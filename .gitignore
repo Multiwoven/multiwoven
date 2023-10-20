@@ -1,0 +1,19 @@
+# .gitignore
+
+# Common
+*.log
+
+# Rails
+/control-plane/log/*
+/control-plane/tmp/*
+/control-plane/.env
+
+# React
+/frontend-ui/node_modules/
+/frontend-ui/.env
+/frontend-ui/build/
+
+# Go
+/data-plane/go.sum
+/data-plane/go.mod
+/data-plane/vendor/
