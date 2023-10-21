@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: multiwoven
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+
+  control-plane:
+    build:
+      context: ./control-plane  # Updated path
+      dockerfile: Dockerfile
+      args:
+        RAILS_ENV: ${RAILS_ENV:-development}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
+      REDIS_URL: redis://redis:6379/0
+      DB_HOST: db
+      DB_USERNAME: multiwoven
+      DB_PASSWORD: password
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+    volumes:
+      - ./control-plane:/rails  # Updated path
+
+volumes:
+  pg-data:
+  redis-data:

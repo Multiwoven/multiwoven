@@ -7,11 +7,20 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 # Rails app lives here
 WORKDIR /rails
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+# Conditional logic based on RAILS_ENV
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+      echo 'Setting up for production'; \
+      echo 'BUNDLE_DEPLOYMENT=1' >> /etc/environment; \
+      echo 'BUNDLE_WITHOUT=development' >> /etc/environment; \
+      echo 'BUNDLE_PATH=/usr/local/bundle' >> /etc/environment; \
+      echo 'RAILS_ENV=production' >> /etc/environment; \
+    else \
+      echo 'Setting up for development'; \
+      echo 'BUNDLE_DEPLOYMENT=0' >> /etc/environment; \
+      echo 'BUNDLE_WITHOUT=' >> /etc/environment; \
+      echo 'BUNDLE_PATH=/usr/local/bundle' >> /etc/environment; \
+      echo 'RAILS_ENV=development' >> /etc/environment; \
+    fi
 
 
 # Throw-away build stage to reduce size of final image
@@ -56,4 +65,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
