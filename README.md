@@ -1,6 +1,6 @@
 # ControlPlane
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/5940b79db426301ef085/maintainability)](https://codeclimate.com/repos/6533a89e41dd881b4bf91de7/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5d2521efe20af922cdda/maintainability)](https://codeclimate.com/repos/6533b99263f9fc1066cba954/maintainability)
 
 ## Introduction
 
