@@ -1,5 +1,7 @@
 # MultiwovenCore
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/5940b79db426301ef085/maintainability)](https://codeclimate.com/repos/6533a89e41dd881b4bf91de7/maintainability)
+
 ## Introduction
 
 Welcome to the `MultiwovenCore` repository. This repository hosts all the core components that power the seamless integration between data warehouses and customer engagement platforms.
@@ -7,7 +9,8 @@ Welcome to the `MultiwovenCore` repository. This repository hosts all the core c
 ## Architecture
 
                  +--------------+
-                 |  Frontend UI  |
+                 |  Frontend UI |
+                 |    (React)   |
                  +-------+------+
                          |
                          | HTTP/REST

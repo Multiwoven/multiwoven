@@ -20,5 +20,5 @@ Rails.application.routes.draw do
   end
 
   # Uncomment below if you have a root path
-  # root "posts#index"
+  root "rails/health#show"
 end
