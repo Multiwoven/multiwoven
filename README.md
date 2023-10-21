@@ -1,13 +1,11 @@
 # MultiwovenCore
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/5940b79db426301ef085/maintainability)](https://codeclimate.com/repos/6533a89e41dd881b4bf91de7/maintainability)
-
 ## Introduction
 
-Welcome to the `MultiwovenCore` repository. This repository hosts all the core components that power the seamless integration between data warehouses and customer engagement platforms.
-
+Welcome to the `MultiwovenCore` repository. This repository serves as a monorepo, housing all the essential components for seamless integration between data warehouses and customer engagement platforms.
 ## Architecture
 
+```plaintext
                  +--------------+
                  |  Frontend UI |
                  |    (React)   |
@@ -26,18 +24,17 @@ Welcome to the `MultiwovenCore` repository. This repository hosts all the core c
                  |  Data Plane  |
                  |   (Golang)   |
                  +--------------+
+```
 
-The architecture is built around three core components:
+### Core Components 
 
-1. **Control Plane** : Developed in Rails 7, it's responsible for managing configurations, user access, and orchestration.
+1. **Control Plane** : Developed in Rails 7, responsible for managing configurations, user access, and orchestration. [Visit control-plane repo here](https://github.com/Multiwoven/control-plane) 
+2. **Data Plane** : Developed in Golang, handles data processing and interactions with data warehouses. 
+3. **Frontend UI** : Developed in React, serves as the user interface. [Visit frontend-ui repo here](https://github.com/Multiwoven/frontend-ui)
 
-2. **Data Plane** : Developed in Golang, this component is responsible for data processing and interaction with data warehouses. 
-
-3. **Frontend UI** : Developed in React, this is the user interface for controlling and managing the Data Plane and Control Plane.
-   
 ## Directory Structure
 
-```graphql
+```plaintext
 MultiwovenCore/
 ├── control-plane/          # Rails 7 API-only service
 ├── data-plane/             # Golang service
@@ -47,76 +44,52 @@ MultiwovenCore/
 │   └── docs/               # Documentation
 ├── .gitignore              # Git ignore file
 ├── README.md               # Project overview and setup instructions
-├── docker-compose.yml      # Docker Compose for local development
+├── docker-compose-dev.yml  # Docker Compose for local development
+├── docker-compose-prod.yml # Docker Compose for production
 ```
 
-## Setup and Installation
 
-### System Requirements
-1. Ensure Docker and Docker Compose are installed on your machine. These are essential for setting up the development environment.
-
-### Get the Code
-
-Firstly, clone the `MultiwovenCore` repository onto your local machine using the following command:
+## Development Setup 
+1. **Clone the Repository** 
 
 ```bash
-git clone git@github.com:Multiwoven/multiwoven-core.git
-```
-
-After the repository is cloned, navigate to its root directory:
-
-```bash
-cd multiwoven-core/
-```
-
-### Environment Variables Setup 
- 
-1. Create a new file named `.env` under multiwoven-core/ directory.
-
-On Unix/Linux systems, you can run:
+git clone https://github.com/Multiwoven/MultiwovenCore.git
+``` 
+2. **Navigate to the Project Directory** 
 
 ```bash
-touch .env
-```
-
-```env
-RAILS_ENV=development
-RAILS_MASTER_KEY=your_secret_key_here
-AWS_ACCESS_KEY_ID=your_aws_access_key_id_here
-AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key_here
-AWS_REGION=your_aws_region_here
-```
-
-Save and close the file.
-
-The environment variables set in the `.env` file will be automatically picked up by Docker Compose when you run the `docker-compose` commands in the subsequent steps.
-
-### Setting Up Services Using Docker
-
-For those using Docker, the setup is streamlined and straightforward:
-#### Step 1: Build Docker Images
-
-Execute the following command to build the Docker images for all services:
+cd MultiwovenCore
+``` 
+3. **Start the Services** 
 
 ```bash
-docker-compose build
+docker-compose -f docker-compose-dev.yml up
 ```
+### Verify Your Development Setup
 
-#### Step 2: Start Services
-
-Run the following command to start all services:
+Navigate to: 
+- **Control Plane** : `http://localhost:3000` 
+- **Data Plane** : `http://localhost:4000` 
+- **Frontend UI** : `http://localhost:8080`
+## Production Setup 
+1. **Clone the Repository** 
 
 ```bash
-docker-compose up
+git clone https://github.com/Multiwoven/MultiwovenCore.git
+``` 
+2. **Navigate to the Project Directory** 
+
+```bash
+cd MultiwovenCore
+``` 
+3. **Start the Services** 
+
+```bash
+docker-compose -f docker-compose-prod.yml up
 ```
+### Verify Your Production Setup
 
-This command will use the configurations set in the `docker-compose.yml` file to start all services, ensuring they interact as specified.
-
-### Verify Your Setup
-
-Once the Docker setup is complete, verify that the services are running by accessing the following URLs in your web browser: 
-- **Control Plane** : Navigate to `http://localhost:3000` 
-- **Data Plane** : Navigate to `http://localhost:4000` 
-- **Frontend UI** : Navigate to `http://localhost:8080`
-
-By this point, you should have all services up and running, confirming that the setup is complete.
+Navigate to: 
+- **Control Plane** : Production URL 
+- **Data Plane** : Production URL 
+- **Frontend UI** : Production URL

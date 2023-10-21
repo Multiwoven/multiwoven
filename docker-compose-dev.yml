@@ -15,14 +15,14 @@ services:
       - redis-data:/data
 
   control-plane:
-    image: your-remote-repo/control-plane:latest  # Use the latest or specific version tag here
+    image: your-remote-repo/control-plane:dev  # Use the dev tag here
     ports:
       - "3000:3000"
     depends_on:
       - db
       - redis
     environment:
-      RAILS_ENV: production
+      RAILS_ENV: development
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: redis://redis:6379/0
       DB_HOST: db
