@@ -17,7 +17,7 @@ services:
   control-plane:
     build:
       context: .  # Since the file is now in the control-plane repo, context is the current directory
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       args:
         RAILS_ENV: ${RAILS_ENV:-development}
     ports:
@@ -32,9 +32,6 @@ services:
       DB_HOST: db
       DB_USERNAME: multiwoven
       DB_PASSWORD: password
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
     volumes:
       - .:/rails  # This mounts the current directory into /rails inside the container
 
