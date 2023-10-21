@@ -10,7 +10,7 @@ Welcome to the Control-Plane! This is a centralized management layer designed to
 - **Backend** : Rails 7 
 - **Database** : PostgreSQL, Redis 
 - **Containerization** : Docker 
-- **CICD** : GitHub Actions
+- **CI/CD** : GitHub Actions
 
 ## Setup and Installation
 
@@ -19,21 +19,21 @@ Welcome to the Control-Plane! This is a centralized management layer designed to
 
 ### Get the Code
 
-Firstly, clone the `MultiwovenCore` repository onto your local machine using the following command:
+Firstly, clone the `ControlPlane` repository onto your local machine using the following command:
 
 ```bash
-git clone git@github.com:Multiwoven/multiwoven-core.git
+git clone git@github.com:Multiwoven/control-plane.git
 ```
 
 After the repository is cloned, navigate to its root directory:
 
 ```bash
-cd multiwoven-core/
+cd control-plane/
 ```
 
 ### Environment Variables Setup 
  
-1. Create a new file named `.env` under multiwoven-core/ directory.
+1. Create a new file named `.env` under control-plane/ directory.
 
 On Unix/Linux systems, you can run:
 
