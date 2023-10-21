@@ -31,9 +31,6 @@ control-plane/tmp/storage/*
 # Ignore master key for control-plane for decrypting credentials and more
 control-plane/config/master.key
 
-# Ignore master key for control-plane for decrypting credentials and more
-control-plane/config/credentials/development.key
-
 # macOS system files
 .DS_Store
 
@@ -43,3 +40,4 @@ swagger/.DS_Store
 # --- End of Control-Plane specific rules ---
 
 # Add ignore rules for other projects here
+.env

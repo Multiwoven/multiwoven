@@ -24,7 +24,6 @@ Welcome to the `MultiwovenCore` repository. This repository hosts all the core c
                  |   (Golang)   |
                  +--------------+
 
-
 The architecture is built around three core components:
 
 1. **Control Plane** : Developed in Rails 7, it's responsible for managing configurations, user access, and orchestration.
@@ -79,6 +78,7 @@ touch .env
 
 ```env
 RAILS_ENV=development
+RAILS_MASTER_KEY=your_secret_key_here
 AWS_ACCESS_KEY_ID=your_aws_access_key_id_here
 AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key_here
 AWS_REGION=your_aws_region_here
