@@ -27,8 +27,10 @@ Welcome to the `MultiwovenCore` repository. This repository hosts all the core c
 
 The architecture is built around three core components:
 
-1. **Control Plane** : Developed in Rails 7, it's responsible for managing configurations, user access, and orchestration. 
+1. **Control Plane** : Developed in Rails 7, it's responsible for managing configurations, user access, and orchestration.
+
 2. **Data Plane** : Developed in Golang, this component is responsible for data processing and interaction with data warehouses. 
+
 3. **Frontend UI** : Developed in React, this is the user interface for controlling and managing the Data Plane and Control Plane.
    
 ## Directory Structure
@@ -46,3 +48,51 @@ MultiwovenCore/
 ├── docker-compose.yml      # Docker Compose for local development
 ```
 
+## Setup and Installation
+
+### System Requirements
+1. Ensure Docker and Docker Compose are installed on your machine. These are essential for setting up the development environment.
+
+### Get the Code
+
+Firstly, clone the `MultiwovenCore` repository onto your local machine using the following command:
+
+```bash
+git clone git@github.com:Multiwoven/multiwoven-core.git
+```
+
+After the repository is cloned, navigate to its root directory:
+
+```bash
+cd multiwoven-core/
+```
+
+### Setting Up Services Using Docker
+
+For those using Docker, the setup is streamlined and straightforward:
+#### Step 1: Build Docker Images
+
+Execute the following command to build the Docker images for all services:
+
+```bash
+docker-compose build
+```
+
+#### Step 2: Start Services
+
+Run the following command to start all services:
+
+```bash
+docker-compose up
+```
+
+This command will use the configurations set in the `docker-compose.yml` file to start all services, ensuring they interact as specified.
+
+### Verify Your Setup
+
+Once the Docker setup is complete, verify that the services are running by accessing the following URLs in your web browser: 
+- **Control Plane** : Navigate to `http://localhost:3000` 
+- **Data Plane** : Navigate to `http://localhost:4000` 
+- **Frontend UI** : Navigate to `http://localhost:8080`
+
+By this point, you should have all services up and running, confirming that the setup is complete.
