@@ -67,6 +67,27 @@ After the repository is cloned, navigate to its root directory:
 cd multiwoven-core/
 ```
 
+### Environment Variables Setup 
+ 
+1. Create a new file named `.env` under multiwoven-core/ directory.
+
+On Unix/Linux systems, you can run:
+
+```bash
+touch .env
+```
+
+```env
+RAILS_ENV=development
+AWS_ACCESS_KEY_ID=your_aws_access_key_id_here
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key_here
+AWS_REGION=your_aws_region_here
+```
+
+Save and close the file.
+
+The environment variables set in the `.env` file will be automatically picked up by Docker Compose when you run the `docker-compose` commands in the subsequent steps.
+
 ### Setting Up Services Using Docker
 
 For those using Docker, the setup is streamlined and straightforward:
