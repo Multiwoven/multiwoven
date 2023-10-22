@@ -11,21 +11,27 @@ PROD_COMPOSE_FILE = docker-compose.yml
 
 # Initialize all subtrees (to be run once when setting up the repo)
 init:
-	git subtree add --prefix=control-plane $(CONTROL_PLANE_REPO) master --squash
-	git subtree add --prefix=data-plane $(DATA_PLANE_REPO) master --squash
-	git subtree add --prefix=frontend-ui $(FRONTEND_UI_REPO) master --squash
+	git subtree add --prefix=control-plane $(CONTROL_PLANE_REPO) main --squash
+	git subtree add --prefix=data-plane $(DATA_PLANE_REPO) main --squash
+	git subtree add --prefix=frontend-ui $(FRONTEND_UI_REPO) main --squash
+
+# Initialize subtrees for development
+dev-init: init
+
+# Initialize subtrees for production
+prod-init: init
 
 # Update all subtrees from their respective remotes
 update:
-	git subtree pull --prefix=control-plane $(CONTROL_PLANE_REPO) master --squash
-	git subtree pull --prefix=data-plane $(DATA_PLANE_REPO) master --squash
-	git subtree pull --prefix=frontend-ui $(FRONTEND_UI_REPO) master --squash
+	git subtree pull --prefix=control-plane $(CONTROL_PLANE_REPO) main --squash
+	git subtree pull --prefix=data-plane $(DATA_PLANE_REPO) main --squash
+	git subtree pull --prefix=frontend-ui $(FRONTEND_UI_REPO) main --squash
 
 # Push changes to all subtrees to their respective remotes
 push:
-	git subtree push --prefix=control-plane $(CONTROL_PLANE_REPO) master
-	git subtree push --prefix=data-plane $(DATA_PLANE_REPO) master
-	git subtree push --prefix=frontend-ui $(FRONTEND_UI_REPO) master
+	git subtree push --prefix=control-plane $(CONTROL_PLANE_REPO) main
+	git subtree push --prefix=data-plane $(DATA_PLANE_REPO) main
+	git subtree push --prefix=frontend-ui $(FRONTEND_UI_REPO) main
 
 # Start local development environment
 dev-up:
