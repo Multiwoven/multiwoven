@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: multiwoven
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+
+  control-plane:
+    build:
+      context: .  
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      RAILS_ENV: development
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: redis://redis:6379/0
+      DB_HOST: db
+      DB_USERNAME: multiwoven
+      DB_PASSWORD: password
+    volumes:
+      - .:/rails
+
+volumes:
+  pg-data:
+  redis-data:
