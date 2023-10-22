@@ -16,24 +16,22 @@ services:
 
   control-plane:
     build:
-      context: .  # Since the file is now in the control-plane repo, context is the current directory
+      context: .  
       dockerfile: Dockerfile.dev
-      args:
-        RAILS_ENV: ${RAILS_ENV:-development}
     ports:
       - "3000:3000"
     depends_on:
       - db
       - redis
     environment:
-      RAILS_ENV: ${RAILS_ENV:-development}
+      RAILS_ENV: development
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: redis://redis:6379/0
       DB_HOST: db
       DB_USERNAME: multiwoven
       DB_PASSWORD: password
     volumes:
-      - .:/rails  # This mounts the current directory into /rails inside the container
+      - .:/rails
 
 volumes:
   pg-data:

@@ -57,6 +57,12 @@ Using Docker, the setup is streamlined and straightforward:
 
 Execute the following command to build the Docker image for all services:
 
+**Development:**
+```bash
+docker-compose -f docker-compose.dev.yml build
+```
+
+**Production:**
 ```bash
 docker-compose build
 ```
@@ -65,6 +71,12 @@ docker-compose build
 
 Run the following command to start all services:
 
+For running **development** build:
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+For running **production** production build:
 ```bash
 docker-compose up
 ```
