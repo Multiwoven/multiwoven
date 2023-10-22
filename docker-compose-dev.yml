@@ -16,7 +16,7 @@ services:
 
   control-plane:
     build:
-      context: ./control-plane  # Points to the service directory
+      context: ./control-plane  # Points to the service directory  
       dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
@@ -25,11 +25,13 @@ services:
       - redis
     environment:
       RAILS_ENV: development
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: redis://redis:6379/0
       DB_HOST: db
       DB_USERNAME: multiwoven
       DB_PASSWORD: password
-      
-  # Other services like data-plane, frontend-ui can be added here
+    volumes:
+      - .:/rails
 
 volumes:
   pg-data:
