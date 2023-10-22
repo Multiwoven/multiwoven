@@ -1,0 +1,43 @@
+# Ruby/Rails .gitignore
+*.rbc
+capybara-*.html
+.rspec
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/log/*
+/tmp/*
+/public/system/*
+/coverage/
+/spec/tmp/*
+.cache
+/config/master.key
+/public/uploads/*
+.DS_Store
+/.bundle
+/vendor/bundle
+lib/tasks/*.rake
+.rvmrc
+/.idea
+/README.rdoc
+/yarn-error.log
+
+# Ignore dotenv file
+.env*
+
+# Ignore pidfiles, but keep the directory
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
+
+# Ignore master key for decrypting credentials and more
+/config/master.key
+
+# macOS system files
+.DS_Store
+
+# Ignore rswag files
+swagger/.DS_Store
