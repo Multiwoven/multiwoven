@@ -31,7 +31,7 @@ services:
       DB_USERNAME: multiwoven
       DB_PASSWORD: password
     volumes:
-      - .:/rails
+      - ./control-plane:/rails
 
 volumes:
   pg-data:
