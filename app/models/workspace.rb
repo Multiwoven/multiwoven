@@ -25,6 +25,11 @@ class Workspace < ApplicationRecord
   validates :workspace_id, uniqueness: true
   validates :status, inclusion: { in: %w[active inactive pending] }
 
+  has_many :connectors, dependent: :nullify
+  has_many :models, dependent: :nullify
+  has_many :catalogs, dependent: :nullify
+  has_many :syncs, dependent: :nullify
+
   before_validation :generate_slug_and_id_and_status, on: :create
 
   private
