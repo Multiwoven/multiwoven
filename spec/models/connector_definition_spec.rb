@@ -13,4 +13,9 @@ RSpec.describe ConnectorDefinition, type: :model do
     it { should define_enum_for(:connector_type).with_values(source: 0, destination: 1) }
     it { should define_enum_for(:source_type).with_values(database: 0, api: 1) }
   end
+
+  describe "associations" do
+    it { should have_many(:sources).dependent(:nullify).class_name("Connector") }
+    it { should have_many(:destinations).dependent(:nullify).class_name("Connector") }
+  end
 end

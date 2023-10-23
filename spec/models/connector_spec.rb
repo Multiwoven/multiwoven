@@ -3,7 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Connector, type: :model do
-  describe "validations" do
+  subject { described_class.new }
+
+  context "validations" do
     it { should validate_presence_of(:workspace_id) }
     it { should validate_presence_of(:connector_definition_id) }
     it { should validate_presence_of(:connector_type) }
@@ -11,8 +13,10 @@ RSpec.describe Connector, type: :model do
     it { should validate_presence_of(:name) }
   end
 
-  describe "associations" do
+  context "associations" do
     it { should belong_to(:workspace) }
     it { should belong_to(:connector_definition) }
+    it { should have_many(:models).dependent(:nullify) }
+    it { should have_many(:catalog).dependent(:nullify) }
   end
 end

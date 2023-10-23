@@ -9,4 +9,7 @@ class Connector < ApplicationRecord
 
   belongs_to :workspace
   belongs_to :connector_definition
+
+  has_many :models, dependent: :nullify
+  has_many :catalog, dependent: :nullify
 end
