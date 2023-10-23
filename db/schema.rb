@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_20_122228) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_23_083527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "connector_definitions", force: :cascade do |t|
+    t.integer "connector_type"
+    t.jsonb "spec"
+    t.integer "source_type"
+    t.jsonb "meta_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
