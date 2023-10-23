@@ -13,5 +13,6 @@ RSpec.describe Model, type: :model do
     it { should validate_presence_of(:connector_id) }
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:query) }
+    it { should have_many(:syncs).dependent(:nullify) }
   end
 end

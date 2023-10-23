@@ -9,4 +9,6 @@ class Model < ApplicationRecord
 
   belongs_to :workspace
   belongs_to :connector
+
+  has_many :syncs, dependent: :nullify
 end
