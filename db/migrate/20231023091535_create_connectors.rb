@@ -1,0 +1,13 @@
+class CreateConnectors < ActiveRecord::Migration[7.1]
+  def change
+    create_table :connectors do |t|
+      t.integer :workspace_id
+      t.integer :connector_type
+      t.integer :connector_definition_id
+      t.jsonb :configuration
+      t.string :name
+
+      t.timestamps
+    end
+  end
+end
