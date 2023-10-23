@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_23_092329) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_23_093217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,6 +38,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_092329) do
     t.integer "connector_definition_id"
     t.jsonb "configuration"
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "models", force: :cascade do |t|
+    t.string "name"
+    t.integer "workspace_id"
+    t.integer "connector_id"
+    t.text "query"
+    t.integer "query_type"
+    t.string "primary_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
