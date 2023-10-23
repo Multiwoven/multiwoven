@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_23_093217) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_23_130412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,20 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_093217) do
     t.text "query"
     t.integer "query_type"
     t.string "primary_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "syncs", force: :cascade do |t|
+    t.integer "workspace_id"
+    t.integer "source_id"
+    t.integer "model_id"
+    t.integer "destination_id"
+    t.jsonb "configuration"
+    t.integer "source_catalog_id"
+    t.integer "schedule_type"
+    t.jsonb "schedule_data"
+    t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
