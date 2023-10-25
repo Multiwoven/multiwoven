@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sync < ApplicationRecord
   validates :workspace_id, presence: true
   validates :source_id, presence: true

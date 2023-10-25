@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateConnectorDefinitions < ActiveRecord::Migration[7.1]
   def change
     create_table :connector_definitions do |t|
