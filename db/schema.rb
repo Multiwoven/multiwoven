@@ -10,9 +10,62 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_20_122228) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_23_130412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "catalogs", force: :cascade do |t|
+    t.integer "workspace_id"
+    t.integer "connector_id"
+    t.jsonb "catalog"
+    t.integer "catalog_hash"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "connector_definitions", force: :cascade do |t|
+    t.integer "connector_type"
+    t.jsonb "spec"
+    t.integer "source_type"
+    t.jsonb "meta_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "connectors", force: :cascade do |t|
+    t.integer "workspace_id"
+    t.integer "connector_type"
+    t.integer "connector_definition_id"
+    t.jsonb "configuration"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "models", force: :cascade do |t|
+    t.string "name"
+    t.integer "workspace_id"
+    t.integer "connector_id"
+    t.text "query"
+    t.integer "query_type"
+    t.string "primary_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "syncs", force: :cascade do |t|
+    t.integer "workspace_id"
+    t.integer "source_id"
+    t.integer "model_id"
+    t.integer "destination_id"
+    t.jsonb "configuration"
+    t.integer "source_catalog_id"
+    t.integer "schedule_type"
+    t.jsonb "schedule_data"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
