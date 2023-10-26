@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Layout } from '../src/layouts/main'
 import { BlankPage } from '../src/layouts/blank'
 import { Login } from "./views/Login";
-// import { Sources } from "./components/source/source";
+import { Sources } from "./components/sources/index";
 // import { AddSources } from "./components/source/add";
 // import { ChannelList } from "./components/channels/channelList";
 import './App.scss';
@@ -14,7 +14,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          {/* <Route path="/sources" element={<Sources />} />
+          <Route path="/sources" element={<Sources />} />
+          {/* 
           <Route path="/sources/new" element={<AddSources />} />
           <Route path="/channels" element={<ChannelList />} /> */}
         </Route>
