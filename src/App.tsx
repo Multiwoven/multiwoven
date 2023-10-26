@@ -21,8 +21,8 @@ const App: React.FC = () => {
             
             {/* Navigation */}
             <nav className="space-y-2">
-              <a href="/" className="block px-4 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600">Home</a>
-              <a href="/dashboard" className="block px-4 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600">Dashboard</a>
+              <a href="/" className="block px-4 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600">Dashboard</a>
+              <a href="/dashboard" className="block px-4 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-600">Data Sources</a>
               {/* Additional links */}
             </nav>
           </div>
