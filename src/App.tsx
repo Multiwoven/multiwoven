@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './views/Home/Home';
+import './tailwind.css';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex flex-col items-center justify-center min-h-screen text-center bg-gray-200">
+      <Router>
+        <div className="flex w-full">
+          {/* Sidebar */}
+          <div className="w-64 bg-gray-800 min-h-screen text-white">
+            <div className="p-4">
+              <p>Sidebar</p>
+            </div>
+          </div>
+          {/* Main Content */}
+          <div className="flex-grow">
+            <Switch>
+              <Route exact path="/" component={Home} />
+            </Switch>
+          </div>
+        </div>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
+
