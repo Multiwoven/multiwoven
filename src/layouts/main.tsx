@@ -38,8 +38,8 @@ const navigation = [
   // { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
 ]
 const teams = [
-  { id: 1, name: 'Sources', href: '#', initial: 'S', current: false },
-  { id: 2, name: 'Destinations', href: '#', initial: 'D', current: false },
+  { id: 1, name: 'Sources', href: 'sources', initial: 'S', current: false },
+  { id: 2, name: 'Destinations', href: 'destinations', initial: 'D', current: false },
   // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
 
