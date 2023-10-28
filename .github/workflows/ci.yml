@@ -10,9 +10,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:  # Add the RAILS_MASTER_KEY environment variable here
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: control_plane_test
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-      CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      DB_HOST: localhost
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
 
     steps:
     - name: Checkout Code
