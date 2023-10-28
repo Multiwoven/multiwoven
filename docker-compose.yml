@@ -4,8 +4,8 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: multiwoven
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
     volumes:
       - pg-data:/var/lib/postgresql/data
 
@@ -27,9 +27,9 @@ services:
       RAILS_ENV: development
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: redis://redis:6379/0
-      DB_HOST: db
-      DB_USERNAME: multiwoven
-      DB_PASSWORD: password
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - .:/rails
 

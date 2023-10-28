@@ -43,6 +43,9 @@ touch .env
 
 ```env
 RAILS_MASTER_KEY=your_secret_key_here
+DB_HOST=your_postgres_host
+DB_USERNAME=your_postgres_username
+DB_PASSWORD=your_postgres_password
 ```
 
 Save and close the file.
@@ -59,11 +62,6 @@ Execute the following command to build the Docker image for all services:
 
 **Development:**
 ```bash
-docker-compose -f docker-compose.dev.yml build
-```
-
-**Production:**
-```bash
 docker-compose build
 ```
 
@@ -72,11 +70,6 @@ docker-compose build
 Run the following command to start all services:
 
 For running **development** build:
-```bash
-docker-compose -f docker-compose.dev.yml up
-```
-
-For running **production** production build:
 ```bash
 docker-compose up
 ```

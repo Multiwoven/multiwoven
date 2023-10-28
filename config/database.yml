@@ -5,9 +5,9 @@ default: &default
 
 development:
   <<: *default
-  host: db # This should be the service name specified in your docker-compose.yml for PostgreSQL
-  username: multiwoven # Matches your Docker setup
-  password: password # Matches your Docker setup
+  host: <%= ENV['DB_HOST'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   database: control_plane_development
 
 test:
