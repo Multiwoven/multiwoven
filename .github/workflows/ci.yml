@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:  # Add the RAILS_MASTER_KEY environment variable here
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -37,5 +41,3 @@ jobs:
       run: |
         ./cc-test-reporter before-build
         ./cc-test-reporter after-build --exit-code $?
-      env:
-        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
