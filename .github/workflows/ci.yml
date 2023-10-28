@@ -72,9 +72,11 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to ECR
-      run: $(aws ecr get-login --no-include-email --region ${{ env.AWS_REGION }})
+      run: echo $(aws ecr get-login-password --region ${{ env.AWS_REGION }}) | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
 
     - name: Build and Push Docker image
       run: |
-        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
         docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
