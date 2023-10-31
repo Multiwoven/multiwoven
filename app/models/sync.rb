@@ -17,4 +17,6 @@ class Sync < ApplicationRecord
   belongs_to :source, class_name: "Connector"
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
+
+  # TODO: - Validate schedule data using JSON schema
 end

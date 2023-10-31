@@ -2,10 +2,10 @@
 
 FactoryBot.define do
   factory :connector do
-    workspace_id { 1 }
+    association :workspace
+    association :connector_definition
     connector_type { 1 }
-    connector_definition_id { 1 }
-    configuration { "" }
-    name { "MyString" }
+    configuration { { test: "test" } }
+    name { Faker::Name.name }
   end
 end

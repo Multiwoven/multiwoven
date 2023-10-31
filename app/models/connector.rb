@@ -7,9 +7,13 @@ class Connector < ApplicationRecord
   validates :configuration, presence: true
   validates :name, presence: true
 
+  enum :connector_type, %i[source destination]
+
   belongs_to :workspace
   belongs_to :connector_definition
 
   has_many :models, dependent: :nullify
   has_many :catalog, dependent: :nullify
+
+  # TODO: - Validate configuration using JSON schema
 end

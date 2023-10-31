@@ -8,6 +8,7 @@ ruby "3.2.0"
 gem "aasm"
 gem "annotate"
 gem "aws-sdk"
+gem "interactor", "~> 3.0"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem
@@ -15,6 +16,7 @@ gem "rails", "~> 7.1.1"  # Core Rails gem
 # API Support
 gem "jbuilder"
 gem "jwt"
+gem "kaminari"
 gem "rack-cors"
 gem "rswag"
 

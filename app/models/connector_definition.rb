@@ -9,6 +9,7 @@ class ConnectorDefinition < ApplicationRecord
   enum :connector_type, %i[source destination]
   enum :source_type, %i[database api]
 
+  # TODO: - Validate spec and meta_data using JSON schema
   has_many :sources, dependent: :nullify, class_name: "Connector"
   has_many :destinations, dependent: :nullify, class_name: "Connector"
 end

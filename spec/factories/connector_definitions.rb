@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :connector_definition do
     connector_type { 1 }
-    spec { "" }
+    spec { { test: "test" } }
     source_type { 1 }
-    meta_data { "" }
+    meta_data { { test: "test" } }
   end
 end

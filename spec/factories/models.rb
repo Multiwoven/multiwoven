@@ -2,11 +2,11 @@
 
 FactoryBot.define do
   factory :model do
-    name { "MyString" }
-    workspace_id { 1 }
-    connector_id { 1 }
-    query { "MyText" }
-    query_type { 1 }
-    primary_key { "MyString" }
+    association :connector
+    association :workspace
+    name { Faker::Name.name }
+    query { Faker::Quote.yoda }
+    query_type { "raw_sql" }
+    primary_key { "TestPrimaryKey" }
   end
 end

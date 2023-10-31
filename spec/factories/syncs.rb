@@ -2,14 +2,13 @@
 
 FactoryBot.define do
   factory :sync do
-    workspace_id { 1 }
-    source_id { 1 }
-    model_id { 1 }
-    destination_id { 1 }
-    configuration { "" }
-    source_catalog_id { 1 }
+    association :workspace
+    association :model
+    association :source, factory: :connector
+    association :destination, factory: :connector
+    configuration { { test: "Test" } }
     schedule_type { 1 }
-    schedule_data { "" }
+    schedule_data { { test: "Test" } }
     status { 1 }
   end
 end
