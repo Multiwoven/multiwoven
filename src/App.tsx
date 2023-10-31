@@ -14,7 +14,7 @@ export default function App() {
     <div className="app-container">
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<Sources />} />
           <Route path="/sources" element={<Sources />} />
           <Route path="/destinations" element={<Destination />} />
           {/* 

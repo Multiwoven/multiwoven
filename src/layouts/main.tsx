@@ -44,13 +44,13 @@ const teams = [
 ]
 
 const activate = [
-  { id: 1, name: 'Catalog', href: '#', initial: 'C', current: false },
+  { id: 1, name: 'Entities', href: '#', initial: 'C', current: false },
   { id: 2, name: 'Models', href: '#', initial: 'M', current: false },
-  // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+  // { id: 3, name: 'Syncs', href: '#', initial: 'S', current: false },
 ]
 const Engage = [
   { id: 1, name: 'Syncs', href: '#', initial: 'S', current: false },
-  { id: 2, name: 'Customer360', href: '#', initial: 'C', current: false },
+  { id: 2, name: 'Customer 360', href: '#', initial: 'C', current: false },
   // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
 const userNavigation = [
@@ -275,7 +275,7 @@ export const Layout =()=> {
                   </ul>
                 </li>
                 <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">Activate</div>
+                  <div className="text-xs font-semibold leading-6 text-gray-400">Transform</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {activate.map((team) => (
                       <li key={team.name}>
@@ -306,9 +306,9 @@ export const Layout =()=> {
                 </li>
 
                 <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">Engage</div>
+                  <div className="text-xs font-semibold leading-6 text-gray-400">Activate</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {activate.map((team) => (
+                    {Engage.map((team) => (
                       <li key={team.name}>
                         <a
                           href={team.href}
