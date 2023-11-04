@@ -11,6 +11,8 @@ import { Destination } from './components/destination';
 import DestinationSelector from './components/destination/new';
 import { DestinationConnect } from './components/destination/connect';
 import Dashboard from './components/Dashboard/Dashboard';
+import SourceSelector from './components/sources/new';
+import { SourceConnect } from './components/sources/connect';
 
 export default function App() {
   return (
@@ -18,7 +20,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          
           <Route path="/sources" element={<Sources />} />
+          <Route path="/sources/new" element={<SourceSelector />} />
+          <Route path="/sources/connect" element={<SourceConnect />} />
+
           <Route path="/destinations" element={<Destination />} />
           <Route path="/destinations/new" element={<DestinationSelector />} />
           <Route path="/destinations/connect" element={<DestinationConnect />} />
