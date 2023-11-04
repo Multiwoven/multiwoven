@@ -5,7 +5,6 @@ import { CheckIcon } from '@heroicons/react/24/outline'
 import AWS from '../../assets/images/redshift.svg'
 import Flake from '../../assets/images/snowflake.png'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import { SourceTable } from './table'
 
 const people = [
     {
