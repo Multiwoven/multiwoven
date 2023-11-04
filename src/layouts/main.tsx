@@ -1,5 +1,5 @@
-import { Fragment, useState, useEffect } from 'react'
-import { Outlet, NavLink } from "react-router-dom";
+import { Fragment, useState } from 'react'
+import { Outlet } from "react-router-dom";
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -17,49 +17,35 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import MultiwovenLogoWhite from '../assets/images/multiwoven-logo-white.png'
-
-
-const navigation = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
-  { name: 'Sources', href: '/sources', icon: CircleStackIcon, current: false },
-  { name: 'Destinations', href: '/destinations', icon: TableCellsIcon, current: false },
-  { name: 'Models', href: '#', icon: ChartBarSquareIcon, current: false },
-  { name: 'Syncs', href: '#', icon: ArrowPathIcon, current: false },
-  { name: 'Audiences', href: '#', icon: UserGroupIcon, current: false },
-]
-const secondaryNavigation = [
-  { name: 'Settings', href: '#', icon: CogIcon },
-  { name: 'Documentation', href: '#', icon: BookOpenIcon },
-  { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
-]
-
-const teams = [
-  { id: 1, name: 'Sources', href: 'sources', initial: 'S', current: false },
-  { id: 2, name: 'Destinations', href: 'destinations', initial: 'D', current: false },
-  // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-
-const activate = [
-  { id: 1, name: 'Entities', href: '#', initial: 'C', current: false },
-  { id: 2, name: 'Models', href: '#', initial: 'M', current: false },
-  // { id: 3, name: 'Syncs', href: '#', initial: 'S', current: false },
-]
-const Engage = [
-  { id: 1, name: 'Syncs', href: '#', initial: 'S', current: false },
-  { id: 2, name: 'Audiences', href: '#', initial: 'C', current: false },
-  // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
-
-function classNames(...classes :any) {
-  return classes.filter(Boolean).join(' ')
-}
+import { useLocation } from 'react-router-dom';
 
 export const Layout =()=> {
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: HomeIcon, current: location.pathname === '/' },
+    { name: 'Sources', href: '/sources', icon: CircleStackIcon, current: location.pathname === '/sources' || location.pathname === '/sources/new' || location.pathname === '/sources/connect' },
+    { name: 'Destinations', href: '/destinations', icon: TableCellsIcon, current: location.pathname === '/destinations' || location.pathname === '/destinations/new' || location.pathname === '/destinations/connect' },
+    { name: 'Models', href: '#', icon: ChartBarSquareIcon, current: location.pathname === '/models' },
+    { name: 'Syncs', href: '#', icon: ArrowPathIcon, current: location.pathname === '/syncs' },
+    { name: 'Audiences', href: '#', icon: UserGroupIcon, current: location.pathname === '/audiences' },
+  ]
+  
+  const secondaryNavigation = [
+    { name: 'Settings', href: '#', icon: CogIcon },
+    { name: 'Documentation', href: '#', icon: BookOpenIcon },
+    { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
+  ]
+  
+  const userNavigation = [
+    { name: 'Your profile', href: '#' },
+    { name: 'Sign out', href: '#' },
+  ]
+  
+  function classNames(...classes :any) {
+    return classes.filter(Boolean).join(' ')
+  }
 
   return (
     <>

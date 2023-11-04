@@ -74,14 +74,14 @@ const SourceSelector: React.FC = () => {
                     </ul>
 
                     <div className='flex justify-end'>
-                        <Link to="/Sources">
+                        <Link to="/sources">
                             <button 
                                 className="bg-slate-200 px-4 py-1 mr-3 md:px-5 md:py-2 rounded hover:bg-slate-100 transition duration-200 text-gray-900"
                             >
                                 Exit
                             </button>
                         </Link>
-                        <Link to="/Sources/connect">
+                        <Link to="/sources/connect">
                             <button 
                             className="bg-orange-600 text-white px-4 py-1 md:px-5 md:py-2 rounded hover:bg-orange-500 transition duration-200"
                             >
