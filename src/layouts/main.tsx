@@ -128,8 +128,8 @@ export const Layout =()=> {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'bg-orange-900 text-white'
-                              : 'text-orange-100 hover:bg-orange-600 hover:text-white',
+                              ? 'bg-orange-800 text-white'
+                              : 'text-orange-100 hover:bg-orange-800 hover:text-white',
                             'group flex items-center rounded-md px-2 py-2 text-base font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
@@ -145,7 +145,7 @@ export const Layout =()=> {
                           <a
                             key={item.name}
                             href={item.href}
-                            className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-orange-100 hover:bg-orange-600 hover:text-white"
+                            className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-orange-100 hover:bg-orange-800 hover:text-white"
                           >
                             <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
                             {item.name}
@@ -181,7 +181,7 @@ export const Layout =()=> {
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.current ? 'bg-orange-900 text-white' : 'text-orange-100 hover:bg-orange-700 hover:text-white',
+                      item.current ? 'bg-orange-800 text-white' : 'text-orange-100 hover:bg-orange-800 hover:text-white',
                       'group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6'
                     )}
                     aria-current={item.current ? 'page' : undefined}
@@ -197,7 +197,7 @@ export const Layout =()=> {
                     <a
                       key={item.name}
                       href={item.href}
-                      className="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-orange-100 hover:bg-orange-700 hover:text-white"
+                      className="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-orange-100 hover:bg-orange-800 hover:text-white"
                     >
                       <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
                       {item.name}
