@@ -26,7 +26,7 @@ export const Destination = () => {
     if (destinations) {
         return(
             <>
-            <div>
+            <div className="px-4 sm:px-6 lg:px-8">
                 <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
                     <h3 className="text-2xl font-semibold leading-6 text-gray-700">Destinations</h3>
                     <div className="mt-3 sm:ml-4 sm:mt-0">
