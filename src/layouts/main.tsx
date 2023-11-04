@@ -1,64 +1,35 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment, useState, useEffect } from 'react'
 import { Outlet, NavLink } from "react-router-dom";
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
   BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
+  CircleStackIcon,
+  TableCellsIcon,
+  ChartBarSquareIcon,
+  BookOpenIcon,
+  ArrowPathIcon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import MultiwovenLogoWhite from '../assets/images/multiwoven-logo-white.png'
-import {
-  Bars3CenterLeftIcon,
-  ClockIcon,
   CogIcon,
-  CreditCardIcon,
-  DocumentChartBarIcon,
-  QuestionMarkCircleIcon,
-  ScaleIcon,
   ShieldCheckIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
-import {
-  BanknotesIcon,
-  BuildingOfficeIcon,
-  CheckCircleIcon,
-  ChevronRightIcon,
-} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import MultiwovenLogoWhite from '../assets/images/multiwoven-logo-white.png'
 
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: HomeIcon, current: true },
-  { name: 'Sources', href: '/sources', icon: ClockIcon, current: false },
-  { name: 'Destinations', href: '/destinations', icon: ScaleIcon, current: false },
-  { name: 'Models', href: '#', icon: CreditCardIcon, current: false },
-  { name: 'Syncs', href: '#', icon: UserGroupIcon, current: false },
+  { name: 'Sources', href: '/sources', icon: CircleStackIcon, current: false },
+  { name: 'Destinations', href: '/destinations', icon: TableCellsIcon, current: false },
+  { name: 'Models', href: '#', icon: ChartBarSquareIcon, current: false },
+  { name: 'Syncs', href: '#', icon: ArrowPathIcon, current: false },
   { name: 'Audiences', href: '#', icon: UserGroupIcon, current: false },
 ]
 const secondaryNavigation = [
   { name: 'Settings', href: '#', icon: CogIcon },
-  { name: 'Documentation', href: '#', icon: QuestionMarkCircleIcon },
+  { name: 'Documentation', href: '#', icon: BookOpenIcon },
   { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
 ]
 
@@ -92,14 +63,6 @@ export const Layout =()=> {
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div className='flex-1 bg-white'>
       <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
