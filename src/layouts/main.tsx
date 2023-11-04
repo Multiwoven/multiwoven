@@ -50,7 +50,7 @@ const activate = [
 ]
 const Engage = [
   { id: 1, name: 'Syncs', href: '#', initial: 'S', current: false },
-  { id: 2, name: 'Customer 360', href: '#', initial: 'C', current: false },
+  { id: 2, name: 'Audiences', href: '#', initial: 'C', current: false },
   // { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
 const userNavigation = [

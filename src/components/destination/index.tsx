@@ -3,7 +3,7 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 
 import Braze from '../../assets/images/braze.svg'
 import Klaviyo from '../../assets/images/klaviyo.svg'
-import CleverTap from '../../assets/images/clevertap.webp'
+import CleverTap from '../../assets/images/clevertap.png'
 
 export const Destination = () => {
 

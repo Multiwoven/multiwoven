@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Braze from '../../assets/images/braze.svg'
 import Klaviyo from '../../assets/images/klaviyo.svg'
-import CleverTap from '../../assets/images/clevertap.webp'
+import CleverTap from '../../assets/images/clevertap.png'
 
 // Define the Destination type
 type Destination = {
