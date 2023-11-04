@@ -88,7 +88,7 @@ export const Layout =()=> {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-orange-700 pb-4 pt-5">
+                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-orange-900 pb-4 pt-5">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -128,7 +128,7 @@ export const Layout =()=> {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'bg-orange-800 text-white'
+                              ? 'bg-orange-900 text-white'
                               : 'text-orange-100 hover:bg-orange-600 hover:text-white',
                             'group flex items-center rounded-md px-2 py-2 text-base font-medium'
                           )}
@@ -166,7 +166,7 @@ export const Layout =()=> {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex flex-grow flex-col overflow-y-auto bg-orange-800 pb-4 pt-5">
+          <div className="flex flex-grow flex-col overflow-y-auto bg-orange-900 pb-4 pt-5">
             <div className="flex flex-shrink-0 items-center px-4">
               <img
                 className="h-7 w-auto mx-auto"
