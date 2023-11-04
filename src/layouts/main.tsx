@@ -75,7 +75,7 @@ export const Layout =()=> {
         <body class="h-full">
         ```
       */}
-      <div className='flex-1'>
+      <div className='flex-1 bg-white'>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child

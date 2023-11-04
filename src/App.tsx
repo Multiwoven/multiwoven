@@ -8,6 +8,7 @@ import { Sources } from "./components/sources/index";
 // import { ChannelList } from "./components/channels/channelList";
 import './App.scss';
 import { Destination } from './components/destination';
+import DestinationSelector from './components/destination/new';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route index element={<Sources />} />
           <Route path="/sources" element={<Sources />} />
           <Route path="/destinations" element={<Destination />} />
+          <Route path="/destinations/new" element={<DestinationSelector />} />
           {/* 
           <Route path="/sources/new" element={<AddSources />} />
           <Route path="/channels" element={<ChannelList />} /> */}

@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <main className="flex-1 relative overflow-y-auto focus:outline-none p-4">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none p-4 bg-white">
           Your main dashboard content will be here
         </main>
     </div>
