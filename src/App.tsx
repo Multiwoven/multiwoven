@@ -9,16 +9,19 @@ import { Sources } from "./components/sources/index";
 import './App.scss';
 import { Destination } from './components/destination';
 import DestinationSelector from './components/destination/new';
+import { DestinationConnect } from './components/destination/connect';
+import Dashboard from './components/Dashboard/Dashboard';
 
 export default function App() {
   return (
     <div className="app-container">
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Sources />} />
+          <Route index element={<Dashboard />} />
           <Route path="/sources" element={<Sources />} />
           <Route path="/destinations" element={<Destination />} />
           <Route path="/destinations/new" element={<DestinationSelector />} />
+          <Route path="/destinations/connect" element={<DestinationConnect />} />
           {/* 
           <Route path="/sources/new" element={<AddSources />} />
           <Route path="/channels" element={<ChannelList />} /> */}

@@ -6,6 +6,7 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@mui/material": "^5.14.15",
+    "@tailwindcss/forms": "^0.5.6",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +16,8 @@
     "@types/react-dom": "^18.2.14",
     "autoprefixer": "^10.4.16",
     "axios": "^1.5.1",
+    "classnames": "^2.3.2",
+    "node-sass": "^7.0.3",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,8 +25,7 @@
     "react-scripts": "^5.0.1",
     "tailwindcss": "^3.3.5",
     "typescript": "^3.9.10",
-    "web-vitals": "^2.1.4",
-    "node-sass": "^7.0.3"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
