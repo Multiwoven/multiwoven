@@ -5,20 +5,24 @@ import Braze from '../../assets/images/braze.svg'
 import Klaviyo from '../../assets/images/klaviyo.svg'
 import CleverTap from '../../assets/images/clevertap.png'
 import { Link } from 'react-router-dom'
+import { Breadcrumb } from '../common/breadcrumb'
 
 export const Destination = () => {
 
     const destinations = [
         {
-            name:"Braze",
+            name:"production-master",
+            appname:"Braze",
             icon:Braze   
         },
         {
-            name:"Klaviyo",
+            name:"staging-beta",
+            appname:"Klaviyo",
             icon:Klaviyo   
         },
         {
-            name:"CleverTap",
+            name:"dev-sandbox",
+            appname:"CleverTap",
             icon:CleverTap
         }
     ]
@@ -28,7 +32,7 @@ export const Destination = () => {
             <>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-                    <h3 className="text-2xl font-semibold leading-6 text-gray-700">Destinations</h3>
+                    <Breadcrumb />
                     <div className="mt-3 sm:ml-4 sm:mt-0">
                         <Link to="/destinations/new">
                         <button
@@ -46,13 +50,16 @@ export const Destination = () => {
                     <table className="min-w-full divide-y divide-gray-300">
                         <thead>
                             <tr>
-                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold uppercase text-gray-900 sm:pl-0">
                                     Name
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
+                                    Type
+                                </th>
+                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
                                     Last Updated
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                <th scope="col" className="px-1 py-3.5 text-right text-sm font-semibold uppercase text-gray-900">
                                     Status
                                 </th>
                             </tr>
@@ -60,17 +67,20 @@ export const Destination = () => {
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {destinations.map((destination) => (
                             <tr key={destination.name}>
-                                <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                                <div className="flex items-center">
-                                    <div className="h-8 w-8 flex-shrink-0">
-                                    <img className="h-8 w-8 rounded-lg" src={destination.icon} alt="" />
-                                    </div>
-                                    <div className="ml-4">
-                                    <div className="font-medium text-gray-900">{destination.name}</div>
-                                    </div>
-                                </div>
+                                <td className="whitespace-nowrap px- py-5 text-sm text-gray-700 text-left">
+                                    <p className='font-semibold'>{destination.name}</p>
                                 </td>
-                                <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-right">
+                                <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                    <div className="flex items-center">
+                                        <div className="h-8 w-8 flex-shrink-0">
+                                        <img className="h-8 w-8 rounded-lg" src={destination.icon} alt="" />
+                                        </div>
+                                        <div className="ml-4">
+                                        <div className="font-medium text-gray-900">{destination.appname}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-left">
                                     <p className='font-semibold'>11/03/23</p>
                                 </td>
                                 <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-right">
@@ -82,10 +92,6 @@ export const Destination = () => {
                             ))}
                         </tbody>
                     </table>
-
-
-
-
                     </div>
                     </div>
                 </div>

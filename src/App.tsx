@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import SourceSelector from './components/sources/new';
 import { SourceConnect } from './components/sources/connect';
 import { Settings } from './components/settings';
+import { SourceShow } from './components/sources/show';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/sources" element={<Sources />} />
           <Route path="/sources/new" element={<SourceSelector />} />
           <Route path="/sources/connect" element={<SourceConnect />} />
+          <Route path="/sources/show/:id" element={<SourceShow />} />
 
           <Route path="/destinations" element={<Destination />} />
           <Route path="/destinations/new" element={<DestinationSelector />} />

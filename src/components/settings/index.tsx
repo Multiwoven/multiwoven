@@ -1,9 +1,10 @@
+import { Breadcrumb } from "../common/breadcrumb"
 
 export const Settings = () => {
     return(
         <>
             <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-                <h3 className="text-2xl font-semibold leading-6 text-gray-700">Settings</h3>
+              <Breadcrumb />
             </div>
             <div className="divide-y divide-white/5 bg-white">
               <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">

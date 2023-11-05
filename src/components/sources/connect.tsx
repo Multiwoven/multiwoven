@@ -52,148 +52,147 @@ export const SourceConnect = () => {
             </div>
         <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-2/3 border-r p-4">
-                
-                    <div className="w-2/3">
-                        <div>
-                            <label htmlFor="hostname" className="block text-sm font-medium leading-6 text-gray-900">
-                                Hostname
+                <div className="w-2/3">
+                    <div>
+                        <label htmlFor="hostname" className="block text-sm font-medium leading-6 text-gray-900">
+                            Hostname
+                        </label>
+                        <div className="mt-2">
+                            <input
+                            type="text"
+                            name="hostname"
+                            id="hostname"
+                            placeholder='redshift-host.us-east-1.redshift.amazonaws.com'
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            required
+                            />
+                        </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div className="sm:col-span-3">
+                            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+                                Username
                             </label>
                             <div className="mt-2">
                                 <input
                                 type="text"
-                                name="hostname"
-                                id="hostname"
-                                placeholder='redshift-host.us-east-1.redshift.amazonaws.com'
+                                name="username"
+                                id="username"
+                                autoComplete="username"
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 required
                                 />
                             </div>
                         </div>
-                        <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                            <div className="sm:col-span-3">
-                                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Username
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                    type="text"
-                                    name="username"
-                                    id="username"
-                                    autoComplete="username"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="sm:col-span-3">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Password
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    autoComplete="password"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                            <div className="sm:col-span-3">
-                                <label htmlFor="port" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Port
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                    type="text"
-                                    name="port"
-                                    id="port"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="sm:col-span-3">
-                                <label htmlFor="database-name" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Database Name
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                    type="text"
-                                    name="database-name"
-                                    id="database-name"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-3 relative flex items-start">
-                            <div className="flex h-6 items-center">
+                        <div className="sm:col-span-3">
+                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                Password
+                            </label>
+                            <div className="mt-2">
                                 <input
-                                id="ssh"
-                                name="ssh"
-                                type="checkbox"
-                                onClick={setSSHTunnelFormState}
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                type="password"
+                                name="password"
+                                id="password"
+                                autoComplete="password"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                required
                                 />
                             </div>
-                            <div className="ml-3 text-sm leading-6">
-                                <label htmlFor="ssh" className="font-medium text-gray-900">
-                                Use SSH Tunnel
-                                </label>
+                        </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div className="sm:col-span-3">
+                            <label htmlFor="port" className="block text-sm font-medium leading-6 text-gray-900">
+                                Port
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                type="text"
+                                name="port"
+                                id="port"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                required
+                                />
                             </div>
                         </div>
-                        <div id="ssh-form" className='hidden'>
-                            <div className='mt-5'>
-                                <label htmlFor="tunnel-host" className="block text-sm font-medium leading-6 text-gray-900">
-                                    Tunnel Host
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="database-name" className="block text-sm font-medium leading-6 text-gray-900">
+                                Database Name
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                type="text"
+                                name="database-name"
+                                id="database-name"
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-3 relative flex items-start">
+                        <div className="flex h-6 items-center">
+                            <input
+                            id="ssh"
+                            name="ssh"
+                            type="checkbox"
+                            onClick={setSSHTunnelFormState}
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                        </div>
+                        <div className="ml-3 text-sm leading-6">
+                            <label htmlFor="ssh" className="font-medium text-gray-900">
+                            Use SSH Tunnel
+                            </label>
+                        </div>
+                    </div>
+                    <div id="ssh-form" className='hidden'>
+                        <div className='mt-5'>
+                            <label htmlFor="tunnel-host" className="block text-sm font-medium leading-6 text-gray-900">
+                                Tunnel Host
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                type="text"
+                                name="tunnel-host"
+                                id="tunnel-host"
+                                placeholder='bastion.example.com'
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="sm:col-span-3">
+                                <label htmlFor="tunnel-username" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Tunnel Username
                                 </label>
                                 <div className="mt-2">
                                     <input
                                     type="text"
-                                    name="tunnel-host"
-                                    id="tunnel-host"
-                                    placeholder='bastion.example.com'
+                                    name="tunnel-username"
+                                    id="tunnel-username"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
-                            <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                <div className="sm:col-span-3">
-                                    <label htmlFor="tunnel-username" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Tunnel Username
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                        type="text"
-                                        name="tunnel-username"
-                                        id="tunnel-username"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="sm:col-span-3">
-                                    <label htmlFor="tunnel-port" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Tunnel Port
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                        type="text"
-                                        name="tunnel-port"
-                                        id="tunnel-port"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="tunnel-port" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Tunnel Port
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                    type="text"
+                                    name="tunnel-port"
+                                    id="tunnel-port"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
             <div className="w-full md:w-1/3 p-4 relative">
                 <div className="border-b border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">

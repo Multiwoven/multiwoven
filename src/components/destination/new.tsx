@@ -3,6 +3,7 @@ import Braze from '../../assets/images/braze.svg'
 import Klaviyo from '../../assets/images/klaviyo.svg'
 import CleverTap from '../../assets/images/clevertap.png'
 import { Link } from 'react-router-dom';
+import { Breadcrumb } from '../common/breadcrumb';
 
 // Define the Destination type
 type Destination = {
@@ -36,7 +37,7 @@ const DestinationSelector: React.FC = () => {
         <>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-                    <h3 className="text-2xl font-semibold leading-6 text-gray-700">Select Destination</h3>
+                    <Breadcrumb />
                 </div>
                 <div className="flex flex-col md:flex-row">
                     <div className="w-full md:w-1/3 border-r p-4">
