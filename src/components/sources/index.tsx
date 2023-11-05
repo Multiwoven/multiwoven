@@ -29,7 +29,7 @@ export const Sources = () => {
     if (sources) {
         return(
             <>
-                <div>
+                <div className="px-4 sm:px-6 lg:px-8">
                     <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
                         <h3 className="text-2xl font-semibold leading-6 text-gray-700">Sources</h3>
                         <div className="mt-3 sm:ml-4 sm:mt-0">
@@ -65,8 +65,8 @@ export const Sources = () => {
                                         <tr key={source.name}>
                                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                             <div className="flex items-center">
-                                                <div className="h-11 w-11 flex-shrink-0">
-                                                <img className="h-10 w-10 md:h-12 md:w-12 flex-none rounded-full bg-gray-50" src={source.icon} alt="" />
+                                                <div className="h-8 w-8 flex-shrink-0">
+                                                <img className="h-8 w-8 md:h-8 md:w-8 flex-none rounded-full bg-gray-50" src={source.icon} alt="" />
                                                 </div>
                                                 <div className="ml-4">
                                                 <div className="font-medium text-gray-900">{source.name}</div>

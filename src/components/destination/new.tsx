@@ -43,10 +43,9 @@ const DestinationSelector: React.FC = () => {
                         <ul>
                         {destinations.map((destination) => (
                                 <li key={destination.name} className="flex gap-x-2 md:gap-x-4 py-3 md:py-5 cursor-pointer hover:bg-stone-100" onClick={() => setSelectedDestination(destination)}>
-                                    <img className="h-10 w-10 md:h-12 md:w-12 flex-none rounded-full bg-gray-50" src={destination.imageUrl} alt="" />
+                                    <img className="h-8 w-8 md:h-8 md:w-8 flex-none rounded-full bg-gray-50" src={destination.imageUrl} alt="" />
                                     <div className="min-w-0">
                                         <p className="text-xs md:text-sm font-semibold leading-5 md:leading-6 text-gray-900">{destination.name}</p>
-                                        <p className="mt-1 truncate text-xs leading-5 text-gray-500">{destination.category}</p>
                                     </div>
                                 </li>
                             ))}
