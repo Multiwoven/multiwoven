@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -24,23 +24,23 @@ export const Layout =()=> {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: HomeIcon, current: location.pathname === '/' },
-    { name: 'Sources', href: '/sources', icon: CircleStackIcon, current: location.pathname === '/sources' || location.pathname === '/sources/new' || location.pathname === '/sources/connect' },
-    { name: 'Destinations', href: '/destinations', icon: TableCellsIcon, current: location.pathname === '/destinations' || location.pathname === '/destinations/new' || location.pathname === '/destinations/connect' },
-    { name: 'Models', href: '#', icon: ChartBarSquareIcon, current: location.pathname === '/models' },
-    { name: 'Syncs', href: '#', icon: ArrowPathIcon, current: location.pathname === '/syncs' },
-    { name: 'Audiences', href: '#', icon: UserGroupIcon, current: location.pathname === '/audiences' },
+    { name: 'Dashboard', to: '/', icon: HomeIcon, current: location.pathname === '/' },
+    { name: 'Sources', to: '/sources', icon: CircleStackIcon, current: location.pathname === '/sources' || location.pathname === '/sources/new' || location.pathname === '/sources/connect' },
+    { name: 'Destinations', to: '/destinations', icon: TableCellsIcon, current: location.pathname === '/destinations' || location.pathname === '/destinations/new' || location.pathname === '/destinations/connect' },
+    { name: 'Models', to: '#', icon: ChartBarSquareIcon, current: location.pathname === '/models' },
+    { name: 'Syncs', to: '#', icon: ArrowPathIcon, current: location.pathname === '/syncs' },
+    { name: 'Audiences', to: '#', icon: UserGroupIcon, current: location.pathname === '/audiences' },
   ]
   
   const secondaryNavigation = [
-    { name: 'Settings', href: '/settings', new: false, icon: CogIcon, current: location.pathname === '/settings'  },
-    { name: 'Documentation', href: 'https://multiwoven.readme.io/reference/getting-started-with-your-api', new: true, icon: BookOpenIcon, current: false  },
-    { name: 'Privacy', href: '#', new: false, icon: ShieldCheckIcon, current: location.pathname === '/privacy'  },
+    { name: 'Settings', to: '/settings', new: false, icon: CogIcon, current: location.pathname === '/settings'  },
+    { name: 'Documentation', to: 'https://multiwoven.readme.io/reference/getting-started-with-your-api', new: true, icon: BookOpenIcon, current: false  },
+    { name: 'Privacy', to: '#', new: false, icon: ShieldCheckIcon, current: location.pathname === '/privacy'  },
   ]
   
   const userNavigation = [
-    { name: 'Your profile', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your profile', to: '#' },
+    { name: 'Sign out', to: '#' },
   ]
   
   function classNames(...classes :any) {
@@ -109,9 +109,9 @@ export const Layout =()=> {
                   >
                     <div className="space-y-1 px-2">
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          to={item.to}
                           className={classNames(
                             item.current
                               ? 'bg-orange-800 text-white'
@@ -122,15 +122,15 @@ export const Layout =()=> {
                         >
                           <item.icon className="mr-4 h-6 w-6 flex-shrink-0 text-orange-200" aria-hidden="true" />
                           {item.name}
-                        </a>
+                       </Link>
                       ))}
                     </div>
                     <div className="mt-6 pt-6">
                       <div className="space-y-1 px-2">
                         {secondaryNavigation.map((item) => (
-                          <a
+                          <Link
                             key={item.name}
-                            href={item.href}
+                            to={item.to}
                             target={item.new ? "_blank" : "_self"}
                             rel={item.new ? "noopener noreferrer" : ""}
                             className={classNames(
@@ -142,7 +142,7 @@ export const Layout =()=> {
                           >
                             <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
                             {item.name}
-                          </a>
+                         </Link>
                         ))}
                       </div>
                     </div>
@@ -170,9 +170,9 @@ export const Layout =()=> {
             <nav className="mt-5 flex flex-1 flex-col divide-y divide-orange-600 overflow-y-auto" aria-label="Sidebar">
               <div className="space-y-1 px-2">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     className={classNames(
                       item.current ? 'bg-orange-800 text-white' : 'text-orange-100 hover:bg-orange-800 hover:text-white',
                       'group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6'
@@ -181,15 +181,15 @@ export const Layout =()=> {
                   >
                     <item.icon className="mr-4 h-6 w-6 flex-shrink-0 text-orange-200" aria-hidden="true" />
                     {item.name}
-                  </a>
+                 </Link>
                 ))}
               </div>
               <div className="mt-6 pt-6">
                 <div className="space-y-1 px-2">
                 {secondaryNavigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     target={item.new ? "_blank" : "_self"}
                     rel={item.new ? "noopener noreferrer" : ""}
                     className={classNames(
@@ -201,7 +201,7 @@ export const Layout =()=> {
                   >
                     <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
                     {item.name}
-                  </a>
+                 </Link>
                 ))}
                 </div>
               </div>
@@ -274,15 +274,15 @@ export const Layout =()=> {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.to}
                               className={classNames(
                                 active ? 'bg-gray-50' : '',
                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
                               )}
                             >
                               {item.name}
-                            </a>
+                           </Link>
                           )}
                         </Menu.Item>
                       ))}
