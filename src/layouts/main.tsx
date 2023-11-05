@@ -33,9 +33,9 @@ export const Layout =()=> {
   ]
   
   const secondaryNavigation = [
-    { name: 'Settings', href: '#', icon: CogIcon },
-    { name: 'Documentation', href: '#', icon: BookOpenIcon },
-    { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
+    { name: 'Settings', href: '/settings', new: false, icon: CogIcon, current: location.pathname === '/settings'  },
+    { name: 'Documentation', href: 'https://multiwoven.readme.io/reference/getting-started-with-your-api', new: true, icon: BookOpenIcon, current: false  },
+    { name: 'Privacy', href: '#', new: false, icon: ShieldCheckIcon, current: location.pathname === '/privacy'  },
   ]
   
   const userNavigation = [
@@ -131,7 +131,14 @@ export const Layout =()=> {
                           <a
                             key={item.name}
                             href={item.href}
-                            className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-orange-100 hover:bg-orange-800 hover:text-white"
+                            target={item.new ? "_blank" : "_self"}
+                            rel={item.new ? "noopener noreferrer" : ""}
+                            className={classNames(
+                              item.current
+                                ? 'bg-orange-800 text-white'
+                                : 'text-orange-100 hover:bg-orange-800 hover:text-white',
+                              'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                            )}
                           >
                             <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
                             {item.name}
@@ -179,16 +186,23 @@ export const Layout =()=> {
               </div>
               <div className="mt-6 pt-6">
                 <div className="space-y-1 px-2">
-                  {secondaryNavigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6 text-orange-100 hover:bg-orange-800 hover:text-white"
-                    >
-                      <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
-                      {item.name}
-                    </a>
-                  ))}
+                {secondaryNavigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target={item.new ? "_blank" : "_self"}
+                    rel={item.new ? "noopener noreferrer" : ""}
+                    className={classNames(
+                      item.current
+                        ? 'bg-orange-800 text-white'
+                        : 'text-orange-100 hover:bg-orange-800 hover:text-white',
+                      'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                    )}
+                  >
+                    <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
+                    {item.name}
+                  </a>
+                ))}
                 </div>
               </div>
             </nav>

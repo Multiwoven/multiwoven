@@ -13,6 +13,7 @@ import { DestinationConnect } from './components/destination/connect';
 import Dashboard from './components/Dashboard/Dashboard';
 import SourceSelector from './components/sources/new';
 import { SourceConnect } from './components/sources/connect';
+import { Settings } from './components/settings';
 
 export default function App() {
   return (
@@ -28,6 +29,8 @@ export default function App() {
           <Route path="/destinations" element={<Destination />} />
           <Route path="/destinations/new" element={<DestinationSelector />} />
           <Route path="/destinations/connect" element={<DestinationConnect />} />
+
+          <Route path="/settings" element={<Settings />} />
           {/* 
           <Route path="/sources/new" element={<AddSources />} />
           <Route path="/channels" element={<ChannelList />} /> */}
