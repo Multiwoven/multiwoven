@@ -1,10 +1,9 @@
-import { Fragment, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import Braze from '../../assets/images/braze.svg'
 import Klaviyo from '../../assets/images/klaviyo.svg'
 import CleverTap from '../../assets/images/clevertap.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Breadcrumb } from '../common/breadcrumb'
 
 export const Destination = () => {
@@ -13,19 +12,29 @@ export const Destination = () => {
         {
             name:"production-master",
             appname:"Braze",
-            icon:Braze   
+            icon:Braze,
+            uuid:"123"
         },
         {
             name:"staging-beta",
             appname:"Klaviyo",
-            icon:Klaviyo   
+            icon:Klaviyo,
+            uuid:"456" 
         },
         {
             name:"dev-sandbox",
             appname:"CleverTap",
-            icon:CleverTap
+            icon:CleverTap,
+            uuid:"789"
         }
     ]
+
+    const navigate = useNavigate();
+
+    
+    function handleDestinationOpen(uuid:string) {
+        navigate("/destinations/show/" + uuid)
+    }
 
     if (destinations) {
         return(
@@ -66,7 +75,7 @@ export const Destination = () => {
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {destinations.map((destination) => (
-                            <tr key={destination.name}>
+                            <tr key={destination.name} onClick={() => handleDestinationOpen(destination.uuid)} className='hover:bg-stone-100 cursor-pointer'>
                                 <td className="whitespace-nowrap px- py-5 text-sm text-gray-700 text-left">
                                     <p className='font-semibold'>{destination.name}</p>
                                 </td>
