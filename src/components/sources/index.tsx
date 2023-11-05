@@ -89,7 +89,7 @@ export const Sources = () => {
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
                                         {sources.map((source) => (
-                                        <tr key={source.name} onClick={() => handleOpenSource(source.uuid)} className='hover:bg-stone-100'>
+                                        <tr key={source.name} onClick={() => handleOpenSource(source.uuid)} className='hover:bg-stone-100 cursor-pointer'>
                                             <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                             <div className="flex items-center">
                                                 <div className="h-8 w-8 flex-shrink-0">
