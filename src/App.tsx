@@ -16,6 +16,7 @@ import { SourceConnect } from './components/sources/connect';
 import { Settings } from './components/settings';
 import { SourceShow } from './components/sources/show';
 import { DestinationShow } from './components/destination/show';
+import { Models } from './components/models';
 
 export default function App() {
   return (
@@ -33,6 +34,8 @@ export default function App() {
           <Route path="/destinations/new" element={<DestinationSelector />} />
           <Route path="/destinations/connect" element={<DestinationConnect />} />
           <Route path="/destinations/show/:id" element={<DestinationShow />} />
+
+          <Route path="/models" element={<Models />} />
 
           <Route path="/settings" element={<Settings />} />
           {/* 

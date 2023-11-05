@@ -27,7 +27,7 @@ export const Layout =()=> {
     { name: 'Dashboard', to: '/', icon: HomeIcon, current: location.pathname === '/' },
     { name: 'Sources', to: '/sources', icon: CircleStackIcon, current: location.pathname === '/sources' || location.pathname === '/sources/new' || location.pathname === '/sources/connect' },
     { name: 'Destinations', to: '/destinations', icon: TableCellsIcon, current: location.pathname === '/destinations' || location.pathname === '/destinations/new' || location.pathname === '/destinations/connect' },
-    { name: 'Models', to: '#', icon: ChartBarSquareIcon, current: location.pathname === '/models' },
+    { name: 'Models', to: '/models', icon: ChartBarSquareIcon, current: location.pathname === '/models' },
     { name: 'Syncs', to: '#', icon: ArrowPathIcon, current: location.pathname === '/syncs' },
     { name: 'Audiences', to: '#', icon: UserGroupIcon, current: location.pathname === '/audiences' },
   ]
