@@ -16,7 +16,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import MultiwovenLogoWhite from '../assets/images/multiwoven-logo-white.png'
+import MultiwovenLogo from '../assets/images/multiwoven-logo.png'
 import { useLocation } from 'react-router-dom';
 
 export const Layout =()=> {
@@ -34,7 +34,7 @@ export const Layout =()=> {
   
   const secondaryNavigation = [
     { name: 'Settings', to: '/settings', new: false, icon: CogIcon, current: location.pathname === '/settings'  },
-    { name: 'Documentation', to: 'https://multiwoven.readme.io/reference/getting-started-with-your-api', new: true, icon: BookOpenIcon, current: false  },
+    { name: 'Documentation', to: 'https://www.docs.blue.com/', new: true, icon: BookOpenIcon, current: false  },
     { name: 'Privacy', to: '#', new: false, icon: ShieldCheckIcon, current: location.pathname === '/privacy'  },
   ]
   
@@ -51,7 +51,7 @@ export const Layout =()=> {
     <>
       <div className='flex-1 bg-white'>
       <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
+          <Dialog as="div" className="relative z-40 lg:hidden border-r-2" onClose={setSidebarOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -74,7 +74,7 @@ export const Layout =()=> {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-orange-900 pb-4 pt-5">
+                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-white pb-4 pt-5">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -92,19 +92,19 @@ export const Layout =()=> {
                       >
                         <span className="absolute -inset-0.5" />
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                        <XMarkIcon className="h-6 w-6 text-blue-900" aria-hidden="true" />
                       </button>
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
                     <img
                       className="h-7 w-auto mx-auto"
-                      src={MultiwovenLogoWhite}
+                      src={MultiwovenLogo}
                       alt="Multiwoven logo"
                     />
                   </div>
                   <nav
-                    className="mt-5 h-full flex-shrink-0 divide-y divide-orange-800 overflow-y-auto"
+                    className="mt-5 h-full flex-shrink-0 divide-y divide-gray-800 overflow-y-auto"
                     aria-label="Sidebar"
                   >
                     <div className="space-y-1 px-2">
@@ -114,13 +114,13 @@ export const Layout =()=> {
                           to={item.to}
                           className={classNames(
                             item.current
-                              ? 'bg-orange-800 text-white'
-                              : 'text-orange-100 hover:bg-orange-800 hover:text-white',
+                              ? 'bg-blue-100 text-blue-900'
+                              : 'text-gray-600 hover:bg-blue-100 hover:text-blue-900',
                             'group flex items-center rounded-md px-2 py-2 text-base font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >
-                          <item.icon className="mr-4 h-6 w-6 flex-shrink-0 text-orange-200" aria-hidden="true" />
+                          <item.icon className="mr-4 h-6 w-6 flex-shrink-0" aria-hidden="true" />
                           {item.name}
                        </Link>
                       ))}
@@ -135,12 +135,12 @@ export const Layout =()=> {
                             rel={item.new ? "noopener noreferrer" : ""}
                             className={classNames(
                               item.current
-                                ? 'bg-orange-800 text-white'
-                                : 'text-orange-100 hover:bg-orange-800 hover:text-white',
+                                ? 'bg-blue-100 text-blue-900'
+                                : 'text-gray-600 hover:bg-blue-100 hover:text-blue-900',
                               'group flex items-center rounded-md px-2 py-2 text-base font-medium'
                             )}
                           >
-                            <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
+                            <item.icon className="mr-4 h-6 w-6" aria-hidden="true" />
                             {item.name}
                          </Link>
                         ))}
@@ -157,33 +157,34 @@ export const Layout =()=> {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col border-r">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex flex-grow flex-col overflow-y-auto bg-orange-900 pb-4 pt-5">
+          <div className="flex flex-grow flex-col overflow-y-auto bg-white pb-4 pt-5">
             <div className="flex flex-shrink-0 items-center px-4">
               <img
                 className="h-7 w-auto mx-auto"
-                src={MultiwovenLogoWhite}
+                src={MultiwovenLogo}
                 alt="Multiwoven logo"
               />
             </div>
-            <nav className="mt-5 flex flex-1 flex-col divide-y divide-orange-600 overflow-y-auto" aria-label="Sidebar">
+            <nav className="mt-5 flex flex-1 flex-col overflow-y-auto" aria-label="Sidebar">
               <div className="space-y-1 px-2">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     to={item.to}
                     className={classNames(
-                      item.current ? 'bg-orange-800 text-white' : 'text-orange-100 hover:bg-orange-800 hover:text-white',
-                      'group flex items-center rounded-md px-2 py-2 text-sm font-medium leading-6'
+                      item.current ? 'bg-blue-100 text-blue-900' : 'text-gray-600 hover:bg-blue-100 hover:text-blue-900',
+                      'group flex items-center rounded-md px-2 py-2 text-base font-medium leading-6 mb-2'
                     )}
                     aria-current={item.current ? 'page' : undefined}
                   >
-                    <item.icon className="mr-4 h-6 w-6 flex-shrink-0 text-orange-200" aria-hidden="true" />
+                    <item.icon className="mr-4 h-6 w-6 flex-shrink-0" aria-hidden="true" />
                     {item.name}
                  </Link>
                 ))}
               </div>
+              
               <div className="mt-6 pt-6">
                 <div className="space-y-1 px-2">
                 {secondaryNavigation.map((item) => (
@@ -194,12 +195,12 @@ export const Layout =()=> {
                     rel={item.new ? "noopener noreferrer" : ""}
                     className={classNames(
                       item.current
-                        ? 'bg-orange-800 text-white'
-                        : 'text-orange-100 hover:bg-orange-800 hover:text-white',
-                      'group flex items-center rounded-md px-2 py-2 text-base font-medium'
+                        ? 'bg-blue-100 text-blue-900'
+                        : 'text-gray-600 hover:bg-blue-100 hover:text-blue-900',
+                      'group flex items-center rounded-md px-2 py-2 text-base font-medium mb-2'
                     )}
                   >
-                    <item.icon className="mr-4 h-6 w-6 text-orange-200" aria-hidden="true" />
+                    <item.icon className="mr-4 h-6 w-6" aria-hidden="true" />
                     {item.name}
                  </Link>
                 ))}
@@ -211,7 +212,7 @@ export const Layout =()=> {
 
         <div className="lg:pl-72">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
+            <button type="button" className="-m-2.5 p-2.5 lg:hidden" onClick={() => setSidebarOpen(true)}>
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
@@ -256,7 +257,7 @@ export const Layout =()=> {
                     />
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        Tom Cook
+                        John Doe
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>

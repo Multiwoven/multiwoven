@@ -66,9 +66,7 @@ export const DestinationShow = () => {
                         <div className="mt-2 flex items-center text-sm font-medium text-gray-800">
                             Last Updated: 11/03/23
                         </div>
-                        <div className="mt-2 flex items-center text-sm font-medium text-gray-800">
-                            Slug: {source?.uuid}
-                        </div>
+
                     </div>
                 </div>
                 <div>

@@ -6,7 +6,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Breadcrumb } from '../common/breadcrumb'
 
 export const Models = () => {
-
     const models = [
         {
             model_name: 'Contacts',
@@ -88,7 +87,8 @@ export const Models = () => {
                         type="button"
                         className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
-                        Add Model
+                            <PlusIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+                            Model
                         </button>
                         </Link>
                     </div>
@@ -99,25 +99,25 @@ export const Models = () => {
                     <table className="min-w-full divide-y divide-gray-300">
                         <thead>
                             <tr>
-                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold uppercase text-gray-900 sm:pl-0">
+                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                                     Name
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
+                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900">
                                     Type
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
+                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900">
                                     Last Updated
                                 </th>
-                                <th scope="col" className="px-1 w-1/5 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
-                                    Tags
+                                <th scope="col" className="px-1 w-1/5 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                    Status
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {models.map((model) => (
-                            <tr key={model.model_name} onClick={() => handleModelOpen(model.uuid)} className='hover:bg-stone-100 cursor-pointer'>
-                                <td className="whitespace-nowrap px- py-5 text-sm text-gray-700 text-left">
-                                    <p className='font-medium'>{model.model_name}</p>
+                            <tr key={model.model_name} onClick={() => handleModelOpen(model.uuid)} className='cursor-pointer'>
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                    {model.model_name}
                                 </td>
                                 <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                     <div className="flex items-center">
@@ -130,7 +130,7 @@ export const Models = () => {
                                     </div>
                                 </td>
                                 <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-left">
-                                    <p className='font-semibold'>11/03/23</p>
+                                    11/03/23
                                 </td>
                                     <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-left">
                                         {model.tags.map((tag) => (

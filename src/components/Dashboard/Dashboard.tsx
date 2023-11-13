@@ -1,33 +1,24 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
-  Bars3CenterLeftIcon,
-  BellIcon,
-  ClockIcon,
-  CogIcon,
-  CreditCardIcon,
-  DocumentChartBarIcon,
-  HomeIcon,
-  QuestionMarkCircleIcon,
-  ScaleIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  XMarkIcon,
+  BarsArrowDownIcon,
+  ArrowPathIcon,
+  ArrowsRightLeftIcon,
 } from '@heroicons/react/24/outline'
+
 import {
   BanknotesIcon,
   BuildingOfficeIcon,
   CheckCircleIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
-  MagnifyingGlassIcon,
 } from '@heroicons/react/20/solid'
+import { LineChart } from './chart'
 
 
 const cards = [
-  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
+  { name: 'Connections', href: '#', icon: ArrowsRightLeftIcon, amount: '5' },
+  { name: 'Syncs', href: '#', icon: ArrowPathIcon, amount: '23' },
+  { name: 'Rows Processed', href: '#', icon: BarsArrowDownIcon, amount: '2M' },
   // More items...
 ]
 const transactions = [
@@ -55,15 +46,47 @@ function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
 }
 
+const activities = [
+  {
+    date: '2023-11-01 14:30:00',
+    member: 'John Doe',
+    action: 'Created Model',
+    resourceName: 'Contacts',
+    resourceType: 'Snowflake',
+  },
+  {
+    date: '2023-10-29 09:45:00',
+    member: 'John Doe',
+    action: 'Updated Source',
+    resourceName: 'Redshift',
+    resourceType: 'Amazon Redshift',
+  },
+  {
+    date: '2023-10-28 16:15:00',
+    member: 'Bob Johnson',
+    action: 'Deleted Destination',
+    resourceName: 'Braze',
+    resourceType: 'Braze',
+  },
+  {
+    date: '2023-10-27 11:20:00',
+    member: 'Eva Wilson',
+    action: 'Created Model',
+    resourceName: 'Locations',
+    resourceType: 'Snowflake',
+  },
+  {
+    date: '2023-10-25 14:00:00',
+    member: 'John Doe',
+    action: 'Created Source',
+    resourceName: 'Contacts',
+    resourceType: 'Snowflake',
+  },
+];
+
+
 
 const Dashboard: React.FC = () => {
-  const stats = [
-    { name: 'Number of Connections', value: '3' },
-    { name: 'Average sync time', value: '30.85', unit:'secs'},
-    { name: 'Number of Syncs', value: '405' },
-    { name: 'Success rate', value: '98.5%' },
-  ]
-  
   return (
     <>
       <main className="flex-1 pb-8 bg-gray-100 border-b border-r border-l border-t">
@@ -76,18 +99,18 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center">
                       <img
                         className="hidden h-16 w-16 rounded-full sm:block"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         alt=""
                       />
                       <div>
                         <div className="flex items-center">
                           <img
                             className="h-16 w-16 rounded-full sm:hidden"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                             alt=""
                           />
                           <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                            Good morning, Emilia Birch
+                            Good morning, John Doe
                           </h1>
                         </div>
                         <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
@@ -97,7 +120,7 @@ const Dashboard: React.FC = () => {
                               className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                               aria-hidden="true"
                             />
-                            Duke street studio
+                            Workspace
                           </dd>
                           <dt className="sr-only">Account status</dt>
                           <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
@@ -105,7 +128,7 @@ const Dashboard: React.FC = () => {
                               className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
                               aria-hidden="true"
                             />
-                            Verified account
+                            Workspace Admin
                           </dd>
                         </dl>
                       </div>
@@ -129,9 +152,9 @@ const Dashboard: React.FC = () => {
                           </div>
                           <div className="ml-5 w-0 flex-1">
                             <dl>
-                              <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
+                              <dt className="text-sm font-medium leading-6 truncate text-gray-500">{card.name}</dt>
                               <dd>
-                                <div className="text-lg font-medium text-gray-900">{card.amount}</div>
+                                <div className="text-4xl font-semibold tracking-tight text-gray-800">{card.amount}</div>
                               </dd>
                             </dl>
                           </div>
@@ -149,6 +172,10 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
+              <div className="mx-auto mt-8 px-4 sm:px-6 lg:px-8 w-fit lg:w-full">
+              <h2 className="text-lg font-medium leading-6 text-gray-900 mb-2">Rows Processed</h2>
+                <LineChart />
+              </div>
               <h2 className="mx-auto mt-8 px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">
                 Recent activity
               </h2>
@@ -198,79 +225,36 @@ const Dashboard: React.FC = () => {
                   </div>
                 </nav>
               </div>
-
               {/* Activity table (small breakpoint and up) */}
               <div className="hidden sm:block">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="mt-2 flex flex-col">
                     <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
+                      {/* Pagination */}
+                      <div className="bg-white shadow-md rounded-md overflow-hidden">
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead>
-                          <tr>
-                            <th
-                              className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
-                              scope="col"
-                            >
-                              Transaction
-                            </th>
-                            <th
-                              className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                              scope="col"
-                            >
-                              Amount
-                            </th>
-                            <th
-                              className="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
-                              scope="col"
-                            >
-                              Status
-                            </th>
-                            <th
-                              className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                              scope="col"
-                            >
-                              Date
-                            </th>
+                          <tr className="bg-gray-100 text-gray-600">
+                            <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900">Date</th>
+                            <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900">Workspace Member</th>
+                            <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900">Action</th>
+                            <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900">Resource Name</th>
+                            <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900">Resource Type</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          {transactions.map((transaction) => (
-                            <tr key={transaction.id} className="bg-white">
-                              <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                                <div className="flex">
-                                  <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
-                                    <BanknotesIcon
-                                      className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                      aria-hidden="true"
-                                    />
-                                    <p className="truncate text-gray-500 group-hover:text-gray-900">
-                                      {transaction.name}
-                                    </p>
-                                  </a>
-                                </div>
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                <span className="font-medium text-gray-900">{transaction.amount}</span>
-                                {transaction.currency}
-                              </td>
-                              <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
-                                <span
-                                  className={classNames(
-                                    statusStyles[transaction.status],
-                                    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize'
-                                  )}
-                                >
-                                  {transaction.status}
-                                </span>
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                <time dateTime={transaction.datetime}>{transaction.date}</time>
-                              </td>
+                          {activities.map((activity, index) => (
+                            <tr key={index} className='bg-white'>
+                              <td className="whitespace-nowrap px-6 py-4 text-left text-sm text-gray-500">{activity.date}</td>
+                              <td className="font-medium text-gray-900 px-6 py-4 text-sm">{activity.member}</td>
+                              <td className="font-medium text-gray-900 px-6 py-4 text-sm">{activity.action}</td>
+                              <td className="font-medium text-gray-900 px-6 py-4 text-sm">{activity.resourceName}</td>
+                              <td className="font-medium text-gray-900 px-6 py-4 text-sm">{activity.resourceType}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
-                      {/* Pagination */}
+                    </div>
                       <nav
                         className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
                         aria-label="Pagination"
@@ -301,7 +285,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-          </main>
+      </main>
     </>
   );
 };

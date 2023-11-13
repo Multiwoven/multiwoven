@@ -17,6 +17,10 @@ import { Settings } from './components/settings';
 import { SourceShow } from './components/sources/show';
 import { DestinationShow } from './components/destination/show';
 import { Models } from './components/models';
+import { ModelShow } from './components/models/show';
+import ModelSelector from './components/models/new';
+import ModelMethod from './components/models/method';
+import { ModelDefine } from './components/models/define';
 
 export default function App() {
   return (
@@ -36,6 +40,10 @@ export default function App() {
           <Route path="/destinations/show/:id" element={<DestinationShow />} />
 
           <Route path="/models" element={<Models />} />
+          <Route path="/models/new" element={<ModelSelector />} />
+          <Route path="/models/new/:id/method" element={<ModelMethod />} />
+          <Route path="/models/new/:id/define" element={<ModelDefine />} />
+          <Route path="/models/show/:id" element={<ModelShow />} />
 
           <Route path="/settings" element={<Settings />} />
           {/* 

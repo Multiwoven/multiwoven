@@ -48,7 +48,8 @@ export const Destination = () => {
                         type="button"
                         className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
-                        New Destination
+                            <PlusIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+                            Destination
                         </button>
                         </Link>
                     </div>
@@ -59,25 +60,25 @@ export const Destination = () => {
                     <table className="min-w-full divide-y divide-gray-300">
                         <thead>
                             <tr>
-                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold uppercase text-gray-900 sm:pl-0">
+                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                                     Name
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                     Type
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold uppercase text-gray-900">
+                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                                     Last Updated
                                 </th>
-                                <th scope="col" className="px-1 py-3.5 text-right text-sm font-semibold uppercase text-gray-900">
+                                <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900">
                                     Status
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {destinations.map((destination) => (
-                            <tr key={destination.name} onClick={() => handleDestinationOpen(destination.uuid)} className='hover:bg-stone-100 cursor-pointer'>
-                                <td className="whitespace-nowrap px- py-5 text-sm text-gray-700 text-left">
-                                    <p className='font-semibold'>{destination.name}</p>
+                            <tr key={destination.name} onClick={() => handleDestinationOpen(destination.uuid)} className='cursor-pointer'>
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                                    {destination.name}
                                 </td>
                                 <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                                     <div className="flex items-center">
@@ -89,8 +90,8 @@ export const Destination = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-left">
-                                    <p className='font-semibold'>11/03/23</p>
+                                <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500 text-left">
+                                    11/03/23
                                 </td>
                                 <td className="whitespace-nowrap px-1 py-5 text-sm text-gray-500 text-right">
                                     <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
@@ -135,7 +136,7 @@ export const Destination = () => {
                         className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                         <PlusIcon className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-                        New Destination
+                        Add Destination
                     </button>
                     </Link>
                 </div>
