@@ -36,11 +36,23 @@ module ControlPlane
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     # Autoload paths
-    config.autoload_paths += Dir[Rails.root.join('app', 'services')]
     config.autoload_paths += Dir[Rails.root.join('app', 'interactors')]
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    # email setup
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.delivery_method = :smtp
+    host = 'multiwoven.com'
+    config.action_mailer.default_url_options = { host: host }
+    config.x.mail_from = %("Multiwoven" <noreply@multiwoven.com>)
+    ActionMailer::Base.smtp_settings = {
+      :address => Rails.application.credentials.secrets.smtp_address,
+      :port => '587',
+      :authentication => :plain,
+      :user_name => Rails.application.credentials.secrets.smtp_username,
+      :password => Rails.application.credentials.secrets.smtp_password,
+    }
   end
 end

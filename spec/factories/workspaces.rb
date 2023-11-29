@@ -6,6 +6,9 @@ FactoryBot.define do
     slug { Faker::Beer.name }
     status { "active" }
     api_key { Faker::Config.random }
-    workspace_id { Faker::Config.random }
+
+    after(:create) do |workspace|
+      create(:workspace_user, workspace:, user: create(:user))
+    end
   end
 end

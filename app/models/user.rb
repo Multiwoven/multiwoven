@@ -28,6 +28,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
+  validates :email, presence: true
+  has_many :workspace_users, dependent: :nullify
+  has_many :workspaces, through: :workspace_users
+
   # This method checks whether the JWT token is revoked
   def self.jwt_revoked?(payload, user)
     user.jti != payload["jti"]

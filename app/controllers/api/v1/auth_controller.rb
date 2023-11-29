@@ -3,37 +3,33 @@
 module Api
   module V1
     class AuthController < ApplicationController
+      include Authentication
       before_action :authenticate_user!, only: [:logout]
 
       def login
-        service = AuthenticationService.new(params)
-        token = service.login
-
-        if token
-          render json: { token: }, status: :ok
+        result = Login.call(params:)
+        if result.success?
+          render json: { token: result.token }, status: :ok
         else
-          render json: { error: "Invalid email or password" }, status: :unauthorized
+          render json: { error: result.error }, status: :unauthorized
         end
       end
 
       def signup
-        result = AuthenticationService.new(params).signup
-
-        if result[:success]
-          render json: { message: result[:message] }, status: :created
+        result = Signup.call(params:)
+        if result.success?
+          render json: { message: result.message }, status: :created
         else
-          render json: { errors: result[:errors] }, status: :unprocessable_entity
+          render json: { errors: result.message }, status: :unprocessable_entity
         end
       end
 
       def logout
-        service = AuthenticationService.new(params)
-        result = service.logout(current_user)
-
-        if result[:success]
-          render json: { message: result[:message] }, status: :ok
+        result = Logout.call(current_user:)
+        if result.success?
+          render json: { message: result.message }, status: :ok
         else
-          render json: { error: result[:errors] }, status: :internal_server_error
+          render json: { error: result.message }, status: :internal_server_error
         end
       end
 

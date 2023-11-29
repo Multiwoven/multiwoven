@@ -34,6 +34,9 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "rspec-rails"
+  gem "rswag-api"
+  gem "rswag-specs"
+  gem "rswag-ui"
   gem "shoulda-matchers", "~> 5.0"
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

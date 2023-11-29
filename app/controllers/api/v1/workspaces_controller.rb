@@ -1,49 +1,47 @@
 # frozen_string_literal: true
 
+# app/controllers/api/v1/workspaces_controller.rb
 module Api
   module V1
     class WorkspacesController < ApplicationController
-      before_action :set_workspace, only: %i[show update destroy]
+      include Workspaces
 
-      # GET /workspaces
       def index
-        @workspaces = Workspace.all
+        result = ListAll.call(user: current_user)
+        @workspaces = result.workspaces
       end
 
-      # GET /workspaces/:id
-      def show; end
-
-      # POST /workspaces
       def create
-        @workspace = Workspace.new(workspace_params)
-
-        if @workspace.save
+        result = Create.call(user: current_user, workspace_params:)
+        if result.success?
+          @workspace = result.workspace
           render :show, status: :created
         else
-          render json: { errors: @workspace.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_entity
         end
       end
 
-      # PATCH/PUT /workspaces/:id
       def update
-        if @workspace.update(workspace_params)
+        result = Update.call(id: params[:id], user: current_user, workspace_params:)
+        if result.success?
+          @workspace = result.workspace
           render :show, status: :ok
         else
-          render json: { errors: @workspace.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_entity
         end
       end
 
-      # DELETE /workspaces/:id
       def destroy
-        @workspace.destroy!
-        head :no_content
+        result = Workspaces::Delete.call(id: params[:id], user: current_user)
+
+        if result.success?
+          head :no_content
+        else
+          render json: { errors: result.errors }, status: :unprocessable_entity
+        end
       end
 
       private
-
-      def set_workspace
-        @workspace = Workspace.find(params[:id])
-      end
 
       def workspace_params
         params.require(:workspace).permit(:name)

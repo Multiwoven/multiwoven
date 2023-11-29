@@ -10,7 +10,6 @@ RSpec.describe Workspace, type: :model do
     it { should validate_uniqueness_of(:name) }
     it { should validate_presence_of(:slug) }
     it { should validate_uniqueness_of(:slug) }
-    it { should validate_uniqueness_of(:workspace_id) }
     it { should validate_inclusion_of(:status).in_array(%w[active inactive pending]) }
   end
 
@@ -26,7 +25,6 @@ RSpec.describe Workspace, type: :model do
       workspace = described_class.new(name: "Example Workspace")
       workspace.valid?
       expect(workspace.slug).to be_present
-      expect(workspace.workspace_id).to be_present
       expect(workspace.status).to eq("pending")
     end
 

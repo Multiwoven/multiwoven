@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_23_130412) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_01_034843) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -83,6 +83,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_130412) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "workspace_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "workspace_id"
+    t.string "role", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_workspace_users_on_user_id"
+    t.index ["workspace_id"], name: "index_workspace_users_on_workspace_id"
+  end
+
   create_table "workspaces", force: :cascade do |t|
     t.string "name"
     t.string "slug"
@@ -96,4 +106,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_130412) do
     t.index ["workspace_id"], name: "index_workspaces_on_workspace_id", unique: true
   end
 
+  add_foreign_key "workspace_users", "users"
+  add_foreign_key "workspace_users", "workspaces", on_delete: :nullify
 end

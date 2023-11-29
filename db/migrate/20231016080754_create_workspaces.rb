@@ -7,7 +7,6 @@ class CreateWorkspaces < ActiveRecord::Migration[7.1]
       t.string :slug
       t.string :status
       t.string :api_key
-      t.string :workspace_id
 
       t.timestamps
     end

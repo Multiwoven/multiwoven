@@ -1796,6 +1796,9 @@ DEPENDENCIES
   redis (~> 4.0)
   rspec-rails
   rswag
+  rswag-api
+  rswag-specs
+  rswag-ui
   rubocop
   rubocop-performance
   rubocop-rails
