@@ -1,9 +1,7 @@
 # Makefile for multiwoven-core monorepo management
 
 # Declare variables for the subtrees
-CONTROL_PLANE_REPO = git@github.com:Multiwoven/control-plane.git
-DATA_PLANE_REPO = git@github.com:Multiwoven/data-plane.git
-FRONTEND_UI_REPO = git@github.com:Multiwoven/frontend-ui.git
+MULTIWOVEN_SERVER = git@github.com:Multiwoven/multiwoven-server.git
 
 # Compose files
 DEV_COMPOSE_FILE = docker-compose-dev.yml
@@ -11,9 +9,7 @@ PROD_COMPOSE_FILE = docker-compose.yml
 
 # Initialize all subtrees (to be run once when setting up the repo)
 init:
-	git subtree add --prefix=control-plane $(CONTROL_PLANE_REPO) main --squash
-	git subtree add --prefix=data-plane $(DATA_PLANE_REPO) main --squash
-	git subtree add --prefix=frontend-ui $(FRONTEND_UI_REPO) main --squash
+	git subtree add --prefix=control-plane $(MULTIWOVEN_SERVER) main --squash
 
 # Initialize subtrees for development
 dev-init: init
@@ -23,15 +19,11 @@ prod-init: init
 
 # Update all subtrees from their respective remotes
 update:
-	git subtree pull --prefix=control-plane $(CONTROL_PLANE_REPO) main --squash
-	git subtree pull --prefix=data-plane $(DATA_PLANE_REPO) main --squash
-	git subtree pull --prefix=frontend-ui $(FRONTEND_UI_REPO) main --squash
+	git subtree pull --prefix=control-plane $(MULTIWOVEN_SERVER) main --squash
 
 # Push changes to all subtrees to their respective remotes
 push:
-	git subtree push --prefix=control-plane $(CONTROL_PLANE_REPO) main
-	git subtree push --prefix=data-plane $(DATA_PLANE_REPO) main
-	git subtree push --prefix=frontend-ui $(FRONTEND_UI_REPO) main
+	git subtree push --prefix=control-plane $(MULTIWOVEN_SERVER) main
 
 # Start local development environment
 dev-up:
