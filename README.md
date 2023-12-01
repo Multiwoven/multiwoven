@@ -1,12 +1,8 @@
-# ControlPlane
-
-[![Rails CI](https://github.com/Multiwoven/control-plane/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/control-plane/actions/workflows/ci.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5d2521efe20af922cdda/maintainability)](https://codeclimate.com/repos/6533b99263f9fc1066cba954/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/5d2521efe20af922cdda/test_coverage)](https://codeclimate.com/repos/6533b99263f9fc1066cba954/test_coverage)
+# MultiwovenServer
 
 ## Introduction
 
-Welcome to the Control-Plane! This is a centralized management layer designed to facilitate seamless interactions between multiple services. Built with Rails 7, Control-Plane aims to serve as the orchestrator for various microservices, manage stateful databases, and handle other business logic & operations.
+Welcome to the "multiwoven-server" repository!  This repository is developed using Rails 7, positioning itself as a central orchestrator. It is responsible for managing databases that require consistent state, as well as overseeing various business logic and operational tasks.
 
 ### Technology Stack 
 - **Backend** : Rails 7 
@@ -21,21 +17,21 @@ Welcome to the Control-Plane! This is a centralized management layer designed to
 
 ### Get the Code
 
-Firstly, clone the `ControlPlane` repository onto your local machine using the following command:
+Firstly, clone the `MultiwovenServer` repository onto your local machine using the following command:
 
 ```bash
-git clone git@github.com:Multiwoven/control-plane.git
+git clone git@github.com:Multiwoven/multiwoven-server.git
 ```
 
 After the repository is cloned, navigate to its root directory:
 
 ```bash
-cd control-plane/
+cd multiwoven-server/
 ```
 
 ### Environment Variables Setup 
  
-1. Create a new file named `.env` under control-plane/ directory.
+1. Create a new file named `.env` under multiwoven-server/ directory.
 
 On Unix/Linux systems, you can run:
 
