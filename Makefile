@@ -1,29 +1,32 @@
-# Makefile for multiwoven-core monorepo management
+# Makefile for multiwoven-core monorepo management using Git submodules
 
-# Declare variables for the subtrees
-MULTIWOVEN_SERVER = git@github.com:Multiwoven/multiwoven-server.git
+# Declare variables for the submodules
+MULTIWOVEN_SERVER_REPO = git@github.com:Multiwoven/multiwoven-server.git
+# MULTIWOVEN_UI_REPO = git@github.com:Multiwoven/multiwoven-ui.git
 
 # Compose files
 DEV_COMPOSE_FILE = docker-compose-dev.yml
 PROD_COMPOSE_FILE = docker-compose.yml
 
-# Initialize all subtrees (to be run once when setting up the repo)
+# Initialize all submodules (to be run once when setting up the repo)
 init:
-	git subtree add --prefix=control-plane $(MULTIWOVEN_SERVER) main --squash
+	git submodule add $(MULTIWOVEN_SERVER_REPO) server
+	git submodule init
+	git submodule update
 
-# Initialize subtrees for development
+# Initialize submodules for development
 dev-init: init
 
-# Initialize subtrees for production
+# Initialize submodules for production
 prod-init: init
 
-# Update all subtrees from their respective remotes
+# Update all submodules from their respective remotes
 update:
-	git subtree pull --prefix=control-plane $(MULTIWOVEN_SERVER) main --squash
+	git submodule update --remote
 
-# Push changes to all subtrees to their respective remotes
+# Push changes to the main repository
 push:
-	git subtree push --prefix=control-plane $(MULTIWOVEN_SERVER) main
+	git push origin main
 
 # Start local development environment
 dev-up:
