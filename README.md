@@ -4,28 +4,6 @@
 
 Welcome to the `MultiwovenCore` repository. This repository serves as a monorepo, housing all the essential components for seamless integration between data warehouses and customer engagement platforms.
 
-## Architecture
-
-```plaintext
-                 +--------------+
-                 |  Frontend UI |
-                 |    (React)   |
-                 +-------+------+
-                         |
-                         | HTTP/REST
-                         |
-                 +-------v------+
-                 | Control Plane|
-                 |    (Rails)   |
-                 +-------+------+
-                         |
-                         | API Calls
-                         |
-                 +-------v------+
-                 |  Data Plane  |
-                 |   (Golang)   |
-                 +--------------+
-```
 
 ### Core Components 
 
