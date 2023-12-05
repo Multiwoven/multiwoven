@@ -19,7 +19,7 @@ test:
 
 production:
   <<: *default
-  host: <%= ENV['DB_HOST'] %> # Here you can use environment variables like RDS_HOSTNAME for AWS RDS
-  username: <%= ENV['DB_USERNAME'] %> # RDS_USERNAME
-  password: <%= ENV['DB_PASSWORD'] %> # RDS_PASSWORD
+  host: <%= ENV['DB_HOST'] %> 
+  username: <%= ENV['DB_USERNAME'] %> 
+  password: <%= ENV['DB_PASSWORD'] %>
   database: control_plane_production

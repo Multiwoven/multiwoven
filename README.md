@@ -1,4 +1,4 @@
-# MultiwovenServer
+# Multiwoven Server
 
 ## Introduction
 
@@ -40,7 +40,6 @@ touch .env
 ```
 
 ```env
-RAILS_MASTER_KEY=your_secret_key_here
 DB_HOST=your_postgres_host
 DB_USERNAME=your_postgres_username
 DB_PASSWORD=your_postgres_password
