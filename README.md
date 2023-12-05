@@ -1,132 +1,39 @@
-# MultiwovenCore
+Multiwoven is an **open-source, no-code platform** tailored for the easy creation and deployment of **reverse ETL pipelines**. 
 
-## Introduction
+Requiring minimal engineering effort, its intuitive interface simplifies building complex data pipelines. The platform seamlessly connects to popular data warehouses, including **Redshift, Snowflake, Databricks, and Google BigQuery**. Multiwoven also facilitates the crafting of data models and enables efficient synchronization of data to various destinations. Key integrations include **Facebook Ads**, CRM systems such as **Salesforce**, email marketing tools like **Braze and Klaviyo**, and analytics services including **Adobe Analytics**, making data activation accessible for every business.
 
-Welcome to the `MultiwovenCore` repository. This repository serves as a monorepo, housing all the essential components for seamless integration between data warehouses and customer engagement platforms.
+<img alt="Screenshot 2023-12-06 at 12 50 14 AM" src="https://github.com/Multiwoven/multiwoven/assets/1298480/8ed5e37e-cba4-4b74-9f70-9c2bbbc11524">
 
+## ✨ Features of Multiwoven
+- **Sources**
+Efficiently connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction and management.
 
-### Core Components 
+- **Destinations**
+Deploy data to over 100+ different platforms. With seamless integrations to tools like Braze, Klaviyo, Facebook Ads, Salesforce, and more, Multiwoven ensures your data reaches its intended destination effectively.
 
-1. **Control Plane** : Developed in Rails 7, responsible for managing configurations, user access, and orchestration. [Visit control-plane repo here](https://github.com/Multiwoven/control-plane) 
+- **Models**
+Craft powerful data models using SQL, visual builders, or DBT. Multiwoven's flexible modeling options allow for precise and customized data handling, suitable for any business need.
 
-2. **Data Plane** : Developed in Golang, handles data processing and interactions with data warehouses. 
+- **Syncs**
+Schedule and monitor your data pipelines with ease. Multiwoven's syncing features enable you to streamline the flow of data from sources to various destinations, ensuring timely and accurate data delivery.
 
-3. **Frontend UI** : Developed in React, serves as the user interface. [Visit frontend-ui repo here](https://github.com/Multiwoven/frontend-ui)
+<p>⭐ Consider giving us a star on GitHub! Your support helps us continue innovating and adding new, exciting features.</p>
 
-## Directory Structure
+<hr>
 
-```plaintext
-multiwoven-core/
-├── Makefile                 # Makefile
-├── control-plane/           # Rails 7 API-only service
-├── data-plane/              # Golang service
-├── frontend-ui/             # React service
-├── shared/                  # Shared code or utilities
-│   ├── scripts/             # DevOps and utility scripts
-│   └── docs/                # Documentation
-└── docker-compose-dev.yml   # Docker Compose for local development
-└── docker-compose.yml       # Docker Compose for production
-```
+## 🚀 Getting Started
 
-## Development Setup
+- **Deploy Multiwoven:**  
+  Set up the Multiwoven platform to begin centralizing and activating your data. Choose between a self-hosted option or our managed cloud service. [Placeholder for link]
 
-### 1. Clone the Repository
+- **Create Data Pipelines:**  
+  Easily create data connectors and pipelines with our intuitive no-code interface. Connect to a variety of data warehouses and destinations in minutes. [Placeholder for link]
 
-```bash
-git clone git@github.com:Multiwoven/multiwoven-core.git
-```
+- **Explore Use Cases:**  
+  Dive into our tutorials to explore common use cases and discover how Multiwoven can transform your data activation processes. [Placeholder for tutorials link]
 
+- **Data Transformation:**  
+  Effortlessly transform your data using SQL or dbt within Multiwoven, making it ready for actionable insights and operations.[Placeholder for link]
 
-### 2. Navigate to the Project Directory
-
-```bash
-cd multiwoven-core
-```
-
-
-### 3. Initialize Subtrees and Dependencies
-
-Fetch all the sub-projects as git subtrees and build necessary dependencies.
-
-```bash
-make dev-init
-```
-
-### 4. Start the Services
-
-Start all services in development mode.
-
-```bash
-make dev-up
-```
-
-**(Optional) View Logs for Development Services**
-
-```bash
-make dev-logs
-```
-
-
-### Verify Your Development Setup
-
-To confirm that the services are running as expected: 
-- **Control Plane** : Open `http://localhost:3000` in your web browser. 
-- **Data Plane** : Open `http://localhost:4000` in your web browser. 
-- **Frontend UI** : Open `http://localhost:8080` in your web browser.
-
-## Production Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone git@github.com:Multiwoven/multiwoven-core.git
-```
-
-
-### 2. Navigate to the Project Directory
-
-```bash
-cd multiwoven-core
-```
-
-
-### 3. Initialize Subtrees and Dependencies
-
-Fetch all the sub-projects as git subtrees and build necessary dependencies.
-
-```bash
-make prod-init
-```
-
-### 4. Start the Services
-
-Start all services in production mode.
-
-```bash
-make prod-up
-```
-
-**(Optional) View Logs for Production Services**
-
-```bash
-make prod-logs
-```
-
-### Verify Your Production Setup
-
-To confirm that the services are running as expected, navigate to their respective Production URLs. 
-- **Control Plane** : Production URL 
-- **Data Plane** : Production URL 
-- **Frontend UI** : Production URL
-
-### Makefile Commands
-
-Below are common `make` commands you might need: 
-- `make dev-init`: Initializes development environment. 
-- `make prod-init`: Initializes production environment. 
-- `make dev-up`: Starts all services in development mode. 
-- `make prod-up`: Starts all services in production mode. 
-- `make dev-down`: Stops all services in development mode. 
-- `make prod-down`: Stops all services in production mode.
-- `make dev-logs`: View logs from all containers in the dev environment. 
-- `make prod-logs`: View logs from all containers in the prod environment.
+- **Demo and Documentation:**  
+  Get hands-on with our demo app to see Multiwoven in action. For more detailed guidance, refer to our comprehensive documentation. [Placeholder for demo app link] | [Placeholder for full documentation link]
