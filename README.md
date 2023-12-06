@@ -4,7 +4,7 @@
 Requiring minimal engineering effort, its intuitive interface simplifies building complex data pipelines. The platform seamlessly connects to popular data warehouses, including <b>Redshift, Snowflake, Databricks, and Google BigQuery</b>. Multiwoven also facilitates the crafting of data models and enables efficient synchronization of data to various destinations. Key integrations include <b>Facebook Ads</b>, CRM systems such as <b>Salesforce</b>, email marketing tools like <b>Braze and Klaviyo</b>, and analytics services including <b>Adobe Analytics</b>, making data activation accessible for every business.
 </p>
 
-<p align="center">⭐ Consider giving us a star on GitHub! Your support helps us continue innovating and adding new, exciting features.</p>
+<p align="center">⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
 <p align="center">
   <!-- Contributions Welcome Badge -->
