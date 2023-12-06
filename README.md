@@ -1,3 +1,5 @@
+<h1 align="center">Multiwoven</h2>
+
 <p align="center">Multiwoven is an <b>open-source, no-code platform</b> tailored for the easy creation of <b>reverse ETL pipelines</b>. </p>
 <br />
 <p align="center">
@@ -7,22 +9,12 @@ Requiring minimal engineering effort, its intuitive interface simplifies buildin
 <p align="center">⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
 <p align="center">
-  <!-- Contributions Welcome Badge -->
-   <a href="https://github.com/Multiwoven/multiwoven">
-      <img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome">
-   </a>
-   <!-- License Badge -->
-   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/license-AGPLv3-purple" alt="License">
-   </a>
-   <!-- Follow on Twitter Badge -->
-   <a href="https://twitter.com/multiwoven">
-      <img src="https://img.shields.io/twitter/follow/[YourTwitterHandle].svg?style=social&label=Follow" alt="Follow on Twitter">
-   </a>
+   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
+   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple" alt="License"></a>
+   <a href="https://twitter.com/multiwoven"><img src="https://img.shields.io/twitter/follow/[YourTwitterHandle].svg?style=social&label=Follow" alt="Follow on Twitter"></a>
 </p>
 
-
-<img alt="Screenshot 2023-12-06 at 12 50 14 AM" src="https://github.com/Multiwoven/multiwoven/assets/1298480/8ed5e37e-cba4-4b74-9f70-9c2bbbc11524">
+<img alt="Multiwoven" src="https://github.com/Multiwoven/multiwoven/assets/1298480/8ed5e37e-cba4-4b74-9f70-9c2bbbc11524">
 
 ## ✨ Features
 - **Sources**
@@ -39,22 +31,59 @@ Schedule and monitor your data pipelines with ease. Multiwoven's syncing feature
 
 <hr>
 
-## 🚀 Getting Started
+## Deploy Locally
 
-- **Deploy Multiwoven:**  
-  Set up the Multiwoven platform to begin centralizing and activating your data. Choose between a self-hosted option or our managed cloud service. [Placeholder for link]
+### Requirements 
+1. **Install Docker:**  Ensure Docker is installed on your machine. [Docker installation guide](https://docs.docker.com/get-docker/) 
+2. **Docker Compose:**  Verify that Docker Compose is installed and available (usually included with Docker Desktop). [Docker Compose documentation](https://docs.docker.com/compose/)
 
-- **Create Data Pipelines:**  
-  Easily create data connectors and pipelines with our intuitive no-code interface. Connect to a variety of data warehouses and destinations in minutes. [Placeholder for link]
+### Run the App
 
-- **Explore Use Cases:**  
-  Dive into our tutorials to explore common use cases and discover how Multiwoven can transform your data activation processes. [Placeholder for tutorials link]
+To start using Multiwoven, execute the following commands in your terminal:
 
-- **Data Transformation:**  
-  Effortlessly transform your data using SQL or dbt within Multiwoven, making it ready for actionable insights and operations.[Placeholder for link]
+```
+# Get the code
+git clone git@github.com:Multiwoven/multiwoven.git
 
-- **Demo and Documentation:**  
-  Get hands-on with our demo app to see Multiwoven in action. For more detailed guidance, refer to our comprehensive documentation. [Placeholder for demo app link] | [Placeholder for full documentation link]
+# Navigate to the multiwoven folder
+cd multiwoven
+
+# Start the application
+docker-compose up
+```
+
+After running these commands, open your web browser and navigate to `http://localhost:3000` to access the Multiwoven frontend application. The Multiwoven API will be available at `http://localhost:3001`.
+
+### Troubleshooting
+
+If you encounter any issues during the setup, such as Docker or Git-related errors, refer to the official documentation for troubleshooting tips or reach out to the community for support.
+
+## Self-hosted Options
+
+Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Below is a guide to deploying Multiwoven on different platforms:
+
+| Provider | Documentation |
+|:---------|:--------------|
+| **AWS EC2** | [Deployment Guide](#) |
+| **AWS ECS** | [Deployment Guide](#) |
+| **AWS EKS (Kubernetes)** | [Deployment Guide](#) |
+| **Azure VMs** | [Deployment Guide](#) |
+| **Azure AKS (Kubernetes)** | [Deployment Guide](#) |
+| **Google Cloud GKE (Kubernetes)** | [Deployment Guide](#) |
+| **Google Cloud Compute Engine** | [Deployment Guide](#) |
+| **Digital Ocean Droplets** | [Deployment Guide](#) |
+| **Digital Ocean Kubernetes** | [Deployment Guide](#) |
+| **Heroku** | [Deployment Guide](#) |
+| **Docker** | [Deployment Guide](#) |
+| **OpenShift** | [Deployment Guide](#) |
+| **Helm Charts** | [Deployment Guide](#) |
+
+## Documentation
+
+Explore documentation for Multiwoven at [Multiwoven Documentation](https://docs.multiwoven.com/) . 
+- [Create Data Pipelines](https://docs.multiwoven.com/)
+- [Data Transformation](https://docs.multiwoven.com/)
+- [Explore Use Cases](https://docs.multiwoven.com/)
 
 ## License
 Multiwoven © 2023, Multiwoven Inc - Released under the GNU Affero General Public License v3.0.
