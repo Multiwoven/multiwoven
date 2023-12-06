@@ -85,5 +85,18 @@ Explore documentation for Multiwoven at [Multiwoven Documentation](https://docs.
 - [Data Transformation](https://docs.multiwoven.com/)
 - [Explore Use Cases](https://docs.multiwoven.com/)
 
+
+## Contributing
+
+Interested in contributing to Multiwoven? Here's how you can help: 
+
+- **Reporting Issues:**  Encounter a bug or have a suggestion? Open an issue on our [GitHub repository](https://github.com/Multiwoven/multiwoven/issues) . 
+
+- **Submitting Pull Requests:**  Have a fix or a new feature? Submit a pull request. Check our [contributing guidelines](https://docs.multiwoven.com/docs/contributing)  for more details. 
+
+- **Joining the Discussion:**  Share your insights and engage with the community in our [Slack channel](#).
+
+Your contributions and feedback help make Multiwoven better for everyone!
+
 ## License
 Multiwoven © 2023, Multiwoven Inc - Released under the GNU Affero General Public License v3.0.
