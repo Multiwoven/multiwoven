@@ -1,9 +1,23 @@
-<h1 align="center">Multiwoven</h2>
+<p align="center">
+  <a href="https://multiwoven.com"><img width="300" src="https://framerusercontent.com/images/QI2W5kDjl2HGKnAISsV9WVxcR0I.png?scale-down-to=512" alt="multiwoven.com"></a>
+</p>
 
-<p align="center">Multiwoven is an <b>open-source, no-code platform</b> tailored for the easy creation of <b>reverse ETL pipelines</b>. </p>
+<p align="center">
+  <b>
+    <a href="https://multiwoven.com">Website</a>
+    ·
+    <a href="https://multiwoven.com">Slack Community</a>
+    ·
+    <a href="https://docs.multiwoven.com">Documentation</a>
+    ·
+    <a href="https://multiwoven.com">Blog</a>
+  </b>
+</p>
+
+<p align="center">Multiwoven is an open-source, no-code platform for data activation, enabling seamless reverse ETL pipelines from data warehouses to various destinations.</p>
 <br />
 <p align="center">
-Requiring minimal engineering effort, its intuitive interface simplifies building complex data pipelines. The platform seamlessly connects to popular data warehouses, including <b>Redshift, Snowflake, Databricks, and Google BigQuery</b>. Multiwoven also facilitates the crafting of data models and enables efficient synchronization of data to various destinations. Key integrations include <b>Facebook Ads</b>, CRM systems such as <b>Salesforce</b>, email marketing tools like <b>Braze and Klaviyo</b>, and analytics services including <b>Adobe Analytics</b>, making data activation accessible for every business.
+Requiring minimal engineering effort, its intuitive interface simplifies building complex data pipelines. The platform connects to popular data warehouses, including <b>Redshift, Snowflake, Databricks, and Google BigQuery</b>. Multiwoven also facilitates the crafting of data models and enables efficient synchronization of data to various destinations. Key integrations include <b>Facebook Ads</b>, CRM systems such as <b>Salesforce</b>, email marketing tools like <b>Braze and Klaviyo</b>, and analytics services including <b>Adobe Analytics</b>, making data activation accessible for every business.
 </p>
 
 <p align="center">⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
