@@ -3,7 +3,6 @@
 </p>
 
 <p align="center">
-  <b>
     <a href="https://multiwoven.com">Website</a>
     ·
     <a href="https://multiwoven.com">Slack Community</a>
@@ -11,7 +10,6 @@
     <a href="https://docs.multiwoven.com">Documentation</a>
     ·
     <a href="https://multiwoven.com">Blog</a>
-  </b>
 </p>
 
 <p align="center">Multiwoven is an open-source, no-code platform for data activation, enabling seamless reverse ETL pipelines from data warehouses to various destinations.</p>
