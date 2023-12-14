@@ -10,4 +10,19 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Layout/LineLength:
-  Max: 120
+  Max: 300
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/Metrics/ModuleLength:
+  Max: 500
+
+Layout/Metrics/BlockLength:
+  Max: 100
+
+Layout/Metrics/AbcSize:
+  Max: 30
