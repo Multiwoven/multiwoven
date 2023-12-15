@@ -14,9 +14,9 @@ services:
     volumes:
       - redis-data:/data
 
-  control-plane:
+  multiwoven-server:
     build:
-      context: .  
+      context: .
       dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"

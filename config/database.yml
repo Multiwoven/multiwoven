@@ -8,18 +8,18 @@ development:
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-  database: control_plane_development
+  database: multiwoven_server_development
 
 test:
   <<: *default
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-  database: control_plane_test
+  database: multiwoven_server_test
 
 production:
   <<: *default
   host: <%= ENV['DB_HOST'] %> 
   username: <%= ENV['DB_USERNAME'] %> 
   password: <%= ENV['DB_PASSWORD'] %>
-  database: control_plane_production
+  database: multiwoven_server_production
