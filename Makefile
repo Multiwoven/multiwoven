@@ -3,6 +3,7 @@
 # Declare variables for the submodules
 MULTIWOVEN_SERVER_REPO = git@github.com:Multiwoven/multiwoven-server.git
 MULTIWOVEN_UI_REPO = git@github.com:Multiwoven/multiwoven-ui.git
+MULTIWOVEN_INTEGRATIONS = git@github.com:Multiwoven/multiwoven-integrations.git
 
 # Compose files
 DEV_COMPOSE_FILE = docker-compose-dev.yml
@@ -12,6 +13,7 @@ PROD_COMPOSE_FILE = docker-compose.yml
 init:
 	git submodule add $(MULTIWOVEN_SERVER_REPO) server
 	git submodule add $(MULTIWOVEN_UI_REPO) ui
+	git submodule add $(MULTIWOVEN_INTEGRATIONS) integrations
 	git submodule init
 	git submodule update
 

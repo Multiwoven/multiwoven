@@ -4,3 +4,6 @@
 [submodule "ui"]
 	path = ui
 	url = git@github.com:Multiwoven/multiwoven-ui.git
+[submodule "integrations"]
+	path = integrations
+	url = git@github.com:Multiwoven/multiwoven-integrations.git
