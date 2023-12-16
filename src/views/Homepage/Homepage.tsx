@@ -1,7 +1,11 @@
 import Heading from "@/components/Heading";
 
-const Homepage = () => {
-  return <Heading>Welcome</Heading>;
+const Homepage = (): JSX.Element => {
+  return (
+    <div>
+      <Heading>Welcome</Heading>
+    </div>
+  );
 };
 
 export default Homepage;
