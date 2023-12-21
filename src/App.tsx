@@ -1,22 +1,33 @@
-import { Outlet } from "react-router";
-import { MAIN_PAGE_ROUTES } from "./routes";
+import { Outlet, Routes, Route } from "react-router-dom";
+import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes"; // Assuming you have AUTH_ROUTES
 import Sidebar from "./views/Sidebar";
-import { Routes, Route } from "react-router-dom";
 import Heading from "./components/Heading";
 
 const App = () => {
   return (
     <div className="md:container md:mx-auto">
-      <div className="flex p-4">
-        <Sidebar />
-        <Outlet />
-        <Routes>
-          {MAIN_PAGE_ROUTES.map((pageRoutes) => (
-            <Route path={pageRoutes.url} element={pageRoutes.component} />
+      <Routes>
+        {/* Routes without Sidebar */}
+        {AUTH_ROUTES.map((authRoute) => (
+          <Route path={authRoute.url} element={authRoute.component} key={authRoute.name} />
+        ))}
+      
+        {/* Routes with Sidebar */}
+        <Route
+          path="/"
+          element={
+            <div className="flex p-4">
+              <Sidebar />
+              <Outlet />
+            </div>
+          }
+        >
+          {MAIN_PAGE_ROUTES.map((pageRoute) => (
+            <Route path={pageRoute.url} element={pageRoute.component} key={pageRoute.name} />
           ))}
-          <Route path="*" element={<Heading>Page Not Found</Heading>} />
-        </Routes>
-      </div>
+        </Route>
+        <Route path="*" element={<Heading size="small">Page Not Found</Heading>} />
+      </Routes>
     </div>
   );
 };
