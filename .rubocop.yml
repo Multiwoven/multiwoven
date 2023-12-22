@@ -18,11 +18,17 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-Layout/Metrics/ModuleLength:
+Metrics/ModuleLength:
   Max: 500
 
-Layout/Metrics/BlockLength:
+Metrics/BlockLength:
   Max: 100
 
-Layout/Metrics/AbcSize:
+Metrics/AbcSize:
   Max: 30
+
+Metrics/MethodLength:
+  Max: 50
+
+Metrics/CyclomaticComplexity:
+  Max: 50

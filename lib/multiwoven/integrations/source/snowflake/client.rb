@@ -54,7 +54,7 @@ module Multiwoven::Integrations::Source
 
       def create_streams(records)
         group_by_table(records).map do |r|
-          Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], json_schema: r[:columns])
+          Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], action: StreamAction["fetch"], json_schema: convert_to_json_schema(r[:columns]))
         end
       end
 

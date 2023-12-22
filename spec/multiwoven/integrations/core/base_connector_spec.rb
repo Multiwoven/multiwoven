@@ -11,9 +11,15 @@ module Multiwoven
       end
 
       describe "#check_connection" do
-        xit "raises an error for not being implemented" do
+        it "raises an error" do
+          expect { described_class.new.check_connection({}) }.to raise_error("Not implemented")
+        end
+      end
+
+      describe "#discover" do
+        it "raises an error for not being implemented" do
           connector = described_class.new
-          expect { connector.check_connection({}) }.to raise_error("Not implemented")
+          expect { connector.discover({}) }.to raise_error("Not implemented")
         end
       end
     end

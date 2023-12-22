@@ -23,6 +23,10 @@ module Multiwoven
         # returns Protocol.ConnectionStatus
       end
 
+      def discover(_connection_config)
+        raise "Not implemented"
+      end
+
       private
 
       def read_json(file_path)
