@@ -1,4 +1,4 @@
-import Heading from "@/components/Heading";
+import { Heading } from "@chakra-ui/react";
 
 const AboutUs = () => {
   return <Heading>AboutUs</Heading>;
