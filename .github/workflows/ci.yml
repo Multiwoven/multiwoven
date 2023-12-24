@@ -1,55 +1,34 @@
 name: CI
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+on: [push]
 env:
-  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-  DB_HOST: localhost
-  DB_USERNAME: postgres
-  DB_PASSWORD: postgres
-
+  CI: true
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: multiwoven_test
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
+    strategy:
+      matrix:
+        ruby-version: [3.2.0]
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
-
-    - name: Setup Ruby
+    - uses: actions/checkout@v2
+    - name: Set up Ruby ${{ matrix.ruby-version }}
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2.0
-
-    - name: Bundle Install
-      run: bundle install
-
-    - name: Run Tests
-      run: bundle exec rspec
-
-    - name: Install cc-test-reporter
+        ruby-version: ${{ matrix.ruby-version }}
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+    - name: Run tests with code coverage
+      run: COVERAGE=true bundle exec rake test
+    - name: Install Code Climate Test Reporter
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
-
-    - name: Upload Coverage to Code Climate
+      working-directory: ${{ github.workspace }}
+    - name: Push coverage data to Code Climate
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       run: |
         ./cc-test-reporter before-build
-        ./cc-test-reporter format-coverage -t simplecov -o coverage/codeclimate.json
         ./cc-test-reporter after-build --exit-code $?
-
+      working-directory: ${{ github.workspace }}

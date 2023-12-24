@@ -3,13 +3,15 @@
 require "multiwoven/integrations"
 require "webmock/rspec"
 
-require 'simplecov'
-require 'simplecov_json_formatter'
+require "simplecov"
+require "simplecov_json_formatter"
 
-SimpleCov.start 'rails' do
-  formatter SimpleCov::Formatter::JSONFormatter
-end
+SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+                                                                  SimpleCov::Formatter::HTMLFormatter,
+                                                                  SimpleCov::Formatter::JSONFormatter
+                                                                ])
 
+SimpleCov.start
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
