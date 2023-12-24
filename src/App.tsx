@@ -1,6 +1,5 @@
-import { Outlet, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes"; // Assuming you have AUTH_ROUTES
-import Sidebar from "./views/Sidebar";
 import Heading from "./components/Heading";
 import MainLayout from "./views/MainLayout";
 
