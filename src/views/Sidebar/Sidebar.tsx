@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       {MAIN_PAGE_ROUTES.map((pageRoutes) => (
-        <div className="text-sm leading-6 cursor-pointer">
+        <div className="text-sm leading-6 cursor-pointer" key={pageRoutes.name}>
           <NavLink to={pageRoutes.url}>{pageRoutes.name}</NavLink>
         </div>
       ))}
