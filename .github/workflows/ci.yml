@@ -19,7 +19,7 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
     - name: Run tests with code coverage
-      run: COVERAGE=true bundle exec rake test
+      run: COVERAGE=true bundle exec rspec
     - name: Install Code Climate Test Reporter
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
