@@ -10,7 +10,8 @@
     "type-check": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "cypress:open": "cypress open",
-    "test": "npm run dev & wait-on http://127.0.0.1:8000 && cypress run"
+    "cypress:run": "cypress run",
+    "test": "npm run dev & wait-on http://localhost:8000 && cypress run"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
