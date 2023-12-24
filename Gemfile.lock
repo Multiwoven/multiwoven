@@ -33,6 +33,7 @@ GEM
     crack (0.4.5)
       rexml
     diff-lcs (1.5.0)
+    docile (1.4.0)
     drb (2.2.0)
       ruby2_keywords
     dry-configurable (1.1.0)
@@ -78,6 +79,7 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
+    pg (1.5.4)
     public_suffix (5.0.4)
     racc (1.7.3)
     rainbow (3.1.1)
@@ -114,6 +116,12 @@ GEM
     ruby2_keywords (0.0.5)
     sequel (5.75.0)
       bigdecimal
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.4)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
@@ -134,11 +142,14 @@ DEPENDENCIES
   dry-struct
   dry-types
   multiwoven-integrations!
+  pg
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop (~> 1.21)
   ruby-odbc!
   sequel
+  simplecov
+  simplecov_json_formatter
   webmock (~> 3.0)
 
 BUNDLED WITH

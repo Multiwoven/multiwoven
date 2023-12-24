@@ -21,8 +21,15 @@ gem "byebug"
 
 gem "sequel"
 
+gem "pg"
+
 gem "ruby-odbc", github: "subintp/ruby-odbc"
 
 gem "webmock", "~> 3.0"
 
 gem "activesupport"
+
+group :development, :test do
+  gem "simplecov", require: false
+  gem "simplecov_json_formatter", require: false
+end

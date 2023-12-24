@@ -1,4 +1,8 @@
-# Multiwoven::Integrations
+# Multiwoven Integrations
+
+[![CI](https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/maintainability)](https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/test_coverage)](https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/test_coverage)
 
 TODO: Delete this and the text below, and describe your gem
 
