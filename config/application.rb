@@ -18,7 +18,7 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module ControlPlane
+module MultiwovenServer
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
@@ -27,7 +27,7 @@ module ControlPlane
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
-    config.require_master_key = true
+    config.require_master_key = false
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -44,15 +44,15 @@ module ControlPlane
     # email setup
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
-    host = 'multiwoven.com'
+    host = ENV.fetch('SMTP_HOST', 'multiwoven.com') # Replace 'multiwoven.com' with SMTP_HOST value if needed
     config.action_mailer.default_url_options = { host: host }
     config.x.mail_from = %("Multiwoven" <noreply@multiwoven.com>)
     ActionMailer::Base.smtp_settings = {
-      :address => Rails.application.credentials.secrets.smtp_address,
-      :port => '587',
-      :authentication => :plain,
-      :user_name => Rails.application.credentials.secrets.smtp_username,
-      :password => Rails.application.credentials.secrets.smtp_password,
+      address: ENV['SMTP_ADDRESS'],
+      port: ENV.fetch('SMTP_PORT', '587'), # '587' is the default value if SMTP_PORT is not set
+      authentication: :plain,
+      user_name: ENV['SMTP_USERNAME'],
+      password: ENV['SMTP_PASSWORD'],
     }
   end
 end
