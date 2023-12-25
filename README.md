@@ -1,30 +1,24 @@
-# React + TypeScript + Vite
+# Multiwoven
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![CI](https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml)
 
-Currently, two official plugins are available:
+<i>Multiwoven is an open-source **Reverse ETL** data activation platform for modern teams.</i>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The platform connects to popular data warehouses, including **Redshift, Snowflake, Databricks, and Google BigQuery**.<br /> 
+Multiwoven also facilitates the crafting of data models and enables efficient synchronization of data to various destinations. Key integrations include Facebook Ads, CRM systems such as Salesforce, email marketing tools like Braze and Klaviyo, and analytics services including Adobe Analytics, making data activation accessible for every business.
 
-## Expanding the ESLint configuration
+## Documentation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The official Multiwoven documentation is available here : https://docs.multiwoven.com
 
-- Configure the top-level `parserOptions` property like this:
+## Contributing
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+The contribution documentation is available [here](https://github.com/Multiwoven/multiwoven/blob/main/CONTRIBUTING.md)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## UI Development Environment
+
+Check the wiki [guide](https://github.com/Multiwoven/multiwoven/wiki)
+
+## License
+
+Multiwoven is open-source under the GNU Affero General Public License Version 3 (AGPLv3) or any later version.
