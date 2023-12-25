@@ -12,7 +12,7 @@
    <a href="https://twitter.com/multiwoven"><img src="https://img.shields.io/twitter/follow/[YourTwitterHandle].svg?style=social&label=Follow" alt="Follow on Twitter"></a>
 </p>
 
-<h1 align="center">The open-source reverse ETL platform for modern data teams</h1>
+<h1 align="center">The open-source reverse ETL platform for data teams</h1>
 
 <div align="center">Your ultimate solution for seamless data sync from warehouse to any application.</div>
 
