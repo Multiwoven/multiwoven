@@ -1,9 +1,14 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+    Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
+    VStack, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox, background
+} from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
-import { Link } from 'react-router-dom';
 
-const LoginSchema = Yup.object().shape({
+// Yup validation schema
+const SignUpSchema = Yup.object().shape({
     email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
@@ -14,94 +19,81 @@ const LoginSchema = Yup.object().shape({
 
 function Login() {
     return (
-        <>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <img
-                        className="mx-auto h-10 w-auto"
+
+        <Container display='flex' flexDir='column' justifyContent='center' maxW='650' minH='100vh' className='flex flex-col align-center justify-center'>
+            <div className='top_side_back'></div>
+            <div className='bottom_side_back'></div>
+            <Box width='100%' className="flex min-h-full flex-1 flex-col align-center justify-center py-12 sm:px-6 lg:px-8">
+                <Box display='flex' justifyContent='center' className="sm:mx-auto sm:w-full sm:max-w-sm">
+                    <Image
+                        maxW="360px"
+                        w="95%"
                         src={MultiwovenLogo}
                         alt="Multiwoven"
                     />
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Sign in to your account
-                    </h2>
-                </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-                    <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+                </Box>
+
+                <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
+                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="9" rounded="lg" className="sm:px-12">
+                        <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
+                            Log in to your account
+                        </Heading>
                         <Formik
                             initialValues={{ email: '', password: '' }}
-                            validationSchema={LoginSchema}
+                            validationSchema={SignUpSchema}
                             onSubmit={(values, actions) => {
-                                // Handle form submission
                                 console.log(values);
                                 actions.setSubmitting(false);
                             }}
                         >
-                            <Form className="space-y-6">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Email address
-                                    </label>
-                                    <div className="mt-2">
-                                        <Field
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            autoComplete="email"
-                                            required
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                    <ErrorMessage name="email" component="div" className="text-red-500" />
-                                </div>
+                            {({ getFieldProps, errors, touched }) => (
+                                <Form>
+                                    <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
+                                        <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
+                                        {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                    </FormControl>
 
-                                <div>
-                                    <div className="flex items-center justify-between">
-                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                            Password
-                                        </label>
-                                        <div className="text-sm">
-                                            <a href="#" className="font-semibold text-orange-600 hover:text-orange-500">
-                                                Forgot password?
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="mt-2">
-                                        <Field
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            autoComplete="current-password"
-                                            required
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                    <ErrorMessage name="password" component="div" className="text-red-500" />
-                                </div>
+                                    <FormControl mb='24px' id="password" isInvalid={errors.password && touched.password}>
+                                        <Input type="password" placeholder='Password' {...getFieldProps('password')} />
+                                        {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
+                                    </FormControl>
 
-                                <div>
-                                    <button
-                                        type="submit"
-                                        className="flex w-full justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            </Form>
+                                    <Button type="submit" background="#E63D2D" color='white' width="full" _hover={{ background: "#E63D2D" }}>
+                                        Login
+                                    </Button>
+                                </Form>
+                            )}
                         </Formik>
-                    </div>
-                </div>
-                <p className="mt-10 text-center text-sm text-gray-500">
-                    {/* eslint-disable */}
-                    Don't have an account?{' '}
-                    { /* eslint-enable */}
-                    <Link to="/sign-up" className="font-semibold leading-6 text-orange-600 hover:text-orange-500">
-                        Sign up here
-                    </Link>
-                </p>
-            </div>
-        </>
+                        <Box width='100%' className="flex min-h-full flex-1 flex-col align-center justify-center py-12 sm:px-6 lg:px-8">
+                            <Flex paddingBottom='5' borderBottom='1px' borderColor='#CCBBDD5E'>
+                                <Text mt="4" textAlign="left" fontSize="sm" color="black">
+                                    <Checkbox size='md' colorScheme='blue'>
+                                        Remember me
+                                    </Checkbox>
+                                </Text>
+                                <Spacer />
+                                <Text mt="4" textAlign="right" fontSize="sm" color="gray.500">
+                                    <Link fontWeight="500" as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                                        Forgot password
+                                    </Link>
+                                </Text>
+                            </Flex>
+                            <Text display='flex' mt="5" textAlign="left" fontSize="sm" color="gray.500">
+                                Don't have an account?
+                                <Link ml='1' as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                                    Sign Up
+                                </Link>
+                            </Text>
+                        </Box>
+                    </Box>
+
+
+                </Box>
+            </Box>
+
+        </Container>
+
     )
 }
 

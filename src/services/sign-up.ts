@@ -1,5 +1,5 @@
-import axiosInstance from './axios';
-//import { axiosInstance as axios } from "./axios";
+// import axiosInstance from './axios';
+// // import { axiosInstance as axios } from "./axios";
 
 // const signUp = async (email: string, password: string, confirmPassword: string) => {
 //     try {

@@ -1,0 +1,21 @@
+.top_side_back{
+    background: url(../images/top_right.png);
+    width: 275px;
+    height: 350px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.bottom_side_back{
+    background: url(../images/bottom_right.png);
+    width: 193px;
+    height: 160px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
