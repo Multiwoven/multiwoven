@@ -1,14 +1,16 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
-import { 
-    Box, Button, FormControl, FormLabel, FormErrorMessage, Input, 
-    VStack, Image, Heading, Text, Link
+import {
+    Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
+    VStack, Image, Heading, Text, Link, Container, Flex
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 
 // Yup validation schema
 const SignUpSchema = Yup.object().shape({
+    name: Yup.string()
+        .required('Name is required'),
     email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
@@ -22,66 +24,76 @@ const SignUpSchema = Yup.object().shape({
 
 function SignUp() {
     return (
-        <Box className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <Box className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <Image
-                    mx="auto"
-                    h="10"
-                    w="auto"
-                    src={MultiwovenLogo}
-                    alt="Multiwoven"
-                />
-                <Heading as="h2" mt="10" textAlign="center" size="xl">
-                    Sign up for an account
-                </Heading>
-            </Box>
 
-            <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
-                <Box bg="white" px="6" py="12" shadow="sm" rounded="lg" className="sm:px-12">
-                    <Formik
-                        initialValues={{ email: '', password: '', confirmPassword: '' }}
-                        validationSchema={SignUpSchema}
-                        onSubmit={(values, actions) => {
-                            console.log(values);
-                            actions.setSubmitting(false);
-                        }}
-                    >
-                        {({ getFieldProps, errors, touched }) => (
-                            <Form>
-                                <FormControl id="email" isInvalid={errors.email && touched.email}>
-                                    <FormLabel>Email address</FormLabel>
-                                    <Input type="email" {...getFieldProps('email')} />
-                                    <FormErrorMessage>{errors.email}</FormErrorMessage>
-                                </FormControl>
+        <Container display='flex' flexDir='column' justifyContent='center' maxW='700' minH='100vh' className='flex flex-col align-center justify-center'>
+            <Box width='100%' className="flex min-h-full flex-1 flex-col align-center justify-center py-12 sm:px-6 lg:px-8">
+                <Box display='flex' justifyContent='center' className="sm:mx-auto sm:w-full sm:max-w-sm">
+                    <Image
+                        maxW="360px"
+                        w="95%"
+                        src={MultiwovenLogo}
+                        alt="Multiwoven"
+                    />
 
-                                <FormControl id="password" isInvalid={errors.password && touched.password}>
-                                    <FormLabel>Password</FormLabel>
-                                    <Input type="password" {...getFieldProps('password')} />
-                                    <FormErrorMessage>{errors.password}</FormErrorMessage>
-                                </FormControl>
-
-                                <FormControl id="confirmPassword" isInvalid={errors.confirmPassword && touched.confirmPassword}>
-                                    <FormLabel>Confirm Password</FormLabel>
-                                    <Input type="password" {...getFieldProps('confirmPassword')} />
-                                    <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
-                                </FormControl>
-
-                                <Button type="submit" colorScheme="orange" width="full">
-                                    Sign Up!
-                                </Button>
-                            </Form>
-                        )}
-                    </Formik>
                 </Box>
 
-                <Text mt="10" textAlign="center" fontSize="sm" color="gray.500">
-                    Already have an account?{' '}
-                    <Link as={RouterLink} to="/login" color="orange.600" _hover={{ color: 'orange.500' }}>
-                        Sign In
-                    </Link>
-                </Text>
+                <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
+                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="20" py="9" rounded="lg" className="sm:px-12">
+                        <Heading fontSize='48px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
+                            Create an account
+                        </Heading>
+                        <Formik
+                            initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
+                            validationSchema={SignUpSchema}
+                            onSubmit={(values, actions) => {
+                                console.log(values);
+                                actions.setSubmitting(false);
+                            }}
+                        >
+                            {({ getFieldProps, errors, touched }) => (
+                                <Form>
+                                    <FormControl mb='24px' id="email" isInvalid={errors.name && touched.name}>
+                                        <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
+                                        {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                    </FormControl>
+
+                                    <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
+                                        <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
+                                        {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                    </FormControl>
+
+                                    <FormControl mb='24px' id="password" isInvalid={errors.password && touched.password}>
+                                        <Input type="password" placeholder='Password' {...getFieldProps('password')} />
+                                        {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
+                                    </FormControl>
+
+                                    <FormControl mb='8px' id="confirmPassword" isInvalid={errors.confirmPassword && touched.confirmPassword}>
+                                        <Input type="password" placeholder='Confirm Password' {...getFieldProps('confirmPassword')} />
+                                        {/* <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage> */}
+                                    </FormControl>
+                                    <Text mt="0" mb='24px' textAlign="left" fontSize="sm" color="gray.500">
+                                        At least 8 characters long
+                                    </Text>
+
+                                    <Button type="submit" background="#E63D2D" color='white' width="full">
+                                        Create Account
+                                    </Button>
+                                </Form>
+                            )}
+                        </Formik>
+                    </Box>
+
+                    <Text mt="10" textAlign="center" fontSize="sm" color="gray.500">
+                        Already have an account?{' '}
+                        <Link as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                            Sign In
+                        </Link>
+                    </Text>
+                </Box>
             </Box>
-        </Box>
+
+        </Container>
+
     )
 }
 
