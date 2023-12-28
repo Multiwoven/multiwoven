@@ -11,8 +11,12 @@ require "net/http"
 require "uri"
 require "active_support/core_ext/hash/indifferent_access"
 
+# Service
+require_relative "integrations/config"
+require_relative "integrations/rollout"
+require_relative "integrations/service"
+
 # Core
-require_relative "integrations/version"
 require_relative "integrations/core/constants"
 require_relative "integrations/core/utils"
 require_relative "integrations/protocol/protocol"

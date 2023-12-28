@@ -12,12 +12,36 @@ module Multiwoven
           expect(instance.message).to eq("Connection succeeded")
         end
       end
+
+      describe "#to_multiwoven_message" do
+        let(:connection_status) do
+          ConnectionStatus.new(
+            status: "succeeded",
+            message: "Connection succeeded"
+          )
+        end
+
+        it "converts to a MultiwovenMessage" do
+          multiwoven_message = connection_status.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("connection_status")
+          expect(multiwoven_message.connection_status).to eq(connection_status)
+        end
+      end
     end
 
     RSpec.describe ConnectorSpecification do
+      json_data = {
+        "connection_specification" => { "key" => "value" },
+        "stream_type" => "dynamic",
+        "supports_normalization" => true,
+        "supports_dbt" => true,
+        "supported_destination_sync_modes" => ["insert"]
+      }.to_json
+
       describe ".from_json" do
         it "creates an instance from JSON" do
-          json_data = '{"connection_specification": {"key": "value"}, "stream_type": "dynamic", "supports_normalization": true, "supports_dbt": true, "supported_destination_sync_modes": ["insert"]}'
           instance = ConnectorSpecification.from_json(json_data)
           expect(instance).to be_a(ConnectorSpecification)
           expect(instance.connection_specification).to eq(key: "value")
@@ -26,17 +50,27 @@ module Multiwoven
           expect(instance.supported_destination_sync_modes).to eq(["insert"])
         end
       end
+
+      describe "#to_multiwoven_message" do
+        it "converts to a MultiwovenMessage" do
+          connector_spec = described_class.from_json(json_data)
+          multiwoven_message = connector_spec.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("connector_spec")
+          expect(multiwoven_message.connector_spec).to eq(connector_spec)
+        end
+      end
     end
     RSpec.describe LogMessage do
-      describe ".from_json" do
-        let(:json_data) do
-          {
-            "level" => "info",
-            "message" => "Sample log message",
-            "stack_trace" => "Sample stack trace"
-          }.to_json
-        end
+      json_data =
+        {
+          "level" => "info",
+          "message" => "Sample log message",
+          "stack_trace" => "Sample stack trace"
+        }.to_json
 
+      describe ".from_json" do
         it "creates an instance from JSON" do
           log_message = described_class.from_json(json_data)
 
@@ -46,16 +80,43 @@ module Multiwoven
           expect(log_message.stack_trace).to eq("Sample stack trace")
         end
       end
+
+      describe "#to_multiwoven_message" do
+        log_message = described_class.from_json(json_data)
+
+        it "converts to a MultiwovenMessage" do
+          multiwoven_message = log_message.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("log")
+          expect(multiwoven_message.log).to eq(log_message)
+        end
+      end
     end
 
     RSpec.describe RecordMessage do
+      json_data = {
+        "data" => { "key" => "value" },
+        "emitted_at" => 1_638_449_455_000
+      }.to_json
+
       describe ".from_json" do
         it "creates an instance from JSON" do
-          json_data = '{ "data": {"key": "value"}, "emitted_at": 1638449455000}'
           instance = RecordMessage.from_json(json_data)
           expect(instance).to be_a(RecordMessage)
           expect(instance.data).to eq(key: "value")
           expect(instance.emitted_at).to eq(1_638_449_455_000)
+        end
+      end
+
+      describe "#to_multiwoven_message" do
+        it "converts to a MultiwovenMessage" do
+          record = described_class.from_json(json_data)
+          multiwoven_message = record.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("record")
+          expect(multiwoven_message.record).to eq(record)
         end
       end
     end
@@ -85,13 +146,31 @@ module Multiwoven
     end
 
     RSpec.describe Catalog do
+      json_data = {
+        "streams" =>
+        [{ "name" => "example_stream",
+           "action" => "create",
+           "json_schema" => { "type" => "object" },
+           "supported_sync_modes" => ["full_refresh"] }]
+      }.to_json
+
       describe ".from_json" do
         it "creates an instance from JSON" do
-          json_data = '{"streams": [{"name": "example_stream","action": "create", "json_schema": {"type": "object"}, "supported_sync_modes": ["full_refresh"]}]}'
           instance = Catalog.from_json(json_data)
           expect(instance).to be_a(Catalog)
           expect(instance.streams.first).to be_a(Stream)
           expect(instance.streams.first.name).to eq("example_stream")
+        end
+      end
+
+      describe "#to_multiwoven_message" do
+        it "converts to a MultiwovenMessage" do
+          catalog = described_class.from_json(json_data)
+          multiwoven_message = catalog.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("catalog")
+          expect(multiwoven_message.catalog).to eq(catalog)
         end
       end
     end
@@ -181,6 +260,70 @@ module Multiwoven
           expect(connector.type).to eq("source")
           expect(connector.connection_specification).to eq(key: "value")
         end
+      end
+    end
+
+    RSpec.describe Multiwoven::Integrations::Protocol::ControlMessage do
+      json_data = {
+        "type": "rate_limit",
+        "emitted_at": 1_638_449_455_000,
+        "meta": { "key": "value" }
+      }.to_json
+
+      describe ".from_json" do
+        it "creates an instance from JSON" do
+          control_message = described_class.from_json(json_data)
+
+          expect(control_message).to be_a(described_class)
+          expect(control_message.type).to eq("rate_limit")
+          expect(control_message.emitted_at).to eq(1_638_449_455_000)
+          expect(control_message.meta).to eq(key: "value")
+        end
+      end
+
+      describe "#to_multiwoven_message" do
+        it "converts to a MultiwovenMessage" do
+          control = described_class.from_json(json_data)
+          multiwoven_message = control.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("control")
+          expect(multiwoven_message.control).to eq(control)
+        end
+      end
+    end
+
+    RSpec.describe Multiwoven::Integrations::Protocol::MultiwovenMessage do
+      describe ".from_json" do
+        let(:json_data) do
+          {
+            "type": "log",
+            "log": { "level": "info", "message": "Sample log message" }
+          }.to_json
+        end
+
+        it "creates an instance from JSON" do
+          multiwoven_message = described_class.from_json(json_data)
+
+          expect(multiwoven_message).to be_a(described_class)
+          expect(multiwoven_message.type).to eq("log")
+        end
+      end
+    end
+  end
+
+  RSpec.describe Multiwoven::Integrations::Protocol::TrackingMessage do
+    describe "#to_multiwoven_message" do
+      let(:tracking_message) do
+        Multiwoven::Integrations::Protocol::TrackingMessage.new(success: 3, failed: 1)
+      end
+
+      it "converts to a MultiwovenMessage" do
+        multiwoven_message = tracking_message.to_multiwoven_message
+
+        expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(multiwoven_message.type).to eq("tracking")
+        expect(multiwoven_message.tracking).to eq(tracking_message)
       end
     end
   end

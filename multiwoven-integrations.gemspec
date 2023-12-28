@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "lib/multiwoven/integrations/version"
+require_relative "lib/multiwoven/integrations/rollout"
 
 Gem::Specification.new do |spec|
   spec.name = "multiwoven-integrations"
@@ -32,8 +32,21 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_runtime_dependency "activesupport"
+  spec.add_runtime_dependency "dry-schema"
+  spec.add_runtime_dependency "dry-struct"
+  spec.add_runtime_dependency "dry-types"
+  spec.add_runtime_dependency "pg"
+  spec.add_runtime_dependency "rake"
+  spec.add_runtime_dependency "ruby-odbc", "~> 0.999992"
+  spec.add_runtime_dependency "sequel"
+
+  spec.add_development_dependency "byebug"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "simplecov_json_formatter"
+  spec.add_development_dependency "webmock"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

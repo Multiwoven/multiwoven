@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/subintp/ruby-odbc.git
+  remote: https://github.com/Multiwoven/ruby-odbc.git
   revision: d8dea99fe03cfa88335d2f0686398b2a5881ff8c
   specs:
     ruby-odbc (0.999992)
@@ -8,6 +8,14 @@ PATH
   remote: .
   specs:
     multiwoven-integrations (0.1.0)
+      activesupport
+      dry-schema
+      dry-struct
+      dry-types
+      pg
+      rake
+      ruby-odbc (~> 0.999992)
+      sequel
 
 GEM
   remote: https://rubygems.org/

@@ -8,9 +8,13 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         create_connection(connection_config)
-        ConnectionStatus.new(status: ConnectionStatusType["succeeded"])
+        ConnectionStatus.new(
+          status: ConnectionStatusType["succeeded"]
+        ).to_multiwoven_message
       rescue PG::Error => e
-        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message)
+        ConnectionStatus.new(
+          status: ConnectionStatusType["failed"], message: e.message
+        ).to_multiwoven_message
       end
 
       def discover(connection_config)
@@ -25,7 +29,14 @@ module Multiwoven::Integrations::Source
             row
           end
         end
-        create_streams(records)
+        catalog = Catalog.new(streams: create_streams(records))
+        catalog.to_multiwoven_message
+      rescue StandardError => e
+        handle_exception(
+          "REDSHIFT:DISCOVER:EXCEPTION",
+          "error",
+          e
+        )
       ensure
         db&.close
       end
@@ -36,10 +47,16 @@ module Multiwoven::Integrations::Source
         db = create_connection(connection_config)
         records = db.exec(query) do |result|
           result.map do |row|
-            RecordMessage.new(data: row, emitted_at: Time.now.to_i)
+            RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
           end
         end
         records
+      rescue StandardError => e
+        handle_exception(
+          "REDSHIFT:READ:EXCEPTION",
+          "error",
+          e
+        )
       ensure
         db&.close
       end

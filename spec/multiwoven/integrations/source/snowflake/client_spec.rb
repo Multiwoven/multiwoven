@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
+RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:disable Metrics/BlockLength
   let(:client) { Multiwoven::Integrations::Source::Snowflake::Client.new }
   # TODO: Move to test helpers
   let(:sync_config) do
@@ -57,8 +57,11 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
         allow(Sequel).to receive(:odbc).and_return(true)
 
         result = client.check_connection(sync_config[:source][:connection_specification])
-        expect(result.status).to eq("succeeded")
-        expect(result.message).to be_nil
+        expect(result.type).to eq("connection_status")
+
+        connection_status = result.connection_status
+        expect(connection_status.status).to eq("succeeded")
+        expect(connection_status.message).to be_nil
       end
     end
 
@@ -67,8 +70,11 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
         allow(Sequel).to receive(:odbc).and_raise(Sequel::DatabaseConnectionError, "Connection failed")
 
         result = client.check_connection(sync_config[:source][:connection_specification])
-        expect(result.status).to eq("failed")
-        expect(result.message).to eq("Connection failed")
+        expect(result.type).to eq("connection_status")
+
+        connection_status = result.connection_status
+        expect(connection_status.status).to eq("failed")
+        expect(connection_status.message).to eq("Connection failed")
       end
     end
   end
@@ -83,10 +89,21 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
       expect(records).to be_an(Array)
       expect(records.length).to eq(2)
 
-      first_record = records.first
+      multiwoven_message = records.first
+      first_record = multiwoven_message.record
       expect(first_record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
       expect(first_record.data).to eq(id: 1, name: "John")
       expect(first_record.emitted_at).to be_an(Integer)
+    end
+
+    it "read failure" do
+      allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
+      expect(client).to receive(:handle_exception).with(
+        "SNOWFLAKE:READ:EXCEPTION",
+        "error",
+        an_instance_of(StandardError)
+      )
+      client.read(Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json))
     end
   end
 
@@ -100,16 +117,25 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
         is_nullable: "YES"
       )
 
-      streams = client.discover(sync_config[:source][:connection_specification])
+      message = client.discover(sync_config[:source][:connection_specification])
+      expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
 
-      expect(streams).to be_an(Array)
-
-      first_stream = streams.first
+      first_stream = message.catalog.streams.first
       expect(first_stream).to be_a(Multiwoven::Integrations::Protocol::Stream)
       expect(first_stream.name).to eq("TEST_TABLE")
       expect(first_stream.json_schema).to be_an(Hash)
       expect(first_stream.json_schema["type"]).to eq("object")
       expect(first_stream.json_schema["properties"]).to eq({ "ID" => { "type" => %w[integer null] } })
+    end
+
+    it "discover schema failure" do
+      allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
+      expect(client).to receive(:handle_exception).with(
+        "SNOWFLAKE:DISCOVER:EXCEPTION",
+        "error",
+        an_instance_of(StandardError)
+      )
+      client.discover(sync_config[:source][:connection_specification])
     end
   end
 end

@@ -17,9 +17,9 @@ module Multiwoven::Integrations::Destination
       end
 
       def discover
-        catalog = read_json(CATALOG_SPEC_PATH)
+        catalog_json = read_json(CATALOG_SPEC_PATH)
 
-        catalog["streams"].map do |stream|
+        streams = catalog_json["streams"].map do |stream|
           Multiwoven::Integrations::Protocol::Stream.new(
             name: stream["name"],
             json_schema: stream["json_schema"],
@@ -28,49 +28,71 @@ module Multiwoven::Integrations::Destination
             action: stream["action"]
           )
         end
+
+        catalog = Multiwoven::Integrations::Protocol::Catalog.new(
+          streams: streams
+        )
+
+        catalog.to_multiwoven_message
+      rescue StandardError => e
+        handle_exception(
+          "KLAVIYO:DISCOVER:EXCEPTION",
+          "error",
+          e
+        )
       end
 
       def write(sync_config, records, _action = "insert")
-        connection_config = sync_config.destination.connection_specification
+        connection_config = sync_config.destination.connection_specification.with_indifferent_access
         url = sync_config.stream.url
         request_method = sync_config.stream.request_method
 
-        # TODO: Standerdise this across connectors
-        tracker = {
-          success: 0,
-          failed: 0
-        }
-
+        write_success = 0
+        write_failure = 0
         records.each do |record|
-          begin # rubocop:disable Style/RedundantBegin
-            response = Multiwoven::Integrations::Core::HttpClient.request(
-              url,
-              request_method,
-              payload: record,
-              headers: auth_headers(connection_config["private_api_key"])
-            )
-            if success?(response)
-              tracker[:success] += 1
-            else
-              tracker[:failed] += 1
-            end
-          rescue StandardError
-            # TODO: Handle ratelimiting
-            # TODO: Log error message
-            tracker[:failed] += 1
+          response = Multiwoven::Integrations::Core::HttpClient.request(
+            url,
+            request_method,
+            payload: record,
+            headers: auth_headers(connection_config["private_api_key"])
+          )
+          if success?(response)
+            write_success += 1
+          else
+            write_failure += 1
           end
+        rescue StandardError => e
+          logger.error(
+            "KLAVIYO:RECORD:WRITE:FAILURE: #{e.message}"
+          )
+          write_failure += 1
         end
-        tracker
+        tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
+          success: write_success,
+          failed: write_failure
+        )
+        tracker.to_multiwoven_message
+      rescue StandardError => e
+        # TODO: Handle rate limiting seperately
+        handle_exception(
+          "KLAVIYO:WRITE:EXCEPTION",
+          "error",
+          e
+        )
       end
 
       private
 
       def parse_response(response)
         if success?(response)
-          ConnectionStatus.new(status: ConnectionStatusType["succeeded"])
+          ConnectionStatus.new(
+            status: ConnectionStatusType["succeeded"]
+          ).to_multiwoven_message
         else
           message = extract_message(response)
-          ConnectionStatus.new(status: ConnectionStatusType["failed"], message: message)
+          ConnectionStatus.new(
+            status: ConnectionStatusType["failed"], message: message
+          ).to_multiwoven_message
         end
       end
 

@@ -43,6 +43,26 @@ module Multiwoven
           "string" # Default type
         end
       end
+
+      def logger
+        Integrations::Service.logger
+      end
+
+      def create_log_message(context, type, exception)
+        Integrations::Protocol::LogMessage.new(
+          name: context,
+          level: type,
+          message: exception.message
+        ).to_multiwoven_message
+      end
+
+      def handle_exception(context, type, exception)
+        logger.error(
+          "#{context}: #{exception.message}"
+        )
+
+        create_log_message(context, type, exception)
+      end
     end
   end
 end

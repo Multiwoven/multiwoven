@@ -7,21 +7,20 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
     WebMock.disable_net_connect!(allow_localhost: true)
   end
 
+  let(:api_key) { "test_api_key" }
+  let(:connection_config) { { private_api_key: api_key } }
+  let(:klaviyo_endpoint) { Multiwoven::Integrations::Destination::Klaviyo::Client::KLAVIYO_AUTH_ENDPOINT }
+  let(:klaviyo_payload) { Multiwoven::Integrations::Destination::Klaviyo::Client::KLAVIYO_AUTH_PAYLOAD }
+  let(:headers) do
+    {
+      "Accept" => "application/json",
+      "Authorization" => "Klaviyo-API-Key #{api_key}",
+      "Revision" => "2023-02-22",
+      "Content-Type" => "application/json"
+    }
+  end
+
   describe "#check_connection" do
-    let(:api_key) { "test_api_key" }
-    let(:connection_config) { { private_api_key: api_key } }
-    let(:klaviyo_endpoint) { Multiwoven::Integrations::Destination::Klaviyo::Client::KLAVIYO_AUTH_ENDPOINT }
-    let(:klaviyo_payload) { Multiwoven::Integrations::Destination::Klaviyo::Client::KLAVIYO_AUTH_PAYLOAD }
-
-    let(:headers) do
-      {
-        "Accept" => "application/json",
-        "Authorization" => "Klaviyo-API-Key #{api_key}",
-        "Revision" => "2023-02-22",
-        "Content-Type" => "application/json"
-      }
-    end
-
     before do
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
     end
@@ -36,7 +35,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
       end
 
       it "returns a successful connection status" do
-        result = subject.check_connection(connection_config)
+        message = subject.check_connection(connection_config)
+        result = message.connection_status
+
         expect(result.status).to eq(Multiwoven::Integrations::Protocol::ConnectionStatusType["succeeded"])
       end
     end
@@ -52,7 +53,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
       end
 
       it "returns a failed connection status with an error message" do
-        result = subject.check_connection(connection_config)
+        message = subject.check_connection(connection_config)
+        result = message.connection_status
+
         expect(result.status).to eq(Multiwoven::Integrations::Protocol::ConnectionStatusType["failed"])
         expect(result.message).to eq(error_message)
       end
@@ -67,7 +70,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
       end
 
       it "returns a failed connection status with a default error message" do
-        result = subject.check_connection(connection_config)
+        message = subject.check_connection(connection_config)
+        result = message.connection_status
+
         expect(result.status).to eq(Multiwoven::Integrations::Protocol::ConnectionStatusType["failed"])
         expect(result.message).to include("Klaviyo auth failed")
       end
@@ -81,14 +86,14 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
           "name": "SourceConnectorName",
           "type": "source",
           "connection_specification": {
-            "private_api_key": "test"
+            "private_api_key": "test_api_key"
           }
         },
         "destination": {
           "name": "DestinationConnectorName",
           "type": "destination",
           "connection_specification": {
-            "private_api_key": "test"
+            "private_api_key": "test_api_key"
           }
         },
         "model": {
@@ -111,12 +116,21 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
         "sync_mode": "full_refresh",
         "cursor_field": "timestamp",
         "destination_sync_mode": "upsert"
-      }
+      }.with_indifferent_access
     end
 
     let(:records) do
-      [{ data: { id: 1, name: "Sample Record 1" }, emitted_at: Time.now.to_i },
-       { data: { id: 2, name: "Sample Record 2" }, emitted_at: Time.now.to_i }]
+      [
+        Multiwoven::Integrations::Protocol::RecordMessage.new(
+          data: { id: 1, name: "Sample Record 1" },
+          emitted_at: Time.now.to_i
+        ),
+        Multiwoven::Integrations::Protocol::RecordMessage.new(
+          data: { id: 2, name: "Sample Record 2" },
+          emitted_at: Time.now.to_i
+        )
+
+      ]
     end
 
     context "when the write is successful" do
@@ -127,10 +141,11 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
 
         stub_request(:any, sync_config.stream.url)
           .to_return(status: 200, body: '{"message": "Success"}')
-        tracker = subject.write(sync_config, records)
+        message = subject.write(sync_config, records)
+        tracker = message.tracking
 
-        expect(tracker[:success]).to eq(records.count)
-        expect(tracker[:failed]).to eq(0)
+        expect(tracker.success).to eq(records.count)
+        expect(tracker.failed).to eq(0)
       end
     end
 
@@ -142,10 +157,26 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
         stub_request(:any, sync_config.stream.url)
           .to_return(status: 500, body: '{"message": "Error"}')
 
-        tracker = subject.write(sync_config, records)
+        message = subject.write(sync_config, records)
+        tracker = message.tracking
+        expect(tracker.failed).to eq(records.count)
+        expect(tracker.success).to eq(0)
+      end
 
-        expect(tracker[:failed]).to eq(records.count)
-        expect(tracker[:success]).to eq(0)
+      it "returns log message" do
+        sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(
+          sync_config_json.to_json
+        )
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(sync_config.stream.url, sync_config.stream.request_method, payload: records.first, headers: headers)
+          .and_raise(StandardError.new("test error"))
+
+        expect(subject).to receive(:handle_exception).with(
+          "KLAVIYO:WRITE:EXCEPTION",
+          "error",
+          an_instance_of(NoMethodError)
+        )
+        subject.write(sync_config, nil)
       end
     end
   end
