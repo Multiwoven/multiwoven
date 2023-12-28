@@ -1,8 +1,10 @@
-import AboutUs from "@/views/AboutUs";
-import Dashboard from "@/views/Dashboard";
-import Homepage from "@/views/Homepage";
-import Login from "@/views/Login";
-import SignUp from "@/views/SignUp";
+import { Suspense, lazy } from "react";
+
+const AboutUs = lazy(() => import("@/views/AboutUs"));
+const Dashboard = lazy(() => import("@/views/Dashboard"));
+const Homepage = lazy(() => import("@/views/Homepage"));
+const Login = lazy(() => import("@/views/Login"));
+const SignUp = lazy(() => import("@/views/SignUp"));
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -10,33 +12,59 @@ type MAIN_PAGE_ROUTES_ITEM = {
   component: JSX.Element;
 };
 
+const SuspenseWithLoader = ({
+  children,
+}: {
+  children: React.ReactElement;
+}): JSX.Element => <Suspense>{children}</Suspense>;
+
 export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
     name: "Homepage",
     url: "/",
-    component: <Homepage />,
+    component: (
+      <SuspenseWithLoader>
+        <Homepage />
+      </SuspenseWithLoader>
+    ),
   },
   {
     name: "Dashboard",
     url: "/dashboard",
-    component: <Dashboard />,
+    component: (
+      <SuspenseWithLoader>
+        <Dashboard />
+      </SuspenseWithLoader>
+    ),
   },
   {
     name: "About Us",
     url: "/about-us",
-    component: <AboutUs />,
-  }
+    component: (
+      <SuspenseWithLoader>
+        <AboutUs />
+      </SuspenseWithLoader>
+    ),
+  },
 ];
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
     name: "Login",
     url: "/login",
-    component: <Login />,
+    component: (
+      <SuspenseWithLoader>
+        <Login />
+      </SuspenseWithLoader>
+    ),
   },
   {
     name: "Sign Up",
     url: "/sign-up",
-    component: <SignUp />,
+    component: (
+      <SuspenseWithLoader>
+        <SignUp />
+      </SuspenseWithLoader>
+    ),
   },
 ];

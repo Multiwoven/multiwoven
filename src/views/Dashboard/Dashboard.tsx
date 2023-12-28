@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/layout";
 
 const Dashboard = (): JSX.Element => {
   return (
