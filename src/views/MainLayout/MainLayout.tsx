@@ -1,5 +1,5 @@
 import Sidebar from "@/views/Sidebar";
-import { Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/layout";
 import { Outlet } from "react-router-dom";
 
 const MainLayout = (): JSX.Element => {
