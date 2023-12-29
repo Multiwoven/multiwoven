@@ -2,8 +2,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
-    VStack, Image, Heading, Text, Link, Container, Flex, background
+    Box, Button, FormControl, Input, Image, Heading, Text, Link, Container
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
@@ -19,7 +18,7 @@ const SignUpSchema = Yup.object().shape({
         .min(8, 'Password must be at least 8 characters')
         .required('Password is required'),
     password_confirmation: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .oneOf([Yup.ref('password'), ''], 'Passwords must match')
         .required('Confirm Password is required'),
 });
 
@@ -63,21 +62,21 @@ const SignUp = () => {
                         >
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="name" isInvalid={errors.name && touched.name}>
+                                    <FormControl mb='24px' id="name">
                                         <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
                                     </FormControl>
 
-                                    <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
+                                    <FormControl mb='24px' id="email" isInvalid={touched.email}>
                                         <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
                                         {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
                                     </FormControl>
 
-                                    <FormControl mb='24px' id="password" isInvalid={errors.password && touched.password}>
+                                    <FormControl mb='24px' id="password" isInvalid={touched.password}>
                                         <Input type="password" placeholder='Password' {...getFieldProps('password')} />
                                         {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
                                     </FormControl>
 
-                                    <FormControl mb='8px' id="password_confirmation" isInvalid={errors.password_confirmation && touched.password_confirmation}>
+                                    <FormControl mb='8px' id="password_confirmation" isInvalid={touched.password_confirmation}>
                                         <Input type="password" placeholder='Confirm Password' {...getFieldProps('password_confirmation')} />
                                         {/* <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage> */}
                                     </FormControl>

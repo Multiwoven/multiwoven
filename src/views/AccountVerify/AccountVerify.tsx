@@ -1,9 +1,8 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-    Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
-    VStack, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox, background
+    Box, Button, FormControl, Image, Heading, Text, Input, Container,
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
@@ -60,7 +59,7 @@ const AccountVerify = () => {
                         >
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
+                                    <FormControl mb='24px' id="email" data-invalid={errors.email && touched.email}>
                                         <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('email')} />
                                         {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
                                     </FormControl>

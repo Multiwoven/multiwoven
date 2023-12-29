@@ -2,8 +2,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-    Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
-    VStack, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox, background
+    Box, Button, FormControl, Input, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
@@ -55,14 +54,14 @@ const Login = () => {
                             validationSchema={SignUpSchema}
                             onSubmit={(values) => handleSubmit(values)}
                         >
-                            {({ getFieldProps, errors, touched }) => (
+                            {({ getFieldProps, touched }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
+                                    <FormControl mb='24px' id="email" isInvalid={touched.email}>
                                         <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
                                         {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
                                     </FormControl>
 
-                                    <FormControl mb='24px' id="password" isInvalid={errors.password && touched.password}>
+                                    <FormControl mb='24px' id="password" isInvalid={touched.password}>
                                         <Input type="password" placeholder='Password' {...getFieldProps('password')} />
                                         {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
                                     </FormControl>
