@@ -60,7 +60,7 @@ const SignUp = () => {
                             onSubmit={(values) => handleSubmit(values)}
 
                         >
-                            {({ getFieldProps, errors, touched }) => (
+                            {({ getFieldProps, touched }) => (
                                 <Form>
                                     <FormControl mb='24px' id="name">
                                         <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
