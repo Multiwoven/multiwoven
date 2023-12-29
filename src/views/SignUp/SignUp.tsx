@@ -1,6 +1,6 @@
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Image, Heading, Text, Link, Container } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
@@ -31,7 +31,7 @@ const SignUp = () => {
         show: false, 
         alertMessage: message
     });
-
+    const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
         const new_values = {
             "email": values.email,
@@ -39,11 +39,15 @@ const SignUp = () => {
             "password_confirmation": values.password_confirmation,
         }
         let data = JSON.stringify(new_values)
-        
+
         setMessages( { show:false, alertMessage:message } )
         console.log(values,data)
-        await axios.post('/signup', data).then(response => {
+        await axios.post('/signup', data)
+        .then(response => {
             console.log("respone", response)
+            sessionStorage.setItem("userEmail",values.email)
+            navigate('/account-verify')
+            
         }).catch(error => {
             console.error('signUp error:', error);
             message = {

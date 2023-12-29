@@ -6,24 +6,25 @@ import {
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
-import Cookies from 'js-cookie';
+
 // Yup validation schema
 const SignUpSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-    password: Yup.string()
-        .required('Password is required'),
+    code: Yup.string()
+        .required('Code is required'),
 });
 
 const AccountVerify = () => {
     const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
-        let data = JSON.stringify(values)
-        await axios.post('/login', data).then(response => {
-            let token = response?.data?.token;
-            Cookies.set('authToken', token);
-            navigate('/')
+        let data = {
+            "email":sessionStorage.getItem("userEmail"),
+            "confirmation_code":values.code
+        }
+        await axios.post('/verify_code', data)
+        .then(response => {
+            if (response.status === 200) {
+                navigate('/login')
+            }
         }).catch(error => {
             console.error('Login error:', error);
         })
@@ -50,18 +51,18 @@ const AccountVerify = () => {
                             Verify Your account
                         </Heading>
                         <Text display='flex' mt="1" mb='7' justifyContent="center" fontSize="md" color="gray.500">
-                            Please check your email for the verification code
+                            Please check your Email for the verification code
                         </Text>
                         <Formik
-                            initialValues={{ email: '', password: '' }}
+                            initialValues={{ code: '' }}
                             validationSchema={SignUpSchema}
                             onSubmit={(values) => handleSubmit(values)}
                         >
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="email" data-invalid={errors.email && touched.email}>
-                                        <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('email')} />
-                                        {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                    <FormControl mb='24px' id="code" data-invalid={errors.code && touched.code}>
+                                        <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('code')} />
+                                        {/* <FormErrorMessage>{errors.code}</FormErrorMessage> */}
                                     </FormControl>
 
 
