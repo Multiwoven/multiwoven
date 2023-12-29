@@ -1,23 +1,34 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
     VStack, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox, background
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
-
+import { axiosInstance as axios } from "../../services/axios";
+import Cookies from 'js-cookie';
 // Yup validation schema
 const SignUpSchema = Yup.object().shape({
     email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
     password: Yup.string()
-        .min(8, 'Password must be at least 8 characters')
         .required('Password is required'),
 });
 
-function Login() {
+const Login = () => {
+    const navigate = useNavigate();
+    const handleSubmit = async (values: any) => {
+        let data = JSON.stringify(values)
+        await axios.post('/login', data).then(response => {
+            let token = response?.data?.token;
+            Cookies.set('authToken', token);
+            navigate('/')
+        }).catch(error => {
+            console.error('Login error:', error);
+        })
+    }
     return (
 
         <Container display='flex' flexDir='column' justifyContent='center' maxW='650' minH='100vh' className='flex flex-col align-center justify-center'>
@@ -42,10 +53,7 @@ function Login() {
                         <Formik
                             initialValues={{ email: '', password: '' }}
                             validationSchema={SignUpSchema}
-                            onSubmit={(values, actions) => {
-                                console.log(values);
-                                actions.setSubmitting(false);
-                            }}
+                            onSubmit={(values) => handleSubmit(values)}
                         >
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
@@ -59,7 +67,7 @@ function Login() {
                                         {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
                                     </FormControl>
 
-                                    <Button type="submit" background="#E63D2D" color='white' width="full" _hover={{ background: "#E63D2D" }}>
+                                    <Button type="submit" background="#731447" color='white' width="full" _hover={{ background: "#731447" }}>
                                         Login
                                     </Button>
                                 </Form>
@@ -74,14 +82,14 @@ function Login() {
                                 </Text>
                                 <Spacer />
                                 <Text mt="4" textAlign="right" fontSize="sm" color="gray.500">
-                                    <Link fontWeight="500" as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                                    <Link fontWeight="500" as={RouterLink} to="/login" color="#5383EC" _hover={{ color: '#5383EC' }}>
                                         Forgot password
                                     </Link>
                                 </Text>
                             </Flex>
                             <Text display='flex' mt="5" textAlign="left" fontSize="sm" color="gray.500">
                                 Don't have an account?
-                                <Link ml='1' as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                                <Link ml='1' as={RouterLink} to="/sign-up" color="#5383EC" _hover={{ color: '#5383EC' }}>
                                     Sign Up
                                 </Link>
                             </Text>

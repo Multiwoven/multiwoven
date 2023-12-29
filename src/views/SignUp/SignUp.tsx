@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     Box, Button, FormControl, FormLabel, FormErrorMessage, Input,
-    VStack, Image, Heading, Text, Link, Container, Flex
+    VStack, Image, Heading, Text, Link, Container, Flex, background
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
@@ -23,16 +23,17 @@ const SignUpSchema = Yup.object().shape({
         .required('Confirm Password is required'),
 });
 
-const handleSubmit = async (values: any) => {
-    let data = JSON.stringify(values)
-    await axios.post('/signup', data).then(response => {
-        console.log("respone", response)
-    }).catch(error => {
-        console.error('signUp error:', error);
-    })
-}
 
-function SignUp() {
+
+const SignUp = () => {
+    const handleSubmit = async (values: any) => {
+        let data = JSON.stringify(values)
+        await axios.post('/signup', data).then(response => {
+            console.log("respone", response)
+        }).catch(error => {
+            console.error('signUp error:', error);
+        })
+    }
     return (
 
         <Container display='flex' flexDir='column' justifyContent='center' maxW='650' minH='100vh' className='flex flex-col align-center justify-center'>
@@ -84,7 +85,7 @@ function SignUp() {
                                         At least 8 characters long
                                     </Text>
 
-                                    <Button type="submit" background="#E63D2D" color='white' width="full">
+                                    <Button type="submit" background="#731447DD" color='white' width="full" _hover={{ background: '#731447DD' }}>
                                         Create Account
                                     </Button>
                                 </Form>
@@ -94,7 +95,7 @@ function SignUp() {
 
                     <Text mt="10" textAlign="center" fontSize="sm" color="gray.500">
                         Already have an account?{' '}
-                        <Link as={RouterLink} to="/login" color="#E63D2D" _hover={{ color: '#E63D2D' }}>
+                        <Link as={RouterLink} to="/login" color="#5383EC" _hover={{ color: '#5383EC' }}>
                             Sign In
                         </Link>
                     </Text>
