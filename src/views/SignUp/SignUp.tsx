@@ -42,7 +42,7 @@ const SignUp = () => {
             <Box width='100%' className="flex min-h-full flex-1 flex-col align-center justify-center py-12 sm:px-6 lg:px-8">
                 <Box display='flex' justifyContent='center' className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image
-                        maxW="360px"
+                        maxW="300px"
                         w="95%"
                         src={MultiwovenLogo}
                         alt="Multiwoven"

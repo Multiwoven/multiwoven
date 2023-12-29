@@ -17,7 +17,7 @@ const SignUpSchema = Yup.object().shape({
         .required('Password is required'),
 });
 
-const Login = () => {
+const AccountVerify = () => {
     const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
         let data = JSON.stringify(values)
@@ -47,9 +47,12 @@ const Login = () => {
 
                 <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
                     <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="9" rounded="lg" className="sm:px-12">
-                        <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
-                            Log in to your account
+                        <Heading fontSize='40px' as="h2" mt="0" mb='2' fontWeight="normal" textAlign="center" >
+                            Verify Your account
                         </Heading>
+                        <Text display='flex' mt="1" mb='7' justifyContent="center" fontSize="md" color="gray.500">
+                            Please check your email for the verification code
+                        </Text>
                         <Formik
                             initialValues={{ email: '', password: '' }}
                             validationSchema={SignUpSchema}
@@ -58,42 +61,18 @@ const Login = () => {
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
                                     <FormControl mb='24px' id="email" isInvalid={errors.email && touched.email}>
-                                        <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
+                                        <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('email')} />
                                         {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
                                     </FormControl>
 
-                                    <FormControl mb='24px' id="password" isInvalid={errors.password && touched.password}>
-                                        <Input type="password" placeholder='Password' {...getFieldProps('password')} />
-                                        {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
-                                    </FormControl>
 
                                     <Button type="submit" background="#731447" color='white' width="full" _hover={{ background: "#731447" }}>
-                                        Login
+                                        Submit
                                     </Button>
                                 </Form>
                             )}
                         </Formik>
-                        <Box width='100%' className="flex min-h-full flex-1 flex-col align-center justify-center py-12 sm:px-6 lg:px-8">
-                            <Flex paddingBottom='5' borderBottom='1px' borderColor='#CCBBDD5E'>
-                                <Text mt="4" textAlign="left" fontSize="sm" color="black">
-                                    <Checkbox size='md' colorScheme='blue'>
-                                        Remember me
-                                    </Checkbox>
-                                </Text>
-                                <Spacer />
-                                <Text mt="4" textAlign="right" fontSize="sm" color="gray.500">
-                                    <Link fontWeight="500" as={RouterLink} to="/login" color="#5383EC" _hover={{ color: '#5383EC' }}>
-                                        Forgot password
-                                    </Link>
-                                </Text>
-                            </Flex>
-                            <Text display='flex' mt="5" textAlign="left" fontSize="sm" color="gray.500">
-                                Don't have an account?
-                                <Link ml='1' as={RouterLink} to="/sign-up" color="#5383EC" _hover={{ color: '#5383EC' }}>
-                                    Sign Up
-                                </Link>
-                            </Text>
-                        </Box>
+
                     </Box>
 
 
@@ -105,4 +84,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default AccountVerify;
