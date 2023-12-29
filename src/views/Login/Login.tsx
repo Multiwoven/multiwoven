@@ -1,4 +1,4 @@
-import { Formik, Form } from 'formik';
+import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
@@ -7,6 +7,8 @@ import {
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
 import Cookies from 'js-cookie';
+import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
+import { useState } from 'react';
 // Yup validation schema
 const SignUpSchema = Yup.object().shape({
     email: Yup.string()
@@ -17,15 +19,29 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const Login = () => {
+
+    let message = alertMessage;
+    const [messages, setMessages] = useState({ 
+        show: false, 
+        alertMessage: message
+    });
+
     const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
         let data = JSON.stringify(values)
+        setMessages( { show:false, alertMessage:message } )
         await axios.post('/login', data).then(response => {
             let token = response?.data?.token;
             Cookies.set('authToken', token);
             navigate('/')
         }).catch(error => {
             console.error('Login error:', error);
+            message = {
+                status: 'error',
+                title: 'Sign Up Error',
+                description: error.code
+            }
+            setMessages( { show: true, alertMessage:message })
         })
     }
     return (
@@ -49,6 +65,7 @@ const Login = () => {
                         <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
                             Log in to your account
                         </Heading>
+                        { messages.show ? <AlertPopUp {...messages.alertMessage}/> : <></> }
                         <Formik
                             initialValues={{ email: '', password: '' }}
                             validationSchema={SignUpSchema}
@@ -59,11 +76,13 @@ const Login = () => {
                                     <FormControl mb='24px' id="email" isInvalid={touched.email}>
                                         <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
                                         {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                        <ErrorMessage name='email' />
                                     </FormControl>
 
                                     <FormControl mb='24px' id="password" isInvalid={touched.password}>
                                         <Input type="password" placeholder='Password' {...getFieldProps('password')} />
                                         {/* <FormErrorMessage>{errors.password}</FormErrorMessage> */}
+                                        <ErrorMessage name='password' />
                                     </FormControl>
 
                                     <Button type="submit" background="#731447" color='white' width="full" _hover={{ background: "#731447" }}>
