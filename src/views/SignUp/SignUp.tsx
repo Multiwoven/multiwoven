@@ -49,8 +49,8 @@ const SignUp = () => {
 
                 </Box>
 
-                <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
-                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="9" rounded="lg" className="sm:px-12">
+                <Box mt="14" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
+                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="12" rounded="lg" className="sm:px-12">
                         <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
                             Create an account
                         </Heading>
@@ -90,14 +90,15 @@ const SignUp = () => {
                                 </Form>
                             )}
                         </Formik>
+                        <Text mt="6" textAlign="left" fontSize="sm" color="gray.500">
+                            Already have an account?{' '}
+                            <Link as={RouterLink} to="/login" color="#5383EC" _hover={{ color: '#5383EC' }}>
+                                Sign In
+                            </Link>
+                        </Text>
                     </Box>
 
-                    <Text mt="10" textAlign="center" fontSize="sm" color="gray.500">
-                        Already have an account?{' '}
-                        <Link as={RouterLink} to="/login" color="#5383EC" _hover={{ color: '#5383EC' }}>
-                            Sign In
-                        </Link>
-                    </Text>
+
                 </Box>
             </Box>
 

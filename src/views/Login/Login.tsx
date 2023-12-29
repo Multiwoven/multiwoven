@@ -44,8 +44,8 @@ const Login = () => {
 
                 </Box>
 
-                <Box mt="10" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
-                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="9" rounded="lg" className="sm:px-12">
+                <Box mt="14" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
+                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="12" rounded="lg" className="sm:px-12">
                         <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
                             Log in to your account
                         </Heading>
