@@ -38,8 +38,8 @@ const Login = () => {
             console.error('Login error:', error);
             message = {
                 status: 'error',
-                title: 'Sign Up Error',
-                description: error.code
+                title: 'Login Error',
+                description: error.response.data.error
             }
             setMessages( { show: true, alertMessage:message })
         })
