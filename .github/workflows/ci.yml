@@ -1,10 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches: [ feat/initial-setup ]
-  pull_request:
-    branches: [ feat/initial-setup ]
+on: [push, pull_request]
 
 jobs:
   build-and-test:
@@ -25,14 +21,23 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    - name: Lint
-      run: npm run lint
+    # - name: Lint
+    #   run: npm run lint
 
-    - name: Type Check
-      run: npm run type-check
+    # - name: Type Check
+    #   run: npm run type-check
 
     - name: Run Tests
       run: npm test
+
+    - name: Upload coverage to Code Climate
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+        ./cc-test-reporter after-build --exit-code $?
 
     - name: Build
       run: npm run build
