@@ -28,7 +28,7 @@ jobs:
     #   run: npm run type-check
 
     - name: Run Tests
-      run: npm test
+      run: npm test -- --coverage --coverageReporters=lcov
 
     - name: Upload coverage to Code Climate
       env:
@@ -37,7 +37,7 @@ jobs:
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-        ./cc-test-reporter after-build --exit-code $?
+        ./cc-test-reporter after-build --exit-code ${{ job.status }} --coverage-input-type lcov
 
     - name: Build
       run: npm run build
