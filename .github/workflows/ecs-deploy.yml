@@ -27,14 +27,14 @@ jobs:
         # Define ECS parameters
         CLUSTER_NAME="MultiwovenServer"
         SERVICE_NAME="MultiwovenServerService"
-        IMAGE_URI="253707965345.dkr.ecr.us-east-1.amazonaws.com/multiwoven-server:latest"  # Replace with your ECR image URI
+        IMAGE_URI="253707965345.dkr.ecr.us-east-1.amazonaws.com/multiwoven-server:latest"
         TASK_FAMILY="MultiwovenServer"
 
         # Fetch the current task definition
         CURRENT_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TASK_FAMILY --query 'taskDefinition')
 
         # Create a new task definition JSON with the updated image
-        NEW_TASK_DEFINITION=$(echo $CURRENT_TASK_DEFINITION | jq --arg IMAGE_URI "$IMAGE_URI" '.containerDefinitions[0].image = $IMAGE_URI | del(.revision, .taskDefinitionArn, .status, .requiresAttributes, .compatibilities)')
+        NEW_TASK_DEFINITION=$(echo $CURRENT_TASK_DEFINITION | jq --arg IMAGE_URI "$IMAGE_URI" '.containerDefinitions[0].image = $IMAGE_URI | del(.revision, .taskDefinitionArn, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .registeredAt, .registeredBy, .deregisteredAt, .placementConstraints, .volumes)')
 
         # Register the new task definition revision
         REGISTERED_TASK_DEF=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEFINITION")
