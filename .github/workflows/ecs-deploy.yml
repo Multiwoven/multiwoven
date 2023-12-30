@@ -1,0 +1,44 @@
+name: ECS Deploy
+
+on:
+  workflow_run:
+    workflows: ["Docker Build"]  # Ensure this matches the name of your Docker build workflow
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Deploy to ECS
+      run: |
+        # Define ECS parameters
+        CLUSTER_NAME="MultiwovenServer"
+        SERVICE_NAME="MultiwovenServerService"
+        IMAGE_URI="253707965345.dkr.ecr.us-east-1.amazonaws.com/multiwoven-server:latest"  # Replace with your ECR image URI
+        TASK_FAMILY="MultiwovenServer"
+
+        # Fetch the current task definition
+        CURRENT_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TASK_FAMILY --query 'taskDefinition')
+
+        # Create a new task definition JSON with the updated image
+        NEW_TASK_DEFINITION=$(echo $CURRENT_TASK_DEFINITION | jq --arg IMAGE_URI "$IMAGE_URI" '.containerDefinitions[0].image = $IMAGE_URI | del(.revision, .taskDefinitionArn, .status, .requiresAttributes, .compatibilities)')
+
+        # Register the new task definition revision
+        REGISTERED_TASK_DEF=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEFINITION")
+        NEW_TASK_DEF_ARN=$(echo $REGISTERED_TASK_DEF | jq -r '.taskDefinition.taskDefinitionArn')
+
+        # Update the ECS service to use the new task definition revision
+        aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEF_ARN

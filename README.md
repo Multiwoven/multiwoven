@@ -1,11 +1,45 @@
-# Multiwoven Server
+<div align="center">
+  <a href="https://multiwoven.com?utm_source=github" target="_blank">
+    <img alt="Multiwoven Logo" src="https://framerusercontent.com/images/QI2W5kDjl2HGKnAISsV9WVxcR0I.png?scale-down-to=512" width="280"/>
+  </a>
+</div>
 
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://github.com/Multiwoven/multiwoven-server/blob/main/LICENSE)
-[![CI](https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml)
-[![Docker Build](https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability)](https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage)](https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage)
+<br/>
 
+<p align="center">
+   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
+   <a href="https://github.com/Multiwoven/multiwoven-server/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL-blue.svg" alt="AGPL License"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml/badge.svg" alt="Docker Build"></a>
+  <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability" alt="Maintainability"></a>
+  <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage" alt="Test Coverage"></a>
+</p>
+
+<h2 align="center">The open-source reverse ETL platform for data teams</h2>
+
+<div align="center">Your ultimate solution for seamless data sync from warehouse to any application.</div>
+
+<p align="center">
+    <br />
+    <a href="https://docs.multiwoven.com" rel=""><strong>Explore the docs »</strong></a>
+    <br />
+
+  <br/>
+    <a href="https://github.com/Multiwoven/multiwoven/issues/new">Report Bug</a>
+    ·
+    <a href="https://github.com/Multiwoven/multiwoven/issues/new">Request Feature</a>
+    ·
+  <a href="https://discord.multiwoven.com">Join Our Discord</a>
+    ·
+    <a href="https://roadmap.multiwoven.com">Roadmap</a>
+    ·
+    <a href="https://twitter.com/multiwoven">X</a>
+    ·
+    <a href="https://multiwoven.com">Slack Community</a>
+  </p>
+
+
+## Multiwoven Server
 Welcome to the **Multiwoven Server**  repository! This backend component powers the Multiwoven app, providing a suite of APIs and encompassing the worker logic, business logic, and state management needed for the app's functionality.
 
 ## Technology Stack
