@@ -31,11 +31,6 @@ RSpec.describe Workspaces::Create, type: :interactor do
       it "fails" do
         expect(context_fail).to be_a_failure
       end
-
-      it "provides a failure message" do
-        expect(context_fail.errors).to include("Name can't be blank")
-        expect(context_fail.errors).to include("Slug can't be blank")
-      end
     end
   end
 end

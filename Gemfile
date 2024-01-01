@@ -18,7 +18,6 @@ gem "jbuilder"
 gem "jwt"
 gem "kaminari"
 gem "rack-cors"
-gem "rswag"
 
 # AuthN & AuthZ
 gem "devise"
@@ -34,9 +33,6 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "rspec-rails"
-  gem "rswag-api"
-  gem "rswag-specs"
-  gem "rswag-ui"
   gem "shoulda-matchers", "~> 5.0"
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
@@ -46,7 +42,7 @@ end
 group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
-  gem "awesome_print"
+  gem "byebug"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false

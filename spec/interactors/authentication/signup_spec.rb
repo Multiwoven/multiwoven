@@ -11,6 +11,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
     context "when provided with valid user attributes" do
       let(:params) do
         {
+          name: "Test User",
           email: "user@example.com",
           password: "password",
           password_confirmation: "password"
@@ -30,6 +31,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
       context "password and password_confirmation do not match" do
         let(:params) do
           {
+            name: "User",
             email: "user@example.com",
             password: "password",
             password_confirmation: "wrong_password"
@@ -48,6 +50,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
       context "email is missing" do
         let(:params) do
           {
+            name: "Test User",
             email: "",
             password: "password",
             password_confirmation: "password"
@@ -60,6 +63,25 @@ RSpec.describe Authentication::Signup, type: :interactor do
 
         it "provides error messages" do
           expect(context.errors).to include("Email can't be blank")
+        end
+      end
+
+      context "name is missing" do
+        let(:params) do
+          {
+            name: "",
+            email: "user@example.com",
+            password: "password",
+            password_confirmation: "password"
+          }
+        end
+
+        it "fails" do
+          expect(context).to be_failure
+        end
+
+        it "provides error messages" do
+          expect(context.errors).to include("Name can't be blank")
         end
       end
     end

@@ -32,7 +32,8 @@ RSpec.describe WorkspaceUsers::Update, type: :interactor do
       end
 
       it "provides a proper error message" do
-        expect(result.errors).to include("Role is not included in the list") # Adjust this error message based on your model's validation message.
+        error_message = "Role is not included in the list"
+        expect(result.errors).to include(error_message)
       end
     end
 

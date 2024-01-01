@@ -9,6 +9,7 @@ AllCops:
   SuggestExtensions: false
   TargetRubyVersion: 3.2
   Exclude:
+    - 'db/migrate/**/*.rb'
     - 'db/schema.rb'
     - 'vendor/**/*'
     - 'config/**/*'

@@ -76,13 +76,10 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    addressable (2.8.5)
-      public_suffix (>= 2.0.2, < 6.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    awesome_print (1.9.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.838.0)
     aws-sdk (3.1.0)
@@ -1526,6 +1523,7 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    byebug (11.1.3)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
@@ -1577,8 +1575,6 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.6.3)
-    json-schema (3.0.0)
-      addressable (>= 2.8)
     jwt (2.7.1)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -1632,7 +1628,6 @@ GEM
     pg (1.5.4)
     psych (5.1.1.1)
       stringio
-    public_suffix (5.0.3)
     puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -1704,20 +1699,6 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
-    rswag (2.11.0)
-      rswag-api (= 2.11.0)
-      rswag-specs (= 2.11.0)
-      rswag-ui (= 2.11.0)
-    rswag-api (2.11.0)
-      railties (>= 3.1, < 7.2)
-    rswag-specs (2.11.0)
-      activesupport (>= 3.1, < 7.2)
-      json-schema (>= 2.2, < 4.0)
-      railties (>= 3.1, < 7.2)
-      rspec-core (>= 2.14)
-    rswag-ui (2.11.0)
-      actionpack (>= 3.1, < 7.2)
-      railties (>= 3.1, < 7.2)
     rubocop (1.57.1)
       base64 (~> 0.1.1)
       json (~> 2.3)
@@ -1771,15 +1752,16 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-22
+  arm64-darwin-23
   x86_64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
   aasm
   annotate
-  awesome_print
   aws-sdk
   bootsnap
+  byebug
   debug
   devise
   devise-jwt
@@ -1795,10 +1777,6 @@ DEPENDENCIES
   rails (~> 7.1.1)
   redis (~> 4.0)
   rspec-rails
-  rswag
-  rswag-api
-  rswag-specs
-  rswag-ui
   rubocop
   rubocop-performance
   rubocop-rails

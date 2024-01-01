@@ -74,3 +74,9 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+RSpec::Matchers.define :devise do |expected|
+  match do |actual|
+    actual.class.devise_modules.include?(expected)
+  end
+end

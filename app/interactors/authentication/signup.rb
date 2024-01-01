@@ -17,6 +17,7 @@ module Authentication
 
     def create_new_user
       self.user = User.new(
+        name: context.params[:name],
         email: context.params[:email],
         password: context.params[:password],
         password_confirmation: context.params[:password_confirmation]

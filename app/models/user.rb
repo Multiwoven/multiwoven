@@ -7,6 +7,7 @@
 #  id                     :bigint           not null, primary key
 #  confirmation_code      :string
 #  confirmed_at           :datetime
+#  name                   :string
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
 #  jti                    :string
@@ -28,7 +29,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
-  validates :email, presence: true
+  validates :name, :email, presence: true
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
 

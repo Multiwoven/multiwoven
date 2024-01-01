@@ -11,7 +11,7 @@ module Api
         if result.success?
           render json: { token: result.token }, status: :ok
         else
-          render json: { error: result.error }, status: :unauthorized
+          render_error(message: result.error, status: :unauthorized)
         end
       end
 
@@ -20,7 +20,8 @@ module Api
         if result.success?
           render json: { message: result.message }, status: :created
         else
-          render json: { errors: result.message }, status: :unprocessable_entity
+          render_error(message: "Signup failed", status: :unprocessable_entity,
+                       details: format_signup_errors(result.errors))
         end
       end
 
@@ -29,7 +30,7 @@ module Api
         if result.success?
           render json: { message: result.message }, status: :ok
         else
-          render json: { error: result.message }, status: :internal_server_error
+          render_error(message: result.message, status: :internal_server_error)
         end
       end
 
@@ -40,7 +41,7 @@ module Api
           user.send_reset_password_instructions
           render json: { message: "Reset password instructions sent to email." }, status: :ok
         else
-          render json: { error: "Email not found" }, status: :not_found
+          render_error(message: "Email not found", status: :not_found)
         end
       end
 
@@ -50,7 +51,7 @@ module Api
         if user&.reset_password(params[:password], params[:password_confirmation])
           render json: { message: "Password successfully reset." }, status: :ok
         else
-          render json: { error: "Invalid token or password mismatch." }, status: :unprocessable_entity
+          render_error(message: "Invalid token or password mismatch.", status: :unprocessable_entity)
         end
       end
 
@@ -61,8 +62,20 @@ module Api
           user.update!(confirmed_at: Time.current, confirmation_code: nil)
           render json: { message: "Account verified successfully!" }, status: :ok
         else
-          render json: { error: "Invalid confirmation code." }, status: :unprocessable_entity
+          render_error(message: "Invalid confirmation code.", status: :unprocessable_entity)
         end
+      end
+
+      private
+
+      def format_signup_errors(errors)
+        formatted_errors = {}
+        errors.each do |error_message|
+          field, message = error_message.split(" ", 2)
+          field = field.strip.to_sym if field
+          formatted_errors[field] = message if field
+        end
+        formatted_errors
       end
     end
   end

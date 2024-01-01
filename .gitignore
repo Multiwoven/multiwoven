@@ -41,3 +41,5 @@ lib/tasks/*.rake
 
 # Ignore rswag files
 swagger/.DS_Store
+
+.byebug_history
