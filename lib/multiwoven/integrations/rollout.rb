@@ -7,6 +7,7 @@ module Multiwoven
     ENABLED_SOURCES = %w[
       Snowflake
       Redshift
+      Bigquery
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

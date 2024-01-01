@@ -29,6 +29,8 @@ gem "webmock", "~> 3.0"
 
 gem "activesupport"
 
+gem "google-cloud-bigquery"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

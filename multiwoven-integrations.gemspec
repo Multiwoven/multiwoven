@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "dry-schema"
   spec.add_runtime_dependency "dry-struct"
   spec.add_runtime_dependency "dry-types"
+  spec.add_runtime_dependency "google-cloud-bigquery"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
   spec.add_runtime_dependency "ruby-odbc", "~> 0.999992"
