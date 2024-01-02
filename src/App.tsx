@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes"; // Assuming you have AUTH_ROUTES
+import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes";
 import Heading from "./components/Heading";
 import MainLayout from "./views/MainLayout";
 

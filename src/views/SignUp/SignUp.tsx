@@ -23,6 +23,9 @@ const SignUpSchema = Yup.object().shape({
         .required('Confirm Password is required'),
 });
 
+function errorToLine(errors:Array<String[]>) {
+    return errors.map(row => row.join(' '));
+}
 
 
 const SignUp = () => {
@@ -33,12 +36,7 @@ const SignUp = () => {
     });
     const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
-        const new_values = {
-            "email": values.email,
-            "password": values.password,
-            "password_confirmation": values.password_confirmation,
-        }
-        let data = JSON.stringify(new_values)
+        let data = JSON.stringify(values)
 
         setMessages( { show:false, alertMessage:message } )
         console.log(values,data)
@@ -49,12 +47,17 @@ const SignUp = () => {
             navigate('/account-verify')
             
         }).catch(error => {
-            console.error('signUp error:', error);
+            // console.error('signUp error:', error);
+
+            const error_message_obj = error.response.data.error.details;
+            const error_message = errorToLine(Object.entries(error_message_obj))
+            // console.log(error_message);
+            
             message = {
                 status: 'error',
-                title: 'Sign Up Error',
-                description: error.code
+                description: error_message
             }
+
             setMessages( { show: true, alertMessage:message })
         })
     }

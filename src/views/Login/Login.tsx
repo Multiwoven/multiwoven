@@ -35,11 +35,10 @@ const Login = () => {
             Cookies.set('authToken', token);
             navigate('/')
         }).catch(error => {
-            console.error('Login error:', error);
+            console.error('Login error:', error.response.data.error);
             message = {
                 status: 'error',
-                title: 'Login Error',
-                description: error.response.data.error
+                description: [error.response.data.error]
             }
             setMessages( { show: true, alertMessage:message })
         })
