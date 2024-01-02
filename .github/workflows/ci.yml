@@ -32,8 +32,9 @@ jobs:
 
     - name: Run tests and generate coverage
       run: npm run test
-      continue-on-error: true
       id: test-step
+      continue-on-error: true
+
 
     - name: Upload coverage to Code Climate
       if: always()
@@ -43,4 +44,5 @@ jobs:
         ./cc-test-reporter before-build
         ./cc-test-reporter after-build -t lcov --exit-code ${{ steps.test-step.outcome == 'success' && 0 || 1 }}
       env:
-        CC_TEST REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
