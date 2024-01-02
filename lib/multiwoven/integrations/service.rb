@@ -33,7 +33,7 @@ module Multiwoven
           enabled_connectors.map do |connector|
             connector_class(
               type, connector
-            ).new.meta_data
+            ).new.meta_data["data"]
           end
         end
 
