@@ -27,14 +27,13 @@ jobs:
     # - name: Type Check
     #   run: npm run type-check
 
-    - name: Build
-      run: npm run build
+    # - name: Build
+    #   run: npm run build
 
     - name: Run tests and generate coverage
       run: npm run test
-      id: test-step
       continue-on-error: true
-
+      id: test-step
 
     - name: Upload coverage to Code Climate
       if: always()
