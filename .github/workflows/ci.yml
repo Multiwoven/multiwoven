@@ -3,45 +3,34 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: [18.x]
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: npm install
 
-    # - name: Lint
+    # - name: Run linting
     #   run: npm run lint
 
-    # - name: Type Check
+    # - name: Run TypeScript type-check
     #   run: npm run type-check
 
-    # - name: Build
-    #   run: npm run build
-
-    - name: Run tests and generate coverage
-      run: npm run test
-      continue-on-error: true
-      id: test-step
+    - name: Run tests and collect coverage
+      run: npm test
 
     - name: Upload coverage to Code Climate
-      if: always()
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-        ./cc-test-reporter after-build -t lcov --exit-code ${{ steps.test-step.outcome == 'success' && 0 || 1 }}
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-
+        ./cc-test-reporter after-build --exit-code $?
