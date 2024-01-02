@@ -27,15 +27,12 @@ jobs:
       run: npm test
 
     - name: Upload coverage to Code Climate
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       run: |
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
         if [ -f coverage/lcov.info ]; then
-          ./cc-test-reporter after-build --exit-code $? --coverage-input-type lcov
+          ./cc-test-reporter after-build --exit-code $? --coverage-input-type lcov --prefix ${GITHUB_WORKSPACE}
         else
           echo "Coverage report not found."
         fi
+
 
