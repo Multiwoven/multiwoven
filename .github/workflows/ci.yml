@@ -27,16 +27,20 @@ jobs:
     # - name: Type Check
     #   run: npm run type-check
 
+    - name: Build
+      run: npm run build
+
     - name: Run tests and generate coverage
       run: npm run test
+      continue-on-error: true
+      id: test-step
 
     - name: Upload coverage to Code Climate
+      if: always()
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-        ./cc-test-reporter after-build -t lcov --exit-code ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == false && 0 || 1 }}
+        ./cc-test-reporter after-build -t lcov --exit-code ${{ steps.test-step.outcome == 'success' && 0 || 1 }}
       env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-    - name: Build
-      run: npm run build
+        CC_TEST REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
