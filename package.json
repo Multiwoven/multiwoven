@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test": "jest --passWithNoTests --coverage"
+    "test": "jest"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
