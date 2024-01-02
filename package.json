@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test": "npm run dev & wait-on http://localhost:8000 && cypress run"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -39,6 +39,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "jest": "^29.7.0",
     "sass": "^1.69.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
