@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  # spec.metadata["allowed_push_host"] = nil
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://www.multiwoven.com/"
@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "google-cloud-bigquery"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
-  spec.add_runtime_dependency "ruby-odbc", "~> 0.999992"
+  spec.add_runtime_dependency "mw-ruby-odbc"
   spec.add_runtime_dependency "sequel"
 
   spec.add_development_dependency "byebug"
