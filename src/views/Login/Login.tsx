@@ -21,15 +21,30 @@ const SignUpSchema = Yup.object().shape({
 const Login = () => {
 
     let message = alertMessage;
-    const [messages, setMessages] = useState({ 
-        show: false, 
+    const [messages, setMessages] = useState({
+        show: false,
         alertMessage: message
     });
 
     const navigate = useNavigate();
+
     const handleSubmit = async (values: any) => {
         let data = JSON.stringify(values)
-        setMessages( { show:false, alertMessage:message } )
+        setMessages({ show: false, alertMessage: message })
+        if (values.email === '' || values.email === '') {
+            message = {
+                status: 'error',
+                description: ['Please Enter Email and Password!']
+            }
+            setMessages({ show: true, alertMessage: message })
+            setTimeout(function () {
+                setMessages({ show: false, alertMessage: message })
+            }, 3000);
+
+            return false;
+        }
+
+
         await axios.post('/login', data).then(response => {
             let token = response?.data?.token;
             Cookies.set('authToken', token);
@@ -40,7 +55,7 @@ const Login = () => {
                 status: 'error',
                 description: [error.response.data.error]
             }
-            setMessages( { show: true, alertMessage:message })
+            setMessages({ show: true, alertMessage: message })
         })
     }
     return (
@@ -64,10 +79,10 @@ const Login = () => {
                         <Heading fontSize='40px' as="h2" mt="0" mb='10' fontWeight="normal" textAlign="center" >
                             Log in to your account
                         </Heading>
-                        { messages.show ? <AlertPopUp {...messages.alertMessage}/> : <></> }
+                        {messages.show ? <AlertPopUp {...messages.alertMessage} /> : <></>}
                         <Formik
                             initialValues={{ email: '', password: '' }}
-                            validationSchema={SignUpSchema}
+                            // validationSchema={SignUpSchema}
                             onSubmit={(values) => handleSubmit(values)}
                         >
                             {({ getFieldProps, touched }) => (
