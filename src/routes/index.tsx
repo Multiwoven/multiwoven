@@ -82,6 +82,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
       </SuspenseWithLoader>
     ),
   },
+  {
+    name: 'Sources',
+    url: '/sources',
+    component: (
+      <SuspenseWithLoader redirectRoute="/sources">
+        <AboutUs />
+      </SuspenseWithLoader>
+    ),
+  },
 ];
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
