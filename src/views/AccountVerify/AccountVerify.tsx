@@ -46,7 +46,7 @@ const AccountVerify = () => {
                 </Box>
 
                 <Box mt="14" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
-                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="12" rounded="lg" className="sm:px-12">
+                    <Box bg="white" border='1px' borderColor="border" px="24" py="12" rounded="lg" className="sm:px-12">
                         <Heading fontSize='40px' as="h2" mt="0" mb='2' fontWeight="normal" textAlign="center" >
                             Verify Your account
                         </Heading>
@@ -66,7 +66,7 @@ const AccountVerify = () => {
                                     </FormControl>
 
 
-                                    <Button type="submit" background="#731447" color='white' width="full" _hover={{ background: "#731447" }}>
+                                    <Button type="submit" background="secondary" color='white' width="full" _hover={{ background: "secondary" }}>
                                         Submit
                                     </Button>
                                 </Form>
