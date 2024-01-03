@@ -10,13 +10,19 @@ module Multiwoven
 
         def connectors
           {
-            source: build_connectors(ENABLED_SOURCES, "Source"),
-            destination: build_connectors(ENABLED_DESTINATIONS, "Destination")
+            source: build_connectors(
+              ENABLED_SOURCES, "Source"
+            ),
+            destination: build_connectors(
+              ENABLED_DESTINATIONS, "Destination"
+            )
           }
         end
 
         def connector_class(connector_type, connector_name)
-          Object.const_get("Multiwoven::Integrations::#{connector_type}::#{connector_name}::Client")
+          Object.const_get(
+            "Multiwoven::Integrations::#{connector_type}::#{connector_name}::Client"
+          )
         end
 
         def logger
@@ -31,9 +37,14 @@ module Multiwoven
 
         def build_connectors(enabled_connectors, type)
           enabled_connectors.map do |connector|
-            connector_class(
+            client = connector_class(
               type, connector
-            ).new.meta_data["data"]
+            ).new
+            client.meta_data["data"].to_h.merge(
+              {
+                connector_spec: client.connector_spec.to_h
+              }
+            )
           end
         end
 
