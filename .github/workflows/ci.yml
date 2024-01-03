@@ -24,7 +24,7 @@ jobs:
     #   run: npm run type-check
 
     - name: Run tests and collect coverage
-      run: npm test
+      run: npm test -- --coverage
 
     - name: Upload coverage to Code Climate
       env:

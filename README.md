@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ac28cea2714ae9868d9e/maintainability)](https://codeclimate.com/repos/658845e86ce9037ff3f7115b/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ac28cea2714ae9868d9e/test_coverage)](https://codeclimate.com/repos/658845e86ce9037ff3f7115b/test_coverage)
 
 <i>Multiwoven is an open-source **Reverse ETL** data activation platform for modern teams.</i>
 
