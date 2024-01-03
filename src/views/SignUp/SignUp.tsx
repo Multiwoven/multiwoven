@@ -3,12 +3,11 @@ import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Image, Heading, Text, Link, Container } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
-import { axiosInstance as axios } from "../../services/axios";
-import { useState } from 'react';
 import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
-import { AlertData } from '@/components/commonTypes';
 
-// Yup validation schema
+import { useState } from 'react';
+import signUp from '@/services/sign-up';
+
 const SignUpSchema = Yup.object().shape({
     name: Yup.string()
         .required('Name is required'),
@@ -23,44 +22,32 @@ const SignUpSchema = Yup.object().shape({
         .required('Confirm Password is required'),
 });
 
-function errorToLine(errors:Array<String[]>) {
-    return errors.map(row => row.join(' '));
-}
-
-
 const SignUp = () => {
     let message = alertMessage;
     const [messages, setMessages] = useState({ 
         show: false, 
         alertMessage: message
     });
+    
     const navigate = useNavigate();
+    
     const handleSubmit = async (values: any) => {
-        let data = JSON.stringify(values)
+        setMessages({ show: false, alertMessage: message });
 
-        setMessages( { show:false, alertMessage:message } )
-        console.log(values,data)
-        await axios.post('/signup', data)
-        .then(response => {
-            console.log("respone", response)
-            sessionStorage.setItem("userEmail",values.email)
-            navigate('/account-verify')
-            
-        }).catch(error => {
-            // console.error('signUp error:', error);
+        const result = await signUp(values);
 
-            const error_message_obj = error.response.data.error.details;
-            const error_message = errorToLine(Object.entries(error_message_obj))
-            // console.log(error_message);
-            
+        if (result.success) {
+            sessionStorage.setItem("userEmail", values.email);
+            navigate('/account-verify');
+        } else {
             message = {
                 status: 'error',
-                description: error_message
-            }
+                description: result.error || ["Some error has occured"]
+            };
+            setMessages({ show: true, alertMessage: message });
+        }
+    };
 
-            setMessages( { show: true, alertMessage:message })
-        })
-    }
     return (
         <>
             <Container display='flex' flexDir='column' justifyContent='center' maxW='650' minH='100vh' className='flex flex-col align-center justify-center'>

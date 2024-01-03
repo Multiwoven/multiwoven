@@ -1,24 +1,20 @@
-// import axiosInstance from './axios';
-// // import { axiosInstance as axios } from "./axios";
+import { axiosInstance as axios } from "./axios";
 
-// const signUp = async (email: string, password: string, confirmPassword: string) => {
-//     try {
-//         const response = await axiosInstance.post('/signup', 
-//             { 
-//                 "email": email, 
-//                 "password": password, 
-//                 "password_confirmation": confirmPassword,
-//             }
-//         );
-//         if (response.status === 201) {
-//             return "Successfully Registered"
-//         } else if (response.status === 409) {
-//             return "User already exists"
-//         }
-//     } catch (error) {
-//         console.error('signUp error:', error);
-//         throw error;
-//     }
-// };
+function errorToLine(errors:Array<String[]>) {
+    return errors.map(row => row.join(' '));
+}
 
-// export default signUp;
+const signUp = async (values: any) => {
+    let data = JSON.stringify(values);
+
+    try {
+        const response = await axios.post('/signup', data);
+        return { success: true, response };
+    } catch (error:any) {
+        const error_message_obj = error.response.data.error.details;
+        const error_message = errorToLine(Object.entries(error_message_obj));
+        return { success: false, error: error_message };
+    }
+};
+
+export default signUp;
