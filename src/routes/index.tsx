@@ -8,6 +8,7 @@ const SignUp = lazy(() => import("@/views/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
 
 import Cookies from 'js-cookie';
+import ViewAll from "@/views/Connectors/ViewAll";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -84,10 +85,19 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   },
   {
     name: 'Sources',
-    url: '/sources',
+    url: '/sources/all',
     component: (
-      <SuspenseWithLoader redirectRoute="/sources">
-        <AboutUs />
+      <SuspenseWithLoader redirectRoute="/sources/all">
+        <ViewAll connectorType="source" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Destinations',
+    url: '/destinations/all',
+    component: (
+      <SuspenseWithLoader redirectRoute="/destinations/all">
+        <ViewAll connectorType="destination" />
       </SuspenseWithLoader>
     ),
   },
