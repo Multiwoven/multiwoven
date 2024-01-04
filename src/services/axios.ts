@@ -20,11 +20,11 @@ axiosInstance?.interceptors.response.use(
     function responseError(error) {
         if (error && error.response && error.response.status === 401) {
 
-            window.alert("Authentication error.");
+            // window.alert("Authentication error.");
         }
         if (error && error.response && error.response.status === 403) {
 
-            window.alert("Authentication error.");
+            // window.alert("Authentication error.");
         }
         if (error && error.response && error.response.status === 501) {
 

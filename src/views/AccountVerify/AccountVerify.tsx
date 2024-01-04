@@ -6,24 +6,25 @@ import {
 } from '@chakra-ui/react';
 import MultiwovenLogo from '../../assets/images/multiwoven-logo.png';
 import { axiosInstance as axios } from "../../services/axios";
-import Cookies from 'js-cookie';
+
 // Yup validation schema
 const SignUpSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-    password: Yup.string()
-        .required('Password is required'),
+    code: Yup.string()
+        .required('Code is required'),
 });
 
 const AccountVerify = () => {
     const navigate = useNavigate();
     const handleSubmit = async (values: any) => {
-        let data = JSON.stringify(values)
-        await axios.post('/login', data).then(response => {
-            let token = response?.data?.token;
-            Cookies.set('authToken', token);
-            navigate('/')
+        let data = {
+            "email":sessionStorage.getItem("userEmail"),
+            "confirmation_code":values.code
+        }
+        await axios.post('/verify_code', data)
+        .then(response => {
+            if (response.status === 200) {
+                navigate('/login')
+            }
         }).catch(error => {
             console.error('Login error:', error);
         })
@@ -45,27 +46,27 @@ const AccountVerify = () => {
                 </Box>
 
                 <Box mt="14" className="sm:mx-auto sm:w-full sm:max-w-[480px]">
-                    <Box bg="white" border='1px' borderColor="#E2E8F0" px="24" py="12" rounded="lg" className="sm:px-12">
+                    <Box bg="white" border='1px' borderColor="border" px="24" py="12" rounded="lg" className="sm:px-12">
                         <Heading fontSize='40px' as="h2" mt="0" mb='2' fontWeight="normal" textAlign="center" >
                             Verify Your account
                         </Heading>
                         <Text display='flex' mt="1" mb='7' justifyContent="center" fontSize="md" color="gray.500">
-                            Please check your email for the verification code
+                            Please check your Email for the verification code
                         </Text>
                         <Formik
-                            initialValues={{ email: '', password: '' }}
+                            initialValues={{ code: '' }}
                             validationSchema={SignUpSchema}
                             onSubmit={(values) => handleSubmit(values)}
                         >
                             {({ getFieldProps, errors, touched }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="email" data-invalid={errors.email && touched.email}>
-                                        <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('email')} />
-                                        {/* <FormErrorMessage>{errors.email}</FormErrorMessage> */}
+                                    <FormControl mb='24px' id="code" data-invalid={errors.code && touched.code}>
+                                        <Input variant='outline' placeholder='Enter the verification code' {...getFieldProps('code')} />
+                                        {/* <FormErrorMessage>{errors.code}</FormErrorMessage> */}
                                     </FormControl>
 
 
-                                    <Button type="submit" background="#731447" color='white' width="full" _hover={{ background: "#731447" }}>
+                                    <Button type="submit" background="secondary" color='white' width="full" _hover={{ background: "secondary" }}>
                                         Submit
                                     </Button>
                                 </Form>
