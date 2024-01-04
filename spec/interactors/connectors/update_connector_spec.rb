@@ -22,7 +22,7 @@ RSpec.describe Connectors::UpdateConnector do
   context "with invalid params" do
     let(:connector_params) do
       {
-        connector_definition_id: nil
+        workspace_id: nil
       }
     end
 

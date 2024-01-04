@@ -25,7 +25,6 @@ services:
       - redis
     environment:
       RAILS_ENV: development
-      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: redis://redis:6379/0
       DB_HOST: ${DB_HOST}
       DB_USERNAME: ${DB_USERNAME}

@@ -18,7 +18,23 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config
+
+# Copy the vendor directory and ODBC installation script
+COPY vendor/ /rails/vendor/
+COPY scripts/install_unix_odbc_package.sh /scripts/
+
+# Make sure the script is executable and run it
+RUN chmod +x /scripts/install_unix_odbc_package.sh && \
+    /scripts/install_unix_odbc_package.sh
+
+# Copy the vendor directory and libiODBC installation script
+COPY vendor/ /rails/vendor/
+COPY scripts/install_lib_iodbc_package.sh /scripts/
+
+# Make sure the script is executable and run it
+RUN chmod +x /scripts/install_lib_iodbc_package.sh && \
+    /scripts/install_lib_iodbc_package.sh
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./

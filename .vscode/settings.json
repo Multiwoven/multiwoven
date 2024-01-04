@@ -1,3 +1,29 @@
 {
-  "editor.formatOnSave": true
+  "workbench.colorTheme": "Default Dark Modern",
+  "window.zoomLevel": 1,
+  "git.suggestSmartCommit": false,
+  "[ruby]": {
+      "editor.tabSize": 2,
+      "editor.defaultFormatter": "Shopify.ruby-lsp",
+      "editor.formatOnSave": true
+  },
+  "rubyLsp.enabledFeatures": {
+      "codeActions": true,
+      "diagnostics": true,
+      "documentHighlights": true,
+      "documentLink": true,
+      "documentSymbols": true,
+      "foldingRanges": true,
+      "formatting": true,
+      "hover": true,
+      "inlayHint": true,
+      "onTypeFormatting": true,
+      "selectionRanges": true,
+      "semanticHighlighting": true,
+      "completion": true,
+      "codeLens": true,
+      "definition": true,
+      "workspaceSymbol": true,
+      "references": true
+  }
 }

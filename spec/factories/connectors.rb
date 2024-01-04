@@ -3,9 +3,11 @@
 FactoryBot.define do
   factory :connector do
     association :workspace
-    association :connector_definition
-    connector_type { 1 }
-    configuration { { test: "test" } }
+    connector_type { "destination" }
+    configuration do
+      { "public_api_key" => "config_v", "private_api_key" => "config_value_2" }
+    end
     name { Faker::Name.name }
+    connector_name { "klaviyo" }
   end
 end

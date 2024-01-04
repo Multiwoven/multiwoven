@@ -22,8 +22,8 @@ RSpec.describe Connectors::CreateConnector do
   context "with invalid params" do
     let(:connector_params) do
       { workspace_id: nil,
-        connector_definition_id: nil,
-        connector_type: nil,
+        connector_type: "destination",
+        connector_name: "klaviyo",
         configuration: nil,
         name: nil }
     end

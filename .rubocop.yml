@@ -23,8 +23,15 @@ Layout/LineLength:
 
 # Metrics
 Metrics/BlockLength:
+  Max: 50
   Exclude:
     - 'config/routes/api.rb'  # If your routes are separated for API, else keep 'config/routes.rb'
+
+Metrics/AbcSize:
+  Max: 50
+
+Metrics/MethodLength:
+  Max: 50
 
 # Rails specific cops
 Rails:

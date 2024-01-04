@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_30_143430) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,16 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_30_143430) do
     t.integer "workspace_id"
     t.integer "connector_id"
     t.jsonb "catalog"
-    t.integer "catalog_hash"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "connector_definitions", force: :cascade do |t|
-    t.integer "connector_type"
-    t.jsonb "spec"
-    t.integer "source_type"
-    t.jsonb "meta_data"
+    t.string "catalog_hash"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -40,6 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_30_143430) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "connector_name"
   end
 
   create_table "models", force: :cascade do |t|
@@ -99,12 +91,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_30_143430) do
     t.string "slug"
     t.string "status"
     t.string "api_key"
-    t.string "workspace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_workspaces_on_name", unique: true
     t.index ["slug"], name: "index_workspaces_on_slug", unique: true
-    t.index ["workspace_id"], name: "index_workspaces_on_workspace_id", unique: true
   end
 
   add_foreign_key "workspace_users", "users"

@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :catalog do
-    workspace_id { 1 }
-    connector_id { 1 }
-    catalog { "" }
+    association :workspace
+    association :connector
+    catalog { Faker::Name.name }
     catalog_hash { 1 }
   end
 end

@@ -4,7 +4,7 @@ module Api
   module V1
     class ConnectorsController < ApplicationController
       include Connectors
-      before_action :set_connector, only: %i[show update destroy]
+      before_action :set_connector, only: %i[show update destroy discover]
 
       def index
         @connectors = current_workspace
@@ -46,8 +46,18 @@ module Api
         head :no_content
       end
 
-      # TODO: connector config API
-      # def config; end
+      def discover
+        result = DiscoverConnector.call(
+          connector: @connector
+        )
+
+        if result.success?
+          @catalog = result.catalog
+        else
+          render json: { errors: result.errors },
+                 status: :unprocessable_entity
+        end
+      end
 
       private
 
@@ -59,7 +69,6 @@ module Api
 
       def connector_params
         params.require(:connector).permit(:workspace_id,
-                                          :connector_definition_id,
                                           :connector_type, :name,
                                           configuration: {})
       end
