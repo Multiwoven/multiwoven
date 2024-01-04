@@ -85,18 +85,18 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   },
   {
     name: 'Sources',
-    url: '/sources/all',
+    url: '/sources',
     component: (
-      <SuspenseWithLoader redirectRoute="/sources/all">
+      <SuspenseWithLoader redirectRoute="/sources">
         <ViewAll connectorType="source" />
       </SuspenseWithLoader>
     ),
   },
   {
     name: 'Destinations',
-    url: '/destinations/all',
+    url: '/destinations',
     component: (
-      <SuspenseWithLoader redirectRoute="/destinations/all">
+      <SuspenseWithLoader redirectRoute="/destinations">
         <ViewAll connectorType="destination" />
       </SuspenseWithLoader>
     ),
