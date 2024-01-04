@@ -10,7 +10,7 @@ import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
 import login from '@/services/login';
 
 
-const SignUpSchema = Yup.object().shape({
+const LoginSchema = Yup.object().shape({
     email: Yup.string()
         .email('Invalid email address')
         .required('Email is required'),
@@ -66,7 +66,7 @@ const Login = () => {
                         {messages.show ? <AlertPopUp {...messages.alertMessage} /> : <></>}
                         <Formik
                             initialValues={{ email: '', password: '' }}
-                            // validationSchema={SignUpSchema}
+                            validationSchema={LoginSchema}
                             onSubmit={(values) => handleSubmit(values)}
                         >
                             {({ getFieldProps, touched }) => (
