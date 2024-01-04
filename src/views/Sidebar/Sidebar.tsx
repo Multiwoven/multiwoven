@@ -1,7 +1,5 @@
-import { MAIN_PAGE_ROUTES } from "@/routes";
-import { SidebarContainer } from "./styles";
-import { NavLink } from "react-router-dom";
-import { Box, Button, FormControl, Input, Image, Heading, Text, Link, Container } from '@chakra-ui/react';
+
+import { Box, Button, Text, Link, Container } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { PhoneIcon, MoonIcon, UpDownIcon } from '@chakra-ui/icons'
 import Icon from '../../assets/images/icon.png';
@@ -15,8 +13,8 @@ const Sidebar = () => {
   const handleWorkPlace = () => {
     setLogoutPop(!logoutPop);
   }
-  const handleLogout=(event: Event)=>{
-    event.stopPropagation();
+  const handleLogout=()=>{
+    // event.stopPropagation();
     Cookies.remove('authToken');
     navigate('/login')
   }
@@ -42,28 +40,31 @@ const Sidebar = () => {
               <Text fontSize={14} textAlign="left" mt={0} w={'100%'}>multiwoven@gmail.com</Text>
               <Text fontSize={14} textAlign="left" mt={5} w={'100%'}>Workplace setting</Text>
               <Text fontSize={14} textAlign="left" mt={3} w={'100%'}>Add an account</Text>
-              <Text fontSize={14} textAlign="left" mt={5} w={'100%'} onClick={(e)=> handleLogout(e)}>Logout</Text>
+              <Text fontSize={14} textAlign="left" mt={5} w={'100%'} onClick={()=> handleLogout()}>Logout</Text>
             </Box>}
           </Button>
           <Text mt={6} w={'100%'}>
             <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Get Started</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Inbox</Link>
+            {/* <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Inbox</Link> */}
           </Text>
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              YOUR BUSINESS </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Destination</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Source</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Destination</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Source</Link>
+              SETUP </Text>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Sources</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Destination</Link>
+            {/* <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Destination</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Source</Link> */}
           </Text>
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              SELLER TOOLS </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Destination</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Source</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Destination</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Source</Link>
+              DEFINE </Text>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Models</Link>
+          </Text>
+          <Text mt={6} w={'100%'}>
+            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
+              ACTIVATE </Text>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}><PhoneIcon mr={3} /> Syncs</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="dark_gray" fontSize={14} _hover={{ background: 'secondary', color: 'white' }}> <MoonIcon mr={3} /> Audidences</Link>
           </Text>
         </Box>
       </Container>
