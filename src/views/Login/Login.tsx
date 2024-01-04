@@ -30,17 +30,14 @@ const Login = () => {
 
     const handleSubmit = async (values: any) => {
         setMessages({ show: false, alertMessage: message });
-
         const result = await login(values);
-
         if (result.success) {
             navigate('/');
         } else {
             message = {
                 status: 'error',
-                description: [result.error]
+                description: [result?.error?.message]
             };
-            console.log(result.error);
             setMessages({ show: true, alertMessage: message });
         }
     };
