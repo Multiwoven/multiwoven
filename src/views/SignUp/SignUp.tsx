@@ -76,24 +76,26 @@ const SignUp = () => {
                                 onSubmit={(values) => handleSubmit(values)}
 
                             >
-                                {({ getFieldProps, touched }) => (
+                                {({ getFieldProps, touched, errors }) => (
                                     <Form>
-                                        <FormControl mb='24px' id="name" isInvalid={touched.name}>
+                                        <FormControl mb='24px' id="name" isInvalid={!!(touched.name && errors.name)}>
                                             <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
-                                            <ErrorMessage name='name' />
+                                            <ErrorMessage name='name'>
+                                                {msg => <Text color='red.500'>{msg}</Text>}
+                                            </ErrorMessage>
                                         </FormControl>
 
-                                        <FormControl mb='24px' id="email" isInvalid={touched.email}>
+                                        <FormControl mb='24px' id="email" isInvalid={!!(touched.email && errors.email)}>
                                             <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
                                             <ErrorMessage name='email' />
                                         </FormControl>
 
-                                        <FormControl mb='24px' id="password" isInvalid={touched.password}>
+                                        <FormControl mb='24px' id="password" isInvalid={!!(touched.password && errors.password)}>
                                             <Input type="password" placeholder='Password' {...getFieldProps('password')} />
                                             <ErrorMessage name='password'  />
                                         </FormControl>
 
-                                        <FormControl mb='8px' id="password_confirmation" isInvalid={touched.password_confirmation}>
+                                        <FormControl mb='8px' id="password_confirmation" isInvalid={!!(touched.password_confirmation && errors.password_confirmation)}>
                                             <Input type="password" placeholder='Confirm Password' {...getFieldProps('password_confirmation')} />
                                             <ErrorMessage name='password_confirmation'  />
                                         </FormControl>
