@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export const domain = 'https://api.multiwoven.com/api/v1'
 export const axiosInstance = axios.create({
@@ -6,7 +7,8 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
-    config.headers['Content-Type']= 'application/json'
+    config.headers['Content-Type']= 'application/json';
+    config.headers['Authorization'] = 'Bearer ' + Cookies.get('authToken');
     return config;
 });
 
