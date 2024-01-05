@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "google-cloud-bigquery"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
-  spec.add_runtime_dependency "mw-ruby-odbc"
+  spec.add_runtime_dependency "ruby-odbc"
   spec.add_runtime_dependency "sequel"
 
   spec.add_development_dependency "byebug"
