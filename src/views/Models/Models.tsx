@@ -1,6 +1,6 @@
 
-import { TableContainer, Table, Stack, Thead, Tr, Th, Td, Tbody, Text, Button, background } from '@chakra-ui/react';
-import { PhoneIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
+import { TableContainer, Table, Stack, Thead, Tr, Th, Td, Tbody, Text, Button } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons'
 
 
 
