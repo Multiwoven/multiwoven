@@ -6,6 +6,7 @@ const Homepage = lazy(() => import("@/views/Homepage"));
 const Login = lazy(() => import("@/views/Login"));
 const SignUp = lazy(() => import("@/views/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
+const Models = lazy(() => import("@/views/Models"));
 
 import Cookies from 'js-cookie';
 import ViewAll from "@/views/Connectors/ViewAll";
@@ -98,6 +99,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute="/destinations">
         <ViewAll connectorType="destination" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Models',
+    url: '/models',
+    component: (
+      <SuspenseWithLoader redirectRoute="/models">
+        <Models />
       </SuspenseWithLoader>
     ),
   },

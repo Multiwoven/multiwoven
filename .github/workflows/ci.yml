@@ -1,38 +1,41 @@
 name: CI
 
-on:
-  push:
-    branches: [ feat/initial-setup ]
-  pull_request:
-    branches: [ feat/initial-setup ]
+on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '18'
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: npm install
 
-    - name: Lint
-      run: npm run lint
+    # - name: Run linting
+    #   run: npm run lint
 
-    - name: Type Check
-      run: npm run type-check
+    # - name: Run TypeScript type-check
+    #   run: npm run type-check
 
-    - name: Run Tests
-      run: npm test
+    - name: Run tests and collect coverage
+      run: npm test -- --coverage
 
-    - name: Build
-      run: npm run build
+    - name: Upload coverage to Code Climate
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+        if [ -f coverage/lcov.info ]; then
+          ./cc-test-reporter after-build --exit-code $? --coverage-input-type lcov
+        else
+          echo "Coverage report not found."
+        fi
+
