@@ -19,7 +19,6 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = () => {
-
     let message = alertMessage;
     const [messages, setMessages] = useState({
         show: false,

@@ -1,6 +1,6 @@
 
 import { Box, Button, Text, Link, Container } from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { UpDownIcon } from '@chakra-ui/icons'
 import { Icon } from '@chakra-ui/react'
 import IconImage from '../../assets/images/icon.png';
@@ -19,6 +19,7 @@ import {
 const Sidebar = () => {
   const [logoutPop, setLogoutPop] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleWorkPlace = () => {
     setLogoutPop(!logoutPop);
@@ -54,7 +55,7 @@ const Sidebar = () => {
             </Box>}
           </Button>
           <Text mt={6} w={'100%'}>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" background={'#2d3748'} color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={HomeIcon} color={'#a0aec0'} fontSize={18} mr={2} /> Get Started</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/" background={location.pathname === '/' ? '#2d3748' : ''} color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={HomeIcon} color={'#a0aec0'} fontSize={18} mr={2} /> Get Started</Link>
           </Text>
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
@@ -65,7 +66,9 @@ const Sidebar = () => {
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
               DEFINE </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={ChartBarSquareIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Models</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4}
+             as={RouterLink} to="/models"
+              color="white" fontSize={14} background={location.pathname === '/models' ? '#2d3748' : ''}  _hover={{ background: '#2d3748', color: 'white' }}><Icon as={ChartBarSquareIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Models</Link>
           </Text>
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
