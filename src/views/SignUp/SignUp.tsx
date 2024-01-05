@@ -80,9 +80,7 @@ const SignUp = () => {
                                     <Form>
                                         <FormControl mb='24px' id="name" isInvalid={!!(touched.name && errors.name)}>
                                             <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
-                                            <ErrorMessage name='name'>
-                                                {msg => <Text color='red.500'>{msg}</Text>}
-                                            </ErrorMessage>
+                                            <ErrorMessage name='name' />
                                         </FormControl>
 
                                         <FormControl mb='24px' id="email" isInvalid={!!(touched.email && errors.email)}>

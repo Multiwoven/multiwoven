@@ -60,8 +60,8 @@ const Sidebar = () => {
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
               SETUP </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={CircleStackIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Sources</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}> <Icon as={TableCellsIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Destination</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/sources " color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={CircleStackIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Sources</Link>
+            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/destinations" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}> <Icon as={TableCellsIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Destination</Link>
             </Text>
           <Text mt={6} w={'100%'}>
             <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">

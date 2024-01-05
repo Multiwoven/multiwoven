@@ -1,4 +1,5 @@
-import { Formik, Form } from 'formik';
+import { Formik, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Box, Button, FormControl, Input, Image, Heading, Text, Link, Container, Flex, Spacer, Checkbox } from '@chakra-ui/react';
@@ -7,30 +8,37 @@ import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
 import { login } from '@/services/login';
 import Cookies from 'js-cookie';
 
+
+const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+    password: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .required('Password is required'),
+});
+
+
 const Login = () => {
     let message = alertMessage;
     const [messages, setMessages] = useState({
         show: false,
         alertMessage: message
     });
+
+    const [submitting, setSubmitting] = useState(false);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (values: any) => {
-        if (values.email.trim() === '' || values.password.trim() === '') {
-            message = {
-                status: 'error',
-                description: ['Invalid email or password']
-            };
-            setMessages({ show: true, alertMessage: message });
-            setTimeout(()=>{
-                setMessages({ show: false, alertMessage: message });
-            },3000)
-            return false;
-        }
+        // console.log("Submitting");
+        setSubmitting(true)
+        
         const result = await login(values);
         if (result.success) {
             const token = result?.response?.data?.token;
             Cookies.set('authToken', token);
+            setSubmitting(false);
             navigate('/');
         } else {
             message = {
@@ -38,6 +46,7 @@ const Login = () => {
                 description: [result?.error?.message]
             };
             setMessages({ show: true, alertMessage: message });
+            setSubmitting(false);
         }
     };
 
@@ -64,18 +73,21 @@ const Login = () => {
                         <Formik
                             initialValues={{ email: '', password: '' }}
                             onSubmit={(values) => handleSubmit(values)}
+                            validationSchema={LoginSchema}
                         >
-                            {({ getFieldProps }) => (
+                            {({ getFieldProps, touched, errors }) => (
                                 <Form>
-                                    <FormControl mb='24px' id="email">
+                                    <FormControl mb='24px' id="email" isInvalid={!!(touched.email && errors.email)}>
                                         <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
+                                        <ErrorMessage name='email' />
                                     </FormControl>
 
-                                    <FormControl mb='24px' id="password">
+                                    <FormControl mb='24px' id="password" isInvalid={!!(touched.password && errors.password)}>
                                         <Input type="password" placeholder='Password' {...getFieldProps('password')} />
+                                        <ErrorMessage name='password' />
                                     </FormControl>
 
-                                    <Button type="submit" background="secondary" color='white' width="full" _hover={{ background: "secondary" }}>
+                                    <Button isLoading={submitting} loadingText="Logging In" type="submit" background="secondary" color='white' width="full" _hover={{ background: "secondary" }}>
                                         Login
                                     </Button>
                                 </Form>
