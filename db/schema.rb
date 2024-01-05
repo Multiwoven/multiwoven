@@ -23,6 +23,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "connector_definitions", force: :cascade do |t|
+    t.integer "connector_type"
+    t.jsonb "spec"
+    t.integer "source_type"
+    t.jsonb "meta_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "connectors", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "connector_type"
@@ -91,10 +100,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
     t.string "slug"
     t.string "status"
     t.string "api_key"
+    t.string "workspace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_workspaces_on_name", unique: true
     t.index ["slug"], name: "index_workspaces_on_slug", unique: true
+    t.index ["workspace_id"], name: "index_workspaces_on_workspace_id", unique: true
   end
 
   add_foreign_key "workspace_users", "users"

@@ -1,3 +1,24 @@
+GIT
+  remote: https://github.com/Multiwoven/multiwoven-integrations.git
+  revision: 9f653fcf585e46b37136bed3ab9aa035bc7cc05c
+  specs:
+    multiwoven-integrations (0.1.0)
+      activesupport
+      dry-schema
+      dry-struct
+      dry-types
+      google-cloud-bigquery
+      pg
+      rake
+      ruby-odbc (~> 0.999992)
+      sequel
+
+GIT
+  remote: https://github.com/Multiwoven/ruby-odbc.git
+  revision: d8dea99fe03cfa88335d2f0686398b2a5881ff8c
+  specs:
+    ruby-odbc (0.999992)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -87,7 +108,7 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
     aws-eventstream (1.3.0)
-    aws-partitions (1.876.0)
+    aws-partitions (1.877.0)
     aws-sdk (3.2.0)
       aws-sdk-resources (~> 3)
     aws-sdk-accessanalyzer (1.44.0)
@@ -353,7 +374,7 @@ GEM
     aws-sdk-configservice (1.103.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-connect (1.145.0)
+    aws-sdk-connect (1.146.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-connectcampaignservice (1.12.0)
@@ -784,7 +805,7 @@ GEM
     aws-sdk-mediaconnect (1.57.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-mediaconvert (1.122.0)
+    aws-sdk-mediaconvert (1.123.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-medialive (1.114.0)
@@ -1652,7 +1673,8 @@ GEM
       dry-types (>= 1.7, < 2)
       ice_nine (~> 0.11)
       zeitwerk (~> 2.6)
-    dry-types (1.7.1)
+    dry-types (1.7.2)
+      bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0)
       dry-inflector (~> 1.0)
@@ -1753,18 +1775,7 @@ GEM
     minitest (5.20.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multiwoven-integrations (0.1.1)
-      activesupport
-      dry-schema
-      dry-struct
-      dry-types
-      google-cloud-bigquery
-      mw-ruby-odbc
-      pg
-      rake
-      sequel
     mutex_m (0.2.0)
-    mw-ruby-odbc (0.999992)
     net-imap (0.4.9)
       date
       net-protocol
@@ -1949,8 +1960,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.1)
-  mw-ruby-odbc
+  multiwoven-integrations!
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
@@ -1960,6 +1970,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
+  ruby-odbc!
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter
