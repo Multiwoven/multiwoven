@@ -28,22 +28,27 @@ const SignUp = () => {
         show: false, 
         alertMessage: message
     });
+
+    const [submitting, setSubmitting] = useState(false);
     
     const navigate = useNavigate();
     
     const handleSubmit = async (values: any) => {
         setMessages({ show: false, alertMessage: message });
+        setSubmitting(true)
 
         const result = await signUp(values);
 
         if (result.success) {
             sessionStorage.setItem("userEmail", values.email);
+            setSubmitting(false)
             navigate('/account-verify');
         } else {
             message = {
                 status: 'error',
                 description: result.error || ["Some error has occured"]
             };
+            setSubmitting(false)
             setMessages({ show: true, alertMessage: message });
         }
     };
@@ -100,7 +105,7 @@ const SignUp = () => {
                                         <Text mt="0" mb='24px' textAlign="left" fontSize="sm" color="gray.500">
                                             At least 8 characters long
                                         </Text>
-                                        <Button type="submit" background="secondary" color='white' width="full" _hover={{ background: 'secondary' }}>
+                                        <Button isLoading={submitting} loadingText="Creating Account" type="submit" background="secondary" color='white' width="full" _hover={{ background: "secondary" }}>
                                             Create Account
                                         </Button>
                                     </Form>

@@ -31,7 +31,6 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (values: any) => {
-        // console.log("Submitting");
         setSubmitting(true)
         
         const result = await login(values);
