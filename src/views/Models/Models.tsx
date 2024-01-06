@@ -1,7 +1,6 @@
 import {
     Avatar,
     Badge,
-    Checkbox,
     HStack,
     Icon,
     IconButton,
@@ -13,11 +12,7 @@ import {
     Tr,
     Box,
     Button,
-    ButtonGroup,
     Container,
-    Input,
-    InputGroup,
-    InputLeftElement,
     Stack,
     Text,
     Heading
@@ -81,20 +76,19 @@ const Models = () => {
     return (
         <Container minW={'100%'}>
             <Box bgColor={'transparent'} as="section" pt={{ base: '4', md: '10' }} pb={{ base: '12', md: '12' }}>
-               
-                    <Stack spacing="4" direction={{ base: 'column', md: 'row' }} justify="space-between">
-                        <Stack spacing="1">
-                            <Heading size={{ base: 'xs', md: 'sm' }} fontWeight="medium">
-                                Member overview
-                            </Heading>
-                            <Text color="fg.muted">All registered users in the overview</Text>
-                        </Stack>
-                        <Stack direction="row" spacing="3">
-                            <Button variant="secondary">Invite</Button>
-                            <Button>Create</Button>
-                        </Stack>
+                <Stack spacing="4" direction={{ base: 'column', md: 'row' }} justify="space-between">
+                    <Stack spacing="1">
+                        <Heading size={{ base: 'xs', md: 'sm' }} fontWeight="medium">
+                            Member overview
+                        </Heading>
+                        <Text color="fg.muted">All registered users in the overview</Text>
                     </Stack>
-            
+                    <Stack direction="row" spacing="3">
+                        <Button variant="secondary">Invite</Button>
+                        <Button>Create</Button>
+                    </Stack>
+                </Stack>
+
             </Box>
             <Box
                 bg="bg.surface"
@@ -159,26 +153,10 @@ const Models = () => {
                             </Tbody>
                         </Table>
                     </Box>
-                    {/* <Box px={{ base: '4', md: '6' }} pb="5">
-                        <HStack spacing="3" justify="space-between">
-                            {!isMobile && (
-                                <Text color="fg.muted" textStyle="sm">
-                                    Showing 1 to 5 of 42 results
-                                </Text>
-                            )}
-                            <ButtonGroup
-                                spacing="3"
-                                justifyContent="space-between"
-                                width={{ base: 'full', md: 'auto' }}
-                                variant="secondary"
-                            >
-                                <Button>Previous</Button>
-                                <Button>Next</Button>
-                            </ButtonGroup>
-                        </HStack>
-                    </Box> */}
+                  
                 </Stack>
             </Box>
+           
         </Container>
     )
 }
