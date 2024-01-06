@@ -1,11 +1,42 @@
 
-import { Box, Button, Text, Link, Container } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  Stack,
+  StackDivider,
+  Text,
+} from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { UpDownIcon } from '@chakra-ui/icons'
 import { Icon } from '@chakra-ui/react'
-import IconImage from '../../assets/images/icon.png';
+import IconImage from '../../assets/images/multiwoven-logo.png';
 import { useState } from "react";
 import Cookies from 'js-cookie';
+import {
+  FiBarChart2,
+  FiCamera,
+  FiFilm,
+  FiHome,
+  FiInstagram,
+  FiLinkedin,
+  FiMic,
+  FiMusic,
+  FiTwitter,
+  FiSettings,
+  FiMoreVertical,
+  FiHelpCircle,
+  FiDatabase,
+  FiBarChart,
+  FiTable,
+  FiPieChart,
+  FiMinimize,
+  FiMinimize2,
+  FiBookOpen
+} from 'react-icons/fi'
+import { NavButton } from './navButton'
 import {
   CircleStackIcon,
   TableCellsIcon,
@@ -16,76 +47,101 @@ import {
   CogIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
+
+const menus: [] = [{
+  heading: null,
+  menu: [{
+    title: 'Get Started',
+    link: '/',
+    Icon: HomeIcon
+  }]
+}]
+
+
 const Sidebar = () => {
   const [logoutPop, setLogoutPop] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
+
   const handleWorkPlace = () => {
     setLogoutPop(!logoutPop);
   }
-  const handleLogout=()=>{
+  const handleLogout = () => {
     // event.stopPropagation();
     Cookies.remove('authToken');
     navigate('/login')
   }
   return (
-    // <SidebarContainer>
-    //   {MAIN_PAGE_ROUTES.map((pageRoutes) => (
-    //     <div className="text-sm leading-6 cursor-pointer" key={pageRoutes.name}>
-    //       <NavLink to={pageRoutes.url}>{pageRoutes.name}</NavLink>
-    //     </div>
-    //   ))}
-    // </SidebarContainer>
-    <>
-      <Container w='256px' display='flex' margin={0} padding={0} flexDir='row' className='flex flex-col align-center justify-center'>
-        <Box position={'relative'} padding={4} width={'100%'} bg='black' minH={'100vh'} color='black' borderRight={'1px'} borderRightColor={'border'}>
-          <Button padding={3} background={'nav_bg'} pt={6} pb={6} position={'relative'} w={'100%'} _hover={{ background: 'nav_bg', color: 'white' }} onClick={() => handleWorkPlace()}>
-            <img width={25} src={IconImage} />
-            <Box padding={2} width={'100%'}>
-              <Text color={'white'} fontSize={13} textAlign="left" mt={0} w={'100%'}>Multiwoven</Text>
-              <Text color={'nav_text'} fontSize={11} textAlign="left" fontWeight='normal' mt={0} w={'100%'}>ID 345678</Text>
-            </Box>
-            <UpDownIcon color={'nav_text'} fontSize={13} />
-            {logoutPop && <Box fontWeight={'normal'} borderRadius={6} background={'white'} color={'nav_bg'} position={'absolute'} top={'55px'} left={0} padding={4} pt={5} pb={5} border={'1px'} borderColor={'border'} width={'100%'}>
-              <Text fontSize={14} textAlign="left" mt={0} w={'100%'}>multiwoven@gmail.com</Text>
-              <Text fontSize={14} textAlign="left" mt={5} w={'100%'}>Workplace setting</Text>
-              <Text fontSize={14} textAlign="left" mt={3} w={'100%'}>Add an account</Text>
-              <Text fontSize={14} textAlign="left" mt={5} w={'100%'} onClick={()=> handleLogout()}>Logout</Text>
-            </Box>}
-          </Button>
-          <Text mt={6} w={'100%'}>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/" background={location.pathname === '/' ? 'nav_bg' : ''} color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={HomeIcon} color={'nav_text'} fontSize={18} mr={2} /> Get Started</Link>
-          </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              SETUP </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/sources " color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={CircleStackIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Sources</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/destinations" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}> <Icon as={TableCellsIcon} color={'nav_text'}  fontSize={18}  mr={2} /> Destination</Link>
-            </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              DEFINE </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4}
-             as={RouterLink} to="/models"
-              color="white" fontSize={14} background={location.pathname === '/models' ? 'nav_bg' : ''}  _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={ChartBarSquareIcon} color={'nav_text'}  fontSize={18} mr={2} /> Models</Link>
-          </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              ACTIVATE </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={ArrowPathIcon} color={'nav_text'}  fontSize={18} mr={2} /> Syncs</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}> <Icon as={UserGroupIcon} color={'nav_text'}  fontSize={18} mr={2} /> Audiences</Link>
-          </Text>
+    <Flex position={'relative'} boxShadow={'0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);'} minW={'320px'} borderColor={'#e0e0e0'} borderStyle={'solid'} as="section" minH="100vh" bg="bg.canvas">
+      <Flex
+        flex="1"
+        bg="bg.surface"
+        boxShadow="sm"
+        maxW={{ base: 'full', sm: 'xs' }}
+        py={{ base: '6', sm: '8' }}
+        px={{ base: '4', sm: '6' }}
+      >
+        <Stack justify="space-between" spacing="1" width="full">
+          <Stack spacing="8" shouldWrapChildren>
+            <img width={200} src={IconImage} />
+            <Stack spacing="1">
+              <NavButton label="Dashboard" icon={FiHome} />
+              {/* <NavButton label="Dashboard" icon={FiBarChart2} aria-current="page" /> */}
+            </Stack>
+            <Stack>
+              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                Setup
+              </Text>
+              <Stack spacing="1">
+                <NavButton label="Sources" icon={FiDatabase} />
+                <NavButton label="Destinations" icon={FiMinimize} />
+              </Stack>
+            </Stack>
+            <Stack>
+              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                Define
+              </Text>
+              <Stack spacing="1">
+                <NavButton label="Models" icon={FiTable} />
+              </Stack>
+            </Stack>
+            <Stack>
+              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                Activate
+              </Text>
+              <Stack spacing="1">
+                <NavButton label="Syncs" icon={FiMinimize2} />
+                <NavButton label="Audiences" icon={FiPieChart} />
+              </Stack>
+            </Stack>
 
 
-          <Text mt={6} w={'100%'} position={'absolute'} bottom={'60px'}>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}><Icon as={CogIcon} color={'nav_text'}  fontSize={18} mr={2} /> Settings</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: 'nav_bg', color: 'white' }}> <Icon as={BookOpenIcon} color={'nav_text'}  fontSize={18} mr={2} /> Documentation</Link>
-          </Text>
-
-        </Box>
-      </Container>
-    </>
+            <Stack spacing="4" divider={<StackDivider />}>
+              <Box />
+              <Stack spacing="1">
+                <NavButton label="Documentation" icon={FiBookOpen} />
+                <NavButton label="Settings" icon={FiSettings} />
+              </Stack>
+              <HStack spacing="3" justify="space-between">
+                <HStack spacing="3">
+                  <Avatar boxSize="10" src="https://i.pravatar.cc/300" />
+                  <Box>
+                    <Text textStyle="sm" fontWeight="medium">
+                      John Doe
+                    </Text>
+                    <Text textStyle="sm" color="fg.muted">
+                      john@chakra-ui.com
+                    </Text>
+                  </Box>
+                </HStack>
+                <IconButton variant="tertiary" icon={<FiMoreVertical />} aria-label="Open Menu" />
+              </HStack>
+            </Stack>
+          </Stack>
+        </Stack>
+      </Flex>
+    </Flex>
   );
 };
 
