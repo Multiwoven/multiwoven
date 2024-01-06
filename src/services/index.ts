@@ -12,12 +12,9 @@ type MultiwovenFetch = {
   data?: Record<string, string>;
 }
 
-type APISuccessResponse = {
-
-}
 
 const multiwovenFetch = <ApiResponse>({ path, method, data }:MultiwovenFetch) : Promise<ApiResponse > => {
-
+    // axiosInstance.request(path, method, data)
     return new Promise(()=>{})
 };
 
