@@ -41,7 +41,7 @@ const AccountVerify = () => {
             setSubmitting(false);
             message = {
                 status: 'error',
-                description: [error]
+                description: [error.response.data.error.message]
               };
               setMessages({ show: true, alertMessage: message });
             console.error('Verification error:', error);
@@ -125,7 +125,7 @@ const AccountVerify = () => {
                             <Stack spacing="5">
                                 {messages.show ? <AlertPopUp {...messages.alertMessage} /> : <></>}
                                 <FormControl isInvalid={!!(touched.code && errors.code)}>
-                                    <FormLabel htmlFor="code">Verification Codeu</FormLabel>
+                                    <FormLabel htmlFor="code">Verification Code</FormLabel>
                                     <Input id="code" type="code" {...getFieldProps('code')} />
                                     <ErrorMessage name='code' />
                                 </FormControl>
