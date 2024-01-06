@@ -1,4 +1,3 @@
-
 import {
   Avatar,
   Box,
@@ -8,45 +7,23 @@ import {
   Stack,
   StackDivider,
   Text,
-} from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate, useLocation, Link } from 'react-router-dom';
-import { UpDownIcon } from '@chakra-ui/icons'
-import { Icon } from '@chakra-ui/react'
-import IconImage from '../../assets/images/multiwoven-logo.png';
+} from "@chakra-ui/react";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
+import IconImage from "../../assets/images/multiwoven-logo.png";
 import { useState } from "react";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import {
-  FiBarChart2,
-  FiCamera,
-  FiFilm,
-  FiHome,
-  FiInstagram,
-  FiLinkedin,
-  FiMic,
-  FiMusic,
-  FiTwitter,
   FiSettings,
   FiMoreVertical,
-  FiHelpCircle,
   FiDatabase,
-  FiBarChart,
   FiTable,
   FiPieChart,
   FiMinimize,
   FiMinimize2,
-  FiBookOpen
-} from 'react-icons/fi'
-import { NavButton } from './navButton'
-import {
-  CircleStackIcon,
-  TableCellsIcon,
-  ChartBarSquareIcon,
-  BookOpenIcon,
-  ArrowPathIcon,
-  HomeIcon,
-  CogIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline'
+  FiBookOpen,
+} from "react-icons/fi";
+import { NavButton } from "./navButton";
+import { HomeIcon } from "@heroicons/react/24/outline";
 
 type MenuItem = {
   title: string;
@@ -63,69 +40,92 @@ type MenuSection = {
 // Define the MenuArray type
 type MenuArray = MenuSection[];
 
-const menus: MenuArray = [{
+const menus: MenuArray = [
+  {
     heading: null,
-    menu: [{
-      title: 'Dashboard',
-      link: '/',
-      Icon: HomeIcon
-    }]
-  }, {
-    heading: 'Setup',
-    menu: [{
-      title: 'Sources',
-      link: '/sources',
-      Icon: FiDatabase
-    }, {
-      title: 'Destinations',
-      link: '/destinations',
-      Icon: FiMinimize
-    }]
-  }, {
-    heading: 'Models',
-    menu: [{
-      title: 'Models',
-      link: '/models',
-      Icon: FiTable
-    }]
-  }, {
-    heading: 'Activate',
-    menu: [{
-      title: 'Syncs',
-      link: '/syncs',
-      Icon: FiMinimize2
-    }, {
-      title: 'Audiences',
-      link: '/audiences',
-      Icon: FiPieChart
-    }]
-  }
-]
-
+    menu: [
+      {
+        title: "Dashboard",
+        link: "/",
+        Icon: HomeIcon,
+      },
+    ],
+  },
+  {
+    heading: "Setup",
+    menu: [
+      {
+        title: "Sources",
+        link: "/sources",
+        Icon: FiDatabase,
+      },
+      {
+        title: "Destinations",
+        link: "/destinations",
+        Icon: FiMinimize,
+      },
+    ],
+  },
+  {
+    heading: "Models",
+    menu: [
+      {
+        title: "Models",
+        link: "/models",
+        Icon: FiTable,
+      },
+    ],
+  },
+  {
+    heading: "Activate",
+    menu: [
+      {
+        title: "Syncs",
+        link: "/syncs",
+        Icon: FiMinimize2,
+      },
+      {
+        title: "Audiences",
+        link: "/audiences",
+        Icon: FiPieChart,
+      },
+    ],
+  },
+];
 
 const Sidebar = () => {
   const [logoutPop, setLogoutPop] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-
   const handleWorkPlace = () => {
     setLogoutPop(!logoutPop);
-  }
+  };
   const handleLogout = () => {
     // event.stopPropagation();
-    Cookies.remove('authToken');
-    navigate('/login')
-  }
+    Cookies.remove("authToken");
+    navigate("/login");
+  };
   return (
-    <Flex position={'relative'} boxShadow={'0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);'} minW={'320px'} borderColor={'#e0e0e0'} borderStyle={'solid'} as="section" minH="100vh" bg="bg.canvas">
+    <Flex
+      position={"relative"}
+      boxShadow={
+        "0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);"
+      }
+      minW={"320px"}
+      borderColor={"#e0e0e0"}
+      borderStyle={"solid"}
+      as="section"
+      minH="100vh"
+      bg="bg.canvas"
+    >
       <Flex
         flex="1"
         bg="bg.surface"
         boxShadow="sm"
-        maxW={{ base: 'full', sm: 'xs' }}
-        py={{ base: '6', sm: '8' }}
-        px={{ base: '4', sm: '6' }}
+        maxW={{ base: "full", sm: "xs" }}
+        py={{ base: "6", sm: "8" }}
+        px={{ base: "4", sm: "6" }}
       >
         <Stack justify="space-between" spacing="1" width="full">
           <Stack spacing="8" shouldWrapChildren>
@@ -134,17 +134,22 @@ const Sidebar = () => {
               <NavButton label="Dashboard" icon={FiHome} />
             </Stack> */}
 
-            {menus.map((categoryItem,index) => (
+            {menus.map((categoryItem, index) => (
               <Stack key={index}>
                 <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
                   {categoryItem?.heading}
                 </Text>
                 <Stack spacing="1">
                   {categoryItem.menu.map((menuItem, index) => (
-                      <Link to={menuItem.link} >
-                        <NavButton label={menuItem.title} icon={menuItem.Icon} w="full" key={index} />
-                      </Link>
-                      // <NavButton label="Destinations" icon={FiMinimize} />
+                    <RouterLink to={menuItem.link}>
+                      <NavButton
+                        label={menuItem.title}
+                        icon={menuItem.Icon}
+                        w="full"
+                        key={index}
+                      />
+                    </RouterLink>
+                    // <NavButton label="Destinations" icon={FiMinimize} />
                   ))}
                 </Stack>
               </Stack>
@@ -177,7 +182,6 @@ const Sidebar = () => {
               </Stack>
             </Stack> */}
 
-
             <Stack spacing="4" divider={<StackDivider />}>
               <Box />
               <Stack spacing="1">
@@ -196,7 +200,11 @@ const Sidebar = () => {
                     </Text>
                   </Box>
                 </HStack>
-                <IconButton variant="tertiary" icon={<FiMoreVertical />} aria-label="Open Menu" />
+                <IconButton
+                  variant="tertiary"
+                  icon={<FiMoreVertical />}
+                  aria-label="Open Menu"
+                />
               </HStack>
             </Stack>
           </Stack>
