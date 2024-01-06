@@ -2,10 +2,9 @@ import { Box } from "@chakra-ui/react";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
 import ConnectorTable from "@/components/ConnectorTable";
-import { ConnectedPayload } from "vite/types/hmrPayload.js";
 
 const ViewAll = ( props:any ) => {
-    console.log(props);
+    // console.log(props);
 
     const navigate = useNavigate();
 
@@ -31,7 +30,7 @@ const ViewAll = ( props:any ) => {
             "connector_subtype": "database",
             "documentation_url": "https://docs.mutliwoven.com",
             "github_issue_label": "source-snowflake",
-            "icon": "snowflake.svg",
+            "icon": "icons/snowflake.png",
             "license": "MIT",
             "release_stage": "alpha",
             "support_level": "community",
