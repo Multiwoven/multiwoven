@@ -170,17 +170,11 @@ const SignUp = () => {
                     </FormControl>
 
                     <FormControl isInvalid={!!(touched.password_confirmation && errors.password_confirmation)}>
-                        <FormLabel htmlFor="password">Password</FormLabel>
+                        <FormLabel htmlFor="password_confirmation">Confirm Password</FormLabel>
                         <Input id="password_confirmation" type="password" placeholder="********" {...getFieldProps('password_confirmation')} />
                         <ErrorMessage name='password_confirmation' />
                     </FormControl>
                   </Stack>
-                  <HStack justify="space-between">
-                    <Checkbox defaultChecked>Remember me</Checkbox>
-                    <Button variant="text" size="sm">
-                      Forgot password?
-                    </Button>
-                  </HStack>
                   <Stack spacing="6">
                     <Button type='submit' isLoading={submitting} loadingText="Signing Up">
                       Sign up

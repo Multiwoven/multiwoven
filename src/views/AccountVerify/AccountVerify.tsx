@@ -133,6 +133,11 @@ const AccountVerify = () => {
                                     Verify
                                 </Button>
                             </Stack>
+                            <HStack justify="space-between">
+                                <Button variant="text" size="sm">
+                                    Resend Code
+                                </Button>
+                            </HStack>
                         </Stack>
                     </Box>
                     </Stack>
