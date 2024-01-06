@@ -9,7 +9,7 @@ import {
   StackDivider,
   Text,
 } from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation, Link } from 'react-router-dom';
 import { UpDownIcon } from '@chakra-ui/icons'
 import { Icon } from '@chakra-ui/react'
 import IconImage from '../../assets/images/multiwoven-logo.png';
@@ -48,14 +48,59 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline'
 
-const menus: [] = [{
-  heading: null,
-  menu: [{
-    title: 'Get Started',
-    link: '/',
-    Icon: HomeIcon
-  }]
-}]
+type MenuItem = {
+  title: string;
+  link: string;
+  Icon: any; // or the specific type if known
+};
+
+// Define a type for a menu section
+type MenuSection = {
+  heading: string | null;
+  menu: MenuItem[];
+};
+
+// Define the MenuArray type
+type MenuArray = MenuSection[];
+
+const menus: MenuArray = [{
+    heading: null,
+    menu: [{
+      title: 'Dashboard',
+      link: '/',
+      Icon: HomeIcon
+    }]
+  }, {
+    heading: 'Setup',
+    menu: [{
+      title: 'Sources',
+      link: '/sources',
+      Icon: FiDatabase
+    }, {
+      title: 'Destinations',
+      link: '/destinations',
+      Icon: FiMinimize
+    }]
+  }, {
+    heading: 'Models',
+    menu: [{
+      title: 'Models',
+      link: '/models',
+      Icon: FiTable
+    }]
+  }, {
+    heading: 'Activate',
+    menu: [{
+      title: 'Syncs',
+      link: '/syncs',
+      Icon: FiMinimize2
+    }, {
+      title: 'Audiences',
+      link: '/audiences',
+      Icon: FiPieChart
+    }]
+  }
+]
 
 
 const Sidebar = () => {
@@ -85,11 +130,27 @@ const Sidebar = () => {
         <Stack justify="space-between" spacing="1" width="full">
           <Stack spacing="8" shouldWrapChildren>
             <img width={200} src={IconImage} />
-            <Stack spacing="1">
+            {/* <Stack spacing="1">
               <NavButton label="Dashboard" icon={FiHome} />
-              {/* <NavButton label="Dashboard" icon={FiBarChart2} aria-current="page" /> */}
-            </Stack>
-            <Stack>
+            </Stack> */}
+
+            {menus.map((categoryItem,index) => (
+              <Stack key={index}>
+                <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                  {categoryItem?.heading}
+                </Text>
+                <Stack spacing="1">
+                  {categoryItem.menu.map((menuItem, index) => (
+                      <Link to={menuItem.link} >
+                        <NavButton label={menuItem.title} icon={menuItem.Icon} w="full" key={index} />
+                      </Link>
+                      // <NavButton label="Destinations" icon={FiMinimize} />
+                  ))}
+                </Stack>
+              </Stack>
+            ))}
+
+            {/* <Stack>
               <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
                 Setup
               </Text>
@@ -114,7 +175,7 @@ const Sidebar = () => {
                 <NavButton label="Syncs" icon={FiMinimize2} />
                 <NavButton label="Audiences" icon={FiPieChart} />
               </Stack>
-            </Stack>
+            </Stack> */}
 
 
             <Stack spacing="4" divider={<StackDivider />}>
