@@ -9,6 +9,7 @@ export const axiosInstance = axios.create({
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
     config.headers['Content-Type']= 'application/json';
     config.headers['Authorization'] = 'Bearer ' + Cookies.get('authToken');
+    config.headers['Accept'] = "*/*"
     return config;
 });
 

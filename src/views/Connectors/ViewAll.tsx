@@ -2,9 +2,12 @@ import { Box } from "@chakra-ui/react";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
 import ConnectorTable from "@/components/ConnectorTable";
+import { useEffect, useState } from "react";
+import getUserConnectors from "@/services/user-connectors";
 
 const ViewAll = ( props:any ) => {
     // console.log(props);
+    const [ payload, setPayload ] = useState<any>();
 
     const navigate = useNavigate();
 
@@ -40,16 +43,25 @@ const ViewAll = ( props:any ) => {
             ]
           }
         }
-      ]
+    ]
 
-    
+    useEffect(() => { 
+      async function fetchData() {
+        const response = await getUserConnectors();
+        console.log(response);
+        setPayload(response) // Uncomment and use this line if you have a state setter for payload
+      }
+
+      fetchData();
+    } , []);
+
     return(
         <>
             <Box display='flex' width="full" height="100vh" margin={8} flexDir='column' backgroundColor={""}>
                 <Box padding="8" bgColor={''}>
                     {/* <h1>{ props.connectorType }s</h1> */}
                     <TopBar connectorType={ props.connectorType } buttonText={ props.connectorType } buttonOnClick={() => navToPage('new')}  />
-                    <ConnectorTable payload={samplePayload} />
+                    {/* { payload ? <ConnectorTable payload={payload} /> : <></> } */}
                 </Box>
             </Box>
         </>
