@@ -6,6 +6,7 @@ class Sync < ApplicationRecord
   validates :destination_id, presence: true
   validates :model_id, presence: true
   validates :configuration, presence: true
+  # TODO: Add primary key and cursor field
   validates :schedule_type, presence: true
   validates :schedule_data, presence: true
   validates :status, presence: true

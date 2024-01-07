@@ -17,6 +17,13 @@ class Connector < ApplicationRecord
   has_many :models, dependent: :nullify
   has_one :catalog, dependent: :nullify
 
+  def connector_definition
+    @connector_definition ||= Multiwoven::Integrations::Service
+                              .connector_class(
+                                connector_type.to_s.camelize, connector_name.to_s.camelize
+                              ).new.meta_data.with_indifferent_access
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(
