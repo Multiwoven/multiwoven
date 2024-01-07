@@ -28,7 +28,7 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 type MenuItem = {
   title: string;
   link: string;
-  Icon: any; // or the specific type if known
+  Icon: any;
 };
 
 // Define a type for a menu section
@@ -130,17 +130,13 @@ const Sidebar = () => {
         <Stack justify="space-between" spacing="1" width="full">
           <Stack spacing="8" shouldWrapChildren>
             <img width={200} src={IconImage} />
-            {/* <Stack spacing="1">
-              <NavButton label="Dashboard" icon={FiHome} />
-            </Stack> */}
-
             {menus.map((categoryItem, index) => (
               <Stack key={index}>
-                <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                {categoryItem?.heading && <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
                   {categoryItem?.heading}
-                </Text>
+                </Text>}
                 <Stack spacing="1">
-                  {categoryItem.menu.map((menuItem, index) => (
+                  {categoryItem?.menu.map((menuItem, index) => (
                     <RouterLink to={menuItem.link}>
                       <NavButton
                         label={menuItem.title}
@@ -149,39 +145,10 @@ const Sidebar = () => {
                         key={index}
                       />
                     </RouterLink>
-                    // <NavButton label="Destinations" icon={FiMinimize} />
                   ))}
                 </Stack>
               </Stack>
             ))}
-
-            {/* <Stack>
-              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
-                Setup
-              </Text>
-              <Stack spacing="1">
-                <NavButton label="Sources" icon={FiDatabase} />
-                <NavButton label="Destinations" icon={FiMinimize} />
-              </Stack>
-            </Stack>
-            <Stack>
-              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
-                Define
-              </Text>
-              <Stack spacing="1">
-                <NavButton label="Models" icon={FiTable} />
-              </Stack>
-            </Stack>
-            <Stack>
-              <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
-                Activate
-              </Text>
-              <Stack spacing="1">
-                <NavButton label="Syncs" icon={FiMinimize2} />
-                <NavButton label="Audiences" icon={FiPieChart} />
-              </Stack>
-            </Stack> */}
-
             <Stack spacing="4" divider={<StackDivider />}>
               <Box />
               <Stack spacing="1">
