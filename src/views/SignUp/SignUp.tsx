@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import {useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Heading, Text, Link, Container, Stack, FormLabel } from '@chakra-ui/react';
 import MultiwovenIcon from '../../assets/images/icon.png';
-import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
 import { useState } from 'react';
 import { signUp } from '@/services/common';
 
@@ -22,17 +21,10 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUp = () => {
-  let message = alertMessage;
-  const [messages, setMessages] = useState({
-    show: false,
-    alertMessage: message
-  });
-
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (values: any) => {
-    setMessages({ show: false, alertMessage: message });
     setSubmitting(true)
     const result = await signUp(values);
     if (result.success) {
@@ -40,12 +32,7 @@ const SignUp = () => {
       setSubmitting(false)
       navigate('/account-verify');
     } else {
-      message = {
-        status: 'error',
-        description: result.error || ["Some error has occured"]
-      };
-      setSubmitting(false)
-      setMessages({ show: true, alertMessage: message });
+      setSubmitting(false);
     }
   };
 
@@ -77,7 +64,6 @@ const SignUp = () => {
               >
                 <Stack spacing="6">
                   <Stack spacing="5">
-                    {messages.show ? <AlertPopUp {...messages.alertMessage} /> : <></>}
                     <FormControl isInvalid={!!(touched.name && errors.name)}>
                       <FormLabel htmlFor="name">Name</FormLabel>
                       <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />

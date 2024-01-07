@@ -5,10 +5,8 @@ import {
     Box, Button, FormControl, Heading, Input, Container, Stack, HStack, FormLabel
 } from '@chakra-ui/react';
 import MultiwovenIcon from '../../assets/images/icon.png';
-import AlertPopUp, { alertMessage } from '@/components/Alerts/Alerts';
 import { useState } from 'react';
 import { accountVerify } from '@/services/common';
-
 
 const AccountVerifySchema = Yup.object().shape({
     code: Yup.string()
@@ -16,12 +14,6 @@ const AccountVerifySchema = Yup.object().shape({
 });
 
 const AccountVerify = () => {
-    let message = alertMessage;
-    const [messages, setMessages] = useState({
-        show: false,
-        alertMessage: message
-    });
-
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
@@ -36,12 +28,7 @@ const AccountVerify = () => {
             setSubmitting(false);
             navigate('/login')
         } else {
-            message = {
-                status: 'error',
-                description: result.error || ["Some error has occured"]
-            };
             setSubmitting(false)
-            setMessages({ show: true, alertMessage: message });
         }
     }
     return (
@@ -69,7 +56,6 @@ const AccountVerify = () => {
                             >
                                 <Stack spacing="6">
                                     <Stack spacing="5">
-                                        {messages.show ? <AlertPopUp {...messages.alertMessage} /> : <></>}
                                         <FormControl isInvalid={!!(touched.code && errors.code)}>
                                             <FormLabel htmlFor="code">Verification Code</FormLabel>
                                             <Input id="code" type="code" {...getFieldProps('code')} />
