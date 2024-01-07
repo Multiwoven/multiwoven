@@ -6,14 +6,28 @@ module Authentication
     include Interactor
 
     def call
-      user = User.find_by(email: context.params[:email])
+      begin
+        user = User.find_by(email: context.params[:email])
+      rescue StandardError => e
+        Rails.logger.error("Login Interactor Exception: #{e.message}")
+        context.fail!(error: "An error occurred while finding the user.")
+        return
+      end
+      authenticate(user)
+    end
 
-      context.fail!(error: "Invalid email or password") unless user&.valid_password?(context.params[:password])
-
-      token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
-      user.update!(jti: payload["jti"])
-
-      context.token = token
+    def authenticate(user)
+      if user&.valid_password?(context.params[:password])
+        if user.verified?
+          token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+          user.update!(jti: payload["jti"])
+          context.token = token
+        else
+          context.fail!(error: "Account not verified. Please verify your account.")
+        end
+      else
+        context.fail!(error: "Invalid email or password")
+      end
     end
   end
 end

@@ -29,7 +29,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
+  attr_accessor :company_name
+
   validates :name, :email, presence: true
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  validates :email, format: { with: VALID_EMAIL_REGEX }
+
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
 
@@ -41,5 +46,9 @@ class User < ApplicationRecord
   # This method revokes the JWT token
   def self.revoke_jwt(_payload, user)
     user.update!(jti: nil)
+  end
+
+  def verified?
+    confirmed_at.present?
   end
 end

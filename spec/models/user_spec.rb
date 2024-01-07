@@ -17,7 +17,17 @@ RSpec.describe User, type: :model do
   describe "validations" do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:email) }
-    # Add other validation tests here
+    it { should allow_value("user@example.com").for(:email) }
+    it { should_not allow_value("user@example").for(:email) }
+    it { should_not allow_value("user@").for(:email) }
+    it { should_not allow_value("user").for(:email) }
+    it { should validate_presence_of(:password) }
+    it {
+      should validate_length_of(:password)
+        .is_at_least(Devise.password_length.min)
+        .is_at_most(Devise.password_length.max)
+    }
+    it { should validate_uniqueness_of(:email).case_insensitive }
   end
 
   # Test for associations
@@ -48,6 +58,18 @@ RSpec.describe User, type: :model do
         User.revoke_jwt(nil, user)
         expect(user.reload.jti).to be_nil
       end
+    end
+  end
+
+  describe "#verified?" do
+    it "returns true if confirmed_at is set" do
+      user = build(:user, confirmed_at: Time.current)
+      expect(user.verified?).to be true
+    end
+
+    it "returns false if confirmed_at is nil" do
+      user = build(:user, confirmed_at: nil)
+      expect(user.verified?).to be false
     end
   end
 

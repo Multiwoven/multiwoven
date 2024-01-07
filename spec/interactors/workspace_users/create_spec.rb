@@ -4,12 +4,12 @@ require "rails_helper"
 
 RSpec.describe WorkspaceUsers::Create, type: :interactor do
   let(:workspace) { Workspace.new(id: 1) }
-
+  let(:unique_email) { "user_#{Time.zone.now.to_i}@example.com" }
   describe ".call" do
     subject(:result) { described_class.call(workspace:, user_params:) }
 
     context "when given valid parameters" do
-      let(:user_params) { { name: "Test User", email: "test@example.com", role: "member" } }
+      let(:user_params) { { name: "Test User", email: unique_email, role: "member" } }
 
       before do
         allow(User).to receive(:find_by).and_return(nil)

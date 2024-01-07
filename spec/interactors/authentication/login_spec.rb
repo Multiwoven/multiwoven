@@ -13,12 +13,26 @@ RSpec.describe Authentication::Login, type: :interactor do
     context "when given valid credentials" do
       let(:params) { { email: user.email, password: "password" } }
 
-      it "succeeds" do
-        expect(context).to be_success
+      context "with a verified user" do
+        before { user.update!(confirmed_at: Time.current) }
+
+        it "succeeds" do
+          expect(context).to be_success
+        end
+
+        it "provides a token" do
+          expect(context.token).to be_present
+        end
       end
 
-      it "provides a token" do
-        expect(context.token).to be_present
+      context "with an unverified user" do
+        it "fails" do
+          expect(context).to be_failure
+        end
+
+        it "provides an appropriate error message" do
+          expect(context.error).to eq("Account not verified. Please verify your account.")
+        end
       end
     end
 
@@ -43,6 +57,16 @@ RSpec.describe Authentication::Login, type: :interactor do
 
       it "provides an error message" do
         expect(context.error).to eq("Invalid email or password")
+      end
+    end
+
+    context "handling exceptions" do
+      let(:params) { { email: user.email, password: "password" } }
+
+      it "handles unexpected errors gracefully" do
+        allow(User).to receive(:find_by).and_raise(StandardError)
+        expect { context }.not_to raise_error
+        expect(context).to be_failure
       end
     end
   end

@@ -6,10 +6,14 @@ class WorkspaceUser < ApplicationRecord
   belongs_to :user
   belongs_to :workspace
 
+  ADMIN = "admin"
+  MEMBER = "member"
+  VIEWER = "viewer"
+
   # TODO: use enum here
-  validates :role, inclusion: { in: %w[admin member viewer] } # Define roles or use an enum
+  validates :role, inclusion: { in: [ADMIN, MEMBER, VIEWER] }
 
   def admin?
-    role == "admin"
+    role == ADMIN
   end
 end

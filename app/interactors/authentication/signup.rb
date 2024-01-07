@@ -5,15 +5,20 @@ module Authentication
     include Interactor
 
     def call
-      create_new_user
-      assign_confirmation_code
-      save_user
-      send_confirmation_email
+      ActiveRecord::Base.transaction do
+        create_new_user
+        create_organization_and_workspace
+        assign_confirmation_code
+        save_user
+        send_confirmation_email
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      context.fail!(error: e.message)
     end
 
     private
 
-    attr_accessor :user
+    attr_accessor :user, :organization, :workspace
 
     def create_new_user
       self.user = User.new(
@@ -24,14 +29,41 @@ module Authentication
       )
     end
 
+    def create_organization_and_workspace
+      create_organization
+      return unless organization.errors.empty?
+
+      create_workspace
+      create_workspace_user
+    end
+
     def assign_confirmation_code
       user.confirmation_code = generate_confirmation_code
     end
 
+    def create_organization
+      self.organization = Organization.new(name: context.params[:company_name])
+      organization.save
+    end
+
+    def create_workspace
+      self.workspace = organization.workspaces.new(name: "default")
+      workspace.save
+    end
+
+    def create_workspace_user
+      WorkspaceUser.create(
+        user:,
+        workspace:,
+        role: WorkspaceUser::ADMIN
+      )
+    end
+
     def save_user
-      if user.save
+      if user.save && organization.errors.empty?
         context.message = "Signup successful!"
       else
+        user.errors.add(:company_name, organization.errors[:name].first)
         context.fail!(errors: user.errors.full_messages)
       end
     end

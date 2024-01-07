@@ -3,8 +3,10 @@
 # spec/support/auth_helper.rb
 module AuthHelper
   def auth_headers(user)
-    context = Authentication::Login.call(params: { email: user.email, password: user.password })
-    token = context.token
+    # Directly generate the token without going through login process
+    token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+    user.update!(jti: payload["jti"])
+
     { "Authorization" => "Bearer #{token}" }
   end
 end

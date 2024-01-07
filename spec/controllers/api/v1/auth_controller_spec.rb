@@ -9,7 +9,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   let(:user_attributes) { attributes_for(:user) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :verified) }
 
   describe "POST #signup" do
     context "with valid parameters" do
@@ -114,6 +114,37 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response["error"]).not_to be_nil
+      end
+    end
+
+    context "with no parameters" do
+      it "returns a bad request status with an error message" do
+        post :verify_code
+
+        expect(response).to have_http_status(:bad_request)
+        expect(json_response["error"]).to eq("Missing required parameters")
+      end
+    end
+  end
+
+  describe "POST #resend_verification" do
+    let(:unverified_user) { create(:user) } # Assuming this creates an unverified user
+
+    context "resending verification code" do
+      it "sends a new verification code" do
+        post :resend_verification, params: { email: unverified_user.email }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response["message"]).to eq("Verification code resent successfully.")
+      end
+    end
+
+    context "with non-existent user" do
+      it "returns an error" do
+        post :resend_verification, params: { email: "nonexistent@example.com" }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json_response["error"]).to eq("User not found.")
       end
     end
   end

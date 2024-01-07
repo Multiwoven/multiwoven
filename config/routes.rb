@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       delete 'logout', to: 'auth#logout'
       post 'forgot_password', to: 'auth#forgot_password'
       post 'reset_password', to: 'auth#reset_password'
+      post 'resend_verification', to: 'auth#resend_verification'
 
       # Workspace Routes
       resources :workspaces do

@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :workspace do
+    association :organization
     name { Faker::Name.name }
     slug { Faker::Beer.name }
     status { "active" }

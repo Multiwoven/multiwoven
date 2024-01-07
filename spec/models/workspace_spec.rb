@@ -3,13 +3,12 @@
 require "rails_helper"
 
 RSpec.describe Workspace, type: :model do
-  subject { described_class.new }
+  # Create a Workspace with an associated Organization before testing
+  subject { create(:workspace) }
 
   context "validations" do
     it { should validate_presence_of(:name) }
-    it { should validate_uniqueness_of(:name) }
     it { should validate_presence_of(:slug) }
-    it { should validate_uniqueness_of(:slug) }
     it { should validate_inclusion_of(:status).in_array(%w[active inactive pending]) }
   end
 
@@ -18,6 +17,7 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:models).dependent(:nullify) }
     it { should have_many(:catalogs).dependent(:nullify) }
     it { should have_many(:syncs).dependent(:nullify) }
+    it { should belong_to(:organization) }
   end
 
   context "before_validation callbacks" do

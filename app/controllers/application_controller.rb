@@ -17,10 +17,8 @@ class ApplicationController < ActionController::API
     render json: { error: "Unauthorized" }, status: :unauthorized
   end
 
-  # TODO: Fetch it via workspace id
-  # Create associations b/w user and workspace
   def current_workspace
-    @current_workspace ||= Workspace.first
+    @current_workspace ||= current_user.workspaces.first
   end
 
   protected
