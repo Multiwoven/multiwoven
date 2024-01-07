@@ -1,6 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Flex } from "@chakra-ui/react";
 import { AddIcon } from '@chakra-ui/icons';
 import { ConnectorType } from "../commonTypes";
+import titleCase from "@/utils/TitleCase";
 
 
 
@@ -17,7 +18,7 @@ const TopBar = ( props:ConnectorType ) => {
                     </BreadcrumbItem>
                 </Breadcrumb>
                 <Button leftIcon={<AddIcon />} backgroundColor="mw_orange" color="white" fontSize={16} size='sm' onClick={ props.buttonOnClick } >
-                    { props.buttonText }
+                    { titleCase(props.buttonText) }
                 </Button>
             </Flex>
         </>
