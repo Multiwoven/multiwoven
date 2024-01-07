@@ -137,12 +137,11 @@ const Sidebar = () => {
                 </Text>}
                 <Stack spacing="1">
                   {categoryItem?.menu.map((menuItem, index) => (
-                    <RouterLink to={menuItem.link}>
+                    <RouterLink to={menuItem.link} key={index}>
                       <NavButton
                         label={menuItem.title}
                         icon={menuItem.Icon}
                         w="full"
-                        key={index}
                       />
                     </RouterLink>
                   ))}
