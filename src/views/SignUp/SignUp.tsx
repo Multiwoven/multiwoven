@@ -1,35 +1,38 @@
+import { useState } from 'react';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Heading, Text, Link, Container, Stack, FormLabel } from '@chakra-ui/react';
 import MultiwovenIcon from '../../assets/images/icon.png';
-import { useState } from 'react';
 import { signUp } from '@/services/common';
 
 const SignUpSchema = Yup.object().shape({
-  name: Yup.string()
-    .required('Name is required'),
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
+  name: Yup.string().required('Name is required'),
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
   password_confirmation: Yup.string()
     .oneOf([Yup.ref('password'), ''], 'Passwords must match')
     .required('Confirm Password is required'),
 });
+
+const FormField = ({ label, name, type = 'text', getFieldProps, touched, errors }: any) => (
+  <FormControl isInvalid={!!(touched[name] && errors[name])}>
+    <FormLabel htmlFor={name}>{label}</FormLabel>
+    <Input variant='outline' placeholder={label} type={type} {...getFieldProps(name)} />
+    <ErrorMessage name={name} />
+  </FormControl>
+);
 
 const SignUp = () => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (values: any) => {
-    setSubmitting(true)
+    setSubmitting(true);
     const result = await signUp(values);
     if (result.success) {
-      sessionStorage.setItem("userEmail", values.email);
-      setSubmitting(false)
+      sessionStorage.setItem('userEmail', values.email);
+      setSubmitting(false);
       navigate('/account-verify');
     } else {
       setSubmitting(false);
@@ -64,29 +67,10 @@ const SignUp = () => {
               >
                 <Stack spacing="6">
                   <Stack spacing="5">
-                    <FormControl isInvalid={!!(touched.name && errors.name)}>
-                      <FormLabel htmlFor="name">Name</FormLabel>
-                      <Input variant='outline' placeholder='Name' {...getFieldProps('name')} />
-                      <ErrorMessage name='name' />
-                    </FormControl>
-
-                    <FormControl isInvalid={!!(touched.email && errors.email)}>
-                      <FormLabel htmlFor="email">Email</FormLabel>
-                      <Input variant='outline' placeholder='Email' {...getFieldProps('email')} />
-                      <ErrorMessage name='email' />
-                    </FormControl>
-
-                    <FormControl isInvalid={!!(touched.password && errors.password)}>
-                      <FormLabel htmlFor="password">Password</FormLabel>
-                      <Input id="password" type="password" placeholder="********" {...getFieldProps('password')} />
-                      <ErrorMessage name='password' />
-                    </FormControl>
-
-                    <FormControl isInvalid={!!(touched.password_confirmation && errors.password_confirmation)}>
-                      <FormLabel htmlFor="password_confirmation">Confirm Password</FormLabel>
-                      <Input id="password_confirmation" type="password" placeholder="********" {...getFieldProps('password_confirmation')} />
-                      <ErrorMessage name='password_confirmation' />
-                    </FormControl>
+                    <FormField label="Name" name="name" getFieldProps={getFieldProps} touched={touched} errors={errors} />
+                    <FormField label="Email" name="email" getFieldProps={getFieldProps} touched={touched} errors={errors} />
+                    <FormField label="Password" name="password" type="password" getFieldProps={getFieldProps} touched={touched} errors={errors} />
+                    <FormField label="Confirm Password" name="password_confirmation" type="password" getFieldProps={getFieldProps} touched={touched} errors={errors} />
                   </Stack>
                   <Stack spacing="6">
                     <Button type='submit' isLoading={submitting} loadingText="Signing Up">
@@ -100,7 +84,7 @@ const SignUp = () => {
         </Form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
 export default SignUp;
