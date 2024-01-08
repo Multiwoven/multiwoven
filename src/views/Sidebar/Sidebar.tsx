@@ -7,6 +7,7 @@ import {
   Stack,
   StackDivider,
   Text,
+  Divider
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import IconImage from "../../assets/images/multiwoven-logo.png";
@@ -112,7 +113,7 @@ const Sidebar = () => {
       boxShadow={
         "0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);"
       }
-      minW={"320px"}
+      minW={"240px"}
       borderColor={"#e0e0e0"}
       borderStyle={"solid"}
       as="section"
@@ -128,14 +129,15 @@ const Sidebar = () => {
         px={{ base: "4", sm: "6" }}
       >
         <Stack justify="space-between" spacing="1" width="full">
-          <Stack spacing="8" shouldWrapChildren>
-            <img width={200} src={IconImage} />
+          <Stack spacing="5" shouldWrapChildren>
+            <Flex justifyContent={'center'}><img width={160} src={IconImage} /></Flex>
+            <Divider borderBottomWidth={'1px'}></Divider>
             {menus.map((categoryItem, index) => (
               <Stack key={index}>
                 {categoryItem?.heading && <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
                   {categoryItem?.heading}
                 </Text>}
-                <Stack spacing="1">
+                <Stack spacing="0">
                   {categoryItem?.menu.map((menuItem, index) => (
                     <RouterLink to={menuItem.link} key={index}>
                       <NavButton
@@ -148,9 +150,9 @@ const Sidebar = () => {
                 </Stack>
               </Stack>
             ))}
-            <Stack spacing="4" divider={<StackDivider />}>
+            <Stack spacing="7" divider={<StackDivider />}>
               <Box />
-              <Stack spacing="1">
+              <Stack spacing="0">
                 <NavButton label="Documentation" icon={FiBookOpen} />
                 <NavButton label="Settings" icon={FiSettings} />
               </Stack>
