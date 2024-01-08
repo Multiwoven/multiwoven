@@ -10,6 +10,8 @@ require "byebug"
 require "net/http"
 require "uri"
 require "active_support/core_ext/hash/indifferent_access"
+require "restforce"
+require "logger"
 
 # Service
 require_relative "integrations/config"
@@ -32,6 +34,7 @@ require_relative "integrations/source/bigquery/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
+require_relative "integrations/destination/salesforce_crm/client"
 
 module Multiwoven
   module Integrations

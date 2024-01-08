@@ -30,10 +30,10 @@ module Multiwoven
       private
 
       def read_json(file_path)
-        # TODO: Rethink. Hack to find connector folder
-        connector_folder = self.class.to_s.split("::")[2..3].map(&:downcase).join("/")
+        path = Object.const_source_location(self.class.to_s)[0]
+        connector_folder = File.dirname(path)
         file_path = File.join(
-          INTEGRATIONS_PATH, "#{connector_folder}/",
+          "#{connector_folder}/",
           file_path
         )
         file_contents = File.read(file_path)

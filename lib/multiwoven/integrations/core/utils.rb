@@ -63,6 +63,10 @@ module Multiwoven
 
         create_log_message(context, type, exception)
       end
+
+      def extract_data(record_object, properties)
+        record_object.data.select { |key, _| properties.key?(key.to_s) }
+      end
     end
   end
 end

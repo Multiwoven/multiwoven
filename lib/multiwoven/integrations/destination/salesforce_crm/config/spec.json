@@ -1,0 +1,37 @@
+{
+    "documentation_url": "https://docs.multiwoven.com/integrations/destination/salesforce_crm",
+    "stream_type": "static",
+    "connection_specification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Salesforce Destination Spec",
+      "type": "object",
+      "required": ["access_token", "refresh_token", "instance_url", "client_id", "client_secret"],
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "title": "Access Token",
+          "order": 0
+        },
+        "refresh_token": {
+          "type": "string",
+          "title": "Refresh Token",
+          "order": 1
+        },
+        "instance_url": {
+          "type": "string",
+          "title": "Instance URL",
+          "order": 2
+        },
+        "client_id": {
+          "type": "string",
+          "title": "Client ID",
+          "order": 3
+        },
+        "client_secret": {
+          "type": "string",
+          "title": "Client Secret",
+          "order": 4
+        }
+      }
+    }
+  }

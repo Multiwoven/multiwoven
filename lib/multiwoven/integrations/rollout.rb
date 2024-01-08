@@ -12,6 +12,7 @@ module Multiwoven
 
     ENABLED_DESTINATIONS = %w[
       Klaviyo
+      SalesforceCrm
     ].freeze
   end
 end

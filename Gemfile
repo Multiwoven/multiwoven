@@ -30,6 +30,7 @@ gem "webmock", "~> 3.0"
 gem "activesupport"
 
 gem "google-cloud-bigquery"
+gem "restforce", "~> 7.1.0"
 
 group :development, :test do
   gem "simplecov", require: false
