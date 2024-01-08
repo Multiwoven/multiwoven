@@ -35,3 +35,29 @@ export const accountVerify = async (values: any) => {
     }
 };
 
+export async function getUserConnectors() {
+    try {
+      const response = await axios.get('/connectors');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+}
+
+export async function getConnectorsDefintions(connectorType:string) {
+    try {
+        const response = await axios.get('/connector_definitions?type=' + connectorType);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success:false, error:error };
+    }
+}
+
+export async function getConnectorDefinition(connectorType:string, connectorName:string) {
+    try {
+        const response = await axios.get('/connector_definitions/' + connectorName + '?type=' + connectorType);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success:false, error:error };
+    }
+}

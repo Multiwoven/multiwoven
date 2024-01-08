@@ -27,7 +27,7 @@ const Login = () => {
     const result = await login(values);
     if (result.success) {
       const token = result?.response?.data?.token;
-      Cookies.set('authToken', token);
+      Cookies.set('authToken', token, {sameSite:"Strict"});
       setSubmitting(false);
       navigate('/');
     } else {

@@ -10,6 +10,7 @@ const Models = lazy(() => import("@/views/Models"));
 
 import Cookies from 'js-cookie';
 import ViewAll from "@/views/Connectors/ViewAll";
+import { ConnectorConfig, ViewNewConnectors } from "@/views/Connectors";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -94,11 +95,47 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
+    name: 'New Source',
+    url: '/sources/new',
+    component: (
+      <SuspenseWithLoader redirectRoute="/sources/new">
+        <ViewNewConnectors connectorType="sources" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'New Source',
+    url: '/sources/new/config/',
+    component: (
+      <SuspenseWithLoader redirectRoute="/sources/new/config/">
+        <ConnectorConfig connectorType="sources" />
+      </SuspenseWithLoader>
+    ),
+  },  
+  {
+    name: 'View Source',
+    url: `/sources/:id`,
+    component: (
+      <SuspenseWithLoader redirectRoute={'/sources/:id'}>
+        <ConnectorConfig connectorType="sources" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
     name: 'Destinations',
     url: '/destinations',
     component: (
       <SuspenseWithLoader redirectRoute="/destinations">
-        <ViewAll connectorType="destination" />
+        <ViewAll connectorType="destinations" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'New Source',
+    url: '/destinations/new',
+    component: (
+      <SuspenseWithLoader redirectRoute="/destinations/new">
+        <ViewNewConnectors connectorType="destinations" />
       </SuspenseWithLoader>
     ),
   },
