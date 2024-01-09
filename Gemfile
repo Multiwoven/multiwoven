@@ -59,6 +59,11 @@ group :production do
   gem "redis", "~> 4.0"
 end
 
+# Third-Party Tools for Monitoring, Error Reporting, etc.
+group :monitoring, :error_reporting do
+  gem "newrelic_rpm"
+end
+
 # API Serialization & Pagination
 # Uncomment as needed:
 # gem "fast_jsonapi"  # Efficient JSON serialization

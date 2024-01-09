@@ -1625,6 +1625,8 @@ GEM
     bigdecimal (3.1.5)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
+    bugsnag (6.26.1)
+      concurrent-ruby (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
     concurrent-ruby (1.2.2)
@@ -1785,6 +1787,8 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
+    newrelic_rpm (9.6.0)
+      base64
     nio4r (2.7.0)
     nokogiri (1.16.0-aarch64-linux)
       racc (~> 1.4)
@@ -1954,6 +1958,7 @@ DEPENDENCIES
   annotate
   aws-sdk
   bootsnap
+  bugsnag
   byebug
   devise
   devise-jwt
@@ -1964,6 +1969,7 @@ DEPENDENCIES
   jwt
   kaminari
   multiwoven-integrations!
+  newrelic_rpm
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
