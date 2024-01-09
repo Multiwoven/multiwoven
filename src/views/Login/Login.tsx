@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, ErrorMessage,FormikTouched, FormikErrors, FieldInputProps } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { Box, Stack, HStack, Divider, FormLabel, Button, FormControl, Input, Heading, Text, Link, Container, Checkbox } from '@chakra-ui/react';
@@ -13,7 +13,14 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
 });
 
-const LoginForm = ({ getFieldProps, touched, errors, submitting }: any) => (
+interface LoginFormProps {
+  getFieldProps: (nameOrOptions: string | { name: string; value?: any; onChange?: (e: any) => void; onBlur?: (e: any) => void }) => FieldInputProps<any>;
+  touched: FormikTouched<any>;
+  errors: FormikErrors<any>;
+  submitting: boolean;
+}
+
+const LoginForm = ({ getFieldProps, touched, errors, submitting }: LoginFormProps) => (
   <Form>
     <FormControl isInvalid={!!(touched.email && errors.email)}>
       <FormLabel htmlFor="email">Email</FormLabel>

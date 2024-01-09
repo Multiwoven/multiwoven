@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, ErrorMessage, FormikTouched, FormikErrors, FieldInputProps } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Heading, Text, Link, Container, Stack, FormLabel } from '@chakra-ui/react';
@@ -15,7 +15,17 @@ const SignUpSchema = Yup.object().shape({
     .required('Confirm Password is required'),
 });
 
-const FormField = ({ label, name, type = 'text', getFieldProps, touched, errors }: any) => (
+interface SignUpFormProps {
+  getFieldProps: (nameOrOptions: string | { name: string; value?: any; onChange?: (e: any) => void; onBlur?: (e: any) => void }) => FieldInputProps<any>;
+  touched: FormikTouched<any>;
+  errors: FormikErrors<any>;
+  submitting: boolean;
+  label:string,
+  name: string,
+  type: string
+}
+
+const FormField = ({ label, name, type = 'text', getFieldProps, touched, errors }: SignUpFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <FormLabel htmlFor={name}>{label}</FormLabel>
     <Input variant='outline' placeholder={label} type={type} {...getFieldProps(name)} />
