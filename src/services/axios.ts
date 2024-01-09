@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-// import cookie from 'react-cookies'
 import toastr from "toastr";
 
 toastr.options.preventDuplicates = true;
