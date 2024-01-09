@@ -5,7 +5,7 @@ interface NavButtonProps extends ButtonProps {
   label: string
 }
 
-export const NavButton = (props: NavButtonProps) => {
+export const NavButton = (props: NavButtonProps) : JSX.Element => {
   const { icon, label, ...buttonProps } = props
   return (
     <Button variant="tertiary" justifyContent="start" {...buttonProps}>

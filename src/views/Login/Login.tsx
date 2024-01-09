@@ -47,11 +47,11 @@ const LoginForm = ({ getFieldProps, touched, errors, submitting }: LoginFormProp
   </Form>
 );
 
-const Login = () => {
+const Login = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: any): Promise<void> => {
     setSubmitting(true)
     const result = await login(values);
     if (result.success) {

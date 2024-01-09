@@ -16,16 +16,15 @@ const SignUpSchema = Yup.object().shape({
 });
 
 interface SignUpFormProps {
-  getFieldProps: (nameOrOptions: string | { name: string; value?: any; onChange?: (e: any) => void; onBlur?: (e: any) => void }) => FieldInputProps<any>;
-  touched: FormikTouched<any>;
-  errors: FormikErrors<any>;
-  submitting: boolean;
   label:string,
   name: string,
-  type: string
+  type: string,
+  getFieldProps: (nameOrOptions: string | { name: string; value?: any; onChange?: (e: any) => void; onBlur?: (e: any) => void }) => FieldInputProps<any>;
+  touched: FormikTouched<any>,
+  errors: FormikErrors<any>
 }
 
-const FormField = ({ label, name, type = 'text', getFieldProps, touched, errors }: SignUpFormProps) => (
+const FormField = ({ label, name, type, getFieldProps, touched, errors }: SignUpFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <FormLabel htmlFor={name}>{label}</FormLabel>
     <Input variant='outline' placeholder={label} type={type} {...getFieldProps(name)} />
@@ -33,7 +32,7 @@ const FormField = ({ label, name, type = 'text', getFieldProps, touched, errors 
   </FormControl>
 );
 
-const SignUp = () => {
+const SignUp = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -77,8 +76,8 @@ const SignUp = () => {
               >
                 <Stack spacing="6">
                   <Stack spacing="5">
-                    <FormField label="Name" name="name" getFieldProps={getFieldProps} touched={touched} errors={errors} />
-                    <FormField label="Email" name="email" getFieldProps={getFieldProps} touched={touched} errors={errors} />
+                    <FormField label="Name" name="name" type='text' getFieldProps={getFieldProps} touched={touched} errors={errors} />
+                    <FormField label="Email" name="email" type='text' getFieldProps={getFieldProps} touched={touched} errors={errors} />
                     <FormField label="Password" name="password" type="password" getFieldProps={getFieldProps} touched={touched} errors={errors} />
                     <FormField label="Confirm Password" name="password_confirmation" type="password" getFieldProps={getFieldProps} touched={touched} errors={errors} />
                   </Stack>

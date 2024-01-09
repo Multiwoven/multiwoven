@@ -1,4 +1,3 @@
-// import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -11,11 +10,9 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-// import { useNavigate, useLocation } from 'react-router-dom';
 import IconImage from '../../assets/images/multiwoven-logo.png';
 import { FiSettings, FiMoreVertical, FiDatabase, FiTable, FiPieChart, FiMinimize, FiMinimize2, FiBookOpen } from 'react-icons/fi';
 import { HomeIcon } from '@heroicons/react/24/outline';
-// import Cookies from 'js-cookie';
 import { NavButton } from './navButton';
 
 type MenuItem = {
@@ -50,19 +47,7 @@ const menus: MenuArray = [
   },
 ];
 
-const Sidebar = () => {
-  // const [logoutPop, setLogoutPop] = useState(false);
-  // const navigate = useNavigate();
-  // const location = useLocation();
-
-  // const handleWorkPlace = () => {
-  //   setLogoutPop(!logoutPop);
-  // };
-
-  // const handleLogout = () => {
-  //   Cookies.remove('authToken');
-  //   navigate('/login');
-  // };
+const Sidebar = (): JSX.Element => {
 
   return (
     <Flex
