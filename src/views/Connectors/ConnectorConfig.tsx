@@ -122,24 +122,24 @@ export const ConnectorConfig = (props: any) => {
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
-  const type = queryParams.get('type');
-  const name = queryParams.get('name');
+  const type = queryParams.get('type') || '';
+  const name = queryParams.get('name') || '';
 
   useEffect(() => {
     
     console.log(params, type, name);
     
-    // async function fetchData() {
-    //   const connectorType = props.connectorType === "sources" ? "source" : "destination";
-    //   console.log(props.connectorType,connectorType);
+    async function fetchData() {
+      const connectorType = props.connectorType === "sources" ? "source" : "destination";
+      console.log(props.connectorType,connectorType);
       
-    //   const response = await getConnectorDefinition(connectorType, "");
-    //   console.log(response);
-    //   setConnectorsSpecs(response?.data);
-    //   // setConnectorsSpecs(sampleConnectorsSpecs);
-    // }
+      const response = await getConnectorDefinition(type, name);
+      console.log(response);
+      // setConnectorsSpecs(response?.data);
+      setConnectorsSpecs([""]);
+    }
 
-    // fetchData();
+    fetchData();
   }, []);
 
   if (!connectorsSpecs) {
@@ -148,8 +148,9 @@ export const ConnectorConfig = (props: any) => {
 
   try {
     const data: ConnectionSpec = JSON.parse(localStorage.getItem("JSON") || "");
+    // const data:ConnectionSpec = connectorsSpecs;
 
-    const renderInputField = (property, key) => {
+    const renderInputField = (property:any, key:any) => {
       const inputType = property.multiwoven_secret ? "password" : "text"; // Determine input type
 
       if (property.type === "string" || property.multiwoven_secret) {
@@ -226,6 +227,8 @@ export const ConnectorConfig = (props: any) => {
       </>
     );
   } catch (error) {
+    console.log(error);
+    
     return (
       <>
         <h1>NO JSON</h1>

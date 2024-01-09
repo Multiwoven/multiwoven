@@ -7,6 +7,6 @@ import { styles } from './styles'
 export const theme: Record<string, any> = extendTheme(proTheme, {
   styles,
   ...foundations,
-  colors: { ...foundations.colors, brand: foundations.colors['purple'] },
+  colors: { ...foundations.colors, brand: foundations.colors['blue'],mw_orange: "#E63D2D" },
   components,
 })

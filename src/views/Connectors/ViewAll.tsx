@@ -28,7 +28,7 @@ const ViewAll = (props: any) => {
     {
       id: 1,
       name: "Sample connector",
-      connector_type: "destination",
+      connector_type: "source",
       workspace_id: "1",
       status: "active",
       updated_at: "timestamp",
@@ -54,8 +54,12 @@ const ViewAll = (props: any) => {
   useEffect(() => {
     async function fetchData() {
       const response = await getUserConnectors();
-      console.log(response);
-      setPayload(samplePayload); // Uncomment and use this line if you have a state setter for payload
+      // console.log(response);
+      if (response.success === false) {
+        setPayload([])
+      } else {
+        setPayload(response.data);
+      }
     }
 
     fetchData();
@@ -64,6 +68,9 @@ const ViewAll = (props: any) => {
   if (!payload) {
     return <></>;
   }
+
+  // console.log("Payload:",payload);
+  
 
   return (
     <>
@@ -78,7 +85,7 @@ const ViewAll = (props: any) => {
           {/* <h1>{ props.connectorType }s</h1> */}
           <TopBar
             connectorType={props.connectorType}
-            buttonText={props.connectorType}
+            buttonText={props.connectorType === "sources" ? "source" : "destination" }
             buttonOnClick={() => navToPage("new")}
           />
           {!payload ? (

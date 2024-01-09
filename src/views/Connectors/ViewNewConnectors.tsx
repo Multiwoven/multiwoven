@@ -380,7 +380,7 @@ export const ViewNewConnectors = (props: any) => {
         {/* <h1>{ props.connectorType }s</h1> */}
         <TopBar
           connectorType={props.connectorType}
-          buttonText={props.connectorType}
+          buttonText={props.connectorType === "sources" ? "source" : "destination" }
           buttonOnClick={() => console.log("new")}
         />
         <SimpleGrid columns={3} spacing={4}>
