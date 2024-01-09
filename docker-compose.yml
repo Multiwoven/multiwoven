@@ -32,6 +32,7 @@ services:
       SMTP_ADDRESS: ${SMTP_ADDRESS}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
+      NEW_RELIC_KEY: ${NEW_RELIC_KEY}
     volumes:
       - .:/rails
 
