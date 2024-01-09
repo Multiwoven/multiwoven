@@ -87,6 +87,7 @@ const ViewAll = (props: any) => {
             connectorType={props.connectorType}
             buttonText={props.connectorType === "sources" ? "source" : "destination" }
             buttonOnClick={() => navToPage("new")}
+            buttonVisible={true}
           />
           {!payload ? (
             <></>

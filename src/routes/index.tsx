@@ -11,7 +11,6 @@ const Models = lazy(() => import("@/views/Models"));
 import Cookies from 'js-cookie';
 import ViewAll from "@/views/Connectors/ViewAll";
 import { ConnectorConfig, ViewNewConnectors } from "@/views/Connectors";
-import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -29,7 +28,7 @@ const SuspenseWithLoader = ({
   redirectRoute,
 }: SuspenseWithLoaderProps): JSX.Element => {
   const history = useNavigate();
-  
+
   useEffect(() => {
     // const token = Cookies.get('authToken');
     // console.log("routename", redirectRoute)
@@ -118,7 +117,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     url: `/sources/:id`,
     component: (
       <SuspenseWithLoader redirectRoute={'/sources/:id'}>
-        <ConnectorModify connectorType="sources" />
+        <ConnectorConfig connectorType="sources" />
       </SuspenseWithLoader>
     ),
   },

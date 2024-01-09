@@ -8,5 +8,6 @@ export type AlertData = {
 export type ConnectorType = {
     connectorType:"sources" | "destinations" | "models",
     buttonText:string,
-    buttonOnClick:any
+    buttonOnClick:any,
+    buttonVisible:boolean
 }

@@ -368,6 +368,8 @@ export const ViewNewConnectors = (props: any) => {
     return <>LOADING</>;
   }
 
+  const connectorCategory = props.connectorType === "sources" ? "source" : "destination";
+
   return (
     <Box
       display="flex"
@@ -380,12 +382,13 @@ export const ViewNewConnectors = (props: any) => {
         {/* <h1>{ props.connectorType }s</h1> */}
         <TopBar
           connectorType={props.connectorType}
-          buttonText={props.connectorType === "sources" ? "source" : "destination" }
+          buttonText={connectorCategory}
           buttonOnClick={() => console.log("new")}
+          buttonVisible={false}
         />
         <SimpleGrid columns={3} spacing={4}>
           {connectorsSpecs.map((item, index) => (
-            <Link to={"config?type=" + "source" + "&name=" + item.name.toLowerCase()} key={index}>
+            <Link to={"config?type=" + connectorCategory + "&name=" + item.name.toLowerCase()} key={index}>
             <Box bgColor="gray.100" _hover={{bgColor:"gray.200"}} shadow="sm" p={5} borderRadius={12}>
               <Flex dir="row" justifyContent="left" justifyItems="left">
                 <Image
