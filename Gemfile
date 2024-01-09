@@ -33,6 +33,9 @@ gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 
+# Third-Party Tools for Monitoring, Error Reporting, etc.
+gem "newrelic_rpm"
+
 # Debugging
 group :development, :test do
   gem "byebug", platforms: %i[mri windows] # Debugging tool
@@ -57,11 +60,6 @@ end
 group :production do
   # Add production-only gems here.
   gem "redis", "~> 4.0"
-end
-
-# Third-Party Tools for Monitoring, Error Reporting, etc.
-group :monitoring, :error_reporting do
-  gem "newrelic_rpm"
 end
 
 # API Serialization & Pagination
