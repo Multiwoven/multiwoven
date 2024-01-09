@@ -118,25 +118,21 @@ type Credentials = {
 export const ConnectorConfig = (props: any) => {
   const [connectorsSpecs, setConnectorsSpecs] = useState<Array<any>>([]);
   // console.log(props.connectorType);
-  const params = useParams();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
   const type = queryParams.get('type') || '';
   const name = queryParams.get('name') || '';
 
-  useEffect(() => {
-    
-    console.log(params, type, name);
-    
+  useEffect(() => {  
     async function fetchData() {
       const connectorType = props.connectorType === "sources" ? "source" : "destination";
-      console.log(props.connectorType,connectorType);
+      console.log(props.connectorType,connectorType, type, name);
       
       const response = await getConnectorDefinition(type, name);
       console.log(response);
-      // setConnectorsSpecs(response?.data);
-      setConnectorsSpecs([""]);
+      setConnectorsSpecs(response?.data);
+      // setConnectorsSpecs([""]);
     }
 
     fetchData();
@@ -147,8 +143,8 @@ export const ConnectorConfig = (props: any) => {
   }
 
   try {
-    const data: ConnectionSpec = JSON.parse(localStorage.getItem("JSON") || "");
-    // const data:ConnectionSpec = connectorsSpecs;
+    // const data: ConnectionSpec = JSON.parse(localStorage.getItem("JSON") || "");
+    const data:any = connectorsSpecs;
 
     const renderInputField = (property:any, key:any) => {
       const inputType = property.multiwoven_secret ? "password" : "text"; // Determine input type
