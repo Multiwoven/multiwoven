@@ -40,7 +40,7 @@ axiosInstance?.interceptors.response.use(
 		if (error && error.response && error.response.status === 500) {
 			// console.log(error.response);
 			// toastr.error(`${error.response.data.error.message}`);
-			// toastr.error("An Internal Server Error occured. Try again in some time.");
+			toastr.error("An Internal Server Error occured. Try again in some time.");
 		}
 
 		return Promise.reject(error);

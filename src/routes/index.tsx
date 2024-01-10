@@ -140,6 +140,24 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
+    name: 'New Destination',
+    url: '/destinations/new',
+    component: (
+      <SuspenseWithLoader redirectRoute="/destinations/new">
+        <ViewNewConnectors connectorType="destinations" />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'New destination',
+    url: '/destinations/new/config/',
+    component: (
+      <SuspenseWithLoader redirectRoute="/destinations/new/config/">
+        <ConnectorConfig connectorType="destinations" />
+      </SuspenseWithLoader>
+    ),
+  },  
+  {
     name: 'Models',
     url: '/models',
     component: (

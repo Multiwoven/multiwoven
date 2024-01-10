@@ -9,13 +9,13 @@ const TopBar = (props: ConnectorType) => {
 		<>
 			<Flex
 				justifyContent='space-between'
-				alignItems='center'
+				// alignItems='center'
 				p={4}
-				borderBottom={"1px"}
+				// borderBottom={"1px"}
 				borderColor='gray.300'
 				mb={4}
 			>
-				<Heading size='md'>{titleCase(props.connectorType)}</Heading>
+				<Heading size='md' _dark={{color:"white"}}>{titleCase(props.connectorType)}</Heading>
 				{props.buttonVisible ? (
 					<Button
 						leftIcon={<FiPlus color='gray.100' />}
