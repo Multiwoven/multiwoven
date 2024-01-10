@@ -38,13 +38,13 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(response_hash[:connector_type]).to eql("source")
     end
 
-    it "returns empty array not  found" do
+    it "returns empty array not found" do
       get api_v1_connector_definition_path(id: "Unknown", type: "source"),
           headers: auth_headers(user)
       expect(response).to have_http_status(:ok)
       response_hash = JSON.parse(response.body)
 
-      expect(response_hash).to eql([])
+      expect(response_hash).to eql({ "data" => [] })
     end
   end
 

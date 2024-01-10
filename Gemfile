@@ -19,6 +19,7 @@ gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem
 
 # API Support
+gem "active_model_serializers", "~> 0.10.0"
 gem "jbuilder"
 gem "jwt"
 gem "kaminari"

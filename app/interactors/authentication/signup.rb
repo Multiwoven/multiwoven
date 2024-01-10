@@ -34,7 +34,6 @@ module Authentication
       return unless organization.errors.empty?
 
       create_workspace
-      create_workspace_user
     end
 
     def assign_confirmation_code
@@ -51,21 +50,23 @@ module Authentication
       workspace.save
     end
 
+    def save_user
+      if user.save && organization.errors.empty?
+        create_workspace_user
+        context.user = user
+        context.message = "Signup successful!"
+      else
+        user.errors.add(:company_name, organization.errors[:name].first)
+        context.fail!(errors: user.errors.full_messages)
+      end
+    end
+
     def create_workspace_user
       WorkspaceUser.create(
         user:,
         workspace:,
         role: WorkspaceUser::ADMIN
       )
-    end
-
-    def save_user
-      if user.save && organization.errors.empty?
-        context.message = "Signup successful!"
-      else
-        user.errors.add(:company_name, organization.errors[:name].first)
-        context.fail!(errors: user.errors.full_messages)
-      end
     end
 
     def send_confirmation_email

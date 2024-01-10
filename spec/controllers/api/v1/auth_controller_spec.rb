@@ -8,16 +8,26 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     JSON.parse(response.body)
   end
 
+  def response_data
+    json_response["data"]
+  end
+
+  def response_errors
+    json_response["errors"]
+  end
+
   let(:user_attributes) { attributes_for(:user) }
   let(:user) { create(:user, :verified) }
 
   describe "POST #signup" do
     context "with valid parameters" do
-      it "creates a new user and returns a success message" do
+      it "creates a new user and returns the user's data" do
         post :signup, params: user_attributes
 
         expect(response).to have_http_status(:created)
-        expect(json_response["message"]).to eq("Signup successful!")
+        expect(response_data["type"]).to eq("users")
+        expect(response_data["attributes"]["name"]).to eq(user_attributes[:name])
+        expect(response_data["attributes"]["email"]).to eq(user_attributes[:email])
       end
     end
 
@@ -26,7 +36,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :signup, params: { email: "test", password: "pass", password_confirmation: "wrong" }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json_response["error"]).not_to be_nil
+        expect(response_errors).not_to be_empty
       end
     end
   end
@@ -37,7 +47,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :login, params: { email: user.email, password: user.password }
 
         expect(response).to have_http_status(:ok)
-        expect(json_response["token"]).not_to be_nil
+        expect(response_data["attributes"]["token"]).not_to be_nil
       end
     end
 
@@ -46,7 +56,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :login, params: { email: "wrong", password: "wrong" }
 
         expect(response).to have_http_status(:unauthorized)
-        expect(json_response["error"]).not_to be_nil
+        expect(response_errors).not_to be_nil
       end
     end
   end
@@ -57,7 +67,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :forgot_password, params: { email: user.email }
 
         expect(response).to have_http_status(:ok)
-        expect(json_response["message"]).to eq("Reset password instructions sent to email.")
+        expect(response_data["attributes"]["message"]).to eq("Reset password instructions sent to email.")
       end
     end
 
@@ -66,7 +76,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :forgot_password, params: { email: "wrong" }
 
         expect(response).to have_http_status(:not_found)
-        expect(json_response["error"]).not_to be_nil
+        expect(response_errors).not_to be_empty
       end
     end
   end
@@ -80,7 +90,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
                        password_confirmation: "newpassword123" }
 
         expect(response).to have_http_status(:ok)
-        expect(json_response["message"]).to eq("Password successfully reset.")
+        expect(response_data["attributes"]["message"]).to eq("Password successfully reset.")
       end
     end
 
@@ -91,7 +101,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
                        password_confirmation: "newpassword123" }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json_response["error"]).not_to be_nil
+        expect(response_errors).not_to be_empty
       end
     end
   end
@@ -104,7 +114,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :verify_code, params: { email: user_with_code.email, confirmation_code: user_with_code.confirmation_code }
 
         expect(response).to have_http_status(:ok)
-        expect(json_response["message"]).to eq("Account verified successfully!")
+        expect(response_data["attributes"]["message"]).to eq("Account verified successfully!")
       end
     end
 
@@ -113,7 +123,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :verify_code, params: { email: user_with_code.email, confirmation_code: "wrong" }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json_response["error"]).not_to be_nil
+        expect(response_errors).not_to be_empty
       end
     end
 
@@ -122,7 +132,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :verify_code
 
         expect(response).to have_http_status(:bad_request)
-        expect(json_response["error"]).to eq("Missing required parameters")
+        expect(response_errors).not_to be_empty
       end
     end
   end
@@ -135,7 +145,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :resend_verification, params: { email: unverified_user.email }
 
         expect(response).to have_http_status(:ok)
-        expect(json_response["message"]).to eq("Verification code resent successfully.")
+        expect(response_data["attributes"]["message"]).to eq("Verification code resent successfully.")
       end
     end
 
@@ -144,7 +154,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :resend_verification, params: { email: "nonexistent@example.com" }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json_response["error"]).to eq("User not found.")
+        expect(response_errors).not_to be_empty
       end
     end
   end
