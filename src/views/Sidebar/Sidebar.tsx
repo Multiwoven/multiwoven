@@ -1,88 +1,120 @@
-
-import { Box, Button, Text, Link, Container } from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { UpDownIcon } from '@chakra-ui/icons'
-import { Icon } from '@chakra-ui/react'
-import IconImage from '../../assets/images/icon.png';
-import { useState } from "react";
-import Cookies from 'js-cookie';
 import {
-  CircleStackIcon,
-  TableCellsIcon,
-  ChartBarSquareIcon,
-  BookOpenIcon,
-  ArrowPathIcon,
-  HomeIcon,
-  CogIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline'
-const Sidebar = () => {
-  const [logoutPop, setLogoutPop] = useState(false);
-  const navigate = useNavigate();
+  Avatar,
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  Stack,
+  StackDivider,
+  Text,
+  Divider,
+} from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
+import IconImage from '../../assets/images/multiwoven-logo.png';
+import { FiSettings, FiMoreVertical, FiDatabase, FiTable, FiPieChart, FiMinimize, FiMinimize2, FiBookOpen } from 'react-icons/fi';
+import { HomeIcon } from '@heroicons/react/24/outline';
+import { NavButton } from './navButton';
 
-  const handleWorkPlace = () => {
-    setLogoutPop(!logoutPop);
-  }
-  const handleLogout=()=>{
-    // event.stopPropagation();
-    Cookies.remove('authToken');
-    navigate('/login')
-  }
+type MenuItem = {
+  title: string;
+  link: string;
+  Icon: any;
+};
+
+type MenuSection = {
+  heading: string | null;
+  menu: MenuItem[];
+};
+
+type MenuArray = MenuSection[];
+
+const menus: MenuArray = [
+  { heading: null, menu: [{ title: 'Dashboard', link: '/', Icon: HomeIcon }] },
+  {
+    heading: 'Setup',
+    menu: [
+      { title: 'Sources', link: '/sources', Icon: FiDatabase },
+      { title: 'Destinations', link: '/destinations', Icon: FiMinimize },
+    ],
+  },
+  { heading: 'Models', menu: [{ title: 'Models', link: '/models', Icon: FiTable }] },
+  {
+    heading: 'Activate',
+    menu: [
+      { title: 'Syncs', link: '/syncs', Icon: FiMinimize2 },
+      { title: 'Audiences', link: '/audiences', Icon: FiPieChart },
+    ],
+  },
+];
+
+const Sidebar = (): JSX.Element => {
+
   return (
-    // <SidebarContainer>
-    //   {MAIN_PAGE_ROUTES.map((pageRoutes) => (
-    //     <div className="text-sm leading-6 cursor-pointer" key={pageRoutes.name}>
-    //       <NavLink to={pageRoutes.url}>{pageRoutes.name}</NavLink>
-    //     </div>
-    //   ))}
-    // </SidebarContainer>
-    <>
-      <Container w='256px' display='flex' margin={0} padding={0} flexDir='row' className='flex flex-col align-center justify-center'>
-        <Box position={'relative'} padding={4} width={'100%'} bg='#171923' minH={'100vh'} color='black' borderRight={'1px'} borderRightColor={'border'}>
-          <Button padding={3} background={'#2d3748'} pt={6} pb={6} position={'relative'} w={'100%'} _hover={{ background: '#2d3748', color: 'white' }} onClick={() => handleWorkPlace()}>
-            <img width={25} src={IconImage} />
-            <Box padding={2} width={'100%'}>
-              <Text color={'white'} fontSize={13} textAlign="left" mt={0} w={'100%'}>Multiwoven</Text>
-              <Text color={'#a0aec0'} fontSize={11} textAlign="left" fontWeight='normal' mt={0} w={'100%'}>ID 345678</Text>
-            </Box>
-            <UpDownIcon color={'#a0aec0'} fontSize={13} />
-            {logoutPop && <Box fontWeight={'normal'} borderRadius={6} background={'white'} color={'#2d3748'} position={'absolute'} top={'55px'} left={0} padding={4} pt={5} pb={5} border={'1px'} borderColor={'border'} width={'100%'}>
-              <Text fontSize={14} textAlign="left" mt={0} w={'100%'}>multiwoven@gmail.com</Text>
-              <Text fontSize={14} textAlign="left" mt={5} w={'100%'}>Workplace setting</Text>
-              <Text fontSize={14} textAlign="left" mt={3} w={'100%'}>Add an account</Text>
-              <Text fontSize={14} textAlign="left" mt={5} w={'100%'} onClick={()=> handleLogout()}>Logout</Text>
-            </Box>}
-          </Button>
-          <Text mt={6} w={'100%'}>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" background={'#2d3748'} color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={HomeIcon} color={'#a0aec0'} fontSize={18} mr={2} /> Get Started</Link>
-          </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              SETUP </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={CircleStackIcon} color={'#a0aec0'}  fontSize={18}  mr={2} /> Sources</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}> <Icon as={TableCellsIcon} color={'#a0aec0'}  fontSize={18}  mr={2} /> Destination</Link>
-            </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              DEFINE </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={ChartBarSquareIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Models</Link>
-          </Text>
-          <Text mt={6} w={'100%'}>
-            <Text display='flex' pl={4} mb={2} textAlign="left" fontSize="12px" fontWeight={600} letterSpacing={2} color="gray.500">
-              ACTIVATE </Text>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={ArrowPathIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Syncs</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}> <Icon as={UserGroupIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Audiences</Link>
-          </Text>
-
-
-          <Text mt={6} w={'100%'} position={'absolute'} bottom={'60px'}>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}><Icon as={CogIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Settings</Link>
-            <Link fontWeight={500} mb={1} borderRadius={10} display={'flex'} alignItems={'center'} width={'100%'} padding={2} pl={4} as={RouterLink} to="/login" color="white" fontSize={14} _hover={{ background: '#2d3748', color: 'white' }}> <Icon as={BookOpenIcon} color={'#a0aec0'}  fontSize={18} mr={2} /> Documentation</Link>
-          </Text>
-
-        </Box>
-      </Container>
-    </>
+    <Flex
+      position="relative"
+      boxShadow="0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);"
+      minW="240px"
+      borderColor="#e0e0e0"
+      borderStyle="solid"
+      as="section"
+      minH="100vh"
+      bg="bg.canvas"
+    >
+      <Flex
+        flex="1"
+        bg="bg.surface"
+        boxShadow="sm"
+        maxW={{ base: 'full', sm: 'xs' }}
+        py={{ base: '6', sm: '8' }}
+        px={{ base: '4', sm: '6' }}
+      >
+        <Stack justify="space-between" spacing="1" width="full">
+          <Stack spacing="5" shouldWrapChildren>
+            <Flex justifyContent="center">
+              <img width={160} src={IconImage} alt="IconImage" />
+            </Flex>
+            <Divider borderBottomWidth="1px" />
+            {menus.map((categoryItem, index) => (
+              <Stack key={index}>
+                {categoryItem?.heading && (
+                  <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+                    {categoryItem?.heading}
+                  </Text>
+                )}
+                <Stack spacing="0">
+                  {categoryItem?.menu.map((menuItem, index) => (
+                    <RouterLink to={menuItem.link} key={index}>
+                      <NavButton label={menuItem.title} icon={menuItem.Icon} w="full" />
+                    </RouterLink>
+                  ))}
+                </Stack>
+              </Stack>
+            ))}
+            <Stack spacing="7" divider={<StackDivider />}>
+              <Box />
+              <Stack spacing="0">
+                <NavButton label="Documentation" icon={FiBookOpen} />
+                <NavButton label="Settings" icon={FiSettings} />
+              </Stack>
+              <HStack spacing="3" justify="space-between">
+                <HStack spacing="3">
+                  <Avatar boxSize="10" src="https://i.pravatar.cc/300" />
+                  <Box>
+                    <Text textStyle="sm" fontWeight="medium">
+                      John Doe
+                    </Text>
+                    <Text textStyle="sm" color="fg.muted">
+                      john@chakra-ui.com
+                    </Text>
+                  </Box>
+                </HStack>
+                <IconButton variant="tertiary" icon={<FiMoreVertical />} aria-label="Open Menu" />
+              </HStack>
+            </Stack>
+          </Stack>
+        </Stack>
+      </Flex>
+    </Flex>
   );
 };
 

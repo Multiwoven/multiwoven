@@ -1,15 +1,18 @@
 import axios from 'axios';
-// import cookie from 'react-cookies'
+import Cookies from 'js-cookie';
+import toastr from "toastr";
 
+toastr.options.preventDuplicates = true;
 export const domain = 'https://api.multiwoven.com/api/v1'
 export const axiosInstance = axios.create({
     baseURL: domain,
 });
 
+const token = Cookies.get('authToken');
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
-
-    // config.headers["x-token"] = cookie.load('x-token') ? cookie.load('x-token') : "";
-    config.headers['Content-Type']= 'application/json'
+    config.headers['Content-Type'] = 'application/json';
+    config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers["Accept"] = "*/*";
     return config;
 });
 
@@ -19,18 +22,17 @@ axiosInstance?.interceptors.response.use(
     },
     function responseError(error) {
         if (error && error.response && error.response.status === 401) {
-
-            // window.alert("Authentication error.");
+            toastr.error(`${error.response.data.error.message}`)
         }
         if (error && error.response && error.response.status === 403) {
-
+            toastr.error(`${error.response.data.error.message}`)
             // window.alert("Authentication error.");
         }
         if (error && error.response && error.response.status === 501) {
-
+            toastr.error(`${error.response.data.error.message}`)
         }
         if (error && error.response && error.response.status === 500) {
-
+            toastr.error(`${error.response.data.error.message}`)
         }
 
         return Promise.reject(error);
