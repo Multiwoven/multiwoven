@@ -55,9 +55,8 @@ const Login = (): JSX.Element => {
     setSubmitting(true)
     const result = await login(values);
     if (result.success) {
-      const token = result?.response?.data.data.attributes.token;
-      debugger;
-      Cookies.set('authToken', token);
+      const token = result?.response?.data?.data?.attributes?.token;
+      Cookies?.set('authToken', token);
       setSubmitting(false);
       navigate('/');
     } else {

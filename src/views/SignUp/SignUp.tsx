@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, Input, Heading, Text, Link, Container, Stack, FormLabel } from '@chakra-ui/react';
 import MultiwovenIcon from '../../assets/images/icon.png';
-import { signUp } from '@/services/common';
+import { signUp } from '../../services/common';
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required('Company name is required'),
