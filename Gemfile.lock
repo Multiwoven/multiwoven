@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.1)
+    multiwoven-integrations (0.1.2)
       activesupport
       dry-schema
       dry-struct
@@ -15,6 +15,7 @@ PATH
       google-cloud-bigquery
       pg
       rake
+      restforce
       ruby-odbc
       sequel
 
