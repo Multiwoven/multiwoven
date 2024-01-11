@@ -21,19 +21,21 @@ axiosInstance?.interceptors.response.use(
         return config;
     },
     function responseError(error) {
-        if (error && error.response && error.response.status === 401) {
-            toastr.error(`${error.response.data.error.message}`)
+        if (error && error.response && error.response.status) {
+            switch (error.response.status) {
+                case 401:
+                case 403:
+                case 501:
+                case 500:
+                    toastr.error(`${error.response.data.error.message}`);
+                    break;
+                // Add more cases if needed
+                default:
+                    toastr.error("An error occurred.");
+                    break;
+            }
         }
-        if (error && error.response && error.response.status === 403) {
-            toastr.error(`${error.response.data.error.message}`)
-            // window.alert("Authentication error.");
-        }
-        if (error && error.response && error.response.status === 501) {
-            toastr.error(`${error.response.data.error.message}`)
-        }
-        if (error && error.response && error.response.status === 500) {
-            toastr.error(`${error.response.data.error.message}`)
-        }
+        
 
         return Promise.reject(error);
     }

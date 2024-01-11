@@ -1,47 +1,38 @@
-// services/login.ts
 import { axiosInstance as axios } from './axios';
 
-export const login = async (values: any) => {
+interface ApiResponse {
+    success: boolean;
+    response?: any;
+}
+
+const apiRequest = async (url: string, values: any): Promise<ApiResponse> => {
     let data = JSON.stringify(values);
+    let response;
     try {
-        const response = await axios.post('/login', data);
+        if (values === null) {
+            response = await axios.get(url);
+        } else {
+            response = await axios.post(url, data);
+        }
         return { success: true, response };
-    } catch (error: any) {
+    } catch (error) {
+        console.error(`API Request Error for ${url}:`, error);
         return { success: false };
     }
 };
 
-// function errorToLine(errors:Array<String[]>) {
-//     return errors.map(row => row.join(' '));
-// }
-
-export const signUp = async (values: any) => {
-    let data = JSON.stringify(values);
-    try {
-        const response = await axios.post('/signup', data);
-        return { success: true, response };
-    } catch (error: any) {
-        return { success: false };
-    }
+export const login = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/login', values);
 };
 
-export const accountVerify = async (values: any) => {
-    let data = JSON.stringify(values);
-    try {
-        const response = await axios.post('/verify_code', data);
-        return { success: true, response };
-    } catch (error: any) {
-        return { success: false };
-    }
+export const signUp = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/signup', values);
 };
 
-
-export const getAllModels = async () => {
-    try {
-        const response = await axios.get('/models');
-        return { success: true, response };
-    } catch (error: any) {
-        return { success: false };
-    }
+export const accountVerify = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/verify_code', values);
 };
 
+export const getAllModels = async (): Promise<ApiResponse> => {
+    return apiRequest('/models', null);
+};
