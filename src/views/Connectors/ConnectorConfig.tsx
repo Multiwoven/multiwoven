@@ -3,15 +3,14 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
 	Button,
-	Container,
 	FormControl,
 	FormHelperText,
 	FormLabel,
 	Input,
 	VStack,
 } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
-import { getConnectorDefinition } from "@/services/common";
+import { useLocation, useParams } from "react-router-dom";
+import { getConnectorData, getConnectorDefinition } from "@/services/common";
 
 interface ConnectorSpecProperty {
 	title?: string;
@@ -33,13 +32,25 @@ interface Connector {
 
 interface ConnectorConfigProps {
 	connectorType: string;
+	configValues?: boolean;
 }
 
-export const ConnectorConfig = ({ connectorType }: ConnectorConfigProps) => {
+interface FormValues {
+	[key: string]: any; // Define a type for dynamic form values
+}
+
+export const ConnectorConfig = ({
+	connectorType,
+	configValues,
+}: ConnectorConfigProps) => {
 	const [connector, setConnector] = useState<Connector | null>(null);
+	const [initialFormValues, setInitialFormValues] = useState<FormValues>({}); // Use FormValues type
 	const location = useLocation();
 
 	const queryParams = new URLSearchParams(location.search);
+	const params = useParams();
+
+	const id = params?.id;
 	const type = queryParams.get("type") || "";
 	const name = queryParams.get("name") || "";
 
@@ -50,12 +61,24 @@ export const ConnectorConfig = ({ connectorType }: ConnectorConfigProps) => {
 			setConnector(response?.data);
 		}
 
+		async function getFormPrefillData() {
+			const prefillData = await getConnectorData(id || "");
+			// setInitialFormValues(prefillData?.data);
+			return prefillData;
+		}
+
+		if (configValues && id !== undefined) {
+			getFormPrefillData().then((response) =>
+				setInitialFormValues(response.data)
+			);
+			console.log(initialFormValues);
+		}
+
 		fetchData();
 	}, [connectorType, type, name]);
 
 	const connectorSpec = connector?.connector_spec.connection_specification;
 
-	// Creating a Yup schema dynamically based on the JSON
 	const validationSchema = Yup.object(
 		connectorSpec?.properties
 			? Object.keys(connectorSpec.properties).reduce((schema, key) => {
@@ -67,21 +90,36 @@ export const ConnectorConfig = ({ connectorType }: ConnectorConfigProps) => {
 			: {}
 	);
 
-	// Initial form values
-	const initialValues = connectorSpec?.properties
-		? Object.keys(connectorSpec.properties).reduce((values, key) => {
-				values[key] = "";
-				return values;
-		  }, {} as { [key: string]: string })
-		: {};
+	const createInitialFormValues = (spec: ConnectorSpec | undefined) => {
+		const initialValues: FormValues = {};
+		if (spec?.properties) {
+			Object.keys(spec.properties).forEach((key) => {
+				initialValues[key] = ""; // Set each field to an empty string initially
+			});
+		}
+		return initialValues;
+	};
+
+
+	// Create initial values based on connectorSpec properties
+	const defaultInitialValues = createInitialFormValues(connectorSpec);
+
+	const formInitialValues =
+		Object.keys(initialFormValues).length > 0
+			? initialFormValues
+			: defaultInitialValues;
+
+	console.log(formInitialValues, connectorSpec?.properties);
+	
 
 	return (
 		<Formik
-			initialValues={initialValues}
+			initialValues={formInitialValues}
 			validationSchema={validationSchema}
 			onSubmit={(values) => {
 				console.log(values);
 			}}
+			enableReinitialize
 		>
 			{({ getFieldProps, touched, errors }) => (
 				<Form>
@@ -97,14 +135,12 @@ export const ConnectorConfig = ({ connectorType }: ConnectorConfigProps) => {
 											isRequired={connectorSpec.required.includes(key)}
 										>
 											<FormLabel htmlFor={key}>{field.title || key}</FormLabel>
-											<Input
-												id={key}
-												type='text'
-												{...getFieldProps(key)} 
-											/>
+											<Input id={key} type='text' {...getFieldProps(key)} />
 											<ErrorMessage name={key} component='div' />
 											{field.description && (
-												<FormHelperText w="md">{field.description}</FormHelperText>
+												<FormHelperText w='md'>
+													{field.description}
+												</FormHelperText>
 											)}
 										</FormControl>
 									);

@@ -35,17 +35,17 @@ export const accountVerify = async (values: any) => {
 	}
 };
 
-export async function getUserConnectors() {
+export async function getUserConnectors(connectorType: string) {
 	try {
-		const response = await axios.get("/connectors");
+		const response = await axios.get("/connectors?type=" + connectorType);
 		return { success: true, data: response.data };
 	} catch (error) {
-		// console.log(error);  
+		// console.log(error);
 		return { success: false, error: error };
 	}
 }
 
-export async function getUserConnector(connectorID:string) {
+export async function getUserConnector(connectorID: string) {
 	try {
 		const response = await axios.get("/connectors/" + connectorID);
 		return { success: true, data: response.data };
@@ -74,6 +74,15 @@ export async function getConnectorDefinition(
 		const response = await axios.get(
 			"/connector_definitions/" + connectorName + "?type=" + connectorType
 		);
+		return { success: true, data: response.data };
+	} catch (error) {
+		return { success: false, error: error };
+	}
+}
+
+export async function getConnectorData(connectorID: string) {
+	try {
+		const response = await axios.get("/connectors/" + connectorID);
 		return { success: true, data: response.data };
 	} catch (error) {
 		return { success: false, error: error };

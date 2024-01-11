@@ -53,7 +53,7 @@ const ViewAll = (props: any) => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getUserConnectors();
+      const response = await getUserConnectors(connectorName);
       // console.log(response);
       if (response.success === false) {
         setPayload([])
