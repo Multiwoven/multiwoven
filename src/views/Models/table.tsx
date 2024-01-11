@@ -13,8 +13,10 @@ import {
     Box,
     Text
 } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { IoArrowDown } from 'react-icons/io5'
+import { getAllModels } from '@/services/common';
 const members = [
     {
         id: '1',
@@ -67,7 +69,17 @@ const members = [
         rating: 4,
     },
 ]
-const ModdelTable = () : JSX.Element => {
+const ModdelTable = (): JSX.Element => {
+
+    useEffect(() => {
+        fetchModels();
+    }, [])
+
+    const fetchModels = async () => {
+        const result = await getAllModels();
+        if (result.success) {
+        }
+    };
 
     return (
         <Table>
@@ -75,7 +87,6 @@ const ModdelTable = () : JSX.Element => {
                 <Tr>
                     <Th>
                         <HStack spacing="3">
-                            {/* <Checkbox /> */}
                             <HStack spacing="1">
                                 <Text>Name</Text>
                                 <Icon as={IoArrowDown} color="fg.muted" boxSize="4" />

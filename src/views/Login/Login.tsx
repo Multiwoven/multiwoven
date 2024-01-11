@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { Box, Stack, HStack, Divider, FormLabel, Button, FormControl, Input, Heading, Text, Link, Container, Checkbox } from '@chakra-ui/react';
 import MultiwovenIcon from '../../assets/images/icon.png';
-import { login } from '@/services/common';
+import { login } from '../../services/common';
 import { GoogleIcon } from './providerIcon';
 import Cookies from 'js-cookie';
 
@@ -55,7 +55,8 @@ const Login = (): JSX.Element => {
     setSubmitting(true)
     const result = await login(values);
     if (result.success) {
-      const token = result?.response?.data?.token;
+      const token = result?.response?.data.data.attributes.token;
+      debugger;
       Cookies.set('authToken', token);
       setSubmitting(false);
       navigate('/');

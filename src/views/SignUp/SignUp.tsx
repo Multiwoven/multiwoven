@@ -7,6 +7,7 @@ import MultiwovenIcon from '../../assets/images/icon.png';
 import { signUp } from '@/services/common';
 
 const SignUpSchema = Yup.object().shape({
+  company_name: Yup.string().required('Company name is required'),
   name: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email address').required('Email is required'),
   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
@@ -76,6 +77,7 @@ const SignUp = (): JSX.Element => {
               >
                 <Stack spacing="6">
                   <Stack spacing="5">
+                  <FormField label="Company Name" name="company_name" type='text' getFieldProps={getFieldProps} touched={touched} errors={errors} />
                     <FormField label="Name" name="name" type='text' getFieldProps={getFieldProps} touched={touched} errors={errors} />
                     <FormField label="Email" name="email" type='text' getFieldProps={getFieldProps} touched={touched} errors={errors} />
                     <FormField label="Password" name="password" type="password" getFieldProps={getFieldProps} touched={touched} errors={errors} />
