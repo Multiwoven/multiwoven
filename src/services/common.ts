@@ -1,90 +1,61 @@
 // services/login.ts
-import { axiosInstance as axios } from "./axios";
 
-export const login = async (values: any) => {
-	let data = JSON.stringify(values);
-	try {
-		const response = await axios.post("/login", data);
-		return { success: true, response };
-	} catch (error: any) {
-		return { success: false };
-	}
+import { axiosInstance as axios } from './axios';
+
+interface ApiResponse {
+    success: boolean;
+    response?: any;
+}
+
+const apiRequest = async (url: string, values: any): Promise<ApiResponse> => {
+    let data = JSON.stringify(values);
+    let response;
+    try {
+        if (values === null) {
+            response = await axios.get(url);
+        } else {
+            response = await axios.post(url, data);
+        }
+        return { success: true, response };
+    } catch (error) {
+        console.error(`API Request Error for ${url}:`, error);
+        return { success: false };
+    }
 };
 
-// function errorToLine(errors:Array<String[]>) {
-//     return errors.map(row => row.join(' '));
-// }
-
-export const signUp = async (values: any) => {
-	let data = JSON.stringify(values);
-	try {
-		const response = await axios.post("/signup", data);
-		return { success: true, response };
-	} catch (error: any) {
-		return { success: false };
-	}
+export const login = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/login', values);
 };
 
-export const accountVerify = async (values: any) => {
-	let data = JSON.stringify(values);
-	try {
-		const response = await axios.post("/account-verify", data);
-		return { success: true, response };
-	} catch (error: any) {
-		return { success: false };
-	}
+export const signUp = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/signup', values);
 };
 
-export async function getUserConnectors(connectorType: string) {
-	try {
-		const response = await axios.get("/connectors?type=" + connectorType);
-		return { success: true, data: response.data };
-	} catch (error) {
-		// console.log(error);
-		return { success: false, error: error };
-	}
-}
+export const accountVerify = async (values: any): Promise<ApiResponse> => {
+    return apiRequest('/verify_code', values);
+};
 
-export async function getUserConnector(connectorID: string) {
-	try {
-		const response = await axios.get("/connectors/" + connectorID);
-		return { success: true, data: response.data };
-	} catch (error) {
-		console.log(error);
-		return { success: false, error: error };
-	}
-}
+export const getAllModels = async (): Promise<ApiResponse> => {
+    return apiRequest('/models', null);
+};
 
-export async function getConnectorsDefintions(connectorType: string) {
-	try {
-		const response = await axios.get(
-			"/connector_definitions?type=" + connectorType
-		);
-		return { success: true, data: response.data };
-	} catch (error) {
-		return { success: false, error: error };
-	}
-}
+export const getUserConnectors = async (connectorType: string): Promise<ApiResponse> => {
+    return apiRequest("/connectors?type=" + connectorType, null);
+};
 
-export async function getConnectorDefinition(
-	connectorType: string,
-	connectorName: string
-) {
-	try {
-		const response = await axios.get(
-			"/connector_definitions/" + connectorName + "?type=" + connectorType
-		);
-		return { success: true, data: response.data };
-	} catch (error) {
-		return { success: false, error: error };
-	}
-}
+export const getUserConnector = async (connectorID: string): Promise<ApiResponse> => {
+    return apiRequest("/connectors" + connectorID, null);
+};
 
-export async function getConnectorData(connectorID: string) {
-	try {
-		const response = await axios.get("/connectors/" + connectorID);
-		return { success: true, data: response.data };
-	} catch (error) {
-		return { success: false, error: error };
-	}
-}
+export const getConnectorsDefintions = async (connectorType: string): Promise<ApiResponse> => {
+    return apiRequest("/connector_definitions?type=" + connectorType, null);
+};
+
+export const getConnectorDefintion = async (connectorType: string,
+	connectorName: string): Promise<ApiResponse> => {
+    return apiRequest("/connector_definitions/" + connectorName + "?type=" + connectorType, null);
+};
+
+export const getConnectorData = async (connectorID: string): Promise<ApiResponse> => {
+    return apiRequest("/connectors/" + connectorID, null);
+};

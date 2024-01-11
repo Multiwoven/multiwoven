@@ -5,13 +5,13 @@ interface NavButtonProps extends ButtonProps {
   label: string
 }
 
-export const NavButton = (props: NavButtonProps) => {
+export const NavButton = (props: NavButtonProps) : JSX.Element => {
   const { icon, label, ...buttonProps } = props
   return (
     <Button variant="tertiary" justifyContent="start" {...buttonProps}>
-      <HStack spacing="3">
-        <Icon as={icon} boxSize="6" color="fg.subtle" />
-        <Text>{label}</Text>
+      <HStack spacing="2">
+        <Icon as={icon} boxSize="4" color="fg.subtle" />
+        <Text color={'#101828'} fontWeight={'500'} fontSize='sm'>{label}</Text>
       </HStack>
     </Button>
   )

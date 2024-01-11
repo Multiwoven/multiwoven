@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     Box, Button, FormControl, Heading, Input, Container, Stack, HStack, FormLabel
 } from '@chakra-ui/react';
-import MultiwovenIcon from '../../assets/images/icon.png';
+import MultiwovenIcon from '@/assets/images/icon.png';
 import { useState } from 'react';
 import { accountVerify } from '@/services/common';
 

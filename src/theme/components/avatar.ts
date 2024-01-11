@@ -5,7 +5,7 @@ import { mode } from '@chakra-ui/theme-tools'
 
 const { definePartsStyle } = createMultiStyleConfigHelpers(avatar.keys)
 
-const baseStyle = definePartsStyle((props) => ({
+const baseStyle:any = definePartsStyle((props:any) => ({
   label: {},
   container: {
     bg: 'accent',
