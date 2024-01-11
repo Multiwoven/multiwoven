@@ -44,6 +44,9 @@ module Multiwoven::Integrations::Source
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
         query = sync_config.model.query
+
+        query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
+
         bigquery = create_connection(connection_config)
         records = []
         results = bigquery.query query

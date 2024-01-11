@@ -16,7 +16,7 @@ module Multiwoven::Integrations::Destination
         parse_response(response)
       end
 
-      def discover
+      def discover(_connection_config = nil)
         catalog_json = read_json(CATALOG_SPEC_PATH)
 
         streams = catalog_json["streams"].map do |stream|

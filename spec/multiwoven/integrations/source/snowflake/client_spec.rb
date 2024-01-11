@@ -31,7 +31,7 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
       },
       "model": {
         "name": "ExampleModel",
-        "query": "SELECT * FROM CALL_CENTER LIMIT 1",
+        "query": "SELECT * FROM CALL_CENTER",
         "query_type": "raw_sql",
         "primary_key": "id"
       },
@@ -80,11 +80,35 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
   end
 
   describe "#read" do
+    let(:s_config) { Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json) }
     it "reads records successfully" do
       allow(Sequel).to receive(:odbc).and_return(double("db").as_null_object)
-      allow_any_instance_of(RSpec::Mocks::Double).to receive(:fetch).and_yield(id: 1, name: "John").and_yield(id: 2, name: "Jane")
 
-      records = client.read(Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json))
+      allow_any_instance_of(RSpec::Mocks::Double).to receive(:fetch).with(s_config.model.query).and_yield(id: 1, name: "John").and_yield(id: 2, name: "Jane")
+
+      records = client.read(s_config)
+
+      expect(records).to be_an(Array)
+      expect(records.length).to eq(2)
+
+      multiwoven_message = records.first
+      first_record = multiwoven_message.record
+      expect(first_record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+      expect(first_record.data).to eq(id: 1, name: "John")
+      expect(first_record.emitted_at).to be_an(Integer)
+    end
+
+    it "reads records successfully for batched_query" do
+      allow(Sequel).to receive(:odbc).and_return(double("db").as_null_object)
+
+      s_config.limit = "10"
+      s_config.offset = "1"
+
+      batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
+
+      allow_any_instance_of(RSpec::Mocks::Double).to receive(:fetch).with(batched_query).and_yield(id: 1, name: "John").and_yield(id: 2, name: "Jane")
+
+      records = client.read(s_config)
 
       expect(records).to be_an(Array)
       expect(records.length).to eq(2)

@@ -130,6 +130,8 @@ module Multiwoven
     end
 
     class SyncConfig < ProtocolModel
+      attr_accessor :offset, :limit
+
       attribute :source, Connector
       attribute :destination, Connector
       attribute :model, Model

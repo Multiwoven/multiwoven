@@ -22,7 +22,7 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do # rubocop:d
       },
       "model": {
         "name": "ExampleBigQueryModel",
-        "query": "SELECT * FROM profile.customer LIMIT 10;",
+        "query": "SELECT * FROM profile.customer;",
         "query_type": "raw_sql",
         "primary_key": "id"
       },
@@ -113,7 +113,25 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do # rubocop:d
       allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery_instance)
       result_row1 = { "full_name" => "John Kennedy", "customer_code" => 1 }
       result_row2 = { "full_name" => "Jhon Doe", "customer_code" => 2 }
-      allow(bigquery_instance).to receive(:query).and_return([result_row1, result_row2])
+      allow(bigquery_instance).to receive(:query).with(s_config.model.query).and_return([result_row1, result_row2])
+      records = client.read(s_config)
+      expect(records).to be_an(Array)
+      expect(records).not_to be_empty
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+      expect(records.first.data).to eq(result_row1)
+      expect(records[1]).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+      expect(records[1].data).to eq(result_row2)
+    end
+
+    it "reads records successfully for batched_query" do
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      s_config.limit = 100
+      s_config.offset = 1
+      allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery_instance)
+      result_row1 = { "full_name" => "John Kennedy", "customer_code" => 1 }
+      result_row2 = { "full_name" => "Jhon Doe", "customer_code" => 2 }
+      batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
+      allow(bigquery_instance).to receive(:query).with(batched_query).and_return([result_row1, result_row2])
       records = client.read(s_config)
       expect(records).to be_an(Array)
       expect(records).not_to be_empty

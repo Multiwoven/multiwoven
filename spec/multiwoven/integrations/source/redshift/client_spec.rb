@@ -28,7 +28,7 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
       },
       "model": {
         "name": "ExampleRedshiftModel",
-        "query": "SELECT * FROM contacts LIMIT 10;",
+        "query": "SELECT * FROM contacts;",
         "query_type": "raw_sql",
         "primary_key": "id"
       },
@@ -85,6 +85,31 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         allow(pg_connection).to receive(:exec).with(s_config.model.query).and_return(
+          [
+            Multiwoven::Integrations::Protocol::RecordMessage.new(
+              data: { column1: "column1" }, emitted_at: Time.now.to_i
+            ).to_multiwoven_message,
+            Multiwoven::Integrations::Protocol::RecordMessage.new(
+              data: { column2: "column2" }, emitted_at: Time.now.to_i
+            ).to_multiwoven_message
+          ]
+        )
+        allow(pg_connection).to receive(:close).and_return(true)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records).not_to be_empty
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      end
+
+      it "reads records successfully for batched_query" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.limit = 100
+        s_config.offset = 1
+        allow(PG).to receive(:connect).and_return(pg_connection)
+
+        batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
+
+        allow(pg_connection).to receive(:exec).with(batched_query).and_return(
           [
             Multiwoven::Integrations::Protocol::RecordMessage.new(
               data: { column1: "column1" }, emitted_at: Time.now.to_i

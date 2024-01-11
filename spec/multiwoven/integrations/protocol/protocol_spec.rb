@@ -195,7 +195,6 @@ module Multiwoven
               "query_type": "raw_sql",
               "primary_key": "id"
             },
-
             "stream": {
               "name": "example_stream", "action": "create",
               "json_schema": { "field1": "type1" },
@@ -208,7 +207,10 @@ module Multiwoven
               "request_method": "GET"
             },
             "sync_mode": "full_refresh",
-            "destination_sync_mode": "insert"
+            "destination_sync_mode": "insert",
+            "cursor_field": "example_cursor_field",
+            "offset": "100",
+            "limit": "10"
           }.to_json
 
           sync_config = described_class.from_json(json_data)
@@ -221,6 +223,16 @@ module Multiwoven
           expect(sync_config.model).to be_a(Model)
           expect(sync_config.model.name).to eq("example_model")
           expect(sync_config.sync_mode).to eq("full_refresh")
+          expect(sync_config.destination_sync_mode).to eq("insert")
+          expect(sync_config.cursor_field).to eq("example_cursor_field")
+          sync_config.limit = "10"
+          sync_config.offset = "100"
+          expect(sync_config.offset).to eq("100")
+          expect(sync_config.limit).to eq("10")
+          sync_config.limit = "20"
+          sync_config.offset = "200"
+          expect(sync_config.offset).to eq("200")
+          expect(sync_config.limit).to eq("20")
         end
       end
     end
