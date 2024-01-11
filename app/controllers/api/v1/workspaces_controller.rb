@@ -9,15 +9,20 @@ module Api
       def index
         result = ListAll.call(user: current_user)
         @workspaces = result.workspaces
+        render json: @workspaces, status: :ok
       end
 
       def create
         result = Create.call(user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-          render :show, status: :created
+          render json: result.workspace, status: :created
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render_error(
+            message: "Workspace creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.workspace)
+          )
         end
       end
 
@@ -25,9 +30,13 @@ module Api
         result = Update.call(id: params[:id], user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-          render :show, status: :ok
+          render json: @workspace, status: :ok
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render_error(
+            message: "Workspace creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.workspace)
+          )
         end
       end
 
@@ -37,7 +46,11 @@ module Api
         if result.success?
           head :no_content
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render_error(
+            message: "Workspace creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.workspace)
+          )
         end
       end
 

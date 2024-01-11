@@ -11,7 +11,7 @@ module Workspaces
         create_workspace_user_as_admin(workspace, context.user)
         context.workspace = workspace
       else
-        context.fail!(errors: workspace.errors.full_messages)
+        context.fail!(workspace:)
       end
     end
 

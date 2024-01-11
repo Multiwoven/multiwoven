@@ -57,7 +57,7 @@ module Authentication
         context.message = "Signup successful!"
       else
         user.errors.add(:company_name, organization.errors[:name].first)
-        context.fail!(errors: user.errors.full_messages)
+        context.fail!(user:)
       end
     end
 

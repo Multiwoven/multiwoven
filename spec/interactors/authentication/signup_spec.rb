@@ -68,7 +68,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
       end
 
       it "provides error messages related to missing company_name" do
-        expect(context.errors).to include("Company name can't be blank")
+        expect(context.user.errors[:company_name]).to include("can't be blank")
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
 
         it "provides error messages" do
-          expect(context.errors).to include("Password confirmation doesn't match Password")
+          expect(context.user.errors[:password_confirmation]).to include("doesn't match Password")
         end
       end
 
@@ -107,7 +107,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
 
         it "provides error messages" do
-          expect(context.errors).to include("Email can't be blank")
+          expect(context.user.errors[:email]).to include("can't be blank")
         end
       end
 
@@ -126,7 +126,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
 
         it "provides error messages" do
-          expect(context.errors).to include("Name can't be blank")
+          expect(context.user.errors[:name]).to include("can't be blank")
         end
       end
 
@@ -151,7 +151,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
 
         it "provides error messages related to company name" do
-          expect(context.errors).to include("Company name has already been taken")
+          expect(context.user.errors[:company_name]).to include("has already been taken")
         end
       end
     end

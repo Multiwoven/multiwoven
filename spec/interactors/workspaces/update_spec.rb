@@ -29,7 +29,7 @@ RSpec.describe Workspaces::Update, type: :interactor do
       end
 
       it "provides a failure message" do
-        expect(context.errors).to include("Name can't be blank")
+        expect(context.workspace.errors[:name]).to include("can't be blank")
       end
     end
   end
