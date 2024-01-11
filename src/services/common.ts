@@ -51,7 +51,7 @@ export const getConnectorsDefintions = async (connectorType: string): Promise<Ap
     return apiRequest("/connector_definitions?type=" + connectorType, null);
 };
 
-export const getConnectorDefintion = async (connectorType: string,
+export const getConnectorDefinition = async (connectorType: string,
 	connectorName: string): Promise<ApiResponse> => {
     return apiRequest("/connector_definitions/" + connectorName + "?type=" + connectorType, null);
 };

@@ -1,5 +1,4 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
 import { ConnectorType } from "../commonTypes";
 import titleCase from "@/utils/TitleCase";
 import { FiPlus } from "react-icons/fi";
