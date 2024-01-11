@@ -10,7 +10,7 @@ module Workspaces
       if workspace.present?
         workspace.destroy!
       else
-        context.fail!(errors: ["Workspace not found"])
+        context.fail!(workspace:)
       end
     end
   end

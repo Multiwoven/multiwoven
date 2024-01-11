@@ -39,6 +39,7 @@ gem "newrelic_rpm"
 
 # Debugging
 group :development, :test do
+  gem "bullet"
   gem "byebug", platforms: %i[mri windows] # Debugging tool
   gem "factory_bot_rails"
   gem "faker"

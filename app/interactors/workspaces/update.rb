@@ -11,7 +11,7 @@ module Workspaces
       if workspace&.update(context.workspace_params)
         context.workspace = workspace
       else
-        context.fail!(errors: workspace&.errors&.full_messages || ["Couldn't find Workspace"])
+        context.fail!(workspace:)
       end
     end
   end

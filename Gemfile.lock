@@ -1631,6 +1631,9 @@ GEM
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    bullet (7.1.5)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     byebug (11.1.3)
     case_transform (0.2)
       activesupport
@@ -1939,6 +1942,7 @@ GEM
       unf_ext
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
+    uniform_notifier (1.16.0)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -1965,6 +1969,7 @@ DEPENDENCIES
   annotate
   aws-sdk
   bootsnap
+  bullet
   byebug
   devise
   devise-jwt
