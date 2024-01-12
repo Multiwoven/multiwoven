@@ -10,7 +10,7 @@ module Multiwoven
 
       private
 
-      def batched_query(sql_query, offset, limit)
+      def batched_query(sql_query, limit, offset)
         offset = offset.to_i
         limit = limit.to_i
         raise ArgumentError, "Offset and limit must be non-negative" if offset.negative? || limit.negative?

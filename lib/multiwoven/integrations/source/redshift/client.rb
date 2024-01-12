@@ -7,6 +7,7 @@ module Multiwoven::Integrations::Source
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
+        connection_config = connection_config.with_indifferent_access
         create_connection(connection_config)
         ConnectionStatus.new(
           status: ConnectionStatusType["succeeded"]
@@ -18,6 +19,7 @@ module Multiwoven::Integrations::Source
       end
 
       def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
         query = "SELECT table_name, column_name, data_type, is_nullable
                  FROM information_schema.columns
                  WHERE table_schema = '#{connection_config[:schema]}' AND table_catalog = '#{connection_config[:database]}'
@@ -43,6 +45,7 @@ module Multiwoven::Integrations::Source
 
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
+        connection_config = connection_config.with_indifferent_access
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
 

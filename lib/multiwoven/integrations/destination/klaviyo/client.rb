@@ -5,6 +5,7 @@ module Multiwoven::Integrations::Destination
     include Multiwoven::Integrations::Core
     class Client < DestinationConnector
       def check_connection(connection_config)
+        connection_config = connection_config.with_indifferent_access
         api_key = connection_config[:private_api_key]
 
         response = Multiwoven::Integrations::Core::HttpClient.request(
@@ -44,6 +45,7 @@ module Multiwoven::Integrations::Destination
 
       def write(sync_config, records, _action = "insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
+        connection_config = connection_config.with_indifferent_access
         url = sync_config.stream.url
         request_method = sync_config.stream.request_method
 

@@ -7,6 +7,7 @@ module Multiwoven::Integrations::Source
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
+        connection_config = connection_config.with_indifferent_access
         bigquery = create_connection(connection_config)
         bigquery.datasets
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
@@ -15,6 +16,7 @@ module Multiwoven::Integrations::Source
       end
 
       def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
         bigquery = create_connection(connection_config)
         target_dataset_id = connection_config["dataset_id"]
         records = bigquery.datasets.flat_map do |dataset|
@@ -43,6 +45,7 @@ module Multiwoven::Integrations::Source
 
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
+        connection_config = connection_config.with_indifferent_access
         query = sync_config.model.query
 
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
