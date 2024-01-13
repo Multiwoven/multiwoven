@@ -9,8 +9,8 @@ export const axiosInstance = axios.create({
 	baseURL: domain,
 });
 
-const token = Cookies.get('authToken');
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
+    const token = Cookies.get('authToken');
     config.headers['Content-Type'] = 'application/json';
     config.headers['Authorization'] = `Bearer ${token}`;
     config.headers["Accept"] = "*/*";

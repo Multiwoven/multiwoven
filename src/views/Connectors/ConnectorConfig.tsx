@@ -58,7 +58,7 @@ export const ConnectorConfig = ({
 		async function fetchData() {
 			// const adjustedConnectorType = connectorType === "sources" ? "source" : "destination";
 			const response = await getConnectorDefinition(type, name);
-			setConnector(response?.data);
+			setConnector(response?.response.data);
 		}
 
 		async function getFormPrefillData() {
@@ -69,7 +69,7 @@ export const ConnectorConfig = ({
 
 		if (configValues && id !== undefined) {
 			getFormPrefillData().then((response) =>
-				setInitialFormValues(response.data)
+				setInitialFormValues(response.response.data)
 			);
 			console.log(initialFormValues);
 		}
