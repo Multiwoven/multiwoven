@@ -79,6 +79,18 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
     end
   end
 
+  describe "#discover" do
+    it "returns a catalog" do
+      message = subject.discover
+      catalog = message.catalog
+      expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+
+      profile_stream = catalog.streams.first
+      expect(profile_stream.url).to eql("https://a.klaviyo.com/api/profiles")
+      expect(profile_stream.request_method).to eql("POST")
+    end
+  end
+
   describe "#write" do
     let(:sync_config_json) do
       {
