@@ -8,6 +8,7 @@ import {
   SteppedForm as SteppedFormType,
 } from "./types";
 import { updateFormDataForStep } from "./utils";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 const initialState: FormState = {
   currentStep: 0,
@@ -53,6 +54,7 @@ export const SteppedFormContext = createContext<FormContextType>({
 });
 
 const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentStep, currentForm } = state;
 
@@ -66,6 +68,9 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
       },
     });
     dispatch({ type: "NEXT_STEP", payload: null });
+
+    const nextFormKey = steps?.[currentStep + 1].formKey;
+    navigate(nextFormKey);
   };
 
   useEffect(() => {
@@ -81,13 +86,21 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
 
   return (
     <SteppedFormContext.Provider value={{ state, dispatch }}>
+      <Routes>
+        {steps.map((step, index) => (
+          <Route
+            index={index === 0}
+            path={step.formKey}
+            element={step.component}
+            key={step.formKey}
+          />
+        ))}
+        <Route path="*" element={<Navigate to="1" replace />} />
+      </Routes>
       <Box>
-        {stepInfo.component}
-        <Box>
-          <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
-            Continue
-          </Button>
-        </Box>
+        <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
+          Continue
+        </Button>
       </Box>
     </SteppedFormContext.Provider>
   );

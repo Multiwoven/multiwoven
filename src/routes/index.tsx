@@ -98,7 +98,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   },
   {
     name: "New Source",
-    url: "/sources/new",
+    url: "/sources/new/*",
     component: (
       <SuspenseWithLoader redirectRoute="/sources/new">
         <Sources />
