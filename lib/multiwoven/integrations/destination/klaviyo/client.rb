@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module Klaviyo
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector
+    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         api_key = connection_config[:private_api_key]
@@ -47,11 +47,17 @@ module Multiwoven::Integrations::Destination
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         connection_config = connection_config.with_indifferent_access
         url = sync_config.stream.url
+
         request_method = sync_config.stream.request_method
 
         write_success = 0
         write_failure = 0
         records.each do |record|
+          # pre process payload
+          # Add hardcode values into payload
+          record["data"] ||= {}
+          record["data"]["type"] = sync_config.stream.name
+
           response = Multiwoven::Integrations::Core::HttpClient.request(
             url,
             request_method,
