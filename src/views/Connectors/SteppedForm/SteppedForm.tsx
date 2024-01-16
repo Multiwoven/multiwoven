@@ -1,27 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Box, Button } from "@chakra-ui/react";
 import { createContext, useReducer } from "react";
-import { FormState } from "./types";
+import {
+  FormAction,
+  FormContextType,
+  FormState,
+  SteppedForm as SteppedFormType,
+} from "./types";
 import { updateFormDataForStep } from "./utils";
-
-type Step = {
-  formKey: string;
-  name: string;
-  component: JSX.Element;
-};
-
-type SteppedForm = {
-  steps: Step[];
-};
-
-type FormAction = {
-  type: string;
-  payload: {
-    step?: number;
-    data?: unknown;
-    stepKey?: string;
-  } | null;
-};
 
 const initialState: FormState = {
   currentStep: 0,
@@ -61,17 +47,12 @@ const reducer = (state: FormState, action: FormAction) => {
   }
 };
 
-type FormContextType = {
-  state: FormState;
-  dispatch: React.Dispatch<FormAction>;
-};
-
 export const SteppedFormContext = createContext<FormContextType>({
   state: initialState,
   dispatch: () => {},
 });
 
-const SteppedForm = ({ steps }: SteppedForm): JSX.Element => {
+const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentStep, currentForm } = state;
 
