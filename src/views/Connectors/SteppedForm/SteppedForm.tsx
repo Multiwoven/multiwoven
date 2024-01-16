@@ -8,7 +8,12 @@ import {
   SteppedForm as SteppedFormType,
 } from "./types";
 import { updateFormDataForStep } from "./utils";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+  createSearchParams,
+  useSearchParams,
+} from "react-router-dom";
 
 const initialState: FormState = {
   currentStep: 0,
@@ -43,6 +48,13 @@ const reducer = (state: FormState, action: FormAction) => {
         currentForm: payload?.data,
       };
     }
+    case "UPDATE_STEP": {
+      const { payload } = action;
+      return {
+        ...state,
+        currentStep: payload?.step || 0,
+      };
+    }
     default:
       return state;
   }
@@ -55,8 +67,21 @@ export const SteppedFormContext = createContext<FormContextType>({
 
 const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentStep, currentForm } = state;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const step = searchParams.get("step");
+
+  useEffect(() => {
+    if (!step) {
+      setSearchParams({
+        step: "0",
+      });
+    } else {
+      dispatch({ type: "UPDATE_STEP", payload: { step: Number(step) } });
+    }
+  }, [location.search]);
 
   const handleOnContinueClick = (stepKey: string) => {
     dispatch({
@@ -67,36 +92,27 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         stepKey,
       },
     });
-    dispatch({ type: "NEXT_STEP", payload: null });
 
-    const nextFormKey = steps?.[currentStep + 1].formKey;
-    navigate(nextFormKey);
-  };
-
-  useEffect(() => {
     dispatch({
       type: "UPDATE_CURRENT_FORM",
       payload: {
         data: null,
       },
     });
-  }, [currentStep]);
+
+    navigate({
+      pathname: location.pathname,
+      search: createSearchParams({
+        step: `${currentStep + 1}`,
+      }).toString(),
+    });
+  };
 
   const stepInfo = steps[state.currentStep];
 
   return (
     <SteppedFormContext.Provider value={{ state, dispatch }}>
-      <Routes>
-        {steps.map((step, index) => (
-          <Route
-            index={index === 0}
-            path={step.formKey}
-            element={step.component}
-            key={step.formKey}
-          />
-        ))}
-        <Route path="*" element={<Navigate to={steps[0].formKey} replace />} />
-      </Routes>
+      {stepInfo.component}
       <Box>
         <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
           Continue
