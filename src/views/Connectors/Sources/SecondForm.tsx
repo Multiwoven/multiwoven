@@ -4,7 +4,6 @@ import { SteppedFormContext } from "../SteppedForm/SteppedForm";
 
 const SecondForm = () => {
   const { state } = useContext(SteppedFormContext);
-  console.log(state);
   return (
     <div>
       <Input placeholder="Phone Number" />

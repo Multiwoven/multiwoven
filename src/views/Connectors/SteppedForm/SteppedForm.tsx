@@ -19,6 +19,7 @@ type FormAction = {
   payload: {
     step?: number;
     data?: unknown;
+    stepKey?: string;
   } | null;
 };
 
@@ -41,6 +42,7 @@ const reducer = (state: FormState, action: FormAction) => {
         forms: state.forms,
         step: payload?.step,
         data: payload?.data,
+        stepKey: payload?.stepKey,
       });
       return {
         ...state,
@@ -73,12 +75,13 @@ const SteppedForm = ({ steps }: SteppedForm): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentStep, currentForm } = state;
 
-  const handleOnContinueClick = () => {
+  const handleOnContinueClick = (stepKey: string) => {
     dispatch({
       type: "UPDATE_FORM",
       payload: {
         step: currentStep,
         data: currentForm,
+        stepKey,
       },
     });
     dispatch({ type: "NEXT_STEP", payload: null });
@@ -93,12 +96,16 @@ const SteppedForm = ({ steps }: SteppedForm): JSX.Element => {
     });
   }, [currentStep]);
 
+  const stepInfo = steps[state.currentStep];
+
   return (
     <SteppedFormContext.Provider value={{ state, dispatch }}>
       <Box>
-        {steps[state.currentStep].component}
+        {stepInfo.component}
         <Box>
-          <Button onClick={handleOnContinueClick}>Continue</Button>
+          <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
+            Continue
+          </Button>
         </Box>
       </Box>
     </SteppedFormContext.Provider>
