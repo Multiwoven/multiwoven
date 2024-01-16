@@ -95,7 +95,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             key={step.formKey}
           />
         ))}
-        <Route path="*" element={<Navigate to="1" replace />} />
+        <Route path="*" element={<Navigate to={steps[0].formKey} replace />} />
       </Routes>
       <Box>
         <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
