@@ -2,99 +2,45 @@ import { Box } from "@chakra-ui/react";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
 import ConnectorTable from "@/components/ConnectorTable";
-import { useEffect, useState } from "react";
 import { getUserConnectors } from "@/services/common";
 import NoConnectors from "./NoConnectors";
+import { ConnectorTypes } from "./types";
+import { CONNECTORS } from "./constant";
+import { FiPlus } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
 
-const ViewAll = (props: any) => {
-  // console.log(props);
-  const [payload, setPayload] = useState<any>();
+type ViewAllProps = {
+  connectorType: ConnectorTypes;
+};
+
+const ViewAll = ({ connectorType }: ViewAllProps): JSX.Element | null => {
+  const { data } = useQuery({
+    queryKey: ["connectors", CONNECTORS[connectorType].name],
+    queryFn: () => getUserConnectors(CONNECTORS[connectorType].name),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
   const navigate = useNavigate();
+  const connectors = data?.data;
 
-  function navToPage(route: string) {
-    navigate(route);
-  }
-
-  let connectorName: string = "";
-  const connectorType = props.connectorType;
-
-  if (connectorType === "sources") {
-    connectorName = "Source";
-  } else if (connectorType === "destinations") {
-    connectorName = "Destination";
-  }
-
-  const samplePayload = [
-    {
-      id: 1,
-      name: "Sample connector",
-      connector_type: "source",
-      workspace_id: "1",
-      status: "active",
-      updated_at: "timestamp",
-      configuration: {
-        public_api_key: "config_v",
-        private_api_key: "config_value_2",
-      },
-      connector_definiton: {
-        name: "Snowflake",
-        connector_type: "source",
-        connector_subtype: "database",
-        documentation_url: "https://docs.mutliwoven.com",
-        github_issue_label: "source-snowflake",
-        icon: "icons/snowflake.png",
-        license: "MIT",
-        release_stage: "alpha",
-        support_level: "community",
-        tags: ["language:ruby", "multiwoven"],
-      },
-    },
-  ];
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await getUserConnectors(connectorName);
-      // console.log(response.response.data);
-      if (response.success === false) {
-        setPayload([])
-      } else {
-        setPayload(response.response.data);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  if (!payload) {
-    return <></>;
-  }
-
-  // console.log("Payload:",payload);
-  
+  if (!connectors) return null;
 
   return (
     <>
-      <Box
-        display="flex"
-        width="full"
-        margin={8}
-        flexDir="column"
-        backgroundColor={""}
-      >
+      <Box display="flex" width="full" margin={8} flexDir="column">
         <Box padding="8" bgColor={""}>
-          {/* <h1>{ props.connectorType }s</h1> */}
           <TopBar
-            connectorType={props.connectorType}
-            buttonText={props.connectorType === "sources" ? "source" : "destination" }
-            buttonOnClick={() => navToPage("new")}
-            buttonVisible={true}
+            name={CONNECTORS[connectorType].name}
+            ctaName="Add New"
+            ctaIcon={<FiPlus color="gray.100" />}
+            onCtaClicked={() => navigate("new")}
+            isCtaVisible
           />
-          {!payload ? (
-            <></>
-          ) : payload.length > 0 ? (
-            <ConnectorTable payload={payload} />
+          {connectors ? (
+            <ConnectorTable payload={connectors} />
           ) : (
-            <NoConnectors connectorType={connectorName.toLowerCase()} />
+            <NoConnectors connectorType={CONNECTORS[connectorType].name} />
           )}
         </Box>
       </Box>

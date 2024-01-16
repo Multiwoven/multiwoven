@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import { theme} from './theme'
-import "./assets/styles/common_styles.scss"
+import { theme } from "./theme";
+import "./assets/styles/common_styles.scss";
 // import { theme } from "./chakra.config";
 //import { ChakraProvider } from "@chakra-ui/provider";
 // const proTheme = extendTheme(theme)

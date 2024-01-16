@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
 const Homepage = lazy(() => import("@/views/Homepage"));
@@ -8,7 +8,7 @@ const SignUp = lazy(() => import("@/views/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
 const Models = lazy(() => import("@/views/Models"));
 
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import ViewAll from "@/views/Connectors/ViewAll";
 import { ConnectorConfig, ViewNewConnectors } from "@/views/Connectors";
 import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
@@ -60,8 +60,8 @@ export default SuspenseWithLoader;
 
 export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
-    name: 'Homepage',
-    url: '/',
+    name: "Homepage",
+    url: "/",
     component: (
       <SuspenseWithLoader redirectRoute="/">
         <Homepage />
@@ -69,8 +69,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Dashboard',
-    url: '/dashboard',
+    name: "Dashboard",
+    url: "/dashboard",
     component: (
       <SuspenseWithLoader redirectRoute="/dashboard">
         <Dashboard />
@@ -78,8 +78,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'About Us',
-    url: '/about-us',
+    name: "About Us",
+    url: "/about-us",
     component: (
       <SuspenseWithLoader redirectRoute="/about-us">
         <AboutUs />
@@ -87,17 +87,17 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Sources',
-    url: '/sources',
+    name: "Sources",
+    url: "/sources",
     component: (
       <SuspenseWithLoader redirectRoute="/sources">
-        <ViewAll connectorType="sources" />
+        <ViewAll connectorType="source" />
       </SuspenseWithLoader>
     ),
   },
   {
-    name: 'New Source',
-    url: '/sources/new',
+    name: "New Source",
+    url: "/sources/new",
     component: (
       <SuspenseWithLoader redirectRoute="/sources/new">
         <ViewNewConnectors connectorType="sources" />
@@ -105,26 +105,26 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'New Source',
-    url: '/sources/new/config/',
+    name: "New Source",
+    url: "/sources/new/config/",
     component: (
       <SuspenseWithLoader redirectRoute="/sources/new/config/">
         <ConnectorConfig connectorType="sources" />
       </SuspenseWithLoader>
     ),
-  },  
+  },
   {
-    name: 'View Source',
+    name: "View Source",
     url: `/sources/:id`,
     component: (
-      <SuspenseWithLoader redirectRoute={'/sources/:id'}>
+      <SuspenseWithLoader redirectRoute={"/sources/:id"}>
         <ConnectorConfig connectorType="sources" configValues={true} />
       </SuspenseWithLoader>
     ),
   },
   {
-    name: 'Destinations',
-    url: '/destinations',
+    name: "Destinations",
+    url: "/destinations",
     component: (
       <SuspenseWithLoader redirectRoute="/destinations">
         <ViewAll connectorType="destinations" />
@@ -132,8 +132,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'New Source',
-    url: '/destinations/new',
+    name: "New Source",
+    url: "/destinations/new",
     component: (
       <SuspenseWithLoader redirectRoute="/destinations/new">
         <ViewNewConnectors connectorType="destinations" />
@@ -141,17 +141,17 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'New destination',
-    url: '/destinations/new/config/',
+    name: "New destination",
+    url: "/destinations/new/config/",
     component: (
       <SuspenseWithLoader redirectRoute="/destinations/new/config/">
         <ConnectorConfig connectorType="destinations" />
       </SuspenseWithLoader>
     ),
-  },  
+  },
   {
-    name: 'Models',
-    url: '/models',
+    name: "Models",
+    url: "/models",
     component: (
       <SuspenseWithLoader redirectRoute="/models">
         <Models />
@@ -162,8 +162,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
-    name: 'Login',
-    url: '/login',
+    name: "Login",
+    url: "/login",
     component: (
       <SuspenseWithLoader redirectRoute="/login">
         <Login />
@@ -171,8 +171,8 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Sign Up',
-    url: '/sign-up',
+    name: "Sign Up",
+    url: "/sign-up",
     component: (
       <SuspenseWithLoader redirectRoute="/sign-up">
         <SignUp />
@@ -180,8 +180,8 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Account Verify',
-    url: '/account-verify',
+    name: "Account Verify",
+    url: "/account-verify",
     component: (
       <SuspenseWithLoader redirectRoute="/account-verify">
         <AccountVerify />
@@ -189,4 +189,3 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
 ];
-

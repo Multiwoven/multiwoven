@@ -2,9 +2,13 @@ import { Routes, Route } from "react-router-dom";
 import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes";
 import Heading from "./components/Heading";
 import MainLayout from "./views/MainLayout";
-const App = () => {
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+const App = (): JSX.Element => {
   return (
-    <div className="md:container md:mx-auto">
+    <QueryClientProvider client={queryClient}>
       <Routes>
         {AUTH_ROUTES.map((authRoute) => (
           <Route
@@ -27,7 +31,7 @@ const App = () => {
           element={<Heading size="small">Page Not Found</Heading>}
         />
       </Routes>
-    </div>
+    </QueryClientProvider>
   );
 };
 export default App;

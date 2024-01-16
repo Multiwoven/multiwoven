@@ -20,6 +20,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.1.1",
+    "@tanstack/react-query": "^5.17.14",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.16",
     "jest-environment-jsdom": "^29.7.0",
