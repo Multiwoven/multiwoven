@@ -63,7 +63,8 @@ module Api
         params.require(:model).permit(:connector_id,
                                       :name,
                                       :query,
-                                      :query_type).merge(workspace_id: current_workspace.id)
+                                      :query_type,
+                                      :primary_key).merge(workspace_id: current_workspace.id)
       end
     end
   end

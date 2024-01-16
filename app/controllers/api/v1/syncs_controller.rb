@@ -63,8 +63,10 @@ module Api
                                      :model_id,
                                      :schedule_type,
                                      :status,
-                                     configuration: {},
-                                     schedule_data: {})
+                                     :sync_interval,
+                                     :sync_interval_unit,
+                                     :stream_name,
+                                     configuration: {})
               .merge(workspace_id: current_workspace.id)
       end
     end

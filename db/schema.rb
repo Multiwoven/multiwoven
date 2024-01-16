@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_07_104025) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_12_073233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,15 +19,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_07_104025) do
     t.integer "connector_id"
     t.jsonb "catalog"
     t.string "catalog_hash"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "connector_definitions", force: :cascade do |t|
-    t.integer "connector_type"
-    t.jsonb "spec"
-    t.integer "source_type"
-    t.jsonb "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -61,6 +52,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_07_104025) do
     t.index ["name"], name: "index_organizations_on_name", unique: true
   end
 
+  create_table "sync_records", force: :cascade do |t|
+    t.integer "sync_id"
+    t.integer "sync_run_id"
+    t.jsonb "record"
+    t.string "fingerprint"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "action"
+    t.string "primary_key"
+    t.index ["fingerprint"], name: "index_sync_records_on_fingerprint", unique: true
+    t.index ["sync_id", "primary_key"], name: "index_sync_records_on_sync_id_and_primary_key", unique: true
+  end
+
+  create_table "sync_runs", force: :cascade do |t|
+    t.integer "sync_id"
+    t.integer "status"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.integer "total_rows"
+    t.integer "successful_rows"
+    t.integer "failed_rows"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "syncs", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "source_id"
@@ -69,10 +86,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_07_104025) do
     t.jsonb "configuration"
     t.integer "source_catalog_id"
     t.integer "schedule_type"
-    t.jsonb "schedule_data"
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "primary_key"
+    t.integer "sync_mode"
+    t.integer "sync_interval"
+    t.integer "sync_interval_unit"
+    t.string "stream_name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -107,12 +128,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_07_104025) do
     t.string "slug"
     t.string "status"
     t.string "api_key"
-    t.string "workspace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "organization_id"
     t.index ["organization_id"], name: "index_workspaces_on_organization_id"
-    t.index ["workspace_id"], name: "index_workspaces_on_workspace_id", unique: true
   end
 
   add_foreign_key "workspace_users", "users"

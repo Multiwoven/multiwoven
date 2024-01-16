@@ -12,8 +12,9 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git"
+gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git", branch: "version_bump"
 
+gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem

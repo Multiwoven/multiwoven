@@ -14,4 +14,24 @@ RSpec.describe Catalog, type: :model do
     it { should validate_presence_of(:catalog) }
     it { should validate_presence_of(:catalog_hash) }
   end
+
+  describe "#find_stream_by_name" do
+    let(:streams) do
+      [
+        { "name" => "profile", "other_attributes" => "value1" },
+        { "name" => "customer", "other_attributes" => "value2" }
+      ]
+    end
+    let(:catalog) { create(:catalog, catalog: { "streams" => streams }) }
+
+    it "returns the correct stream when it exists" do
+      stream = catalog.find_stream_by_name("profile")
+      expect(stream).to eq({ "name" => "profile", "other_attributes" => "value1" })
+    end
+
+    it "returns nil when the stream does not exist" do
+      stream = catalog.find_stream_by_name("non_existent")
+      expect(stream).to be_nil
+    end
+  end
 end

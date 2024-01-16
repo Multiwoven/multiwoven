@@ -7,6 +7,7 @@ module Api
       before_action :set_connector, only: %i[show update destroy discover]
 
       def index
+        # TODO: Add type filter for source and destination
         @connectors = current_workspace
                       .connectors.all.page(params[:page] || 1)
       end

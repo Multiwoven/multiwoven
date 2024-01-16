@@ -15,4 +15,23 @@ RSpec.describe Model, type: :model do
     it { should validate_presence_of(:query) }
     it { should have_many(:syncs).dependent(:nullify) }
   end
+
+  describe "#to_protocol" do
+    it "returns a protocol model with correct attributes" do
+      model = Model.new(
+        workspace_id: 1,
+        connector_id: 1,
+        name: "Test Model",
+        query: "SELECT * FROM table",
+        primary_key: "id",
+        query_type: :raw_sql
+      )
+      protocol_model = model.to_protocol
+      expect(protocol_model).to be_a(Multiwoven::Integrations::Protocol::Model)
+      expect(protocol_model.name).to eq(model.name)
+      expect(protocol_model.query).to eq(model.query)
+      expect(protocol_model.query_type).to eq(model.query_type)
+      expect(protocol_model.primary_key).to eq(model.primary_key)
+    end
+  end
 end

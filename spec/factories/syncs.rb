@@ -8,7 +8,9 @@ FactoryBot.define do
     association :destination, factory: :connector
     configuration { { test: "Test" } }
     schedule_type { 1 }
-    schedule_data { { test: "Test" } }
+    sync_interval { 1 }
+    stream_name { "profile" }
+    sync_interval_unit { "hours" }
     status { 1 }
   end
 end

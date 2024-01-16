@@ -18,10 +18,7 @@ class Connector < ApplicationRecord
   has_one :catalog, dependent: :nullify
 
   def connector_definition
-    @connector_definition ||= Multiwoven::Integrations::Service
-                              .connector_class(
-                                connector_type.to_s.camelize, connector_name.to_s.camelize
-                              ).new.meta_data.with_indifferent_access
+    @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
 
   def configuration_schema
@@ -30,5 +27,20 @@ class Connector < ApplicationRecord
                connector_type.to_s.camelize, connector_name.to_s.camelize
              ).new
     client.connector_spec[:connection_specification].to_json
+  end
+
+  def to_protocol
+    Multiwoven::Integrations::Protocol::Connector.new(
+      name: connector_name,
+      type: connector_type,
+      connection_specification: configuration
+    )
+  end
+
+  def connector_client
+    Multiwoven::Integrations::Service
+      .connector_class(
+        connector_type.to_s.camelize, connector_name.to_s.camelize
+      )
   end
 end
