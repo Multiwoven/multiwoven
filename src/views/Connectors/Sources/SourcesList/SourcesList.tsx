@@ -23,7 +23,7 @@ const SourcesList = () => {
     <Box width="100%">
       <TopBar
         name={"Sources"}
-        ctaName="Add New"
+        ctaName="Add Sources"
         ctaIcon={<FiPlus color="gray.100" />}
         onCtaClicked={() => navigate("new")}
         isCtaVisible
