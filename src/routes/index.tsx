@@ -11,8 +11,12 @@ const Sources = lazy(() => import("@/views/Connectors/Sources"));
 
 import Cookies from "js-cookie";
 import ViewAll from "@/views/Connectors/ViewAll";
-import { ConnectorConfig, ViewNewConnectors } from "@/views/Connectors";
+import Connectors, {
+  ConnectorConfig,
+  ViewNewConnectors,
+} from "@/views/Connectors";
 import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
+import SetupConnectors from "@/views/Connectors/Setup/SetupConnectors";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -156,6 +160,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute="/models">
         <Models />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: "Setup",
+    url: "/setup*",
+    component: (
+      <SuspenseWithLoader redirectRoute="/models">
+        <SetupConnectors />
       </SuspenseWithLoader>
     ),
   },

@@ -8,12 +8,21 @@ import {
   StackDivider,
   Text,
   Divider,
-} from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import IconImage from '../../assets/images/multiwoven-logo.png';
-import { FiSettings, FiMoreVertical, FiDatabase, FiTable, FiPieChart, FiMinimize, FiMinimize2, FiBookOpen } from 'react-icons/fi';
-import { HomeIcon } from '@heroicons/react/24/outline';
-import { NavButton } from './navButton';
+} from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import IconImage from "../../assets/images/multiwoven-logo.png";
+import {
+  FiSettings,
+  FiMoreVertical,
+  FiDatabase,
+  FiTable,
+  FiPieChart,
+  FiMinimize,
+  FiMinimize2,
+  FiBookOpen,
+} from "react-icons/fi";
+import { HomeIcon } from "@heroicons/react/24/outline";
+import { NavButton } from "./navButton";
 
 type MenuItem = {
   title: string;
@@ -29,26 +38,28 @@ type MenuSection = {
 type MenuArray = MenuSection[];
 
 const menus: MenuArray = [
-  { heading: null, menu: [{ title: 'Dashboard', link: '/', Icon: HomeIcon }] },
+  { heading: null, menu: [{ title: "Dashboard", link: "/", Icon: HomeIcon }] },
   {
-    heading: 'Setup',
+    heading: "Setup",
     menu: [
-      { title: 'Sources', link: '/sources', Icon: FiDatabase },
-      { title: 'Destinations', link: '/destinations', Icon: FiMinimize },
+      { title: "Sources", link: "/setup/sources", Icon: FiDatabase },
+      { title: "Destinations", link: "/destinations", Icon: FiMinimize },
     ],
   },
-  { heading: 'Models', menu: [{ title: 'Models', link: '/models', Icon: FiTable }] },
   {
-    heading: 'Activate',
+    heading: "Models",
+    menu: [{ title: "Models", link: "/models", Icon: FiTable }],
+  },
+  {
+    heading: "Activate",
     menu: [
-      { title: 'Syncs', link: '/syncs', Icon: FiMinimize2 },
-      { title: 'Audiences', link: '/audiences', Icon: FiPieChart },
+      { title: "Syncs", link: "/syncs", Icon: FiMinimize2 },
+      { title: "Audiences", link: "/audiences", Icon: FiPieChart },
     ],
   },
 ];
 
 const Sidebar = (): JSX.Element => {
-
   return (
     <Flex
       position="relative"
@@ -64,9 +75,9 @@ const Sidebar = (): JSX.Element => {
         flex="1"
         bg="bg.surface"
         boxShadow="sm"
-        maxW={{ base: 'full', sm: 'xs' }}
-        py={{ base: '6', sm: '8' }}
-        px={{ base: '4', sm: '6' }}
+        maxW={{ base: "full", sm: "xs" }}
+        py={{ base: "6", sm: "8" }}
+        px={{ base: "4", sm: "6" }}
       >
         <Stack justify="space-between" spacing="1" width="full">
           <Stack spacing="5" shouldWrapChildren>
@@ -84,7 +95,11 @@ const Sidebar = (): JSX.Element => {
                 <Stack spacing="0">
                   {categoryItem?.menu.map((menuItem, index) => (
                     <RouterLink to={menuItem.link} key={index}>
-                      <NavButton label={menuItem.title} icon={menuItem.Icon} w="full" />
+                      <NavButton
+                        label={menuItem.title}
+                        icon={menuItem.Icon}
+                        w="full"
+                      />
                     </RouterLink>
                   ))}
                 </Stack>
@@ -108,7 +123,11 @@ const Sidebar = (): JSX.Element => {
                     </Text>
                   </Box>
                 </HStack>
-                <IconButton variant="tertiary" icon={<FiMoreVertical />} aria-label="Open Menu" />
+                <IconButton
+                  variant="tertiary"
+                  icon={<FiMoreVertical />}
+                  aria-label="Open Menu"
+                />
               </HStack>
             </Stack>
           </Stack>

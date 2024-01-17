@@ -1,6 +1,6 @@
-import SteppedForm from "../SteppedForm";
-import SelectDataSourceForm from "./SelectDataSourceForm";
-import SecondForm from "./SecondForm";
+import SteppedForm from "../../SteppedForm";
+import SecondForm from "../SecondForm";
+import SelectDataSourceForm from "../SelectDataSourceForm";
 
 const Sources = () => {
   const steps = [

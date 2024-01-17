@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { createContext, useReducer } from "react";
 import {
   FormAction,
@@ -75,13 +75,24 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
 
   useEffect(() => {
     if (!step) {
-      setSearchParams({
+      const params = {
         step: "0",
-      });
-    } else {
-      dispatch({ type: "UPDATE_STEP", payload: { step: Number(step) } });
+      };
+
+      setSearchParams(params, { replace: true });
     }
-  }, [location.search]);
+  }, []);
+
+  useEffect(() => {
+    if (step) {
+      dispatch({
+        type: "UPDATE_STEP",
+        payload: {
+          step: parseInt(step),
+        },
+      });
+    }
+  }, [step]);
 
   const handleOnContinueClick = (stepKey: string) => {
     dispatch({
@@ -112,11 +123,30 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
 
   return (
     <SteppedFormContext.Provider value={{ state, dispatch }}>
-      {stepInfo.component}
-      <Box>
-        <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
-          Continue
-        </Button>
+      <Box width="100%">
+        <Box width="100%" padding="10px">
+          <Box display="flex" justifyContent="space-between">
+            <Box>
+              <Text fontSize="l" color="gray">
+                STEP {currentStep + 1} OF {steps.length}
+              </Text>
+              <Text fontWeight="bold" fontSize="xl">
+                {stepInfo.name}
+              </Text>
+            </Box>
+            <Box>
+              <Button variant="outline" size="sm" colorScheme="gray">
+                Exit
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+        {stepInfo.component}
+        <Box>
+          <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
+            Continue
+          </Button>
+        </Box>
       </Box>
     </SteppedFormContext.Provider>
   );

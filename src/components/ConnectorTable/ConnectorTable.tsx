@@ -42,9 +42,8 @@ interface Payload {
 }
 
 const ConnectorTable = ({ payload }: { payload: Payload[] }) => {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   console.log(payload);
-  
 
   return (
     <TableContainer>
@@ -60,7 +59,18 @@ const ConnectorTable = ({ payload }: { payload: Payload[] }) => {
         <Tbody>
           {payload.map((item) => (
             <Tr
-              onClick={() => navigate("/" + item.connector_type + "s/" + item.id + "?type=" + item.connector_type + "&name=" + item.connector_definition.name.toLowerCase())}
+              onClick={() =>
+                navigate(
+                  "/" +
+                    item.connector_type +
+                    "s/" +
+                    item.id +
+                    "?type=" +
+                    item.connector_type +
+                    "&name=" +
+                    item.connector_definition.name.toLowerCase()
+                )
+              }
               key={item.id}
               _hover={{ backgroundColor: "gray.100" }}
             >
@@ -70,7 +80,7 @@ const ConnectorTable = ({ payload }: { payload: Payload[] }) => {
               <Td>
                 <Flex>
                   <Image
-                    src={'/icons/' + item.connector_definition.icon}
+                    src={"/icons/" + item.connector_definition.icon}
                     alt={`${item.connector_definition.name} Icon`}
                     boxSize="20px"
                     mr={2}

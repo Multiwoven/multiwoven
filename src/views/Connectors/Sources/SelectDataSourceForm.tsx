@@ -2,7 +2,7 @@ import { Input } from "@chakra-ui/react";
 import { useContext } from "react";
 import { SteppedFormContext } from "../SteppedForm/SteppedForm";
 
-const FirstForm = () => {
+const SelectDataSourceForm = () => {
   const { dispatch } = useContext(SteppedFormContext);
 
   const handleOnChange = () => {
@@ -21,4 +21,4 @@ const FirstForm = () => {
   );
 };
 
-export default FirstForm;
+export default SelectDataSourceForm;
