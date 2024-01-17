@@ -13,6 +13,7 @@ module Multiwoven
     ENABLED_DESTINATIONS = %w[
       Klaviyo
       SalesforceCrm
+      FacebookCustomAudience
     ].freeze
   end
 end

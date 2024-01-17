@@ -67,6 +67,10 @@ module Multiwoven
       def extract_data(record_object, properties)
         record_object.data.select { |key, _| properties.key?(key.to_s) }
       end
+
+      def success?(response)
+        response && %w[200 201].include?(response.code.to_s)
+      end
     end
   end
 end

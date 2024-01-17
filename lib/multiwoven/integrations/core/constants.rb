@@ -24,6 +24,8 @@ module Multiwoven
         }
       }.freeze
 
+      FACEBOOK_AUDIENCE_GET_ALL_ACCOUNTS = "https://graph.facebook.com/v18.0/me/adaccounts?fields=id,name"
+
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"

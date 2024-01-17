@@ -1,0 +1,38 @@
+{
+  "streams": [
+    {
+      "name": "audience",
+      "action": "create",
+      "method": "POST",
+      "audience_id": "audience_id",
+      "url": "https://graph.facebook.com/v18.0/{audience_id}/users",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "CT": { "type": ["string", "null"], "default": null },
+          "COUNTRY": { "type": ["string", "null"], "default": null },
+          "DOBD": { "type": ["string", "null"], "default": null },
+          "DOBM": { "type": ["string", "null"], "default": null },
+          "DOBY": { "type": ["string", "null"], "default": null },
+          "EMAIL": { "type": ["string", "null"], "default": null },
+          "EXTERN_ID": { "type": ["string", "null"], "default": null },
+          "FI": { "type": ["string", "null"], "default": null },
+          "FN": { "type": ["string", "null"], "default": null },
+          "GEN": { "type": ["string", "null"], "default": null },
+          "LN": { "type": ["string", "null"], "default": null },
+          "LOOKALIKE_VALUE": { "type": ["number", "null"], "default": null },
+          "MADID": { "type": ["string", "null"], "default": null },
+          "PAGEUID": { "type": ["string", "null"], "default": null },
+          "PHONE": { "type": ["string", "null"], "default": null },
+          "ST": { "type": ["string", "null"], "default": null },
+          "ZIP": { "type": ["string", "null"], "default": null }
+        }
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["email"]]
+    }
+  ]
+}
