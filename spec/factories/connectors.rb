@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: connectors
+#
+#  id                      :bigint           not null, primary key
+#  workspace_id            :integer
+#  connector_type          :integer
+#  connector_definition_id :integer
+#  configuration           :jsonb
+#  name                    :string
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  connector_name          :string
+#
 FactoryBot.define do
   factory :connector do
     association :workspace

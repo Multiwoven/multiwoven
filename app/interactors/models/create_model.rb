@@ -12,7 +12,7 @@ module Models
       if model.persisted?
         context.model = model
       else
-        context.fail!(errors: model.errors)
+        context.fail!(model:)
       end
     end
   end

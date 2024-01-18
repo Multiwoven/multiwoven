@@ -4,13 +4,13 @@
 #
 # Table name: workspaces
 #
-#  id           :bigint           not null, primary key
-#  api_key      :string
-#  name         :string
-#  slug         :string
-#  status       :string
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id         :bigint           not null, primary key
+#  name       :string
+#  slug       :string
+#  status     :string
+#  api_key    :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 class Workspace < ApplicationRecord
   has_many :workspace_users, dependent: :nullify

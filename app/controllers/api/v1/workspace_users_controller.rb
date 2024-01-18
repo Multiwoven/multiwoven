@@ -13,9 +13,13 @@ module Api
 
         if result.success?
           @workspace_user = result.workspace_user
-          render :create, status: :created
+          render json: @workspace_user, status: :created
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render_error(
+            message: "Workspace User creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.workspace_user)
+          )
         end
       end
 
@@ -23,6 +27,7 @@ module Api
       def index
         result = List.call(workspace: @workspace)
         @workspace_users = result.workspace_users
+        render json: @workspace_users, status: :ok
       end
 
       # PUT /api/v1/workspaces/:workspace_id/workspace_users/:id
@@ -31,7 +36,7 @@ module Api
 
         if result.success?
           @workspace_user = result.workspace_user
-          render :update, status: :ok
+          render json: @workspace_user, status: :ok
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end

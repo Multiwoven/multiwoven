@@ -6,7 +6,6 @@ ruby "3.2.0"
 
 # Core
 gem "aasm"
-gem "annotate"
 gem "aws-sdk"
 gem "interactor", "~> 3.0"
 
@@ -54,6 +53,7 @@ end
 group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
+  gem "annotate"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false

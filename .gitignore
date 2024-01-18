@@ -22,7 +22,7 @@ lib/tasks/*.rake
 /yarn-error.log
 
 # Ignore dotenv file
-.env*
+.env
 
 # Ignore pidfiles, but keep the directory
 /tmp/pids/*

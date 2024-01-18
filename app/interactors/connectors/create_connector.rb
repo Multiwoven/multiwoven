@@ -12,7 +12,7 @@ module Connectors
       if connector.persisted?
         context.connector = connector
       else
-        context.fail!(errors: connector.errors)
+        context.fail!(connector:)
       end
     end
   end

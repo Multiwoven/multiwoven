@@ -1,5 +1,22 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: syncs
+#
+#  id                :bigint           not null, primary key
+#  workspace_id      :integer
+#  source_id         :integer
+#  model_id          :integer
+#  destination_id    :integer
+#  configuration     :jsonb
+#  source_catalog_id :integer
+#  schedule_type     :integer
+#  schedule_data     :jsonb
+#  status            :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
 class Sync < ApplicationRecord
   validates :workspace_id, presence: true
   validates :source_id, presence: true

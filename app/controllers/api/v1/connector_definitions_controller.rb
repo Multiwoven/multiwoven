@@ -18,9 +18,11 @@ module Api
       end
 
       def check_connection
+        connection_spec = params[:connection_spec]
+        connection_spec = connection_spec.to_unsafe_h if connection_spec.respond_to?(:to_unsafe_h)
         connection_status = @connector_client
                             .check_connection(
-                              params[:connection_spec]
+                              connection_spec
                             )
 
         render json: connection_status

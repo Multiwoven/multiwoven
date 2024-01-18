@@ -35,7 +35,7 @@ module WorkspaceUsers
     def create_new_user
       random_password = SecureRandom.hex(8)
       new_user = User.new(email:, password: random_password, password_confirmation: random_password, name:)
-      context.fail!(errors: new_user.errors.full_messages) unless new_user.save
+      context.fail!(new_user:) unless new_user.save
       new_user
     end
 
@@ -47,7 +47,7 @@ module WorkspaceUsers
       if workspace_user.save
         context.workspace_user = workspace_user
       else
-        context.fail!(errors: workspace_user.errors.full_messages)
+        context.fail!(workspace_user:)
       end
     end
 

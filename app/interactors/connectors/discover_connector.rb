@@ -19,7 +19,7 @@ module Connectors
       if catalog.persisted?
         context.catalog = catalog
       else
-        context.fail!(errors: catalog.errors)
+        context.fail!(catalog:)
       end
     end
 

@@ -12,21 +12,27 @@ module Api
       def index
         @models = current_workspace
                   .models.all.page(params[:page] || 1)
+        render json: @models, status: :ok
       end
 
-      def show; end
+      def show
+        render json: @model, status: :ok
+      end
 
       def create
         result = CreateModel.call(
           connector:,
           model_params:
         )
-
         if result.success?
           @model = result.model
+          render json: @model, status: :created
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Model creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.model)
+          )
         end
       end
 
@@ -38,9 +44,13 @@ module Api
 
         if result.success?
           @model = result.model
+          render json: @model, status: :ok
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Model update failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.model)
+          )
         end
       end
 
