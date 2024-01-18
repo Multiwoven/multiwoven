@@ -69,7 +69,7 @@ const members = [
         rating: 4,
     },
 ]
-const ModdelTable = (): JSX.Element => {
+const ModelTable = (): JSX.Element => {
 
     useEffect(() => {
         fetchModels();
@@ -136,10 +136,4 @@ const ModdelTable = (): JSX.Element => {
         </Table>
     )
 }
-export default ModdelTable;
-
-
-
-
-
-
+export default ModelTable;

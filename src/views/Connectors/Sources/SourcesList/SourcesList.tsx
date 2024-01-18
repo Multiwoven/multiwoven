@@ -20,6 +20,9 @@ const SourcesList = () => {
 
   if (!connectors) return null;
 
+  console.log(connectors);
+  
+
   return (
     <Box width="100%">
       <TopBar
@@ -29,7 +32,7 @@ const SourcesList = () => {
         onCtaClicked={() => navigate("new")}
         isCtaVisible
       />
-      <ConnectorTable payload={connectors} />
+      <ConnectorTable payload={connectors.data} />
       <Outlet />
     </Box>
   );

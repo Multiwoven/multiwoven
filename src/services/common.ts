@@ -5,6 +5,7 @@ import { axiosInstance as axios } from "./axios";
 export interface ApiResponse {
   success: boolean;
   data?: any;
+  links?: Record<string, string>;
 }
 
 export const apiRequest = async (

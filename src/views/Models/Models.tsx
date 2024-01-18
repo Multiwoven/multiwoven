@@ -1,3 +1,5 @@
+import ModelTable from '@/components/ModelTable';
+import { getAllModels } from '@/services/common';
 import {
     Box,
     Button,
@@ -6,9 +8,20 @@ import {
     Text,
     Heading
 } from '@chakra-ui/react'
-import ModdelTable from "./table";
+import { useQuery } from '@tanstack/react-query';
+
 
 const Models = (): JSX.Element => {
+
+    const { data } = useQuery({
+        queryKey: ["connectors", "source"],
+        queryFn: () => getAllModels(),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+    });
+
+    console.log("HERE",data);
+    
 
     return (
         <Container minW={'100%'}>
@@ -34,7 +47,7 @@ const Models = (): JSX.Element => {
             >
                 <Stack spacing="5">
                     <Box overflowX="auto">
-                        <ModdelTable />
+                        <ModelTable />
                     </Box>
                 </Stack>
             </Box>
@@ -43,9 +56,3 @@ const Models = (): JSX.Element => {
     )
 }
 export default Models;
-
-
-
-
-
-
