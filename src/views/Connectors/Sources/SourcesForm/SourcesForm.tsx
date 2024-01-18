@@ -1,22 +1,47 @@
-import SteppedForm from "../../SteppedForm";
-import SecondForm from "../SecondForm";
-import SelectDataSourceForm from "../SelectDataSourceForm";
+import SteppedForm from "@/components/SteppedForm";
+import SelectDataSourcesForm from "./SelectDataSourcesForm";
+import SourceConfigForm from "./SourceConfigForm";
 
-const Sources = () => {
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+
+const SourcesForm = (): JSX.Element => {
+  const navigate = useNavigate();
   const steps = [
     {
-      formKey: "first",
+      formKey: "datasource",
       name: "Select a data source",
-      component: <SelectDataSourceForm />,
+      component: <SelectDataSourcesForm />,
+      isRequireContinueCta: true,
+      beforeNextStep: () => true,
     },
     {
-      formKey: "second",
-      name: "Second Form",
-      component: <SecondForm />,
+      formKey: "connectToSources",
+      name: "Connect to source",
+      component: <SourceConfigForm />,
+      isRequireContinueCta: true,
+      beforeNextStep: () => false,
     },
   ];
 
-  return <SteppedForm steps={steps} />;
+  return (
+    <Drawer isOpen onClose={() => navigate(-1)} placement="right" size="100%">
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerBody>
+          <Box width="100%">
+            <SteppedForm steps={steps} />
+          </Box>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
+  );
 };
 
-export default Sources;
+export default SourcesForm;

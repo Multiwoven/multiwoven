@@ -45,7 +45,7 @@ const reducer = (state: FormState, action: FormAction) => {
       const { payload } = action;
       return {
         ...state,
-        currentForm: payload?.data,
+        currentForm: { [payload?.stepKey as string]: payload?.data },
       };
     }
     case "UPDATE_STEP": {
@@ -63,18 +63,21 @@ const reducer = (state: FormState, action: FormAction) => {
 export const SteppedFormContext = createContext<FormContextType>({
   state: initialState,
   dispatch: () => {},
+  stepInfo: null,
+  handleMoveForward: () => {},
 });
 
 const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { currentStep, currentForm } = state;
+  const { currentStep, currentForm, forms } = state;
   const [searchParams, setSearchParams] = useSearchParams();
   const step = searchParams.get("step");
+  const stepInfo = steps[state.currentStep];
 
   useEffect(() => {
-    if (!step) {
+    if (!step || forms.length === 0) {
       const params = {
         step: "0",
       };
@@ -94,12 +97,21 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     }
   }, [step]);
 
-  const handleOnContinueClick = (stepKey: string) => {
+  const handleMoveForward = (stepKey: string) => {
+    const currentFormData = currentForm;
+    let isValidated = true;
+
+    if (stepInfo?.beforeNextStep) {
+      isValidated = stepInfo.beforeNextStep();
+    }
+
+    if (!isValidated) return;
+
     dispatch({
       type: "UPDATE_FORM",
       payload: {
         step: currentStep,
-        data: currentForm,
+        data: currentFormData,
         stepKey,
       },
     });
@@ -119,13 +131,26 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     });
   };
 
-  const stepInfo = steps[state.currentStep];
-
   return (
-    <SteppedFormContext.Provider value={{ state, dispatch }}>
+    <SteppedFormContext.Provider
+      value={{ state, stepInfo, dispatch, handleMoveForward }}
+    >
       <Box width="100%">
-        <Box width="100%" padding="10px">
-          <Box display="flex" justifyContent="space-between">
+        <Box
+          width="100%"
+          borderBottomWidth="thin"
+          marginBottom="20px"
+          padding="20px"
+          display="flex"
+          justifyContent="center"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            maxWidth="1300px"
+            width="100%"
+          >
             <Box>
               <Text fontSize="l" color="gray">
                 STEP {currentStep + 1} OF {steps.length}
@@ -142,11 +167,15 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
           </Box>
         </Box>
         {stepInfo.component}
-        <Box>
-          <Button onClick={() => handleOnContinueClick(stepInfo.formKey)}>
-            Continue
-          </Button>
-        </Box>
+        {stepInfo.isRequireContinueCta ? (
+          <Box padding="10px" display="flex" justifyContent="center">
+            <Box maxWidth="1300px" width="100%">
+              <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
+                Continue
+              </Button>
+            </Box>
+          </Box>
+        ) : null}
       </Box>
     </SteppedFormContext.Provider>
   );

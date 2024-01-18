@@ -2,12 +2,15 @@
 
 import { axiosInstance as axios } from "./axios";
 
-interface ApiResponse {
+export interface ApiResponse {
   success: boolean;
   data?: any;
 }
 
-const apiRequest = async (url: string, values: any): Promise<ApiResponse> => {
+export const apiRequest = async (
+  url: string,
+  values: any
+): Promise<ApiResponse> => {
   let data = JSON.stringify(values);
   let response;
   try {

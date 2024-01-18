@@ -4,7 +4,7 @@ import ConnectorTable from "@/components/ConnectorTable";
 import { Box } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const SourcesList = () => {
   const { data } = useQuery({
@@ -14,8 +14,9 @@ const SourcesList = () => {
     refetchOnWindowFocus: false,
   });
 
-  const navigate = useNavigate();
   const connectors = data?.data;
+
+  const navigate = useNavigate();
 
   if (!connectors) return null;
 
@@ -29,6 +30,7 @@ const SourcesList = () => {
         isCtaVisible
       />
       <ConnectorTable payload={connectors} />
+      <Outlet />
     </Box>
   );
 };

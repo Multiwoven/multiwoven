@@ -5,8 +5,7 @@ import SourcesForm from "../Sources/SourcesForm";
 const SetupConnectors = (): JSX.Element => {
   return (
     <Routes>
-      <Route path="sources">
-        <Route index element={<SourcesList />} />
+      <Route path="sources" element={<SourcesList />}>
         <Route path="new" element={<SourcesForm />} />
       </Route>
       <Route path="*" element={<Navigate to="sources" />} />

@@ -1,12 +1,12 @@
 export type Form = {
   step: number;
-  data: unknown;
+  data: Record<string, unknown>;
   stepKey: string;
 };
 
 export type FormState = {
   currentStep: number;
-  currentForm: unknown | null;
+  currentForm: Record<string, unknown> | null;
   forms: Form[];
 };
 
@@ -14,6 +14,9 @@ export type Step = {
   formKey: string;
   name: string;
   component: JSX.Element;
+  isRequireContinueCta: boolean;
+  onSubmit?: (args: unknown) => void;
+  beforeNextStep?: () => boolean;
 };
 
 export type SteppedForm = {
@@ -32,4 +35,6 @@ export type FormAction = {
 export type FormContextType = {
   state: FormState;
   dispatch: React.Dispatch<FormAction>;
+  stepInfo: Step | null;
+  handleMoveForward: (args: string) => void;
 };
