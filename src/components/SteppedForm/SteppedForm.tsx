@@ -14,6 +14,7 @@ import {
   createSearchParams,
   useSearchParams,
 } from "react-router-dom";
+import ExitModal from "../ExitModal";
 
 const initialState: FormState = {
   currentStep: 0,
@@ -160,9 +161,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
               </Text>
             </Box>
             <Box>
-              <Button variant="outline" size="sm" colorScheme="gray">
-                Exit
-              </Button>
+              <ExitModal />
             </Box>
           </Box>
         </Box>

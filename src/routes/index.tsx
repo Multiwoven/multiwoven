@@ -140,7 +140,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   },
   {
     name: "Models",
-    url: "/models",
+    url: "/models*",
     component: (
       <SuspenseWithLoader redirectRoute="/models">
         <Models />
@@ -151,7 +151,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     name: "Setup",
     url: "/setup*",
     component: (
-      <SuspenseWithLoader redirectRoute="/models">
+      <SuspenseWithLoader redirectRoute="/setup">
         <SetupConnectors />
       </SuspenseWithLoader>
     ),
