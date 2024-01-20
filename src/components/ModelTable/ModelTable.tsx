@@ -35,7 +35,7 @@ type Models = {
 };
 
 const ModelTable = ({ models }: { models: Models }): JSX.Element => {
-	console.log(models);
+	models);
 
 	return (
 		<Table size='sm' variant='simple' border='1'>

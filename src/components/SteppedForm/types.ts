@@ -36,5 +36,9 @@ export type FormContextType = {
   state: FormState;
   dispatch: React.Dispatch<FormAction>;
   stepInfo: Step | null;
-  handleMoveForward: (args: string) => void;
+  handleMoveForward: (stepKey: string, data?: unknown) => void;
+};
+
+export type HandleMoveForwardOptions = {
+  isAvoidMainFormUpdate?: boolean;
 };

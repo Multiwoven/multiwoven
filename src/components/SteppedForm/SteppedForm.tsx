@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { createContext, useReducer } from "react";
 import {
+  Form,
   FormAction,
   FormContextType,
   FormState,
@@ -46,7 +47,9 @@ const reducer = (state: FormState, action: FormAction) => {
       const { payload } = action;
       return {
         ...state,
-        currentForm: { [payload?.stepKey as string]: payload?.data },
+        currentForm: payload?.stepKey
+          ? { [payload?.stepKey as string]: payload?.data }
+          : null,
       };
     }
     case "UPDATE_STEP": {
@@ -98,7 +101,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     }
   }, [step]);
 
-  const handleMoveForward = (stepKey: string) => {
+  const handleMoveForward = (stepKey: string, data?: unknown) => {
     const currentFormData = currentForm;
     let isValidated = true;
 
@@ -112,7 +115,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
       type: "UPDATE_FORM",
       payload: {
         step: currentStep,
-        data: currentFormData,
+        data: currentFormData ?? { [stepKey]: data },
         stepKey,
       },
     });

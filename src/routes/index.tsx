@@ -39,7 +39,6 @@ const SuspenseWithLoader = ({
 
   useEffect(() => {
     // const token = Cookies.get('authToken');
-    // console.log("routename", redirectRoute)
     // if (token) {
     //   history(redirectRoute);
     //   if (token && redirectRoute == '/sign-up') {

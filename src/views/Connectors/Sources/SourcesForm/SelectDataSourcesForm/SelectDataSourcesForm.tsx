@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Box, Image, Text } from "@chakra-ui/react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorsDefintions } from "@/services/connectors";
@@ -6,7 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { DatasourceType } from "@/views/Connectors/types";
 
 const SelectDataSourcesForm = (): JSX.Element => {
-  const { state, dispatch, stepInfo } = useContext(SteppedFormContext);
+  const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+
   const { currentForm } = state;
   const { data } = useQuery({
     queryKey: ["datasources", "source"],
@@ -16,21 +17,11 @@ const SelectDataSourcesForm = (): JSX.Element => {
     gcTime: Infinity,
   });
 
-  useEffect(() => {
-    getConnectorsDefintions("source");
-  }, []);
-
   const datasources = data?.data ?? [];
 
   const handleOnClick = (datasource: DatasourceType) => {
     if (stepInfo?.formKey) {
-      dispatch({
-        type: "UPDATE_CURRENT_FORM",
-        payload: {
-          stepKey: stepInfo?.formKey,
-          data: datasource.name,
-        },
-      });
+      handleMoveForward(stepInfo.formKey, datasource.name);
     }
   };
 

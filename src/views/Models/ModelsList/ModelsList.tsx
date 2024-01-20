@@ -7,34 +7,32 @@ import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const ModelsList = (): JSX.Element | null => {
-	const { data } = useQuery({
-		queryKey: ["models"],
-		queryFn: () => getAllModels(),
-		refetchOnMount: false,
-		refetchOnWindowFocus: false,
-	});
+  const { data } = useQuery({
+    queryKey: ["models"],
+    queryFn: () => getAllModels(),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
-	const models = data?.data;
+  const models = data?.data;
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	if (!models) return null;
+  if (!models) return null;
 
-	console.log(models);
-
-	return (
-		<Box width='90%' mx='auto'>
-			<TopBar
-				name={"Models"}
-				ctaName='Add model'
-				ctaIcon={<FiPlus color='gray.100' />}
-				onCtaClicked={() => navigate("new")}
-				isCtaVisible
-			/>
-			<ModelTable models={models} />
-			<Outlet />
-		</Box>
-	);
+  return (
+    <Box width="90%" mx="auto">
+      <TopBar
+        name={"Models"}
+        ctaName="Add model"
+        ctaIcon={<FiPlus color="gray.100" />}
+        onCtaClicked={() => navigate("new")}
+        isCtaVisible
+      />
+      <ModelTable models={models} />
+      <Outlet />
+    </Box>
+  );
 };
 
 export default ModelsList;

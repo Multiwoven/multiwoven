@@ -20,9 +20,6 @@ const SourcesList = () => {
 
   if (!connectors) return null;
 
-  console.log(connectors);
-  
-
   return (
     <Box width="100%">
       <TopBar

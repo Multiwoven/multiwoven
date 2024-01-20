@@ -11,10 +11,8 @@ export const ViewNewConnectors = (props: any) => {
     async function fetchData() {
       const connectorType =
         props.connectorType === "sources" ? "source" : "destination";
-      console.log(props.connectorType, connectorType);
 
       const response = await getConnectorsDefintions(connectorType);
-      console.log(response);
       setConnectorsSpecs(response?.data);
     }
 

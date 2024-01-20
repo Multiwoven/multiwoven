@@ -18,7 +18,7 @@ const SourcesForm = (): JSX.Element => {
       formKey: "datasource",
       name: "Select a data source",
       component: <SelectDataSourcesForm />,
-      isRequireContinueCta: true,
+      isRequireContinueCta: false,
       beforeNextStep: () => true,
     },
     {

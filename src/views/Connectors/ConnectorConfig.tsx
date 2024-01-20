@@ -71,7 +71,6 @@ export const ConnectorConfig = ({
       getFormPrefillData().then((response) =>
         setInitialFormValues(response.data)
       );
-      console.log(initialFormValues);
     }
 
     fetchData();
@@ -108,15 +107,11 @@ export const ConnectorConfig = ({
       ? initialFormValues
       : defaultInitialValues;
 
-  console.log(formInitialValues, connectorSpec?.properties);
-
   return (
     <Formik
       initialValues={formInitialValues}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
+      onSubmit={(values) => {}}
       enableReinitialize
     >
       {({ getFieldProps, touched, errors }) => (
