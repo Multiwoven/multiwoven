@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorDefinition } from "@/services/connectors";
 import { useContext } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, ChakraProvider, Spinner } from "@chakra-ui/react";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
+import { extendTheme } from "@chakra-ui/react";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state } = useContext(SteppedFormContext);
@@ -18,16 +19,41 @@ const SourceConfigForm = (): JSX.Element | null => {
 
   if (!datasource) return null;
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["connector_definition", datasource],
     queryFn: () => getConnectorDefinition("source", datasource),
     enabled: !!datasource,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
+
+  const onFormSubmit = (data) => {};
+
+  if (isLoading)
+    return (
+      <Box
+        height="30vh"
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Spinner size="lg" />
+      </Box>
+    );
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
 
-  const onFormSubmit = (data) => {};
+  const theme = extendTheme({
+    colors: {
+      brand: {
+        100: "#f7fafc",
+        // ...
+        900: "#1a202c",
+      },
+    },
+  });
 
   return (
     <Box padding="20px" display="flex" justifyContent="center">

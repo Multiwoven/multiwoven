@@ -3,6 +3,7 @@ import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes";
 import Heading from "./components/Heading";
 import MainLayout from "./views/MainLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = (): JSX.Element => {
           element={<Heading size="small">Page Not Found</Heading>}
         />
       </Routes>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 };
