@@ -8,21 +8,21 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalFooter,
-	ModalHeader,
 	ModalOverlay,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import ExitWarningImage from "../../assets/images/ExitWarning.png";
 
 function ExitModal() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	return (
 		<>
 			{/* <Button onClick={onOpen}>Open Modal</Button> */}
-			<Button variant='outline' onClick={onOpen} w={24}  colorScheme='gray'>
+			<Button variant='outline' onClick={onOpen} w={24} colorScheme='gray'>
 				Exit
 			</Button>
 
@@ -33,7 +33,7 @@ function ExitModal() {
 					<ModalCloseButton color='gray.300' />
 					<ModalBody mx='auto' pt={10}>
 						<Flex direction='column'>
-							<Image src='' h={48}/>
+							<Image src={ExitWarningImage} h={32} w={48} mx='auto' my={8} />
 							<Text fontWeight='bold' pt={8} fontSize={20} textAlign='center'>
 								Are you sure you want to exit?
 							</Text>
@@ -48,7 +48,7 @@ function ExitModal() {
 							<Flex flexDir='row' justifyContent='center'>
 								<Button
 									bgColor='gray.300'
-                                    variant='ghost'
+									variant='ghost'
 									color='black'
 									mr={3}
 									onClick={onClose}
@@ -61,12 +61,12 @@ function ExitModal() {
 								</Button>
 								<Button
 									// variant='ghost'
-									_hover={{ bgColor: "orange.500" }}
-									bgColor='orange.400'
+									_hover={{ bgColor: "orange.400" }}
+									bgColor='orange.500'
 									rounded='lg'
 									pr={10}
 									pl={10}
-                                    onClick={() => navigate('/models')}
+									onClick={() => navigate("/models")}
 								>
 									Exit
 								</Button>

@@ -10,6 +10,8 @@ import {
 	Text,
 } from "@chakra-ui/react";
 
+import Klaviyo from '../../assets/icons/klaviyo.svg'
+
 type Models = {
 	data: {
 		id: string;
@@ -51,7 +53,7 @@ const ModelTable = ({ models }: { models: Models }): JSX.Element => {
 							<HStack spacing='4'>
 								<Avatar
 									name={model.attributes.name}
-									src={model.attributes.name}
+									src={'../../assets/icons/' + model.attributes.name + '.svg'}
 									boxSize='8'
 								/>
 								<Text fontWeight='medium'>{model.attributes.name}</Text>
