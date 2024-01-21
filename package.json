@@ -19,7 +19,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/manrope": "^5.0.18",
+    "@fontsource-variable/manrope": "^5.0.18",
     "@heroicons/react": "^2.1.1",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.16",

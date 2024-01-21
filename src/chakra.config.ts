@@ -26,4 +26,4 @@ const extenstion = {
 
 const mwTheme = extendTheme(extenstion, proTheme);
 
-export default mwTheme
+export default mwTheme;

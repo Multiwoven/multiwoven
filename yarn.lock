@@ -2088,10 +2088,10 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.56.0.tgz"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@fontsource/manrope@^5.0.18":
+"@fontsource-variable/manrope@^5.0.18":
   version "5.0.18"
-  resolved "https://registry.npmjs.org/@fontsource/manrope/-/manrope-5.0.18.tgz"
-  integrity sha512-rcH+NXafXbKaLU+xS5VRAOBvI1FOf2VvLUYv3TQXpF9HETtpWwLb9+/4N/kFOA/0YneqkQal+YTqTYEmqGip1g==
+  resolved "https://registry.npmjs.org/@fontsource-variable/manrope/-/manrope-5.0.18.tgz"
+  integrity sha512-BmTWanceVCX3/xAY0VhBLM9fwEwe+Z/jR3/EPDLxas6+b3gnBChI+MYh+vMxDPEavfpEhcQptCCNJ3kQxn07iw==
 
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
