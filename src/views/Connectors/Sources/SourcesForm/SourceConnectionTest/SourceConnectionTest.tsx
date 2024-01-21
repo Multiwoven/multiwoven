@@ -73,7 +73,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
           borderRadius="8px"
           marginBottom="20px"
         >
-          {CONNECTION_STATUS.map(({ status }, index) => {
+          {CONNECTION_STATUS.map(({ status }) => {
             const statusMetaInfo = status({
               data: connectionResponse,
               isLoading: isFetching,
