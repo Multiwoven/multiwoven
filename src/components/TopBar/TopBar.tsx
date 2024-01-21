@@ -16,15 +16,15 @@ const TopBar = ({
   isCtaVisible,
 }: TopBarType): JSX.Element => (
   <Flex justifyContent="space-between" p={4} borderColor="gray.300" mb={4}>
-    <Heading size="md" _dark={{ color: "white" }}>
+    <Heading size="xl" _dark={{ color: "white" }}>
       {name}
     </Heading>
     {isCtaVisible ? (
       <Button
         leftIcon={ctaIcon}
-        backgroundColor="mw_orange"
-        color="gray.100"
-        _hover={{ bgColor: "orange.500" }}
+        backgroundColor="orange.500"
+        _hover={{ bgColor: "orange.400" }}
+        p={4}
         fontSize={16}
         size="sm"
         onClick={onCtaClicked}

@@ -1,35 +1,25 @@
-import {
-	Avatar,
-	Badge,
-	Box,
-	Checkbox,
-	HStack,
-	Icon,
-	IconButton,
-	Table,
-	Tbody,
-	Td,
-	Text,
-	Th,
-	Thead,
-	Tr,
-} from "@chakra-ui/react";
-import { TableDataType } from "./types";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { TableType } from "./types";
 
-const GenerateTable = ({ columns, data }: TableDataType): JSX.Element => {
+const GenerateTable = ({ title, data }: TableType): JSX.Element => {
 	return (
 		<>
+			{/* {title && <Text fontSize='xl'>{title}</Text>} */}
 			<Table>
-				<Thead>
+				<Thead bgColor={'gray.200'}>
 					<Tr>
-						{columns.map((column) => (
-							<Th>{column}</Th>
+						{data.columns.map((column, index) => (
+							<Th key={index}>{column}</Th>
 						))}
 					</Tr>
 				</Thead>
 				<Tbody>
-					{data.map((value) => (
-						<Tr key={value}></Tr>
+					{data.data.map((row, rowIndex) => (
+						<Tr key={rowIndex} _hover={{backgroundColor: 'gray.100'}}>
+							{Object.values(row).map((value, valueIndex) => (
+								<Td key={valueIndex}>{value}</Td>
+							))}
+						</Tr>
 					))}
 				</Tbody>
 			</Table>
