@@ -1,4 +1,4 @@
-import { ConnectorTypes } from "./types";
+import { ConnectionStatus, ConnectorTypes } from "./types";
 
 export const CONNECTORS: Record<ConnectorTypes, Record<string, string>> = {
   source: {
@@ -14,3 +14,41 @@ export const CONNECTORS: Record<ConnectorTypes, Record<string, string>> = {
     key: "model",
   },
 };
+
+export const CONNECTION_STATUS: ConnectionStatus[] = [
+  {
+    name: "Establishing Connection",
+    status: ({ isLoading }) => {
+      if (isLoading) {
+        return {
+          status: "loading",
+          text: "Checking network connectivity",
+        };
+      }
+      return {
+        status: "success",
+        text: "Connection Established",
+      };
+    },
+  },
+  {
+    name: "Validating Credentials",
+    status: ({ data, isLoading, datasource }) => {
+      if (isLoading) {
+        return {
+          status: "loading",
+          text: `Validating ${datasource} credentials`,
+        };
+      } else if (data?.connection_status?.status !== "failed") {
+        return {
+          status: "success",
+          text: `${datasource}  credentials validated`,
+        };
+      }
+      return {
+        status: "failed",
+        text: `Failed to validate ${datasource} credentials`,
+      };
+    },
+  },
+];

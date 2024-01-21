@@ -156,7 +156,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            maxWidth="1300px"
+            maxWidth="850px"
             width="100%"
           >
             <Box>
@@ -175,7 +175,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (
           <Box padding="10px" display="flex" justifyContent="center">
-            <Box maxWidth="1300px" width="100%">
+            <Box maxWidth="850px" width="100%">
               <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
                 Continue
               </Button>

@@ -26,7 +26,7 @@ const ExitModal = (): JSX.Element => {
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
+        <ModalOverlay bg="blackAlpha.700" />
         <ModalContent>
           <ModalCloseButton color="gray.300" />
           <ModalBody mx="auto" pt={10}>

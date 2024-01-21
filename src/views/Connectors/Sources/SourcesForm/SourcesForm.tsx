@@ -10,6 +10,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import SourceConnectionTest from "./SourceConnectionTest";
 
 const SourcesForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ const SourcesForm = (): JSX.Element => {
       formKey: "connectToSources",
       name: "Connect to source",
       component: <SourceConfigForm />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "testSource",
+      name: "Test your source",
+      component: <SourceConnectionTest />,
       isRequireContinueCta: false,
     },
   ];
