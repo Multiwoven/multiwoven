@@ -40,7 +40,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
   const { data } = sourceConfigForm ?? {};
   const sourceConfig = data?.[CONNECT_TO_SOURCES_KEY];
   const processedSourceConfig = useMemo(
-    () => processConnectorConfigData(sourceConfig),
+    () => processConnectorConfigData(sourceConfig, selectedDataSource),
     [forms]
   );
 
@@ -58,7 +58,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
   });
 
   const isAnyFailed =
-    connectionResponse?.connection_status.status !== "success";
+    connectionResponse?.connection_status.status !== "succeeded";
 
   const handleOnContinueClick = () => {
     handleMoveForward(stepInfo?.formKey as string, isAnyFailed);

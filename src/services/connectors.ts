@@ -1,4 +1,7 @@
-import { TestConnectionPayload } from "@/views/Connectors/types";
+import {
+  TestConnectionPayload,
+  TestConnectionResponse,
+} from "@/views/Connectors/types";
 import { apiRequest, multiwovenFetch } from "./common";
 
 type ConnectorsDefinationApiResponse = {
@@ -26,16 +29,8 @@ export const getConnectorDefinition = async (
   );
 };
 
-type ConnectionStatusResponse = {
-  connection_status: {
-    message: string;
-    status: "failed" | "success";
-  };
-  type: "connection_status";
-};
-
 export const getConnectionStatus = async (payload: TestConnectionPayload) =>
-  multiwovenFetch<TestConnectionPayload, ConnectionStatusResponse>({
+  multiwovenFetch<TestConnectionPayload, TestConnectionResponse>({
     method: "post",
     url: "/connector_definitions/check_connection",
     data: payload,

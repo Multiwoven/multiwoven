@@ -19,7 +19,7 @@ export type TestConnectionPayload = {
 export type TestConnectionResponse = {
   type: "connection_status";
   connection_status: {
-    status: "failed" | "success";
+    status: "failed" | "succeeded";
     message: string;
   };
 };
