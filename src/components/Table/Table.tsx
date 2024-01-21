@@ -3,8 +3,8 @@ import { TableType } from "./types";
 
 const GenerateTable = ({ title, data }: TableType): JSX.Element => {
 	return (
-		<Box mt={8} border="1px"  borderColor="gray.100" borderRadius="lg">
-			{/* {title ? {title} : <></>} */}
+		<Box mt={8} border="1 | JSX.Elementpx"  borderColor="gray.100" borderRadius="lg">
+			{title ? title : <></>}
 			<Table>
 				<Thead bgColor={'gray.200'}>
 					<Tr>

@@ -1,14 +1,14 @@
 export type TableDataType = {
 	columns: Array<string>;
-	data: [{}];
+	data: Array<{}>;
 };
 
 export type ModelTableDataType = {
 	columns: Array<string>;
 	data: Array<{
-		name: string;
-		method: string;
-		last_updated: string;
+		name: string | JSX.Element;
+		method: string | JSX.Element;
+		last_updated: string | JSX.Element;
 	}>;
 };
 
