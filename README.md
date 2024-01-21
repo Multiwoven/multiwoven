@@ -9,10 +9,21 @@
 <p align="center">
    <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
    <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple" alt="License"></a>
+   <br />
    <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
    <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml/badge.svg" alt="Docker Build"></a>
    <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability" alt="Maintainability"></a>
    <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage" alt="Test Coverage"></a>
+   <br />
+   <a href="https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml">
+    <img src="https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml/badge.svg" alt="CI">
+   </a>
+   <a href="https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/maintainability" alt="Maintainability">
+   </a>
+   <a href="https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/test_coverage">
+      <img src="https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/test_coverage" alt="Test Coverage">
+   </a>
 </p>
 
 <h2 align="center">The open-source reverse ETL platform for data teams</h2>
