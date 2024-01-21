@@ -2,14 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorDefinition } from "@/services/connectors";
-import { useContext } from "react";
-import { Box, ChakraProvider, Spinner } from "@chakra-ui/react";
+import { useContext, useState } from "react";
+import { Box, Spinner } from "@chakra-ui/react";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
-import { extendTheme } from "@chakra-ui/react";
+import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 
 const SourceConfigForm = (): JSX.Element | null => {
+  const [isTested, setIsTested] = useState<boolean>(false);
   const { state } = useContext(SteppedFormContext);
   const { forms } = state;
   const selectedDataSource = forms.find(
@@ -27,8 +28,6 @@ const SourceConfigForm = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const onFormSubmit = (data) => {};
-
   if (isLoading)
     return (
       <Box
@@ -45,26 +44,30 @@ const SourceConfigForm = (): JSX.Element | null => {
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
 
-  const theme = extendTheme({
-    colors: {
-      brand: {
-        100: "#f7fafc",
-        // ...
-        900: "#1a202c",
-      },
-    },
-  });
+  const handleFormSubmit = (formData: FormData) => {
+    console.log(formData);
+  };
+
+  const handleOnContinue = () => {};
 
   return (
-    <Box padding="20px" display="flex" justifyContent="center">
+    <Box
+      padding="20px"
+      display="flex"
+      justifyContent="center"
+      marginBottom="30px"
+    >
       <Box maxWidth="1300px" width="100%">
         <Form
           schema={connectorSchema}
           validator={validator}
-          onChange={({ formData }) => {}}
-          onSubmit={(data) => onFormSubmit(data)}
+          onSubmit={({ formData }) => handleFormSubmit(formData)}
         >
-          <button type="submit">Submit Custom</button>
+          <SourceFormFooter
+            ctaName={isTested ? "Continue" : "Test Connection"}
+            ctaType={isTested ? "button" : "submit"}
+            onCtaClick={isTested ? handleOnContinue : undefined}
+          />
         </Form>
       </Box>
     </Box>

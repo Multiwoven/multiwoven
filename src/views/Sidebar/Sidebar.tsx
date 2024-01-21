@@ -64,12 +64,13 @@ const Sidebar = (): JSX.Element => {
     <Flex
       position="relative"
       boxShadow="0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);"
-      minW="240px"
+      maxW="240px"
       borderColor="#e0e0e0"
       borderStyle="solid"
       as="section"
       minH="100vh"
       bg="bg.canvas"
+      overflow="hidden"
     >
       <Flex
         flex="1"

@@ -19,23 +19,21 @@ const SourcesForm = (): JSX.Element => {
       name: "Select a data source",
       component: <SelectDataSourcesForm />,
       isRequireContinueCta: false,
-      beforeNextStep: () => true,
     },
     {
       formKey: "connectToSources",
       name: "Connect to source",
       component: <SourceConfigForm />,
-      isRequireContinueCta: true,
-      beforeNextStep: () => false,
+      isRequireContinueCta: false,
     },
   ];
 
   return (
     <Drawer isOpen onClose={() => navigate(-1)} placement="right" size="100%">
       <DrawerOverlay />
-      <DrawerContent>
-        <DrawerBody>
-          <Box width="100%">
+      <DrawerContent padding="0px">
+        <DrawerBody padding="0px">
+          <Box>
             <SteppedForm steps={steps} />
           </Box>
         </DrawerBody>

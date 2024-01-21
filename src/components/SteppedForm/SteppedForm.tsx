@@ -134,10 +134,15 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     });
   };
 
+  const valuesToExpose: FormContextType = {
+    state,
+    stepInfo,
+    dispatch,
+    handleMoveForward,
+  };
+
   return (
-    <SteppedFormContext.Provider
-      value={{ state, stepInfo, dispatch, handleMoveForward }}
-    >
+    <SteppedFormContext.Provider value={valuesToExpose}>
       <Box width="100%">
         <Box
           width="100%"
