@@ -27,7 +27,7 @@ const STATUS_COLOR_MAP = {
 };
 
 const SourceConnectionTest = (): JSX.Element | null => {
-  const { state } = useContext(SteppedFormContext);
+  const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
 
   const selectedDataSource = forms.find(
@@ -59,6 +59,10 @@ const SourceConnectionTest = (): JSX.Element | null => {
 
   const isAnyFailed =
     connectionResponse?.connection_status.status !== "success";
+
+  const handleOnContinueClick = () => {
+    handleMoveForward(stepInfo?.formKey as string, isAnyFailed);
+  };
 
   return (
     <Box display="flex" justifyContent="center">
@@ -146,7 +150,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
           </Alert>
         ) : null}
       </Box>
-      <SourceFormFooter ctaName="Continue" onCtaClick={() => {}} />
+      <SourceFormFooter ctaName="Continue" onCtaClick={handleOnContinueClick} />
     </Box>
   );
 };
