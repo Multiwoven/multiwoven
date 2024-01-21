@@ -24,7 +24,11 @@ Rails.application.routes.draw do
           get :discover
         end
       end
-      resources :models
+      resources :models do
+        member do
+          get :preview
+        end
+      end
       resources :syncs
       resources :connector_definitions, only: [:index, :show] do
         collection do

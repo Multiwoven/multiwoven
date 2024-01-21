@@ -35,6 +35,27 @@ class Connector < ApplicationRecord
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
 
+  # TODO: move the method to integration gem
+  def execute_query(query, limit: 50)
+    connection_config = configuration.deep_symbolize_keys
+    db = connector_client.new.send(:create_connection, connection_config)
+    query = query.chomp(";")
+
+    # Check if the query already has a LIMIT clause
+    has_limit = query.match?(/LIMIT \s*\d+\s*$/i)
+
+    # Append LIMIT only if not already present
+    final_query = has_limit ? query : "#{query} LIMIT #{limit}"
+
+    db.exec(final_query) do |result|
+      result.map do |row|
+        row
+      end
+    end
+  ensure
+    db&.close
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(

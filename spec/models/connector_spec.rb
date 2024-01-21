@@ -54,4 +54,74 @@ RSpec.describe Connector, type: :model do
       expect(protocol_connector.connection_specification).to eq(connector.configuration)
     end
   end
+
+  describe "#execute_query" do
+    let(:connector) { create(:connector) }
+    let(:query) { "SELECT * FROM your_table" }
+    let(:limit) { 50 }
+    let(:mock_db_connection) { instance_double("DatabaseConnection") }
+    let(:mock_result) { [{ "column1" => "value1" }, { "column2" => "value2" }] }
+
+    before do
+      allow(connector).to receive(:connector_client).and_return(double("ConnectorClient", new: mock_db_connection))
+      allow(mock_db_connection).to receive(:create_connection).and_return(mock_db_connection)
+      allow(mock_db_connection).to receive(:exec).and_yield(mock_result)
+      allow(mock_db_connection).to receive(:close)
+    end
+
+    it "executes the query on the database" do
+      expect(mock_db_connection).to receive(:exec).with("#{query} LIMIT #{limit}")
+      connector.execute_query(query, limit: 50)
+    end
+
+    it "returns the result of the query" do
+      expect(connector.execute_query(query, limit: 50)).to eq(mock_result)
+    end
+
+    it "closes the database connection" do
+      connector.execute_query(query, limit: 50)
+      expect(mock_db_connection).to have_received(:close)
+    end
+
+    context "when an error occurs" do
+      before do
+        allow(mock_db_connection).to receive(:exec).and_raise(StandardError)
+      end
+
+      it "raises an error" do
+        expect { connector.execute_query(query, limit: 50) }.to raise_error(StandardError)
+      end
+
+      it "ensures the database connection is closed" do
+        begin
+          connector.execute_query(query, limit: 50)
+        rescue StandardError
+          # Ignored for this test
+        end
+        expect(mock_db_connection).to have_received(:close)
+      end
+    end
+
+    context "when the query has a trailing semicolon" do
+      let(:query) { "SELECT * FROM your_table;" }
+
+      it "removes the trailing semicolon" do
+        expect(mock_db_connection).to receive(:exec).with("SELECT * FROM your_table LIMIT #{limit}")
+        connector.execute_query(query, limit: 50)
+      end
+    end
+
+    context "when the query already has a LIMIT clause" do
+      let(:query_with_limit) { "SELECT * FROM your_table LIMIT 30" }
+
+      it "does not append an additional LIMIT clause" do
+        expect(mock_db_connection).to receive(:exec).with(query_with_limit)
+        connector.execute_query(query_with_limit)
+      end
+
+      it "returns the result of the query" do
+        expect(connector.execute_query(query_with_limit)).to eq(mock_result)
+      end
+    end
+  end
 end
