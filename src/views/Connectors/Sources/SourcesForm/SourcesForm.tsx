@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SourceConnectionTest from "./SourceConnectionTest";
+import SourceFinalizeForm from "./SourceFinalizeForm";
 
 const SourcesForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -31,6 +32,12 @@ const SourcesForm = (): JSX.Element => {
       formKey: "testSource",
       name: "Test your source",
       component: <SourceConnectionTest />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "finalizeSource",
+      name: "Finalize your source",
+      component: <SourceFinalizeForm />,
       isRequireContinueCta: false,
     },
   ];
