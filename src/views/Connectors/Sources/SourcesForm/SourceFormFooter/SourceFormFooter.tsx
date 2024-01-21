@@ -6,6 +6,7 @@ type SourceFormFooterProps = {
   ctaName: string;
   ctaType?: "button" | "reset" | "submit" | undefined;
   onCtaClick?: undefined | (() => void);
+  isCtaDisabled?: boolean;
   isBackRequired?: boolean;
 };
 
@@ -13,7 +14,7 @@ const SourceFormFooter = ({
   ctaName,
   ctaType = "button",
   onCtaClick,
-  isBackRequired,
+  isCtaDisabled = false,
 }: SourceFormFooterProps): JSX.Element => {
   return (
     <Box
@@ -27,6 +28,7 @@ const SourceFormFooter = ({
       display="flex"
       justifyContent="center"
       minHeight="80px"
+      zIndex="1"
     >
       <Box
         maxWidth="850px"
@@ -49,7 +51,12 @@ const SourceFormFooter = ({
             </Box>
           </Link>
         </Box>
-        <Button type={ctaType} onClick={() => onCtaClick?.()} size="lg">
+        <Button
+          type={ctaType}
+          onClick={() => onCtaClick?.()}
+          size="lg"
+          isDisabled={isCtaDisabled}
+        >
           {ctaName}
         </Button>
       </Box>

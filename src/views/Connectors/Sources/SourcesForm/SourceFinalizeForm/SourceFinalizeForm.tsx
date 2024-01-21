@@ -14,6 +14,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               Source Name
             </Text>
             <Input
+              name="connector_name"
               type="text"
               placeholder="Enter source name"
               background="#fff"
@@ -23,13 +24,14 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               Description
             </Text>
             <Textarea
+              name="connector_description"
               placeholder="Enter a description"
               background="#fff"
               resize="none"
             />
           </Box>
         </Box>
-        <SourceFormFooter ctaName="Finish" />
+        <SourceFormFooter ctaName="Finish" ctaType="submit" />
       </Box>
     </Box>
   );

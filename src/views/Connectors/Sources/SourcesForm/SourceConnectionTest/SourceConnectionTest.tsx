@@ -73,7 +73,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
           borderRadius="8px"
           marginBottom="20px"
         >
-          {CONNECTION_STATUS.map(({ status }) => {
+          {CONNECTION_STATUS.map(({ status }, index) => {
             const statusMetaInfo = status({
               data: connectionResponse,
               isLoading: isFetching,
@@ -84,7 +84,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
             return (
               <Box
                 display="flex"
-                marginBottom="30px"
+                marginBottom="20px"
                 alignItems="center"
                 height="30px"
               >
