@@ -1,10 +1,10 @@
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { TableType } from "./types";
 
 const GenerateTable = ({ title, data }: TableType): JSX.Element => {
 	return (
-		<>
-			{/* {title && <Text fontSize='xl'>{title}</Text>} */}
+		<Box mt={8} border="1px"  borderColor="gray.100" borderRadius="lg">
+			{/* {title ? {title} : <></>} */}
 			<Table>
 				<Thead bgColor={'gray.200'}>
 					<Tr>
@@ -23,7 +23,7 @@ const GenerateTable = ({ title, data }: TableType): JSX.Element => {
 					))}
 				</Tbody>
 			</Table>
-		</>
+		</Box>
 	);
 };
 

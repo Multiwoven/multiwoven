@@ -32,11 +32,14 @@ const ModelsList = (): JSX.Element | null => {
   }
 
   return (
-    <Box width="90%" mx="auto">
+    <Box width="90%" mx="auto" py={12}>
       <TopBar
         name={"Models"}
         ctaName="Add model"
         ctaIcon={<FiPlus color="gray.100" />}
+        ctaBgColor={'orange.500'}
+        ctaHoverBgColor={'orange.400'}
+        ctaColor={'white'}
         onCtaClicked={() => navigate("new")}
         isCtaVisible
       />
