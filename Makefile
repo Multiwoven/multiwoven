@@ -27,6 +27,17 @@ prod-init: init
 update:
 	git submodule update --remote
 
+# Pull latest changes for all submodules and push updated submodules to monorepo
+update-submodules:
+	git submodule update --remote
+	git submodule foreach '(git checkout main; git pull origin main;)'
+	git commit -am "Updated submodules to the latest commits"
+	git push origin main
+
+# Update and push submodules to the latest commit
+update-push:
+	git submodule foreach '(git checkout main; git pull origin main; git submodule update --remote --merge; git commit -am "Updated submodule to latest commit."; git push origin main;)'
+
 # Push changes to the main repository
 push:
 	git push origin main
