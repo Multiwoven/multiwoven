@@ -1061,6 +1061,16 @@
     "@chakra-ui/shared-utils" "2.0.5"
     "@chakra-ui/spinner" "2.1.0"
 
+"@chakra-ui/anatomy@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/@chakra-ui/anatomy/-/anatomy-2.1.1.tgz"
+  integrity sha512-LUHAoqJAgxAqmyckG5bUpBrfEo1FleEyY+1A8hkWciy58gZ+h3GoY9oBpHcdo7XdHPpy3G+3hieK/7i9NLwxAw==
+
+"@chakra-ui/anatomy@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/@chakra-ui/anatomy/-/anatomy-2.1.2.tgz"
+  integrity sha512-pKfOS/mztc4sUXHNc8ypJ1gPWSolWT770jrgVRfolVbYlki8y5Y+As996zMF6k5lewTu6j9DQequ7Cc9a69IVQ==
+
 "@chakra-ui/anatomy@2.2.2":
   version "2.2.2"
   resolved "https://registry.npmjs.org/@chakra-ui/anatomy/-/anatomy-2.2.2.tgz"
@@ -1404,6 +1414,15 @@
     "@chakra-ui/react-context" "2.1.0"
     "@chakra-ui/react-use-safe-layout-effect" "2.1.0"
 
+"@chakra-ui/pro-theme@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/@chakra-ui/pro-theme/-/pro-theme-0.10.0.tgz"
+  integrity sha512-2GdBfI7E0la+gYSFmY9bRgbgC6oaNNJf7X0ucAwBNELdjIr225QbnaDtL/R+vRVqf+t9HmaF4Z5/vu6ZeM4+UA==
+  dependencies:
+    "@chakra-ui/anatomy" "2.1.1"
+    "@chakra-ui/styled-system" "2.9.1"
+    "@chakra-ui/theme-tools" "2.0.18"
+
 "@chakra-ui/progress@2.2.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@chakra-ui/progress/-/progress-2.2.0.tgz"
@@ -1712,6 +1731,15 @@
     csstype "^3.1.2"
     lodash.mergewith "4.6.2"
 
+"@chakra-ui/styled-system@2.9.1":
+  version "2.9.1"
+  resolved "https://registry.npmjs.org/@chakra-ui/styled-system/-/styled-system-2.9.1.tgz"
+  integrity sha512-jhYKBLxwOPi9/bQt9kqV3ELa/4CjmNNruTyXlPp5M0v0+pDMUngPp48mVLoskm9RKZGE0h1qpvj/jZ3K7c7t8w==
+  dependencies:
+    "@chakra-ui/shared-utils" "2.0.5"
+    csstype "^3.0.11"
+    lodash.mergewith "4.6.2"
+
 "@chakra-ui/switch@2.1.2":
   version "2.1.2"
   resolved "https://registry.npmjs.org/@chakra-ui/switch/-/switch-2.1.2.tgz"
@@ -1771,6 +1799,15 @@
   dependencies:
     "@chakra-ui/form-control" "2.2.0"
     "@chakra-ui/shared-utils" "2.0.5"
+
+"@chakra-ui/theme-tools@2.0.18":
+  version "2.0.18"
+  resolved "https://registry.npmjs.org/@chakra-ui/theme-tools/-/theme-tools-2.0.18.tgz"
+  integrity sha512-MbiRuXb2tb41FbnW41zhsYYAU0znlpfYZnu0mxCf8U2otCwPekJCfESUGYypjq4JnydQ7TDOk+Kz/Wi974l4mw==
+  dependencies:
+    "@chakra-ui/anatomy" "2.1.2"
+    "@chakra-ui/shared-utils" "2.0.5"
+    color2k "^2.0.0"
 
 "@chakra-ui/theme-tools@2.1.2":
   version "2.1.2"
@@ -2050,6 +2087,11 @@
   version "8.56.0"
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.56.0.tgz"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
+
+"@fontsource/manrope@^5.0.18":
+  version "5.0.18"
+  resolved "https://registry.npmjs.org/@fontsource/manrope/-/manrope-5.0.18.tgz"
+  integrity sha512-rcH+NXafXbKaLU+xS5VRAOBvI1FOf2VvLUYv3TQXpF9HETtpWwLb9+/4N/kFOA/0YneqkQal+YTqTYEmqGip1g==
 
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
@@ -3441,7 +3483,7 @@ color-name@1.1.3:
   resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz"
   integrity sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==
 
-color2k@^2.0.2:
+color2k@^2.0.0, color2k@^2.0.2:
   version "2.0.3"
   resolved "https://registry.npmjs.org/color2k/-/color2k-2.0.3.tgz"
   integrity sha512-zW190nQTIoXcGCaU08DvVNFTmQhUpnJfVuAKfWqUQkflXKpaDdpaYoM0iluLS9lgJNHyBF58KKA2FBEwkD7wog==
@@ -3588,7 +3630,7 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^3.0.2, csstype@^3.1.2:
+csstype@^3.0.11, csstype@^3.0.2, csstype@^3.1.2:
   version "3.1.3"
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
