@@ -1,12 +1,3 @@
-[submodule "server"]
-	path = server
-	url = git@github.com:Multiwoven/multiwoven-server.git
-[submodule "ui"]
-	path = ui
-	url = git@github.com:Multiwoven/multiwoven-ui.git
-[submodule "integrations"]
-	path = integrations
-	url = git@github.com:Multiwoven/multiwoven-integrations.git
 [submodule "multiwoven-server"]
 	path = multiwoven-server
 	url = git@github.com:Multiwoven/multiwoven-server.git

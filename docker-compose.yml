@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+
+  multiwoven-server:
+    build:
+      context: ./multiwoven-server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      RAILS_ENV: production
+      REDIS_URL: redis://redis:6379/0
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SMTP_ADDRESS: ${SMTP_ADDRESS}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      NEW_RELIC_KEY: ${NEW_RELIC_KEY}
+    volumes:
+      - ./multiwoven-server:/rails
+
+volumes:
+  pg-data:
+  redis-data:
