@@ -38,8 +38,6 @@ const ModelsList = (): JSX.Element | null => {
 		["Name", "Method", "Last Updated"]
 	);
 
-	console.log("Values", values);
-
 	return (
 		<Box width='90%' mx='auto' py={12}>
 			<TopBar

@@ -1,12 +1,7 @@
 import {
 	Box,
-	Button,
-	ButtonGroup,
 	Card,
 	CardBody,
-	CardFooter,
-	Divider,
-	Flex,
 	Heading,
 	Image,
 	SimpleGrid,
@@ -16,21 +11,28 @@ import {
 import { modelMethods } from "./methods";
 import { useContext } from "react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { ModelMethodType } from "./types";
 
 const ModelMethod = () => {
 	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-	const handleOnClick = (method) => {
+	const handleOnClick = (method:ModelMethodType) => {
 		if (stepInfo?.formKey) {
-		  handleMoveForward(stepInfo.formKey, method.name);
+			handleMoveForward(stepInfo.formKey, method.name);
 		}
-	  };
+	};
 	return (
 		<>
 			<Box mx='auto' w='6xl'>
 				<SimpleGrid columns={3} spacing={8}>
 					{modelMethods.map((method, index) => (
-						<Card maxW='sm' key={index}  _hover={method.enabled ? {bgColor:"gray.50"} : {}} variant={!method.enabled ? 'filled' : 'elevated' }>
+						<Card
+							maxW='sm'
+							key={index}
+							_hover={method.enabled ? { bgColor: "gray.50" } : {}}
+							variant={!method.enabled ? "filled" : "elevated"}
+							onClick={() => handleOnClick(method)}
+						>
 							<CardBody>
 								<Image
 									src={method.image}
@@ -40,9 +42,7 @@ const ModelMethod = () => {
 								/>
 								<Stack mt='6' spacing='3'>
 									<Heading size='md'>{method.name}</Heading>
-									<Text>
-                                        {method.description}
-									</Text>
+									<Text>{method.description}</Text>
 								</Stack>
 							</CardBody>
 						</Card>

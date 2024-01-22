@@ -19,7 +19,7 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
 	const connectors = data?.data;
 
-	if (!connectors)
+	if (!connectors) {
 		return (
 			<Box mx='auto'>
 				<Spinner
@@ -31,16 +31,13 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 				/>
 			</Box>
 		);
-
-	console.log("here", connectors?.data);
+	}
 
 	let values = ConvertToTableData(
 		connectors?.data,
 		["name", "connector_name", "updated_at"],
 		["Name", "Type", "Last Updated"]
 	);
-
-	console.log(values);
 
 	return (
 		<>

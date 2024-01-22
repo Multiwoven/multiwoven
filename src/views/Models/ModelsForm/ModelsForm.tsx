@@ -29,6 +29,13 @@ const ModelsForm = (): JSX.Element => {
 			isRequireContinueCta: true,
 			beforeNextStep: () => false,
 		},
+		{
+			formKey: "defineModel",
+			name: "Define your model",
+			component: <>dffd</>,
+			isRequireContinueCta: true,
+			beforeNextStep: () => false,
+		},
 	];
 
 	return (
