@@ -1,15 +1,77 @@
-import { Box, Heading, Input, Text, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Input,
+  Text,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import SourceFormFooter from "../SourceFormFooter";
 import { useFormik } from "formik";
+import { useContext, useState } from "react";
+import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import {
+  CreateConnectorPayload,
+  TestConnectionPayload,
+} from "@/views/Connectors/types";
+import { useNavigate } from "react-router-dom";
+import { createNewConnector } from "@/services/connectors";
+
+const finalDataSourceFormKey = "testSource";
 
 const SourceFinalizeForm = (): JSX.Element | null => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { state } = useContext(SteppedFormContext);
+  const { forms } = state;
+  const toast = useToast();
+  const navigate = useNavigate();
+  const finalDataSourceForm = forms.find(
+    ({ stepKey }) => stepKey === finalDataSourceFormKey
+  )?.data?.[finalDataSourceFormKey] as TestConnectionPayload | undefined;
+
+  if (!finalDataSourceForm) return null;
+
   const formik = useFormik({
     initialValues: {
-      connector_name: "Something",
+      connector_name: finalDataSourceForm.name,
       description: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (formData) => {
+      setIsLoading(true);
+      try {
+        const payload: CreateConnectorPayload = {
+          connector: {
+            configuration: finalDataSourceForm.connection_spec,
+            name: finalDataSourceForm.name,
+            connector_type: "source",
+            connector_name: formData.connector_name,
+            description: formData.description,
+          },
+        };
+
+        const createConnectorResponse = await createNewConnector(payload);
+        if (createConnectorResponse?.data) {
+          toast({
+            status: "success",
+            title: "Success!!",
+            description: "Source created successfully!",
+            position: "bottom-right",
+          });
+          navigate("/setup/sources");
+        } else {
+          throw new Error();
+        }
+      } catch {
+        toast({
+          status: "error",
+          title: "An error occurred.",
+          description: "Something went wrong while creating source.",
+          position: "bottom-right",
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
@@ -51,7 +113,11 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               />
             </Box>
           </Box>
-          <SourceFormFooter ctaName="Finish" ctaType="submit" />
+          <SourceFormFooter
+            ctaName="Finish"
+            ctaType="submit"
+            isCtaLoading={isLoading}
+          />
         </form>
       </Box>
     </Box>

@@ -61,7 +61,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
     connectionResponse?.connection_status.status !== "succeeded";
 
   const handleOnContinueClick = () => {
-    handleMoveForward(stepInfo?.formKey as string, isAnyFailed);
+    handleMoveForward(stepInfo?.formKey as string, processedSourceConfig);
   };
 
   return (
@@ -83,6 +83,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
 
             return (
               <Box
+                key={statusMetaInfo.text}
                 display="flex"
                 marginBottom="20px"
                 alignItems="center"

@@ -44,8 +44,22 @@ export type ConnectionStatus = {
     configFormData,
     datasource,
   }: ConnectionStatusProps) => ConnectionStatusMetaData;
-  // status: "failed" | "success" | "loading";
-  // loadingText: string | ((args: unknown) => string);
-  // errorText: string | ((args: unknown) => string);
-  // successText: string | ((args: unknown) => string);
+};
+
+export type CreateConnectorPayload = {
+  connector: {
+    configuration: unknown;
+    name: string;
+    connector_type: "source" | "destination";
+    connector_name: string;
+    description: string;
+  };
+};
+
+export type CreateConnectorResponse = {
+  data: {
+    attributes: unknown;
+    id: string;
+    type: string;
+  };
 };

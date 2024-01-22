@@ -1,4 +1,6 @@
 import {
+  CreateConnectorPayload,
+  CreateConnectorResponse,
   TestConnectionPayload,
   TestConnectionResponse,
 } from "@/views/Connectors/types";
@@ -33,5 +35,14 @@ export const getConnectionStatus = async (payload: TestConnectionPayload) =>
   multiwovenFetch<TestConnectionPayload, TestConnectionResponse>({
     method: "post",
     url: "/connector_definitions/check_connection",
+    data: payload,
+  });
+
+export const createNewConnector = async (
+  payload: CreateConnectorPayload
+): Promise<CreateConnectorResponse> =>
+  multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
+    method: "post",
+    url: "/connectors",
     data: payload,
   });

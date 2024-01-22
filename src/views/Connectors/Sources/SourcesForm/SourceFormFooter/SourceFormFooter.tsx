@@ -7,6 +7,7 @@ type SourceFormFooterProps = {
   ctaType?: "button" | "reset" | "submit" | undefined;
   onCtaClick?: undefined | (() => void);
   isCtaDisabled?: boolean;
+  isCtaLoading?: boolean;
   isBackRequired?: boolean;
 };
 
@@ -14,6 +15,7 @@ const SourceFormFooter = ({
   ctaName,
   ctaType = "button",
   onCtaClick,
+  isCtaLoading = false,
   isCtaDisabled = false,
 }: SourceFormFooterProps): JSX.Element => {
   return (
@@ -56,6 +58,7 @@ const SourceFormFooter = ({
           onClick={() => onCtaClick?.()}
           size="lg"
           isDisabled={isCtaDisabled}
+          isLoading={isCtaLoading}
         >
           {ctaName}
         </Button>
