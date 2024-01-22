@@ -26,7 +26,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   before do
     sync.model.update(primary_key: "id")
     allow(client).to receive(:read).and_return(records)
-    allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records)
+    allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1)
     allow(sync_run.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
   end
 
@@ -53,7 +53,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         emitted_at: DateTime.now.to_i
       ).to_multiwoven_message
 
-      allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2])
+      allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2], 1)
 
       # Second sync run
       subject.read(sync_run.id)
@@ -65,4 +65,6 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       expect(updated_sync_record.record).to eq(modified_record1.record.data)
     end
   end
+
+  # TODO: test for partial recovery via currrent offset
 end

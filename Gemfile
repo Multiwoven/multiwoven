@@ -11,7 +11,8 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git", branch: "version_bump"
+gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git"
+gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
 gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database

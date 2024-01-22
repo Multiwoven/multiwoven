@@ -58,4 +58,46 @@ RSpec.describe Sync, type: :model do
       expect(protocol).to be_a(Multiwoven::Integrations::Protocol::SyncConfig)
     end
   end
+
+  describe "#schedule_cron_expression" do
+    let(:sync) { build(:sync, sync_interval:, sync_interval_unit:) }
+
+    context "when interval unit is hours" do
+      let(:sync_interval) { 3 }
+      let(:sync_interval_unit) { "hours" }
+
+      it "returns the correct cron expression" do
+        expect(sync.schedule_cron_expression).to eq("0 */3 * * *")
+      end
+    end
+
+    context "when interval unit is days" do
+      let(:sync_interval) { 1 }
+      let(:sync_interval_unit) { "days" }
+
+      it "returns the correct cron expression" do
+        expect(sync.schedule_cron_expression).to eq("0 0 */1 * *")
+      end
+    end
+
+    context "when interval unit is weeks" do
+      let(:sync_interval) { 2 }
+      let(:sync_interval_unit) { "weeks" }
+
+      it "returns the correct cron expression" do
+        expect(sync.schedule_cron_expression).to eq("0 0 * * */2")
+      end
+    end
+
+    context "when interval unit is invalid" do
+      let(:sync_interval) { 1 }
+      let(:sync_interval_unit) { "invalid" }
+
+      it "raises an ArgumentError" do
+        expect do
+          sync.schedule_cron_expression
+        end.to raise_error(ArgumentError, "'invalid' is not a valid sync_interval_unit")
+      end
+    end
+  end
 end

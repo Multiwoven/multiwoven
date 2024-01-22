@@ -18,7 +18,7 @@ module ReverseEtl
 
           break if result.empty?
 
-          yield result if block_given?
+          yield result, current_offset if block_given?
 
           # Break the loop if the number of records fetched is less than the batch size
           break if result.size < params[:batch_size]

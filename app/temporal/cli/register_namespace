@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "setup"
+
+namespace = ARGV[0] || "multiwoven-dev"
+description = ARGV[1]
+
+begin
+  Temporal.register_namespace(namespace, description)
+  Temporal.logger.info "Namespace created", { namespace: }
+rescue Temporal::NamespaceAlreadyExistsFailure
+  Temporal.logger.info "Namespace already exists", { namespace: }
+end
+
+loop do
+  Temporal.list_custom_search_attributes(namespace:)
+  Temporal.logger.info("Namespace is ready", { namespace: })
+  break
+rescue GRPC::NotFound
+  Temporal.logger.info("Namespace not yet found, waiting and retrying", { namespace: })
+  sleep 1
+  next
+end
+
+# Register a variety of search attributes for ease of integration testing
+attributes_to_add = {
+  "CustomStringField" => :text,
+  "CustomDoubleField" => :double,
+  "CustomBoolField" => :bool,
+  "CustomIntField" => :int,
+  "CustomDatetimeField" => :datetime
+}
+
+attributes_to_add.each do |name, type|
+  Temporal.add_custom_search_attributes({ name: type })
+  Temporal.logger.info("Registered search attributes #{name} = #{type}", { namespace: })
+rescue Temporal::SearchAttributeAlreadyExistsFailure
+  Temporal.logger.info("Default search attribute #{name} already exist for namespace", { namespace: })
+end

@@ -10,13 +10,13 @@ module ReverseEtl
       def read(sync_run_id)
         sync_run = setup_sync_run(sync_run_id)
         source_client = setup_source_client(sync_run.sync)
-        batch_query_params = batch_params(source_client, sync_run.sync.to_protocol)
+
+        batch_query_params = batch_params(source_client, sync_run)
         model = sync_run.sync.model
 
-        ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records|
+        ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           process_records(records, sync_run, model)
-        rescue StandardError => e
-          Rails.logger.error(e)
+          sync_run.update(current_offset:)
         end
       end
 

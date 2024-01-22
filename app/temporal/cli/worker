@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "setup"
+
+worker = Temporal::Worker.new(binary_checksum: `git show HEAD -s --format=%H`.strip)
+
+worker.register_workflow(Workflows::SyncWorkflow)
+
+worker.register_activity(Activities::FetchSyncActivity)
+worker.register_activity(Activities::CreateSyncRunActivity)
+worker.register_activity(Activities::ExtractorActivity)
+worker.register_activity(Activities::LoaderActivity)
+worker.register_activity(Activities::ReporterActivity)
+
+# TODO: add logging middleware to all workflows and activities
+
+worker.start

@@ -13,12 +13,12 @@ module ReverseEtl
 
       private
 
-      def batch_params(client, sync_config)
+      def batch_params(client, sync_run)
         {
-          offset: DEFAULT_OFFSET,
+          offset: sync_run.current_offset || DEFAULT_OFFSET,
           limit: DEFAULT_LIMT,
           batch_size: DEFAULT_BATCH_SIZE,
-          sync_config:,
+          sync_config: sync_run.sync.to_protocol,
           client:
         }
       end

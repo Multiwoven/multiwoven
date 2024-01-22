@@ -59,4 +59,21 @@ class Sync < ApplicationRecord
   def set_defaults
     self.status ||= "healthy"
   end
+
+  def schedule_cron_expression
+    case sync_interval_unit
+    when "hours"
+      # Every X hours: 0 */X * * *
+      "0 */#{sync_interval} * * *"
+    when "days"
+      # Every X days: 0 0 */X * *
+      "0 0 */#{sync_interval} * *"
+    when "weeks"
+      # Every X weeks: 0 0 * * */X
+      # Note: Cron doesn't directly support weeks, so we use day of week here
+      "0 0 * * */#{sync_interval}"
+    else
+      raise ArgumentError, "Invalid sync_interval_unit: #{sync_interval_unit}"
+    end
+  end
 end
