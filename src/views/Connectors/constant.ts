@@ -52,3 +52,5 @@ export const CONNECTION_STATUS: ConnectionStatus[] = [
     },
   },
 ];
+
+export const SOURCES_LIST_QUERY_KEY = ["connectors", "source"];

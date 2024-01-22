@@ -16,6 +16,8 @@ import {
 } from "@/views/Connectors/types";
 import { useNavigate } from "react-router-dom";
 import { createNewConnector } from "@/services/connectors";
+import { useQueryClient } from "@tanstack/react-query";
+import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
 
 const finalDataSourceFormKey = "testSource";
 
@@ -25,6 +27,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
   const { forms } = state;
   const toast = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const finalDataSourceForm = forms.find(
     ({ stepKey }) => stepKey === finalDataSourceFormKey
   )?.data?.[finalDataSourceFormKey] as TestConnectionPayload | undefined;
@@ -51,6 +54,9 @@ const SourceFinalizeForm = (): JSX.Element | null => {
 
         const createConnectorResponse = await createNewConnector(payload);
         if (createConnectorResponse?.data) {
+          queryClient.invalidateQueries({
+            queryKey: SOURCES_LIST_QUERY_KEY,
+          });
           toast({
             status: "success",
             title: "Success!!",
