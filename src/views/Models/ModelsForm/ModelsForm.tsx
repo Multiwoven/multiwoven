@@ -8,7 +8,7 @@ import {
 	DrawerOverlay,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import SelectSourceForm from "./SelectSourceForm";
+import SelectModelSourceForm from "./SelectModelSourceForm";
 import ModelMethod from "./ModelMethod";
 
 
@@ -18,8 +18,8 @@ const ModelsForm = (): JSX.Element => {
 		{
 			formKey: "datasource",
 			name: "Select a data source",
-			component: <SelectSourceForm />,
-			isRequireContinueCta: false,
+			component: <SelectModelSourceForm />,
+			isRequireContinueCta: true,
 			beforeNextStep: () => true,
 		},
 		{

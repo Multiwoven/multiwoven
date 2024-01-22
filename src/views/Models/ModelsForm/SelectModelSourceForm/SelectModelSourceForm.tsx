@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SelectSourceForm = (): JSX.Element | null => {
+const SelectModelSourceForm = (): JSX.Element | null => {
 	// const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
 	const { data } = useQuery({
@@ -51,4 +51,4 @@ const SelectSourceForm = (): JSX.Element | null => {
 	);
 };
 
-export default SelectSourceForm;
+export default SelectModelSourceForm;

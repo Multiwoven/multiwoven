@@ -14,8 +14,17 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { modelMethods } from "./methods";
+import { useContext } from "react";
+import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 
 const ModelMethod = () => {
+	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+
+	const handleOnClick = (method) => {
+		if (stepInfo?.formKey) {
+		  handleMoveForward(stepInfo.formKey, method.name);
+		}
+	  };
 	return (
 		<>
 			<Box mx='auto' w='6xl'>
@@ -27,6 +36,7 @@ const ModelMethod = () => {
 									src={method.image}
 									alt={method.type}
 									borderRadius='lg'
+									w='full'
 								/>
 								<Stack mt='6' spacing='3'>
 									<Heading size='md'>{method.name}</Heading>
