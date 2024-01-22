@@ -3,12 +3,6 @@ type ModelData = {
     type: string;
     attributes: {
         [key: string]: string | null;
-        name: string;
-        description: string | null;
-        query: string;
-        query_type: string;
-        created_at: string;
-        updated_at: string;
     };
 };
 

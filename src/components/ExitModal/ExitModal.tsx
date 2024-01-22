@@ -25,7 +25,7 @@ const ExitModal = (): JSX.Element => {
         Exit
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
         <ModalContent>
           <ModalCloseButton color="gray.300" />
@@ -60,6 +60,7 @@ const ExitModal = (): JSX.Element => {
                 <Button
                   _hover={{ bgColor: "orange.400" }}
                   bgColor="orange.500"
+                  color='white'
                   rounded="lg"
                   pr={10}
                   pl={10}

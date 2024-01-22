@@ -2,7 +2,7 @@ import GenerateTable from "@/components/Table/Table";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
 import { ConvertToTableData } from "@/utils";
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -19,15 +19,26 @@ const ModelsList = (): JSX.Element | null => {
 
 	const navigate = useNavigate();
 
-	if (!models) return null;
+	if (!models)
+		return (
+			<Box mx='auto'>
+				<Spinner
+					thickness='4px'
+					speed='0.65s'
+					emptyColor='gray.200'
+					color='blue.500'
+					size='xl'
+				/>
+			</Box>
+		);
 
-	let values = ConvertToTableData(models.data, [
-		"name",
-		"query_type",
-		"updated_at",
-	], ["Name", "Method", "Last Updated"]);
-	
-  console.log("Values", values);
+	let values = ConvertToTableData(
+		models.data,
+		["name", "query_type", "updated_at"],
+		["Name", "Method", "Last Updated"]
+	);
+
+	console.log("Values", values);
 
 	return (
 		<Box width='90%' mx='auto' py={12}>
