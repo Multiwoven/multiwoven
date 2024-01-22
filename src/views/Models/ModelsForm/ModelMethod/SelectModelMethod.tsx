@@ -18,6 +18,8 @@ const ModelMethod = () => {
 
 	const handleOnClick = (method:ModelMethodType) => {
 		if (stepInfo?.formKey) {
+			console.log(stepInfo?.formKey);
+			
 			handleMoveForward(stepInfo.formKey, method.name);
 		}
 	};
