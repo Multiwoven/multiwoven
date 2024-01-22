@@ -17,9 +17,7 @@ const ModelMethod = () => {
 	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
 	const handleOnClick = (method:ModelMethodType) => {
-		if (stepInfo?.formKey) {
-			console.log(stepInfo?.formKey);
-			
+		if (stepInfo?.formKey) {		
 			handleMoveForward(stepInfo.formKey, method.name);
 		}
 	};

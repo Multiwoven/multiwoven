@@ -26,7 +26,7 @@ const ModelsForm = (): JSX.Element => {
 			formKey: "selectModelType",
 			name: "Select a Modelling Method",
 			component: <ModelMethod />,
-			isRequireContinueCta: true,
+			isRequireContinueCta: false,
 			beforeNextStep: () => true,
 		},
 		{
