@@ -1,20 +1,4 @@
 GIT
-  remote: https://github.com/Multiwoven/multiwoven-integrations.git
-  revision: a15f06c39ad169b41f54445fa198dbf4a49d559a
-  specs:
-    multiwoven-integrations (0.1.2)
-      activesupport
-      dry-schema
-      dry-struct
-      dry-types
-      google-cloud-bigquery
-      pg
-      rake
-      restforce
-      ruby-odbc
-      sequel
-
-GIT
   remote: https://github.com/Multiwoven/ruby-odbc.git
   revision: d8dea99fe03cfa88335d2f0686398b2a5881ff8c
   specs:
@@ -1819,6 +1803,17 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.3.0)
+    multiwoven-integrations (0.1.2)
+      activesupport
+      dry-schema
+      dry-struct
+      dry-types
+      google-cloud-bigquery
+      pg
+      rake
+      restforce
+      ruby-odbc
+      sequel
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -2024,7 +2019,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations!
+  multiwoven-integrations (~> 0.1.2)
   newrelic_rpm
   parallel
   pg (~> 1.1)
