@@ -6,12 +6,14 @@ require_relative "setup"
 worker = Temporal::Worker.new(binary_checksum: `git show HEAD -s --format=%H`.strip)
 
 worker.register_workflow(Workflows::SyncWorkflow)
+worker.register_workflow(Workflows::ScheduleSyncWorkflow)
 
 worker.register_activity(Activities::FetchSyncActivity)
 worker.register_activity(Activities::CreateSyncRunActivity)
 worker.register_activity(Activities::ExtractorActivity)
 worker.register_activity(Activities::LoaderActivity)
 worker.register_activity(Activities::ReporterActivity)
+worker.register_activity(Activities::ScheduleSyncActivity)
 
 # TODO: add logging middleware to all workflows and activities
 

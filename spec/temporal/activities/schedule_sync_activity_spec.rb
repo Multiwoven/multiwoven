@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Activities::ReporterActivity do
+RSpec.describe Activities::ScheduleSyncActivity do
   describe "#execute" do
     subject { described_class.new }
 

@@ -17,6 +17,7 @@ RSpec.describe Workflows::SyncWorkflow do
   before { allow(Activities::ReporterActivity).to receive(:execute!) }
 
   it "executes sync workflow" do
+    # TODO: Add more tests
     subject.execute_locally(sync.id)
 
     expect(Activities::ExtractorActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
