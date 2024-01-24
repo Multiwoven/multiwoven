@@ -27,8 +27,8 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Copy custom Nginx configuration file
 COPY server-config/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 8080
+EXPOSE 8080
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
