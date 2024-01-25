@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import SelectModelSourceForm from "./SelectModelSourceForm";
 import ModelMethod from "./ModelMethod";
+import DefineModel from "./DefineModel";
 
 
 const ModelsForm = (): JSX.Element => {
@@ -32,7 +33,7 @@ const ModelsForm = (): JSX.Element => {
 		{
 			formKey: "defineModel",
 			name: "Define your model",
-			component: <>dffd</>,
+			component: <DefineModel />,
 			isRequireContinueCta: true,
 			beforeNextStep: () => false,
 		},
