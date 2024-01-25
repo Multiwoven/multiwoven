@@ -15,4 +15,8 @@ export type ModelTableDataType = {
 export type TableType = {
 	title?: string | JSX.Element;
 	data: TableDataType | ModelTableDataType;
+	size?: string;
+	headerColor?: string;
+	headerColorVisible?: boolean;
+	borderRadius?:string;
 };

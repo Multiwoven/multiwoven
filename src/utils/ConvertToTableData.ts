@@ -27,3 +27,14 @@ export function ConvertToTableData(apiData: Array<ModelData>, columns: Array<str
         data: data
     };
 }
+
+export function ConvertModelPreviewToTableData(apiData: Array<Object>, columns: Array<string>, customColumnNames? : Array<string>) : TableDataType {
+
+    console.log(apiData);
+    
+
+    return {
+        columns: customColumnNames ? customColumnNames : columns,
+        data:apiData
+    }
+}

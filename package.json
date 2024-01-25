@@ -20,6 +20,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.1.1",
+    "@monaco-editor/react": "^4.6.0",
     "@rjsf/chakra-ui": "^5.16.1",
     "@rjsf/core": "^5.16.1",
     "@rjsf/utils": "^5.16.1",

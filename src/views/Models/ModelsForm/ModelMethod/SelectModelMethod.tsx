@@ -14,9 +14,7 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
 
 const ModelMethod = () => {
-	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
-	console.log(state);
-	
+	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);	
 
 	const handleOnClick = (method:ModelMethodType) => {
 		if (stepInfo?.formKey) {		

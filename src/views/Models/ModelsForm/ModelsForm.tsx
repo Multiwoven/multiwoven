@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import SelectModelSourceForm from "./SelectModelSourceForm";
 import ModelMethod from "./ModelMethod";
 import DefineModel from "./DefineModel";
+import FinalizeModel from "./FinalizeModel";
 
 
 const ModelsForm = (): JSX.Element => {
@@ -35,7 +36,14 @@ const ModelsForm = (): JSX.Element => {
 			name: "Define your model",
 			component: <DefineModel />,
 			isRequireContinueCta: true,
-			beforeNextStep: () => false,
+			beforeNextStep: () => true,
+		},
+		{
+			formKey: "finalizeModel",
+			name: "Finalize model",
+			component: <FinalizeModel />,
+			isRequireContinueCta: true,
+			beforeNextStep: () => true,
 		},
 	];
 

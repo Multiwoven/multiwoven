@@ -1,12 +1,18 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { TableType } from "./types";
 
-const GenerateTable = ({ title, data }: TableType): JSX.Element => {
+const GenerateTable = ({ title, data, size, headerColor, headerColorVisible, borderRadius }: TableType): JSX.Element => {
+	const theadProps = headerColorVisible ? { bgColor: headerColor || "gray.200" } : {};
+
 	return (
-		<Box mt={8} border="1 | JSX.Elementpx"  borderColor="gray.100" borderRadius="lg">
+		<Box
+			border='1px'
+			borderColor='gray.300'
+			borderRadius={borderRadius || 'lg'}
+		>
 			{title ? title : <></>}
-			<Table>
-				<Thead bgColor={'gray.200'}>
+			<Table size={size}>
+				<Thead {...theadProps}>
 					<Tr>
 						{data.columns.map((column, index) => (
 							<Th key={index}>{column}</Th>
@@ -15,7 +21,7 @@ const GenerateTable = ({ title, data }: TableType): JSX.Element => {
 				</Thead>
 				<Tbody>
 					{data.data.map((row, rowIndex) => (
-						<Tr key={rowIndex} _hover={{backgroundColor: 'gray.100'}}>
+						<Tr key={rowIndex} _hover={{ backgroundColor: "gray.100" }}>
 							{Object.values(row).map((value, valueIndex) => (
 								<Td key={valueIndex}>{value}</Td>
 							))}

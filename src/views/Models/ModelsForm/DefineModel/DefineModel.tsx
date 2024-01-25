@@ -9,7 +9,6 @@ const DefineModel = () : JSX.Element | null => {
 	const selectedModelType = dataMethod?.data.selectModelType;
 
 	if (selectedModelType === "SQL Query") {
-		console.log("set");
 		return <DefineSQL />;
 	}
 	return null;
