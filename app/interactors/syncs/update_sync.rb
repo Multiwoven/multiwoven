@@ -8,7 +8,7 @@ module Syncs
       unless context
              .sync
              .update(context.sync_params)
-        context.fail!(errors: context.sync.errors)
+        context.fail!(sync: context.sync)
       end
     end
   end

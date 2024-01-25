@@ -11,9 +11,12 @@ module Api
       def index
         @syncs = current_workspace
                  .syncs.all.page(params[:page] || 1)
+        render json: @syncs, status: :ok
       end
 
-      def show; end
+      def show
+        render json: @sync, status: :ok
+      end
 
       def create
         result = CreateSync.call(
@@ -23,9 +26,13 @@ module Api
 
         if result.success?
           @sync = result.sync
+          render json: @sync, status: :created
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Sync creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.sync)
+          )
         end
       end
 
@@ -37,9 +44,13 @@ module Api
 
         if result.success?
           @sync = result.sync
+          render json: @sync, status: :ok
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Sync update failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.sync)
+          )
         end
       end
 
@@ -64,6 +75,7 @@ module Api
                                      :schedule_type,
                                      :status,
                                      :sync_interval,
+                                     :sync_mode,
                                      :sync_interval_unit,
                                      :stream_name,
                                      configuration: {})

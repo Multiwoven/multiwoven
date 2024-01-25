@@ -11,7 +11,7 @@ module Syncs
       if sync.persisted?
         context.sync = sync
       else
-        context.fail!(errors: sync.errors)
+        context.fail!(sync:)
       end
     end
   end
