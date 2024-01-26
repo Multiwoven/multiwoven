@@ -13,7 +13,7 @@ const MainLayout = (): JSX.Element => {
         maxW={"100%"}
         display="flex"
         flex={1}
-        flexDir="row"
+        flexDir="column"
         className="flex"
       >
         <Outlet />

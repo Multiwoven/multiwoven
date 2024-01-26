@@ -2,9 +2,9 @@ import { Button, Flex, Heading } from "@chakra-ui/react";
 
 type TopBarType = {
   name: string;
-  ctaName: string;
-  ctaIcon: JSX.Element;
-  onCtaClicked: () => void;
+  ctaName?: string;
+  ctaIcon?: JSX.Element;
+  onCtaClicked?: () => void;
   isCtaVisible?: boolean;
 };
 
@@ -15,7 +15,7 @@ const TopBar = ({
   onCtaClicked = () => {},
   isCtaVisible,
 }: TopBarType): JSX.Element => (
-  <Flex justifyContent="space-between" p={4} borderColor="gray.300" mb={4}>
+  <Flex justifyContent="space-between" borderColor="gray.300">
     <Heading size="md" _dark={{ color: "white" }}>
       {name}
     </Heading>

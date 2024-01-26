@@ -1,17 +1,19 @@
 import {
+  ConnectorInfoResponse,
   CreateConnectorPayload,
   CreateConnectorResponse,
   TestConnectionPayload,
   TestConnectionResponse,
 } from "@/views/Connectors/types";
 import { apiRequest, multiwovenFetch } from "./common";
+import { RJSFSchema } from "@rjsf/utils";
 
 type ConnectorsDefinationApiResponse = {
   success: boolean;
   data?: {
     icon: string;
     name: string;
-    connector_spec: Record<string, unknown>;
+    connector_spec: RJSFSchema;
   };
 };
 
@@ -45,4 +47,12 @@ export const createNewConnector = async (
     method: "post",
     url: "/connectors",
     data: payload,
+  });
+
+export const getConnectorInfo = async (
+  id: string
+): Promise<ConnectorInfoResponse> =>
+  multiwovenFetch<null, ConnectorInfoResponse>({
+    method: "get",
+    url: `/connectors/${id}`,
   });

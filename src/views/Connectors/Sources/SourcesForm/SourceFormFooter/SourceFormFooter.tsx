@@ -1,4 +1,6 @@
+import { useUiConfig } from "@/utils/hooks";
 import { Box, Button, Icon, Text } from "@chakra-ui/react";
+import { RefObject, useEffect, useState } from "react";
 import { FiBookOpen, FiHeadphones } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
@@ -9,31 +11,42 @@ type SourceFormFooterProps = {
   isCtaDisabled?: boolean;
   isCtaLoading?: boolean;
   isBackRequired?: boolean;
+  alignTo?: RefObject<HTMLDivElement> | null;
 };
 
 const SourceFormFooter = ({
   ctaName,
   ctaType = "button",
+  alignTo,
   onCtaClick,
   isCtaLoading = false,
   isCtaDisabled = false,
 }: SourceFormFooterProps): JSX.Element => {
+  const [leftOffset, setLeftOffet] = useState<number>(0);
+  const { maxContentWidth } = useUiConfig();
+
+  useEffect(() => {
+    if (alignTo) {
+      setLeftOffet(alignTo.current?.getBoundingClientRect()?.left ?? 0);
+    }
+  }, [alignTo]);
+
   return (
     <Box
       position="fixed"
-      left="0"
+      left={leftOffset}
       right="0"
       borderWidth="thin"
       bottom="0"
       backgroundColor="#fff"
-      padding="10px"
+      padding="10px 30px"
       display="flex"
       justifyContent="center"
       minHeight="80px"
       zIndex="1"
     >
       <Box
-        maxWidth="850px"
+        maxWidth={maxContentWidth}
         width="100%"
         display="flex"
         justifyContent="space-between"

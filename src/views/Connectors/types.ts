@@ -1,3 +1,5 @@
+import { RJSFSchema } from "@rjsf/utils";
+
 export type ConnectorTypes = "source" | "destination" | "model";
 
 export type DatasourceType = {
@@ -13,7 +15,7 @@ export type ApiResponse<T> = {
 export type TestConnectionPayload = {
   type: string;
   name: string;
-  connection_spec: unknown;
+  connection_spec: RJSFSchema;
 };
 
 export type TestConnectionResponse = {
@@ -61,5 +63,15 @@ export type CreateConnectorResponse = {
     attributes: unknown;
     id: string;
     type: string;
+  };
+};
+
+export type ConnectorInfoResponse = {
+  data: {
+    attributes: {
+      connector_name: string;
+      connector_type: string;
+      configuration: unknown;
+    };
   };
 };
