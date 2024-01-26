@@ -8,55 +8,65 @@ import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const ModelsList = (): JSX.Element | null => {
-	const { data } = useQuery({
-		queryKey: ["models"],
-		queryFn: () => getAllModels(),
-		refetchOnMount: false,
-		refetchOnWindowFocus: false,
-	});
+  const { data } = useQuery({
+    queryKey: ["models"],
+    queryFn: () => getAllModels(),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
-	const models = data?.data?.data;
+  const models = data?.data?.data;
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	if (!models) {
-		return (
-			<Box mx='auto'>
-				<Spinner
-					thickness='4px'
-					speed='0.65s'
-					emptyColor='gray.200'
-					color='blue.500'
-					size='xl'
-				/>
-			</Box>
-		);
-	}
-	
-	let values = ConvertToTableData(
-		models,
-		["name", "query_type", "updated_at"],
-		["Name", "Method", "Last Updated"]
-	);
+  if (!models) {
+    return (
+      <Box mx="auto">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Box>
+    );
+  }
 
-	return (
-		<Box width='90%' mx='auto' py={12}>
-			<TopBar
-				name={"Models"}
-				ctaName='Add model'
-				ctaIcon={<FiPlus color='gray.100' />}
-				ctaBgColor={"orange.500"}
-				ctaHoverBgColor={"orange.400"}
-				ctaColor={"white"}
-				onCtaClicked={() => navigate("new")}
-				isCtaVisible
-			/>
-			<Box mt={16}>
-				<GenerateTable data={values} headerColorVisible={true} />
-			</Box>
-			<Outlet />
-		</Box>
-	);
+  let values = ConvertToTableData(
+    models,
+    ["name", "query_type", "updated_at"],
+    ["Name", "Method", "Last Updated"]
+  );
+
+  console.log("values", values);
+
+  const handleOnRowClick = (row) => {
+    console.log(row);
+  };
+
+  return (
+    <Box width="90%" mx="auto" py={12}>
+      <TopBar
+        name={"Models"}
+        ctaName="Add model"
+        ctaIcon={<FiPlus color="gray.100" />}
+        ctaBgColor={"orange.500"}
+        ctaHoverBgColor={"orange.400"}
+        ctaColor={"white"}
+        onCtaClicked={() => navigate("new")}
+        isCtaVisible
+      />
+      <Box mt={16}>
+        <GenerateTable
+          data={values}
+          headerColorVisible={true}
+          onRowClick={handleOnRowClick}
+        />
+      </Box>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default ModelsList;
