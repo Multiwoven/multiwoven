@@ -13,7 +13,7 @@ import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
 import SourceFormFooter from "../SourcesForm/SourceFormFooter";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 
 const EditSource = (): JSX.Element => {
@@ -21,6 +21,7 @@ const EditSource = (): JSX.Element => {
   const containerRef = useRef(null);
   const toast = useToast();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState<unknown>(null);
 
   const [isTestRunning, setIsTestRunning] = useState<boolean>(false);
   const [testedFormData, setTestedFormData] = useState<unknown>(null);
@@ -47,6 +48,12 @@ const EditSource = (): JSX.Element => {
     refetchOnWindowFocus: false,
     enabled: !!connectorName,
   });
+
+  const connectorSchema = connectorDefinitionResponse?.data?.connector_spec;
+
+  useEffect(() => {
+    setFormData(connectorInfo?.attributes?.configuration);
+  }, [connectorDefinitionResponse]);
 
   const handleOnSaveChanges = async () => {
     if (!connectorInfo?.attributes) return;
@@ -84,8 +91,6 @@ const EditSource = (): JSX.Element => {
       });
     },
   });
-
-  const connectorSchema = connectorDefinitionResponse?.data?.connector_spec;
 
   const handleOnTestClick = async (formData: unknown) => {
     setIsTestRunning(true);
@@ -163,8 +168,9 @@ const EditSource = (): JSX.Element => {
           <Form
             schema={connectorSchema?.connection_specification}
             validator={validator}
+            formData={formData}
             onSubmit={({ formData }) => handleOnTestClick(formData)}
-            formData={connectorInfo?.attributes?.configuration}
+            onChange={({ formData }) => setFormData(formData)}
           >
             <SourceFormFooter
               ctaName="Save Changes"
