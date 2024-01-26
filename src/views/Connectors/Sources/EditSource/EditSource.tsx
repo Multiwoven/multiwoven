@@ -5,7 +5,7 @@ import {
   updateConnector,
 } from "@/services/connectors";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
@@ -20,6 +20,7 @@ const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
   const containerRef = useRef(null);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const [isTestRunning, setIsTestRunning] = useState<boolean>(false);
   const [testedFormData, setTestedFormData] = useState<unknown>(null);
@@ -71,6 +72,7 @@ const EditSource = (): JSX.Element => {
         position: "bottom-right",
         isClosable: true,
       });
+      navigate("/setup/sources");
     },
     onError: () => {
       toast({
