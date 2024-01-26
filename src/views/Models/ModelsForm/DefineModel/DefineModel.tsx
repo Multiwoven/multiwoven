@@ -6,7 +6,7 @@ const DefineModel = () : JSX.Element | null => {
 	const { state } = useContext(SteppedFormContext);
 
 	const dataMethod = state.forms.find((data) => data.data?.selectModelType);
-	const selectedModelType = dataMethod?.data.selectModelType;
+	const selectedModelType = dataMethod?.data?.selectModelType;
 
 	if (selectedModelType === "SQL Query") {
 		return <DefineSQL />;
