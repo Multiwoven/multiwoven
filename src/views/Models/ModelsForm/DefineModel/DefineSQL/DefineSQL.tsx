@@ -1,4 +1,6 @@
 import {
+	Alert,
+	AlertIcon,
 	Box,
 	Button,
 	Flex,
@@ -7,6 +9,7 @@ import {
 	Spacer,
 	Text,
 	VStack,
+	useToast,
 } from "@chakra-ui/react";
 
 import StarsImage from "@/assets/images/stars.svg";
@@ -19,31 +22,45 @@ import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
 import { TableDataType } from "@/components/Table/types";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { extractData } from "@/utils";
 
 const DefineSQL = (): JSX.Element => {
 	const [query, setQuery] = useState("");
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
 	const { state, handleMoveForward } = useContext(SteppedFormContext);
-
-	function handleRowClick() {
-		handleMoveForward('','');
-	}
+	const [ loading, setLoading ] = useState(false);
 
 	function handleEditorChange(value: string | undefined) {
 		if (value) setQuery(value);
 	}
 
+	const extracted = extractData(state.forms);
+	const connector_data = extracted.find((data) => data?.id);
+	const connector_id = connector_data?.id || "";
+	const connector_icon = connector_data?.icon || "";
+	const connector_name = connector_data?.name || "";
+	const toast = useToast();
+	
 	async function getPreview() {
-		console.log(query,state.forms);
-		// let data = await getModelPreview(query, '0');
-		
-		// if (data.success) {
-		// 	console.log('got data',data);
-			
-		// 	const columns = Object.keys(data.data[0]);
-		// 	setTableData(ConvertModelPreviewToTableData(data.data, columns));
-		// }
+		setLoading(true);
+		let data = await getModelPreview(query, connector_id?.toString());
+		if (data.success) {
+			console.log("got data", data);
+			setLoading(false);
+			const columns = Object.keys(data.data[0]);
+			setTableData(ConvertModelPreviewToTableData(data.data, columns));
+		} else {
+			console.log("error getting data", data);
+			toast({
+				title: 'An Error Occured',
+				description: data.message || 'Please check your query and try again',
+				status: 'error',
+				duration: 9000,
+				isClosable: true,
+			  })
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -58,9 +75,9 @@ const DefineSQL = (): JSX.Element => {
 					rounded='xl'
 				>
 					<Flex bgColor='gray.200' p={2} roundedTop='xl'>
-						<Flex>
-							<Image src='@/assets/icons/redshift.svg' />
-							<Text>difi</Text>
+						<Flex w='full' alignItems='center'>
+							<Image src={connector_icon} p={2} mx={4} />
+							<Text>{connector_name}</Text>
 						</Flex>
 						<Spacer />
 						<HStack spacing={3}>
@@ -70,6 +87,7 @@ const DefineSQL = (): JSX.Element => {
 								variant='outline'
 								borderColor={"gray.500"}
 								onClick={getPreview}
+								isLoading={loading}
 							>
 								{" "}
 								Run Query{" "}
@@ -99,7 +117,7 @@ const DefineSQL = (): JSX.Element => {
 
 				{tableData ? (
 					<Box w='4xl' h='fit'>
-						<GenerateTable data={tableData} size='sm' borderRadius='xl' onRowClick={handleRowClick} />
+						<GenerateTable data={tableData} size='sm' borderRadius='xl' />
 					</Box>
 				) : (
 					<Box

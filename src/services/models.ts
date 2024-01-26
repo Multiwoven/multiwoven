@@ -26,5 +26,6 @@ export const getModelPreview = async (
 	query: string,
 	connector_id: string
 ): Promise<any> => {
-	return apiRequest("/api/v1/connectors/" + {connector_id} + "/query_source", {'query':query});
+	const url = "/connectors/" + connector_id + "/query_source";
+	return apiRequest(url, {'query':query});
 };
