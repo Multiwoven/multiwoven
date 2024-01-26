@@ -31,14 +31,22 @@ export function ConvertToTableData(
 }
 
 export function ConvertModelPreviewToTableData(
-	apiData: Array<Object>,
-	columns: Array<string>,
-	customColumnNames?: Array<string>
+	apiData: Array<Object>
 ): TableDataType {
 	console.log(apiData);
 
+	console.log(Object.keys(apiData[0]));
+	const column_names = Object.keys(apiData[0]);
+
+	const columns = column_names.map((column_name) => {
+		return {
+			name: column_name,
+			key: column_name,
+		};
+	});
+
 	return {
-		columns: customColumnNames ? customColumnNames : columns,
+		columns: columns,
 		data: apiData,
 	};
 }

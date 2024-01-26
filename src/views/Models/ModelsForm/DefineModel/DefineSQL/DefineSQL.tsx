@@ -28,7 +28,7 @@ const DefineSQL = (): JSX.Element => {
 	const [query, setQuery] = useState("");
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
-	const { state, handleMoveForward } = useContext(SteppedFormContext);
+	const { state } = useContext(SteppedFormContext);
 	const [ loading, setLoading ] = useState(false);
 
 	function handleEditorChange(value: string | undefined) {

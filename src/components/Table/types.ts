@@ -23,5 +23,5 @@ export type TableType = {
   headerColor?: string;
   headerColorVisible?: boolean;
   borderRadius?: string;
-  onRowClick?: (args: ModelTableRow | unknown) => void;
+  onRowClick?: (args: ModelTableRow) => void;
 };
