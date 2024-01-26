@@ -21,7 +21,7 @@ const ModelsForm = (): JSX.Element => {
 			formKey: "datasource",
 			name: "Select a data source",
 			component: <SelectModelSourceForm />,
-			isRequireContinueCta: true,
+			isRequireContinueCta: false,
 			beforeNextStep: () => true,
 		},
 		{
@@ -35,7 +35,7 @@ const ModelsForm = (): JSX.Element => {
 			formKey: "defineModel",
 			name: "Define your model",
 			component: <DefineModel />,
-			isRequireContinueCta: true,
+			isRequireContinueCta: false,
 			beforeNextStep: () => true,
 		},
 		{

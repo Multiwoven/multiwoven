@@ -8,6 +8,7 @@ const GenerateTable = ({
 	headerColor,
 	headerColorVisible,
 	borderRadius,
+	maxHeight,
 	onRowClick,
 }: TableType): JSX.Element => {
 	const theadProps = headerColorVisible
@@ -18,9 +19,12 @@ const GenerateTable = ({
 			border='1px'
 			borderColor='gray.300'
 			borderRadius={borderRadius || "lg"}
+			p={2}
+			maxHeight={maxHeight}
+			overflowX='scroll'
 		>
 			{title ? title : <></>}
-			<Table size={size}>
+			<Table size={size} maxHeight={maxHeight}>
 				<Thead {...theadProps}>
 					<Tr>
 						{data.columns.map((column, index) => (

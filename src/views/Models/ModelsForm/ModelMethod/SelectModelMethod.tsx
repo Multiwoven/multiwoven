@@ -9,9 +9,11 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { modelMethods } from "./methods";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
+import ModelFooter from "../ModelFooter";
+import { useNavigate } from "react-router-dom";
 
 const ModelMethod = () => {
 	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -21,6 +23,8 @@ const ModelMethod = () => {
 			handleMoveForward(stepInfo.formKey, method.name);
 		}
 	};
+
+	const navigate = useNavigate();
 	return (
 		<>
 			<Box mx='auto' w='6xl'>
@@ -31,7 +35,13 @@ const ModelMethod = () => {
 							key={index}
 							_hover={method.enabled ? { bgColor: "gray.50" } : {}}
 							variant={!method.enabled ? "filled" : "elevated"}
-							onClick={method.enabled ? () => {handleOnClick(method)} : () => {}}
+							onClick={
+								method.enabled
+									? () => {
+											handleOnClick(method);
+									  }
+									: () => {}
+							}
 						>
 							<CardBody>
 								<Image
@@ -49,6 +59,17 @@ const ModelMethod = () => {
 					))}
 				</SimpleGrid>
 			</Box>
+			<ModelFooter
+				buttons={[
+					{
+						name: "Back",
+						bgColor: "gray.300",
+						hoverBgColor: "gray.200",
+						color: "black",
+						onClick: () => navigate(-1),
+					},
+				]}
+			/>
 		</>
 	);
 };

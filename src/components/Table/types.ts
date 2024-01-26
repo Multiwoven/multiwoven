@@ -23,5 +23,6 @@ export type TableType = {
   headerColor?: string;
   headerColorVisible?: boolean;
   borderRadius?: string;
+  maxHeight?: string;
   onRowClick?: (args: ModelTableRow | unknown) => void;
 };
