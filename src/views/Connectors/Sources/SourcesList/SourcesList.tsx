@@ -5,10 +5,11 @@ import { Box } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { Outlet, useNavigate } from "react-router-dom";
+import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
 
-const SourcesList = () => {
+const SourcesList = (): JSX.Element | null => {
   const { data } = useQuery({
-    queryKey: ["connectors", "source"],
+    queryKey: SOURCES_LIST_QUERY_KEY,
     queryFn: () => getUserConnectors("Source"),
     refetchOnMount: false,
     refetchOnWindowFocus: false,

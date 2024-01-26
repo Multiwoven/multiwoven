@@ -77,3 +77,26 @@ export const getConnectorData = async (
 ): Promise<ApiResponse> => {
   return apiRequest("/connectors/" + connectorID, null);
 };
+
+type MultiwovenFetchProps<PayloadType> = {
+  url: string;
+  method: "get" | "post";
+  data?: PayloadType;
+};
+
+export const multiwovenFetch = async <PayloadType, ResponseType>({
+  url,
+  method,
+  data,
+}: MultiwovenFetchProps<PayloadType>): Promise<ResponseType> => {
+  if (method === "post")
+    return axios
+      .post(url, data)
+      .then((res) => res?.data)
+      .catch((err) => err);
+
+  return axios
+    .get(url)
+    .then((res) => res?.data)
+    .catch((err) => err);
+};

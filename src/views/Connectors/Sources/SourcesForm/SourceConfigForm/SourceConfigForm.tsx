@@ -3,14 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorDefinition } from "@/services/connectors";
 import { useContext } from "react";
-import { Box, ChakraProvider, Spinner } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
-import { extendTheme } from "@chakra-ui/react";
+import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 
 const SourceConfigForm = (): JSX.Element | null => {
-  const { state } = useContext(SteppedFormContext);
+  const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
   const selectedDataSource = forms.find(
     ({ stepKey }) => stepKey === "datasource"
@@ -27,8 +27,6 @@ const SourceConfigForm = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const onFormSubmit = (data) => {};
-
   if (isLoading)
     return (
       <Box
@@ -42,29 +40,43 @@ const SourceConfigForm = (): JSX.Element | null => {
       </Box>
     );
 
+  const handleFormSubmit = async (formData: FormData) => {
+    console.log(formData);
+    handleMoveForward(stepInfo?.formKey as string, formData);
+  };
+
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
 
-  const theme = extendTheme({
-    colors: {
-      brand: {
-        100: "#f7fafc",
-        // ...
-        900: "#1a202c",
-      },
+  const formData = {
+    credentials: {
+      auth_type: "username/password",
+      username: "MULTIWOVEN_USER",
+      password: "asdad",
     },
-  });
+    host: "accountname.us-east-2.aws.snowflakecomputing.com",
+    role: "MULTIWOVEN_ROLE",
+    warehouse: "MULTIWOVEN_WAREHOUSE",
+    database: "MULTIWOVEN_DATABASE",
+    schema: "MULTIWOVEN_SCHEMA",
+    jdbc_url_params: "addsadad",
+  };
 
   return (
-    <Box padding="20px" display="flex" justifyContent="center">
-      <Box maxWidth="1300px" width="100%">
+    <Box
+      padding="20px"
+      display="flex"
+      justifyContent="center"
+      marginBottom="80px"
+    >
+      <Box maxWidth="850px" width="100%">
         <Form
           schema={connectorSchema}
           validator={validator}
-          onChange={({ formData }) => {}}
-          onSubmit={(data) => onFormSubmit(data)}
+          onSubmit={({ formData }) => handleFormSubmit(formData)}
+          formData={formData}
         >
-          <button type="submit">Submit Custom</button>
+          <SourceFormFooter ctaName="Continue" ctaType="submit" />
         </Form>
       </Box>
     </Box>

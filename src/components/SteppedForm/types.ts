@@ -1,6 +1,6 @@
 export type Form = {
   step: number;
-  data: Record<string, unknown>;
+  data: Record<string, unknown> | null;
   stepKey: string;
 };
 
@@ -27,7 +27,7 @@ export type FormAction = {
   type: string;
   payload: {
     step?: number;
-    data?: unknown;
+    data?: Record<string, unknown> | null;
     stepKey?: string;
   } | null;
 };

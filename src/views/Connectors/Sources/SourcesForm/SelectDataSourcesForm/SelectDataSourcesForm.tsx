@@ -28,13 +28,12 @@ const SelectDataSourcesForm = (): JSX.Element => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
       <Box
-        display="grid"
+        display={{ base: "block", md: "grid" }}
         gridTemplateColumns="1fr 1fr"
         gap="20px"
         marginBottom="20px"
-        paddingY="20px"
-        paddingX="30px"
-        maxWidth="1300px"
+        paddingY="10px"
+        maxWidth="850px"
         width="100%"
       >
         {datasources.map((datasource) => (
