@@ -12,6 +12,15 @@ type ConnectorsDefinationApiResponse = {
     icon: string;
     name: string;
     connector_spec: Record<string, unknown>;
+  }[];
+};
+
+type ConnectorDefinationApiResponse = {
+  success: boolean;
+  data?: {
+    icon: string;
+    name: string;
+    connector_spec: Record<string, unknown>;
   };
 };
 
@@ -24,7 +33,7 @@ export const getConnectorsDefintions = async (
 export const getConnectorDefinition = async (
   connectorType: string,
   connectorName: string
-): Promise<ConnectorsDefinationApiResponse> => {
+): Promise<ConnectorDefinationApiResponse> => {
   return apiRequest(
     "/connector_definitions/" + connectorName + "?type=" + connectorType,
     null

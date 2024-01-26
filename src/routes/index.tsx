@@ -1,5 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
 const Homepage = lazy(() => import("@/views/Homepage"));
@@ -12,7 +11,6 @@ const SetupConnectors = lazy(
 );
 // const Sources = lazy(() => import("@/views/Connectors/Sources"));
 
-import Cookies from "js-cookie";
 // import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
@@ -28,32 +26,7 @@ interface SuspenseWithLoaderProps {
 
 const SuspenseWithLoader = ({
   children,
-  redirectRoute,
 }: SuspenseWithLoaderProps): JSX.Element => {
-  const history = useNavigate();
-
-  useEffect(() => {
-    // const token = Cookies.get('authToken');
-    // if (token) {
-    //   history(redirectRoute);
-    //   if (token && redirectRoute == '/sign-up') {
-    //     history('/');
-    //   } else if (token && redirectRoute == '/login') {
-    //     history('/');
-    //   } else if (token && redirectRoute == '/account-verify') {
-    //     history('/');
-    //   } else {
-    //     history(redirectRoute);
-    //   }
-    // } else if (redirectRoute == '/sign-up') {
-    //   history(redirectRoute);
-    // } else if (redirectRoute == '/account-verify') {
-    //   history(redirectRoute);
-    // } else {
-    //   history('/login');
-    // }
-  }, [redirectRoute, history]);
-
   return <Suspense>{children}</Suspense>;
 };
 

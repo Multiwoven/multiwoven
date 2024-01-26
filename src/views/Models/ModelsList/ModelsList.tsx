@@ -29,7 +29,6 @@ const ModelsList = (): JSX.Element | null => {
         onCtaClicked={() => navigate("new")}
         isCtaVisible
       />
-      <ModelTable models={models} />
       <Outlet />
     </Box>
   );

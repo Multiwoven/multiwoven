@@ -3,7 +3,7 @@ import { Form } from "./types";
 type updateFormDataForStep = {
   forms: Form[];
   step?: number;
-  data?: unknown;
+  data: Record<string, unknown> | null;
   stepKey?: string;
 };
 
