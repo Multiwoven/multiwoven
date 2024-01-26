@@ -24,10 +24,13 @@ const SourcesList = (): JSX.Element | null => {
   return (
     <Box width="100%">
       <TopBar
-        name={"Sources"}
+        name="Sources"
         ctaName="Add Sources"
         ctaIcon={<FiPlus color="gray.100" />}
         onCtaClicked={() => navigate("new")}
+        ctaBgColor="orange.500"
+        ctaColor="gray.900"
+        ctaHoverBgColor="orange.400"
         isCtaVisible
       />
       <ConnectorTable payload={connectors.data} />

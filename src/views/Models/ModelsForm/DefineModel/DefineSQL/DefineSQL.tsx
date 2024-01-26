@@ -1,8 +1,6 @@
 import {
-	AbsoluteCenter,
 	Box,
 	Button,
-	Center,
 	Flex,
 	HStack,
 	Image,
@@ -26,19 +24,26 @@ const DefineSQL = (): JSX.Element => {
 	const [query, setQuery] = useState("");
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
-	const { handleMoveForward } = useContext(SteppedFormContext);
+	const { state, handleMoveForward } = useContext(SteppedFormContext);
+
+	function handleRowClick() {
+		handleMoveForward('','');
+	}
 
 	function handleEditorChange(value: string | undefined) {
 		if (value) setQuery(value);
 	}
 
 	async function getPreview() {
-		console.log(query);
-		let data = await getModelPreview();
-		if (data) {
-			const columns = Object.keys(data.data[0]);
-			setTableData(ConvertModelPreviewToTableData(data.data, columns));
-		}
+		console.log(query,state.forms);
+		// let data = await getModelPreview(query, '0');
+		
+		// if (data.success) {
+		// 	console.log('got data',data);
+			
+		// 	const columns = Object.keys(data.data[0]);
+		// 	setTableData(ConvertModelPreviewToTableData(data.data, columns));
+		// }
 	}
 
 	return (
@@ -94,7 +99,7 @@ const DefineSQL = (): JSX.Element => {
 
 				{tableData ? (
 					<Box w='4xl' h='fit'>
-						<GenerateTable data={tableData} size='sm' borderRadius='xl' />
+						<GenerateTable data={tableData} size='sm' borderRadius='xl' onRowClick={handleRowClick} />
 					</Box>
 				) : (
 					<Box

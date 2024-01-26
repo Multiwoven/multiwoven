@@ -22,6 +22,9 @@ export const getAllModels = async (): Promise<ModelAPIResponse> => {
 	return apiRequest("/models", null);
 };
 
-export const getModelPreview = async (): Promise<any> => {
-	return apiRequest("/models/3/preview", null);
+export const getModelPreview = async (
+	query: string,
+	connector_id: string
+): Promise<any> => {
+	return apiRequest("/api/v1/connectors/" + {connector_id} + "/query_source", {'query':query});
 };

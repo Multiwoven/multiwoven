@@ -2,13 +2,13 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import GenerateTable from "@/components/Table/Table";
 import { getUserConnectors } from "@/services/common";
 import { ConvertToTableData } from "@/utils";
-import { Box, Container, Spinner } from "@chakra-ui/react";
+import { ColumnMapType } from "@/utils/types";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 
 const SelectModelSourceForm = (): JSX.Element | null => {
-	// const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
 	const { data } = useQuery({
 		queryKey: ["connectors", "source"],
@@ -18,6 +18,12 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 	});
 
 	const connectors = data?.data;
+
+	const handleOnRowClick = (row: any) => {
+		if (stepInfo?.formKey) {
+			handleMoveForward(stepInfo?.formKey, row);
+		}
+	};
 
 	if (!connectors) {
 		return (
@@ -33,16 +39,21 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 		);
 	}
 
-	let values = ConvertToTableData(
-		connectors?.data,
-		["name", "connector_name", "updated_at"],
-		["Name", "Type", "Last Updated"]
-	);
+	const columns: ColumnMapType[] = [
+		{ name: "Name", key: "name" },
+		{ name: "Connector Type", key: "connector_type" },
+	];
+
+	let values = ConvertToTableData(connectors?.data, columns);
 
 	return (
 		<>
 			<Box w='6xl' mx='auto'>
-				<GenerateTable data={values} headerColorVisible={true} 	/>
+				<GenerateTable
+					data={values}
+					headerColorVisible={true}
+					onRowClick={handleOnRowClick}
+				/>
 			</Box>
 		</>
 	);

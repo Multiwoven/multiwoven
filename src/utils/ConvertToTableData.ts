@@ -1,42 +1,44 @@
+import { TableDataType } from "@/components/Table/types";
+import { ColumnMapType } from "./types";
+
 type ModelData = {
-    id: string;
-    type: string;
-    icon: string;
-    name: string;
-    attributes: {
-        [key: string]: string | null;
-    };
+	id: string;
+	type: string;
+	icon: string;
+	name: string;
+	attributes: {
+		[key: string]: string | null;
+	};
 };
 
+export function ConvertToTableData(
+	apiData: ModelData[],
+	columnMap: ColumnMapType[]
+): TableDataType {
+	let data = apiData.map((item) => {
+		let rowData: { [key: string]: string | null } = {};
+		rowData = item.attributes;
 
-type TableDataType = {
-	columns: Array<string>;
-	data: Array<{}>;
-};
+		if (item.id) rowData["id"] = item.id;
 
+		return rowData;
+	});
 
-export function ConvertToTableData(apiData: Array<ModelData>, columns: Array<string>, customColumnNames? : Array<string>) : TableDataType {
-    let data = apiData.map(item => {
-        let rowData: { [key: string]: string | null } = {};
-        columns.forEach(column => {
-            rowData[column] = item.attributes[column] || null;
-        });
-        return rowData;
-    });
-
-    return {
-        columns: customColumnNames ? customColumnNames : columns,
-        data: data
-    };
+	return {
+		columns: columnMap,
+		data: data,
+	};
 }
 
-export function ConvertModelPreviewToTableData(apiData: Array<Object>, columns: Array<string>, customColumnNames? : Array<string>) : TableDataType {
+export function ConvertModelPreviewToTableData(
+	apiData: Array<Object>,
+	columns: Array<string>,
+	customColumnNames?: Array<string>
+): TableDataType {
+	console.log(apiData);
 
-    console.log(apiData);
-    
-
-    return {
-        columns: customColumnNames ? customColumnNames : columns,
-        data:apiData
-    }
+	return {
+		columns: customColumnNames ? customColumnNames : columns,
+		data: apiData,
+	};
 }

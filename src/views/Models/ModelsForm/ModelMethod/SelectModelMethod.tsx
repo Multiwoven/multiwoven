@@ -14,10 +14,10 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
 
 const ModelMethod = () => {
-	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);	
+	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-	const handleOnClick = (method:ModelMethodType) => {
-		if (stepInfo?.formKey) {		
+	const handleOnClick = (method: ModelMethodType) => {
+		if (stepInfo?.formKey) {
 			handleMoveForward(stepInfo.formKey, method.name);
 		}
 	};
@@ -31,7 +31,7 @@ const ModelMethod = () => {
 							key={index}
 							_hover={method.enabled ? { bgColor: "gray.50" } : {}}
 							variant={!method.enabled ? "filled" : "elevated"}
-							onClick={() => handleOnClick(method)}
+							onClick={method.enabled ? () => {handleOnClick(method)} : () => {}}
 						>
 							<CardBody>
 								<Image

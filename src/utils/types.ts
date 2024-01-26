@@ -6,3 +6,9 @@ export type ModelTableDataType = {
 		last_updated: string | JSX.Element;
 	}>;
 };
+
+
+export type ColumnMapType = {
+	name: string;
+	key: string;
+};

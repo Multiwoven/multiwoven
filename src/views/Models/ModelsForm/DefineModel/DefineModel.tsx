@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import DefineSQL from "./DefineSQL";
 
