@@ -11,7 +11,7 @@ const SetupConnectors = lazy(
 );
 // const Sources = lazy(() => import("@/views/Connectors/Sources"));
 
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 // import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
