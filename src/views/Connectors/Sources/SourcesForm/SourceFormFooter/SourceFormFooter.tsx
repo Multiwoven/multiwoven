@@ -1,8 +1,8 @@
 import { useUiConfig } from "@/utils/hooks";
-import { Box, Button, Icon, Text } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
 import { RefObject, useEffect, useState } from "react";
 import { FiBookOpen, FiHeadphones } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type SourceFormFooterProps = {
   ctaName: string;
@@ -12,6 +12,7 @@ type SourceFormFooterProps = {
   isCtaLoading?: boolean;
   isBackRequired?: boolean;
   alignTo?: RefObject<HTMLDivElement> | null;
+  extra?: JSX.Element;
 };
 
 const SourceFormFooter = ({
@@ -19,11 +20,14 @@ const SourceFormFooter = ({
   ctaType = "button",
   alignTo,
   onCtaClick,
+  isBackRequired,
+  extra,
   isCtaLoading = false,
   isCtaDisabled = false,
 }: SourceFormFooterProps): JSX.Element => {
   const [leftOffset, setLeftOffet] = useState<number>(0);
   const { maxContentWidth } = useUiConfig();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (alignTo) {
@@ -39,7 +43,7 @@ const SourceFormFooter = ({
       borderWidth="thin"
       bottom="0"
       backgroundColor="#fff"
-      padding="10px 30px"
+      padding="10px 20px"
       display="flex"
       justifyContent="center"
       minHeight="80px"
@@ -66,15 +70,23 @@ const SourceFormFooter = ({
             </Box>
           </Link>
         </Box>
-        <Button
-          type={ctaType}
-          onClick={() => onCtaClick?.()}
-          size="lg"
-          isDisabled={isCtaDisabled}
-          isLoading={isCtaLoading}
-        >
-          {ctaName}
-        </Button>
+        <ButtonGroup>
+          {extra}
+          {isBackRequired ? (
+            <Button onClick={() => navigate(-1)} size="lg" marginRight="10px">
+              Back
+            </Button>
+          ) : null}
+          <Button
+            type={ctaType}
+            onClick={() => onCtaClick?.()}
+            size="lg"
+            isDisabled={isCtaDisabled}
+            isLoading={isCtaLoading}
+          >
+            {ctaName}
+          </Button>
+        </ButtonGroup>
       </Box>
     </Box>
   );

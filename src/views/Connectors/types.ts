@@ -15,7 +15,7 @@ export type ApiResponse<T> = {
 export type TestConnectionPayload = {
   type: string;
   name: string;
-  connection_spec: RJSFSchema;
+  connection_spec: unknown;
 };
 
 export type TestConnectionResponse = {
@@ -72,6 +72,8 @@ export type ConnectorInfoResponse = {
       connector_name: string;
       connector_type: string;
       configuration: unknown;
+      name: string;
+      description: string;
     };
   };
 };

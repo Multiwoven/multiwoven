@@ -1,21 +1,29 @@
 import {
+  getConnectionStatus,
   getConnectorDefinition,
   getConnectorInfo,
+  updateConnector,
 } from "@/services/connectors";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
 import SourceFormFooter from "../SourcesForm/SourceFormFooter";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
   const containerRef = useRef(null);
+  const toast = useToast();
+
+  const [isTestRunning, setIsTestRunning] = useState<boolean>(false);
+  const [testedFormData, setTestedFormData] = useState<unknown>(null);
+
   const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } =
     useQuery({
       queryKey: ["connectorInfo", sourceId],
@@ -39,7 +47,89 @@ const EditSource = (): JSX.Element => {
     enabled: !!connectorName,
   });
 
+  const handleOnSaveChanges = async () => {
+    if (!connectorInfo?.attributes) return;
+    const payload: CreateConnectorPayload = {
+      connector: {
+        configuration: testedFormData,
+        name: connectorInfo?.attributes?.name,
+        connector_type: "source",
+        connector_name: connectorInfo?.attributes?.connector_name,
+        description: connectorInfo?.attributes?.description ?? "",
+      },
+    };
+    return updateConnector(payload, sourceId as string);
+  };
+
+  const { isPending: isEditLoading, mutate } = useMutation({
+    mutationFn: handleOnSaveChanges,
+    onSettled: () => {
+      toast({
+        status: "success",
+        title: "Success!!",
+        description: "Connector Updated",
+        position: "bottom-right",
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        status: "error",
+        title: "Error!!",
+        description: "Something went wrong",
+        position: "bottom-right",
+        isClosable: true,
+      });
+    },
+  });
+
   const connectorSchema = connectorDefinitionResponse?.data?.connector_spec;
+
+  const handleOnTestClick = async (formData: unknown) => {
+    setIsTestRunning(true);
+
+    if (!connectorInfo?.attributes) return;
+
+    try {
+      const payload: TestConnectionPayload = {
+        connection_spec: formData,
+        name: connectorInfo?.attributes?.name,
+        type: "source",
+      };
+
+      const testingConnectionResponse = await getConnectionStatus(payload);
+      const isConnectionSucceeded =
+        testingConnectionResponse?.connection_status?.status === "succeeded";
+
+      if (isConnectionSucceeded) {
+        toast({
+          status: "success",
+          title: "Connection successful",
+          position: "bottom-right",
+          isClosable: true,
+        });
+      }
+
+      toast({
+        status: "error",
+        title: "Connection failed",
+        description: testingConnectionResponse?.connection_status?.message,
+        position: "bottom-right",
+        isClosable: true,
+      });
+    } catch (e) {
+      toast({
+        status: "error",
+        title: "Connection failed",
+        description: "Something went wrong!",
+        position: "bottom-right",
+        isClosable: true,
+      });
+    } finally {
+      setIsTestRunning(false);
+      setTestedFormData(formData);
+    }
+  };
 
   if (isConnectorInfoLoading || isConnectorDefinitionLoading)
     return (
@@ -71,13 +161,26 @@ const EditSource = (): JSX.Element => {
           <Form
             schema={connectorSchema?.connection_specification}
             validator={validator}
-            onSubmit={({ formData }) => {}}
+            onSubmit={({ formData }) => handleOnTestClick(formData)}
             formData={connectorInfo?.attributes?.configuration}
           >
             <SourceFormFooter
-              ctaName="Continue"
-              ctaType="submit"
+              ctaName="Save Changes"
+              ctaType="button"
               alignTo={containerRef}
+              isCtaDisabled={!testedFormData}
+              onCtaClick={mutate}
+              isCtaLoading={isEditLoading}
+              extra={
+                <Button
+                  size="lg"
+                  marginRight="10px"
+                  type="submit"
+                  isLoading={isTestRunning}
+                >
+                  Test Connection
+                </Button>
+              }
             />
           </Form>
         </Box>

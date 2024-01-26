@@ -56,3 +56,13 @@ export const getConnectorInfo = async (
     method: "get",
     url: `/connectors/${id}`,
   });
+
+export const updateConnector = async (
+  payload: CreateConnectorPayload,
+  id: string
+): Promise<CreateConnectorResponse> =>
+  multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
+    method: "put",
+    url: `/connectors/${id}`,
+    data: payload,
+  });
