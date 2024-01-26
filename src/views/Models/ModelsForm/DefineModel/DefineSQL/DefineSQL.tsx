@@ -46,10 +46,8 @@ const DefineSQL = (): JSX.Element => {
 		setLoading(true);
 		let data = await getModelPreview(query, connector_id?.toString());
 		if (data.success) {
-			console.log("got data", data);
 			setLoading(false);
-			const columns = Object.keys(data.data[0]);
-			setTableData(ConvertModelPreviewToTableData(data.data, columns));
+			setTableData(ConvertModelPreviewToTableData(data.data));
 		} else {
 			console.log("error getting data", data);
 			toast({
