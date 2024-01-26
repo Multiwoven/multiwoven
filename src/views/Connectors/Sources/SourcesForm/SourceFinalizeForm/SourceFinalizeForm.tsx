@@ -45,9 +45,9 @@ const SourceFinalizeForm = (): JSX.Element | null => {
         const payload: CreateConnectorPayload = {
           connector: {
             configuration: finalDataSourceForm.connection_spec,
-            name: finalDataSourceForm.name,
+            name: formData.connector_name,
             connector_type: "source",
-            connector_name: formData.connector_name,
+            connector_name: finalDataSourceForm.name,
             description: formData.description,
           },
         };
