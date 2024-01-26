@@ -1,0 +1,14 @@
+{
+  "data": {
+    "name": "Slack",
+    "connector_type": "destination",
+    "connector_subtype": "API",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-slack",
+    "icon": "slack.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

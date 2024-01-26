@@ -12,6 +12,7 @@ require "uri"
 require "active_support/core_ext/hash/indifferent_access"
 require "restforce"
 require "logger"
+require "slack-ruby-client"
 
 # Service
 require_relative "integrations/config"
@@ -36,6 +37,7 @@ require_relative "integrations/source/bigquery/client"
 require_relative "integrations/destination/klaviyo/client"
 require_relative "integrations/destination/salesforce_crm/client"
 require_relative "integrations/destination/facebook_custom_audience/client"
+require_relative "integrations/destination/slack/client"
 
 module Multiwoven
   module Integrations

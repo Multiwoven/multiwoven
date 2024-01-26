@@ -28,8 +28,14 @@ gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 gem "webmock", "~> 3.0"
 
 gem "activesupport"
+
 gem "google-cloud-bigquery"
+
 gem "restforce", "~> 7.1.0"
+
+gem "slack-ruby-client"
+
+gem "async-websocket", "~> 0.8.0"
 
 group :development, :test do
   gem "simplecov", require: false

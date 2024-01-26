@@ -1,0 +1,78 @@
+{
+  "streams": [
+    {
+      "name": "chat_postMessage",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "text": {
+            "type": ["string", "null"]
+          },
+          "attachments": {
+            "type": ["string", "null"]
+          },
+          "blocks": {
+            "type": ["array", "null"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "as_user": {
+            "type": ["boolean", "null"]
+          },
+          "icon_emoji": {
+            "type": ["string", "null"]
+          },
+          "icon_url": {
+            "type": ["string", "null"]
+          },
+          "link_names": {
+            "type": ["boolean", "null"]
+          },
+          "metadata": {
+            "type": ["string", "null"]
+          },
+          "mrkdwn": {
+            "type": ["boolean", "null"]
+          },
+          "parse": {
+            "type": ["string", "null"]
+          },
+          "reply_broadcast": {
+            "type": ["boolean", "null"]
+          },
+          "thread_ts": {
+            "type": ["string", "null"]
+          },
+          "unfurl_links": {
+            "type": ["boolean", "null"]
+          },
+          "unfurl_media": {
+            "type": ["boolean", "null"]
+          },
+          "username": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": ["token", "channel"],
+        "oneOf": [
+          { "required": ["text"] },
+          { "required": ["attachments"] },
+          { "required": ["blocks"] }
+        ]
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["Id"]]
+    }
+  ]
+}
