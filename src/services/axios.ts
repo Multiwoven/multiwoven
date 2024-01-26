@@ -3,13 +3,14 @@ import Cookies from 'js-cookie';
 import toastr from "toastr";
 
 toastr.options.preventDuplicates = true;
-export const domain = 'https://api.multiwoven.com/api/v1'
+
+export const domain = "https://api.multiwoven.com/api/v1";
 export const axiosInstance = axios.create({
-    baseURL: domain,
+	baseURL: domain,
 });
 
-const token = Cookies.get('authToken');
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
+    const token = Cookies.get('authToken');
     config.headers['Content-Type'] = 'application/json';
     config.headers['Authorization'] = `Bearer ${token}`;
     config.headers["Accept"] = "*/*";
@@ -37,6 +38,6 @@ axiosInstance?.interceptors.response.use(
         }
         
 
-        return Promise.reject(error);
-    }
+		return Promise.reject(error);
+	}
 );
