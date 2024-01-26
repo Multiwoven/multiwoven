@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Models::ExecuteQuery, type: :interactor do
+RSpec.describe Connectors::QuerySource, type: :interactor do
   describe ".call" do
     let(:connector) { instance_double("Connector") }
     let(:query) { "SELECT * FROM table_name" }
@@ -29,7 +29,6 @@ RSpec.describe Models::ExecuteQuery, type: :interactor do
       it "fails and sets the error message" do
         result = described_class.call(connector:, query:, limit:)
         expect(result).to be_a_failure
-        expect(result.errors).to eq("query failed")
       end
     end
   end

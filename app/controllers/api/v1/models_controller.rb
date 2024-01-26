@@ -7,7 +7,7 @@ module Api
       attr_reader :connector, :model
 
       before_action :set_connector, only: %i[create]
-      before_action :set_model, only: %i[show update destroy preview]
+      before_action :set_model, only: %i[show update destroy]
 
       def index
         @models = current_workspace
@@ -50,24 +50,6 @@ module Api
             message: "Model update failed",
             status: :unprocessable_entity,
             details: format_errors(result.model)
-          )
-        end
-      end
-
-      def preview
-        result = ExecuteQuery.call(
-          connector: @model.connector,
-          query: @model.query,
-          limit: params[:limit] || 50
-        )
-
-        if result.success?
-          render json: result.records, status: :ok
-        else
-          render_error(
-            message: "Query execution failed",
-            status: :unprocessable_entity,
-            details: result.errors
           )
         end
       end

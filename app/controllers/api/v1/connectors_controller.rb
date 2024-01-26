@@ -4,7 +4,7 @@ module Api
   module V1
     class ConnectorsController < ApplicationController
       include Connectors
-      before_action :set_connector, only: %i[show update destroy discover]
+      before_action :set_connector, only: %i[show update destroy discover query_source]
 
       def index
         # TODO: Add type filter for source and destination
@@ -71,6 +71,31 @@ module Api
             message: "Discover catalog failed",
             status: :unprocessable_entity,
             details: format_errors(result.catalog)
+          )
+        end
+      end
+
+      def query_source
+        if @connector.connector_type == "source"
+          result = QuerySource.call(
+            connector: @connector,
+            query: params[:query],
+            limit: params[:limit] || 50
+          )
+
+          if result.success?
+            @records = result.records
+            render json: @records, status: :ok
+          else
+            render_error(
+              message: result["error"],
+              status: :unprocessable_entity
+            )
+          end
+        else
+          render_error(
+            message: "Connector is not a source",
+            status: :unprocessable_entity
           )
         end
       end
