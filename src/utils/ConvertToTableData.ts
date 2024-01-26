@@ -1,6 +1,8 @@
 type ModelData = {
     id: string;
     type: string;
+    icon: string;
+    name: string;
     attributes: {
         [key: string]: string | null;
     };

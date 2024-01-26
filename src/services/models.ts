@@ -1,21 +1,27 @@
 import { apiRequest } from "./common";
 
-type ModelAPIResponse = {
-	success: boolean;
-	data?: {
+type APIData = {
+	data?: Array<{
 		id: string;
 		type: string;
 		icon: string;
 		name: string;
-		attributes: Record<string, unknown>;
-	}[];
-    links?: Record<string, string>;
+		attributes: {
+			[key: string]: string | null;
+		};
+	}>;
+	links?: Record<string, string>;
+};
+
+type ModelAPIResponse = {
+	success: boolean;
+	data?: APIData;
 };
 
 export const getAllModels = async (): Promise<ModelAPIResponse> => {
 	return apiRequest("/models", null);
 };
 
-export const getModelPreview =async (): Promise<any> => {
-	return apiRequest("/models/3/preview", null)
-}
+export const getModelPreview = async (): Promise<any> => {
+	return apiRequest("/models/3/preview", null);
+};

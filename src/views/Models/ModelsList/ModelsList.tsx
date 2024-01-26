@@ -15,11 +15,11 @@ const ModelsList = (): JSX.Element | null => {
 		refetchOnWindowFocus: false,
 	});
 
-	const models = data?.data;
+	const models = data?.data?.data;
 
 	const navigate = useNavigate();
 
-	if (!models)
+	if (!models) {
 		return (
 			<Box mx='auto'>
 				<Spinner
@@ -31,9 +31,10 @@ const ModelsList = (): JSX.Element | null => {
 				/>
 			</Box>
 		);
-
+	}
+	
 	let values = ConvertToTableData(
-		models.data,
+		models,
 		["name", "query_type", "updated_at"],
 		["Name", "Method", "Last Updated"]
 	);
@@ -50,7 +51,9 @@ const ModelsList = (): JSX.Element | null => {
 				onCtaClicked={() => navigate("new")}
 				isCtaVisible
 			/>
-			<GenerateTable data={values} />
+			<Box mt={16}>
+				<GenerateTable data={values} headerColorVisible={true} />
+			</Box>
 			<Outlet />
 		</Box>
 	);

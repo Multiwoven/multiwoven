@@ -42,7 +42,7 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 	return (
 		<>
 			<Box w='6xl' mx='auto'>
-				<GenerateTable data={values} />
+				<GenerateTable data={values} headerColorVisible={true} 	/>
 			</Box>
 		</>
 	);
