@@ -1,4 +1,3 @@
-import ModelTable from "@/components/ModelTable";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
 import { Box } from "@chakra-ui/react";
