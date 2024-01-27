@@ -15,6 +15,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import ExitModal from "../ExitModal";
+import { useUiConfig } from "@/utils/hooks";
 
 const initialState: FormState = {
   currentStep: 0,
@@ -78,6 +79,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
   const step = searchParams.get("step");
   const stepInfo = steps[state.currentStep];
+  const { maxContentWidth } = useUiConfig();
 
   useEffect(() => {
     if (!step || forms.length === 0) {
@@ -156,7 +158,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            maxWidth="850px"
+            maxWidth={maxContentWidth}
             width="100%"
           >
             <Box>
@@ -175,7 +177,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (
           <Box padding="10px" display="flex" justifyContent="center">
-            <Box maxWidth="850px" width="100%">
+            <Box maxWidth={maxContentWidth} width="100%">
               <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
                 Continue
               </Button>

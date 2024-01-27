@@ -18,11 +18,13 @@ import { useNavigate } from "react-router-dom";
 import { createNewConnector } from "@/services/connectors";
 import { useQueryClient } from "@tanstack/react-query";
 import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
+import { useUiConfig } from "@/utils/hooks";
 
 const finalDataSourceFormKey = "testSource";
 
 const SourceFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { maxContentWidth } = useUiConfig();
   const { state } = useContext(SteppedFormContext);
   const { forms } = state;
   const toast = useToast();
@@ -83,7 +85,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Box maxWidth="850px" width="100%">
+      <Box maxWidth={maxContentWidth} width="100%">
         <form onSubmit={formik.handleSubmit}>
           <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
             <Heading size="md" fontWeight="600" marginBottom="24px">
