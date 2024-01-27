@@ -1,5 +1,3 @@
-import { RJSFSchema } from "@rjsf/utils";
-
 export type ConnectorTypes = "source" | "destination" | "model";
 
 export type DatasourceType = {

@@ -15,6 +15,7 @@ import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
 import { useEffect, useRef, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
+import { RJSFSchema } from "@rjsf/utils";
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
@@ -166,7 +167,7 @@ const EditSource = (): JSX.Element => {
           marginBottom="100px"
         >
           <Form
-            schema={connectorSchema?.connection_specification}
+            schema={connectorSchema?.connection_specification as RJSFSchema}
             validator={validator}
             formData={formData}
             onSubmit={({ formData }) => handleOnTestClick(formData)}
