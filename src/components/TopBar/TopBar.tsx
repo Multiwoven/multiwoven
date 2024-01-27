@@ -2,12 +2,12 @@ import { Button, Flex, Heading } from "@chakra-ui/react";
 
 type TopBarType = {
 	name: string;
-	ctaName: string;
-	ctaIcon: JSX.Element;
-	ctaColor: string;
-	ctaBgColor: string;
-  ctaHoverBgColor: string;
-	onCtaClicked: () => void;
+	ctaName?: string;
+	ctaIcon?: JSX.Element;
+	ctaColor?: string;
+	ctaBgColor?: string;
+  ctaHoverBgColor?: string;
+	onCtaClicked?: () => void;
 	isCtaVisible?: boolean;
 };
 
