@@ -74,7 +74,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
 );
 
 const SideBarFooter = () => (
-  <Stack spacing="7">
+  <Stack position="absolute" bottom="0" left="0px" right="0px" margin="24px">
     <Box />
     <Stack spacing="0">
       <NavButton label="Settings" icon={FiSettings} />

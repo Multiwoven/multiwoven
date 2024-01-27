@@ -6,7 +6,7 @@ interface NavButtonProps extends ButtonProps {
 }
 
 export const NavButton = (props: NavButtonProps): JSX.Element => {
-  const { icon, label, isActive, ...buttonProps } = props;
+  const { icon, label, isActive } = props;
   return (
     <Button
       variant="tertiary"
