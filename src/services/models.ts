@@ -1,4 +1,8 @@
-import { apiRequest } from "./common";
+import {
+	CreateModelPayload,
+	CreateModelResponse,
+} from "@/views/Models/types";
+import { apiRequest, multiwovenFetch } from "./common";
 
 type APIData = {
 	data?: Array<{
@@ -27,5 +31,14 @@ export const getModelPreview = async (
 	connector_id: string
 ): Promise<any> => {
 	const url = "/connectors/" + connector_id + "/query_source";
-	return apiRequest(url, {'query':query});
+	return apiRequest(url, { query: query });
 };
+
+export const createNewModel = async (
+	payload: CreateModelPayload
+): Promise<CreateModelResponse> =>
+	multiwovenFetch<CreateModelPayload, CreateModelResponse>({
+		method: "post",
+		url: "/models",
+		data: payload,
+	});

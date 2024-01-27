@@ -6,3 +6,9 @@ export type SQLModel = {
 	query: string;
 	query_type: string;
 };
+
+export type FinalizeForm = {
+	modelName: string;
+	description: string;
+	primaryKey: string;
+};
