@@ -1,6 +1,4 @@
-import { Box, Button, Flex, HStack, Icon, Text } from "@chakra-ui/react";
-import { FiBookOpen, FiHeadphones } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Box, Button, HStack } from "@chakra-ui/react";
 
 type ButtonConfig = {
 	name: string;
@@ -21,7 +19,6 @@ type ModelFooterProps = {
 
 const ModelFooter = ({
 	buttons,
-	isBackRequired = false,
 }: ModelFooterProps): JSX.Element => {
 	return (
 		<Box

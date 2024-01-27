@@ -28,13 +28,9 @@ const DefineSQL = (): JSX.Element => {
 	const [query, setQuery] = useState("");
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
-	const { state } = useContext(SteppedFormContext);
+	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 	const [loading, setLoading] = useState(false);
 	const [moveForward, canMoveForward] = useState(false);
-
-	function handleEditorChange(value: string | undefined) {
-		if (value) setQuery(value);
-	}
 
 	const extracted = extractData(state.forms);
 	const connector_data = extracted.find((data) => data?.id);
@@ -45,6 +41,21 @@ const DefineSQL = (): JSX.Element => {
 	const toast = useToast();
 	const navigate = useNavigate();
 
+	function handleEditorChange(value: string | undefined) {
+		if (value) setQuery(value);
+	}
+
+	function handleContinueClick(query: string, connector_id: string | number, tableData: TableDataType | null | undefined) {
+		if (stepInfo?.formKey) {
+			const formData = {
+				query: query,
+				id: connector_id,
+				query_type: "sql_query",
+				columns: tableData?.columns
+			};
+			handleMoveForward(stepInfo.formKey, formData);
+		}
+	}
 
 	async function getPreview() {
 		setLoading(true);
@@ -52,6 +63,7 @@ const DefineSQL = (): JSX.Element => {
 		if (data.success) {
 			setLoading(false);
 			setTableData(ConvertModelPreviewToTableData(data.data));
+			canMoveForward(true);
 		} else {
 			console.log("error getting data", data);
 			toast({
@@ -79,7 +91,14 @@ const DefineSQL = (): JSX.Element => {
 					>
 						<Flex bgColor='gray.200' p={2} roundedTop='xl'>
 							<Flex w='full' alignItems='center'>
-								<Image src={"/src/assets/icons/" + connector_icon} p={2} mx={4} h={12} bgColor='gray.100' rounded='lg' />
+								<Image
+									src={"/src/assets/icons/" + connector_icon}
+									p={2}
+									mx={4}
+									h={12}
+									bgColor='gray.100'
+									rounded='lg'
+								/>
 								<Text>{connector_name}</Text>
 							</Flex>
 							<Spacer />
@@ -108,6 +127,7 @@ const DefineSQL = (): JSX.Element => {
 						<Box p={3} w='100%' maxH='250px'>
 							<Editor
 								width='100%'
+								height='240px'
 								language='mysql'
 								defaultLanguage='mysql'
 								defaultValue='Enter your query...'
@@ -119,7 +139,12 @@ const DefineSQL = (): JSX.Element => {
 
 					{tableData ? (
 						<Box w='4xl' h='fit' maxHeight='xs'>
-							<GenerateTable maxHeight="xs" data={tableData} size='sm' borderRadius='xl' />
+							<GenerateTable
+								maxHeight='xs'
+								data={tableData}
+								size='sm'
+								borderRadius='xl'
+							/>
 						</Box>
 					) : (
 						<Box
@@ -153,7 +178,13 @@ const DefineSQL = (): JSX.Element => {
 						color: "black",
 						onClick: () => navigate(-1),
 					},
-					{ name: "Continue", isDisabled: !moveForward, bgColor: "primary.400", hoverBgColor: "primary.300"},
+					{
+						name: "Continue",
+						isDisabled: !moveForward,
+						bgColor: "primary.400",
+						hoverBgColor: "primary.300",
+						onClick: () => handleContinueClick(query, connector_id, tableData),
+					},
 				]}
 			/>
 		</>

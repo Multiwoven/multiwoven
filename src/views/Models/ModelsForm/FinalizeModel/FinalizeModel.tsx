@@ -1,4 +1,6 @@
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { extractDataByKey } from "@/utils";
+import { ColumnMapType } from "@/utils/types";
 import {
 	Box,
 	Flex,
@@ -13,12 +15,14 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useContext } from "react";
 import * as Yup from "yup";
+import { SQLModel } from "./types";
 
 const FinalizeModel = (): JSX.Element => {
 	const { state } = useContext(SteppedFormContext);
-	console.log(state);
+	const defineModelData = extractDataByKey(state.forms, "defineModel");
 
-	// Yup schema
+	console.log("define data", defineModelData);
+
 	const validationSchema = Yup.object().shape({
 		modelName: Yup.string().required("Model name is required"),
 		description: Yup.string(),
@@ -100,9 +104,16 @@ const FinalizeModel = (): JSX.Element => {
 										bgColor='white'
 										w='lg'
 									>
-										<option value='option1'>Option 1</option>
-										<option value='option2'>Option 2</option>
-										<option value='option3'>Option 3</option>
+										{defineModelData &&
+											defineModelData.map((data: SQLModel) =>
+												data.columns.map(
+													(column: ColumnMapType, columnIndex: number) => (
+														<option key={columnIndex} value={column.key}>
+															{column.name}
+														</option>
+													)
+												)
+											)}
 									</Field>
 									<Text color='red.500' fontSize='sm'>
 										<ErrorMessage name='primaryKey' />

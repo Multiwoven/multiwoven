@@ -9,7 +9,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { modelMethods } from "./methods";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
 import ModelFooter from "../ModelFooter";
