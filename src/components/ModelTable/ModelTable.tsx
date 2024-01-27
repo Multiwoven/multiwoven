@@ -10,8 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import Klaviyo from "../../assets/icons/klaviyo.svg";
-
 type Models = {
   data: {
     id: string;

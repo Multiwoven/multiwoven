@@ -34,7 +34,7 @@ const reducer = (state: FormState, action: FormAction) => {
       const newFormData = updateFormDataForStep({
         forms: state.forms,
         step: payload?.step,
-        data: payload?.data,
+        data: payload?.data ?? null,
         stepKey: payload?.stepKey,
       });
       return {

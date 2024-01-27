@@ -1,4 +1,3 @@
-import ModelTable from "@/components/ModelTable";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
 import { Box } from "@chakra-ui/react";
@@ -29,7 +28,6 @@ const ModelsList = (): JSX.Element | null => {
         onCtaClicked={() => navigate("new")}
         isCtaVisible
       />
-      <ModelTable models={models} />
       <Outlet />
     </Box>
   );

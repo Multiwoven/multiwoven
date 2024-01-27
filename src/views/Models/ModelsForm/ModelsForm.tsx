@@ -1,6 +1,5 @@
 import SteppedForm from "@/components/SteppedForm";
-import SelectDataSourcesForm from "./SelectDataSourcesForm";
-import SourceConfigForm from "./SourceConfigForm";
+import SourceConfigForm from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm";
 
 import {
   Box,
@@ -17,7 +16,7 @@ const ModelsForm = (): JSX.Element => {
     {
       formKey: "datasource",
       name: "Select a data source",
-      component: <SelectDataModelsForm />,
+      component: <div></div>,
       isRequireContinueCta: true,
       beforeNextStep: () => true,
     },
