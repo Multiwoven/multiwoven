@@ -64,10 +64,10 @@ const FinalizeModel = (): JSX.Element => {
 				toast({
 					status: "success",
 					title: "Success!!",
-					description: "Source created successfully!",
+					description: "Model created successfully!",
 					position: "bottom-right",
 				});
-				navigate("/setup/sources");
+				navigate("/models");
 			} else {
 				throw new Error();
 			}
@@ -97,11 +97,7 @@ const FinalizeModel = (): JSX.Element => {
 						primaryKey: "",
 					}}
 					validationSchema={validationSchema}
-					onSubmit={(values, { setSubmitting }) => {
-						setTimeout(() => {
-							alert(JSON.stringify(values, null, 2));
-							setSubmitting(false);
-						}, 500);
+					onSubmit={(values) => {
 						handleModelSubmit(values);
 					}}
 				>

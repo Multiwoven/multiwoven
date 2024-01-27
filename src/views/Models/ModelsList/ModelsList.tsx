@@ -42,6 +42,7 @@ const ModelsList = (): JSX.Element | null => {
 
 	const handleOnRowClick = (row: ModelTableRow) => {
 		console.log(row);
+		navigate(row.id)
 	};
 
 	return (

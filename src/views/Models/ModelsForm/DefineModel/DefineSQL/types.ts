@@ -9,3 +9,15 @@ export type ExtractedData = {
 	icon?: string;
 	name?: string;
 };
+
+export type PrefillValue = {
+	connector_id: string;
+	connector_name: string;
+	connector_icon: string;
+};
+
+export type DefineSQLProps = {
+	hasPrefilledValues?: boolean;
+	prefillValues?: PrefillValue;
+	isFooterVisible?: boolean;
+};

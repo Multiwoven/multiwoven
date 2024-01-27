@@ -42,7 +42,7 @@ const ModelsForm = (): JSX.Element => {
 			formKey: "finalizeModel",
 			name: "Finalize model",
 			component: <FinalizeModel />,
-			isRequireContinueCta: true,
+			isRequireContinueCta: false,
 			beforeNextStep: () => true,
 		},
 	];

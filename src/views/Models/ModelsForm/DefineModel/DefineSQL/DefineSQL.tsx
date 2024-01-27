@@ -23,8 +23,13 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { extractData } from "@/utils";
 import ModelFooter from "../../ModelFooter";
 import { useNavigate } from "react-router-dom";
+import { DefineSQLProps } from "./types";
 
-const DefineSQL = (): JSX.Element => {
+const DefineSQL = ({
+	hasPrefilledValues = false,
+	prefillValues,
+	isFooterVisible = true} : DefineSQLProps
+): JSX.Element => {
 	const [query, setQuery] = useState("");
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
@@ -32,12 +37,23 @@ const DefineSQL = (): JSX.Element => {
 	const [loading, setLoading] = useState(false);
 	const [moveForward, canMoveForward] = useState(false);
 
-	const extracted = extractData(state.forms);
-	const connector_data = extracted.find((data) => data?.id);
-	const connector_id = connector_data?.id || "";
-	const connector_icon = connector_data?.icon || "";
-	const connector_name = connector_data?.name || "";
+	let connector_id: string = "";
+	let connector_icon: string = "";
+	let connector_name: string = "";
 
+	if (!hasPrefilledValues) {
+		const extracted = extractData(state.forms);
+		const connector_data = extracted.find((data) => data?.id);
+		connector_id = connector_data?.id || "";
+		connector_icon = connector_data?.icon || "";
+		connector_name = connector_data?.name || "";
+	} else {
+		if (prefillValues) {
+			connector_id = prefillValues.connector_id;
+			connector_icon = prefillValues.connector_icon;
+			connector_name = prefillValues.connector_name;
+		}
+	}
 	const toast = useToast();
 	const navigate = useNavigate();
 
@@ -45,13 +61,17 @@ const DefineSQL = (): JSX.Element => {
 		if (value) setQuery(value);
 	}
 
-	function handleContinueClick(query: string, connector_id: string | number, tableData: TableDataType | null | undefined) {
+	function handleContinueClick(
+		query: string,
+		connector_id: string | number,
+		tableData: TableDataType | null | undefined
+	) {
 		if (stepInfo?.formKey) {
 			const formData = {
 				query: query,
 				id: connector_id,
 				query_type: "raw_sql",
-				columns: tableData?.columns
+				columns: tableData?.columns,
 			};
 			handleMoveForward(stepInfo.formKey, formData);
 		}
@@ -169,24 +189,29 @@ const DefineSQL = (): JSX.Element => {
 					)}
 				</VStack>
 			</Box>
-			<ModelFooter
-				buttons={[
-					{
-						name: "Back",
-						bgColor: "gray.300",
-						hoverBgColor: "gray.200",
-						color: "black",
-						onClick: () => navigate(-1),
-					},
-					{
-						name: "Continue",
-						isDisabled: !moveForward,
-						bgColor: "primary.400",
-						hoverBgColor: "primary.300",
-						onClick: () => handleContinueClick(query, connector_id, tableData),
-					},
-				]}
-			/>
+			{isFooterVisible ? (
+				<ModelFooter
+					buttons={[
+						{
+							name: "Back",
+							bgColor: "gray.300",
+							hoverBgColor: "gray.200",
+							color: "black",
+							onClick: () => navigate(-1),
+						},
+						{
+							name: "Continue",
+							isDisabled: !moveForward,
+							bgColor: "primary.400",
+							hoverBgColor: "primary.300",
+							onClick: () =>
+								handleContinueClick(query, connector_id, tableData),
+						},
+					]}
+				/>
+			) : (
+				<> </>
+			)}
 		</>
 	);
 };
