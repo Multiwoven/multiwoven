@@ -7,9 +7,9 @@ module Api
       before_action :set_connector, only: %i[show update destroy discover query_source]
 
       def index
-        # TODO: Add type filter for source and destination
-        @connectors = current_workspace
-                      .connectors.all.page(params[:page] || 1)
+        @connectors = current_workspace.connectors
+        @connectors = @connectors.send(params[:type]) if params[:type]
+        @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
       end
 
