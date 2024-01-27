@@ -1,19 +1,8 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  HStack,
-  IconButton,
-  Stack,
-  StackDivider,
-  Text,
-  Divider,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Flex, Stack, Text, Divider } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
 import IconImage from "../../assets/images/multiwoven-logo.png";
 import {
   FiSettings,
-  FiMoreVertical,
   FiDatabase,
   FiTable,
   FiPieChart,
@@ -40,18 +29,18 @@ type MenuArray = MenuSection[];
 const menus: MenuArray = [
   { heading: null, menu: [{ title: "Dashboard", link: "/", Icon: HomeIcon }] },
   {
-    heading: "Setup",
+    heading: "SETUP",
     menu: [
       { title: "Sources", link: "/setup/sources", Icon: FiDatabase },
       { title: "Destinations", link: "/destinations", Icon: FiMinimize },
     ],
   },
   {
-    heading: "Models",
+    heading: "DEFINE",
     menu: [{ title: "Models", link: "/models", Icon: FiTable }],
   },
   {
-    heading: "Activate",
+    heading: "ACTIVATE",
     menu: [
       { title: "Syncs", link: "/syncs", Icon: FiMinimize2 },
       { title: "Audiences", link: "/audiences", Icon: FiPieChart },
@@ -62,45 +51,35 @@ const menus: MenuArray = [
 const renderMenuSection = (section: MenuSection, index: number) => (
   <Stack key={index}>
     {section.heading && (
-      <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
-        {section.heading}
-      </Text>
+      <Box paddingX="17px" marginTop="20px" marginBottom="5px">
+        <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+          {section.heading}
+        </Text>
+      </Box>
     )}
     <Stack spacing="0">
       {section.menu.map((menuItem, idx) => (
-        <RouterLink to={menuItem.link} key={`${index}-${idx}`}>
-          <NavButton label={menuItem.title} icon={menuItem.Icon} w="full" />
-        </RouterLink>
+        <NavLink to={menuItem.link} key={`${index}-${idx}`}>
+          {({ isActive }) => (
+            <NavButton
+              label={menuItem.title}
+              icon={menuItem.Icon}
+              isActive={isActive}
+            />
+          )}
+        </NavLink>
       ))}
     </Stack>
   </Stack>
 );
 
 const SideBarFooter = () => (
-  <Stack spacing="7" divider={<StackDivider />}>
+  <Stack spacing="7">
     <Box />
     <Stack spacing="0">
-      <NavButton label="Documentation" icon={FiBookOpen} />
       <NavButton label="Settings" icon={FiSettings} />
+      <NavButton label="Documentation" icon={FiBookOpen} />
     </Stack>
-    <HStack spacing="3" justify="space-between">
-      <HStack spacing="3">
-        <Avatar boxSize="10" src="https://i.pravatar.cc/300" />
-        <Box>
-          <Text textStyle="sm" fontWeight="medium">
-            John Doe
-          </Text>
-          <Text textStyle="sm" color="fg.muted">
-            john@chakra-ui.com
-          </Text>
-        </Box>
-      </HStack>
-      <IconButton
-        variant="tertiary"
-        icon={<FiMoreVertical />}
-        aria-label="Open Menu"
-      />
-    </HStack>
   </Stack>
 );
 
