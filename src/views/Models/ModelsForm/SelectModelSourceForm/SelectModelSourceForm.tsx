@@ -12,7 +12,7 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
 	const { data } = useQuery({
 		queryKey: ["connectors", "source"],
-		queryFn: () => getUserConnectors("Source"),
+		queryFn: () => getUserConnectors("source"),
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 	});
