@@ -17,6 +17,7 @@ import { useContext, useMemo } from "react";
 import SourceFormFooter from "../SourceFormFooter";
 import { CONNECTION_STATUS } from "@/views/Connectors/constant";
 import { FiAlertOctagon, FiCheck } from "react-icons/fi";
+import { useUiConfig } from "@/utils/hooks";
 
 const CONNECT_TO_SOURCES_KEY = "connectToSources";
 
@@ -29,6 +30,7 @@ const STATUS_COLOR_MAP = {
 const SourceConnectionTest = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
+  const { maxContentWidth } = useUiConfig();
 
   const selectedDataSource = forms.find(
     ({ stepKey }) => stepKey === "datasource"
@@ -66,7 +68,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Box maxWidth="850px" width="100%">
+      <Box maxWidth={maxContentWidth} width="100%">
         <Box
           padding="24px"
           backgroundColor="gray.100"

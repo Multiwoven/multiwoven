@@ -1,6 +1,8 @@
-import { Box, Button, Icon, Text } from "@chakra-ui/react";
+import { useUiConfig } from "@/utils/hooks";
+import { Box, Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
+import { RefObject, useEffect, useState } from "react";
 import { FiBookOpen, FiHeadphones } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type SourceFormFooterProps = {
   ctaName: string;
@@ -9,31 +11,46 @@ type SourceFormFooterProps = {
   isCtaDisabled?: boolean;
   isCtaLoading?: boolean;
   isBackRequired?: boolean;
+  alignTo?: RefObject<HTMLDivElement> | null;
+  extra?: JSX.Element;
 };
 
 const SourceFormFooter = ({
   ctaName,
   ctaType = "button",
+  alignTo,
   onCtaClick,
+  isBackRequired,
+  extra,
   isCtaLoading = false,
   isCtaDisabled = false,
 }: SourceFormFooterProps): JSX.Element => {
+  const [leftOffset, setLeftOffet] = useState<number>(0);
+  const { maxContentWidth } = useUiConfig();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (alignTo) {
+      setLeftOffet(alignTo.current?.getBoundingClientRect()?.left ?? 0);
+    }
+  }, [alignTo]);
+
   return (
     <Box
       position="fixed"
-      left="0"
+      left={leftOffset}
       right="0"
       borderWidth="thin"
       bottom="0"
       backgroundColor="#fff"
-      padding="10px"
+      padding="10px 20px"
       display="flex"
       justifyContent="center"
       minHeight="80px"
       zIndex="1"
     >
       <Box
-        maxWidth="850px"
+        maxWidth={maxContentWidth}
         width="100%"
         display="flex"
         justifyContent="space-between"
@@ -53,15 +70,23 @@ const SourceFormFooter = ({
             </Box>
           </Link>
         </Box>
-        <Button
-          type={ctaType}
-          onClick={() => onCtaClick?.()}
-          size="lg"
-          isDisabled={isCtaDisabled}
-          isLoading={isCtaLoading}
-        >
-          {ctaName}
-        </Button>
+        <ButtonGroup>
+          {extra}
+          {isBackRequired ? (
+            <Button onClick={() => navigate(-1)} size="lg" marginRight="10px">
+              Back
+            </Button>
+          ) : null}
+          <Button
+            type={ctaType}
+            onClick={() => onCtaClick?.()}
+            size="lg"
+            isDisabled={isCtaDisabled}
+            isLoading={isCtaLoading}
+          >
+            {ctaName}
+          </Button>
+        </ButtonGroup>
       </Box>
     </Box>
   );

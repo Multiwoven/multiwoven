@@ -1,4 +1,5 @@
 import {
+  ConnectorInfoResponse,
   CreateConnectorPayload,
   CreateConnectorResponse,
   TestConnectionPayload,
@@ -53,5 +54,23 @@ export const createNewConnector = async (
   multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
     method: "post",
     url: "/connectors",
+    data: payload,
+  });
+
+export const getConnectorInfo = async (
+  id: string
+): Promise<ConnectorInfoResponse> =>
+  multiwovenFetch<null, ConnectorInfoResponse>({
+    method: "get",
+    url: `/connectors/${id}`,
+  });
+
+export const updateConnector = async (
+  payload: CreateConnectorPayload,
+  id: string
+): Promise<CreateConnectorResponse> =>
+  multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
+    method: "put",
+    url: `/connectors/${id}`,
     data: payload,
   });

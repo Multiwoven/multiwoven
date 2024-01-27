@@ -80,7 +80,7 @@ export const getConnectorData = async (
 
 type MultiwovenFetchProps<PayloadType> = {
   url: string;
-  method: "get" | "post";
+  method: "get" | "post" | "put";
   data?: PayloadType;
 };
 
@@ -92,6 +92,12 @@ export const multiwovenFetch = async <PayloadType, ResponseType>({
   if (method === "post")
     return axios
       .post(url, data)
+      .then((res) => res?.data)
+      .catch((err) => err);
+
+  if (method === "put")
+    return axios
+      .put(url, data)
       .then((res) => res?.data)
       .catch((err) => err);
 

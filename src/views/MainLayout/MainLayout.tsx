@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout = (): JSX.Element => {
   return (
-    <Box display="flex" width={"100%"}>
+    <Box display="flex" width={"100%"} overflow="hidden" maxHeight="100vh">
       <Sidebar />
       <Box
         pl={0}
@@ -13,8 +13,9 @@ const MainLayout = (): JSX.Element => {
         maxW={"100%"}
         display="flex"
         flex={1}
-        flexDir="row"
+        flexDir="column"
         className="flex"
+        overflow="scroll"
       >
         <Outlet />
       </Box>

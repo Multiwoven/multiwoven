@@ -63,3 +63,15 @@ export type CreateConnectorResponse = {
     type: string;
   };
 };
+
+export type ConnectorInfoResponse = {
+  data: {
+    attributes: {
+      connector_name: string;
+      connector_type: string;
+      configuration: unknown;
+      name: string;
+      description: string;
+    };
+  };
+};

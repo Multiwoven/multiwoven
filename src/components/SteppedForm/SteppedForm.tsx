@@ -15,6 +15,7 @@ import {
 	useSearchParams,
 } from "react-router-dom";
 import ExitModal from "../ExitModal";
+import { useUiConfig } from "@/utils/hooks";
 
 const initialState: FormState = {
 	currentStep: 0,
@@ -71,68 +72,69 @@ export const SteppedFormContext = createContext<FormContextType>({
 });
 
 const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const [state, dispatch] = useReducer(reducer, initialState);
-	const { currentStep, currentForm, forms } = state;
-	const [searchParams, setSearchParams] = useSearchParams();
-	const step = searchParams.get("step");
-	const stepInfo = steps[state.currentStep];
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { currentStep, currentForm, forms } = state;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const step = searchParams.get("step");
+  const stepInfo = steps[state.currentStep];
+  const { maxContentWidth } = useUiConfig();
 
-	useEffect(() => {
-		if (!step || forms.length === 0) {
-			const params = {
-				step: "0",
-			};
+  useEffect(() => {
+    if (!step || forms.length === 0) {
+      const params = {
+        step: "0",
+      };
 
-			setSearchParams(params, { replace: true });
-		}
-	}, []);
+      setSearchParams(params, { replace: true });
+    }
+  }, []);
 
-	useEffect(() => {
-		if (step) {
-			dispatch({
-				type: "UPDATE_STEP",
-				payload: {
-					step: parseInt(step),
-				},
-			});
-		}
-	}, [step]);
+  useEffect(() => {
+    if (step) {
+      dispatch({
+        type: "UPDATE_STEP",
+        payload: {
+          step: parseInt(step),
+        },
+      });
+    }
+  }, [step]);
 
-	const handleMoveForward = (stepKey: string, data?: unknown) => {
-		const currentFormData = currentForm;
-		let isValidated = true;
+  const handleMoveForward = (stepKey: string, data?: unknown) => {
+    const currentFormData = currentForm;
+    let isValidated = true;
 
-		if (stepInfo?.beforeNextStep) {
-			isValidated = stepInfo.beforeNextStep();
-		}
+    if (stepInfo?.beforeNextStep) {
+      isValidated = stepInfo.beforeNextStep();
+    }
 
-		if (!isValidated) return;
+    if (!isValidated) return;
 
-		dispatch({
-			type: "UPDATE_FORM",
-			payload: {
-				step: currentStep,
-				data: currentFormData ?? { [stepKey]: data },
-				stepKey,
-			},
-		});
+    dispatch({
+      type: "UPDATE_FORM",
+      payload: {
+        step: currentStep,
+        data: currentFormData ?? { [stepKey]: data },
+        stepKey,
+      },
+    });
 
-		dispatch({
-			type: "UPDATE_CURRENT_FORM",
-			payload: {
-				data: null,
-			},
-		});
+    dispatch({
+      type: "UPDATE_CURRENT_FORM",
+      payload: {
+        data: null,
+      },
+    });
 
-		navigate({
-			pathname: location.pathname,
-			search: createSearchParams({
-				step: `${currentStep + 1}`,
-			}).toString(),
-		});
-	};
+    navigate({
+      pathname: location.pathname,
+      search: createSearchParams({
+        step: `${currentStep + 1}`,
+      }).toString(),
+    });
+  };
 
   const valuesToExpose: FormContextType = {
     state,
@@ -156,7 +158,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            maxWidth="850px"
+            maxWidth={maxContentWidth}
             width="100%"
           >
             <Box>
@@ -175,7 +177,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (
           <Box padding="10px" display="flex" justifyContent="center">
-            <Box maxWidth="850px" width="100%">
+            <Box maxWidth={maxContentWidth} width="100%">
               <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
                 Continue
               </Button>
