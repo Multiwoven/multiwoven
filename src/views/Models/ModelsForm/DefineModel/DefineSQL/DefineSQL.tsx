@@ -79,7 +79,7 @@ const DefineSQL = (): JSX.Element => {
 					>
 						<Flex bgColor='gray.200' p={2} roundedTop='xl'>
 							<Flex w='full' alignItems='center'>
-								<Image src={connector_icon} p={2} mx={4} />
+								<Image src={"/src/assets/icons/" + connector_icon} p={2} mx={4} h={12} bgColor='gray.100' rounded='lg' />
 								<Text>{connector_name}</Text>
 							</Flex>
 							<Spacer />
