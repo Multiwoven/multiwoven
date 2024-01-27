@@ -105,10 +105,9 @@ const DefineSQL = (): JSX.Element => {
 								</Button>
 							</HStack>
 						</Flex>
-						<Box p={3} w='100%'>
+						<Box p={3} w='100%' maxH='250px'>
 							<Editor
 								width='100%'
-								height='250px'
 								language='mysql'
 								defaultLanguage='mysql'
 								defaultValue='Enter your query...'
@@ -119,8 +118,8 @@ const DefineSQL = (): JSX.Element => {
 					</Box>
 
 					{tableData ? (
-						<Box w='4xl' h='fit' maxHeight='sm'>
-							<GenerateTable maxHeight="xl" data={tableData} size='lg' borderRadius='xl' />
+						<Box w='4xl' h='fit' maxHeight='xs'>
+							<GenerateTable maxHeight="xs" data={tableData} size='sm' borderRadius='xl' />
 						</Box>
 					) : (
 						<Box
