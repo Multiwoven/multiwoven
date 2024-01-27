@@ -50,7 +50,7 @@ const DefineSQL = (): JSX.Element => {
 			const formData = {
 				query: query,
 				id: connector_id,
-				query_type: "sql_query",
+				query_type: "raw_sql",
 				columns: tableData?.columns
 			};
 			handleMoveForward(stepInfo.formKey, formData);
