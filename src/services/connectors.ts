@@ -1,5 +1,6 @@
 import {
   ConnectorInfoResponse,
+  ConnectorListResponse,
   CreateConnectorPayload,
   CreateConnectorResponse,
   TestConnectionPayload,
@@ -74,3 +75,13 @@ export const updateConnector = async (
     url: `/connectors/${id}`,
     data: payload,
   });
+
+export const getUserConnectors = async (
+  connectorType: string
+): Promise<ConnectorListResponse> => {
+  return multiwovenFetch<null, ConnectorListResponse>({
+    method: "get",
+    url: `/connectors?type=${connectorType}`,
+    data: null,
+  });
+};

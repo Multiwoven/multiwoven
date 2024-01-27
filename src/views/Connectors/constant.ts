@@ -1,4 +1,8 @@
-import { ConnectionStatus, ConnectorTypes } from "./types";
+import {
+  ConnectionStatus,
+  ConnectorTypes,
+  SourceListColumnType,
+} from "./types";
 
 export const CONNECTORS: Record<ConnectorTypes, Record<string, string>> = {
   source: {
@@ -54,3 +58,14 @@ export const CONNECTION_STATUS: ConnectionStatus[] = [
 ];
 
 export const SOURCES_LIST_QUERY_KEY = ["connectors", "source"];
+
+export const SOURCE_LIST_COLUMNS: SourceListColumnType[] = [
+  {
+    key: "connector_name",
+    name: "Name",
+  },
+  {
+    key: "icon",
+    name: "Type",
+  },
+];

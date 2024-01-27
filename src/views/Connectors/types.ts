@@ -64,14 +64,26 @@ export type CreateConnectorResponse = {
   };
 };
 
-export type ConnectorInfoResponse = {
-  data: {
-    attributes: {
-      connector_name: string;
-      connector_type: string;
-      configuration: unknown;
-      name: string;
-      description: string;
-    };
+export type ConnectorItem = {
+  attributes: {
+    connector_name: string;
+    connector_type: string;
+    configuration: unknown;
+    name: string;
+    description: string;
+    icon: string;
   };
+};
+
+export type ConnectorInfoResponse = {
+  data: ConnectorItem;
+};
+
+export type ConnectorListResponse = {
+  data: ConnectorItem[];
+};
+
+export type SourceListColumnType = {
+  key: "connector_name" | "icon";
+  name: string;
 };

@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserConnectors } from "@/services/common";
 import ConnectorTable from "@/components/ConnectorTable";
 import { Box } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
+import {
+  SOURCES_LIST_QUERY_KEY,
+  SOURCE_LIST_COLUMNS,
+} from "@/views/Connectors/constant";
+import Table from "@/components/Table";
+import { getUserConnectors } from "@/services/connectors";
+import { useMemo } from "react";
 
 const SourcesList = (): JSX.Element | null => {
   const { data } = useQuery({
@@ -16,6 +21,23 @@ const SourcesList = (): JSX.Element | null => {
   });
 
   const connectors = data?.data;
+
+  const tableData = useMemo(() => {
+    const rows = connectors?.map(({ attributes }) => {
+      return SOURCE_LIST_COLUMNS.reduce(
+        (acc, { key }) => ({
+          [key]: attributes?.[key],
+          ...acc,
+        }),
+        {}
+      );
+    });
+
+    return {
+      columns: SOURCE_LIST_COLUMNS,
+      data: rows,
+    };
+  }, [data]);
 
   const navigate = useNavigate();
 
@@ -33,7 +55,9 @@ const SourcesList = (): JSX.Element | null => {
         ctaHoverBgColor="orange.400"
         isCtaVisible
       />
-      <ConnectorTable payload={connectors.data} />
+      <Box maxWidth="1300px">
+        <Table data={tableData} onRowClick={(row) => console.log(row)} />
+      </Box>
       <Outlet />
     </Box>
   );
