@@ -3,7 +3,7 @@
     {
       "name": "Redshift",
       "connector_type": "source",
-      "connector_subtype": "database",
+      "category": "Data Warehouse",
       "documentation_url": "https://docs.mutliwoven.com",
       "github_issue_label": "source-redshift",
       "icon": "redshift.svg",

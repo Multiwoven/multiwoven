@@ -2,7 +2,7 @@
   "data": {
     "name": "Slack",
     "connector_type": "destination",
-    "connector_subtype": "API",
+    "category": "Team Collaboration",
     "documentation_url": "https://docs.mutliwoven.com",
     "github_issue_label": "destination-slack",
     "icon": "slack.svg",
