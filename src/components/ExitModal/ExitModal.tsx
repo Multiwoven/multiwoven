@@ -12,16 +12,12 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ExitWarningImage from "@/assets/images/ExitWarning.png";
 
 const ExitModal = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
-
-  const location = useLocation();
-  
-  console.log(location.key);
 
   return (
     <>
