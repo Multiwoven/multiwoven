@@ -68,4 +68,12 @@ export const SOURCE_LIST_COLUMNS: SourceListColumnType[] = [
     key: "icon",
     name: "Type",
   },
+  {
+    key: "updated_at",
+    name: "Updated At",
+  },
+  {
+    key: "status",
+    name: "Status",
+  },
 ];

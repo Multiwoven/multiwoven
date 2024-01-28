@@ -1,6 +1,6 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import ConnectorTable from "@/components/ConnectorTable";
-import { Box } from "@chakra-ui/react";
+import { Badge, Box, Image, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -10,7 +10,51 @@ import {
 } from "@/views/Connectors/constant";
 import Table from "@/components/Table";
 import { getUserConnectors } from "@/services/connectors";
-import { useMemo } from "react";
+import { ConnectorAttributes, SourcesTableColumnFields } from "../../types";
+import moment from "moment";
+
+type TableItem = {
+  field: SourcesTableColumnFields;
+  attributes: ConnectorAttributes;
+};
+
+const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
+  switch (field) {
+    case "icon":
+      return (
+        <Box display="flex" alignItems="center">
+          <Box
+            height="40px"
+            width="40px"
+            marginRight="10px"
+            borderWidth="thin"
+            padding="5px"
+            borderRadius="8px"
+          >
+            <Image
+              src={`/src/assets/icons/${attributes?.[field]}`}
+              alt="source icon"
+              maxHeight="100%"
+            />
+          </Box>
+          <Text>{attributes?.connector_name}</Text>
+        </Box>
+      );
+
+    case "updated_at":
+      return <Text>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
+
+    case "status":
+      return (
+        <Badge colorScheme="green" variant="outline">
+          Active
+        </Badge>
+      );
+
+    default:
+      return <Text>{attributes?.[field]}</Text>;
+  }
+};
 
 const SourcesList = (): JSX.Element | null => {
   const { data } = useQuery({
@@ -23,10 +67,10 @@ const SourcesList = (): JSX.Element | null => {
   const connectors = data?.data;
 
   const tableData = useMemo(() => {
-    const rows = connectors?.map(({ attributes }) => {
+    const rows = (connectors ?? [])?.map(({ attributes }) => {
       return SOURCE_LIST_COLUMNS.reduce(
         (acc, { key }) => ({
-          [key]: attributes?.[key],
+          [key]: <TableItem field={key} attributes={attributes} />,
           ...acc,
         }),
         {}

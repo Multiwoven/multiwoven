@@ -64,15 +64,19 @@ export type CreateConnectorResponse = {
   };
 };
 
+export type ConnectorAttributes = {
+  connector_name: string;
+  connector_type: string;
+  configuration: unknown;
+  name: string;
+  description: string;
+  icon: string;
+  updated_at: string;
+  status: string;
+};
+
 export type ConnectorItem = {
-  attributes: {
-    connector_name: string;
-    connector_type: string;
-    configuration: unknown;
-    name: string;
-    description: string;
-    icon: string;
-  };
+  attributes: ConnectorAttributes;
 };
 
 export type ConnectorInfoResponse = {
@@ -83,7 +87,13 @@ export type ConnectorListResponse = {
   data: ConnectorItem[];
 };
 
+export type SourcesTableColumnFields =
+  | "connector_name"
+  | "icon"
+  | "updated_at"
+  | "status";
+
 export type SourceListColumnType = {
-  key: "connector_name" | "icon";
+  key: SourcesTableColumnFields;
   name: string;
 };
