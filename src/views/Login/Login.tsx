@@ -108,7 +108,6 @@ const Login = (): JSX.Element => {
   const handleSubmit = async (values: any): Promise<void> => {
     setSubmitting(true);
     const result = await login(values);
-    console.log("res", result);
     if (result.success) {
       const token = result?.data?.data?.attributes?.token;
       Cookies?.set("authToken", token);
