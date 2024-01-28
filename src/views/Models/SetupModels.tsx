@@ -6,10 +6,10 @@ import ViewModel from "./ViewModel";
 const SetupModels = (): JSX.Element => {
   return (
     <Routes>
-      <Route path="" element={<ModelsList />}>
+      <Route path="/models" element={<ModelsList />}>
         <Route path="new" element={<ModelsForm />} />
+        <Route path=":id" element={<ViewModel />} />
       </Route>
-      <Route path=":id" element={<ViewModel />} />
       <Route path="*" element={<Navigate to="" />} />
     </Routes>
   );

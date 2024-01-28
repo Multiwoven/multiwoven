@@ -37,7 +37,7 @@ const menus: MenuArray = [
   },
   {
     heading: "DEFINE",
-    menu: [{ title: "Models", link: "/models", Icon: FiTable }],
+    menu: [{ title: "Models", link: "/define/models", Icon: FiTable }],
   },
   {
     heading: "ACTIVATE",
