@@ -17,27 +17,20 @@ const TopBar = ({
   ctaIcon,
   onCtaClicked = () => {},
   isCtaVisible,
-  ctaBgColor,
-  ctaHoverBgColor,
-  ctaColor,
 }: TopBarType): JSX.Element => (
   <Flex
     justifyContent="space-between"
     borderColor="gray.300"
     marginBottom="30px"
   >
-    <Heading size="xl" _dark={{ color: "white" }}>
+    <Heading as="h6" fontWeight="500" size="lg">
       {name}
     </Heading>
     {isCtaVisible ? (
       <Button
+        variant="solid"
         leftIcon={ctaIcon}
-        backgroundColor={ctaBgColor}
-        _hover={{ bgColor: ctaHoverBgColor }}
-        color={ctaColor}
-        p={4}
-        fontSize={16}
-        size="sm"
+        size="lg"
         onClick={onCtaClicked}
       >
         {ctaName}
