@@ -58,6 +58,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 };
 
 const SourcesList = (): JSX.Element | null => {
+  const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: SOURCES_LIST_QUERY_KEY,
     queryFn: () => getUserConnectors("Source"),
@@ -68,10 +69,11 @@ const SourcesList = (): JSX.Element | null => {
   const connectors = data?.data;
 
   const tableData = useMemo(() => {
-    const rows = (connectors ?? [])?.map(({ attributes }) => {
+    const rows = (connectors ?? [])?.map(({ attributes, id }) => {
       return SOURCE_LIST_COLUMNS.reduce(
         (acc, { key }) => ({
           [key]: <TableItem field={key} attributes={attributes} />,
+          id,
           ...acc,
         }),
         {}
@@ -83,8 +85,6 @@ const SourcesList = (): JSX.Element | null => {
       data: rows,
     };
   }, [data]);
-
-  const navigate = useNavigate();
 
   if (!connectors) return null;
 
@@ -101,7 +101,10 @@ const SourcesList = (): JSX.Element | null => {
           ctaHoverBgColor="orange.400"
           isCtaVisible
         />
-        <Table data={tableData} onRowClick={(row) => console.log(row)} />
+        <Table
+          data={tableData}
+          onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
+        />
       </ContentContainer>
     </Box>
   );
