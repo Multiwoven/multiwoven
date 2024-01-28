@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge, Box, Image, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   SOURCES_LIST_QUERY_KEY,
   SOURCE_LIST_COLUMNS,
@@ -12,6 +12,7 @@ import Table from "@/components/Table";
 import { getUserConnectors } from "@/services/connectors";
 import { ConnectorAttributes, SourcesTableColumnFields } from "../../types";
 import moment from "moment";
+import ContentContainer from "@/components/ContentContainer";
 
 type TableItem = {
   field: SourcesTableColumnFields;
@@ -88,21 +89,20 @@ const SourcesList = (): JSX.Element | null => {
   if (!connectors) return null;
 
   return (
-    <Box width="100%">
-      <TopBar
-        name="Sources"
-        ctaName="Add Sources"
-        ctaIcon={<FiPlus color="gray.100" />}
-        onCtaClicked={() => navigate("new")}
-        ctaBgColor="orange.500"
-        ctaColor="gray.900"
-        ctaHoverBgColor="orange.400"
-        isCtaVisible
-      />
-      <Box maxWidth="1300px">
+    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+      <ContentContainer>
+        <TopBar
+          name="Sources"
+          ctaName="Add Sources"
+          ctaIcon={<FiPlus color="gray.100" />}
+          onCtaClicked={() => navigate("new")}
+          ctaBgColor="orange.500"
+          ctaColor="gray.900"
+          ctaHoverBgColor="orange.400"
+          isCtaVisible
+        />
         <Table data={tableData} onRowClick={(row) => console.log(row)} />
-      </Box>
-      <Outlet />
+      </ContentContainer>
     </Box>
   );
 };

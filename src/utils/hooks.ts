@@ -5,7 +5,7 @@ type UseUiConfig = {
 
 export const useUiConfig = (): UseUiConfig => {
   return {
-    maxContentWidth: 1300,
+    maxContentWidth: 1500,
     contentPadding: 30,
   };
 };
