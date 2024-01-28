@@ -17,7 +17,7 @@ const ModelsList = (): JSX.Element | null => {
 
   const models = data?.data?.data;
 
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   if (!models) {
     return (
