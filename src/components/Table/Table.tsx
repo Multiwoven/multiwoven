@@ -1,34 +1,31 @@
-import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { TableType } from "./types";
 
 const GenerateTable = ({
   title,
   data,
   size,
-  headerColor,
-  headerColorVisible,
-  borderRadius,
   maxHeight,
   onRowClick,
 }: TableType): JSX.Element => {
-  const theadProps = headerColorVisible
-    ? { bgColor: headerColor || "gray.200" }
-    : {};
   return (
     <Box
-      border="1px"
-      borderColor="gray.300"
-      borderRadius={borderRadius || "lg"}
-      p={2}
       maxHeight={maxHeight}
       overflowX="scroll"
+      borderWidth="thin"
+      borderRadius="8px"
+      borderColor="gray.300"
     >
-      {title ? title : <></>}
+      {title ? title : null}
       <Table size={size} maxHeight={maxHeight}>
-        <Thead {...theadProps}>
+        <Thead>
           <Tr>
             {data.columns.map((column, index) => (
-              <Th key={index}>{column.name}</Th>
+              <Th key={index} backgroundColor="gray.100">
+                <Text fontWeight={700} casing="uppercase">
+                  {column.name}
+                </Text>
+              </Th>
             ))}
           </Tr>
         </Thead>
@@ -36,7 +33,7 @@ const GenerateTable = ({
           {data.data.map((row, rowIndex) => (
             <Tr
               key={rowIndex}
-              _hover={{ backgroundColor: "gray.100" }}
+              _hover={{ backgroundColor: "gray.50" }}
               onClick={() => onRowClick?.(row)}
             >
               {data.columns.map((column, columnIndex) => (
