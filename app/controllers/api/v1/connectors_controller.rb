@@ -8,7 +8,7 @@ module Api
 
       def index
         @connectors = current_workspace.connectors
-        @connectors = @connectors.send(params[:type]) if params[:type]
+        @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
       end
