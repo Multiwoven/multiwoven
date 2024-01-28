@@ -11,10 +11,10 @@ const GenerateTable = ({
   return (
     <Box
       maxHeight={maxHeight}
-      overflowX="scroll"
       borderWidth="thin"
       borderRadius="8px"
       borderColor="gray.300"
+      overflowX="auto"
     >
       {title ? title : null}
       <Table size={size} maxHeight={maxHeight}>
