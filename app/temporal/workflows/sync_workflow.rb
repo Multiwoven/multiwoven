@@ -7,13 +7,13 @@ module Workflows
       sync = FetchSyncActivity.execute!(sync_id)
       return if sync.disabled?
 
-      sync_run = CreateSyncRunActivity.execute!(sync.id)
+      sync_run_id = CreateSyncRunActivity.execute!(sync.id)
 
-      ExtractorActivity.execute!(sync_run.id)
+      ExtractorActivity.execute!(sync_run_id)
 
-      LoaderActivity.execute!(sync_run.id)
+      LoaderActivity.execute!(sync_run_id)
 
-      ReporterActivity.execute!(sync_run.id)
+      ReporterActivity.execute!(sync_run_id)
     end
   end
 end

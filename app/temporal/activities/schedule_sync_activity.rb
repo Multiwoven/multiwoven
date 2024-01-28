@@ -5,8 +5,11 @@ module Activities
     def execute(sync_id)
       sync = Sync.find_by(id: sync_id)
 
-      # TODO: Catch exception if workflow is not running
-      Temporal.terminate_workflow(sync.workflow_id) if sync.workflow_id.present?
+      begin
+        Temporal.terminate_workflow(sync.workflow_id) if sync.workflow_id.present?
+      rescue StandardError => e
+        Rails.logger.error(e)
+      end
 
       workflow_id = SecureRandom.uuid
 

@@ -5,7 +5,7 @@ module Activities
     def execute(sync_id)
       sync_run = SyncRun.find_or_initialize_by(status: "pending", sync_id:)
       sync_run.save! if sync_run.new_record?
-      sync_run
+      sync_run.id
     end
   end
 end

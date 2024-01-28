@@ -3,11 +3,12 @@
 
 require_relative "setup"
 
-worker = Temporal::Worker.new(binary_checksum: `git show HEAD -s --format=%H`.strip)
+worker = Temporal::Worker.new
 
 worker.register_workflow(Workflows::SyncWorkflow)
 worker.register_workflow(Workflows::ScheduleSyncWorkflow)
 
+worker.add_activity_middleware(Middlewares::DatabaseMiddleware)
 worker.register_activity(Activities::FetchSyncActivity)
 worker.register_activity(Activities::CreateSyncRunActivity)
 worker.register_activity(Activities::ExtractorActivity)

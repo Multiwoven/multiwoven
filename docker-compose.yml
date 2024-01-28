@@ -1,5 +1,6 @@
 version: '3'
-
+include:
+  - temporal-docker-compose.yml
 services:
   db:
     image: postgres:latest
@@ -23,20 +24,25 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      RAILS_ENV: development
-      REDIS_URL: redis://redis:6379/0
-      DB_HOST: ${DB_HOST}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SMTP_ADDRESS: ${SMTP_ADDRESS}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      NEW_RELIC_KEY: ${NEW_RELIC_KEY}
+      - temporal
+    env_file: .env
     volumes:
       - .:/rails
-    tty: true
     stdin_open: true
+    tty: true
+
+  multiwoven-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db
+      - redis
+      - temporal
+    env_file: .env
+    volumes:
+      - .:/rails
+    command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
 
 volumes:
   mw-pg-data:
