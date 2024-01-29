@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 include:
   - temporal-docker-compose.yml
 services:
@@ -26,8 +26,6 @@ services:
       - redis
       - temporal
     env_file: .env
-    volumes:
-      - .:/rails
     stdin_open: true
     tty: true
 
