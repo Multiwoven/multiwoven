@@ -32,3 +32,4 @@ Tested with a batch of 10,000 records to ensure data integrity and monitor perfo
 - [ ] Added the new connector in rollout.rb
 - [ ] Have you updated the version number of the gem?
 - [ ] Have you ensured that your changes for new connector are documented in the [docs repo](https://github.com/Multiwoven/docs) or relevant documentation files?
+- [ ] Have you updated the run time dependency in multiwoven-integrations.gemspec if new gems are added

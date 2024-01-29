@@ -7,12 +7,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "token": {
-            "type": "string"
-          },
-          "channel": {
-            "type": "string"
-          },
           "text": {
             "type": ["string", "null"]
           },
@@ -62,7 +56,6 @@
             "type": ["string", "null"]
           }
         },
-        "required": ["token", "channel"],
         "oneOf": [
           { "required": ["text"] },
           { "required": ["attachments"] },

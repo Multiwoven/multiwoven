@@ -7,8 +7,9 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.4)
+    multiwoven-integrations (0.1.5)
       activesupport
+      async-websocket
       dry-schema
       dry-struct
       dry-types
@@ -18,6 +19,7 @@ PATH
       restforce
       ruby-odbc
       sequel
+      slack-ruby-client
 
 GEM
   remote: https://rubygems.org/
