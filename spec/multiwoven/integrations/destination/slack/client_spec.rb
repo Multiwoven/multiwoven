@@ -21,12 +21,24 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
     catalog.streams.find { |stream| stream.name == "chat_postMessage" }.json_schema
   end
 
-  let(:sync_config) do
-    {
+  let(:sync_config_json) do
+    { source: {
+        name: "DestinationConnectorName",
+        type: "destination",
+        connection_specification: {
+          private_api_key: "test_api_key"
+        }
+      },
       destination: {
         name: "Slack",
         type: "destination",
         connection_specification: connection_config
+      },
+      model: {
+        name: "ExampleModel",
+        query: "SELECT * FROM CALL_CENTER LIMIT 1",
+        query_type: "raw_sql",
+        primary_key: "id"
       },
       stream: {
         name: "chat_postMessage",
@@ -35,8 +47,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
       },
       sync_mode: "full_refresh",
       cursor_field: "timestamp",
-      destination_sync_mode: "append"
-    }.with_indifferent_access
+      destination_sync_mode: "insert" }.with_indifferent_access
   end
 
   let(:records) do
@@ -85,6 +96,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
       end
 
       it "increments the success count" do
+        sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(
+          sync_config_json.to_json
+        )
         response = client.write(sync_config, records)
 
         expect(response.tracking.success).to eq(records.size)
@@ -99,6 +113,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
       end
 
       it "increments the failure count" do
+        sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(
+          sync_config_json.to_json
+        )
         response = client.write(sync_config, records)
 
         expect(response.tracking.failed).to eq(records.size)
@@ -110,9 +127,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
   private
 
   def build_record(id, name)
-    Multiwoven::Integrations::Protocol::RecordMessage.new(
-      data: { Id: id, Name: name },
-      emitted_at: Time.now.to_i
-    )
+    {
+      "data": { "Id": id, "Name": name },
+      "emitted_at": Time.now.to_i
+    }
   end
 end
