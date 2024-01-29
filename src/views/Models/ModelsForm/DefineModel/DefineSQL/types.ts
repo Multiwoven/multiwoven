@@ -14,6 +14,8 @@ export type PrefillValue = {
 	connector_id: string;
 	connector_name: string;
 	connector_icon: string;
+	model_name: string;
+	model_description: string;
 };
 
 export type DefineSQLProps = {

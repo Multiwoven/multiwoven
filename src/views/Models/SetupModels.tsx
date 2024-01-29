@@ -8,9 +8,9 @@ const SetupModels = (): JSX.Element => {
     <Routes>
       <Route path="/models" element={<ModelsList />}>
         <Route path="new" element={<ModelsForm />} />
-        <Route path=":id" element={<ViewModel />} />
         <Route path="*" element={<Navigate to="" />} />
       </Route>
+      <Route path="/models/:id" element={<ViewModel />} />
     </Routes>
   );
 };

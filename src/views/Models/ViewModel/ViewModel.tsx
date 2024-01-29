@@ -5,8 +5,8 @@ import FinalizeModel from "../ModelsForm/FinalizeModel";
 const ViewModel = () : JSX.Element => {
     return(
         <>
-            <DefineModel />
-            <FinalizeModel />
+            <DefineModel />dff
+            {/* <FinalizeModel /> */}
         </>
     )
 }
