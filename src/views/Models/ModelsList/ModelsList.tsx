@@ -11,7 +11,7 @@ const ModelsList = (): JSX.Element | null => {
   const { data } = useQuery({
     queryKey: ["models"],
     queryFn: () => getAllModels(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
