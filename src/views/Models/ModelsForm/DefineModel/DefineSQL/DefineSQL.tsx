@@ -14,7 +14,7 @@ import StarsImage from "@/assets/images/stars.svg";
 import EmptyQueryPreviewImage from "@/assets/images/EmptyQueryPreview.png";
 
 import Editor from "@monaco-editor/react";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { getModelPreview } from "@/services/models";
 import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
@@ -28,9 +28,8 @@ import { DefineSQLProps } from "./types";
 const DefineSQL = ({
 	hasPrefilledValues = false,
 	prefillValues,
-	isFooterVisible = true} : DefineSQLProps
-): JSX.Element => {
-	const [query, setQuery] = useState("");
+	isFooterVisible = true,
+}: DefineSQLProps): JSX.Element => {
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
 	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -40,6 +39,7 @@ const DefineSQL = ({
 	let connector_id: string = "";
 	let connector_icon: string = "";
 	let connector_name: string = "";
+	let user_query: string = "";
 
 	if (!hasPrefilledValues) {
 		const extracted = extractData(state.forms);
@@ -48,17 +48,20 @@ const DefineSQL = ({
 		connector_icon = connector_data?.icon || "";
 		connector_name = connector_data?.name || "";
 	} else {
-		if (prefillValues) {
-			connector_id = prefillValues.connector_id;
-			connector_icon = prefillValues.connector_icon;
-			connector_name = prefillValues.connector_name;
-		}
+		if (!prefillValues) return <></>;
+
+		connector_id = prefillValues.connector_id.toString();
+		connector_icon = prefillValues.connector_icon;
+		connector_name = prefillValues.connector_name;
+		user_query = prefillValues.query;
 	}
+
 	const toast = useToast();
 	const navigate = useNavigate();
+	const editorRef = useRef(null);
 
-	function handleEditorChange(value: string | undefined) {
-		if (value) setQuery(value);
+	function handleEditorDidMount(editor:any) {
+		editorRef.current = editor;		
 	}
 
 	function handleContinueClick(
@@ -79,13 +82,14 @@ const DefineSQL = ({
 
 	async function getPreview() {
 		setLoading(true);
+		const query = editorRef?.current?.getValue();
 		let data = await getModelPreview(query, connector_id?.toString());
+
 		if (data.success) {
 			setLoading(false);
 			setTableData(ConvertModelPreviewToTableData(data.data));
 			canMoveForward(true);
 		} else {
-			console.log("error getting data", data);
 			toast({
 				title: "An Error Occured",
 				description: data.message || "Please check your query and try again",
@@ -151,7 +155,9 @@ const DefineSQL = ({
 								language='mysql'
 								defaultLanguage='mysql'
 								defaultValue='Enter your query...'
-								onChange={handleEditorChange}
+								value={user_query}
+								saveViewState={true}
+								onMount={handleEditorDidMount}
 								theme='light'
 							/>
 						</Box>
@@ -205,7 +211,7 @@ const DefineSQL = ({
 							bgColor: "primary.400",
 							hoverBgColor: "primary.300",
 							onClick: () =>
-								handleContinueClick(query, connector_id, tableData),
+								handleContinueClick(editorRef?.current?.getValue(), connector_id, tableData),
 						},
 					]}
 				/>

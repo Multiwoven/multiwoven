@@ -20,7 +20,7 @@ import ModelFooter from "../ModelFooter";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useNavigate } from "react-router-dom";
-import { FinalizeForm } from "./types";
+import { FinalizeForm, FinalizeModelProps } from "./types";
 import { CreateModelPayload } from "../../types";
 import { createNewModel } from "@/services/models";
 
@@ -37,12 +37,18 @@ type StepData = {
 	stepKey: string;
 };
 
-const FinalizeModel = (): JSX.Element => {
-	const { state } = useContext(SteppedFormContext);
-	let defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
+const FinalizeModel = ({ hasPrefilledValues, prefillValues } : FinalizeModelProps): JSX.Element => {
+	
+	let defineModelData: StepData;
 
-  console.log(defineModelData.data.defineModel.id);
-  
+	if (!hasPrefilledValues) {
+		const { state } = useContext(SteppedFormContext);
+		defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
+
+		console.log(defineModelData.data.defineModel.id);
+	} else {
+
+	}
 
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();

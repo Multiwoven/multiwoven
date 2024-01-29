@@ -16,3 +16,19 @@ export type CreateModelResponse = {
     type: string;
   };
 };
+
+export type GetModelByIdResponse = {
+    attributes: {
+      connector_id: number;
+      created_at: string;
+      description: string;
+      id: string;
+      name: string;
+      primary_key: string;
+      query: string;
+      query_type: string;
+      updated_at: string;
+    };
+    id: string;
+    type: string;
+};

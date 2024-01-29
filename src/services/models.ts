@@ -1,7 +1,4 @@
-import {
-	CreateModelPayload,
-	CreateModelResponse,
-} from "@/views/Models/types";
+import { CreateModelPayload, CreateModelResponse, GetModelByIdResponse } from "@/views/Models/types";
 import { apiRequest, multiwovenFetch } from "./common";
 
 type APIData = {
@@ -17,12 +14,12 @@ type APIData = {
 	links?: Record<string, string>;
 };
 
-type ModelAPIResponse = {
+type ModelAPIResponse<T> = {
 	success: boolean;
-	data?: APIData;
+	data?: T;
 };
 
-export const getAllModels = async (): Promise<ModelAPIResponse> => {
+export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
 	return apiRequest("/models", null);
 };
 
@@ -42,3 +39,9 @@ export const createNewModel = async (
 		url: "/models",
 		data: payload,
 	});
+
+export const getModelById = async (id: string): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+	multiwovenFetch<string, ModelAPIResponse<GetModelByIdResponse>>({
+		method: "get",
+		url: "/models/" + id,
+	})
