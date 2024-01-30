@@ -2,7 +2,7 @@ import { ColumnMapType } from "@/utils/types";
 
 export type TableDataType = {
   columns: Array<ColumnMapType>;
-  data: Array<{}>;
+  data: Array<{icon?:string}>;
 };
 
 export type ModelTableRow = {
