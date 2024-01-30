@@ -5,7 +5,7 @@ import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
 import {
-  SOURCES_LIST_QUERY_KEY,
+  DESTINATIONS_LIST_QUERY_KEY,
   CONNECTOR_LIST_COLUMNS,
 } from "@/views/Connectors/constant";
 import Table from "@/components/Table";
@@ -34,7 +34,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
           >
             <Image
               src={`/src/assets/icons/${attributes?.[field]}`}
-              alt="source icon"
+              alt="destination icon"
               maxHeight="100%"
             />
           </Box>
@@ -57,11 +57,11 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   }
 };
 
-const SourcesList = (): JSX.Element | null => {
+const DestinationsList = (): JSX.Element | null => {
   const navigate = useNavigate();
   const { data } = useQuery({
-    queryKey: SOURCES_LIST_QUERY_KEY,
-    queryFn: () => getUserConnectors("Source"),
+    queryKey: DESTINATIONS_LIST_QUERY_KEY,
+    queryFn: () => getUserConnectors("destination"),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -92,8 +92,8 @@ const SourcesList = (): JSX.Element | null => {
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
         <TopBar
-          name="Sources"
-          ctaName="Add Sources"
+          name="Destinations"
+          ctaName="Add destination"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
           ctaBgColor="orange.500"
@@ -103,11 +103,11 @@ const SourcesList = (): JSX.Element | null => {
         />
         <Table
           data={tableData}
-          onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
+          onRowClick={(row) => navigate(`/setup/destinations/${row?.id}`)}
         />
       </ContentContainer>
     </Box>
   );
 };
 
-export default SourcesList;
+export default DestinationsList;

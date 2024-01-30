@@ -88,13 +88,13 @@ export type ConnectorListResponse = {
   data: ConnectorItem[];
 };
 
-export type SourcesTableColumnFields =
+export type ConnectorTableColumnFields =
   | "connector_name"
   | "icon"
   | "updated_at"
   | "status";
 
 export type SourceListColumnType = {
-  key: SourcesTableColumnFields;
+  key: ConnectorTableColumnFields;
   name: string;
 };
