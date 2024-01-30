@@ -60,6 +60,7 @@ const ModelsList = (): JSX.Element | null => {
           data={values}
           headerColorVisible={true}
           onRowClick={handleOnRowClick}
+          maxHeight="2xl"
         />
       </Box>
       <Outlet />
