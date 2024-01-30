@@ -1,0 +1,177 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe "Api::V1::ModelsController", type: :request do
+  let(:workspace) { create(:workspace) }
+  let(:user) { workspace.workspace_users.first.user }
+  let(:connector) do
+    create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
+  end
+  let!(:models) do
+    [
+      create(:model, connector:, workspace:, name: "model1", query: "SELECT * FROM locations"),
+      create(:model, connector:, workspace:, name: "model2", query: "SELECT * FROM locations")
+    ]
+  end
+
+  describe "GET /api/v1/models" do
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        get "/api/v1/models"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success and all model " do
+        get "/api/v1/models", headers: auth_headers(user)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash.dig(:data, 0, :type)).to eq("models")
+      end
+    end
+  end
+
+  describe "GET /api/v1/models/id" do
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        get "/api/v1/models/#{models.first.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success and fetch model " do
+        get "/api/v1/models/#{models.first.id}", headers: auth_headers(user)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(models.first.id.to_s)
+        expect(response_hash.dig(:data, :type)).to eq("models")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(models.first.name)
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(models.first.query)
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(models.first.query_type)
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(models.first.primary_key)
+      end
+
+      it "returns an error response while fetch model" do
+        get "/api/v1/models/test", headers: auth_headers(user)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "POST /api/v1/models - Create model" do
+    let(:request_body) do
+      {
+        model: {
+          connector_id: models.first.connector_id,
+          name: "Redshift Location",
+          query: "SELECT * FROM locations",
+          query_type: "raw_sql",
+          primary_key: "id"
+        }
+      }
+    end
+
+    context "when it is an unauthenticated user for create model" do
+      it "returns unauthorized" do
+        post "/api/v1/models"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user and create model" do
+      it "creates a new model and returns success" do
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:created)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      it "returns an error response when creation fails" do
+        request_body[:model][:connector_id] = "connector_id_wrong"
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "PUT /api/v1/models - Update model" do
+    let(:request_body) do
+      {
+        model: {
+          connector_id: models.first.connector_id,
+          name: "Redshift Location",
+          query: "SELECT * FROM locations",
+          query_type: "raw_sql",
+          primary_key: "id"
+        }
+      }
+    end
+
+    context "when it is an unauthenticated user for update model" do
+      it "returns unauthorized" do
+        put "/api/v1/models/#{models.first.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user and update model" do
+      it "updates the model and returns success" do
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(models.second.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      it "returns an error response when wrong model_id" do
+        put "/api/v1/models/test", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns an error response when update fails" do
+        request_body[:model][:connector_id] = "connector_id_wrong"
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "DELETE /api/v1/models/id" do
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        delete "/api/v1/models/#{models.first.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success and delete model " do
+        delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user)
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns an error response while delete wrong model" do
+        delete "/api/v1/models/test", headers: auth_headers(user)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+end

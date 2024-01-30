@@ -33,7 +33,7 @@ module Api
           render json: @workspace, status: :ok
         else
           render_error(
-            message: "Workspace creation failed",
+            message: "Workspace update failed",
             status: :unprocessable_entity,
             details: format_errors(result.workspace)
           )
@@ -47,7 +47,7 @@ module Api
           head :no_content
         else
           render_error(
-            message: "Workspace creation failed",
+            message: "Workspace delete failed",
             status: :unprocessable_entity,
             details: format_errors(result.workspace)
           )
@@ -57,7 +57,7 @@ module Api
       private
 
       def workspace_params
-        params.require(:workspace).permit(:name)
+        params.require(:workspace).permit(:name, :organization_id)
       end
     end
   end

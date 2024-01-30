@@ -32,7 +32,7 @@ module Api
 
       # PUT /api/v1/workspaces/:workspace_id/workspace_users/:id
       def update
-        result = Update.call(id: params[:id], role: params[:role])
+        result = Update.call(id: params[:id], role: workspace_user_params[:role])
 
         if result.success?
           @workspace_user = result.workspace_user
@@ -67,7 +67,7 @@ module Api
       end
 
       def workspace_user_params
-        params.require(:workspace_user).permit(:email, :role)
+        params.require(:workspace_user).permit(:email, :role, :name)
       end
     end
   end

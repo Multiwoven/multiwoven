@@ -14,6 +14,8 @@ module ExceptionHandler
   rescue JSON::ParserError, ActionDispatch::Http::Parameters::ParseError => e
     # TODO: Add logs
     render_bad_request_error(e.message)
+  rescue StandardError => e
+    render_bad_request_error(e.message)
   end
 
   def render_not_found_error(message)
