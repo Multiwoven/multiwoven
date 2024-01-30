@@ -82,7 +82,7 @@ const DefineSQL = ({
 
 	async function getPreview() {
 		setLoading(true);
-		const query = editorRef?.current?.getValue();
+		const query = (editorRef?.current as any)?.getValue() as string;
 		let data = await getModelPreview(query, connector_id?.toString());
 
 		if (data.success) {
@@ -211,7 +211,7 @@ const DefineSQL = ({
 							bgColor: "primary.400",
 							hoverBgColor: "primary.300",
 							onClick: () =>
-								handleContinueClick(editorRef?.current?.getValue(), connector_id, tableData),
+								handleContinueClick((editorRef?.current as any).getValue(), connector_id, tableData),
 						},
 					]}
 				/>

@@ -20,7 +20,7 @@ import ModelFooter from "../ModelFooter";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useNavigate } from "react-router-dom";
-import { FinalizeForm, FinalizeModelProps } from "./types";
+import { FinalizeForm } from "./types";
 import { CreateModelPayload } from "../../types";
 import { createNewModel } from "@/services/models";
 
@@ -37,18 +37,13 @@ type StepData = {
 	stepKey: string;
 };
 
-const FinalizeModel = ({ hasPrefilledValues, prefillValues } : FinalizeModelProps): JSX.Element => {
-	
+const FinalizeModel = (): JSX.Element => {
 	let defineModelData: StepData;
 
-	if (!hasPrefilledValues) {
-		const { state } = useContext(SteppedFormContext);
-		defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
+	const { state } = useContext(SteppedFormContext);
+	defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
 
-		console.log(defineModelData.data.defineModel.id);
-	} else {
-
-	}
+	console.log(defineModelData.data.defineModel.id);
 
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -172,7 +167,7 @@ const FinalizeModel = ({ hasPrefilledValues, prefillValues } : FinalizeModelProp
 									w='lg'
 								>
 									{(defineModelData.data.defineModel.columns ?? []).map(
-										({ key, name }:ColumnMapType, index:number) => (
+										({ key, name }: ColumnMapType, index: number) => (
 											<option key={index} value={key}>
 												{name}
 											</option>
