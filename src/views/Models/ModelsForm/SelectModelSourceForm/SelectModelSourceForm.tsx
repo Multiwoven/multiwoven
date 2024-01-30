@@ -41,11 +41,14 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
 	const columns: ColumnMapType[] = [
 		{ name: "Name", key: "name" },
-		{ name: "Connector Type", key: "connector_type" },
+		{ name: "Type", key: "connector_name", showIcon: true},
+		{ name: "Created At", key: "created_at" },
 	];
 
 	let values = ConvertToTableData(connectors?.data, columns);
+	console.log(values);
 	
+
 	return (
 		<>
 			<Box w='6xl' mx='auto'>

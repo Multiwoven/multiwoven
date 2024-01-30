@@ -34,7 +34,7 @@ const ModelsList = (): JSX.Element | null => {
   }
 
   let values = ConvertToTableData(models, [
-    { name: "Name", key: "name" },
+    { name: "Name", key: "name", showIcon: true },
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },
   ]);
