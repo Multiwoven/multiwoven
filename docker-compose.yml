@@ -44,6 +44,15 @@ services:
       - ./multiwoven-server:/rails
     command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
 
+  multiwoven-ui:
+    build:
+      context: ./multiwoven-ui
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - multiwoven-server
+
 volumes:
   mw-pg-data:
   mw-redis-data:
