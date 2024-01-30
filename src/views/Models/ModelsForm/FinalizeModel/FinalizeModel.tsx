@@ -43,8 +43,6 @@ const FinalizeModel = (): JSX.Element => {
 	const { state } = useContext(SteppedFormContext);
 	defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
 
-	console.log(defineModelData.data.defineModel.id);
-
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const toast = useToast();

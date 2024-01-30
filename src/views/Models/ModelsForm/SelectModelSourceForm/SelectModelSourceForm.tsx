@@ -45,9 +45,7 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 		{ name: "Created At", key: "created_at" },
 	];
 
-	let values = ConvertToTableData(connectors?.data, columns);
-	console.log(values);
-	
+	let values = ConvertToTableData(connectors?.data, columns);	
 
 	return (
 		<>

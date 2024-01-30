@@ -38,7 +38,7 @@ const ModelsList = (): JSX.Element | null => {
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },
   ]);
-
+  
   const handleOnRowClick = (row: any) => {
     navigate(row?.id);
   };
