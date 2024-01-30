@@ -1,6 +1,6 @@
 version: '3'
 include:
-  - temporal-docker-compose.yml
+  - ./multiwoven-server/temporal-docker-compose.yml
 services:
   db:
     image: postgres:latest
