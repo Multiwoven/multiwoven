@@ -65,7 +65,8 @@ module Multiwoven
       end
 
       def extract_data(record_object, properties)
-        record_object.data.select { |key, _| properties.key?(key.to_s) }
+        data_attributes = record_object.with_indifferent_access[:data][:attributes]
+        data_attributes.select { |key, _| properties.key?(key.to_sym) }
       end
 
       def success?(response)

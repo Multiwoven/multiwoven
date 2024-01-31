@@ -72,7 +72,7 @@ module Multiwoven
           def build_args(stream_name, record)
             case stream_name
             when "chat_postMessage"
-              { channel: channel_id, text: slack_code_block(record[:data]) }
+              { channel: channel_id, text: slack_code_block(record[:data][:attributes]) }
             else
               raise "Stream name not found: #{stream_name}"
             end

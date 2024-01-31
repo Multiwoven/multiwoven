@@ -23,12 +23,24 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
     catalog.streams.find { |stream| stream.name == "Account" }.json_schema
   end
 
-  let(:sync_config) do
-    {
+  let(:sync_config_json) do
+    { source: {
+        name: "DestinationConnectorName",
+        type: "destination",
+        connection_specification: {
+          private_api_key: "test_api_key"
+        }
+      },
       destination: {
         name: "Salesforce CRM",
         type: "destination",
         connection_specification: connection_config
+      },
+      model: {
+        name: "ExampleModel",
+        query: "SELECT * FROM CALL_CENTER LIMIT 1",
+        query_type: "raw_sql",
+        primary_key: "id"
       },
       stream: {
         name: "Account",
@@ -37,8 +49,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
       },
       sync_mode: "full_refresh",
       cursor_field: "timestamp",
-      destination_sync_mode: "append"
-    }.with_indifferent_access
+      destination_sync_mode: "insert" }.with_indifferent_access
   end
 
   let(:records) do
@@ -111,21 +122,24 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
   private
 
   def build_record(id, name)
-    Multiwoven::Integrations::Protocol::RecordMessage.new(
-      data: { Id: id, Name: name, NonListedField: "NonListedField Value" },
-      emitted_at: Time.now.to_i
-    )
+    {
+      "data": { "attributes": { "Id": id, "Name": name, NonListedField: "NonListedField Value" } },
+      "emitted_at": Time.now.to_i
+    }
   end
 
   def stub_create_request(id, name, response_code)
     stub_request(:post, "https://your-instance-url.salesforce.com/services/data/v59.0/sobjects/Account")
       .with(
         body: hash_including("Id" => id, "Name" => name),
-        headers: {
-          "Accept" => "*/*",
-          "Authorization" => "OAuth",
-          "Content-Type" => "application/json"
-        }
+        headers: { "Accept" => "*/*", "Authorization" => "OAuth",
+                   "Content-Type" => "application/json" }
       ).to_return(status: response_code, body: "", headers: {})
+  end
+
+  def sync_config
+    Multiwoven::Integrations::Protocol::SyncConfig.from_json(
+      sync_config_json.to_json
+    )
   end
 end

@@ -5,7 +5,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Slack Destination Spec",
     "type": "object",
-    "required": ["api_token"],
+    "required": ["api_token", "channel_id"],
     "properties": {
       "api_token": {
         "type": "string",
