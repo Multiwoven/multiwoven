@@ -1,10 +1,11 @@
 import {
 	CreateModelPayload,
 	CreateModelResponse,
+	GetModelByIdResponse,
 } from "@/views/Models/types";
 import { apiRequest, multiwovenFetch } from "./common";
 
-type APIData = {
+export type APIData = {
 	data?: Array<{
 		id: string;
 		type: string;
@@ -41,4 +42,29 @@ export const createNewModel = async (
 		method: "post",
 		url: "/models",
 		data: payload,
+	});
+
+export const getModelById = async (
+	id: string
+): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+	multiwovenFetch<string, ModelAPIResponse<GetModelByIdResponse>>({
+		method: "get",
+		url: "/models/" + id,
+	});
+
+export const putModelById = async (
+	id: string,
+	payload: UpdateModelPayload
+): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+	multiwovenFetch<UpdateModelPayload, ModelAPIResponse<GetModelByIdResponse>>({
+		method: "put",
+		url: "/models/" + id,
+		data: payload,
+	});
+
+
+export const deleteModelById = async (id:string): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+	multiwovenFetch<string, ModelAPIResponse<GetModelByIdResponse>>({
+		method: "delete",
+		url: "/models/" + id,
 	});

@@ -1,7 +1,7 @@
 import { TableDataType } from "@/components/Table/types";
 import { ColumnMapType } from "./types";
 
-type ModelData = {
+export type ModelData = {
 	id: string;
 	type: string;
 	icon: string;

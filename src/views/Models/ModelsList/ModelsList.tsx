@@ -1,7 +1,7 @@
 import GenerateTable from "@/components/Table/Table";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
-import { ConvertToTableData } from "@/utils";
+import { AddIconDataToArray, ConvertToTableData } from "@/utils";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FiPlus } from "react-icons/fi";
@@ -15,7 +15,7 @@ const ModelsList = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const models = data?.data?.data;
+  let models = data?.data?.data;
 
   const navigate = useNavigate();
 
@@ -33,12 +33,14 @@ const ModelsList = (): JSX.Element | null => {
     );
   }
 
+  models = AddIconDataToArray(models);
+
   let values = ConvertToTableData(models, [
     { name: "Name", key: "name" },
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },
-  ]);
-
+  ]);  
+  
   const handleOnRowClick = (row: any) => {
     navigate(row?.id);
   };

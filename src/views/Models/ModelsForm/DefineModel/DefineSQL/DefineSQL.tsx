@@ -77,25 +77,53 @@ const DefineSQL = ({
     }
   }
 
-  async function getPreview() {
-    setLoading(true);
-    let data = await getModelPreview(query, connector_id?.toString());
-    if (data.success) {
-      setLoading(false);
-      setTableData(ConvertModelPreviewToTableData(data.data));
-      canMoveForward(true);
-    } else {
-      console.log("error getting data", data);
-      toast({
-        title: "An Error Occured",
-        description: data.message || "Please check your query and try again",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      setLoading(false);
-    }
-  }
+	async function getPreview() {
+		setLoading(true);
+		const query = (editorRef?.current as any)?.getValue() as string;
+		let data = await getModelPreview(query, connector_id?.toString());
+
+		if (data.success) {
+			setLoading(false);
+			setTableData(ConvertModelPreviewToTableData(data.data));
+			canMoveForward(true);
+		} else {
+			toast({
+				title: "An Error Occured",
+				description: data.message || "Please check your query and try again",
+				status: "error",
+				duration: 9000,
+				isClosable: true,
+				position: "bottom-right",
+			});
+			setLoading(false);
+		}
+	}
+
+	async function handleModelUpdate() {
+		const query = (editorRef?.current as any)?.getValue() as string;
+		const updatePayload: UpdateModelPayload = {
+			model: {
+				name: prefillValues?.model_name || "",
+				description: prefillValues?.model_description || "",
+				primary_key: prefillValues?.primary_key || "",
+				connector_id: prefillValues?.connector_id || "",
+				query: query,
+				query_type: prefillValues?.query_type || "",
+			},
+		};
+
+		const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
+		if (modelUpdateResponse.data) {
+			toast({
+				title: "Model updated successfully",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+				position: "bottom-right",
+			});
+			navigate('/define/models/' + prefillValues?.model_id || '');
+		}
+	}
 
   return (
     <>
