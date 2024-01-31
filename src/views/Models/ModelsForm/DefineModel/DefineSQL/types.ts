@@ -11,11 +11,12 @@ export type ExtractedData = {
 };
 
 export type PrefillValue = {
-	connector_id: number;
+	connector_id: string;
 	connector_name: string;
 	connector_icon: string;
 	model_name: string;
 	model_description: string;
+	model_id:string;
 	query: string;
 	query_type: string;
 	primary_key: string;
@@ -26,4 +27,5 @@ export type DefineSQLProps = {
 	prefillValues?: PrefillValue;
 	isFooterVisible?: boolean;
 	newQuery?: string;
+	isUpdateButtonVisible: boolean;
 };

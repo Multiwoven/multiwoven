@@ -1,3 +1,5 @@
+import { CreateConnectorResponse } from "../Connectors/types";
+
 export type CreateModelPayload = {
   model: {
     connector_id: number;
@@ -28,6 +30,9 @@ export type GetModelByIdResponse = {
       query: string;
       query_type: string;
       updated_at: string;
+      connector: {
+        [key: string] : string | null;
+      }
     };
     id: string;
     type: string;

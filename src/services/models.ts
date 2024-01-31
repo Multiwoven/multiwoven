@@ -1,5 +1,6 @@
 import { CreateModelPayload, CreateModelResponse, GetModelByIdResponse } from "@/views/Models/types";
 import { apiRequest, multiwovenFetch } from "./common";
+import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
 
 type APIData = {
 	data?: Array<{
@@ -45,3 +46,10 @@ export const getModelById = async (id: string): Promise<ModelAPIResponse<GetMode
 		method: "get",
 		url: "/models/" + id,
 	})
+
+export const putModelById = async (id:string, payload: UpdateModelPayload): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+multiwovenFetch<UpdateModelPayload, ModelAPIResponse<GetModelByIdResponse>>({
+	method: "put",
+	url: "/models/" + id,
+	data: payload,
+})

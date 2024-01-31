@@ -15,7 +15,7 @@ import EmptyQueryPreviewImage from "@/assets/images/EmptyQueryPreview.png";
 
 import Editor from "@monaco-editor/react";
 import { useContext, useRef, useState } from "react";
-import { getModelPreview } from "@/services/models";
+import { getModelPreview, putModelById } from "@/services/models";
 import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
 import { TableDataType } from "@/components/Table/types";
@@ -24,11 +24,15 @@ import { extractData } from "@/utils";
 import ModelFooter from "../../ModelFooter";
 import { useNavigate } from "react-router-dom";
 import { DefineSQLProps } from "./types";
+import {
+	UpdateModelPayload,
+} from "@/views/Models/ViewModel/types";
 
 const DefineSQL = ({
 	hasPrefilledValues = false,
 	prefillValues,
 	isFooterVisible = true,
+	isUpdateButtonVisible = false,
 }: DefineSQLProps): JSX.Element => {
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
@@ -60,8 +64,8 @@ const DefineSQL = ({
 	const navigate = useNavigate();
 	const editorRef = useRef(null);
 
-	function handleEditorDidMount(editor:any) {
-		editorRef.current = editor;		
+	function handleEditorDidMount(editor: any) {
+		editorRef.current = editor;
 	}
 
 	function handleContinueClick(
@@ -96,9 +100,36 @@ const DefineSQL = ({
 				status: "error",
 				duration: 9000,
 				isClosable: true,
-				position: 'bottom-right'
+				position: "bottom-right",
 			});
 			setLoading(false);
+		}
+	}
+
+	async function handleModelUpdate() {
+		const query = (editorRef?.current as any)?.getValue() as string;
+		const updatePayload: UpdateModelPayload = {
+			model: {
+				name: prefillValues?.model_name || "",
+				description: prefillValues?.model_description || "",
+				primary_key: prefillValues?.primary_key || "",
+				connector_id: prefillValues?.connector_id || "",
+				query: query,
+				query_type: prefillValues?.query_type || "",
+			},
+		};
+		console.log(updatePayload);
+
+		const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
+		if (modelUpdateResponse.data) {
+			toast({
+				title: "Model updated successfully",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+				position: "bottom-right",
+			});
+			navigate('/define/models/' + prefillValues?.model_id || '');
 		}
 	}
 
@@ -159,6 +190,7 @@ const DefineSQL = ({
 								value={user_query}
 								saveViewState={true}
 								onMount={handleEditorDidMount}
+								onChange={() => canMoveForward(false)}
 								theme='light'
 							/>
 						</Box>
@@ -212,12 +244,23 @@ const DefineSQL = ({
 							bgColor: "primary.400",
 							hoverBgColor: "primary.300",
 							onClick: () =>
-								handleContinueClick((editorRef?.current as any).getValue(), connector_id, tableData),
+								handleContinueClick(
+									(editorRef?.current as any).getValue(),
+									connector_id,
+									tableData
+								),
 						},
 					]}
 				/>
 			) : (
 				<> </>
+			)}
+			{isUpdateButtonVisible ? (
+				<Button isDisabled={!moveForward} onClick={handleModelUpdate}>
+					Save Changes
+				</Button>
+			) : (
+				<></>
 			)}
 		</>
 	);

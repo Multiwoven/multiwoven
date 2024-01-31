@@ -40,7 +40,7 @@ const ModelsList = (): JSX.Element | null => {
   ]);
   
   const handleOnRowClick = (row: any) => {
-    navigate(row?.id);
+    navigate(row?.id);    
   };
 
   return (
