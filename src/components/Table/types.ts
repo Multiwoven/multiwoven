@@ -27,5 +27,6 @@ export type TableType = {
   headerColor?: string;
   headerColorVisible?: boolean;
   maxHeight?: string;
+  borderRadius?: string;
   onRowClick?: (args: any) => void;
 };
