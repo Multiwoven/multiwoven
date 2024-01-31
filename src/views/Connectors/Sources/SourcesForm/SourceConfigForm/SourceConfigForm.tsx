@@ -43,7 +43,6 @@ const SourceConfigForm = (): JSX.Element | null => {
     );
 
   const handleFormSubmit = async (formData: FormData) => {
-    console.log(formData);
     handleMoveForward(stepInfo?.formKey as string, formData);
   };
 

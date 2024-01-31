@@ -2,7 +2,7 @@ import { ColumnMapType } from "@/utils/types";
 
 export type TableDataType = {
   columns: Array<ColumnMapType>;
-  data: Array<{}>;
+  data: Array<{icon?:string}>;
 };
 
 export type ModelTableRow = {
@@ -27,5 +27,6 @@ export type TableType = {
   headerColor?: string;
   headerColorVisible?: boolean;
   maxHeight?: string;
+  borderRadius?: string;
   onRowClick?: (args: any) => void;
 };

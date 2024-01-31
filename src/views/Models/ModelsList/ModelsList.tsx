@@ -11,13 +11,13 @@ const ModelsList = (): JSX.Element | null => {
   const { data } = useQuery({
     queryKey: ["models"],
     queryFn: () => getAllModels(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
   let models = data?.data?.data;
 
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   if (!models) {
     return (
@@ -36,13 +36,13 @@ const ModelsList = (): JSX.Element | null => {
   models = AddIconDataToArray(models);
 
   let values = ConvertToTableData(models, [
-    { name: "Name", key: "name" },
+    { name: "Name", key: "name", showIcon: true },
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },
   ]);  
   
   const handleOnRowClick = (row: any) => {
-    navigate(row?.id);
+    navigate(row?.id);    
   };
 
   return (
@@ -62,6 +62,7 @@ const ModelsList = (): JSX.Element | null => {
           data={values}
           headerColorVisible={true}
           onRowClick={handleOnRowClick}
+          maxHeight="2xl"
         />
       </Box>
       <Outlet />

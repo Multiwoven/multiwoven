@@ -4,6 +4,7 @@ import {
 	GetModelByIdResponse,
 } from "@/views/Models/types";
 import { apiRequest, multiwovenFetch } from "./common";
+import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
 
 export type APIData = {
 	data?: Array<{
@@ -18,12 +19,12 @@ export type APIData = {
 	links?: Record<string, string>;
 };
 
-type ModelAPIResponse = {
+type ModelAPIResponse<T> = {
 	success: boolean;
-	data?: APIData;
+	data?: T;
 };
 
-export const getAllModels = async (): Promise<ModelAPIResponse> => {
+export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
 	return apiRequest("/models", null);
 };
 

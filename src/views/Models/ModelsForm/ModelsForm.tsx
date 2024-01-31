@@ -34,7 +34,7 @@ const ModelsForm = (): JSX.Element => {
 		{
 			formKey: "defineModel",
 			name: "Define your model",
-			component: <DefineModel />,
+			component: <DefineModel isUpdateButtonVisible = {false} />,
 			isRequireContinueCta: false,
 			beforeNextStep: () => true,
 		},
