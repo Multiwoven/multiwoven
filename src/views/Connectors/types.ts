@@ -64,14 +64,37 @@ export type CreateConnectorResponse = {
   };
 };
 
+export type ConnectorAttributes = {
+  connector_name: string;
+  connector_type: string;
+  configuration: unknown;
+  name: string;
+  description: string;
+  icon: string;
+  updated_at: string;
+  status: string;
+};
+
+export type ConnectorItem = {
+  attributes: ConnectorAttributes;
+  id: string;
+};
+
 export type ConnectorInfoResponse = {
-  data: {
-    attributes: {
-      connector_name: string;
-      connector_type: string;
-      configuration: unknown;
-      name: string;
-      description: string;
-    };
-  };
+  data: ConnectorItem;
+};
+
+export type ConnectorListResponse = {
+  data: ConnectorItem[];
+};
+
+export type ConnectorTableColumnFields =
+  | "connector_name"
+  | "icon"
+  | "updated_at"
+  | "status";
+
+export type SourceListColumnType = {
+  key: ConnectorTableColumnFields;
+  name: string;
 };

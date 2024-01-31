@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Flex, Image, Table, Tbody, Td, Text, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { TableType } from "./types";
 
 const GenerateTable = ({

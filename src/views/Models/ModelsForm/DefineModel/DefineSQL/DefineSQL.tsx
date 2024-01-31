@@ -1,13 +1,13 @@
 import {
-	Box,
-	Button,
-	Flex,
-	HStack,
-	Image,
-	Spacer,
-	Text,
-	VStack,
-	useToast,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Spacer,
+  Text,
+  VStack,
+  useToast,
 } from "@chakra-ui/react";
 
 import StarsImage from "@/assets/images/stars.svg";
@@ -36,9 +36,9 @@ const DefineSQL = ({
 }: DefineSQLProps): JSX.Element => {
 	const [tableData, setTableData] = useState<null | TableDataType>();
 
-	const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
-	const [loading, setLoading] = useState(false);
-	const [moveForward, canMoveForward] = useState(false);
+  const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+  const [loading, setLoading] = useState(false);
+  const [moveForward, canMoveForward] = useState(false);
 
 	let connector_id: string = "";
 	let connector_icon: string = "";
@@ -68,21 +68,21 @@ const DefineSQL = ({
 		editorRef.current = editor;
 	}
 
-	function handleContinueClick(
-		query: string,
-		connector_id: string | number,
-		tableData: TableDataType | null | undefined
-	) {
-		if (stepInfo?.formKey) {
-			const formData = {
-				query: query,
-				id: connector_id,
-				query_type: "raw_sql",
-				columns: tableData?.columns,
-			};
-			handleMoveForward(stepInfo.formKey, formData);
-		}
-	}
+  function handleContinueClick(
+    query: string,
+    connector_id: string | number,
+    tableData: TableDataType | null | undefined
+  ) {
+    if (stepInfo?.formKey) {
+      const formData = {
+        query: query,
+        id: connector_id,
+        query_type: "raw_sql",
+        columns: tableData?.columns,
+      };
+      handleMoveForward(stepInfo.formKey, formData);
+    }
+  }
 
 	async function getPreview() {
 		setLoading(true);

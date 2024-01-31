@@ -32,7 +32,7 @@ const menus: MenuArray = [
     heading: "SETUP",
     menu: [
       { title: "Sources", link: "/setup/sources", Icon: FiDatabase },
-      { title: "Destinations", link: "/destinations", Icon: FiMinimize },
+      { title: "Destinations", link: "/setup/destinations", Icon: FiMinimize },
     ],
   },
   {
