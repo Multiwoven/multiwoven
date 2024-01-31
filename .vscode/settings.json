@@ -1,6 +1,5 @@
 {
   "workbench.colorTheme": "Default Dark Modern",
-  "window.zoomLevel": 1,
   "git.suggestSmartCommit": false,
   "[ruby]": {
       "editor.tabSize": 2,
