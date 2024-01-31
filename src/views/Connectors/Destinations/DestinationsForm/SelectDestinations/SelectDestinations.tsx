@@ -4,10 +4,12 @@ import { getDestinationCategories } from "@/views/Connectors/helpers";
 import { useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import ContentContainer from "@/components/ContentContainer";
+import { ALL_DESTINATIONS_CATEGORY } from "@/views/Connectors/constant";
 
 const SelectDestinations = (): JSX.Element => {
-  const [selectedCategory, setSelectedCategory] =
-    useState<string>("All Destinations");
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    ALL_DESTINATIONS_CATEGORY
+  );
   const { data } = useQuery({
     queryKey: ["datasources", "destination"],
     queryFn: () => getConnectorsDefintions("destination"),
@@ -47,7 +49,7 @@ const SelectDestinations = (): JSX.Element => {
         <Box display="flex" justifyContent="center">
           <Box display="grid" gridTemplateColumns="350px 350px 350px">
             {datasources.map((datasource) =>
-              selectedCategory === "All Destinations" ||
+              selectedCategory === ALL_DESTINATIONS_CATEGORY ||
               selectedCategory === datasource.category ? (
                 <Box
                   marginX="20px"

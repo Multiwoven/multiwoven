@@ -1,3 +1,4 @@
+import { ALL_DESTINATIONS_CATEGORY } from "./constant";
 import { Connector, TestConnectionPayload } from "./types";
 
 export const processConnectorConfigData = (
@@ -14,6 +15,6 @@ export const processConnectorConfigData = (
 };
 
 export const getDestinationCategories = (data: Connector[]): string[] => [
-  "All Destinations",
+  ALL_DESTINATIONS_CATEGORY,
   ...new Set(data.map((item) => item.category)),
 ];
