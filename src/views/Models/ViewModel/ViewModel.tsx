@@ -211,6 +211,7 @@ const ViewModel = (): JSX.Element => {
 					</Formik>
 				</Box>
 			</VStack>
+			<Button>DELETE MODEL</Button>
 		</Box>
 	);
 };

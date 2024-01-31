@@ -2,7 +2,7 @@ import { CreateModelPayload, CreateModelResponse, GetModelByIdResponse } from "@
 import { apiRequest, multiwovenFetch } from "./common";
 import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
 
-type APIData = {
+export type APIData = {
 	data?: Array<{
 		id: string;
 		type: string;
