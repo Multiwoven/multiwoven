@@ -15,7 +15,7 @@ const DestinationsForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "datasource",
-      name: "Select a data source",
+      name: "Select a destination",
       component: <SelectDestinations />,
       isRequireContinueCta: false,
     },

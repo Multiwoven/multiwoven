@@ -55,6 +55,7 @@ const SelectDestinations = (): JSX.Element => {
                   borderWidth="thin"
                   padding="20px"
                   borderRadius="8px"
+                  marginY="20px"
                   cursor="pointer"
                   _hover={{
                     backgroundColor: "gray.100",
