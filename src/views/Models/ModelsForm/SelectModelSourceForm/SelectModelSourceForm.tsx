@@ -12,7 +12,7 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
 	const { data } = useQuery({
 		queryKey: ["connectors", "source"],
-		queryFn: () => getUserConnectors("Source"),
+		queryFn: () => getUserConnectors("source"),
 		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 	});
@@ -41,11 +41,12 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
 	const columns: ColumnMapType[] = [
 		{ name: "Name", key: "name" },
-		{ name: "Connector Type", key: "connector_type" },
+		{ name: "Type", key: "connector_name", showIcon: true},
+		{ name: "Created At", key: "created_at" },
 	];
 
-	let values = ConvertToTableData(connectors?.data, columns);
-	
+	let values = ConvertToTableData(connectors?.data, columns);	
+
 	return (
 		<>
 			<Box w='6xl' mx='auto'>
