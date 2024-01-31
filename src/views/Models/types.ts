@@ -1,5 +1,3 @@
-import { CreateConnectorResponse } from "../Connectors/types";
-
 export type CreateModelPayload = {
   model: {
     connector_id: number;
