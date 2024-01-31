@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { PrefillValue } from "../ModelsForm/DefineModel/DefineSQL/types";
 import TopBar from "@/components/TopBar/TopBar";
-import { getModelById, putModelById } from "@/services/models";
+import { deleteModelById, getModelById, putModelById } from "@/services/models";
 import { useNavigate, useParams } from "react-router-dom";
 import {
 	Box,
@@ -22,6 +22,7 @@ import { Editor } from "@monaco-editor/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { ModelSubmitFormValues, UpdateModelPayload } from "./types";
+
 
 const ViewModel = (): JSX.Element => {
 	const params = useParams();
@@ -53,6 +54,9 @@ const ViewModel = (): JSX.Element => {
 
 	if (!data) return <></>;
 
+	console.log(data);
+	
+
 	const prefillValues: PrefillValue = {
 		connector_id: data?.data?.attributes.connector.id || "",
 		connector_icon: data?.data?.attributes.connector.icon || "",
@@ -62,7 +66,7 @@ const ViewModel = (): JSX.Element => {
 		primary_key: data?.data?.attributes.primary_key || "",
 		query: data?.data?.attributes.query || "",
 		query_type: data?.data?.attributes.query_type || "",
-		model_id: model_id
+		model_id: model_id,
 	};
 
 	async function handleModelUpdate(values: ModelSubmitFormValues) {
@@ -83,6 +87,30 @@ const ViewModel = (): JSX.Element => {
 				status: "success",
 				duration: 3000,
 				isClosable: true,
+				position: "bottom-right",
+			});
+		}
+	}
+
+	async function handleDeleteModel() {
+		console.log("Deleting");
+		try {
+			await deleteModelById(model_id);
+			toast({
+				title: "Model deleted successfully",
+				status: "success",
+				isClosable: true,
+				duration: 5000,
+				position: "bottom-right",
+			})
+			navigate("/define/models")
+		} catch (error) {
+			toast({
+				title: "Unable to delete model",
+				description: "error",
+				status: "error",
+				isClosable: true,
+				duration: 5000,
 				position: "bottom-right",
 			});
 		}
@@ -211,7 +239,7 @@ const ViewModel = (): JSX.Element => {
 					</Formik>
 				</Box>
 			</VStack>
-			<Button>DELETE MODEL</Button>
+			<Button onClick={handleDeleteModel}>DELETE MODEL</Button>
 		</Box>
 	);
 };
