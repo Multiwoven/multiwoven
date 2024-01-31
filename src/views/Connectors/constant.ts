@@ -58,8 +58,9 @@ export const CONNECTION_STATUS: ConnectionStatus[] = [
 ];
 
 export const SOURCES_LIST_QUERY_KEY = ["connectors", "source"];
+export const DESTINATIONS_LIST_QUERY_KEY = ["connectors", "destinations"];
 
-export const SOURCE_LIST_COLUMNS: SourceListColumnType[] = [
+export const CONNECTOR_LIST_COLUMNS: SourceListColumnType[] = [
   {
     key: "connector_name",
     name: "Name",
