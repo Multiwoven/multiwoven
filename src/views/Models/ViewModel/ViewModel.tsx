@@ -53,8 +53,6 @@ const ViewModel = (): JSX.Element => {
 	}
 
 	if (!data) return <></>;
-
-	console.log(data);
 	
 
 	const prefillValues: PrefillValue = {
@@ -93,7 +91,6 @@ const ViewModel = (): JSX.Element => {
 	}
 
 	async function handleDeleteModel() {
-		console.log("Deleting");
 		try {
 			await deleteModelById(model_id);
 			toast({

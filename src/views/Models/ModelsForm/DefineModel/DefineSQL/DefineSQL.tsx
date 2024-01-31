@@ -118,7 +118,6 @@ const DefineSQL = ({
 				query_type: prefillValues?.query_type || "",
 			},
 		};
-		console.log(updatePayload);
 
 		const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
 		if (modelUpdateResponse.data) {
