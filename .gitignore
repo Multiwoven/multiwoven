@@ -3,13 +3,15 @@
 # Testing
 /coverage
 
-# Node modules and dependencies
-/node_modules/
+# production
+/build
+/dist
 
 # Build output
 /dist/
 /build/
 /.vite/
+
 
 # Environment files
 .env
@@ -33,3 +35,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+/node_modules
