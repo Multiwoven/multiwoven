@@ -62,10 +62,10 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: "Define",
-    url: "/define/*",
+    name: "Models",
+    url: "/models/*",
     component: (
-      <SuspenseWithLoader redirectRoute="/define">
+      <SuspenseWithLoader redirectRoute="/models">
         <Models />
       </SuspenseWithLoader>
     ),

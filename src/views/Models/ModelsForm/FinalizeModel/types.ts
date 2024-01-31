@@ -12,9 +12,3 @@ export type FinalizeForm = {
 	description: string;
 	primaryKey: string;
 };
-
-export type FinalizeModelProps = {
-	hasPrefilledValues?: boolean;
-	prefillValues?: FinalizeForm;
-}
-

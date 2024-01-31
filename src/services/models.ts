@@ -1,6 +1,8 @@
-import { CreateModelPayload, CreateModelResponse, GetModelByIdResponse } from "@/views/Models/types";
+import {
+	CreateModelPayload,
+	CreateModelResponse,
+} from "@/views/Models/types";
 import { apiRequest, multiwovenFetch } from "./common";
-import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
 
 type APIData = {
 	data?: Array<{
@@ -15,12 +17,12 @@ type APIData = {
 	links?: Record<string, string>;
 };
 
-type ModelAPIResponse<T> = {
+type ModelAPIResponse = {
 	success: boolean;
-	data?: T;
+	data?: APIData;
 };
 
-export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
+export const getAllModels = async (): Promise<ModelAPIResponse> => {
 	return apiRequest("/models", null);
 };
 
@@ -40,16 +42,3 @@ export const createNewModel = async (
 		url: "/models",
 		data: payload,
 	});
-
-export const getModelById = async (id: string): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
-	multiwovenFetch<string, ModelAPIResponse<GetModelByIdResponse>>({
-		method: "get",
-		url: "/models/" + id,
-	})
-
-export const putModelById = async (id:string, payload: UpdateModelPayload): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
-multiwovenFetch<UpdateModelPayload, ModelAPIResponse<GetModelByIdResponse>>({
-	method: "put",
-	url: "/models/" + id,
-	data: payload,
-})
