@@ -1,5 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Suspense, lazy } from "react";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
 const Homepage = lazy(() => import("@/views/Homepage"));
@@ -7,8 +6,13 @@ const Login = lazy(() => import("@/views/Login"));
 const SignUp = lazy(() => import("@/views/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
 const Models = lazy(() => import("@/views/Models"));
+const SetupConnectors = lazy(
+  () => import("@/views/Connectors/SetupConnectors")
+);
+// const Sources = lazy(() => import("@/views/Connectors/Sources"));
 
-import Cookies from 'js-cookie';
+// import Cookies from "js-cookie";
+// import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -23,33 +27,7 @@ interface SuspenseWithLoaderProps {
 
 const SuspenseWithLoader = ({
   children,
-  redirectRoute,
 }: SuspenseWithLoaderProps): JSX.Element => {
-  const history = useNavigate();
-
-  useEffect(() => {
-    const token = Cookies.get('authToken');
-    console.log("routename", redirectRoute)
-    if (token) {
-      history(redirectRoute);
-      if (token && redirectRoute == '/sign-up') {
-        history('/');
-      } else if (token && redirectRoute == '/login') {
-        history('/');
-      } else if (token && redirectRoute == '/account-verify') {
-        history('/');
-      } else {
-        history(redirectRoute);
-      }
-    } else if (redirectRoute == '/sign-up') {
-      history(redirectRoute);
-    } else if (redirectRoute == '/account-verify') {
-      history(redirectRoute);
-    } else {
-      history('/login');
-    }
-  }, [redirectRoute, history]);
-
   return <Suspense>{children}</Suspense>;
 };
 
@@ -57,8 +35,8 @@ export default SuspenseWithLoader;
 
 export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
-    name: 'Homepage',
-    url: '/',
+    name: "Homepage",
+    url: "/",
     component: (
       <SuspenseWithLoader redirectRoute="/">
         <Homepage />
@@ -66,8 +44,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Dashboard',
-    url: '/dashboard',
+    name: "Dashboard",
+    url: "/dashboard",
     component: (
       <SuspenseWithLoader redirectRoute="/dashboard">
         <Dashboard />
@@ -75,8 +53,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'About Us',
-    url: '/about-us',
+    name: "About Us",
+    url: "/about-us",
     component: (
       <SuspenseWithLoader redirectRoute="/about-us">
         <AboutUs />
@@ -84,20 +62,20 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Sources',
-    url: '/sources',
+    name: "Define",
+    url: "/define/*",
     component: (
-      <SuspenseWithLoader redirectRoute="/sources">
-        <AboutUs />
+      <SuspenseWithLoader redirectRoute="/define">
+        <Models />
       </SuspenseWithLoader>
     ),
   },
   {
-    name: 'Models',
-    url: '/models',
+    name: "Setup",
+    url: "/setup/*",
     component: (
-      <SuspenseWithLoader redirectRoute="/models">
-        <Models />
+      <SuspenseWithLoader redirectRoute="/setup">
+        <SetupConnectors />
       </SuspenseWithLoader>
     ),
   },
@@ -105,8 +83,8 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
-    name: 'Login',
-    url: '/login',
+    name: "Login",
+    url: "/login",
     component: (
       <SuspenseWithLoader redirectRoute="/login">
         <Login />
@@ -114,8 +92,8 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Sign Up',
-    url: '/sign-up',
+    name: "Sign Up",
+    url: "/sign-up",
     component: (
       <SuspenseWithLoader redirectRoute="/sign-up">
         <SignUp />
@@ -123,8 +101,8 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
   {
-    name: 'Account Verify',
-    url: '/account-verify',
+    name: "Account Verify",
+    url: "/account-verify",
     component: (
       <SuspenseWithLoader redirectRoute="/account-verify">
         <AccountVerify />
@@ -132,4 +110,3 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     ),
   },
 ];
-
