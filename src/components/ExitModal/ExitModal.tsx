@@ -64,7 +64,7 @@ const ExitModal = (): JSX.Element => {
                   rounded="lg"
                   pr={10}
                   pl={10}
-                  onClick={() => navigate("*")}
+                  onClick={() => navigate("/models")}
                 >
                   Exit
                 </Button>
