@@ -1,4 +1,5 @@
 import {
+  Connector,
   ConnectorInfoResponse,
   ConnectorListResponse,
   CreateConnectorPayload,
@@ -10,11 +11,7 @@ import { apiRequest, multiwovenFetch } from "./common";
 
 type ConnectorsDefinationApiResponse = {
   success: boolean;
-  data?: {
-    icon: string;
-    name: string;
-    connector_spec: Record<string, unknown>;
-  }[];
+  data?: Connector[];
 };
 
 type ConnectorDefinationApiResponse = {

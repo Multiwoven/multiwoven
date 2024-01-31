@@ -1,4 +1,4 @@
-import { TestConnectionPayload } from "./types";
+import { Connector, TestConnectionPayload } from "./types";
 
 export const processConnectorConfigData = (
   formData: unknown,
@@ -12,3 +12,8 @@ export const processConnectorConfigData = (
     name: selectedDataSource,
   };
 };
+
+export const getDestinationCategories = (data: Connector[]): string[] => [
+  "All Destinations",
+  ...new Set(data.map((item) => item.category)),
+];
