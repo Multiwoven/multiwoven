@@ -11,14 +11,14 @@ type SourceFormFooterProps = {
   isCtaDisabled?: boolean;
   isCtaLoading?: boolean;
   isBackRequired?: boolean;
-  alignTo?: RefObject<HTMLDivElement> | null;
+  isAlignToContentContainer?: boolean;
   extra?: JSX.Element;
 };
 
 const SourceFormFooter = ({
   ctaName,
   ctaType = "button",
-  alignTo,
+  isAlignToContentContainer,
   onCtaClick,
   isBackRequired,
   extra,
@@ -28,12 +28,16 @@ const SourceFormFooter = ({
   const [leftOffset, setLeftOffet] = useState<number>(0);
   const { maxContentWidth } = useUiConfig();
   const navigate = useNavigate();
+  const { contentContainerId } = useUiConfig();
 
   useEffect(() => {
-    if (alignTo) {
-      setLeftOffet(alignTo.current?.getBoundingClientRect()?.left ?? 0);
+    if (isAlignToContentContainer) {
+      setLeftOffet(
+        document.getElementById(contentContainerId)?.getBoundingClientRect()
+          ?.left ?? 0
+      );
     }
-  }, [alignTo]);
+  }, [isAlignToContentContainer]);
 
   return (
     <Box

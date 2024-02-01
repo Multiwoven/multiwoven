@@ -98,3 +98,10 @@ export type SourceListColumnType = {
   key: ConnectorTableColumnFields;
   name: string;
 };
+
+export type Connector = {
+  icon: string;
+  name: string;
+  category: string;
+  connector_spec: Record<string, unknown>;
+};

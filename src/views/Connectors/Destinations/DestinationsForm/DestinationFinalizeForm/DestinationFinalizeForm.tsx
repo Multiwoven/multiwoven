@@ -6,7 +6,6 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import SourceFormFooter from "../SourceFormFooter";
 import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
@@ -17,12 +16,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { createNewConnector } from "@/services/connectors";
 import { useQueryClient } from "@tanstack/react-query";
-import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
+import { DESTINATIONS_LIST_QUERY_KEY } from "@/views/Connectors/constant";
 import { useUiConfig } from "@/utils/hooks";
+import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 
-const finalDataSourceFormKey = "testSource";
+const finalDestinationConfigFormKey = "testDestination";
 
-const SourceFinalizeForm = (): JSX.Element | null => {
+const DestinationFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { maxContentWidth } = useUiConfig();
   const { state } = useContext(SteppedFormContext);
@@ -30,15 +30,15 @@ const SourceFinalizeForm = (): JSX.Element | null => {
   const toast = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const finalDataSourceForm = forms.find(
-    ({ stepKey }) => stepKey === finalDataSourceFormKey
-  )?.data?.[finalDataSourceFormKey] as TestConnectionPayload | undefined;
+  const finalDestinationConfigForm = forms.find(
+    ({ stepKey }) => stepKey === finalDestinationConfigFormKey
+  )?.data?.[finalDestinationConfigFormKey] as TestConnectionPayload | undefined;
 
-  if (!finalDataSourceForm) return null;
+  if (!finalDestinationConfigForm) return null;
 
   const formik = useFormik({
     initialValues: {
-      connector_name: finalDataSourceForm.name,
+      connector_name: finalDestinationConfigForm.name,
       description: "",
     },
     onSubmit: async (formData) => {
@@ -46,10 +46,10 @@ const SourceFinalizeForm = (): JSX.Element | null => {
       try {
         const payload: CreateConnectorPayload = {
           connector: {
-            configuration: finalDataSourceForm.connection_spec,
+            configuration: finalDestinationConfigForm.connection_spec,
             name: formData.connector_name,
-            connector_type: "source",
-            connector_name: finalDataSourceForm.name,
+            connector_type: "destination",
+            connector_name: finalDestinationConfigForm.name,
             description: formData.description,
           },
         };
@@ -57,16 +57,16 @@ const SourceFinalizeForm = (): JSX.Element | null => {
         const createConnectorResponse = await createNewConnector(payload);
         if (createConnectorResponse?.data) {
           queryClient.removeQueries({
-            queryKey: SOURCES_LIST_QUERY_KEY,
+            queryKey: DESTINATIONS_LIST_QUERY_KEY,
           });
 
           toast({
             status: "success",
             title: "Success!!",
-            description: "Source created successfully!",
+            description: "Destination created successfully!",
             position: "bottom-right",
           });
-          navigate("/setup/sources");
+          navigate("/setup/destinations");
         } else {
           throw new Error();
         }
@@ -74,7 +74,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
         toast({
           status: "error",
           title: "An error occurred.",
-          description: "Something went wrong while creating source.",
+          description: "Something went wrong while creating destination.",
           position: "bottom-right",
           isClosable: true,
         });
@@ -90,16 +90,16 @@ const SourceFinalizeForm = (): JSX.Element | null => {
         <form onSubmit={formik.handleSubmit}>
           <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
             <Heading size="md" fontWeight="600" marginBottom="24px">
-              Finalize settings for this source
+              Finalize settings for this destination
             </Heading>
             <Box>
               <Text marginBottom="8px" fontWeight="600">
-                Source Name
+                Destination Name
               </Text>
               <Input
                 name="connector_name"
                 type="text"
-                placeholder="Enter source name"
+                placeholder="Enter destination name"
                 background="#fff"
                 marginBottom="24px"
                 onChange={formik.handleChange}
@@ -133,4 +133,4 @@ const SourceFinalizeForm = (): JSX.Element | null => {
   );
 };
 
-export default SourceFinalizeForm;
+export default DestinationFinalizeForm;
