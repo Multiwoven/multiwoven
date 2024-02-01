@@ -43,10 +43,10 @@ Requiring minimal engineering effort, its intuitive interface simplifies buildin
 Efficiently connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction and management.
 
 - **Destinations**
-Deploy data to over 100+ different platforms. With seamless integrations to tools like Braze, Klaviyo, Facebook Ads, Salesforce, and more, Multiwoven ensures your data reaches its intended destination effectively.
+Sync data to over 100+ different business applications. Use out-of-the-box connectors to tools like Braze, Klaviyo, Slack, Facebook Ads, Salesforce, and more.
 
 - **Models**
-Craft powerful data models using SQL, visual builders, or DBT. Multiwoven's flexible modeling options allow for precise and customized data handling, suitable for any business need.
+Craft powerful data models using SQL, visual builders, or dbt. Multiwoven's flexible modeling options allow for precise and customized data preparation, suitable for any business need.
 
 - **Syncs**
 Schedule and monitor your data pipelines with ease. Multiwoven's syncing features enable you to streamline the flow of data from sources to various destinations, ensuring timely and accurate data delivery.
