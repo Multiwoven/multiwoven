@@ -58,7 +58,7 @@ const ExitModal = (): JSX.Element => {
                   Cancel
                 </Button>
                 <Button
-                  _hover={{ bgColor: "primary.500" }}
+                  _hover={{ bgColor: "primary.300" }}
                   bgColor="primary.400"
                   color='white'
                   rounded="lg"
