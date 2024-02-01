@@ -5,41 +5,28 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Snowflake Source Spec",
     "type": "object",
-    "required": ["host", "role", "warehouse", "database"],
+    "required": [
+      "username",
+      "password",
+      "host",
+      "role",
+      "warehouse",
+      "database"
+    ],
     "properties": {
-      "credentials": {
-        "title": "Authorization Method",
-        "type": "object",
-        "oneOf": [  
-          {
-            "title": "Username and Password",
-            "type": "object",
-            "required": ["username", "password", "auth_type"],
-            "order": 1,
-            "properties": {
-              "auth_type": {
-                "type": "string",
-                "const": "username/password",
-                "order": 0
-              },
-              "username": {
-                "description": "The username you created to allow multiwoven to access the database.",
-                "examples": ["MULTIWOVEN_USER"],
-                "type": "string",
-                "title": "Username",
-                "order": 1
-              },
-              "password": {
-                "description": "The password associated with the username.",
-                "type": "string",
-                "multiwoven_secret": true,
-                "title": "Password",
-                "order": 2
-              }
-            }
-          }
-        ],
-        "order": 0
+      "username": {
+        "description": "The username you created to allow multiwoven to access the database.",
+        "examples": ["MULTIWOVEN_USER"],
+        "type": "string",
+        "title": "Username",
+        "order": 1
+      },
+      "password": {
+        "description": "The password associated with the username.",
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Password",
+        "order": 2
       },
       "host": {
         "description": "The host domain of the snowflake instance (must include the account, region, cloud environment, and end with snowflakecomputing.com).",
