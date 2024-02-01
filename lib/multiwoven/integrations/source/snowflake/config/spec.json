@@ -5,28 +5,35 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Snowflake Source Spec",
     "type": "object",
-    "required": [
-      "username",
-      "password",
-      "host",
-      "role",
-      "warehouse",
-      "database"
-    ],
+    "required": ["host", "role", "warehouse", "database"],
     "properties": {
-      "username": {
-        "description": "The username you created to allow multiwoven to access the database.",
-        "examples": ["MULTIWOVEN_USER"],
-        "type": "string",
-        "title": "Username",
-        "order": 1
-      },
-      "password": {
-        "description": "The password associated with the username.",
-        "type": "string",
-        "multiwoven_secret": true,
-        "title": "Password",
-        "order": 2
+      "credentials": {
+        "title": "Authorization Method",
+        "type": "object",
+        "required": ["auth_type", "username", "password"],
+        "properties": {
+          "auth_type": {
+            "type": "string",
+            "default": "username/password",
+            "order": 0,
+            "readOnly": true
+          },
+          "username": {
+            "description": "The username for Redshift database access.",
+            "examples": ["REDSHIFT_USER"],
+            "type": "string",
+            "title": "Username",
+            "order": 1
+          },
+          "password": {
+            "description": "The password for the Redshift user.",
+            "type": "string",
+            "multiwoven_secret": true,
+            "title": "Password",
+            "order": 2
+          }
+        },
+        "order": 0
       },
       "host": {
         "description": "The host domain of the snowflake instance (must include the account, region, cloud environment, and end with snowflakecomputing.com).",
