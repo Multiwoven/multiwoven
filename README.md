@@ -13,7 +13,7 @@
 
 <h2 align="center">The open-source reverse ETL platform for data teams</h2>
 
-<div align="center">Your ultimate solution for seamless data sync from warehouse to any application.</div>
+<div align="center">Effortlessly sync customer data from the datawarehouse into your business tools.</div>
 
 <p align="center">
     <br />
