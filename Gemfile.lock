@@ -106,7 +106,7 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    async (2.8.0)
+    async (2.8.1)
       console (~> 1.10)
       fiber-annotation
       io-event (~> 1.1)
@@ -1835,7 +1835,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.3.0)
-    multiwoven-integrations (0.1.6)
+    multiwoven-integrations (0.1.9)
       activesupport
       async-websocket
       dry-schema
@@ -2016,7 +2016,7 @@ GEM
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    slack-ruby-client (2.2.0)
+    slack-ruby-client (2.3.0)
       faraday (>= 2.0)
       faraday-mashify
       faraday-multipart
@@ -2074,7 +2074,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.6)
+  multiwoven-integrations (~> 0.1.9)
   newrelic_rpm
   parallel
   pg (~> 1.1)
