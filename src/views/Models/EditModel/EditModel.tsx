@@ -26,7 +26,7 @@ const EditModel = () => {
 		primary_key: data?.data?.attributes.primary_key || "",
 		query: data?.data?.attributes.query || "",
 		query_type: data?.data?.attributes.query_type || "",
-        model_id: model_id
+		model_id: model_id,
 	};
 
 	if (isLoading) {

@@ -57,7 +57,7 @@ const SelectDataSourcesForm = (): JSX.Element => {
           >
             <Box>
               <Image
-                src={"/src/assets/icons/" + datasource.icon}
+                src={datasource.icon}
                 height="8"
                 w="min"
                 mr={3}

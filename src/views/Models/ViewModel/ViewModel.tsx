@@ -115,7 +115,7 @@ const ViewModel = (): JSX.Element => {
 
 	return (
 		<Box width='90%' mx='auto'>
-			<TopBar name={"View Model"} />
+			<TopBar name={"View Model"} extra={<Button>Hi</Button>} isCtaVisible={true} ctaColor="red.100" />
 			<VStack m={8}>
 				<Box p={2} w='5xl' mx='auto'>
 					<Flex
@@ -126,7 +126,7 @@ const ViewModel = (): JSX.Element => {
 						p={2}
 					>
 						<Image
-							src={"/src/assets/icons/" + data.data?.attributes.connector.icon}
+							src={data.data?.attributes.connector.icon || ""}
 							p={2}
 							mx={4}
 							h={12}
@@ -225,6 +225,7 @@ const ViewModel = (): JSX.Element => {
 										name='primaryKey'
 										bgColor='white'
 										w='lg'
+										isDisabled
 									/>
 									<Text color='red.500' fontSize='sm'>
 										<ErrorMessage name='primaryKey' />
