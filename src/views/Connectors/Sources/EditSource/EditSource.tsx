@@ -13,13 +13,12 @@ import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
 import SourceFormFooter from "../SourcesForm/SourceFormFooter";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 import { RJSFSchema } from "@rjsf/utils";
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
-  const containerRef = useRef(null);
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<unknown>(null);
@@ -154,7 +153,7 @@ const EditSource = (): JSX.Element => {
 
   return (
     <Box width="100%" display="flex" justifyContent="center">
-      <ContentContainer containerRef={containerRef}>
+      <ContentContainer>
         <Box marginBottom="20px">
           <TopBar name={"Sources"} isCtaVisible={false} />
         </Box>
@@ -176,10 +175,10 @@ const EditSource = (): JSX.Element => {
             <SourceFormFooter
               ctaName="Save Changes"
               ctaType="button"
-              alignTo={containerRef}
               isCtaDisabled={!testedFormData}
               onCtaClick={mutate}
               isCtaLoading={isEditLoading}
+              isAlignToContentContainer
               extra={
                 <Button
                   size="lg"
