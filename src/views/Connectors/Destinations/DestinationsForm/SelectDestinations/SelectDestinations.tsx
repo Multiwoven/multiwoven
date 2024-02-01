@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getConnectorsDefintions } from "@/services/connectors";
 import { getDestinationCategories } from "@/views/Connectors/helpers";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import ContentContainer from "@/components/ContentContainer";
 import { ALL_DESTINATIONS_CATEGORY } from "@/views/Connectors/constant";
+import { Connector } from "@/views/Connectors/types";
+import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 
 const SelectDestinations = (): JSX.Element => {
+  const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     ALL_DESTINATIONS_CATEGORY
   );
@@ -18,8 +21,12 @@ const SelectDestinations = (): JSX.Element => {
     gcTime: Infinity,
   });
 
-  const datasources = data?.data ?? [];
-  const destinationCategories = getDestinationCategories(datasources);
+  const connectors = data?.data ?? [];
+  const destinationCategories = getDestinationCategories(connectors);
+
+  const onDestinationSelect = (destination: Connector) => {
+    handleMoveForward(stepInfo?.formKey as string, destination.name);
+  };
 
   return (
     <Box display="flex" alignItems="center">
@@ -48,9 +55,9 @@ const SelectDestinations = (): JSX.Element => {
         </Box>
         <Box display="flex" justifyContent="center">
           <Box display="grid" gridTemplateColumns="350px 350px 350px">
-            {datasources.map((datasource) =>
+            {connectors.map((connector) =>
               selectedCategory === ALL_DESTINATIONS_CATEGORY ||
-              selectedCategory === datasource.category ? (
+              selectedCategory === connector.category ? (
                 <Box
                   marginX="20px"
                   display="flex"
@@ -62,8 +69,9 @@ const SelectDestinations = (): JSX.Element => {
                   _hover={{
                     backgroundColor: "gray.100",
                   }}
+                  onClick={() => onDestinationSelect(connector)}
                 >
-                  <Text fontSize="md">{datasource.name}</Text>
+                  <Text fontSize="md">{connector.name}</Text>
                 </Box>
               ) : null
             )}

@@ -8,17 +8,38 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SelectDestinations from "./SelectDestinations";
+import DestinationConfigForm from "./DestinationConfigForm";
+import DestinationFinaliseForm from "./DestinationFinaliseForm";
+import DestinationConnectionTest from "./DestinationConnectionTest/DestinationConnectionTest";
 
 const DestinationsForm = (): JSX.Element => {
   const navigate = useNavigate();
 
   const steps = [
     {
-      formKey: "datasource",
+      formKey: "destination",
       name: "Select a destination",
       component: <SelectDestinations />,
       isRequireContinueCta: false,
     },
+    {
+      formKey: "destinationConfig",
+      name: "Connect your destination",
+      component: <DestinationConfigForm />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "testDestination",
+      name: "Test your destination",
+      component: <DestinationConnectionTest />,
+      isRequireContinueCta: false,
+    },
+    // {
+    //   formKey: "finaliseDestination",
+    //   name: "Finalize your destination",
+    //   component: <DestinationConfigForm />,
+    //   isRequireContinueCta: false,
+    // },
   ];
 
   return (

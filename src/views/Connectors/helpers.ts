@@ -1,16 +1,17 @@
 import { ALL_DESTINATIONS_CATEGORY } from "./constant";
-import { Connector, TestConnectionPayload } from "./types";
+import { Connector, ConnectorTypes, TestConnectionPayload } from "./types";
 
 export const processConnectorConfigData = (
   formData: unknown,
-  selectedDataSource: string
+  selectedDataSource: string,
+  type: ConnectorTypes
 ): TestConnectionPayload | null => {
   if (!formData) return null;
 
   return {
     connection_spec: formData,
-    type: "source",
     name: selectedDataSource,
+    type,
   };
 };
 
