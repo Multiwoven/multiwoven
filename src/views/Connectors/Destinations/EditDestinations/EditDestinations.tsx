@@ -4,7 +4,7 @@ import {
   getConnectorInfo,
   updateConnector,
 } from "@/services/connectors";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
 import validator from "@rjsf/validator-ajv8";
@@ -19,6 +19,9 @@ import SourceFormFooter from "../../Sources/SourcesForm/SourceFormFooter";
 
 const EditDestination = (): JSX.Element => {
   const { destinationId } = useParams();
+  const CONNECTOR_INFO_KEY = ["connectorInfo", destinationId];
+  const queryClient = useQueryClient();
+
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<unknown>(null);
@@ -28,7 +31,7 @@ const EditDestination = (): JSX.Element => {
 
   const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } =
     useQuery({
-      queryKey: ["connectorInfo", destinationId],
+      queryKey: CONNECTOR_INFO_KEY,
       queryFn: () => getConnectorInfo(destinationId as string),
       refetchOnMount: true,
       refetchOnWindowFocus: false,
@@ -80,6 +83,11 @@ const EditDestination = (): JSX.Element => {
         position: "bottom-right",
         isClosable: true,
       });
+
+      queryClient.removeQueries({
+        queryKey: CONNECTOR_INFO_KEY,
+      });
+
       navigate("/setup/destinations");
     },
     onError: () => {

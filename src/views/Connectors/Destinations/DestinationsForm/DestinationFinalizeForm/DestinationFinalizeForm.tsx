@@ -56,9 +56,10 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
 
         const createConnectorResponse = await createNewConnector(payload);
         if (createConnectorResponse?.data) {
-          queryClient.invalidateQueries({
+          queryClient.removeQueries({
             queryKey: DESTINATIONS_LIST_QUERY_KEY,
           });
+
           toast({
             status: "success",
             title: "Success!!",
