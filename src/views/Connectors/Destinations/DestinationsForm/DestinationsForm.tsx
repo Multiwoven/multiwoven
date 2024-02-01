@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import SelectDestinations from "./SelectDestinations";
 import DestinationConfigForm from "./DestinationConfigForm";
-import DestinationFinaliseForm from "./DestinationFinaliseForm";
+import DestinationFinalizeForm from "./DestinationFinalizeForm";
 import DestinationConnectionTest from "./DestinationConnectionTest/DestinationConnectionTest";
 
 const DestinationsForm = (): JSX.Element => {
@@ -34,12 +34,12 @@ const DestinationsForm = (): JSX.Element => {
       component: <DestinationConnectionTest />,
       isRequireContinueCta: false,
     },
-    // {
-    //   formKey: "finaliseDestination",
-    //   name: "Finalize your destination",
-    //   component: <DestinationConfigForm />,
-    //   isRequireContinueCta: false,
-    // },
+    {
+      formKey: "finalizeDestination",
+      name: "Finalize your destination",
+      component: <DestinationFinalizeForm />,
+      isRequireContinueCta: false,
+    },
   ];
 
   return (
