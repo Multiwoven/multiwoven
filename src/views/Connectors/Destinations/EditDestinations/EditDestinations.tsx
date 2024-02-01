@@ -10,15 +10,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
 import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
-import SourceFormFooter from "../SourcesForm/SourceFormFooter";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
 import { useEffect, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 import { RJSFSchema } from "@rjsf/utils";
+import SourceFormFooter from "../../Sources/SourcesForm/SourceFormFooter";
 
-const EditSource = (): JSX.Element => {
-  const { sourceId } = useParams();
+const EditDestination = (): JSX.Element => {
+  const { destinationId } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<unknown>(null);
@@ -28,11 +28,11 @@ const EditSource = (): JSX.Element => {
 
   const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } =
     useQuery({
-      queryKey: ["connectorInfo", sourceId],
-      queryFn: () => getConnectorInfo(sourceId as string),
+      queryKey: ["connectorInfo", destinationId],
+      queryFn: () => getConnectorInfo(destinationId as string),
       refetchOnMount: true,
       refetchOnWindowFocus: false,
-      enabled: !!sourceId,
+      enabled: !!destinationId,
     });
 
   const connectorInfo = connectorInfoResponse?.data;
@@ -43,7 +43,8 @@ const EditSource = (): JSX.Element => {
     isLoading: isConnectorDefinitionLoading,
   } = useQuery({
     queryKey: ["connector_definition", connectorName],
-    queryFn: () => getConnectorDefinition("source", connectorName as string),
+    queryFn: () =>
+      getConnectorDefinition("destination", connectorName as string),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     enabled: !!connectorName,
@@ -61,12 +62,12 @@ const EditSource = (): JSX.Element => {
       connector: {
         configuration: testedFormData,
         name: connectorInfo?.attributes?.name,
-        connector_type: "source",
+        connector_type: "destination",
         connector_name: connectorInfo?.attributes?.connector_name,
         description: connectorInfo?.attributes?.description ?? "",
       },
     };
-    return updateConnector(payload, sourceId as string);
+    return updateConnector(payload, destinationId as string);
   };
 
   const { isPending: isEditLoading, mutate } = useMutation({
@@ -79,7 +80,7 @@ const EditSource = (): JSX.Element => {
         position: "bottom-right",
         isClosable: true,
       });
-      navigate("/setup/sources");
+      navigate("/setup/destinations");
     },
     onError: () => {
       toast({
@@ -101,7 +102,7 @@ const EditSource = (): JSX.Element => {
       const payload: TestConnectionPayload = {
         connection_spec: formData,
         name: connectorInfo?.attributes?.name,
-        type: "source",
+        type: "destination",
       };
 
       const testingConnectionResponse = await getConnectionStatus(payload);
@@ -115,7 +116,6 @@ const EditSource = (): JSX.Element => {
           position: "bottom-right",
           isClosable: true,
         });
-
         return;
       }
 
@@ -157,7 +157,7 @@ const EditSource = (): JSX.Element => {
     <Box width="100%" display="flex" justifyContent="center">
       <ContentContainer>
         <Box marginBottom="20px">
-          <TopBar name={"Sources"} isCtaVisible={false} />
+          <TopBar name={"Destination"} isCtaVisible={false} />
         </Box>
 
         <Box
@@ -199,4 +199,4 @@ const EditSource = (): JSX.Element => {
   );
 };
 
-export default EditSource;
+export default EditDestination;

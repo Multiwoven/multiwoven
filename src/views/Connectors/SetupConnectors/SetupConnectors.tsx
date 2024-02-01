@@ -4,6 +4,7 @@ import SourcesForm from "../Sources/SourcesForm";
 import EditSource from "../Sources/EditSource";
 import DestinationsList from "../Destinations/DestinationsList";
 import DestinationsForm from "../Destinations/DestinationsForm";
+import EditDestinations from "../Destinations/EditDestinations";
 
 const SetupConnectors = (): JSX.Element => {
   return (
@@ -16,7 +17,7 @@ const SetupConnectors = (): JSX.Element => {
       <Route path="destinations">
         <Route index element={<DestinationsList />} />
         <Route path="new" element={<DestinationsForm />} />
-        <Route path=":sourceId" element={<EditSource />} />
+        <Route path=":destinationId" element={<EditDestinations />} />
       </Route>
       <Route path="*" element={<Navigate to="sources" />} />
     </Routes>
