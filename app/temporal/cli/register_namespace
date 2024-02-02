@@ -22,19 +22,3 @@ rescue GRPC::NotFound
   sleep 1
   next
 end
-
-# Register a variety of search attributes for ease of integration testing
-attributes_to_add = {
-  "CustomStringField" => :text,
-  "CustomDoubleField" => :double,
-  "CustomBoolField" => :bool,
-  "CustomIntField" => :int,
-  "CustomDatetimeField" => :datetime
-}
-
-attributes_to_add.each do |name, type|
-  Temporal.add_custom_search_attributes({ name: type })
-  Temporal.logger.info("Registered search attributes #{name} = #{type}", { namespace: })
-rescue Temporal::SearchAttributeAlreadyExistsFailure
-  Temporal.logger.info("Default search attribute #{name} already exist for namespace", { namespace: })
-end

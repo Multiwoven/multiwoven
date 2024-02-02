@@ -36,20 +36,24 @@ RUN ./configure && \
     make && \
     make install
 
-# # Navigate to the directory of the component you want to build
-WORKDIR /multiwoven-dependencies/libiodbc-3.52.10
+# Install iodbc
+RUN apt-get update -qq && \
+    apt-get install -y libiodbc2 && \
+    rm -rf /var/lib/apt/lists/*
 
-# Run autoreconf
-RUN autoreconf -f -i
+# Hack for snowflake odbc driver
+RUN apt-get update -qq && \
+    apt-get install -y unixodbc && \
+    rm -rf /var/lib/apt/lists/*
 
-# Run configure and make install
-RUN ./configure && \
-    make && \
-    make install
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends wget && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the Snowflake ODBC driver
-RUN wget https://sfc-repo.snowflakecomputing.com/odbc/linux/latest/snowflake-odbc-3.1.4.x86_64.deb -O snowflake-odbc.deb && \
-    dpkg -i snowflake-odbc.deb || apt-get install -f
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+RUN wget https://sfc-repo.snowflakecomputing.com/odbc/linuxaarch64/3.2.0/snowflake-odbc-3.2.0.aarch64.deb -O snowflake-odbc.deb && \
+    dpkg -i snowflake-odbc.deb || apt-get -y -f install
 
 # Change back to the root directory before copying the Rails app
 # Rails app lives here
@@ -67,18 +71,10 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Final stage for app image
-FROM base
-
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# Copy built artifacts: gems, application
-COPY --from=build /usr/local/lib /usr/local/lib
-COPY --from=build /usr/local/bundle /usr/local/bundle
-COPY --from=build /rails /rails
 
 # Add a command here to list files in /rails/bin for debugging
 RUN ls -l /rails/bin
