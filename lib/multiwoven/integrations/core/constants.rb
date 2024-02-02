@@ -11,7 +11,9 @@ module Multiwoven
       META_DATA_PATH = "config/meta.json"
       CONNECTOR_SPEC_PATH = "config/spec.json"
       CATALOG_SPEC_PATH   = "config/catalog.json"
-      SNOWFLAKE_DRIVER_PATH = "/opt/snowflake/snowflakeodbc/lib/universal/libSnowflake.dylib"
+      SNOWFLAKE_MAC_DRIVER_PATH = "/opt/snowflake/snowflakeodbc/lib/universal/libSnowflake.dylib"
+
+      SNOWFLAKE_DRIVER_PATH = ENV["SNOWFLAKE_DRIVER_PATH"] || SNOWFLAKE_MAC_DRIVER_PATH
 
       # CONNECTORS
       KLAVIYO_AUTH_ENDPOINT = "https://a.klaviyo.com/api/lists/"
