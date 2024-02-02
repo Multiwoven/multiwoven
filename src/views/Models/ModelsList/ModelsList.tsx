@@ -1,3 +1,4 @@
+import ContentContainer from "@/components/ContentContainer";
 import GenerateTable from "@/components/Table/Table";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
@@ -8,66 +9,68 @@ import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const ModelsList = (): JSX.Element | null => {
-  const { data } = useQuery({
-    queryKey: ["models"],
-    queryFn: () => getAllModels(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+	const { data } = useQuery({
+		queryKey: ["models"],
+		queryFn: () => getAllModels(),
+		refetchOnMount: true,
+		refetchOnWindowFocus: false,
+	});
 
-  let models = data?.data?.data;
+	let models = data?.data?.data;
 
-  const navigate = useNavigate();  
+	const navigate = useNavigate();
 
-  if (!models) {
-    return (
-      <Box mx="auto">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Box>
-    );
-  }
+	if (!models) {
+		return (
+			<Box mx='auto'>
+				<Spinner
+					thickness='4px'
+					speed='0.65s'
+					emptyColor='gray.200'
+					color='blue.500'
+					size='xl'
+				/>
+			</Box>
+		);
+	}
 
-  models = AddIconDataToArray(models);
+	models = AddIconDataToArray(models);
 
-  let values = ConvertToTableData(models, [
-    { name: "Name", key: "name", showIcon: true },
-    { name: "Query Type", key: "query_type" },
-    { name: "Updated At", key: "updated_at" },
-  ]);  
-  
-  const handleOnRowClick = (row: any) => {
-    navigate(row?.id);    
-  };
+	let values = ConvertToTableData(models, [
+		{ name: "Name", key: "name", showIcon: true },
+		{ name: "Query Type", key: "query_type" },
+		{ name: "Updated At", key: "updated_at" },
+	]);
 
-  return (
-    <Box width="90%" mx="auto" py={12}>
-      <TopBar
-        name={"Models"}
-        ctaName="Add model"
-        ctaIcon={<FiPlus color="gray.100" />}
-        ctaBgColor={"orange.500"}
-        ctaHoverBgColor={"orange.400"}
-        ctaColor={"white"}
-        onCtaClicked={() => navigate("new")}
-        isCtaVisible
-      />
-      <Box mt={16}>
-        <GenerateTable
-          data={values}
-          headerColorVisible={true}
-          onRowClick={handleOnRowClick}
-          maxHeight="2xl"
-        />
-      </Box>
-      <Outlet />
-    </Box>
-  );
+	const handleOnRowClick = (row: any) => {
+		navigate(row?.id);
+	};
+
+	return (
+		<Box width='100%' display='flex' flexDirection='column' alignItems='center'>
+			<ContentContainer>
+				<TopBar
+					name={"Models"}
+					ctaName='Add model'
+					ctaIcon={<FiPlus color='gray.100' />}
+					ctaBgColor={"orange.500"}
+					ctaHoverBgColor={"orange.400"}
+					ctaColor={"white"}
+					onCtaClicked={() => navigate("new")}
+					isCtaVisible
+				/>
+				<Box mt={16}>
+					<GenerateTable
+						data={values}
+						headerColorVisible={true}
+						onRowClick={handleOnRowClick}
+						maxHeight='2xl'
+					/>
+				</Box>
+				<Outlet />
+			</ContentContainer>
+		</Box>
+	);
 };
 
 export default ModelsList;

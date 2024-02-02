@@ -147,7 +147,7 @@ const DefineSQL = ({
 						<Flex bgColor='gray.200' p={2} roundedTop='xl'>
 							<Flex w='full' alignItems='center'>
 								<Image
-									src={"/src/assets/icons/" + connector_icon}
+									src={connector_icon}
 									p={2}
 									mx={4}
 									h={12}

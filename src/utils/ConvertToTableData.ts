@@ -1,5 +1,6 @@
 import { TableDataType } from "@/components/Table/types";
 import { ColumnMapType } from "./types";
+import moment from "moment";
 
 export type ModelData = {
 	id: string;
@@ -15,12 +16,13 @@ export function ConvertToTableData(
 	apiData: ModelData[],
 	columnMap: ColumnMapType[]
 ): TableDataType {
-	let data = apiData.map((item) => {
+	let data = apiData.map((item) => {		
 		let rowData: { [key: string]: string | null } = {};
 		rowData = item.attributes;
 
 		if (item.id) rowData["id"] = item.id;
-
+		if (item.attributes.updated_at) rowData["updated_at"] = moment(item.attributes.updated_at).format("DD/MM/YYYY")
+		if (item.attributes.updated_at) rowData["created_at"] = moment(item.attributes.updated_at).format("DD/MM/YYYY")
 		return rowData;
 	});
 

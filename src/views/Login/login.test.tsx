@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import Login from './Login';
 import Cookies from 'js-cookie';
 
-jest.mock('../../services/common', () => ({
+jest.mock('@/services/common', () => ({
   login: jest.fn().mockResolvedValue({ success: true, response: { data: { token: 'mockToken' } } }),
 }));
 

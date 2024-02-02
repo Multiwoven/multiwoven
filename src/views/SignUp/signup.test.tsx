@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import SignUp from './SignUp'; // Update the path based on your project structure
 
-jest.mock('../../services/common', () => ({
+jest.mock('@/services/common', () => ({
   signUp: jest.fn().mockResolvedValue({ success: true }),
 }));
 

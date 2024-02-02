@@ -5,9 +5,13 @@ import { Box } from "@chakra-ui/react";
 import { getModelById } from "@/services/models";
 import { PrefillValue } from "../ModelsForm/DefineModel/DefineSQL/types";
 import TopBar from "@/components/TopBar";
+import { useRef } from "react";
+import ContentContainer from "@/components/ContentContainer";
 
 const EditModel = () => {
 	const params = useParams();
+	const containerRef = useRef(null);
+
 	const model_id = params.id || "";
 
 	const { data, isLoading, isError } = useQuery({
@@ -26,7 +30,7 @@ const EditModel = () => {
 		primary_key: data?.data?.attributes.primary_key || "",
 		query: data?.data?.attributes.query || "",
 		query_type: data?.data?.attributes.query_type || "",
-        model_id: model_id
+		model_id: model_id,
 	};
 
 	if (isLoading) {
@@ -38,14 +42,16 @@ const EditModel = () => {
 	}
 
 	return (
-		<Box width='90%' mx='auto'>
-			<TopBar name='Edit Model Query' />
-			<DefineSQL
-				isFooterVisible={false}
-				hasPrefilledValues={true}
-				prefillValues={prefillValues}
-				isUpdateButtonVisible={true}
-			/>
+		<Box width='100%' display='flex' justifyContent='center'>
+			<ContentContainer containerRef={containerRef}>
+				<TopBar name="Edit Model Query" />
+				<DefineSQL
+					isFooterVisible={false}
+					hasPrefilledValues={true}
+					prefillValues={prefillValues}
+					isUpdateButtonVisible={true}
+				/>
+			</ContentContainer>
 		</Box>
 	);
 };
