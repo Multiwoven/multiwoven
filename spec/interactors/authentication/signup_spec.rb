@@ -23,8 +23,19 @@ RSpec.describe Authentication::Signup, type: :interactor do
         expect(context).to be_success
       end
 
-      it "provides a success message" do
-        expect(context.message).to eq("Signup successful!")
+      it "confirms the user" do
+        expect(User.find_by(email: params[:email])).to be_nil
+
+        # Execute the interactor
+        context
+
+        user = User.find_by(email: params[:email])
+        expect(user).not_to be_nil
+        expect(user.confirmed_at).not_to be_nil
+      end
+
+      it "provides a JWT token" do
+        expect(context.token).not_to be_nil
       end
 
       it "creates a new user" do

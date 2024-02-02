@@ -27,7 +27,15 @@ module Api
       def signup
         result = Signup.call(params:)
         if result.success?
-          render json: result.user, status: :created
+          render json: {
+            data: {
+              type: "token",
+              id: result.token,
+              attributes: {
+                token: result.token
+              }
+            }
+          }, status: :created
         else
           render_error(message: "Signup failed", status: :unprocessable_entity,
                        details: format_errors(result.user))

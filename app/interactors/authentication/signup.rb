@@ -8,9 +8,11 @@ module Authentication
       ActiveRecord::Base.transaction do
         create_new_user
         create_organization_and_workspace
-        assign_confirmation_code
+        # Commenting out the assign_confirmation_code and send_confirmation_email steps
+        # assign_confirmation_code
+        # send_confirmation_email
         save_user
-        send_confirmation_email
+        confirm_user_and_generate_token if user.persisted?
       end
     rescue ActiveRecord::RecordInvalid => e
       context.fail!(error: e.message)
@@ -34,6 +36,17 @@ module Authentication
       return unless organization.errors.empty?
 
       create_workspace
+    end
+
+    def confirm_user_and_generate_token
+      # Confirm the user
+      user.update!(confirmed_at: Time.current)
+      # Generate JWT token, similar to the Login interactor
+      token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+      user.update!(jti: payload["jti"])
+
+      context.token = token
+      context.message = "Signup and confirmation successful!"
     end
 
     def assign_confirmation_code

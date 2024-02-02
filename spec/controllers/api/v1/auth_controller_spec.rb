@@ -25,9 +25,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :signup, params: user_attributes
 
         expect(response).to have_http_status(:created)
-        expect(response_data["type"]).to eq("users")
-        expect(response_data["attributes"]["name"]).to eq(user_attributes[:name])
-        expect(response_data["attributes"]["email"]).to eq(user_attributes[:email])
+        expect(response_data["type"]).to eq("token")
+        expect(response_data["attributes"]["token"]).not_to be_nil
       end
     end
 
