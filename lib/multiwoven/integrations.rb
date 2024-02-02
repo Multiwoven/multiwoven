@@ -13,6 +13,7 @@ require "active_support/core_ext/hash/indifferent_access"
 require "restforce"
 require "logger"
 require "slack-ruby-client"
+require "git"
 
 # Service
 require_relative "integrations/config"

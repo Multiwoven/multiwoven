@@ -7,12 +7,13 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.9)
+    multiwoven-integrations (0.1.10)
       activesupport
       async-websocket
       dry-schema
       dry-struct
       dry-types
+      git
       google-cloud-bigquery
       pg
       rake
@@ -107,6 +108,9 @@ GEM
     faraday-net_http (3.0.2)
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
+    git (1.19.1)
+      addressable (~> 2.8)
+      rchardet (~> 1.8)
     gli (2.21.1)
     google-apis-bigquery_v2 (0.61.0)
       google-apis-core (>= 0.11.0, < 2.a)
@@ -163,6 +167,7 @@ GEM
     racc (1.7.3)
     rainbow (3.1.1)
     rake (13.1.0)
+    rchardet (1.8.0)
     regexp_parser (2.8.2)
     representable (3.2.0)
       declarative (< 0.1.0)
@@ -251,6 +256,7 @@ DEPENDENCIES
   dry-schema
   dry-struct
   dry-types
+  git
   google-cloud-bigquery
   multiwoven-integrations!
   pg

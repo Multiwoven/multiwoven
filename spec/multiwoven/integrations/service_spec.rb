@@ -12,7 +12,7 @@ RSpec.describe Multiwoven::Integrations::Service do
       stub_const("Multiwoven::Integrations::Service::ENABLED_SOURCES", ["Source1"])
       stub_const("Multiwoven::Integrations::Service::ENABLED_DESTINATIONS", ["Destination1"])
       allow(described_class).to receive(:connector_class).and_return(double("Connector", new: double(
-        "Instance", meta_data: { data: {} }, connector_spec: {}
+        "Instance", meta_data: { "data": { "icon": "source1.svg" } }, connector_spec: {}
       )))
     end
 
