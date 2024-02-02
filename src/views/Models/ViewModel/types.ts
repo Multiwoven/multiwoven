@@ -1,7 +1,7 @@
 export type ModelSubmitFormValues = {
 	modelName: string;
 	description: string;
-	primaryKey: string;
+	primaryKey?: string;
 };
 
 export type UpdateModelPayload = {

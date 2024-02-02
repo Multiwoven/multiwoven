@@ -10,6 +10,7 @@ type TopBarType = {
 	onCtaClicked?: () => void;
 	isCtaVisible?: boolean;
 	extra?: JSX.Element;
+	ctaButtonVariant?: string;
 };
 
 const TopBar = ({
@@ -19,6 +20,7 @@ const TopBar = ({
 	onCtaClicked = () => {},
 	isCtaVisible,
 	extra,
+	ctaButtonVariant = "solid",
 }: TopBarType): JSX.Element => (
 	<Flex
 		justifyContent='space-between'
@@ -32,7 +34,7 @@ const TopBar = ({
 			{extra}
 			{isCtaVisible ? (
 				<Button
-					variant='solid'
+					variant={ctaButtonVariant}
 					leftIcon={ctaIcon}
 					size='lg'
 					onClick={onCtaClicked}
