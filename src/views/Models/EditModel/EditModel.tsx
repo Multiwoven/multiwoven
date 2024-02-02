@@ -44,9 +44,9 @@ const EditModel = () => {
 	return (
 		<Box width='100%' display='flex' justifyContent='center'>
 			<ContentContainer containerRef={containerRef}>
-				<TopBar name='Edit Model Query' />
+				<TopBar name="Edit Model Query" />
 				<DefineSQL
-					isFooterVisible={true}
+					isFooterVisible={false}
 					hasPrefilledValues={true}
 					prefillValues={prefillValues}
 					isUpdateButtonVisible={true}
