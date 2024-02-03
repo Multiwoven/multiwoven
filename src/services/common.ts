@@ -93,22 +93,22 @@ export const multiwovenFetch = async <PayloadType, ResponseType>({
 		return axios
 			.post(url, data)
 			.then((res) => res?.data)
-			.catch((err) => err);
+			.catch((err) => err?.response);
 
 	if (method === "put")
 		return axios
 			.put(url, data)
 			.then((res) => res?.data)
-			.catch((err) => err);
+			.catch((err) => err?.response);
 
 	if (method === "delete")
 		return axios
 			.delete(url)
 			.then((res) => res?.data)
-			.catch((err) => err);
+			.catch((err) => err?.response);
 
 	return axios
 		.get(url)
 		.then((res) => res?.data)
-		.catch((err) => err);
+		.catch((err) => err?.response);
 };
