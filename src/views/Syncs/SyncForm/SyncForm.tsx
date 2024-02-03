@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SelectModel from "./SelectModel";
+import SelectDestination from "./SelectDestination";
 
 const SyncForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -16,6 +17,12 @@ const SyncForm = (): JSX.Element => {
       formKey: "selectModel",
       name: "Select a model",
       component: <SelectModel />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "selectDestination",
+      name: "Select a destination",
+      component: <SelectDestination />,
       isRequireContinueCta: false,
     },
   ];
