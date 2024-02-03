@@ -9,6 +9,9 @@ const Models = lazy(() => import("@/views/Models"));
 const SetupConnectors = lazy(
   () => import("@/views/Connectors/SetupConnectors")
 );
+
+const Syncs = lazy(() => import("@/views/Syncs"));
+
 // const Sources = lazy(() => import("@/views/Connectors/Sources"));
 
 // import Cookies from "js-cookie";
@@ -76,6 +79,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute="/setup">
         <SetupConnectors />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: "Syncs",
+    url: "/syncs/*",
+    component: (
+      <SuspenseWithLoader redirectRoute="/syncs">
+        <Syncs />
       </SuspenseWithLoader>
     ),
   },
