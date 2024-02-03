@@ -1,6 +1,6 @@
 import { useUiConfig } from "@/utils/hooks";
 import { Box, Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
-import { RefObject, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiBookOpen, FiHeadphones } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 
