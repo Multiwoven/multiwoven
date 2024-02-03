@@ -131,10 +131,10 @@ const SignUp = (): JSX.Element => {
 	return (
 		<Formik
 			initialValues={{
-				name: "",
-				email: "",
-				password: "",
-				password_confirmation: "",
+				name: " ",
+				email: " ",
+				password: " ",
+				password_confirmation: " ",
 			}}
 			onSubmit={(values) => handleSubmit(values)}
 			validationSchema={SignUpSchema}
