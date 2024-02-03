@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from "./routes";
-import Heading from "./components/Heading";
 import MainLayout from "./views/MainLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PageNotFound from "./views/PageNotFound";
