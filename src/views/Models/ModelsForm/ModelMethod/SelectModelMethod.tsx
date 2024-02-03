@@ -15,7 +15,7 @@ import { ModelMethodType } from "./types";
 import ModelFooter from "../ModelFooter";
 import { useNavigate } from "react-router-dom";
 
-const ModelMethod = () => {
+const ModelMethod = () : JSX.Element => {
 	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
 	const handleOnClick = (method: ModelMethodType) => {

@@ -41,7 +41,7 @@ interface Payload {
   status?: string;
 }
 
-const ConnectorTable = ({ payload }: { payload: Payload[] }) => {
+const ConnectorTable = ({ payload }: { payload: Payload[] }) : JSX.Element => {
   const navigate = useNavigate();
 
   return (

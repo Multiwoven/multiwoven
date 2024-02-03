@@ -1,7 +1,7 @@
 import { Container, Stack, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const NoConnectors = (connectorType: any) => {
+const NoConnectors = (connectorType: any) : JSX.Element => {
   return (
     <>
       <Link to="new">

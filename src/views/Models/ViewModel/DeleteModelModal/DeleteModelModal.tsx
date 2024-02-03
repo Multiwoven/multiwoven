@@ -18,7 +18,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import ExitWarningImage from "@/assets/images/ExitWarning.png";
 
-const DeleteModelModal = () => {
+const DeleteModelModal = () : JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const params = useParams();

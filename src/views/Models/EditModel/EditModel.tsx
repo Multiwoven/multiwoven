@@ -8,7 +8,7 @@ import TopBar from "@/components/TopBar";
 import { useRef } from "react";
 import ContentContainer from "@/components/ContentContainer";
 
-const EditModel = () => {
+const EditModel = () : JSX.Element => {
 	const params = useParams();
 	const containerRef = useRef(null);
 

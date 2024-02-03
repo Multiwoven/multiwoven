@@ -25,7 +25,7 @@ import {
   Checkbox,
 } from "@chakra-ui/react";
 import MultiwovenIcon from "../../assets/images/icon.png";
-import { login } from "../../services/common";
+import { login } from "@/services/common";
 import { GoogleIcon } from "./providerIcon";
 import Cookies from "js-cookie";
 
