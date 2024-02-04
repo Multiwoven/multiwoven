@@ -1,6 +1,6 @@
 {
   "data": {
-    "name": "Redshift",
+    "name": "Amazon Redshift",
     "connector_type": "source",
     "category": "Data Warehouse",
     "documentation_url": "https://docs.mutliwoven.com",

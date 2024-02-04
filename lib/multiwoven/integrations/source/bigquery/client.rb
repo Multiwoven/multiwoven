@@ -52,9 +52,9 @@ module Multiwoven::Integrations::Source
 
         bigquery = create_connection(connection_config)
         records = []
-        results = bigquery.query query
+        results = bigquery.query(query) || []
         results.each do |row|
-          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i)
+          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
         end
 
         records

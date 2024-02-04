@@ -117,10 +117,10 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do # rubocop:d
       records = client.read(s_config)
       expect(records).to be_an(Array)
       expect(records).not_to be_empty
-      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-      expect(records.first.data).to eq(result_row1)
-      expect(records[1]).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-      expect(records[1].data).to eq(result_row2)
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      expect(records.first.record.data).to eq(result_row1)
+      expect(records[1]).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      expect(records[1].record.data).to eq(result_row2)
     end
 
     it "reads records successfully for batched_query" do
@@ -135,10 +135,10 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do # rubocop:d
       records = client.read(s_config)
       expect(records).to be_an(Array)
       expect(records).not_to be_empty
-      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-      expect(records.first.data).to eq(result_row1)
-      expect(records[1]).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-      expect(records[1].data).to eq(result_row2)
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      expect(records.first.record.data).to eq(result_row1)
+      expect(records[1]).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      expect(records[1].record.data).to eq(result_row2)
     end
 
     it "read records failure" do

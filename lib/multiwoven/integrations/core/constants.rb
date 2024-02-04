@@ -12,6 +12,7 @@ module Multiwoven
       CONNECTOR_SPEC_PATH = "config/spec.json"
       CATALOG_SPEC_PATH   = "config/catalog.json"
       SNOWFLAKE_MAC_DRIVER_PATH = "/opt/snowflake/snowflakeodbc/lib/universal/libSnowflake.dylib"
+      MAIN_BRANCH_SHA = Git.ls_remote("https://github.com/Multiwoven/multiwoven-integrations")["head"][:sha]
 
       SNOWFLAKE_DRIVER_PATH = ENV["SNOWFLAKE_DRIVER_PATH"] || SNOWFLAKE_MAC_DRIVER_PATH
 

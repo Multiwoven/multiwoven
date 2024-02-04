@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
+RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
 
   before(:each) do
@@ -116,6 +116,13 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
         expect(response.tracking.failed).to eq(records.size)
         expect(response.tracking.success).to eq(0)
       end
+    end
+  end
+
+  describe "#meta_data" do
+    it "serves it github image url as icon" do
+      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{client.class::MAIN_BRANCH_SHA}/assets/images/connectors/salesforce.svg"
+      expect(client.send(:meta_data)[:icon]).to eq(image_url)
     end
   end
 

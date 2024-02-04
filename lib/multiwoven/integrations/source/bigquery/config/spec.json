@@ -3,25 +3,78 @@
   "stream_type": "dynamic",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "BigQuery Source Spec",
+    "title": "Google BigQuery",
     "type": "object",
     "required": ["project_id", "credentials_json"],
     "properties": {
       "project_id": {
         "type": "string",
-        "description": "The GCP project ID for the project containing the target BigQuery dataset.",
+        "description": "The project ID, serving as the unique identifier for the Google Cloud project associated with your BigQuery data warehouse, can be located within the Google Cloud web console. This is achieved by either selecting your project name from the top navigation bar or by navigating to the project settings page.",
         "title": "Project ID"
       },
       "dataset_id": {
         "type": "string",
-        "description": "The dataset ID to search for tables and views. If you are only loading data from one dataset, setting this option could result in much faster schema discovery.",
+        "description": "The dataset ID to search for tables and views. If you are only loading data from one dataset, setting this option could result in much faster schema discovery. You can get ",
         "title": "Default Dataset ID"
       },
       "credentials_json": {
-        "type": "string",
-        "description": "The contents of your Service Account Key JSON file. See the <a href=\"https://docs.multiwoven.com/integrations/sources/bigquery#setup-the-bigquery-source-in-multiwoven\">docs</a> for more information on how to obtain this key.",
-        "title": "Credentials JSON",
-        "multiwoven_secret": true
+        "type": "object",
+        "description": "You can get the keys from the Google Cloud web console. First, go to the IAM page and select Service Accounts from the left menu. Next, locate your service account in the list, click on its Keys tab, and then click Add Key. Lastly, click Create new key and select JSON.",
+        "title": "",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["service_account"]
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "private_key_id": {
+            "type": "string"
+          },
+          "private_key": {
+            "type": "string"
+          },
+          "client_email": {
+            "type": "string",
+            "format": "email"
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "auth_uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "token_uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "auth_provider_x509_cert_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "client_x509_cert_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "universe_domain": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "project_id",
+          "private_key_id",
+          "private_key",
+          "client_email",
+          "client_id",
+          "auth_uri",
+          "token_uri",
+          "auth_provider_x509_cert_url",
+          "client_x509_cert_url",
+          "universe_domain"
+        ]
       }
     }
   }

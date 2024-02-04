@@ -3,7 +3,6 @@
 module Multiwoven
   module Integrations
     class Service
-      MAIN_BRANCH_SHA = Git.ls_remote("https://github.com/Multiwoven/multiwoven-integrations")["head"][:sha]
       class << self
         def initialize
           yield(config) if block_given?
@@ -40,10 +39,7 @@ module Multiwoven
           enabled_connectors.map do |connector|
             client = connector_class(type, connector).new
             connector_spec = { connector_spec: client.connector_spec.to_h }
-            icon_name = client.meta_data.with_indifferent_access["data"]["icon"]
-            icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}/assets/images/connectors/#{icon_name}"
             client.meta_data["data"].to_h.merge!(connector_spec)
-            client.meta_data["data"].to_h.merge!({ "icon": icon_url })
           end
         end
 

@@ -3,12 +3,12 @@
   "stream_type": "dynamic",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Snowflake Source Spec",
+    "title": "Snowflake",
     "type": "object",
     "required": ["host", "role", "warehouse", "database"],
     "properties": {
       "credentials": {
-        "title": "Authorization Method",
+        "title": "",
         "type": "object",
         "required": ["auth_type", "username", "password"],
         "properties": {
@@ -19,14 +19,14 @@
             "readOnly": true
           },
           "username": {
-            "description": "The username for Redshift database access.",
-            "examples": ["REDSHIFT_USER"],
+            "description": "The username you created to allow multiwoven to access the database.",
+            "examples": ["MULTIWOVEN_USER"],
             "type": "string",
             "title": "Username",
             "order": 1
           },
           "password": {
-            "description": "The password for the Redshift user.",
+            "description": "The password associated with the username.",
             "type": "string",
             "multiwoven_secret": true,
             "title": "Password",
