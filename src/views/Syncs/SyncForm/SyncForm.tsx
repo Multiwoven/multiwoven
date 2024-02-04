@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import SelectModel from "./SelectModel";
 import SelectDestination from "./SelectDestination";
+import ConfigureSyncs from "./ConfigureSyncs";
 
 const SyncForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -23,6 +24,12 @@ const SyncForm = (): JSX.Element => {
       formKey: "selectDestination",
       name: "Select a destination",
       component: <SelectDestination />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "configureSyncs",
+      name: "Configure sync",
+      component: <ConfigureSyncs />,
       isRequireContinueCta: false,
     },
   ];

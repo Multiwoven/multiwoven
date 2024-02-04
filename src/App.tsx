@@ -21,10 +21,7 @@ const App = (): JSX.Element => {
           ))}
         </Route>
 
-        <Route
-          path="*"
-          element={<PageNotFound />}
-        />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>

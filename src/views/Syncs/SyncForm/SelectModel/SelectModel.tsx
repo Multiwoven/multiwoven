@@ -12,7 +12,7 @@ const SelectModel = (): JSX.Element => {
   };
 
   return (
-    <Box>
+    <Box width="100%" display="flex" justifyContent="center">
       <ContentContainer>
         <ModelTable handleOnRowClick={handleOnRowClick} />
       </ContentContainer>

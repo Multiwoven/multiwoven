@@ -12,7 +12,7 @@ const SelectDestination = (): JSX.Element => {
   };
 
   return (
-    <Box>
+    <Box width="100%" display="flex" justifyContent="center">
       <ContentContainer>
         <DestinationsTable
           handleOnRowClick={(data) => handleOnRowClick(data)}
