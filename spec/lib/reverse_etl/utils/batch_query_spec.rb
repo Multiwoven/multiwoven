@@ -17,7 +17,7 @@ module ReverseEtl
           call_count = 0
           allow(client).to receive(:read) do |_config|
             call_count += 1
-            call_count < 10 ? Array.new(100, "mock_data") : Array.new(99, "mock_data")
+            call_count < 10 ? Array.new(100, "mock_data") : []
           end
         end
 
@@ -37,9 +37,9 @@ module ReverseEtl
             results << result
           end
 
-          expect(results.size).to eq(10)
+          expect(results.size).to eq(9)
           expect(results.first.size).to eq(100)
-          expect(results.last.size).to eq(99)
+          expect(results.last.size).to eq(100)
         end
       end
     end

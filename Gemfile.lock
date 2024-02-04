@@ -1647,7 +1647,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
-    bigdecimal (3.1.5)
+    bigdecimal (3.1.6)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -1657,7 +1657,7 @@ GEM
     byebug (11.1.3)
     case_transform (0.2)
       activesupport
-    concurrent-ruby (1.2.2)
+    concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     console (1.23.3)
       fiber-annotation
@@ -1834,11 +1834,11 @@ GEM
       net-smtp
     marcel (1.0.2)
     mini_mime (1.1.5)
-    minitest (5.21.1)
+    minitest (5.21.2)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.3.0)
-    multiwoven-integrations (0.1.11)
+    multiwoven-integrations (0.1.12)
       activesupport
       async-websocket
       dry-schema
@@ -1900,7 +1900,7 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (3.0.8)
+    rack (3.0.9)
     rack-cors (2.0.1)
       rack (>= 2.0.0)
     rack-session (2.0.0)
@@ -2079,7 +2079,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.11)
+  multiwoven-integrations (~> 0.1.12)
   newrelic_rpm
   parallel
   pg (~> 1.1)

@@ -16,15 +16,14 @@ module ReverseEtl
           # Execute the batch query
           result = params[:client].read(params[:sync_config])
 
+          # Increment the offset by the batch size for the next iteration
+          current_offset += params[:batch_size]
+
           break if result.empty?
 
           yield result, current_offset if block_given?
-
           # Break the loop if the number of records fetched is less than the batch size
-          break if result.size < params[:batch_size]
-
-          # Increment the offset by the batch size for the next iteration
-          current_offset += params[:batch_size]
+          # break if result.size < params[:batch_size]
         end
       end
     end
