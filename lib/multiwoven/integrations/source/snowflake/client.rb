@@ -43,12 +43,7 @@ module Multiwoven::Integrations::Source
 
         db = create_connection(connection_config)
 
-        records = []
-        db.fetch(query) do |row|
-          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
-        end
-
-        records
+        query(db, query)
       rescue StandardError => e
         handle_exception(
           "SNOWFLAKE:READ:EXCEPTION",
@@ -58,6 +53,14 @@ module Multiwoven::Integrations::Source
       end
 
       private
+
+      def query(connection, query)
+        records = []
+        connection.fetch(query) do |row|
+          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+        end
+        records
+      end
 
       def create_connection(connection_config)
         raise "Unsupported Auth type" if connection_config[:credentials][:auth_type] != "username/password"

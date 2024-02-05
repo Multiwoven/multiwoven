@@ -5,10 +5,17 @@ module Multiwoven
     class SourceConnector < BaseConnector
       def read(_sync_config)
         raise "Not implemented"
-        # return list of RecordMessage
+        # setup sync configs
+        # call query(connection, query)
       end
 
       private
+
+      # This needs to be implemented as private method
+      # In every source connector. This will be used for model preview
+      def query(connection, query)
+        # return list of RecordMessage
+      end
 
       def batched_query(sql_query, limit, offset)
         offset = offset.to_i

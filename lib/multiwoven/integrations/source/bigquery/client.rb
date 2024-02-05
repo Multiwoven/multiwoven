@@ -51,19 +51,25 @@ module Multiwoven::Integrations::Source
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
 
         bigquery = create_connection(connection_config)
-        records = []
-        results = bigquery.query(query) || []
-        results.each do |row|
-          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
-        end
 
-        records
+        query(bigquery, query)
       rescue StandardError => e
         handle_exception(
           "BIGQUERY:READ:EXCEPTION",
           "error",
           e
         )
+      end
+
+      private
+
+      def query(connection, query)
+        records = []
+        results = connection.query(query) || []
+        results.each do |row|
+          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+        end
+        records
       end
 
       def create_connection(connection_config)

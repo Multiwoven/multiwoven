@@ -183,4 +183,10 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
       expect(client.send(:meta_data)[:data][:name]).to eq(meta_name)
     end
   end
+
+  describe "method definition" do
+    it "defines a private #query method" do
+      expect(described_class.private_instance_methods).to include(:query)
+    end
+  end
 end

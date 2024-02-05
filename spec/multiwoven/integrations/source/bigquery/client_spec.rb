@@ -152,4 +152,10 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do # rubocop:d
       client.read(s_config)
     end
   end
+
+  describe "method definition" do
+    it "defines a private #query method" do
+      expect(described_class.private_instance_methods).to include(:query)
+    end
+  end
 end

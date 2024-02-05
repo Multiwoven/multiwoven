@@ -162,4 +162,10 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
       client.discover(sync_config[:source][:connection_specification])
     end
   end
+
+  describe "method definition" do
+    it "defines a private #query method" do
+      expect(described_class.private_instance_methods).to include(:query)
+    end
+  end
 end

@@ -50,12 +50,8 @@ module Multiwoven::Integrations::Source
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
 
         db = create_connection(connection_config)
-        records = db.exec(query) do |result|
-          result.map do |row|
-            RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
-          end
-        end
-        records
+
+        query(db, query)
       rescue StandardError => e
         handle_exception(
           "REDSHIFT:READ:EXCEPTION",
@@ -67,6 +63,14 @@ module Multiwoven::Integrations::Source
       end
 
       private
+
+      def query(connection, query)
+        connection.exec(query) do |result|
+          result.map do |row|
+            RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+          end
+        end
+      end
 
       def create_connection(connection_config)
         raise "Unsupported Auth type" unless connection_config[:credentials][:auth_type] == "username/password"
