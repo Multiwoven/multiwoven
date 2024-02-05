@@ -33,7 +33,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
             borderRadius="8px"
           >
             <Image
-              src={`/src/assets/icons/${attributes?.[field]}`}
+              src={attributes?.[field]}
               alt="destination icon"
               maxHeight="100%"
             />

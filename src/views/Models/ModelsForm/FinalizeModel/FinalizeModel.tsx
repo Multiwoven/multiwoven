@@ -128,6 +128,7 @@ const FinalizeModel = (): JSX.Element => {
 									as={Input}
 									id='modelName'
 									name='modelName'
+									variant='outline'
 									placeholder='Enter a name'
 									bgColor='white'
 								/>
@@ -181,15 +182,12 @@ const FinalizeModel = (): JSX.Element => {
 							buttons={[
 								{
 									name: "Back",
-									bgColor: "gray.300",
-									hoverBgColor: "gray.200",
-									color: "black",
+									variant:"shell",
 									onClick: () => navigate(-1),
 								},
 								{
 									name: "Finish",
-									bgColor: "primary.400",
-									hoverBgColor: "primary.300",
+									variant: "solid",
 									isLoading: isLoading,
 									type: "submit",
 								},

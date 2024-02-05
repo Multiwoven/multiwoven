@@ -67,7 +67,7 @@ const LoginForm = ({
 			<Input
 				type='email'
 				placeholder='Email'
-				outlineColor='gray.400'
+				variant='outline'
 				{...getFieldProps("email")}
 			/>
 			<ErrorMessage name='email' />
@@ -78,7 +78,7 @@ const LoginForm = ({
 			<Input
 				id='password'
 				type='password'
-				outlineColor='gray.400'
+				variant='outline'
 				placeholder='********'
 				{...getFieldProps("password")}
 			/>

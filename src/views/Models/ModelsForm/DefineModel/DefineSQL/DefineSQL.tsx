@@ -15,7 +15,7 @@ import EmptyQueryPreviewImage from "@/assets/images/EmptyQueryPreview.png";
 
 import Editor from "@monaco-editor/react";
 import { useContext, useRef, useState } from "react";
-import { getModelPreview, putModelById } from "@/services/models";
+import { getModelPreview, getModelPreviewById, putModelById } from "@/services/models";
 import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
 import { TableDataType } from "@/components/Table/types";
@@ -87,21 +87,26 @@ const DefineSQL = ({
 	async function getPreview() {
 		setLoading(true);
 		const query = (editorRef?.current as any)?.getValue() as string;
-		let data = await getModelPreview(query, connector_id?.toString());
-
-		if (data.success) {
+		let data = await getModelPreviewById(query, connector_id?.toString());
+		console.log(data);
+		
+		if (data.data) {
 			setLoading(false);
-			setTableData(ConvertModelPreviewToTableData(data.data));
+			setTableData(ConvertModelPreviewToTableData(data));
 			canMoveForward(true);
 		} else {
-			toast({
-				title: "An Error Occured",
-				description: data.message || "Please check your query and try again",
-				status: "error",
-				duration: 9000,
-				isClosable: true,
-				position: "bottom-right",
-			});
+			console.log(data);
+			{data.data.errors.map((error:{title: string, detail: string}) => (
+				toast({
+					title: "An Error Occured",
+					description: error.detail || "Please check your query and try again",
+					status: "error",
+					duration: 9000,
+					isClosable: true,
+					position: "bottom-right",
+				})
+			))}
+			
 			setLoading(false);
 		}
 	}
@@ -159,10 +164,7 @@ const DefineSQL = ({
 							<Spacer />
 							<HStack spacing={3}>
 								<Button
-									bgColor='white'
-									_hover={{ bgColor: "gray.100" }}
-									variant='outline'
-									borderColor={"gray.500"}
+									variant='shell'
 									onClick={getPreview}
 									isLoading={loading}
 								>
@@ -170,10 +172,7 @@ const DefineSQL = ({
 									Run Query{" "}
 								</Button>
 								<Button
-									bgColor='white'
-									_hover={{ bgColor: "gray.100" }}
-									variant='outline'
-									borderColor={"gray.500"}
+									variant='shell'
 								>
 									<Image src={StarsImage} w={6} mr={2} /> Beautify
 								</Button>

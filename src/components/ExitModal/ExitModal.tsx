@@ -21,7 +21,7 @@ const ExitModal = (): JSX.Element => {
 
   return (
     <>
-      <Button variant="outline" outlineColor='gray.400' onClick={onOpen} w={24}>
+      <Button variant="shell" onClick={onOpen} w={24}>
         Exit
       </Button>
 
@@ -45,21 +45,16 @@ const ExitModal = (): JSX.Element => {
             <Box w="full">
               <Flex flexDir="row" justifyContent="center">
                 <Button
-                  bgColor="gray.300"
+                  // bgColor="gray.300"
                   variant="ghost"
-                  color="black"
                   mr={3}
                   onClick={onClose}
                   size="md"
-                  pr={8}
-                  pl={8}
-                  rounded="lg"
                 >
                   Cancel
                 </Button>
                 <Button
-                  _hover={{ bgColor: "primary.300" }}
-                  bgColor="primary.400"
+                  variant="solid"
                   color='white'
                   rounded="lg"
                   pr={10}

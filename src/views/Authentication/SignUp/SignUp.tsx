@@ -74,7 +74,6 @@ const FormField = ({
 			variant='outline'
 			placeholder={label}
 			type={type}
-			outlineColor='gray.400'
 			{...getFieldProps(name)}
 		/>
 		<ErrorMessage name={name} />

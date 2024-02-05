@@ -115,6 +115,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
 											as={Input}
 											id='modelName'
 											name='modelName'
+											variant='outline'
 											placeholder='Enter a name'
 											bgColor='white'
 										/>

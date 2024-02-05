@@ -5,13 +5,6 @@ import "@fontsource-variable/manrope";
 const extenstion = {
 	colors: {
 		mw_orange: "#E63D2D",
-		secondary: "#731447",
-		nav_bg: "#2d3748",
-		nav_text: "#a0aec0",
-		primary: "#EB524C",
-		hyperlink: "#5383EC",
-		dark_gray: "#4b5563",
-		border: "#E2E8F0",
 		brand: {
 			100: "#FFE7E6",
 			200: "#FAC5C3",
@@ -49,7 +42,20 @@ const extenstion = {
 					bgColor: "gray.100",
 					_hover: { bgColor: "brand.400", color: "white" },
 					color: "brand.400",
-					outline: "1px solid brand.400",
+					outline: "1px",
+					borderColor: "brand.400",
+				},
+				ghost: {
+					bgColor: "gray.400",
+					_hover: { bgColor: "gray.500", color: "black" },
+					color: "black",
+				},
+				shell: {
+					bgColor: "gray.100",
+					_hover: { bgColor: "gray.300", color: "black" },
+					color: "black",
+					borderColor: "gray.400",
+					border: "1px",
 				},
 			},
 			sizes: {
@@ -140,6 +146,19 @@ const extenstion = {
 				xs: {
 					fontSize: "24px",
 					lineHeight: "32px",
+				},
+			},
+		},
+		Input: {
+			variants: {
+				outline: {
+					field: {
+						width: "100%",
+						border: "1px",
+						borderColor: "gray.400",
+						boxSizing: "border-box",
+						borderRadius: 8,
+					},
 				},
 			},
 		},
