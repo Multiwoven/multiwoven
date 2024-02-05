@@ -1752,7 +1752,7 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-cloud-bigquery (1.46.1)
+    google-cloud-bigquery (1.47.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.62)
       google-apis-core (~> 0.13)
@@ -1794,7 +1794,7 @@ GEM
     ice_nine (0.11.2)
     interactor (3.1.2)
     io-console (0.7.1)
-    io-event (1.4.2)
+    io-event (1.4.3)
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
@@ -1838,7 +1838,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.3.0)
-    multiwoven-integrations (0.1.12)
+    multiwoven-integrations (0.1.13)
       activesupport
       async-websocket
       dry-schema
@@ -2079,7 +2079,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.12)
+  multiwoven-integrations (~> 0.1.13)
   newrelic_rpm
   parallel
   pg (~> 1.1)

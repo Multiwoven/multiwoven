@@ -123,7 +123,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :workspace_id)).to eq(workspace.id)
         expect(response_hash.dig(:data, :attributes, :connector_type)).to eq("source")
         expect(response_hash.dig(:data, :attributes, :name)).to eq("AWS Redshift")
-        expect(response_hash.dig(:data, :attributes, :connector_name)).to eq("Amazon Redshift")
+        expect(response_hash.dig(:data, :attributes, :connector_name)).to eq("Redshift")
       end
 
       it "returns an error response when creation fails" do
