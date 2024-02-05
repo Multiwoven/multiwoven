@@ -77,7 +77,7 @@ module Api
       end
 
       def query_source
-        if @connector.connector_type == "source"
+        if @connector.source?
           result = QuerySource.call(
             connector: @connector,
             query: params[:query],
@@ -85,7 +85,7 @@ module Api
           )
 
           if result.success?
-            @records = result.records
+            @records = result.records.map(&:record).map(&:data)
             render json: @records, status: :ok
           else
             render_error(

@@ -37,23 +37,16 @@ class Connector < ApplicationRecord
 
   # TODO: move the method to integration gem
   def execute_query(query, limit: 50)
-    connection_config = configuration.deep_symbolize_keys
-    db = connector_client.new.send(:create_connection, connection_config)
+    connection_config = configuration.with_indifferent_access
+    client = connector_client.new
+    db = client.send(:create_connection, connection_config)
     query = query.chomp(";")
 
     # Check if the query already has a LIMIT clause
     has_limit = query.match?(/LIMIT \s*\d+\s*$/i)
-
     # Append LIMIT only if not already present
     final_query = has_limit ? query : "#{query} LIMIT #{limit}"
-
-    db.exec(final_query) do |result|
-      result.map do |row|
-        row
-      end
-    end
-  ensure
-    db&.close
+    client.send(:query, db, final_query)
   end
 
   def configuration_schema

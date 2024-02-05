@@ -238,7 +238,14 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     let(:connector) { create(:connector, connector_type: "source") }
     let(:query) { "SELECT * FROM table_name" }
     let(:limit) { 50 }
-    let(:mock_records) { [{ "column1" => "value1" }, { "column2" => "value2" }] }
+    let(:record1) do
+      Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1 },
+                                                            emitted_at: DateTime.now.to_i).to_multiwoven_message
+    end
+    let(:record2) do
+      Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 2 },
+                                                            emitted_at: DateTime.now.to_i).to_multiwoven_message
+    end
 
     let(:request_body) do
       {
@@ -256,12 +263,12 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     context "when it is an authenticated user" do
       it "returns success status for a valid query" do
         allow(Connectors::QuerySource).to receive(:call)
-          .and_return(double(:context, success?: true, records: mock_records))
+          .and_return(double(:context, success?: true, records: [record1, record2]))
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq(mock_records)
+        expect(response_hash).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns failure status for a invalid query" do
