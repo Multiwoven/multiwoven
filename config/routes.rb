@@ -32,6 +32,11 @@ Rails.application.routes.draw do
           post :check_connection
         end
       end
+      resources :users, only: [] do
+        collection do
+          get :me
+        end
+      end
     end
   end
 
