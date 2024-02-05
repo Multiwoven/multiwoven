@@ -38,8 +38,8 @@ module Multiwoven
         def build_connectors(enabled_connectors, type)
           enabled_connectors.map do |connector|
             client = connector_class(type, connector).new
-            connector_spec = { connector_spec: client.connector_spec.to_h }
-            client.meta_data["data"].to_h.merge!(connector_spec)
+            client.meta_data[:data][:connector_spec] = client.connector_spec.to_h
+            client.meta_data
           end
         end
 
