@@ -38,7 +38,10 @@ Requiring minimal engineering effort, its intuitive interface simplifies buildin
 
 <p>⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
-<img alt="Multiwoven" src="https://res.cloudinary.com/dspflukeu/image/upload/v1707160050/Multiwoven/image_cxxilo.png">
+![image](https://github.com/Multiwoven/multiwoven/assets/1298480/8f530edb-22b8-45ec-837c-5723dc4437cd)
+
+![image](https://github.com/Multiwoven/multiwoven/assets/1298480/6c136697-00de-4217-8c17-0f3f7f652b51)
+
 
 ## ✨ Features
 - **Sources**
