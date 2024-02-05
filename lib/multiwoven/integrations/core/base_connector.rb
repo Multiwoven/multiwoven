@@ -15,10 +15,12 @@ module Multiwoven
       end
 
       def meta_data
-        client_meta_data = read_json(META_DATA_PATH).to_h
-        icon_name = client_meta_data.with_indifferent_access["data"]["icon"]
+        client_meta_data = read_json(META_DATA_PATH).deep_symbolize_keys
+        icon_name = client_meta_data[:data][:icon]
         icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}/assets/images/connectors/#{icon_name}"
-        @meta_data ||= client_meta_data.merge!({ "icon": icon_url })
+        client_meta_data[:data][:icon] = icon_url
+
+        @meta_data ||= client_meta_data
       end
 
       def check_connection(_connection_config)
