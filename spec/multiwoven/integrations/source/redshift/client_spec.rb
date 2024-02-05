@@ -175,4 +175,12 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
       client.discover(sync_config[:source][:connection_specification])
     end
   end
+
+  describe "#meta_data" do
+    # change this to rollout validation for all connector rolling out
+    it "client class_name and meta name is same" do
+      meta_name = client.class.to_s.split("::")[-2]
+      expect(client.send(:meta_data)["data"]["name"]).to eq(meta_name)
+    end
+  end
 end
