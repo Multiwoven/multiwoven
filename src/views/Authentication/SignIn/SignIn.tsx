@@ -65,8 +65,9 @@ const LoginForm = ({
 		<FormControl isInvalid={!!(touched.email && errors.email)}>
 			<FormLabel htmlFor='email'>Email</FormLabel>
 			<Input
-				variant='outline'
+				type='email'
 				placeholder='Email'
+				outlineColor='gray.400'
 				{...getFieldProps("email")}
 			/>
 			<ErrorMessage name='email' />
@@ -77,6 +78,7 @@ const LoginForm = ({
 			<Input
 				id='password'
 				type='password'
+				outlineColor='gray.400'
 				placeholder='********'
 				{...getFieldProps("password")}
 			/>
@@ -130,21 +132,26 @@ const SignIn = (): JSX.Element => {
 					maxW='lg'
 					py={{ base: "12", md: "24" }}
 					px={{ base: "0", sm: "8" }}
-					bgColor='gray.100'
 				>
-					<Stack spacing='8' border='1px' borderColor={"gray.400"} borderRadius='lg'>
-						<Stack spacing='6' alignItems={"center"} p={2}>
+					<Stack spacing='8'>
+						<Stack spacing='6' alignItems={"center"}>
 							<img src={MultiwovenIcon} width={55} />
 							<Stack spacing={{ base: "2", md: "3" }} textAlign='center'>
-								<Heading size={{ base: "xs", md: "sm" }}>Login to your Multiwoven account</Heading>
+								<Heading size={{ base: "xs", md: "sm" }}>
+									Log in to your account
+								</Heading>
 								<Text color='fg.muted'>
-									Don't have an account? <Link href='/sign-up'>Sign up</Link>
+									Don't have an account? <Link href='/sign-up' color='brand.500'>Sign up</Link>
 								</Text>
 							</Stack>
 						</Stack>
 						<Box
 							py={{ base: "0", sm: "8" }}
 							px={{ base: "4", sm: "10" }}
+							bgColor='gray.100'
+							border='2px'
+							borderRadius='xl'
+							borderColor={"gray.400"}
 						>
 							<Stack spacing='6'>
 								<LoginForm
@@ -153,7 +160,7 @@ const SignIn = (): JSX.Element => {
 									errors={errors}
 									submitting={submitting}
 								/>
-								<Stack spacing='6'>
+								{/* <Stack spacing='6'>
 									<HStack>
 										<Divider />
 										<Text textStyle='sm' whiteSpace='nowrap' color='fg.muted'>
@@ -161,18 +168,10 @@ const SignIn = (): JSX.Element => {
 										</Text>
 										<Divider />
 									</HStack>
-									<Button
-										bgColor='gray.100'
-                    w='full'
-                    color='black.600'
-										border='1px'
-                    borderColor='gray.400'
-
-										leftIcon={<GoogleIcon />}
-									>
+									<Button variant='secondary' leftIcon={<GoogleIcon />}>
 										Sign in with Google
 									</Button>
-								</Stack>
+								</Stack> */}
 							</Stack>
 						</Box>
 					</Stack>

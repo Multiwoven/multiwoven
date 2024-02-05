@@ -8,9 +8,9 @@ export const axiosInstance = axios.create({
 
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
 	const token = Cookies.get("authToken");
-	if (!token) {
-		window.location.href = "/login";
-	}
+	// if (!token) {
+	// 	window.location.href = "/sign-in";
+	// }
 	config.headers["Content-Type"] = "application/json";
 	config.headers["Authorization"] = `Bearer ${token}`;
 	config.headers["Accept"] = "*/*";
@@ -29,7 +29,7 @@ axiosInstance?.interceptors.response.use(
             
 			switch (error.response.status) {
 				case 401:
-                    window.location.href = "/login";
+                    window.location.href = "/sign-in";
 					Cookies.remove("authToken");
 					break;
 				case 403:

@@ -74,6 +74,7 @@ const FormField = ({
 			variant='outline'
 			placeholder={label}
 			type={type}
+			outlineColor='gray.400'
 			{...getFieldProps(name)}
 		/>
 		<ErrorMessage name={name} />
@@ -157,16 +158,16 @@ const SignUp = (): JSX.Element => {
 										</Heading>
 										<Text color='fg.muted'>
 											Already have an account?{" "}
-											<Link href='/login'>Sign In</Link>
+											<Link href='/sign-in' color="brand.500">Sign In</Link>
 										</Text>
 									</Stack>
 								</Stack>
 								<Box
 									py={{ base: "0", sm: "8" }}
 									px={{ base: "4", sm: "10" }}
-									bg={{ base: "transparent", sm: "bg.surface" }}
-									boxShadow={{ base: "none", sm: "md" }}
-									borderRadius={{ base: "none", sm: "xl" }}
+									borderRadius="xl"
+									border="2px"
+									borderColor="gray.400"
 								>
 									<Stack spacing='6'>
 										<Stack spacing='5'>
@@ -216,6 +217,8 @@ const SignUp = (): JSX.Element => {
 												type='submit'
 												isLoading={submitting}
 												loadingText='Signing Up'
+												variant='solid'
+												width='full'
 											>
 												Sign up
 											</Button>

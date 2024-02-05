@@ -96,9 +96,9 @@ const DestinationsList = (): JSX.Element | null => {
           ctaName="Add destination"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
-          ctaBgColor="brand.500"
-          ctaColor="gray.900"
-          ctaHoverBgColor="brand.400"
+          ctaButtonVariant="solid"
+          ctaButtonWidth="fit"
+          ctaButtonHeight="40px"
           isCtaVisible
         />
         <Table
