@@ -28,4 +28,24 @@ RSpec.describe Multiwoven::Integrations::Service do
       expect(connector).to eq(Multiwoven::Integrations::Source::Snowflake::Client)
     end
   end
+
+  describe ".connectors" do
+    it "valid data structure" do
+      expected_keys = %i[
+        name
+        connector_type
+        category
+        documentation_url
+        github_issue_label
+        icon
+        license
+        release_stage
+        support_level
+        tags
+        connector_spec
+      ]
+      source_connector_keys = described_class.connectors[:source][0].keys
+      expect(source_connector_keys).to include(*expected_keys)
+    end
+  end
 end

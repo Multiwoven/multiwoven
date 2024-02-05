@@ -1,12 +1,3 @@
----
-name: Pull Request Template
-about: Template for creating a new pull request for a Multiwoven integrations gem
-title: "[TYPE]: Brief Description" # e.g. Enhance Salesforce Connector Performance
-labels: ''
-assignees: ''
-
----
-
 ## Description
 <!-- A brief description of what this pull request does. Include the purpose of the change and any relevant context. e.g
  This PR enhances the performance of the Salesforce connector by implementing batch data processing. -->

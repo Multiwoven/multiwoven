@@ -39,7 +39,7 @@ module Multiwoven
           enabled_connectors.map do |connector|
             client = connector_class(type, connector).new
             client.meta_data[:data][:connector_spec] = client.connector_spec.to_h
-            client.meta_data
+            client.meta_data[:data]
           end
         end
 
