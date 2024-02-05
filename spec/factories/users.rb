@@ -23,6 +23,7 @@ FactoryBot.define do
   factory :user do
     name { Faker::Name.name }
     email { Faker::Internet.unique.email }
+    unique_id { SecureRandom.uuid }
     password { "password" }
     password_confirmation { "password" }
     company_name { Faker::Company.name }

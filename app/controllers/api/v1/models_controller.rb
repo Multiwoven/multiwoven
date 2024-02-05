@@ -8,6 +8,7 @@ module Api
 
       before_action :set_connector, only: %i[create]
       before_action :set_model, only: %i[show update destroy]
+      after_action :event_logger
 
       def index
         @models = current_workspace

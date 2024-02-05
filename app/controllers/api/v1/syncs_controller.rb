@@ -5,6 +5,7 @@ module Api
     class SyncsController < ApplicationController
       include Syncs
       before_action :set_sync, only: %i[show update destroy]
+      after_action :event_logger
 
       attr_reader :sync
 

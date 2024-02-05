@@ -5,6 +5,7 @@ module Api
     class ConnectorsController < ApplicationController
       include Connectors
       before_action :set_connector, only: %i[show update destroy discover query_source]
+      after_action :event_logger
 
       def index
         @connectors = current_workspace.connectors

@@ -20,6 +20,7 @@ module Authentication
       if user&.valid_password?(context.params[:password])
         if user.verified?
           token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+          user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
           user.update!(jti: payload["jti"])
           context.token = token
         else

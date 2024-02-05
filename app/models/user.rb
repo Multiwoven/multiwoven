@@ -23,6 +23,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
+  before_create :assign_unique_id
+
   attr_accessor :company_name
 
   validates :name, :email, presence: true
@@ -44,5 +46,11 @@ class User < ApplicationRecord
 
   def verified?
     confirmed_at.present?
+  end
+
+  private
+
+  def assign_unique_id
+    self.unique_id = SecureRandom.uuid
   end
 end
