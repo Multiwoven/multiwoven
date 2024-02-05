@@ -17,15 +17,14 @@ const GenerateTable = ({
 	return (
 		<Box
 			border='1px'
-			borderColor='gray.300'
+			borderColor='gray.400'
 			borderRadius={borderRadius || "lg"}
-			p={2}
 			maxHeight={maxHeight}
 			overflowX='scroll'
 		>
 			{title ? title : <></>}
 			<Table size={size} maxHeight={maxHeight}>
-				<Thead {...theadProps}>
+				<Thead {...theadProps} bgColor='gray.300'>
 					<Tr>
 						{data.columns.map((column, index) => (
 							<Th key={index}>{column.name}</Th>

@@ -1,19 +1,14 @@
-import AuthFooter from "@/views/Authentication/AuthFooter";
 import { Suspense, lazy } from "react";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
 const Homepage = lazy(() => import("@/views/Homepage"));
-const Login = lazy(() => import("@/views/Authentication/Login"));
+const SignIn = lazy(() => import("@/views/Authentication/SignIn"));
 const SignUp = lazy(() => import("@/views/Authentication/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
 const Models = lazy(() => import("@/views/Models"));
 const SetupConnectors = lazy(
 	() => import("@/views/Connectors/SetupConnectors")
 );
-// const Sources = lazy(() => import("@/views/Connectors/Sources"));
-
-// import Cookies from "js-cookie";
-// import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
 	name: string;
@@ -84,13 +79,12 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 	{
-		name: "Login",
-		url: "/login",
+		name: "Sign In",
+		url: "/sign-in",
 		component: (
-			<SuspenseWithLoader redirectRoute='/login'>
+			<SuspenseWithLoader redirectRoute='/sign-in'>
 				<>
-					<Login />
-					<AuthFooter />
+					<SignIn />
 				</>
 			</SuspenseWithLoader>
 		),
@@ -102,7 +96,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 			<SuspenseWithLoader redirectRoute='/sign-up'>
 				<>
 					<SignUp />
-					<AuthFooter />
 				</>
 			</SuspenseWithLoader>
 		),

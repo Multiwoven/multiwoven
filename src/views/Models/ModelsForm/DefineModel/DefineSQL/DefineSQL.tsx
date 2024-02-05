@@ -138,7 +138,7 @@ const DefineSQL = ({
 				<VStack>
 					<Box
 						border='1px'
-						borderColor='gray.300'
+						borderColor='gray.400'
 						w='4xl'
 						minH='100%'
 						h='xs'
@@ -207,7 +207,7 @@ const DefineSQL = ({
 					) : (
 						<Box
 							border='1px'
-							borderColor='gray.300'
+							borderColor='gray.400'
 							w='4xl'
 							minH='100%'
 							h='2xs'

@@ -88,6 +88,9 @@ const SourcesList = (): JSX.Element | null => {
 
   if (!connectors) return null;
 
+  console.log(connectors);
+  
+
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
@@ -96,9 +99,9 @@ const SourcesList = (): JSX.Element | null => {
           ctaName="Add Sources"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
-          ctaBgColor="orange.500"
+          ctaBgColor="brand.500"
           ctaColor="gray.900"
-          ctaHoverBgColor="orange.400"
+          ctaHoverBgColor="brand.400"
           isCtaVisible
         />
         <Table

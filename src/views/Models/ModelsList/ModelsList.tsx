@@ -2,11 +2,12 @@ import ContentContainer from "@/components/ContentContainer";
 import GenerateTable from "@/components/Table/Table";
 import TopBar from "@/components/TopBar";
 import { getAllModels } from "@/services/models";
-import { AddIconDataToArray, ConvertToTableData } from "@/utils";
+import { addIconDataToArray, ConvertToTableData } from "@/utils";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
+import NoModels from "../NoModels";
 
 const ModelsList = (): JSX.Element | null => {
 	const { data } = useQuery({
@@ -34,7 +35,7 @@ const ModelsList = (): JSX.Element | null => {
 		);
 	}
 
-	models = AddIconDataToArray(models);
+	models = addIconDataToArray(models);
 
 	let values = ConvertToTableData(models, [
 		{ name: "Name", key: "name", showIcon: true },
@@ -49,24 +50,31 @@ const ModelsList = (): JSX.Element | null => {
 	return (
 		<Box width='100%' display='flex' flexDirection='column' alignItems='center'>
 			<ContentContainer>
-				<TopBar
-					name={"Models"}
-					ctaName='Add model'
-					ctaIcon={<FiPlus color='gray.100' />}
-					ctaBgColor={"orange.500"}
-					ctaHoverBgColor={"orange.400"}
-					ctaColor={"white"}
-					onCtaClicked={() => navigate("new")}
-					isCtaVisible
-				/>
-				<Box mt={16}>
-					<GenerateTable
-						data={values}
-						headerColorVisible={true}
-						onRowClick={handleOnRowClick}
-						maxHeight='2xl'
-					/>
-				</Box>
+				{models.length === 0 ? (
+					<NoModels />
+				) : (
+					<>
+						<TopBar
+							name={"Models"}
+							ctaName='Add model'
+							ctaIcon={<FiPlus color='gray.100' />}
+							ctaBgColor={"brand.500"}
+							ctaHoverBgColor={"brand.400"}
+							ctaColor={"white"}
+							onCtaClicked={() => navigate("new")}
+							isCtaVisible
+						/>
+						<Box mt={16}>
+							<GenerateTable
+								data={values}
+								headerColorVisible={true}
+								onRowClick={handleOnRowClick}
+								maxHeight='2xl'
+							/>
+						</Box>
+					</>
+				)}
+
 				<Outlet />
 			</ContentContainer>
 		</Box>

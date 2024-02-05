@@ -26,6 +26,7 @@ import MultiwovenIcon from "@/assets/images/icon.png";
 import { signUp } from "@/services/authentication";
 import Cookies from "js-cookie";
 import titleCase from "@/utils/TitleCase";
+import AuthFooter from "../AuthFooter";
 
 const SignUpSchema = Yup.object().shape({
 	company_name: Yup.string().required("Company name is required"),
@@ -129,101 +130,105 @@ const SignUp = (): JSX.Element => {
 	};
 
 	return (
-		<Formik
-			initialValues={{
-				name: "",
-				email: "",
-				password: "",
-				password_confirmation: "",
-			}}
-			onSubmit={(values) => handleSubmit(values)}
-			validationSchema={SignUpSchema}
-		>
-			{({ getFieldProps, touched, errors }) => (
-				<Form>
-					<Container
-						maxW='lg'
-						py={{ base: "12", md: "24" }}
-						px={{ base: "0", sm: "8" }}
-					>
-						<Stack spacing='8'>
-							<Stack spacing='6' alignItems={"center"}>
-								<img src={MultiwovenIcon} width={55} />
-								<Stack spacing={{ base: "2", md: "3" }} textAlign='center'>
-									<Heading size={{ base: "xs", md: "sm" }}>
-										Create an account
-									</Heading>
-									<Text color='fg.muted'>
-										Already have an account? <Link href='/login'>Sign In</Link>
-									</Text>
-								</Stack>
-							</Stack>
-							<Box
-								py={{ base: "0", sm: "8" }}
-								px={{ base: "4", sm: "10" }}
-								bg={{ base: "transparent", sm: "bg.surface" }}
-								boxShadow={{ base: "none", sm: "md" }}
-								borderRadius={{ base: "none", sm: "xl" }}
-							>
-								<Stack spacing='6'>
-									<Stack spacing='5'>
-										<FormField
-											label='Company Name'
-											name='company_name'
-											type='text'
-											getFieldProps={getFieldProps}
-											touched={touched}
-											errors={errors}
-										/>
-										<FormField
-											label='Name'
-											name='name'
-											type='text'
-											getFieldProps={getFieldProps}
-											touched={touched}
-											errors={errors}
-										/>
-										<FormField
-											label='Email'
-											name='email'
-											type='text'
-											getFieldProps={getFieldProps}
-											touched={touched}
-											errors={errors}
-										/>
-										<FormField
-											label='Password'
-											name='password'
-											type='password'
-											getFieldProps={getFieldProps}
-											touched={touched}
-											errors={errors}
-										/>
-										<FormField
-											label='Confirm Password'
-											name='password_confirmation'
-											type='password'
-											getFieldProps={getFieldProps}
-											touched={touched}
-											errors={errors}
-										/>
+		<>
+			<Formik
+				initialValues={{
+					name: "",
+					email: "",
+					password: "",
+					password_confirmation: "",
+				}}
+				onSubmit={(values) => handleSubmit(values)}
+				validationSchema={SignUpSchema}
+			>
+				{({ getFieldProps, touched, errors }) => (
+					<Form>
+						<Container
+							maxW='lg'
+							py={{ base: "12", md: "24" }}
+							px={{ base: "0", sm: "8" }}
+						>
+							<Stack spacing='8'>
+								<Stack spacing='6' alignItems={"center"}>
+									<img src={MultiwovenIcon} width={55} />
+									<Stack spacing={{ base: "2", md: "3" }} textAlign='center'>
+										<Heading size={{ base: "xs", md: "sm" }}>
+											Create an account
+										</Heading>
+										<Text color='fg.muted'>
+											Already have an account?{" "}
+											<Link href='/login'>Sign In</Link>
+										</Text>
 									</Stack>
+								</Stack>
+								<Box
+									py={{ base: "0", sm: "8" }}
+									px={{ base: "4", sm: "10" }}
+									bg={{ base: "transparent", sm: "bg.surface" }}
+									boxShadow={{ base: "none", sm: "md" }}
+									borderRadius={{ base: "none", sm: "xl" }}
+								>
 									<Stack spacing='6'>
-										<Button
-											type='submit'
-											isLoading={submitting}
-											loadingText='Signing Up'
-										>
-											Sign up
-										</Button>
+										<Stack spacing='5'>
+											<FormField
+												label='Company Name'
+												name='company_name'
+												type='text'
+												getFieldProps={getFieldProps}
+												touched={touched}
+												errors={errors}
+											/>
+											<FormField
+												label='Name'
+												name='name'
+												type='text'
+												getFieldProps={getFieldProps}
+												touched={touched}
+												errors={errors}
+											/>
+											<FormField
+												label='Email'
+												name='email'
+												type='text'
+												getFieldProps={getFieldProps}
+												touched={touched}
+												errors={errors}
+											/>
+											<FormField
+												label='Password'
+												name='password'
+												type='password'
+												getFieldProps={getFieldProps}
+												touched={touched}
+												errors={errors}
+											/>
+											<FormField
+												label='Confirm Password'
+												name='password_confirmation'
+												type='password'
+												getFieldProps={getFieldProps}
+												touched={touched}
+												errors={errors}
+											/>
+										</Stack>
+										<Stack spacing='6'>
+											<Button
+												type='submit'
+												isLoading={submitting}
+												loadingText='Signing Up'
+											>
+												Sign up
+											</Button>
+										</Stack>
 									</Stack>
-								</Stack>
-							</Box>
-						</Stack>
-					</Container>
-				</Form>
-			)}
-		</Formik>
+								</Box>
+								<AuthFooter />
+							</Stack>
+						</Container>
+					</Form>
+				)}
+			</Formik>
+		</>
 	);
 };
 

@@ -24,10 +24,10 @@ const TopBar = ({
 }: TopBarType): JSX.Element => (
 	<Flex
 		justifyContent='space-between'
-		borderColor='gray.300'
+		borderColor='gray.400'
 		marginBottom='30px'
 	>
-		<Heading as='h6' fontWeight='500' size='lg'>
+		<Heading fontWeight='700' size='md'>
 			{name}
 		</Heading>
 		<HStack spacing={2}>
@@ -36,7 +36,7 @@ const TopBar = ({
 				<Button
 					variant={ctaButtonVariant}
 					leftIcon={ctaIcon}
-					size='lg'
+					size='md'
 					onClick={onCtaClicked}
 				>
 					{ctaName}

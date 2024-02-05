@@ -21,7 +21,7 @@ const ExitModal = (): JSX.Element => {
 
   return (
     <>
-      <Button variant="outline" onClick={onOpen} w={24} colorScheme="gray">
+      <Button variant="outline" outlineColor='gray.400' onClick={onOpen} w={24}>
         Exit
       </Button>
 

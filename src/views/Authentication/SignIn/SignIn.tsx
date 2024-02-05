@@ -24,10 +24,11 @@ import {
   Container,
   Checkbox,
 } from "@chakra-ui/react";
-import MultiwovenIcon from "../../assets/images/icon.png";
+import MultiwovenIcon from "@/assets/images/icon.png";
 import { login } from "@/services/common";
 import { GoogleIcon } from "./providerIcon";
 import Cookies from "js-cookie";
+import AuthFooter from "../AuthFooter";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -101,7 +102,7 @@ const LoginForm = ({
   </Form>
 );
 
-const Login = (): JSX.Element => {
+const SignIn = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -135,7 +136,7 @@ const Login = (): JSX.Element => {
               <img src={MultiwovenIcon} width={55} />
               <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
                 <Heading size={{ base: "xs", md: "sm" }}>
-                  Log in to your account
+                  Sign in
                 </Heading>
                 <Text color="fg.muted">
                   Don't have an account? <Link href="/sign-up">Sign up</Link>
@@ -164,17 +165,18 @@ const Login = (): JSX.Element => {
                     </Text>
                     <Divider />
                   </HStack>
-                  <Button variant="secondary" leftIcon={<GoogleIcon />}>
+                  <Button colorScheme="gray" size='xl' leftIcon={<GoogleIcon />}>
                     Sign in with Google
                   </Button>
                 </Stack>
               </Stack>
             </Box>
           </Stack>
+          <AuthFooter />
         </Container>
       )}
     </Formik>
   );
 };
 
-export default Login;
+export default SignIn;
