@@ -96,7 +96,7 @@ const SourcesList = (): JSX.Element | null => {
       <ContentContainer>
         <TopBar
           name="Sources"
-          ctaName="Add Sources"
+          ctaName="Add sources"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
           ctaBgColor="brand.500"

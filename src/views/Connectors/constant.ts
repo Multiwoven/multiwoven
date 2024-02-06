@@ -78,3 +78,5 @@ export const CONNECTOR_LIST_COLUMNS: SourceListColumnType[] = [
     name: "Status",
   },
 ];
+
+export const ALL_DESTINATIONS_CATEGORY = "All Destinations";
