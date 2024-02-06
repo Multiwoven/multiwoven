@@ -10,7 +10,8 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
   let(:client) { described_class.new }
   let(:access_token) { "test_access_token" }
   let(:ad_account_id) { "your_ad_account_id" }
-  let(:connection_config) { { access_token: access_token, ad_account_id: ad_account_id } }
+  let(:audience_id) { "your_audience_id" }
+  let(:connection_config) { { access_token: access_token, ad_account_id: ad_account_id, audience_id: audience_id } }
 
   let(:facebook_audience_json_schema) do
     catalog = client.discover.catalog
@@ -45,7 +46,7 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
         "default_cursor_field": ["field1"],
         "source_defined_primary_key": [["field1"], ["field2"]],
         "namespace": "exampleNamespace",
-        "url": "https://api.example.com/data",
+        "url": "https://graph.facebook.com/v18.0/#{audience_id}/users",
         "request_method": "POST"
       },
       "sync_mode": "full_refresh",
@@ -56,7 +57,7 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
 
   let(:records) do
     [
-      build_record("8c05c9fe994ebbf6e4d7d93f1693df442e75d7541ac5efb1c796433b9fe63897", "US")
+      build_record("test@gmail.com", "US")
     ]
   end
 
@@ -120,6 +121,9 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
   end
 
   def build_record(email, country)
-    { data: { "EMAIL": email, "COUNTRY": country } }
+    {
+      "data": { "attributes": { "EMAIL": email, "COUNTRY": country } },
+      "emitted_at": Time.now.to_i
+    }
   end
 end

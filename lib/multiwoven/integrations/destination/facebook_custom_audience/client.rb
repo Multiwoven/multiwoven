@@ -27,7 +27,6 @@ module Multiwoven::Integrations::Destination
 
         streams = catalog_json["streams"].map do |stream|
           Multiwoven::Integrations::Protocol::Stream.new(
-            audience_id: stream["audience_id"],
             url: stream["url"],
             name: stream["name"],
             json_schema: stream["json_schema"],
@@ -50,21 +49,13 @@ module Multiwoven::Integrations::Destination
       end
 
       def write(sync_config, records, _action = "insert")
-        url = sync_config.stream.url
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
-        connection_config = connection_config.with_indifferent_access
         access_token = connection_config[:access_token]
-
+        url = generate_url(sync_config, connection_config)
         write_success = 0
         write_failure = 0
         records.each do |record|
-          schema, data = extract_schema_and_data(record.with_indifferent_access[:data])
-          payload = {
-            "payload" => {
-              "schema" => schema,
-              "data" => [data]
-            }
-          }
+          payload = create_payload(record.with_indifferent_access[:data][:attributes], sync_config.stream.json_schema.with_indifferent_access)
           response = Multiwoven::Integrations::Core::HttpClient.request(
             url,
             sync_config.stream.request_method,
@@ -96,8 +87,34 @@ module Multiwoven::Integrations::Destination
         )
       end
 
-      def extract_schema_and_data(data)
-        [data.keys, data.values]
+      private
+
+      def generate_url(sync_config, connection_config)
+        sync_config.stream.url.gsub("{audience_id}", connection_config[:audience_id])
+      end
+
+      def create_payload(record_data, json_schema)
+        schema, data = extract_schema_and_data(record_data, json_schema)
+        {
+          "payload" => {
+            "schema" => schema,
+            "data" => [data]
+          }
+        }
+      end
+
+      def extract_schema_and_data(data, json_schema)
+        schema_properties = json_schema[:properties]
+        schema = data.keys.map(&:upcase)
+        encrypted_data_array = []
+
+        data.each do |key, value|
+          schema_key = key.upcase
+          encrypted_value = schema_properties[schema_key] && schema_properties[schema_key]["x-hashRequired"] ? Digest::SHA256.hexdigest(value.to_s) : value
+          encrypted_data_array << encrypted_value
+        end
+
+        [schema, encrypted_data_array]
       end
 
       def auth_headers(access_token)

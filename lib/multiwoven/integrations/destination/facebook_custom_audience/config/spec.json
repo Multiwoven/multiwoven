@@ -5,7 +5,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Facebook Custom Audiences",
     "type": "object",
-    "required": ["access_token", "ad_account_id"],
+    "required": ["access_token", "ad_account_id", "audience_id"],
     "properties": {
       "access_token": {
         "type": "string",
@@ -16,6 +16,11 @@
         "type": "string",
         "title": "Ad Account Id",
         "order": 1
+      },
+      "audience_id": {
+        "type": "string",
+        "title": "Audience Id",
+        "order": 2
       }
     }
   }
