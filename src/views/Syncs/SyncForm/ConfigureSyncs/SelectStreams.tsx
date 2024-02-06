@@ -1,12 +1,15 @@
 import { Box, Text, Select } from "@chakra-ui/react";
 import { Stream } from "../../types";
+import { ModelEntity } from "@/views/Models/types";
 
 type SelectStreamsProps = {
+  model: ModelEntity;
   streams: Stream[];
   onChange: (stream: Stream) => void;
 };
 
 const SelectStreams = ({
+  model,
   streams,
   onChange,
 }: SelectStreamsProps): JSX.Element => {
@@ -17,9 +20,14 @@ const SelectStreams = ({
     onChange?.(selectedStream);
   };
   return (
-    <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
+    <Box
+      backgroundColor="gray.200"
+      padding="20px"
+      borderRadius="8px"
+      marginBottom="20px"
+    >
       <Text fontWeight="600" marginBottom="30px">
-        Configure sync to Klaviyo
+        Configure sync to {model?.connector?.connector_name}
       </Text>
       <Text fontWeight="600">Stream Name</Text>
       <Text fontSize="sm" marginBottom="10px">

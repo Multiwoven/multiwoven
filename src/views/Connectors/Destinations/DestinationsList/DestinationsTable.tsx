@@ -12,37 +12,30 @@ import {
   DESTINATIONS_LIST_QUERY_KEY,
   CONNECTOR_LIST_COLUMNS,
 } from "@/views/Connectors/constant";
+import EntityItem from "@/components/EntityItem";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
   attributes: ConnectorAttributes;
 };
 
+type TableRow = {
+  id: string;
+  connector: unknown;
+};
+
 type DestinationTableProps = {
-  handleOnRowClick: (args: Record<"id", string>) => void;
+  handleOnRowClick: (args: TableRow) => void;
 };
 
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
     case "icon":
       return (
-        <Box display="flex" alignItems="center">
-          <Box
-            height="40px"
-            width="40px"
-            marginRight="10px"
-            borderWidth="thin"
-            padding="5px"
-            borderRadius="8px"
-          >
-            <Image
-              src={`/src/assets/icons/${attributes?.[field]}`}
-              alt="destination icon"
-              maxHeight="100%"
-            />
-          </Box>
-          <Text>{attributes?.connector_name}</Text>
-        </Box>
+        <EntityItem
+          icon={`/src/assets/icons/${attributes?.[field]}`}
+          name={attributes?.connector_name}
+        />
       );
 
     case "updated_at":
@@ -73,11 +66,13 @@ const DestinationsTable = ({
   const connectors = data?.data;
 
   const tableData = useMemo(() => {
-    const rows = (connectors ?? [])?.map(({ attributes, id }) => {
+    const rows = (connectors ?? [])?.map((connector) => {
+      const { id, attributes } = connector;
       return CONNECTOR_LIST_COLUMNS.reduce(
         (acc, { key }) => ({
           [key]: <TableItem field={key} attributes={attributes} />,
           id,
+          connector,
           ...acc,
         }),
         {}

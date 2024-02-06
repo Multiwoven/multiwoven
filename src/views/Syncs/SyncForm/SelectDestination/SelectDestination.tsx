@@ -7,8 +7,8 @@ import { useContext } from "react";
 const SelectDestination = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-  const handleOnRowClick = (data: unknown) => {
-    handleMoveForward(stepInfo?.formKey as string, data);
+  const handleOnRowClick = (data: Record<"connector", unknown>) => {
+    handleMoveForward(stepInfo?.formKey as string, data?.connector);
   };
 
   return (

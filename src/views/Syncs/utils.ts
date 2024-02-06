@@ -2,7 +2,7 @@ import { RJSFSchema } from "@rjsf/utils";
 import { flatten } from "flat";
 
 export const convertSchemaToObject = (schema: RJSFSchema): unknown => {
-  if (schema.type === "object") {
+  if (schema?.type === "object") {
     const result: Record<string, unknown> = {};
     if (schema.properties) {
       Object.keys(schema.properties).forEach((property) => {
@@ -19,14 +19,15 @@ export const convertSchemaToObject = (schema: RJSFSchema): unknown => {
     }
 
     return result;
-  } else if (schema.type === "array") {
+  } else if (schema?.type === "array") {
     return [convertSchemaToObject(schema.items as RJSFSchema)];
   } else {
-    return "";
+    return null;
   }
 };
 
-export const getPathFromObject = (schema: RJSFSchema) => {
+export const getPathFromObject = (schema?: RJSFSchema) => {
+  if (!schema) return [];
   const schemaObject = convertSchemaToObject(schema);
   const flattenedObj = flatten(schemaObject);
   return Object.keys(flattenedObj || {});
