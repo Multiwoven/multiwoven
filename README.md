@@ -45,13 +45,13 @@ Requiring minimal engineering effort, its intuitive interface simplifies buildin
 
 ## ✨ Features
 - **Sources**
-Efficiently connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction and management.
+Connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction and management.
 
 - **Destinations**
 Sync data to over 100+ different business applications. Use out-of-the-box connectors to tools like Braze, Klaviyo, Slack, Facebook Ads, Salesforce, and more.
 
 - **Models**
-Craft powerful data models using SQL, visual builders, or dbt. Multiwoven's flexible modeling options allow for precise and customized data preparation, suitable for any business need.
+Craft data models using SQL, visual builders, or dbt. Multiwoven's flexible modeling options allow for precise and customized data preparation, suitable for any business need.
 
 - **Syncs**
 Schedule and monitor your data pipelines with ease. Multiwoven's syncing features enable you to streamline the flow of data from sources to various destinations, ensuring timely and accurate data delivery.
@@ -68,6 +68,7 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 | Provider | Documentation |
 |:---------|:--------------|
+| **Docker** | [Deployment Guide](https://docs.multiwoven.com/guides/setup/docker-compose) |
 | **AWS EC2** | [Deployment Guide](#) |
 | **AWS ECS** | [Deployment Guide](#) |
 | **AWS EKS (Kubernetes)** | [Deployment Guide](#) |
@@ -78,7 +79,6 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 | **Digital Ocean Droplets** | [Deployment Guide](#) |
 | **Digital Ocean Kubernetes** | [Deployment Guide](#) |
 | **Heroku** | [Deployment Guide](#) |
-| **Docker** | [Deployment Guide](#) |
 | **OpenShift** | [Deployment Guide](#) |
 | **Helm Charts** | [Deployment Guide](#) |
 
