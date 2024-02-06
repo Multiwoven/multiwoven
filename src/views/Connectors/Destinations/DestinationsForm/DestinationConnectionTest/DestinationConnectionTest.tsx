@@ -14,12 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useMemo } from "react";
-import SourceFormFooter from "../SourceFormFooter";
 import { CONNECTION_STATUS } from "@/views/Connectors/constant";
 import { FiAlertOctagon, FiCheck } from "react-icons/fi";
 import { useUiConfig } from "@/utils/hooks";
+import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 
-const CONNECT_TO_SOURCES_KEY = "connectToSources";
+const CONNECT_TO_DESTINATION_KEY = "destinationConfig";
 
 const STATUS_COLOR_MAP = {
   success: "green.400",
@@ -27,35 +27,40 @@ const STATUS_COLOR_MAP = {
   loading: "gray.800",
 };
 
-const SourceConnectionTest = (): JSX.Element | null => {
+const DestinationConnectionTest = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
   const { maxContentWidth } = useUiConfig();
 
-  const selectedDataSource = forms.find(
-    ({ stepKey }) => stepKey === "datasource"
-  )?.data?.datasource as string;
+  const selectedDestination = forms.find(
+    ({ stepKey }) => stepKey === "destination"
+  )?.data?.destination as string;
 
-  const sourceConfigForm = forms.find(
-    ({ stepKey }) => stepKey === CONNECT_TO_SOURCES_KEY
+  const destinationConfigForm = forms.find(
+    ({ stepKey }) => stepKey === CONNECT_TO_DESTINATION_KEY
   );
-  const { data } = sourceConfigForm ?? {};
-  const sourceConfig = data?.[CONNECT_TO_SOURCES_KEY];
-  const processedSourceConfig = useMemo(
+
+  const { data } = destinationConfigForm ?? {};
+  const destinationConfig = data?.[CONNECT_TO_DESTINATION_KEY];
+  const processedDestinationConfig = useMemo(
     () =>
-      processConnectorConfigData(sourceConfig, selectedDataSource, "source"),
+      processConnectorConfigData(
+        destinationConfig,
+        selectedDestination,
+        "destination"
+      ),
     [forms]
   );
 
   const {
     data: connectionResponse,
-    refetch: retrySourceConnection,
+    refetch: retryDestinationConnection,
     isFetching,
   } = useQuery({
-    queryKey: ["connector_definition", "test-connection", "source"],
+    queryKey: ["connector_definition", "test-connection", "destination"],
     queryFn: () =>
-      getConnectionStatus(processedSourceConfig as TestConnectionPayload),
-    enabled: !!processedSourceConfig,
+      getConnectionStatus(processedDestinationConfig as TestConnectionPayload),
+    enabled: !!processedDestinationConfig,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
@@ -64,7 +69,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
     connectionResponse?.connection_status.status !== "succeeded";
 
   const handleOnContinueClick = () => {
-    handleMoveForward(stepInfo?.formKey as string, processedSourceConfig);
+    handleMoveForward(stepInfo?.formKey as string, processedDestinationConfig);
   };
 
   return (
@@ -80,8 +85,8 @@ const SourceConnectionTest = (): JSX.Element | null => {
             const statusMetaInfo = status({
               data: connectionResponse,
               isLoading: isFetching,
-              configFormData: sourceConfig,
-              datasource: selectedDataSource,
+              configFormData: destinationConfig,
+              datasource: selectedDestination,
             });
 
             return (
@@ -131,7 +136,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
               variant="outline"
               borderColor="gray.500"
               isDisabled={isFetching}
-              onClick={() => retrySourceConnection()}
+              onClick={() => retryDestinationConnection()}
             >
               Test Again
             </Button>
@@ -148,7 +153,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
               <AlertDescription>
                 {isAnyFailed
                   ? connectionResponse?.connection_status.message
-                  : `All tests passed. Continue to finish setting up your ${selectedDataSource} source`}
+                  : `All tests passed. Continue to finish setting up your ${selectedDestination} source`}
               </AlertDescription>
             </Box>
           </Alert>
@@ -159,4 +164,4 @@ const SourceConnectionTest = (): JSX.Element | null => {
   );
 };
 
-export default SourceConnectionTest;
+export default DestinationConnectionTest;
