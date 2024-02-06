@@ -15,7 +15,7 @@ import EmptyQueryPreviewImage from "@/assets/images/EmptyQueryPreview.png";
 
 import Editor from "@monaco-editor/react";
 import { useContext, useRef, useState } from "react";
-import { getModelPreview, getModelPreviewById, putModelById } from "@/services/models";
+import { getModelPreviewById, putModelById } from "@/services/models";
 import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
 import { TableDataType } from "@/components/Table/types";
@@ -90,13 +90,15 @@ const DefineSQL = ({
 		let data = await getModelPreviewById(query, connector_id?.toString());
 		console.log(data);
 		
-		if (data.data) {
+		if (data.data?.data) {
+			console.log(data.data.data);
+			
 			setLoading(false);
-			setTableData(ConvertModelPreviewToTableData(data));
+			setTableData(ConvertModelPreviewToTableData(data.data.data));
 			canMoveForward(true);
 		} else {
 			console.log(data);
-			{data.data.errors.map((error:{title: string, detail: string}) => (
+			{data?.data?.errors?.map((error:{title: string, detail: string}) => (
 				toast({
 					title: "An Error Occured",
 					description: error.detail || "Please check your query and try again",

@@ -28,10 +28,17 @@ type ModelPreviewPayload = {
 	query: string;
 };
 
+type Field = {
+	[key:string] : string | number | null;
+}
+
 type ModelPreviewResponse = {
-	data: {
-		[key: string]: string | number | null;
-	};
+	data: Field[]
+	errors?: {
+		detail: string;
+		status: number;
+		title: string;
+	}[]
 };
 
 export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {

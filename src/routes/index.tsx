@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
-const Homepage = lazy(() => import("@/views/Homepage"));
+// const Homepage = lazy(() => import("@/views/Homepage"));
 const SignIn = lazy(() => import("@/views/Authentication/SignIn"));
 const SignUp = lazy(() => import("@/views/Authentication/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
@@ -35,15 +35,6 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 		url: "/",
 		component: (
 			<SuspenseWithLoader redirectRoute='/'>
-				<Homepage />
-			</SuspenseWithLoader>
-		),
-	},
-	{
-		name: "Dashboard",
-		url: "/dashboard",
-		component: (
-			<SuspenseWithLoader redirectRoute='/dashboard'>
 				<Dashboard />
 			</SuspenseWithLoader>
 		),

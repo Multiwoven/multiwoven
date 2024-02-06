@@ -1,10 +1,12 @@
-import { Heading } from "@chakra-ui/layout";
+import { Box, Center, Heading } from "@chakra-ui/react";
 
 const Dashboard = (): JSX.Element => {
   return (
-    <div className="box-content py-4">
-      <Heading>Dashboard</Heading>
-    </div>
+    <Box mx="auto" w='lg' h="100%" verticalAlign="end">
+      <Center h="100%"  color="white">
+        <Heading color='gray.600'>Coming Soon</Heading>
+      </Center>{" "}
+    </Box>
   );
 };
 

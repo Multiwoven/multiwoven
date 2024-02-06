@@ -145,14 +145,13 @@ const SignUp = (): JSX.Element => {
 					<Form>
 						<Container
 							maxW='lg'
-							py={{ base: "12", md: "24" }}
-							px={{ base: "0", sm: "8" }}
+							py="6"
 						>
 							<Stack spacing='8'>
 								<Stack spacing='6' alignItems={"center"}>
 									<img src={MultiwovenIcon} width={55} />
-									<Stack spacing={{ base: "2", md: "3" }} textAlign='center'>
-										<Heading size={{ base: "xs", md: "sm" }}>
+									<Stack spacing="3" textAlign='center'>
+										<Heading size="sm">
 											Create an account
 										</Heading>
 										<Text color='fg.muted'>
@@ -162,8 +161,8 @@ const SignUp = (): JSX.Element => {
 									</Stack>
 								</Stack>
 								<Box
-									py={{ base: "0", sm: "8" }}
-									px={{ base: "4", sm: "10" }}
+									py="8"
+									px="10"
 									borderRadius="xl"
 									border="2px"
 									borderColor="gray.400"
@@ -224,9 +223,9 @@ const SignUp = (): JSX.Element => {
 										</Stack>
 									</Stack>
 								</Box>
-								<AuthFooter />
 							</Stack>
 						</Container>
+						<AuthFooter />
 					</Form>
 				)}
 			</Formik>
