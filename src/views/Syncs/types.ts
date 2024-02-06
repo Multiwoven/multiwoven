@@ -21,3 +21,8 @@ export type DiscoverResponse = {
     type: "catalogs";
   };
 };
+
+export type FieldMap = {
+  model: string;
+  destination: string;
+};

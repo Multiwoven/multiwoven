@@ -1,5 +1,6 @@
 import { RJSFSchema } from "@rjsf/utils";
 import { flatten } from "flat";
+import { FieldMap } from "./types";
 
 export const convertSchemaToObject = (schema: RJSFSchema): unknown => {
   if (schema?.type === "object") {
@@ -31,4 +32,18 @@ export const getPathFromObject = (schema?: RJSFSchema) => {
   const schemaObject = convertSchemaToObject(schema);
   const flattenedObj = flatten(schemaObject);
   return Object.keys(flattenedObj || {});
+};
+
+export const convertFieldMapToConfig = (
+  fields: FieldMap[]
+): Record<string, string> => {
+  const configurations = fields.reduce(
+    (acc, field) => ({
+      ...acc,
+      [field.model]: field.destination,
+    }),
+    {}
+  );
+
+  return configurations;
 };
