@@ -5,9 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  IMAGE_NAME: multiwoven-server
+  IMAGE_NAME: multiwoven/multiwoven-server
   IMAGE_TAG: latest
 
 jobs:
