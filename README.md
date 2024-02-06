@@ -7,8 +7,15 @@
 <br/>
 
 <p align="center">
-   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
-   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple" alt="License"></a>
+  <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven-server?style=flat-square"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple?style=flat-square" alt="License"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/issues">
+    <img alt="GitHub open issues" src="https://img.shields.io/github/issues-raw/Multiwoven/multiwoven?style=flat-square">
+  </a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/pulls">
+    <img alt="GitHub open pull requests" src="https://img.shields.io/github/issues-pr/Multiwoven/multiwoven-server?style=flat-square">
+  </a>
 </p>
 
 <h2 align="center">The open-source reverse ETL platform for data teams</h2>
@@ -44,16 +51,16 @@ Requiring minimal engineering effort, its intuitive interface simplifies buildin
 
 
 ## ✨ Features
-- **Sources**
+👉 **Sources**
 Connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction and management.
 
-- **Destinations**
+👉 **Destinations**
 Sync data to over 100+ different business applications. Use out-of-the-box connectors to tools like Braze, Klaviyo, Slack, Facebook Ads, Salesforce, and more.
 
-- **Models**
+👉 **Models**
 Craft data models using SQL, visual builders, or dbt. Multiwoven's flexible modeling options allow for precise and customized data preparation, suitable for any business need.
 
-- **Syncs**
+👉 **Syncs**
 Schedule and monitor your data pipelines with ease. Multiwoven's syncing features enable you to streamline the flow of data from sources to various destinations, ensuring timely and accurate data delivery.
 
 <hr>
