@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import SelectModel from "./SelectModel";
 import SelectDestination from "./SelectDestination";
 import ConfigureSyncs from "./ConfigureSyncs";
+import FinaliseSync from "./FinaliseSync";
 
 const SyncForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -30,6 +31,12 @@ const SyncForm = (): JSX.Element => {
       formKey: "configureSyncs",
       name: "Configure sync",
       component: <ConfigureSyncs />,
+      isRequireContinueCta: false,
+    },
+    {
+      formKey: "finaliseSync",
+      name: "Finalize sync",
+      component: <FinaliseSync />,
       isRequireContinueCta: false,
     },
   ];
