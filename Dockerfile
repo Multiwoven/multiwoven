@@ -84,6 +84,8 @@ RUN useradd rails --create-home --shell /bin/bash && \
     mkdir -p /rails/db /rails/log /rails/storage /rails/tmp && \
     chown -R rails:rails /rails/db /rails/log /rails/storage /rails/tmp
 
+USER rails:rails
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
