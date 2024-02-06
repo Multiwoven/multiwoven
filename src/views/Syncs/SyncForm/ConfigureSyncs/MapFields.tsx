@@ -77,7 +77,12 @@ const MapFields = ({
   const mappedColumns = fields.map((item) => item.model);
 
   return (
-    <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
+    <Box
+      backgroundColor="gray.200"
+      padding="20px"
+      borderRadius="8px"
+      marginBottom="100px"
+    >
       <Text fontWeight="600">
         Map fields to {destination?.attributes?.connector_name}
       </Text>
