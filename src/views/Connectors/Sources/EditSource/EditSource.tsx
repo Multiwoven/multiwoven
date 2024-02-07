@@ -161,11 +161,13 @@ const EditSource = (): JSX.Element => {
         </Box>
 
         <Box
-          backgroundColor="#fff"
+          backgroundColor="gray.200"
           padding="24px"
           borderWidth="thin"
           borderRadius="8px"
           marginBottom="100px"
+          border='1px'
+          borderColor='gray.400'
         >
           <Form
             schema={connectorSchema?.connection_specification as RJSFSchema}

@@ -1,7 +1,7 @@
 import { Box, Button, Center, Image, Text, VStack } from "@chakra-ui/react";
 import NotFoundImage from "@/assets/images/404-image.png";
 import { FiArrowLeft } from "react-icons/fi";
-const PageNotFound = () => {
+const PageNotFound = () : JSX.Element => {
 	return (
 		<Box mx='auto' height='100vh' width='100%'>
 			<Center h='100%'>

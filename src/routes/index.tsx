@@ -1,9 +1,8 @@
 import { Suspense, lazy } from "react";
 const AboutUs = lazy(() => import("@/views/AboutUs"));
 const Dashboard = lazy(() => import("@/views/Dashboard"));
-const Homepage = lazy(() => import("@/views/Homepage"));
-const Login = lazy(() => import("@/views/Login"));
-const SignUp = lazy(() => import("@/views/SignUp"));
+const SignIn = lazy(() => import("@/views/Authentication/SignIn"));
+const SignUp = lazy(() => import("@/views/Authentication/SignUp"));
 const AccountVerify = lazy(() => import("@/views/AccountVerify"));
 const Models = lazy(() => import("@/views/Models"));
 const SetupConnectors = lazy(
@@ -11,11 +10,6 @@ const SetupConnectors = lazy(
 );
 
 const Syncs = lazy(() => import("@/views/Syncs"));
-
-// const Sources = lazy(() => import("@/views/Connectors/Sources"));
-
-// import Cookies from "js-cookie";
-// import { ConnectorModify } from "@/views/Connectors/ConnectorModify";
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -42,15 +36,6 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     url: "/",
     component: (
       <SuspenseWithLoader redirectRoute="/">
-        <Homepage />
-      </SuspenseWithLoader>
-    ),
-  },
-  {
-    name: "Dashboard",
-    url: "/dashboard",
-    component: (
-      <SuspenseWithLoader redirectRoute="/dashboard">
         <Dashboard />
       </SuspenseWithLoader>
     ),
@@ -82,24 +67,17 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
       </SuspenseWithLoader>
     ),
   },
-  {
-    name: "Syncs",
-    url: "/syncs/*",
-    component: (
-      <SuspenseWithLoader redirectRoute="/syncs">
-        <Syncs />
-      </SuspenseWithLoader>
-    ),
-  },
 ];
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
   {
-    name: "Login",
-    url: "/login",
+    name: "Sign In",
+    url: "/sign-in",
     component: (
-      <SuspenseWithLoader redirectRoute="/login">
-        <Login />
+      <SuspenseWithLoader redirectRoute="/sign-in">
+        <>
+          <SignIn />
+        </>
       </SuspenseWithLoader>
     ),
   },
@@ -108,7 +86,9 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     url: "/sign-up",
     component: (
       <SuspenseWithLoader redirectRoute="/sign-up">
-        <SignUp />
+        <>
+          <SignUp />
+        </>
       </SuspenseWithLoader>
     ),
   },
@@ -118,6 +98,15 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute="/account-verify">
         <AccountVerify />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: "Syncs",
+    url: "/syncs/*",
+    component: (
+      <SuspenseWithLoader redirectRoute="/syncs">
+        <Syncs />
       </SuspenseWithLoader>
     ),
   },

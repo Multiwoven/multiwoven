@@ -33,7 +33,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
             borderRadius="8px"
           >
             <Image
-              src={`/src/assets/icons/${attributes?.[field]}`}
+              src={attributes?.[field]}
               alt="source icon"
               maxHeight="100%"
             />
@@ -96,9 +96,9 @@ const SourcesList = (): JSX.Element | null => {
           ctaName="Add sources"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
-          ctaBgColor="orange.500"
+          ctaBgColor="brand.500"
           ctaColor="gray.900"
-          ctaHoverBgColor="orange.400"
+          ctaHoverBgColor="brand.400"
           isCtaVisible
         />
         <Table

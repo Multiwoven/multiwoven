@@ -1,4 +1,4 @@
-import { Button, Flex, HStack, Heading } from "@chakra-ui/react";
+import { Button, Flex, HStack, Heading, Text } from "@chakra-ui/react";
 
 type TopBarType = {
 	name: string;
@@ -11,6 +11,8 @@ type TopBarType = {
 	isCtaVisible?: boolean;
 	extra?: JSX.Element;
 	ctaButtonVariant?: string;
+	ctaButtonWidth?: string;
+	ctaButtonHeight?: string;
 };
 
 const TopBar = ({
@@ -21,13 +23,15 @@ const TopBar = ({
 	isCtaVisible,
 	extra,
 	ctaButtonVariant = "solid",
+	ctaButtonWidth,
+	ctaButtonHeight,
 }: TopBarType): JSX.Element => (
 	<Flex
 		justifyContent='space-between'
-		borderColor='gray.300'
+		borderColor='gray.400'
 		marginBottom='30px'
 	>
-		<Heading as='h6' fontWeight='500' size='lg'>
+		<Heading fontWeight='700' size='md'>
 			{name}
 		</Heading>
 		<HStack spacing={2}>
@@ -36,10 +40,11 @@ const TopBar = ({
 				<Button
 					variant={ctaButtonVariant}
 					leftIcon={ctaIcon}
-					size='lg'
+					width={ctaButtonWidth || "126px"}
+					height={ctaButtonHeight || "40px"}
 					onClick={onCtaClicked}
 				>
-					{ctaName}
+					<Text size='sm'>{ctaName}</Text>
 				</Button>
 			) : (
 				<></>

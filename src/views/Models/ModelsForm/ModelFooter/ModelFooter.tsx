@@ -10,6 +10,7 @@ type ButtonConfig = {
 	bgColor?: string;
 	hoverColor?: string;
 	hoverBgColor?: string;
+	variant?: string;
 };
 
 type ModelFooterProps = {
@@ -52,6 +53,7 @@ const ModelFooter = ({
 							isLoading={button.isLoading}
 							color={button.color}
 							bgColor={button.bgColor}
+							variant={button.variant || "solid"}
 							_hover={{
 								color: button.hoverColor,
 								bgColor: button.hoverBgColor,

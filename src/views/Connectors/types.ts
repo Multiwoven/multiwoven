@@ -92,7 +92,8 @@ export type ConnectorTableColumnFields =
   | "connector_name"
   | "icon"
   | "updated_at"
-  | "status";
+  | "status"
+  | "name";
 
 export type SourceListColumnType = {
   key: ConnectorTableColumnFields;

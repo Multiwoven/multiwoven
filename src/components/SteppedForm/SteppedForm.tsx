@@ -153,6 +153,8 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
           padding="20px"
           display="flex"
           justifyContent="center"
+          borderBottom='1px'
+          borderColor='gray.400'
         >
           <Box
             display="flex"
