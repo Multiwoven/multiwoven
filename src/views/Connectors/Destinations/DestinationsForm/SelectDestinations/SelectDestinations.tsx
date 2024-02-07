@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getConnectorsDefintions } from "@/services/connectors";
 import { getDestinationCategories } from "@/views/Connectors/helpers";
 import { useContext, useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import ContentContainer from "@/components/ContentContainer";
 import { ALL_DESTINATIONS_CATEGORY } from "@/views/Connectors/constant";
 import { Connector } from "@/views/Connectors/types";
@@ -58,20 +58,52 @@ const SelectDestinations = (): JSX.Element => {
             {connectors.map((connector) =>
               selectedCategory === ALL_DESTINATIONS_CATEGORY ||
               selectedCategory === connector.category ? (
+                // <Box
+                //   marginX="20px"
+                //   display="flex"
+                //   borderWidth="thin"
+                //   padding="20px"
+                //   borderRadius="8px"
+                //   marginY="20px"
+                //   cursor="pointer"
+                //   _hover={{
+                //     backgroundColor: "gray.100",
+                //   }}
+                //   onClick={() => onDestinationSelect(connector)}
+                // >
+
+                //   <Text fontSize="md">{connector.name}</Text>
+                // </Box>
                 <Box
-                  marginX="20px"
                   display="flex"
+                  alignItems="center"
+                  marginX="20px"
                   borderWidth="thin"
                   padding="20px"
                   borderRadius="8px"
                   marginY="20px"
                   cursor="pointer"
+                  borderColor="gray.400"
                   _hover={{
-                    backgroundColor: "gray.100",
+                    backgroundColor: "gray.200",
                   }}
                   onClick={() => onDestinationSelect(connector)}
                 >
-                  <Text fontSize="md">{connector.name}</Text>
+                  <Box
+                    height="40px"
+                    width="40px"
+                    marginRight="10px"
+                    borderWidth="thin"
+                    padding="5px"
+                    borderRadius="8px"
+                  >
+                    <Image
+                      src={connector.icon}
+                      alt="source icon"
+                      maxHeight="100%"
+                    />
+                  </Box>
+                  <Text fontWeight="bold">{connector.name}</Text>
                 </Box>
               ) : null
             )}
