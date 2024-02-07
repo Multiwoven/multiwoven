@@ -36,7 +36,7 @@ const MapFields = ({
     queryFn: () =>
       getModelPreviewById(model?.query, String(model?.connector?.id)),
     enabled: !!model?.connector?.id,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
