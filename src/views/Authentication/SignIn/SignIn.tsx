@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 import MultiwovenIcon from "@/assets/images/icon.png";
 import { login } from "@/services/common";
-// import { GoogleIcon } from "./providerIcon";
 import Cookies from "js-cookie";
 import AuthFooter from "../AuthFooter";
 
@@ -160,18 +159,6 @@ const SignIn = (): JSX.Element => {
 									errors={errors}
 									submitting={submitting}
 								/>
-								{/* <Stack spacing='6'>
-									<HStack>
-										<Divider />
-										<Text textStyle='sm' whiteSpace='nowrap' color='fg.muted'>
-											or continue with
-										</Text>
-										<Divider />
-									</HStack>
-									<Button variant='secondary' leftIcon={<GoogleIcon />}>
-										Sign in with Google
-									</Button>
-								</Stack> */}
 							</Stack>
 						</Box>
 					</Stack>

@@ -6,7 +6,6 @@ const AuthFooter = (): JSX.Element => {
 		<Box
 			position='fixed'
 			right='0'
-			// borderWidth='thin'
 			bottom='0'
 			backgroundColor='gray.100'
 			display='flex'

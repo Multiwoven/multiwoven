@@ -1,5 +1,4 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
 import { MemoryRouter } from "react-router-dom";
 import SignUp from "./SignUp"; // Update the path based on your project structure
 
@@ -29,30 +28,26 @@ describe("SignUp Component", () => {
     const confirmPassword = "password123";
 
     // form fields on change
-    act(() => {
-      fireEvent.change(getByPlaceholderText("Company Name"), {
-        target: { value: companyName },
-      });
-      fireEvent.change(getByPlaceholderText("Name"), {
-        target: { value: name },
-      });
-      fireEvent.change(getByPlaceholderText("Email"), {
-        target: { value: email },
-      });
-      fireEvent.change(getByPlaceholderText("Password"), {
-        target: { value: password },
-      });
-      fireEvent.change(getByPlaceholderText("Confirm Password"), {
-        target: { value: confirmPassword },
-      });
+    fireEvent.change(getByPlaceholderText("Company Name"), {
+      target: { value: companyName },
+    });
+    fireEvent.change(getByPlaceholderText("Name"), {
+      target: { value: name },
+    });
+    fireEvent.change(getByPlaceholderText("Email"), {
+      target: { value: email },
+    });
+    fireEvent.change(getByPlaceholderText("Password"), {
+      target: { value: password },
+    });
+    fireEvent.change(getByPlaceholderText("Confirm Password"), {
+      target: { value: confirmPassword },
     });
 
     // click on sign up
-    act(() => {
-      fireEvent.click(getByText("Sign up"));
-    });
+    fireEvent.click(getByText("Sign up"));
 
-    // post api call
+    // Verify the expected outcome after the API call
     await waitFor(() => {
       expect(window.location.pathname).toBe("/"); // Update the expected path if necessary
     });
