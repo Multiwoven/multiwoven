@@ -74,7 +74,6 @@ const FinalizeModel = (): JSX.Element => {
         queryClient.removeQueries({
           queryKey: ["Create Model"],
         });
-
         toast({
           status: "success",
           title: "Success!!",

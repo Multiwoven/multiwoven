@@ -32,8 +32,12 @@ export function ConvertToTableData(
 	};
 }
 
+type Field = {
+	[key:string] : string | number | null;
+}
+
 export function ConvertModelPreviewToTableData(
-	apiData: Array<Object>
+	apiData: Array<Field>
 ): TableDataType {
 	const column_names = Object.keys(apiData[0]);
 

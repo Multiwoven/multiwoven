@@ -100,7 +100,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
                 name="connector_name"
                 type="text"
                 placeholder="Enter source name"
-                background="#fff"
+                variant='outline'
                 marginBottom="24px"
                 onChange={formik.handleChange}
                 value={formik.values.connector_name}

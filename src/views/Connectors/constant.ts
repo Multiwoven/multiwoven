@@ -62,7 +62,7 @@ export const DESTINATIONS_LIST_QUERY_KEY = ["connectors", "destinations"];
 
 export const CONNECTOR_LIST_COLUMNS: SourceListColumnType[] = [
   {
-    key: "connector_name",
+    key: "name",
     name: "Name",
   },
   {

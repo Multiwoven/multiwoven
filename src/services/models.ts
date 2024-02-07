@@ -24,6 +24,23 @@ type ModelAPIResponse<T> = {
 	data?: T;
 };
 
+type ModelPreviewPayload = {
+	query: string;
+};
+
+type Field = {
+	[key:string] : string | number | null;
+}
+
+type ModelPreviewResponse = {
+	data: Field[]
+	errors?: {
+		detail: string;
+		status: number;
+		title: string;
+	}[]
+};
+
 export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
 	return apiRequest("/models", null);
 };
@@ -35,6 +52,16 @@ export const getModelPreview = async (
 	const url = "/connectors/" + connector_id + "/query_source";
 	return apiRequest(url, { query: query });
 };
+
+export const getModelPreviewById = async (
+	query: string,
+	id: string
+): Promise<ModelAPIResponse<ModelPreviewResponse>> =>
+	multiwovenFetch<ModelPreviewPayload, ModelAPIResponse<ModelPreviewResponse>>({
+		method: "post",
+		url: "/connectors/" + id + "/query_source",
+		data: { query: query }
+	});
 
 export const createNewModel = async (
 	payload: CreateModelPayload
@@ -63,8 +90,9 @@ export const putModelById = async (
 		data: payload,
 	});
 
-
-export const deleteModelById = async (id:string): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
+export const deleteModelById = async (
+	id: string
+): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
 	multiwovenFetch<string, ModelAPIResponse<GetModelByIdResponse>>({
 		method: "delete",
 		url: "/models/" + id,

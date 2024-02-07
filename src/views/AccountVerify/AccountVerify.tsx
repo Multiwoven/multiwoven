@@ -13,7 +13,7 @@ const AccountVerifySchema = Yup.object().shape({
         .required('Code is required'),
 });
 
-const AccountVerify = () => {
+const AccountVerify = () : JSX.Element => {
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
