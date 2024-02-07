@@ -1,14 +1,14 @@
 import { ConnectorItem } from "@/views/Connectors/types";
 import { ModelEntity } from "@/views/Models/types";
 import { Box, Button, CloseButton, Text } from "@chakra-ui/react";
-import { getModelPreview } from "@/services/models";
+import { getModelPreviewById } from "@/services/models";
 import { useQuery } from "@tanstack/react-query";
-import { FieldMap as FieldMapType, Stream } from "@/views/Syncs/types";
+import { FieldMap as FieldMapType, Stream } from "@/views/Activate/Syncs/types";
 import FieldMap from "./FieldMap";
 import {
   convertFieldMapToConfig,
   getPathFromObject,
-} from "@/views/Syncs/utils";
+} from "@/views/Activate/Syncs/utils";
 import { useMemo, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
@@ -24,8 +24,6 @@ const FieldStruct: FieldMapType = {
   destination: "",
 };
 
-const MOCK_COLUMNS = ["contact_id", "email", "mobile", "name", "address"];
-
 const MapFields = ({
   model,
   destination,
@@ -34,9 +32,10 @@ const MapFields = ({
 }: MapFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([FieldStruct]);
   const { data: previewModelData } = useQuery({
-    queryKey: ["syncs", "preview-model", model?.id],
-    queryFn: () => getModelPreview(model?.query, model?.id),
-    enabled: !!model?.id,
+    queryKey: ["syncs", "preview-model", model?.connector?.id],
+    queryFn: () =>
+      getModelPreviewById(model?.query, String(model?.connector?.id)),
+    enabled: !!model?.connector?.id,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -46,9 +45,11 @@ const MapFields = ({
     [stream]
   );
 
-  if (!previewModelData) return null;
+  if (!previewModelData || !Array.isArray(previewModelData)) return null;
 
-  const modelColumns = Object.keys(previewModelData?.data?.data?.[0] ?? {});
+  const firstRow = previewModelData[0];
+
+  const modelColumns = Object.keys(firstRow ?? {});
 
   const handleOnAppendField = () => {
     setFields([...fields, FieldStruct]);
@@ -78,7 +79,7 @@ const MapFields = ({
 
   return (
     <Box
-      backgroundColor="gray.200"
+      backgroundColor="gray.300"
       padding="20px"
       borderRadius="8px"
       marginBottom="100px"
@@ -90,13 +91,18 @@ const MapFields = ({
         Select the API from the destination that you wish to map.
       </Text>
       {fields.map((_, index) => (
-        <Box display="flex" alignItems="flex-end" marginBottom="30px">
+        <Box
+          key={`field-map-${index}`}
+          display="flex"
+          alignItems="flex-end"
+          marginBottom="30px"
+        >
           <FieldMap
             id={index}
             fieldType="model"
             entityName={model.connector.connector_name}
             icon={model.icon}
-            options={MOCK_COLUMNS}
+            options={modelColumns}
             disabledOptions={mappedColumns}
             value={fields[index].model}
             onChange={handleOnChange}
@@ -129,7 +135,7 @@ const MapFields = ({
         <Button
           variant="secondary"
           onClick={handleOnAppendField}
-          isDisabled={fields.length === MOCK_COLUMNS.length || !stream}
+          isDisabled={fields.length === modelColumns.length || !stream}
           backgroundColor="#fff"
         >
           Add mapping

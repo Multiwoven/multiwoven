@@ -21,7 +21,7 @@ const SelectStreams = ({
   };
   return (
     <Box
-      backgroundColor="gray.200"
+      backgroundColor="gray.300"
       padding="20px"
       borderRadius="8px"
       marginBottom="20px"

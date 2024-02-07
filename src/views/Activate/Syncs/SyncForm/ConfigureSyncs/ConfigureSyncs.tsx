@@ -6,14 +6,14 @@ import { Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";
 import SelectStreams from "./SelectStreams";
-import { Stream } from "@/views/Syncs/types";
+import { Stream } from "@/views/Activate/Syncs/types";
 import MapFields from "./MapFields";
 import { ConnectorItem } from "@/views/Connectors/types";
 import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 
 const ConfigureSyncs = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
-  const [configurations, setConfiguratins] = useState<Record<
+  const [configuration, setConfiguration] = useState<Record<
     string,
     string
   > | null>(null);
@@ -45,17 +45,17 @@ const ConfigureSyncs = (): JSX.Element | null => {
   };
 
   const handleOnConfigChange = (config: Record<string, string>) => {
-    setConfiguratins(config);
+    setConfiguration(config);
   };
 
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
     const payload = {
       source_id: selectedModel?.connector?.id,
-      destination: selectedDestination.id,
+      destination_id: selectedDestination.id,
       model_id: selectedModel.id,
       stream_name: selectedStream?.name,
-      configurations,
+      configuration,
     };
 
     handleMoveForward(stepInfo?.formKey as string, payload);

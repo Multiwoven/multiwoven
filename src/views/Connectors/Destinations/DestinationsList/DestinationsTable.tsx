@@ -33,7 +33,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
     case "icon":
       return (
         <EntityItem
-          icon={`/src/assets/icons/${attributes?.[field]}`}
+          icon={attributes?.[field]}
           name={attributes?.connector_name}
         />
       );

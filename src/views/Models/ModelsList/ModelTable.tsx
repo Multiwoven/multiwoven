@@ -1,6 +1,6 @@
 import GenerateTable from "@/components/Table/Table";
 import { getAllModels } from "@/services/models";
-import { AddIconDataToArray, ConvertToTableData } from "@/utils";
+import { addIconDataToArray, ConvertToTableData } from "@/utils";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,7 +32,7 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
     );
   }
 
-  let values = ConvertToTableData(AddIconDataToArray(models), [
+  let values = ConvertToTableData(addIconDataToArray(models), [
     { name: "Name", key: "name", showIcon: true },
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },

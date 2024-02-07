@@ -13,6 +13,7 @@ import { getUserConnectors } from "@/services/connectors";
 import { ConnectorAttributes, ConnectorTableColumnFields } from "../../types";
 import moment from "moment";
 import ContentContainer from "@/components/ContentContainer";
+import EntityItem from "@/components/EntityItem";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -23,23 +24,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
     case "icon":
       return (
-        <Box display="flex" alignItems="center">
-          <Box
-            height="40px"
-            width="40px"
-            marginRight="10px"
-            borderWidth="thin"
-            padding="5px"
-            borderRadius="8px"
-          >
-            <Image
-              src={attributes?.[field]}
-              alt="source icon"
-              maxHeight="100%"
-            />
-          </Box>
-          <Text>{attributes?.connector_name}</Text>
-        </Box>
+        <EntityItem icon={attributes.icon} name={attributes.connector_name} />
       );
 
     case "updated_at":

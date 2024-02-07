@@ -1,5 +1,6 @@
 import ContentContainer from "@/components/ContentContainer";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { createSync } from "@/services/syncs";
 import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 import {
   Box,
@@ -11,12 +12,18 @@ import {
   Stack,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { ConfigSync } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 const FinaliseSync = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const { forms } = state;
   const syncConfigForm = forms.find(
@@ -27,11 +34,46 @@ const FinaliseSync = (): JSX.Element => {
   const formik = useFormik({
     initialValues: {
       description: "",
-      intervalType: "manual",
-      interval: 0,
-      intervalUnit: "min",
+      sync_mode: "full_refresh",
+      sync_interval: 0,
+      sync_interval_unit: "minutes",
+      schedule_type: "automated",
     },
-    onSubmit: (data) => {},
+    onSubmit: async (data) => {
+      setIsLoading(true);
+      try {
+        const payload = {
+          sync: {
+            ...data,
+            ...((syncConfigData?.configureSyncs ?? {}) as ConfigSync),
+          },
+        };
+
+        const response = await createSync(payload);
+        if (response?.data?.attributes) {
+          toast({
+            status: "success",
+            title: "Success!!",
+            description: "Sync created successfully!",
+            position: "bottom-right",
+          });
+
+          navigate("/activate/syncs");
+          return;
+        }
+        throw new Error();
+      } catch {
+        toast({
+          status: "error",
+          title: "An error occurred.",
+          description: "Something went wrong while creating Sync.",
+          position: "bottom-right",
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
   });
 
   return (
@@ -39,7 +81,7 @@ const FinaliseSync = (): JSX.Element => {
       <ContentContainer>
         <form onSubmit={formik.handleSubmit}>
           <Box
-            backgroundColor="gray.200"
+            backgroundColor="gray.300"
             padding="20px"
             borderRadius="8px"
             marginBottom="100px"
@@ -64,8 +106,8 @@ const FinaliseSync = (): JSX.Element => {
                   Schedule type
                 </Text>
                 <RadioGroup
-                  name="intervalType"
-                  value={formik.values.intervalType}
+                  name="schedule_type"
+                  value={formik.values.schedule_type}
                   onClick={formik.handleChange}
                 >
                   <Stack direction="column">
@@ -75,6 +117,7 @@ const FinaliseSync = (): JSX.Element => {
                       alignItems="flex-start"
                       marginBottom="10px"
                       backgroundColor="#fff"
+                      isDisabled
                     >
                       <Box position="relative" top="-5px">
                         <Text fontWeight="500">Manual </Text>
@@ -84,7 +127,7 @@ const FinaliseSync = (): JSX.Element => {
                       </Box>
                     </Radio>
                     <Radio
-                      value="interval"
+                      value="automated"
                       display="flex"
                       alignItems="flex-start"
                       backgroundColor="#fff"
@@ -102,7 +145,7 @@ const FinaliseSync = (): JSX.Element => {
                 </RadioGroup>
               </Box>
               <Box minWidth="400px">
-                {formik.values.intervalType === "interval" ? (
+                {formik.values.schedule_type === "automated" ? (
                   <>
                     <Text marginBottom="20px" fontWeight="600">
                       Schedule Configuration
@@ -120,13 +163,13 @@ const FinaliseSync = (): JSX.Element => {
                       </Box>
                       <Box>
                         <Input
-                          name="interval"
+                          name="sync_interval"
                           pr="4.5rem"
                           type="number"
                           placeholder="Enter a value"
                           border="none"
                           _focusVisible={{ border: "#fff" }}
-                          value={formik.values.interval}
+                          value={formik.values.sync_interval}
                           onChange={formik.handleChange}
                           isRequired
                         />
@@ -138,16 +181,13 @@ const FinaliseSync = (): JSX.Element => {
                       />
                       <Box>
                         <Select
-                          name="intervalUnit"
+                          name="sync_interval_unit"
                           border="none"
                           _focusVisible={{ border: "#fff" }}
-                          value={formik.values.intervalUnit}
+                          value={formik.values.sync_interval_unit}
                           onChange={formik.handleChange}
                         >
-                          <option>Minute(s)</option>
-                          <option>Hour(s)</option>
-                          <option>Day(s)</option>
-                          <option>Week(s)</option>
+                          <option value="minutes">Minute(s)</option>
                         </Select>
                       </Box>
                     </Box>
@@ -156,7 +196,11 @@ const FinaliseSync = (): JSX.Element => {
               </Box>
             </Box>
           </Box>
-          <SourceFormFooter ctaName="Finish" ctaType="submit" />
+          <SourceFormFooter
+            ctaName="Finish"
+            ctaType="submit"
+            isCtaLoading={isLoading}
+          />
         </form>
       </ContentContainer>
     </Box>

@@ -9,7 +9,7 @@ const SetupConnectors = lazy(
   () => import("@/views/Connectors/SetupConnectors")
 );
 
-const Syncs = lazy(() => import("@/views/Syncs"));
+const SetupActivate = lazy(() => import("@/views/Activate/SetupActivate"));
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -67,6 +67,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
       </SuspenseWithLoader>
     ),
   },
+  {
+    name: "Syncs",
+    url: "/activate/*",
+    component: (
+      <SuspenseWithLoader redirectRoute="/activate">
+        <SetupActivate />
+      </SuspenseWithLoader>
+    ),
+  },
 ];
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
@@ -98,15 +107,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute="/account-verify">
         <AccountVerify />
-      </SuspenseWithLoader>
-    ),
-  },
-  {
-    name: "Syncs",
-    url: "/syncs/*",
-    component: (
-      <SuspenseWithLoader redirectRoute="/syncs">
-        <Syncs />
       </SuspenseWithLoader>
     ),
   },
