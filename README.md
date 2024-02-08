@@ -7,15 +7,28 @@
 <br/>
 
 <p align="center">
+<a href="https://github.com/Multiwoven/multiwoven-server/stargazers">
+    <img src="https://img.shields.io/github/stars/Multiwoven/multiwoven-server?style=flat-square" alt="GitHub stars">
+</a>
   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
   <a href="https://github.com/Multiwoven/multiwoven-server/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven-server?style=flat-square"></a>
   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple?style=flat-square" alt="License"></a>
-  <a href="https://github.com/Multiwoven/multiwoven/issues">
+      <a href="https://github.com/Multiwoven/multiwoven/issues">
     <img alt="GitHub open issues" src="https://img.shields.io/github/issues-raw/Multiwoven/multiwoven?style=flat-square">
   </a>
   <a href="https://github.com/Multiwoven/multiwoven-server/pulls">
     <img alt="GitHub open pull requests" src="https://img.shields.io/github/issues-pr/Multiwoven/multiwoven-server?style=flat-square">
   </a>
+  <br />
+  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/docker-build.yml?style=flat-square&label=backend-docker-build" alt="server-docker-build">
+  </a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/ci.yml?style=flat-square&label=backend%20CI" alt="server-ci">
+</a>
+
+
+
 </p>
 
 <h2 align="center">The open-source reverse ETL platform for data teams</h2>
