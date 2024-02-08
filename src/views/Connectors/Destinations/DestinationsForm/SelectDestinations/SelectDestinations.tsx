@@ -58,22 +58,6 @@ const SelectDestinations = (): JSX.Element => {
             {connectors.map((connector) =>
               selectedCategory === ALL_DESTINATIONS_CATEGORY ||
               selectedCategory === connector.category ? (
-                // <Box
-                //   marginX="20px"
-                //   display="flex"
-                //   borderWidth="thin"
-                //   padding="20px"
-                //   borderRadius="8px"
-                //   marginY="20px"
-                //   cursor="pointer"
-                //   _hover={{
-                //     backgroundColor: "gray.100",
-                //   }}
-                //   onClick={() => onDestinationSelect(connector)}
-                // >
-
-                //   <Text fontSize="md">{connector.name}</Text>
-                // </Box>
                 <Box
                   display="flex"
                   alignItems="center"
