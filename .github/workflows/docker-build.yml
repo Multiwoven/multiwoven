@@ -1,8 +1,11 @@
-name: Docker Build
+name: server-docker-build
 
 on:
-  push:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["server-ci"]
+    branches: [main]
+    types:
+      - completed
 
 env:
   IMAGE_NAME: multiwoven/multiwoven-server
