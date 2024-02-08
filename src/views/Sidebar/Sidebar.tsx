@@ -42,7 +42,7 @@ const menus: MenuArray = [
   {
     heading: "ACTIVATE",
     menu: [
-      { title: "Syncs", link: "/syncs", Icon: FiMinimize2 },
+      { title: "Syncs", link: "/activate/syncs", Icon: FiMinimize2 },
       { title: "Audiences", link: "/audiences", Icon: FiPieChart },
     ],
   },

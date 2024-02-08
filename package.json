@@ -29,6 +29,7 @@
     "@tanstack/react-query": "^5.17.14",
     "@tanstack/react-query-devtools": "^5.17.18",
     "chakra-react-select": "^4.7.6",
+    "flat": "^6.0.1",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.16",
     "jest-environment-jsdom": "^29.7.0",
