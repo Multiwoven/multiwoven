@@ -35,7 +35,7 @@ const GenerateTable = ({
 					{data.data.map((row, rowIndex) => (
 						<Tr
 							key={rowIndex}
-							_hover={{ backgroundColor: "gray.100" }}
+							_hover={{ backgroundColor: "gray.100", cursor: "pointer" }}
 							onClick={() => onRowClick?.(row)}
 						>
 							{data.columns.map((column, columnIndex) => (

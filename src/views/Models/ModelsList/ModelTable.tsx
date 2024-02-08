@@ -1,8 +1,9 @@
 import GenerateTable from "@/components/Table/Table";
 import { getAllModels } from "@/services/models";
 import { addIconDataToArray, ConvertToTableData } from "@/utils";
-import { Box, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import NoModels from "../NoModels";
+import Loader from "@/components/Loader";
 
 type ModelTableProps = {
   handleOnRowClick: (args: unknown) => void;
@@ -20,17 +21,11 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
 
   if (!models) {
     return (
-      <Box width="100%" display="flex" justifyContent="center">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Box>
+      <Loader />
     );
   }
+
+  if (models.length === 0) return <NoModels />; 
 
   let values = ConvertToTableData(addIconDataToArray(models), [
     { name: "Name", key: "name", showIcon: true },

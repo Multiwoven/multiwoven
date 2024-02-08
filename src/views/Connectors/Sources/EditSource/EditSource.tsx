@@ -100,7 +100,7 @@ const EditSource = (): JSX.Element => {
     try {
       const payload: TestConnectionPayload = {
         connection_spec: formData,
-        name: connectorInfo?.attributes?.name,
+        name: connectorInfo?.attributes?.connector_name,
         type: "source",
       };
 

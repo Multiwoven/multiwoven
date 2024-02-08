@@ -15,7 +15,7 @@ import EmptyQueryPreviewImage from "@/assets/images/EmptyQueryPreview.png";
 
 import Editor from "@monaco-editor/react";
 import { useContext, useRef, useState } from "react";
-import { getModelPreviewById, putModelById } from "@/services/models";
+import { Field, getModelPreviewById, putModelById } from "@/services/models";
 import { ConvertModelPreviewToTableData } from "@/utils/ConvertToTableData";
 import GenerateTable from "@/components/Table/Table";
 import { TableDataType } from "@/components/Table/types";
@@ -85,29 +85,29 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = (editorRef?.current as any)?.getValue() as string;
-    let data = await getModelPreviewById(query, connector_id?.toString());
-
-    if (data.data?.data) {
-      setLoading(false);
-      setTableData(ConvertModelPreviewToTableData(data.data.data));
-      canMoveForward(true);
-    } else {
-      {
-        data?.data?.errors?.map((error: { title: string; detail: string }) =>
+    let response = await getModelPreviewById(query, connector_id?.toString());
+    console.log(response);
+    if ("data" in response && response.data.errors) {
+      response.data.errors.forEach(
+        (error: { title: string; detail: string }) => {
           toast({
-            title: "An Error Occured",
+            title: "An Error Occurred",
             description:
               error.detail || "Please check your query and try again",
             status: "error",
             duration: 9000,
             isClosable: true,
             position: "bottom-right",
-          })
-        );
-      }
-
-      setLoading(false);
+          });
+        }
+      );
+    } else {
+      console.log("DATA", response);
+      setTableData(ConvertModelPreviewToTableData(response as Field[]));
+      canMoveForward(true);
     }
+
+    setLoading(false);
   }
 
   async function handleModelUpdate() {
@@ -231,16 +231,14 @@ const DefineSQL = ({
           buttons={[
             {
               name: "Back",
-              bgColor: "gray.300",
-              hoverBgColor: "gray.200",
+              variant: "ghost",
               color: "black",
               onClick: () => navigate(-1),
             },
             {
               name: "Continue",
               isDisabled: !moveForward,
-              bgColor: "primary.400",
-              hoverBgColor: "primary.300",
+              variant: "solid",
               onClick: () =>
                 handleContinueClick(
                   (editorRef?.current as any).getValue(),
