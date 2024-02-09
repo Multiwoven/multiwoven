@@ -1752,7 +1752,7 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-cloud-bigquery (1.47.0)
+    google-cloud-bigquery (1.48.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.62)
       google-apis-core (~> 0.13)
@@ -1770,7 +1770,7 @@ GEM
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.11.0)
       google-protobuf (~> 3.18)
-    googleauth (1.9.2)
+    googleauth (1.10.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
       jwt (>= 1.4, < 3.0)
@@ -1837,8 +1837,8 @@ GEM
     minitest (5.21.2)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multipart-post (2.3.0)
-    multiwoven-integrations (0.1.17)
+    multipart-post (2.4.0)
+    multiwoven-integrations (0.1.18)
       activesupport
       async-websocket
       dry-schema
@@ -1882,8 +1882,7 @@ GEM
       racc
     pg (1.5.4)
     protocol-hpack (1.4.2)
-    protocol-http (0.26.0)
-      base64
+    protocol-http (0.26.1)
     protocol-http1 (0.18.0)
       protocol-http (~> 0.22)
     protocol-http2 (0.16.0)
@@ -2079,7 +2078,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.17)
+  multiwoven-integrations (~> 0.1.18)
   newrelic_rpm
   parallel
   pg (~> 1.1)
