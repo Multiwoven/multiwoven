@@ -11,8 +11,6 @@
   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
   <a href="https://github.com/Multiwoven/multiwoven-server/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven-server?style=flat-square"></a>
   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple?style=flat-square" alt="License"></a>
-  <a href="https://github.com/Multiwoven/multiwoven/issues"><img alt="GitHub open issues" src="https://img.shields.io/github/issues-raw/Multiwoven/multiwoven?style=flat-square"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-server/pulls"><img alt="GitHub open pull requests" src="https://img.shields.io/github/issues-pr/Multiwoven/multiwoven-server?style=flat-square"></a>
   <br />
   <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/docker-build.yml?style=flat-square&label=backend-docker-build" alt="server-docker-build"></a>
   <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/ci.yml?style=flat-square&label=backend%20CI" alt="server-ci"></a>
@@ -33,7 +31,9 @@
     ·
     <a href="https://multiwoven.com">Website</a>
     ·
-    <a href="https://github.com/Multiwoven/multiwoven/issues">Issues</a>
+    <a href="https://github.com/Multiwoven/multiwoven-server/issues">Backend Issues</a>
+    ·
+    <a href="https://github.com/Multiwoven/multiwoven-ui/issues">Frontend Issues</a>
     ·
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
@@ -128,7 +128,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 ### Sources
 
 - [x] [Amazon Redshift](https://docs.multiwoven.com/sources/redshift)
-- [x] [Google BigQuery](https://docs.multiwoven.com/sources/bigquery)
+- [x] [Google BigQuery](https://docs.multiwoven.com/sources/bquery)
 - [x] [Snowflake](https://docs.multiwoven.com/sources/snowflake)
 - [ ] Databricks
 - [ ] PostgreSQL
@@ -136,12 +136,12 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 ### Destinations
 
 #### CRM
-- [x] [Salesforce](https://docs.multiwoven.com/destinations/salesforce)
+- [x] [Salesforce](https://docs.multiwoven.com/destinations/crm/salesforce)
 - [ ] Zoho CRM
 - [ ] HubSpot
 
 #### Marketing Automation
-- [x] [Klavio](https://docs.multiwoven.com/destinations/klavio)
+- [x] [Klavio](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
 
@@ -152,10 +152,10 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 
 #### Advertising
 - [ ] Google Ads
-- [x] [Facebook Ads](https://docs.multiwoven.com/destinations/facebook-ads)
+- [x] [Facebook Ads](https://docs.multiwoven.com/destinations/adtech/facebook-ads)
 
 #### Collaboration
-- [x] [Slack](https://docs.multiwoven.com/destinations/slack)
+- [x] [Slack](https://docs.multiwoven.com/destinations/team-collaboration/slack)
 - [ ] Google Sheets
 
 #### Analytics
@@ -177,7 +177,7 @@ Before contributing to Multiwoven, please read our [Code of Conduct](https://doc
 We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 
 ### ⚠️ Development Status: Under Active Development
-This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a [new issue](https://github.com/Multiwoven/multiwoven/issues) with detailed information. Thank you for your support!
+This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a **new issue** with detailed information. Thank you for your support!
 
 ## License
 Multiwoven is licensed under the AGPLv3 License. See the [LICENSE](https://github.com/Multiwoven/multiwoven/blob/main/LICENSE) file for details.
