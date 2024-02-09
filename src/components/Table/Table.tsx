@@ -1,15 +1,26 @@
-import { Box, Flex, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { TableType } from "./types";
 
 const GenerateTable = ({
-	title,
-	data,
-	size,
-	headerColor,
-	headerColorVisible,
-	borderRadius,
-	maxHeight,
-	onRowClick,
+  title,
+  data,
+  size,
+  headerColor,
+  headerColorVisible,
+  borderRadius,
+  maxHeight,
+  onRowClick,
 }: TableType): JSX.Element => {
 	const theadProps = headerColorVisible
 		? { bgColor: headerColor || "gray.200" }
