@@ -16,6 +16,8 @@ const SyncsList = (): JSX.Element => {
   });
 
   const syncList = data?.data;
+  console.log(syncList);
+  
 
   if (!syncList || isLoading) {
     return (

@@ -1,6 +1,6 @@
 import { Box, Spinner } from "@chakra-ui/react"
 
-const Loader = () => {
+const Loader = () : JSX.Element => {
     return(
         <Box width="100%" display="flex" justifyContent="center">
         <Spinner

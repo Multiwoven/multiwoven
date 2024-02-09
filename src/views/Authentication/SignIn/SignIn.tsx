@@ -85,7 +85,7 @@ const LoginForm = ({
 		</FormControl>
 
 		<HStack mt={4} justify='space-between'>
-			<Checkbox defaultChecked>Remember me</Checkbox>
+			<Checkbox defaultChecked size='sm'>Remember me</Checkbox>
 			<Button variant='text' size='sm'>
 				Forgot password?
 			</Button>
