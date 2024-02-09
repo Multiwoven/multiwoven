@@ -10,6 +10,7 @@ module Multiwoven
       def connector_spec
         @connector_spec ||= begin
           spec_json = keys_to_symbols(read_json(CONNECTOR_SPEC_PATH)).to_json
+          # returns Protocol::ConnectorSpecification
           ConnectorSpecification.from_json(spec_json)
         end
       end
@@ -19,17 +20,20 @@ module Multiwoven
         icon_name = client_meta_data[:data][:icon]
         icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}/assets/images/connectors/#{icon_name}"
         client_meta_data[:data][:icon] = icon_url
-
+        # returns hash
         @meta_data ||= client_meta_data
       end
 
+      # Connection config is a hash
       def check_connection(_connection_config)
         raise "Not implemented"
         # returns Protocol.ConnectionStatus
       end
 
+      # Connection config is a hash
       def discover(_connection_config)
         raise "Not implemented"
+        # returns Protocol::Catalog
       end
 
       private

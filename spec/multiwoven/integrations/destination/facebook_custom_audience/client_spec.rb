@@ -121,9 +121,6 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
   end
 
   def build_record(email, country)
-    {
-      "data": { "attributes": { "EMAIL": email, "COUNTRY": country } },
-      "emitted_at": Time.now.to_i
-    }
+    { "EMAIL": email, "COUNTRY": country }
   end
 end

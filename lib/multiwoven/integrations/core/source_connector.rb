@@ -3,10 +3,12 @@
 module Multiwoven
   module Integrations::Core
     class SourceConnector < BaseConnector
+      # accepts Protocol::SyncConfig
       def read(_sync_config)
         raise "Not implemented"
         # setup sync configs
         # call query(connection, query)
+        # Returns list of RecordMessage
       end
 
       private

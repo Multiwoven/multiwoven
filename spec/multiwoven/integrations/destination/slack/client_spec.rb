@@ -127,9 +127,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
   private
 
   def build_record(id, name)
-    {
-      "data": { "attributes": { "Id": id, "Name": name } },
-      "emitted_at": Time.now.to_i
-    }
+    { "Id": id, "Name": name }
   end
 end

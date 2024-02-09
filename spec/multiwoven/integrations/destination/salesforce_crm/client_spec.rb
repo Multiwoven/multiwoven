@@ -129,10 +129,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
   private
 
   def build_record(id, name)
-    {
-      "data": { "attributes": { "Id": id, "Name": name, NonListedField: "NonListedField Value" } },
-      "emitted_at": Time.now.to_i
-    }
+    { "Id": id, "Name": name, NonListedField: "NonListedField Value" }
   end
 
   def stub_create_request(id, name, response_code)

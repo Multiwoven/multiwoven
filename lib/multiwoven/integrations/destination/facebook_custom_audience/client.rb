@@ -55,7 +55,7 @@ module Multiwoven::Integrations::Destination
         write_success = 0
         write_failure = 0
         records.each do |record|
-          payload = create_payload(record.with_indifferent_access[:data][:attributes], sync_config.stream.json_schema.with_indifferent_access)
+          payload = create_payload(record.with_indifferent_access, sync_config.stream.json_schema.with_indifferent_access)
           response = Multiwoven::Integrations::Core::HttpClient.request(
             url,
             sync_config.stream.request_method,
