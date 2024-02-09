@@ -90,6 +90,10 @@ const SyncsList = (): JSX.Element => {
     );
   }
 
+  const handleOnSyncClick = (row: Record<"id", string>) => {
+    navigate(`${row.id}`);
+  };
+
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
@@ -103,7 +107,7 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor="orange.400"
           isCtaVisible
         />
-        <Table data={tableData} onRowClick={(row) => console.log(row)} />
+        <Table data={tableData} onRowClick={handleOnSyncClick} />
       </ContentContainer>
     </Box>
   );
