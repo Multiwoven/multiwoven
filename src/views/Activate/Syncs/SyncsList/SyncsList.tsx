@@ -97,7 +97,11 @@ const SyncsList = (): JSX.Element => {
         {!syncList && isLoading ? (
           <Loader />
         ) : (
-          <Table data={tableData} onRowClick={handleOnSyncClick} />
+          <Table
+            data={tableData}
+            onRowClick={handleOnSyncClick}
+            maxHeight="2xl"
+          />
         )}
       </ContentContainer>
     </Box>
