@@ -53,7 +53,7 @@ const FinaliseSync = (): JSX.Element => {
         if (response?.data?.attributes) {
           toast({
             status: "success",
-            title: "Success!!",
+            title: "Success!",
             description: "Sync created successfully!",
             position: "bottom-right",
           });

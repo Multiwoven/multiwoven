@@ -181,15 +181,13 @@ const FinalizeModel = (): JSX.Element => {
               buttons={[
                 {
                   name: "Back",
-                  bgColor: "gray.300",
-                  hoverBgColor: "gray.200",
+                  variant:"ghost",
                   color: "black",
                   onClick: () => navigate(-1),
                 },
                 {
                   name: "Finish",
-                  bgColor: "primary.400",
-                  hoverBgColor: "primary.300",
+                  variant:"solid",
                   isLoading: isLoading,
                   type: "submit",
                 },

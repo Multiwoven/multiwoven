@@ -102,12 +102,11 @@ const ViewModel = (): JSX.Element => {
 					}
 				/>
 				<VStack m={8}>
-					<Box p={2} w='5xl'
+					<Box w='5xl'
 						mx='auto'
 						bgColor='gray.100'
 						rounded='xl'
-						border='1px'
-						borderColor='gray.400'>
+						>
 						<Flex
 							w='full'
 							roundedTop='xl'
@@ -128,16 +127,13 @@ const ViewModel = (): JSX.Element => {
 							<Text>{data.data?.attributes.connector.connector_name}</Text>
 							<Spacer />
 							<Button
-								bgColor='white'
-								_hover={{ bgColor: "gray.100" }}
-								variant='outline'
-								borderColor={"gray.500"}
+								variant='shell'
 								onClick={() => navigate("edit")}
 							>
 								Edit
 							</Button>
 						</Flex>
-						<Box borderX='1px' borderBottom='1px' borderColor='gray.400'>
+						<Box borderX='1px' borderBottom='1px' roundedBottom="lg" py={2} borderColor='gray.400'>
 							<Editor
 								width='100%'
 								height='280px'
@@ -183,7 +179,8 @@ const ViewModel = (): JSX.Element => {
 											as={Select}
 											placeholder={prefillValues.primary_key}
 											name='primaryKey'
-											bgColor='white'
+											bgColor='gray.100'
+											borderColor="gray.600"
 											w='lg'
 											isDisabled
 										/>

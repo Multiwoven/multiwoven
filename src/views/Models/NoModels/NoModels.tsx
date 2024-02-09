@@ -16,7 +16,7 @@ const NoModels = (): JSX.Element => {
 	return (
 		<Flex
 			width='100%'
-			height='100vh'
+			height='100%'
 			alignContent='center'
 			justifyContent='center'
 		>

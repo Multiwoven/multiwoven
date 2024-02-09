@@ -3,8 +3,6 @@ import SQLImage from '@/assets/images/SQLSelector.png';
 import TableImage from '@/assets/images/TableSelector.png';
 import DBTImage from '@/assets/images/DBTSelector.png';
 
-// const sampleImg = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80';
-
 export const modelMethods: ModelMethodType[] = [
 	{
 		image: SQLImage,

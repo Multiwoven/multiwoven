@@ -29,6 +29,14 @@ const extenstion = {
 			500: "#10182B",
 			600: "#000000",
 		},
+		success: {
+			100: "#DCF2EF",
+			200: "#B7EDE3",
+			300: "#71D9C6",
+			400: "#33C0A7",
+			500: "#129981",
+			600: "#075042",
+		}
 	},
 	components: {
 		Button: {
@@ -124,6 +132,7 @@ const extenstion = {
 					lineHeight: "18px",
 				},
 			},
+			font: "Manrope",
 		},
 		Heading: {
 			sizes: {
@@ -165,15 +174,8 @@ const extenstion = {
 	},
 
 	fonts: {
-		heading: "'Manrope', -apple-system, system-ui, sans-serif",
-		body: "'Manrope', -apple-system, system-ui, sans-serif",
-	},
-	styles: {
-		h1: {
-			fontSize: "60px",
-			lineHeight: "72px",
-			tracking: "-1%",
-		},
+		heading: `'Manrope', sans-serif`,
+		body: `'Manrope', sans-serif`,
 	},
 };
 

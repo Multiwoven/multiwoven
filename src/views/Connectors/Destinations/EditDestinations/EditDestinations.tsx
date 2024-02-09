@@ -109,7 +109,7 @@ const EditDestination = (): JSX.Element => {
     try {
       const payload: TestConnectionPayload = {
         connection_spec: formData,
-        name: connectorInfo?.attributes?.name,
+        name: connectorInfo?.attributes?.connector_name,
         type: "destination",
       };
 
@@ -194,6 +194,7 @@ const EditDestination = (): JSX.Element => {
                   size="lg"
                   marginRight="10px"
                   type="submit"
+                  variant="ghost"
                   isLoading={isTestRunning}
                 >
                   Test Connection

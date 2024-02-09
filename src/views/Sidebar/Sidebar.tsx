@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { NavButton } from "./navButton";
+import Profile from "./Profile";
 
 type MenuItem = {
   title: string;
@@ -52,7 +53,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
   <Stack key={index}>
     {section.heading && (
       <Box paddingX="17px" marginTop="20px" marginBottom="5px">
-        <Text textStyle="sm" color="fg.subtle" fontWeight="medium">
+        <Text textStyle="sm" size="xs" color="gray.600" fontWeight="extrabold">
           {section.heading}
         </Text>
       </Box>
@@ -80,6 +81,7 @@ const SideBarFooter = () => (
       <NavButton label="Settings" icon={FiSettings} />
       <NavButton label="Documentation" icon={FiBookOpen} />
     </Stack>
+    <Profile />
   </Stack>
 );
 
@@ -89,6 +91,7 @@ const Sidebar = (): JSX.Element => {
       position="relative"
       boxShadow="0px 0px 1px rgba(48, 49, 51, 0.05),0px 2px 4px rgba(48, 49, 51, 0.1);"
       minW="240px"
+      w="240px"
       borderColor="#e0e0e0"
       borderStyle="solid"
       as="section"
@@ -108,7 +111,9 @@ const Sidebar = (): JSX.Element => {
             <Flex justifyContent="center">
               <img width={160} src={IconImage} alt="IconImage" />
             </Flex>
-            <Divider borderBottomWidth="1px" />
+            <Box bgColor="gray.600">
+              <Divider orientation="horizontal" />
+            </Box>
             {menus.map(renderMenuSection)}
             <SideBarFooter />
           </Stack>

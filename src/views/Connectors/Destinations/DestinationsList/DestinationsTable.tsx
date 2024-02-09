@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Table from "@/components/Table";
-import { Badge, Box, Image, Spinner, Text } from "@chakra-ui/react";
+import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
 
 import { ConnectorAttributes, ConnectorTableColumnFields } from "../../types";
 import moment from "moment";
@@ -39,7 +39,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "updated_at":
-      return <Text>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
+      return <Text size='sm'>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
 
     case "status":
       return (
@@ -49,7 +49,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     default:
-      return <Text>{attributes?.[field]}</Text>;
+      return <Text size='sm'>{attributes?.[field]}</Text>;
   }
 };
 

@@ -8,9 +8,6 @@ export const axiosInstance = axios.create({
 
 axiosInstance?.interceptors.request.use(function requestSuccess(config) {
   const token = Cookies.get("authToken");
-  // if (!token) {
-  // 	window.location.href = "/sign-in";
-  // }
   config.headers["Content-Type"] = "application/json";
   config.headers["Authorization"] = `Bearer ${token}`;
   config.headers["Accept"] = "*/*";

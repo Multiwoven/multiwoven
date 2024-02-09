@@ -56,7 +56,7 @@ const SyncsList = (): JSX.Element => {
     refetchOnWindowFocus: false,
   });
 
-  const syncList = data?.data;
+  const syncList = data?.data;  
 
   const tableData = useMemo(() => {
     const rows = (syncList ?? [])?.map((data) => {

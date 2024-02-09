@@ -77,7 +77,7 @@ const SourceFormFooter = ({
         <ButtonGroup>
           {extra}
           {isBackRequired ? (
-            <Button onClick={() => navigate(-1)} size="lg" marginRight="10px">
+            <Button onClick={() => navigate(-1)} size="lg" marginRight="10px" variant="ghost">
               Back
             </Button>
           ) : null}

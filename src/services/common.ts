@@ -1,5 +1,3 @@
-// services/login.ts
-
 import { axiosInstance as axios } from "./axios";
 
 export interface ApiResponse {
