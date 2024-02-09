@@ -39,7 +39,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "updated_at":
-      return <Text>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
+      return <Text size='sm'>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
 
     case "status":
       return (
@@ -49,7 +49,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     default:
-      return <Text>{attributes?.[field]}</Text>;
+      return <Text size='sm'>{attributes?.[field]}</Text>;
   }
 };
 

@@ -24,10 +24,10 @@ const GenerateTable = ({
 		>
 			{title ? title : <></>}
 			<Table size={size} maxHeight={maxHeight}>
-				<Thead {...theadProps} bgColor='gray.400'>
+				<Thead {...theadProps} bgColor='gray.300'>
 					<Tr>
 						{data.columns.map((column, index) => (
-							<Th key={index}>{column.name}</Th>
+							<Th key={index} color='black.500'>{column.name}</Th>
 						))}
 					</Tr>
 				</Thead>
@@ -42,7 +42,7 @@ const GenerateTable = ({
 								<Td key={columnIndex}>
                 {column.showIcon ? (
                   <Flex flexDir='row' alignItems='center' alignContent='center'>
-                    <Image src={'/src/assets/icons/' + row.icon} h={10} p={1} border='1px' borderRadius='lg' borderColor='gray.400' />
+                    <Image src={row.icon} h={10} p={1} border='1px' borderRadius='lg' borderColor='gray.400' />
                     <Text fontSize='md' mx={2}>
                       {row[column.key as keyof typeof row]}
                     </Text>

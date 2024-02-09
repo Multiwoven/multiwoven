@@ -28,17 +28,21 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "updated_at":
-      return <Text>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
+      return (
+        <Text size="sm">
+          {moment(attributes?.updated_at).format("DD/MM/YYYY")}
+        </Text>
+      );
 
     case "status":
       return (
-        <Badge colorScheme="green" variant="outline">
-          Active
+        <Badge colorScheme="green" variant="outline" size="sm">
+          <Text size="sm">Active</Text>
         </Badge>
       );
 
     default:
-      return <Text>{attributes?.[field]}</Text>;
+      return <Text size="sm">{attributes?.[field]}</Text>;
   }
 };
 
