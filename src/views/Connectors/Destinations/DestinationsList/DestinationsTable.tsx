@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Table from "@/components/Table";
-import { Badge, Box, Image, Spinner, Text } from "@chakra-ui/react";
+import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
 
 import { ConnectorAttributes, ConnectorTableColumnFields } from "../../types";
 import moment from "moment";

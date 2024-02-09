@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorsDefintions } from "@/services/connectors";
 import { useQuery } from "@tanstack/react-query";
@@ -7,10 +7,9 @@ import { DatasourceType } from "@/views/Connectors/types";
 import { useUiConfig } from "@/utils/hooks";
 
 const SelectDataSourcesForm = (): JSX.Element => {
-  const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+  const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { maxContentWidth } = useUiConfig();
 
-  const { currentForm } = state;
   const { data } = useQuery({
     queryKey: ["datasources", "source"],
     queryFn: () => getConnectorsDefintions("source"),
