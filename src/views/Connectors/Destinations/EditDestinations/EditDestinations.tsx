@@ -194,6 +194,7 @@ const EditDestination = (): JSX.Element => {
                   size="lg"
                   marginRight="10px"
                   type="submit"
+                  variant="ghost"
                   isLoading={isTestRunning}
                 >
                   Test Connection

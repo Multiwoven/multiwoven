@@ -18,8 +18,8 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
       size="sm"
     >
       <HStack spacing="2">
-        <Icon as={icon} boxSize="4" color="fg.subtle" />
-        <Text color={"#101828"} fontWeight={"500"} fontSize="sm">
+        <Icon as={icon} boxSize="4" color={isActive ? "black.500" : "gray.600"} />
+        <Text color={"black.500"} fontWeight={isActive ? "600" : "500"} fontSize="sm">
           {label}
         </Text>
       </HStack>
