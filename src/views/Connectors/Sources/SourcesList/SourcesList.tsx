@@ -14,6 +14,8 @@ import { ConnectorAttributes, ConnectorTableColumnFields } from "../../types";
 import moment from "moment";
 import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
+import Loader from "@/components/Loader";
+import NoModels from "@/views/Models/NoModels";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -36,19 +38,32 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "status":
       return (
-        <Tag colorScheme="teal" variant="outline" size="xs" bgColor="success.100" p={1} fontWeight={600}>
-          <Text size="xs" fontWeight="semibold">Active</Text>
+        <Tag
+          colorScheme="teal"
+          variant="outline"
+          size="xs"
+          bgColor="success.100"
+          p={1}
+          fontWeight={600}
+        >
+          <Text size="xs" fontWeight="semibold">
+            Active
+          </Text>
         </Tag>
       );
 
     default:
-      return <Text size="xs" fontWeight={600}>{attributes?.[field]}</Text>;
+      return (
+        <Text size="xs" fontWeight={600}>
+          {attributes?.[field]}
+        </Text>
+      );
   }
 };
 
 const SourcesList = (): JSX.Element | null => {
   const navigate = useNavigate();
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: SOURCES_LIST_QUERY_KEY,
     queryFn: () => getUserConnectors("Source"),
     refetchOnMount: false,
@@ -58,24 +73,30 @@ const SourcesList = (): JSX.Element | null => {
   const connectors = data?.data;
 
   const tableData = useMemo(() => {
-    const rows = (connectors ?? [])?.map(({ attributes, id }) => {
-      return CONNECTOR_LIST_COLUMNS.reduce(
-        (acc, { key }) => ({
-          [key]: <TableItem field={key} attributes={attributes} />,
-          id,
-          ...acc,
-        }),
-        {}
-      );
-    });
+    if (connectors && connectors?.length > 0) {
+      const rows = connectors.map(({ attributes, id }) => {
+        return CONNECTOR_LIST_COLUMNS.reduce(
+          (acc, { key }) => ({
+            [key]: <TableItem field={key} attributes={attributes} />,
+            id,
+            ...acc,
+          }),
+          {}
+        );
+      });
 
-    return {
-      columns: CONNECTOR_LIST_COLUMNS,
-      data: rows,
-    };
+      return {
+        columns: CONNECTOR_LIST_COLUMNS,
+        data: rows,
+      };
+    }
   }, [data]);
 
   if (!connectors) return null;
+
+  console.log("connectors", connectors);
+
+  if (!isLoading && !tableData) return <NoModels />;
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -88,10 +109,14 @@ const SourcesList = (): JSX.Element | null => {
           ctaButtonVariant="solid"
           isCtaVisible
         />
-        <Table
-          data={tableData}
-          onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
-        />
+        {isLoading || !tableData ? (
+          <Loader />
+        ) : (
+          <Table
+            data={tableData}
+            onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
+          />
+        )}
       </ContentContainer>
     </Box>
   );
