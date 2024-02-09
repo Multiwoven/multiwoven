@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge, Box, Tag, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
@@ -30,19 +30,19 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
     case "updated_at":
       return (
         <Text size="sm">
-          {moment(attributes?.updated_at).format("DD/MM/YYYY")}
+          {moment(attributes?.updated_at).format("DD/MM/YY")}
         </Text>
       );
 
     case "status":
       return (
-        <Badge colorScheme="green" variant="outline" size="sm">
-          <Text size="sm">Active</Text>
-        </Badge>
+        <Tag colorScheme="teal" variant="outline" size="sm" bgColor="success.100" p={1} fontWeight={600}>
+          <Text size="sm" fontWeight="semibold">Active</Text>
+        </Tag>
       );
 
     default:
-      return <Text size="sm">{attributes?.[field]}</Text>;
+      return <Text size="sm" fontWeight={600}>{attributes?.[field]}</Text>;
   }
 };
 
@@ -82,12 +82,10 @@ const SourcesList = (): JSX.Element | null => {
       <ContentContainer>
         <TopBar
           name="Sources"
-          ctaName="Add sources"
+          ctaName="Add Source"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
-          ctaBgColor="brand.500"
-          ctaColor="gray.900"
-          ctaHoverBgColor="brand.400"
+          ctaButtonVariant="solid"
           isCtaVisible
         />
         <Table

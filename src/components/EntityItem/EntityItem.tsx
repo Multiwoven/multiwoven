@@ -13,13 +13,14 @@ const EntityItem = ({ icon, name }: EntityItem): JSX.Element => {
         width="40px"
         marginRight="10px"
         borderWidth="thin"
+        borderColor="gray.400"
         padding="5px"
         borderRadius="8px"
         backgroundColor="#fff"
       >
         <Image src={icon} alt="destination icon" maxHeight="100%" />
       </Box>
-      <Text size="sm">{name}</Text>
+      <Text size="sm" fontWeight={600}>{name}</Text>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { getUserProfile } from "@/services/user";
+import { getUserProfile, logout } from "@/services/user";
 import {
   Avatar,
   Box,
@@ -10,9 +10,11 @@ import {
   PopoverTrigger,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FiEdit3, FiLogOut, FiMoreVertical } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { data } = useQuery({
@@ -21,7 +23,24 @@ const Profile = () => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
-  console.log(data);
+  
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const logoutResponse = await logout();
+    console.log(logoutResponse);
+    if(logoutResponse.data) {
+      toast({
+        title: "Signed out successfully",
+        isClosable: true,
+        duration: 5000,
+        status: "success",
+        position: "bottom-right",
+      });
+      navigate('/sign-in');
+    }
+  }
 
   const OptionsPopover = () => {
     return (
@@ -65,6 +84,7 @@ const Profile = () => {
               alignItems="center"
               color={"red.600"}
               rounded="lg"
+              onClick={handleLogout}
             >
               <FiLogOut />
               <Text size="sm" fontWeight="semibold" ml={3}>

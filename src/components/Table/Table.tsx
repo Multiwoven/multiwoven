@@ -27,7 +27,7 @@ const GenerateTable = ({
 				<Thead {...theadProps} bgColor='gray.300'>
 					<Tr>
 						{data.columns.map((column, index) => (
-							<Th key={index} color='black.500'>{column.name}</Th>
+							<Th key={index} color='black.500' fontWeight={700}>{column.name}</Th>
 						))}
 					</Tr>
 				</Thead>

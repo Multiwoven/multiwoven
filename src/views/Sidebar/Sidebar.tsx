@@ -111,7 +111,9 @@ const Sidebar = (): JSX.Element => {
             <Flex justifyContent="center">
               <img width={160} src={IconImage} alt="IconImage" />
             </Flex>
-            <Divider borderBottomWidth="1px" />
+            <Box bgColor="gray.600">
+              <Divider orientation="horizontal" />
+            </Box>
             {menus.map(renderMenuSection)}
             <SideBarFooter />
           </Stack>
