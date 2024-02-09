@@ -58,7 +58,28 @@ export type CreateSyncResponse = {
     sync_interval: number;
     sync_interval_unit: "minutes";
     sync_mode: "full_refresh";
+    source: {
+      connector_name: string;
+      icon: string;
+      name: string;
+    };
+    destination: {
+      connector_name: string;
+      icon: string;
+      name: string;
+    };
   };
   id: string;
   type: "syncs";
+};
+
+export type SyncColumnFields =
+  | "model"
+  | "destination"
+  | "lastUpdated"
+  | "status";
+
+export type SyncColumnEntity = {
+  key: SyncColumnFields;
+  name: string;
 };
