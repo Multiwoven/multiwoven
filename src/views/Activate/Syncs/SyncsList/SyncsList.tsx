@@ -11,6 +11,7 @@ import { CreateSyncResponse, SyncColumnFields } from "../types";
 import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
 import moment from "moment";
+import Loader from "@/components/Loader";
 
 type TableItem = {
   field: SyncColumnFields;
@@ -56,7 +57,7 @@ const SyncsList = (): JSX.Element => {
     refetchOnWindowFocus: false,
   });
 
-  const syncList = data?.data;  
+  const syncList = data?.data;
 
   const tableData = useMemo(() => {
     const rows = (syncList ?? [])?.map((data) => {
@@ -76,20 +77,6 @@ const SyncsList = (): JSX.Element => {
     };
   }, [data]);
 
-  if (!syncList || isLoading) {
-    return (
-      <Box width="100%" display="flex" justifyContent="center">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Box>
-    );
-  }
-
   const handleOnSyncClick = (row: Record<"id", string>) => {
     navigate(`${row.id}`);
   };
@@ -107,7 +94,11 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor="orange.400"
           isCtaVisible
         />
-        <Table data={tableData} onRowClick={handleOnSyncClick} />
+        {!syncList && isLoading ? (
+          <Loader />
+        ) : (
+          <Table data={tableData} onRowClick={handleOnSyncClick} />
+        )}
       </ContentContainer>
     </Box>
   );
