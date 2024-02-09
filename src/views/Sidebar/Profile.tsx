@@ -29,7 +29,6 @@ const Profile = () => {
 
   const handleLogout = async () => {
     const logoutResponse = await logout();
-    console.log(logoutResponse);
     if(logoutResponse.data) {
       toast({
         title: "Signed out successfully",
@@ -101,7 +100,7 @@ const Profile = () => {
     <>
       <Box bgColor="gray.300" px={2} py={2} rounded="xl" w="208px">
         <HStack w="192px" maxW="192px" spacing={0}>
-          <Avatar name={data?.data?.attributes.name} mr={1} bgColor='brand.400' marginRight={2} color='gray.100' size='sm' />
+          <Avatar name={data?.data?.attributes.name} mr={1} bgColor='brand.400' marginRight={2} color='gray.100' size='sm' fontWeight='extrabold' />
           <VStack spacing={0} align="start">
             <Box w="128px" maxW="128px">
               <Text size="sm" fontWeight="500" noOfLines={1}>

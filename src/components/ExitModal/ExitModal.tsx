@@ -45,7 +45,6 @@ const ExitModal = (): JSX.Element => {
             <Box w="full">
               <Flex flexDir="row" justifyContent="center">
                 <Button
-                  // bgColor="gray.300"
                   variant="ghost"
                   mr={3}
                   onClick={onClose}

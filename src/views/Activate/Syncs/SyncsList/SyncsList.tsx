@@ -15,9 +15,7 @@ const SyncsList = (): JSX.Element => {
     refetchOnWindowFocus: false,
   });
 
-  const syncList = data?.data;
-  console.log(syncList);
-  
+  const syncList = data?.data;  
 
   if (!syncList || isLoading) {
     return (

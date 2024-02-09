@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Badge, Box, Tag, Text } from "@chakra-ui/react";
+import { Box, Tag, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
@@ -29,20 +29,20 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "updated_at":
       return (
-        <Text size="sm">
+        <Text size="xs">
           {moment(attributes?.updated_at).format("DD/MM/YY")}
         </Text>
       );
 
     case "status":
       return (
-        <Tag colorScheme="teal" variant="outline" size="sm" bgColor="success.100" p={1} fontWeight={600}>
-          <Text size="sm" fontWeight="semibold">Active</Text>
+        <Tag colorScheme="teal" variant="outline" size="xs" bgColor="success.100" p={1} fontWeight={600}>
+          <Text size="xs" fontWeight="semibold">Active</Text>
         </Tag>
       );
 
     default:
-      return <Text size="sm" fontWeight={600}>{attributes?.[field]}</Text>;
+      return <Text size="xs" fontWeight={600}>{attributes?.[field]}</Text>;
   }
 };
 

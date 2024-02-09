@@ -4,14 +4,10 @@ import MainLayout from "./views/MainLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PageNotFound from "./views/PageNotFound";
 import Protected from "./protected-route";
-// import Cookies from "js-cookie";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
-  // const token = Cookies.get("token");
-
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>

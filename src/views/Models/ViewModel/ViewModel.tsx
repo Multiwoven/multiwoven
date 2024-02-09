@@ -106,8 +106,6 @@ const ViewModel = (): JSX.Element => {
 						mx='auto'
 						bgColor='gray.100'
 						rounded='xl'
-						// border='1px'
-						// borderColor='gray.400'
 						>
 						<Flex
 							w='full'

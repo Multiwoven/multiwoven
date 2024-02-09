@@ -86,7 +86,6 @@ const DefineSQL = ({
     setLoading(true);
     const query = (editorRef?.current as any)?.getValue() as string;
     let response = await getModelPreviewById(query, connector_id?.toString());
-    console.log(response);
     if ("data" in response && response.data.errors) {
       response.data.errors.forEach(
         (error: { title: string; detail: string }) => {
@@ -102,7 +101,6 @@ const DefineSQL = ({
         }
       );
     } else {
-      console.log("DATA", response);
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
       canMoveForward(true);
     }
