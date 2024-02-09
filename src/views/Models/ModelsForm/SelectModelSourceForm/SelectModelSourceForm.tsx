@@ -8,56 +8,56 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 
 const SelectModelSourceForm = (): JSX.Element | null => {
-	const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+  const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-	const { data } = useQuery({
-		queryKey: ["connectors", "source"],
-		queryFn: () => getUserConnectors("source"),
-		refetchOnMount: true,
-		refetchOnWindowFocus: true,
-	});
+  const { data } = useQuery({
+    queryKey: ["models", "data-source"],
+    queryFn: () => getUserConnectors("source"),
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
 
-	const connectors = data?.data;
+  const connectors = data?.data;
 
-	const handleOnRowClick = (row: any) => {
-		if (stepInfo?.formKey) {
-			handleMoveForward(stepInfo?.formKey, row);
-		}
-	};
+  const handleOnRowClick = (row: unknown) => {
+    if (stepInfo?.formKey) {
+      handleMoveForward(stepInfo?.formKey, row);
+    }
+  };
 
-	if (!connectors) {
-		return (
-			<Box mx='auto'>
-				<Spinner
-					thickness='4px'
-					speed='0.65s'
-					emptyColor='gray.200'
-					color='blue.500'
-					size='xl'
-				/>
-			</Box>
-		);
-	}
+  if (!connectors) {
+    return (
+      <Box mx="auto">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Box>
+    );
+  }
 
-	const columns: ColumnMapType[] = [
-		{ name: "Name", key: "name" },
-		{ name: "Type", key: "connector_name", showIcon: true},
-		{ name: "Created At", key: "created_at" },
-	];
+  const columns: ColumnMapType[] = [
+    { name: "Name", key: "name" },
+    { name: "Type", key: "connector_name", showIcon: true },
+    { name: "Created At", key: "created_at" },
+  ];
 
-	let values = ConvertToTableData(connectors?.data, columns);	
+  const values = ConvertToTableData(connectors?.data, columns);
 
-	return (
-		<>
-			<Box w='6xl' mx='auto'>
-				<GenerateTable
-					data={values}
-					headerColorVisible={true}
-					onRowClick={handleOnRowClick}
-				/>
-			</Box>
-		</>
-	);
+  return (
+    <>
+      <Box w="6xl" mx="auto">
+        <GenerateTable
+          data={values}
+          headerColorVisible={true}
+          onRowClick={handleOnRowClick}
+        />
+      </Box>
+    </>
+  );
 };
 
 export default SelectModelSourceForm;
