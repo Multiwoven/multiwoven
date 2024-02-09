@@ -24,7 +24,7 @@ const GenerateTable = ({
 		>
 			{title ? title : <></>}
 			<Table size={size} maxHeight={maxHeight}>
-				<Thead {...theadProps} bgColor='gray.300'>
+				<Thead {...theadProps} bgColor='gray.400'>
 					<Tr>
 						{data.columns.map((column, index) => (
 							<Th key={index}>{column.name}</Th>
@@ -35,7 +35,7 @@ const GenerateTable = ({
 					{data.data.map((row, rowIndex) => (
 						<Tr
 							key={rowIndex}
-							_hover={{ backgroundColor: "gray.100", cursor: "pointer" }}
+							_hover={{ backgroundColor: "gray.300", cursor: "pointer" }}
 							onClick={() => onRowClick?.(row)}
 						>
 							{data.columns.map((column, columnIndex) => (

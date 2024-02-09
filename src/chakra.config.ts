@@ -165,15 +165,8 @@ const extenstion = {
 	},
 
 	fonts: {
-		heading: "'Manrope', -apple-system, system-ui, sans-serif",
-		body: "'Manrope', -apple-system, system-ui, sans-serif",
-	},
-	styles: {
-		h1: {
-			fontSize: "60px",
-			lineHeight: "72px",
-			tracking: "-1%",
-		},
+		heading: "'Manrope', sans-serif",
+		body: "'Manrope', sans-serif",
 	},
 };
 

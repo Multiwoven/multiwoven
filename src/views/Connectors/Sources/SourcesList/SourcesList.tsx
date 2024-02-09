@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Badge, Box, Image, Text } from "@chakra-ui/react";
+import { Badge, Box, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
