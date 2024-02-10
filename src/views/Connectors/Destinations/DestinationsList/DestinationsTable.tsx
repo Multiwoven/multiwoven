@@ -4,7 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import Table from "@/components/Table";
 import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
 
-import { ConnectorAttributes, ConnectorTableColumnFields } from "../../types";
+import {
+  ConnectorAttributes,
+  ConnectorItem,
+  ConnectorListResponse,
+  ConnectorTableColumnFields,
+} from "../../types";
 import moment from "moment";
 
 import { getUserConnectors } from "@/services/connectors";
@@ -26,6 +31,7 @@ type TableRow = {
 
 type DestinationTableProps = {
   handleOnRowClick: (args: TableRow) => void;
+  destinationData: ConnectorListResponse;
 };
 
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
@@ -39,7 +45,11 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "updated_at":
-      return <Text size='sm'>{moment(attributes?.updated_at).format("DD/MM/YYYY")}</Text>;
+      return (
+        <Text size="sm">
+          {moment(attributes?.updated_at).format("DD/MM/YYYY")}
+        </Text>
+      );
 
     case "status":
       return (
@@ -49,12 +59,13 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     default:
-      return <Text size='sm'>{attributes?.[field]}</Text>;
+      return <Text size="sm">{attributes?.[field]}</Text>;
   }
 };
 
 const DestinationsTable = ({
   handleOnRowClick,
+  destinationData,
 }: DestinationTableProps): JSX.Element | null => {
   const { data, isLoading } = useQuery({
     queryKey: DESTINATIONS_LIST_QUERY_KEY,
@@ -63,7 +74,7 @@ const DestinationsTable = ({
     refetchOnWindowFocus: false,
   });
 
-  const connectors = data?.data;
+  const connectors = destinationData?.data;
 
   const tableData = useMemo(() => {
     const rows = (connectors ?? [])?.map((connector) => {

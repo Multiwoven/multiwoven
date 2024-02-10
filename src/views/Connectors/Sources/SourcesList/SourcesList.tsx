@@ -15,7 +15,7 @@ import moment from "moment";
 import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
 import Loader from "@/components/Loader";
-import NoModels from "@/views/Models/NoModels";
+import NoConnectors from "@/views/Connectors/NoConnectors";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -94,7 +94,7 @@ const SourcesList = (): JSX.Element | null => {
 
   if (!connectors) return null;
 
-  if (!isLoading && !tableData) return <NoModels />;
+  if (!isLoading && !tableData) return <NoConnectors connectorType="source" />;
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">

@@ -8,11 +8,26 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
-import NoModelsImage from "@/assets/images/NoModels.png";
+import NoSourcesImage from "@/assets/images/NoSources.png";
+import NoDestinationsImage from "@/assets/images/NoDestinations.png";
 import { useNavigate } from "react-router-dom";
 
-const NoModels = (): JSX.Element => {
+type NoConnectorsProps = {
+  connectorType: string;
+};
+
+const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   const navigate = useNavigate();
+
+  const type = connectorType === "source" ? "Source" : "Destination";
+  const description =
+    connectorType === "source"
+      ? "Add a destination where your data will be sent"
+      : "Configure a source where your data is stored and managed";
+
+  const image =
+    connectorType === "source" ? NoSourcesImage : NoDestinationsImage;
+
   return (
     <Flex
       width="100%"
@@ -23,14 +38,17 @@ const NoModels = (): JSX.Element => {
       <Center>
         <VStack spacing={8}>
           <VStack>
-            <Image src={NoModelsImage} />
-            <Heading size="xs">No models added</Heading>
-            <Text size="sm">
-              Add a model to describe how your Data Source will be queried{" "}
-            </Text>
+            <Image src={image} />
+            <Heading size="xs">No {type}s added</Heading>
+            <Text size="sm">{description} </Text>
           </VStack>
-          <Button onClick={() => navigate("new")} leftIcon={<FiPlus />}>
-            Add Model
+          <Button
+            onClick={() => navigate("new")}
+            leftIcon={<FiPlus />}
+            variant="solid"
+            w="fit"
+          >
+            Add {type}
           </Button>
         </VStack>
       </Center>
@@ -38,4 +56,4 @@ const NoModels = (): JSX.Element => {
   );
 };
 
-export default NoModels;
+export default NoConnectors;

@@ -5,9 +5,25 @@ import { useNavigate } from "react-router-dom";
 
 import ContentContainer from "@/components/ContentContainer";
 import DestinationsTable from "./DestinationsTable";
+import { useQuery } from "@tanstack/react-query";
+import { DESTINATIONS_LIST_QUERY_KEY } from "../../constant";
+import { getUserConnectors } from "@/services/connectors";
+import NoConnectors from "../../NoConnectors";
+import Loader from "@/components/Loader";
 
 const DestinationsList = (): JSX.Element | null => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery({
+    queryKey: DESTINATIONS_LIST_QUERY_KEY,
+    queryFn: () => getUserConnectors("destination"),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoading || !data) return null;
+
+  if (!isLoading || !data) return <NoConnectors connectorType="destination" />;
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -22,9 +38,16 @@ const DestinationsList = (): JSX.Element | null => {
           ctaButtonHeight="40px"
           isCtaVisible
         />
-        <DestinationsTable
-          handleOnRowClick={(row) => navigate(`/setup/destinations/${row?.id}`)}
-        />
+        {isLoading || !data ? (
+          <Loader />
+        ) : (
+          <DestinationsTable
+            handleOnRowClick={(row) =>
+              navigate(`/setup/destinations/${row?.id}`)
+            }
+            destinationData={data}
+          />
+        )}
       </ContentContainer>
     </Box>
   );
