@@ -22,8 +22,10 @@ axiosInstance?.interceptors.response.use(
     if (error && error.response && error.response.status) {
       switch (error.response.status) {
         case 401:
-          window.location.href = "/sign-in";
-          Cookies.remove("authToken");
+          if (window.location.pathname !== "/sign-in") {
+            window.location.href = "/sign-in";
+            Cookies.remove("authToken");
+          }
           break;
         case 403:
           break;

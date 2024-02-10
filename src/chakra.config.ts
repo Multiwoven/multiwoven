@@ -174,8 +174,8 @@ const extenstion = {
   },
 
   fonts: {
-    heading: "Manrope",
-    body: "Manrope",
+    heading: "Manrope, sans-serif",
+    body: "Manrope, sans-serif",
   },
 };
 
