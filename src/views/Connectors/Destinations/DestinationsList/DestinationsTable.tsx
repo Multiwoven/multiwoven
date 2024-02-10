@@ -6,7 +6,6 @@ import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
 
 import {
   ConnectorAttributes,
-  ConnectorItem,
   ConnectorListResponse,
   ConnectorTableColumnFields,
 } from "../../types";
