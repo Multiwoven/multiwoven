@@ -14,7 +14,7 @@ const DestinationsList = (): JSX.Element | null => {
       <ContentContainer>
         <TopBar
           name="Destinations"
-          ctaName="Add destination"
+          ctaName="Add Destination"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
           ctaButtonVariant="solid"

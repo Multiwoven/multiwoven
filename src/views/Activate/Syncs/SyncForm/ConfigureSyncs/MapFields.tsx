@@ -88,7 +88,7 @@ const MapFields = ({
         Map fields to {destination?.attributes?.connector_name}
       </Text>
       <Text fontSize="sm" marginBottom="30px">
-        Select the API from the destination that you wish to map.
+        Select the API from the Destination that you wish to map.
       </Text>
       {fields.map((_, index) => (
         <Box

@@ -148,13 +148,17 @@ const SourceConnectionTest = (): JSX.Element | null => {
               <AlertDescription>
                 {isAnyFailed
                   ? connectionResponse?.connection_status.message
-                  : `All tests passed. Continue to finish setting up your ${selectedDataSource} source`}
+                  : `All tests passed. Continue to finish setting up your ${selectedDataSource} Source`}
               </AlertDescription>
             </Box>
           </Alert>
         ) : null}
       </Box>
-      <SourceFormFooter ctaName="Continue" onCtaClick={handleOnContinueClick} isBackRequired />
+      <SourceFormFooter
+        ctaName="Continue"
+        onCtaClick={handleOnContinueClick}
+        isBackRequired
+      />
     </Box>
   );
 };

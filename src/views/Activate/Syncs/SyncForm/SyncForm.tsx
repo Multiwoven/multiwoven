@@ -17,25 +17,25 @@ const SyncForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "selectModel",
-      name: "Select a model",
+      name: "Select a <odel",
       component: <SelectModel />,
       isRequireContinueCta: false,
     },
     {
       formKey: "selectDestination",
-      name: "Select a destination",
+      name: "Select a Destination",
       component: <SelectDestination />,
       isRequireContinueCta: false,
     },
     {
       formKey: "configureSyncs",
-      name: "Configure sync",
+      name: "Configure Sync",
       component: <ConfigureSyncs />,
       isRequireContinueCta: false,
     },
     {
       formKey: "finaliseSync",
-      name: "Finalize sync",
+      name: "Finalize Sync",
       component: <FinaliseSync />,
       isRequireContinueCta: false,
     },
