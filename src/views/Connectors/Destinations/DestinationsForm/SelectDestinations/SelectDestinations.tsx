@@ -36,6 +36,7 @@ const SelectDestinations = (): JSX.Element => {
             const isSelected = category === selectedCategory;
             return (
               <Box
+                key={category}
                 padding="10px 15px"
                 borderRadius="100px"
                 backgroundColor={isSelected ? "brand.400" : "none"}
@@ -59,6 +60,7 @@ const SelectDestinations = (): JSX.Element => {
               selectedCategory === ALL_DESTINATIONS_CATEGORY ||
               selectedCategory === connector.category ? (
                 <Box
+                  key={connector.name}
                   display="flex"
                   alignItems="center"
                   marginX="20px"

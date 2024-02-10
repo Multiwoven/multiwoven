@@ -85,7 +85,7 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = (editorRef?.current as any)?.getValue() as string;
-    let response = await getModelPreviewById(query, connector_id?.toString());
+    const response = await getModelPreviewById(query, connector_id?.toString());
     if ("data" in response && response.data.errors) {
       response.data.errors.forEach(
         (error: { title: string; detail: string }) => {

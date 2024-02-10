@@ -94,8 +94,6 @@ const SourcesList = (): JSX.Element | null => {
 
   if (!connectors) return null;
 
-  console.log("connectors", connectors);
-
   if (!isLoading && !tableData) return <NoModels />;
 
   return (

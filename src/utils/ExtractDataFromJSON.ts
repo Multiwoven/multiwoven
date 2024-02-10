@@ -21,5 +21,5 @@ export function extractData(steps: StepData[]): ExtractedData[] {
 }
 
 export function extractDataByKey<T>(forms: Form[], key: string): T {
-	return forms.find(({ stepKey }) => stepKey === key) as T; ;
+	return forms.find(({ stepKey }) => stepKey === key) as T; 
 }
