@@ -5,12 +5,12 @@ import {
   FiSettings,
   FiDatabase,
   FiTable,
-  FiPieChart,
-  FiMinimize,
-  FiMinimize2,
   FiBookOpen,
+  FiGrid,
+  FiRefreshCcw,
+  FiUsers,
+  FiHome,
 } from "react-icons/fi";
-import { HomeIcon } from "@heroicons/react/24/outline";
 import { NavButton } from "./navButton";
 import Profile from "./Profile";
 
@@ -29,7 +29,10 @@ type MenuSection = {
 type MenuArray = MenuSection[];
 
 const menus: MenuArray = [
-  { heading: null, menu: [{ title: "Dashboard", link: "/", Icon: HomeIcon }] },
+  {
+    heading: null,
+    menu: [{ title: "Dashboard", link: "/", Icon: FiHome, disabled: true }],
+  },
   {
     heading: "SETUP",
     menu: [
@@ -37,7 +40,7 @@ const menus: MenuArray = [
       {
         title: "Destinations",
         link: "/setup/destinations",
-        Icon: FiMinimize,
+        Icon: FiGrid,
       },
     ],
   },
@@ -48,11 +51,11 @@ const menus: MenuArray = [
   {
     heading: "ACTIVATE",
     menu: [
-      { title: "Syncs", link: "/activate/syncs", Icon: FiMinimize2 },
+      { title: "Syncs", link: "/activate/syncs", Icon: FiRefreshCcw },
       {
         title: "Audiences",
         link: "/audiences",
-        Icon: FiPieChart,
+        Icon: FiUsers,
         disabled: true,
       },
     ],
