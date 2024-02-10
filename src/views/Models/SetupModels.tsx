@@ -13,6 +13,7 @@ const SetupModels = (): JSX.Element => {
       </Route>
       <Route path="/models/:id" element={<ViewModel />} />
       <Route path="/models/:id/edit" element={<EditModel />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
