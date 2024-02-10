@@ -32,8 +32,8 @@ RSpec.describe Connector, type: :model do
 
   context "associations" do
     it { should belong_to(:workspace) }
-    it { should have_many(:models).dependent(:nullify) }
-    it { should have_one(:catalog).dependent(:nullify) }
+    it { should have_many(:models).dependent(:destroy) }
+    it { should have_one(:catalog).dependent(:destroy) }
   end
 
   describe "#to_protocol" do

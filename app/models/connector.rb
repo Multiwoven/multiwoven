@@ -28,8 +28,8 @@ class Connector < ApplicationRecord
 
   belongs_to :workspace
 
-  has_many :models, dependent: :nullify
-  has_one :catalog, dependent: :nullify
+  has_many :models, dependent: :destroy
+  has_one :catalog, dependent: :destroy
 
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access

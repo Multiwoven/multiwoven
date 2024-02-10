@@ -25,7 +25,7 @@ class Model < ApplicationRecord
   belongs_to :workspace
   belongs_to :connector
 
-  has_many :syncs, dependent: :nullify
+  has_many :syncs, dependent: :destroy
 
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(

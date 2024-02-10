@@ -37,7 +37,7 @@ class Sync < ApplicationRecord
   belongs_to :source, class_name: "Connector"
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
-  has_many :sync_runs, dependent: :nullify
+  has_many :sync_runs, dependent: :destroy
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?

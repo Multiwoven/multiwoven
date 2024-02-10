@@ -27,7 +27,7 @@ RSpec.describe Model, type: :model do
     it { should validate_presence_of(:connector_id) }
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:query) }
-    it { should have_many(:syncs).dependent(:nullify) }
+    it { should have_many(:syncs).dependent(:destroy) }
   end
 
   describe "#to_protocol" do
@@ -46,6 +46,7 @@ RSpec.describe Model, type: :model do
       expect(protocol_model.query).to eq(model.query)
       expect(protocol_model.query_type).to eq(model.query_type)
       expect(protocol_model.primary_key).to eq(model.primary_key)
+      expect(model).to have_many(:syncs).dependent(:destroy)
     end
   end
 end
