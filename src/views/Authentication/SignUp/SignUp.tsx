@@ -96,7 +96,12 @@ const SignUp = (): JSX.Element => {
     const result = await signUp(values);
 
     if (result.data?.attributes) {
-      Cookies.set("authToken", result.data.attributes.token);
+      const token = result.data.attributes.token;
+      Cookies.set("authToken", token, {
+        secure: true,
+        sameSite: "Lax",
+      });
+      result.data.attributes.token;
       setSubmitting(false);
       toast({
         title: "Account created.",

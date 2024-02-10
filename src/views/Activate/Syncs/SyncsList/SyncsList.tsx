@@ -1,7 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
 import TopBar from "@/components/TopBar";
 import { fetchSyncs } from "@/services/syncs";
-import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
+import { Badge, Box, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -97,11 +97,7 @@ const SyncsList = (): JSX.Element => {
         {!syncList && isLoading ? (
           <Loader />
         ) : (
-          <Table
-            data={tableData}
-            onRowClick={handleOnSyncClick}
-            maxHeight="2xl"
-          />
+          <Table data={tableData} onRowClick={handleOnSyncClick} />
         )}
       </ContentContainer>
     </Box>
