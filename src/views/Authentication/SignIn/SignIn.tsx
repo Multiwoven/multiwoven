@@ -21,6 +21,7 @@ import {
   Stack,
   FormLabel,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import MultiwovenIcon from "@/assets/images/icon.png";
 import {
@@ -120,7 +121,7 @@ const SignIn = (): JSX.Element => {
   };
 
   return (
-    <>
+    <Flex justify="center" w="100%" h="100vh" alignItems="center">
       <Formik
         initialValues={{
           email: "",
@@ -131,12 +132,12 @@ const SignIn = (): JSX.Element => {
       >
         {({ getFieldProps, touched, errors }) => (
           <Form>
-            <Container maxW="lg" py="6">
+            <Container maxW="lg" w="lg" py="6">
               <Stack spacing="8">
                 <Stack spacing="6" alignItems={"center"}>
                   <img src={MultiwovenIcon} width={55} />
                   <Stack spacing="3" textAlign="center">
-                    <Heading size="sm">Sign In to your account</Heading>
+                    <Heading size="sm">Sign in to your account</Heading>
                     <Text color="fg.muted">
                       Don't have an account?{" "}
                       <Link href="/sign-up" color="brand.500">
@@ -190,7 +191,7 @@ const SignIn = (): JSX.Element => {
           </Form>
         )}
       </Formik>
-    </>
+    </Flex>
   );
 };
 
