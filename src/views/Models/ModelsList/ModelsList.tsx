@@ -17,11 +17,9 @@ const ModelsList = (): JSX.Element | null => {
       <ContentContainer>
         <TopBar
           name={"Models"}
-          ctaName="Add model"
+          ctaName="Add Model"
           ctaIcon={<FiPlus color="gray.100" />}
-          ctaBgColor={"orange.500"}
-          ctaHoverBgColor={"orange.400"}
-          ctaColor={"white"}
+          ctaButtonVariant="solid"
           onCtaClicked={() => navigate("new")}
           isCtaVisible
         />

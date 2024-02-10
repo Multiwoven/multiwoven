@@ -45,9 +45,9 @@ type ModelPreviewResponse =
       };
     };
 
-export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
-  return apiRequest("/models", null);
-};
+// export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
+//   return apiRequest("/models", null);
+// };
 
 export const getModelPreview = async (
   query: string,
@@ -56,6 +56,12 @@ export const getModelPreview = async (
   const url = "/connectors/" + connector_id + "/query_source";
   return apiRequest(url, { query: query });
 };
+
+export const getAllModels = async (): Promise<APIData> =>
+  multiwovenFetch<null, APIData>({
+    method: "get",
+    url: "/models",
+  });
 
 export const getModelPreviewById = async (
   query: string,

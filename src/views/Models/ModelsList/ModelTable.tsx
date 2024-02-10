@@ -10,22 +10,20 @@ type ModelTableProps = {
 };
 
 const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["models"],
     queryFn: () => getAllModels(),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
-  const models = data?.data?.data;
+  const models = data?.data;
 
-  if (!models) {
-    return (
-      <Loader />
-    );
+  if (isLoading) {
+    return <Loader />;
   }
 
-  if (models.length === 0) return <NoModels />; 
+  if (models?.length === 0 || !models) return <NoModels />;
 
   let values = ConvertToTableData(addIconDataToArray(models), [
     { name: "Name", key: "name", showIcon: true },
