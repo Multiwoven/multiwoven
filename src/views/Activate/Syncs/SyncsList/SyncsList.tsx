@@ -12,6 +12,8 @@ import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
 import moment from "moment";
 import Loader from "@/components/Loader";
+import NoConnectors from "@/views/Connectors/NoConnectors";
+import NoActivations from "../../NoSyncs/NoSyncs";
 
 type TableItem = {
   field: SyncColumnFields;
@@ -81,12 +83,17 @@ const SyncsList = (): JSX.Element => {
     navigate(`${row.id}`);
   };
 
+  if (isLoading) return <Loader />;
+
+  if (!isLoading && tableData.data?.length === 0)
+    return <NoActivations activationType="sync" />;
+
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
         <TopBar
           name="Syncs"
-          ctaName="Add sync"
+          ctaName="Add Sync"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
           ctaBgColor="orange.500"
