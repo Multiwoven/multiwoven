@@ -18,6 +18,7 @@ type MenuItem = {
   title: string;
   link: string;
   Icon: any;
+  disabled?: boolean;
 };
 
 type MenuSection = {
@@ -33,7 +34,11 @@ const menus: MenuArray = [
     heading: "SETUP",
     menu: [
       { title: "Sources", link: "/setup/sources", Icon: FiDatabase },
-      { title: "Destinations", link: "/setup/destinations", Icon: FiMinimize },
+      {
+        title: "Destinations",
+        link: "/setup/destinations",
+        Icon: FiMinimize,
+      },
     ],
   },
   {
@@ -44,7 +49,12 @@ const menus: MenuArray = [
     heading: "ACTIVATE",
     menu: [
       { title: "Syncs", link: "/activate/syncs", Icon: FiMinimize2 },
-      { title: "Audiences", link: "/audiences", Icon: FiPieChart },
+      {
+        title: "Audiences",
+        link: "/audiences",
+        Icon: FiPieChart,
+        disabled: true,
+      },
     ],
   },
 ];
@@ -66,6 +76,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
               label={menuItem.title}
               icon={menuItem.Icon}
               isActive={isActive}
+              disabled={menuItem.disabled}
             />
           )}
         </NavLink>
@@ -78,8 +89,10 @@ const SideBarFooter = () => (
   <Stack position="absolute" bottom="0" left="0px" right="0px" margin="24px">
     <Box />
     <Stack spacing="0">
-      <NavButton label="Settings" icon={FiSettings} />
-      <NavButton label="Documentation" icon={FiBookOpen} />
+      <NavButton label="Settings" icon={FiSettings} disabled={true} />
+      <NavLink to="https://docs.multiwoven.com/get-started/introduction">
+        <NavButton label="Documentation" icon={FiBookOpen} />
+      </NavLink>
     </Stack>
     <Profile />
   </Stack>
