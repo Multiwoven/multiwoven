@@ -10,7 +10,7 @@ export const apiRequest = async (
   url: string,
   values: any
 ): Promise<ApiResponse> => {
-  let data = JSON.stringify(values);
+  const data = JSON.stringify(values);
   let response;
   try {
     if (values === null) {

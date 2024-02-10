@@ -38,10 +38,11 @@ type StepData = {
 };
 
 const FinalizeModel = (): JSX.Element => {
-  let defineModelData: StepData;
-
   const { state } = useContext(SteppedFormContext);
-  defineModelData = extractDataByKey<StepData>(state.forms, "defineModel");
+  const defineModelData: StepData = extractDataByKey<StepData>(
+    state.forms,
+    "defineModel"
+  );
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -181,13 +182,13 @@ const FinalizeModel = (): JSX.Element => {
               buttons={[
                 {
                   name: "Back",
-                  variant:"ghost",
+                  variant: "ghost",
                   color: "black",
                   onClick: () => navigate(-1),
                 },
                 {
                   name: "Finish",
-                  variant:"solid",
+                  variant: "solid",
                   isLoading: isLoading,
                   type: "submit",
                 },
