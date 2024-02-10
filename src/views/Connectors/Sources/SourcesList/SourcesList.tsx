@@ -95,7 +95,7 @@ const SourcesList = (): JSX.Element | null => {
   if (!connectors) return null;
 
   if (!isLoading && !tableData) return <NoModels />;
-
+  console.log("TEST");
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
