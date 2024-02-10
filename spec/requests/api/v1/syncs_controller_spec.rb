@@ -34,8 +34,14 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         get "/api/v1/syncs", headers: auth_headers(user)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
+
         expect(response_hash[:data].count).to eql(syncs.count)
         expect(response_hash.dig(:data, 0, :type)).to eq("syncs")
+        expect(response_hash[:data][0][:attributes][:model_id].present?).to be_truthy
+        expect(response_hash[:data][0][:attributes][:model].present?).to be_truthy
+        expect(response_hash[:data][0][:attributes][:model].keys).to include("id", "name", "description", "query",
+                                                                             "query_type", "primary_key", "created_at",
+                                                                             "updated_at", "connector")
       end
     end
   end
