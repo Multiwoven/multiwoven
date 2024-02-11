@@ -48,6 +48,8 @@ export type CreateSyncPayload = {
 
 export type CreateSyncResponse = {
   attributes: {
+    created_at: Date;
+    updated_at: Date;
     configuration: Record<string, unknown>;
     destination_id: number;
     model_id: number;
@@ -67,6 +69,13 @@ export type CreateSyncResponse = {
       connector_name: string;
       icon: string;
       name: string;
+    };
+    model: {
+      connector: {
+        connector_name: string;
+        icon: string;
+        name: string;
+      };
     };
   };
   id: string;

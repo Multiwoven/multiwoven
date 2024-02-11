@@ -23,8 +23,8 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
     case "model":
       return (
         <EntityItem
-          icon={data.attributes.source.icon}
-          name={data.attributes.source.connector_name}
+          icon={data.attributes.model.connector.icon}
+          name={data.attributes.model.connector.name}
         />
       );
 
@@ -37,7 +37,9 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
       );
 
     case "lastUpdated":
-      return <Text>{moment().format("DD/MM/YYYY")}</Text>;
+      return (
+        <Text>{moment(data.attributes.updated_at).format("DD/MM/YYYY")}</Text>
+      );
 
     case "status":
       return (
