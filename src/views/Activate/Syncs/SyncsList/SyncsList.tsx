@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { SYNC_TABLE_COLUMS } from "../constants";
+import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from "../constants";
 import { CreateSyncResponse, SyncColumnFields } from "../types";
 import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
@@ -53,7 +53,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 const SyncsList = (): JSX.Element => {
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
-    queryKey: ["activate", "syncs"],
+    queryKey: SYNCS_LIST_QUERY_KEY,
     queryFn: () => fetchSyncs(),
     refetchOnMount: false,
     refetchOnWindowFocus: false,

@@ -29,11 +29,11 @@ export type FieldMap = {
 };
 
 export type ConfigSync = {
-  source_id: number;
-  destination_id: number;
-  model_id: number;
+  source_id: string;
+  destination_id: string;
+  model_id: string;
   schedule_type: "automated";
-  configuration: Record<string, unknown>;
+  configuration: Record<string, string>;
   stream_name: string;
 };
 
@@ -55,7 +55,7 @@ export type CreateSyncResponse = {
     destination_id: number;
     model_id: number;
     schedule_type: "automated";
-    source_id: number;
+    source_id: string;
     status: string;
     stream_name: string;
     sync_interval: number;
@@ -65,6 +65,7 @@ export type CreateSyncResponse = {
       connector_name: string;
       icon: string;
       name: string;
+      id: string;
     };
     destination: {
       connector_name: string;

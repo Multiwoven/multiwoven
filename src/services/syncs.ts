@@ -34,3 +34,13 @@ export const getSyncById = (
     method: "get",
     url: `/syncs/${id}`,
   });
+
+export const editSync = (
+  payload: CreateSyncPayload,
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<CreateSyncPayload, ApiResponse<CreateSyncResponse>>({
+    method: "put",
+    url: `/syncs/${id}`,
+    data: payload,
+  });

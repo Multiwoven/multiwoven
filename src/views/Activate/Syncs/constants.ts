@@ -30,3 +30,5 @@ export const EDIT_SYNC_FORM_STEPS: Step[] = [
     url: "",
   },
 ];
+
+export const SYNCS_LIST_QUERY_KEY = ["activate", "syncs-list"];

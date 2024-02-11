@@ -16,7 +16,7 @@ type MapFieldsProps = {
   model: ModelEntity;
   destination: ConnectorItem;
   stream: Stream | null;
-  data?: Record<string, string>;
+  data?: Record<string, string> | null;
   isEdit?: boolean;
   handleOnConfigChange: (args: Record<string, string>) => void;
 };

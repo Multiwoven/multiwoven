@@ -1,10 +1,13 @@
 import ContentContainer from "@/components/ContentContainer";
 import TopBar from "@/components/TopBar";
 import { Box, Divider, Text, useToast } from "@chakra-ui/react";
-import { EDIT_SYNC_FORM_STEPS } from "@/views/Activate/Syncs/constants";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getSyncById } from "@/services/syncs";
+import {
+  EDIT_SYNC_FORM_STEPS,
+  SYNCS_LIST_QUERY_KEY,
+} from "@/views/Activate/Syncs/constants";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { editSync, getSyncById } from "@/services/syncs";
 import Loader from "@/components/Loader";
 import React, { useEffect, useState } from "react";
 import MappedInfo from "./MappedInfo";
@@ -13,21 +16,26 @@ import SelectStreams from "@/views/Activate/Syncs/SyncForm/ConfigureSyncs/Select
 import MapFields from "../SyncForm/ConfigureSyncs/MapFields";
 import { getConnectorInfo } from "@/services/connectors";
 import {
+  CreateSyncPayload,
   DiscoverResponse,
   FinalizeSyncFormFields,
   Stream,
 } from "@/views/Activate/Syncs/types";
 import ScheduleForm from "./ScheduleForm";
 import { FormikProps, useFormik } from "formik";
+import FormFooter from "@/components/FormFooter";
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
+  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [configuration, setConfiguration] = useState<Record<
     string,
     string
   > | null>(null);
   const { syncId } = useParams();
   const toast = useToast();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     data: syncFetchResponse,
     isLoading,
@@ -58,8 +66,58 @@ const EditSync = (): JSX.Element | null => {
       sync_interval_unit: "minutes",
       schedule_type: "automated",
     },
-    onSubmit: (data) => {
-      console.log("Submitted", configuration, data);
+    onSubmit: async (data) => {
+      setIsEditLoading(true);
+      try {
+        if (
+          destinationFetchResponse?.data.id &&
+          syncData?.model.id &&
+          syncData?.source.id &&
+          configuration
+        ) {
+          const payload: CreateSyncPayload = {
+            sync: {
+              configuration,
+              destination_id: destinationFetchResponse?.data.id,
+              model_id: syncData?.model.id,
+              schedule_type: data.schedule_type,
+              source_id: syncData?.source.id,
+              stream_name: syncData?.stream_name,
+              sync_interval: data.sync_interval,
+              sync_interval_unit: data.sync_interval_unit,
+              sync_mode: data.sync_mode,
+            },
+          };
+
+          const editSyncResponse = await editSync(payload, syncId as string);
+          if (editSyncResponse.data.attributes) {
+            toast({
+              title: "Sync updated successfully",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+              position: "bottom-right",
+            });
+
+            queryClient.removeQueries({
+              queryKey: SYNCS_LIST_QUERY_KEY,
+            });
+
+            navigate("/activate/syncs");
+            return;
+          }
+        }
+      } catch {
+        toast({
+          status: "error",
+          title: "Error!!",
+          description: "Something went wrong while editing the sync",
+          position: "bottom-right",
+          isClosable: true,
+        });
+      } finally {
+        setIsEditLoading(false);
+      }
     },
   });
 
@@ -83,6 +141,8 @@ const EditSync = (): JSX.Element | null => {
         sync_mode: syncData?.sync_mode ?? "full_refresh",
         schedule_type: syncData?.schedule_type ?? "automated",
       });
+
+      setConfiguration(syncFetchResponse.data.attributes.configuration);
     }
   }, [syncFetchResponse]);
 
@@ -133,7 +193,7 @@ const EditSync = (): JSX.Element | null => {
             ) : null
           }
         />
-        {(isLoading || isConnectorInfoLoading) && !syncData ? <Loader /> : null}
+        {isLoading || isConnectorInfoLoading || !syncData ? <Loader /> : null}
         {syncData && destinationFetchResponse?.data ? (
           <React.Fragment>
             <SelectStreams
@@ -147,12 +207,18 @@ const EditSync = (): JSX.Element | null => {
               destination={destinationFetchResponse?.data}
               stream={selectedStream}
               handleOnConfigChange={handleOnConfigChange}
-              data={syncData.configuration}
+              data={configuration}
               isEdit
             />
             <ScheduleForm formik={formik} />
           </React.Fragment>
         ) : null}
+        <FormFooter
+          ctaName="Save Changes"
+          ctaType="submit"
+          isCtaLoading={isEditLoading}
+          isAlignToContentContainer
+        />
       </ContentContainer>
     </form>
   );
