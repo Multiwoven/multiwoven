@@ -1,8 +1,7 @@
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 import Table from "@/components/Table";
-import { Badge, Box, Spinner, Text } from "@chakra-ui/react";
+import { Badge, Text } from "@chakra-ui/react";
 
 import {
   ConnectorAttributes,
@@ -11,12 +10,9 @@ import {
 } from "../../types";
 import moment from "moment";
 
-import { getUserConnectors } from "@/services/connectors";
-import {
-  DESTINATIONS_LIST_QUERY_KEY,
-  CONNECTOR_LIST_COLUMNS,
-} from "@/views/Connectors/constant";
+import { CONNECTOR_LIST_COLUMNS } from "@/views/Connectors/constant";
 import EntityItem from "@/components/EntityItem";
+import Loader from "@/components/Loader";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -31,6 +27,7 @@ type TableRow = {
 type DestinationTableProps = {
   handleOnRowClick: (args: TableRow) => void;
   destinationData: ConnectorListResponse;
+  isLoading: boolean;
 };
 
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
@@ -65,14 +62,8 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 const DestinationsTable = ({
   handleOnRowClick,
   destinationData,
+  isLoading,
 }: DestinationTableProps): JSX.Element | null => {
-  const { data, isLoading } = useQuery({
-    queryKey: DESTINATIONS_LIST_QUERY_KEY,
-    queryFn: () => getUserConnectors("destination"),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
-
   const connectors = destinationData?.data;
 
   const tableData = useMemo(() => {
@@ -93,20 +84,10 @@ const DestinationsTable = ({
       columns: CONNECTOR_LIST_COLUMNS,
       data: rows,
     };
-  }, [data]);
+  }, [destinationData]);
 
   if (!connectors || isLoading) {
-    return (
-      <Box width="100%" display="flex" justifyContent="center">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return <Table data={tableData} onRowClick={handleOnRowClick} />;

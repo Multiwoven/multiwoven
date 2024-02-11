@@ -21,9 +21,10 @@ const DestinationsList = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading || !data) return null;
+  if (isLoading && !data) return <Loader />;
 
-  if (!isLoading || !data) return <NoConnectors connectorType="destination" />;
+  if (data?.data.length === 0)
+    return <NoConnectors connectorType="destination" />;
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -46,6 +47,7 @@ const DestinationsList = (): JSX.Element | null => {
               navigate(`/setup/destinations/${row?.id}`)
             }
             destinationData={data}
+            isLoading={isLoading}
           />
         )}
       </ContentContainer>
