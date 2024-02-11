@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import Table from "@/components/Table";
-import { Badge, Tag, Text } from "@chakra-ui/react";
+import { Tag, Text } from "@chakra-ui/react";
 
 import {
   ConnectorAttributes,

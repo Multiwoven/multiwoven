@@ -23,8 +23,6 @@ const ModelsList = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  console.log(data);
-
   if (isLoading && !data) return <Loader />;
   if (data?.data?.length === 0) return <NoModels />;
 

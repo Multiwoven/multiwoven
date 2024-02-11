@@ -4,7 +4,6 @@ import { ModelColumnFields } from "../types";
 import EntityItem from "@/components/EntityItem";
 import { Text } from "@chakra-ui/react";
 import moment from "moment";
-import { ModelTableRow } from "@/components/Table/types";
 import { useMemo } from "react";
 import { MODEL_TABLE_COLUMNS } from "../constants";
 import Table from "@/components/Table";
@@ -49,8 +48,6 @@ const ModelTable = ({
   const tableData = useMemo(() => {
     if (models && models?.length > 0) {
       const rows = models.map(({ attributes, id }) => {
-        console.log(attributes);
-
         return MODEL_TABLE_COLUMNS.reduce(
           (acc, { key }) => ({
             [key]: <TableItem field={key} data={attributes} />,
