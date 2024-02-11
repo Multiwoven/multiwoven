@@ -20,16 +20,16 @@ const Profile = () => {
   const { data } = useQuery({
     queryKey: ["users", "profile", "me"],
     queryFn: () => getUserProfile(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
-  
+
   const toast = useToast();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const logoutResponse = await logout();
-    if(logoutResponse.data) {
+    if (logoutResponse.data) {
       toast({
         title: "Signed out successfully",
         isClosable: true,
@@ -37,9 +37,9 @@ const Profile = () => {
         status: "success",
         position: "bottom-right",
       });
-      navigate('/sign-in');
+      navigate("/sign-in");
     }
-  }
+  };
 
   const OptionsPopover = () => {
     return (
@@ -100,7 +100,15 @@ const Profile = () => {
     <>
       <Box bgColor="gray.300" px={2} py={2} rounded="xl" w="208px">
         <HStack w="192px" maxW="192px" spacing={0}>
-          <Avatar name={data?.data?.attributes.name} mr={1} bgColor='brand.400' marginRight={2} color='gray.100' size='sm' fontWeight='extrabold' />
+          <Avatar
+            name={data?.data?.attributes.name}
+            mr={1}
+            bgColor="brand.400"
+            marginRight={2}
+            color="gray.100"
+            size="sm"
+            fontWeight="extrabold"
+          />
           <VStack spacing={0} align="start">
             <Box w="128px" maxW="128px">
               <Text size="sm" fontWeight="500" noOfLines={1}>
