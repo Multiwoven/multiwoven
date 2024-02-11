@@ -149,7 +149,7 @@ const DefineSQL = ({
             h="xs"
             rounded="xl"
           >
-            <Flex bgColor="gray.200" p={2} roundedTop="xl">
+            <Flex bgColor="gray.300" p={2} roundedTop="xl">
               <Flex w="full" alignItems="center">
                 <Image
                   src={connector_icon}
@@ -176,7 +176,7 @@ const DefineSQL = ({
                 </Button>
               </HStack>
             </Flex>
-            <Box p={3} w="100%" maxH="250px">
+            <Box p={3} w="100%" maxH="250px" bgColor="gray.100">
               <Editor
                 width="100%"
                 height="240px"
@@ -250,9 +250,11 @@ const DefineSQL = ({
         <> </>
       )}
       {isUpdateButtonVisible ? (
-        <Button isDisabled={!moveForward} onClick={handleModelUpdate}>
-          Save Changes
-        </Button>
+        <Box display="flex" justifyContent="end">
+          <Button isDisabled={!moveForward} onClick={handleModelUpdate}>
+            Save Changes
+          </Button>
+        </Box>
       ) : (
         <></>
       )}
