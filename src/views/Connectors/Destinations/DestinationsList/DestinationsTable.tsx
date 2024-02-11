@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import Table from "@/components/Table";
-import { Badge, Text } from "@chakra-ui/react";
+import { Badge, Tag, Text } from "@chakra-ui/react";
 
 import {
   ConnectorAttributes,
@@ -49,9 +49,18 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "status":
       return (
-        <Badge colorScheme="green" variant="outline">
-          Active
-        </Badge>
+        <Tag
+          colorScheme="teal"
+          variant="outline"
+          size="xs"
+          bgColor="success.100"
+          p={1}
+          fontWeight={600}
+        >
+          <Text size="xs" fontWeight="semibold">
+            Active
+          </Text>
+        </Tag>
       );
 
     default:

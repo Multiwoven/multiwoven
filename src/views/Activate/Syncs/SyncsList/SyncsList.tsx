@@ -1,7 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
 import TopBar from "@/components/TopBar";
 import { fetchSyncs } from "@/services/syncs";
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge, Box, Tag, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -42,9 +42,18 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 
     case "status":
       return (
-        <Badge colorScheme="green" variant="outline">
-          Active
-        </Badge>
+        <Tag
+          colorScheme="teal"
+          variant="outline"
+          size="xs"
+          bgColor="success.100"
+          p={1}
+          fontWeight={600}
+        >
+          <Text size="xs" fontWeight="semibold">
+            Active
+          </Text>
+        </Tag>
       );
   }
 };
