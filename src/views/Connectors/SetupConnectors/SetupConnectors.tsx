@@ -13,11 +13,13 @@ const SetupConnectors = (): JSX.Element => {
         <Route index element={<SourcesList />} />
         <Route path="new" element={<SourcesForm />} />
         <Route path=":sourceId" element={<EditSource />} />
+        <Route path="*" element={<Navigate to="" />} />
       </Route>
       <Route path="destinations">
         <Route index element={<DestinationsList />} />
         <Route path="new" element={<DestinationsForm />} />
         <Route path=":destinationId" element={<EditDestinations />} />
+        <Route path="*" element={<Navigate to="" />} />
       </Route>
       <Route path="*" element={<Navigate to="sources" />} />
     </Routes>
