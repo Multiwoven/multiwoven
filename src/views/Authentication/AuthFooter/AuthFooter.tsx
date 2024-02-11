@@ -4,13 +4,10 @@ import { Link } from "react-router-dom";
 const AuthFooter = (): JSX.Element => {
   return (
     <Box
-      position="fixed"
-      right="0"
-      bottom="0"
       backgroundColor="gray.100"
       display="flex"
       justifyContent="center"
-      minHeight="80px"
+      height="10vh"
       zIndex="1"
       width="full"
       alignItems="center"

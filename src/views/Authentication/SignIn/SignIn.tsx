@@ -8,7 +8,7 @@ import {
   FieldInputProps,
 } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -16,12 +16,12 @@ import {
   Input,
   Heading,
   Text,
-  Link,
   Container,
   Stack,
   FormLabel,
   useToast,
   Flex,
+  HStack,
 } from "@chakra-ui/react";
 import MultiwovenIcon from "@/assets/images/icon.png";
 import {
@@ -121,77 +121,84 @@ const SignIn = (): JSX.Element => {
   };
 
   return (
-    <Flex justify="center" w="100%" h="100vh" alignItems="center">
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
-        }}
-        onSubmit={(values) => handleSubmit(values)}
-        validationSchema={SignInSchema}
+    <>
+      <Flex
+        justify="center"
+        w="100%"
+        minHeight="90vh"
+        alignItems="center"
+        overflowY="auto"
       >
-        {({ getFieldProps, touched, errors }) => (
-          <Form>
-            <Container maxW="lg" w="lg" py="6">
-              <Stack spacing="8">
-                <Stack spacing="6" alignItems={"center"}>
-                  <img src={MultiwovenIcon} width={55} />
-                  <Stack spacing="3" textAlign="center">
-                    <Heading size="sm">Sign in to your account</Heading>
-                    <Text color="fg.muted">
-                      Don't have an account?{" "}
-                      <Link href="/sign-up" color="brand.500">
-                        Sign Up
-                      </Link>
-                    </Text>
-                  </Stack>
-                </Stack>
-                <Box
-                  py="8"
-                  px="10"
-                  borderRadius="xl"
-                  border="2px"
-                  borderColor="gray.400"
-                >
-                  <Stack spacing="6">
-                    <Stack spacing="5">
-                      <FormField
-                        label="Email"
-                        name="email"
-                        type="text"
-                        getFieldProps={getFieldProps}
-                        touched={touched}
-                        errors={errors}
-                      />
-                      <FormField
-                        label="Password"
-                        name="password"
-                        type="password"
-                        getFieldProps={getFieldProps}
-                        touched={touched}
-                        errors={errors}
-                      />
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onSubmit={(values) => handleSubmit(values)}
+          validationSchema={SignInSchema}
+        >
+          {({ getFieldProps, touched, errors }) => (
+            <Form>
+              <Container width={{ base: "400px", sm: "500px" }} py="6">
+                <Stack spacing="8">
+                  <Stack spacing="6" alignItems={"center"}>
+                    <img src={MultiwovenIcon} width={55} />
+                    <Stack spacing="3" textAlign="center">
+                      <Heading size="sm">Sign in to your account</Heading>
+                      <HStack spacing={1} justify="center">
+                        <Text color="black.500">Don't have an account? </Text>
+                        <Link to="/sign-up">
+                          <Text color="brand.500">Sign Up</Text>
+                        </Link>
+                      </HStack>
                     </Stack>
+                  </Stack>
+                  <Box
+                    padding="20px"
+                    borderRadius="xl"
+                    border="2px"
+                    borderColor="gray.400"
+                  >
                     <Stack spacing="6">
-                      <Button
-                        type="submit"
-                        isLoading={submitting}
-                        loadingText="Signing In"
-                        variant="solid"
-                        width="full"
-                      >
-                        Sign In
-                      </Button>
+                      <Stack spacing="5">
+                        <FormField
+                          label="Email"
+                          name="email"
+                          type="text"
+                          getFieldProps={getFieldProps}
+                          touched={touched}
+                          errors={errors}
+                        />
+                        <FormField
+                          label="Password"
+                          name="password"
+                          type="password"
+                          getFieldProps={getFieldProps}
+                          touched={touched}
+                          errors={errors}
+                        />
+                      </Stack>
+                      <Stack spacing="6">
+                        <Button
+                          type="submit"
+                          isLoading={submitting}
+                          loadingText="Signing In"
+                          variant="solid"
+                          width="full"
+                        >
+                          Sign In
+                        </Button>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </Box>
-              </Stack>
-            </Container>
-            <AuthFooter />
-          </Form>
-        )}
-      </Formik>
-    </Flex>
+                  </Box>
+                </Stack>
+              </Container>
+            </Form>
+          )}
+        </Formik>
+      </Flex>
+      <AuthFooter />
+    </>
   );
 };
 
