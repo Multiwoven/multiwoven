@@ -12,7 +12,6 @@ import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
 import moment from "moment";
 import Loader from "@/components/Loader";
-import NoConnectors from "@/views/Connectors/NoConnectors";
 import NoActivations from "../../NoSyncs/NoSyncs";
 
 type TableItem = {
