@@ -5,7 +5,7 @@ import {
     AlertDescription,
   } from '@chakra-ui/react'
   
-export let alertMessage:AlertData = {
+export const alertMessage:AlertData = {
     status: undefined,
     description: ['']
 }

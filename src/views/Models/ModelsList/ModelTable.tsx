@@ -25,7 +25,7 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
 
   if (models?.length === 0 || !models) return <NoModels />;
 
-  let values = ConvertToTableData(addIconDataToArray(models), [
+  const values = ConvertToTableData(addIconDataToArray(models), [
     { name: "Name", key: "name", showIcon: true },
     { name: "Query Type", key: "query_type" },
     { name: "Updated At", key: "updated_at" },

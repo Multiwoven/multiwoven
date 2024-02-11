@@ -5,7 +5,7 @@ export default {
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
-    "\\.(gif|ttf|eot|svg|jpg|png)$": "<rootDir>/__mocks__/fileMock.js",
+    "\\.(gif|ttf|eot|svg|jpg|png)$": "identity-obj-proxy",
     ...pathsToModuleNameMapper({
       "@/*": ["src/*"],
     }),

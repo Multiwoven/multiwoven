@@ -19,7 +19,7 @@ const AccountVerify = () : JSX.Element => {
 
     const handleSubmit = async (values: any) => {
         setSubmitting(true);
-        let data = {
+        const data = {
             "email": sessionStorage.getItem("userEmail"),
             "confirmation_code": values.code
         }
