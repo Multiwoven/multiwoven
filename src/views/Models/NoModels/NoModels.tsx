@@ -24,9 +24,9 @@ const NoModels = (): JSX.Element => {
         <VStack spacing={8}>
           <VStack>
             <Image src={NoModelsImage} />
-            <Heading size="xs">No models added</Heading>
+            <Heading size="xs">No Models added</Heading>
             <Text size="sm">
-              Add a model to describe how your Data Source will be queried{" "}
+              Add a Model to describe how your Data Source will be queried{" "}
             </Text>
           </VStack>
           <Button onClick={() => navigate("new")} leftIcon={<FiPlus />}>

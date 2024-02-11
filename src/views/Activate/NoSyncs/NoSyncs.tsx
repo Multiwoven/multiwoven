@@ -22,7 +22,7 @@ const NoActivations = ({ activationType }: NoActivationsProps): JSX.Element => {
   const type = activationType === "sync" ? "Sync" : "";
   const description =
     activationType === "sync"
-      ? "Add a sync to declare how you want query results from a model to appear in your destination"
+      ? "Add a Sync to declare how you want query results from a Model to appear in your destination"
       : "";
 
   const image = activationType === "sync" ? NoSyncsImage : "";
