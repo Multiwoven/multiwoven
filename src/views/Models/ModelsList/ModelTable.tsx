@@ -1,43 +1,80 @@
-import GenerateTable from "@/components/Table/Table";
-import { getAllModels } from "@/services/models";
-import { addIconDataToArray, ConvertToTableData } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import NoModels from "../NoModels";
+import { APIData, ModelAttributes } from "@/services/models";
 import Loader from "@/components/Loader";
+import { ModelColumnFields } from "../types";
+import EntityItem from "@/components/EntityItem";
+import { Text } from "@chakra-ui/react";
+import moment from "moment";
+import { ModelTableRow } from "@/components/Table/types";
+import { useMemo } from "react";
+import { MODEL_TABLE_COLUMNS } from "../constants";
+import Table from "@/components/Table";
 
-type ModelTableProps = {
-  handleOnRowClick: (args: unknown) => void;
+type TableItem = {
+  field: ModelColumnFields;
+  data: ModelAttributes;
 };
 
-const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["models"],
-    queryFn: () => getAllModels(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+const TableItem = ({
+  field,
+  data,
+}: TableItem): JSX.Element | null | undefined => {
+  switch (field) {
+    case "name":
+      return <EntityItem icon={data.connector.icon} name={data.name} />;
+    case "query_type":
+      return <Text>METHOD</Text>;
 
-  const models = data?.data;
+    case "last_updated":
+      return <Text>{moment().format("DD/MM/YYYY")}</Text>;
+  }
+};
 
-  if (isLoading) {
+type ModelTableProps = {
+  handleOnRowClick: (args: ModelTableRow) => void;
+  modelData: APIData;
+  isLoading: boolean;
+};
+
+const ModelTable = ({
+  handleOnRowClick,
+  modelData,
+  isLoading,
+}: ModelTableProps): JSX.Element => {
+  const models = modelData?.data;
+  const tableData = useMemo(() => {
+    if (models && models?.length > 0) {
+      const rows = models.map(({ attributes, id }) => {
+        console.log(attributes);
+
+        return MODEL_TABLE_COLUMNS.reduce(
+          (acc, { key }) => ({
+            [key]: <TableItem field={key} data={attributes} />,
+            id,
+            ...acc,
+          }),
+          {}
+        );
+      });
+
+      return {
+        columns: MODEL_TABLE_COLUMNS,
+        data: rows,
+      };
+    }
+  }, [modelData]);
+
+  if (!models || isLoading) {
     return <Loader />;
   }
 
-  if (models?.length === 0 || !models) return <NoModels />;
-
-  const values = ConvertToTableData(addIconDataToArray(models), [
-    { name: "Name", key: "name", showIcon: true },
-    { name: "Query Type", key: "query_type" },
-    { name: "Updated At", key: "updated_at" },
-  ]);
-
   return (
-    <GenerateTable
-      data={values}
-      headerColorVisible={true}
-      onRowClick={handleOnRowClick}
-      maxHeight="2xl"
-    />
+    <>
+      {isLoading || !tableData ? (
+        <Loader />
+      ) : (
+        <Table data={tableData} onRowClick={handleOnRowClick} />
+      )}
+    </>
   );
 };
 

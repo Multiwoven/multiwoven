@@ -7,15 +7,7 @@ import { apiRequest, multiwovenFetch } from "./common";
 import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
 
 export type APIData = {
-  data?: Array<{
-    id: string;
-    type: string;
-    icon: string;
-    name: string;
-    attributes: {
-      [key: string]: string | null;
-    };
-  }>;
+  data?: Array<GetAllModelsResponse>;
   links?: Record<string, string>;
 };
 
@@ -32,7 +24,7 @@ export type Field = {
   [key: string]: string | number | null;
 };
 
-type ModelPreviewResponse =
+export type ModelPreviewResponse =
   | Field[]
   | {
       data: {
@@ -44,6 +36,27 @@ type ModelPreviewResponse =
         }[];
       };
     };
+
+export type ModelAttributes = {
+  updated_at: string;
+  query: string;
+  query_type: string;
+  icon: string;
+  id: string;
+  name: string;
+  description: string;
+  primary_key: string;
+  connector: {
+    icon: string;
+    [key: string]: string | null;
+  };
+};
+
+export type GetAllModelsResponse = {
+  id: string;
+  type: string;
+  attributes: ModelAttributes;
+};
 
 // export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
 //   return apiRequest("/models", null);

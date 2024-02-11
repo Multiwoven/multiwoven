@@ -7,13 +7,13 @@ import EditModel from "./EditModel";
 const SetupModels = (): JSX.Element => {
   return (
     <Routes>
-      <Route path="/models" element={<ModelsList />}>
+      <Route path="models">
+        <Route index element={<ModelsList />} />
         <Route path="new" element={<ModelsForm />} />
-        <Route path="*" element={<Navigate to="" />} />
+        <Route path=":id" element={<ViewModel />} />
+        <Route path=":id/edit" element={<EditModel />} />
       </Route>
-      <Route path="/models/:id" element={<ViewModel />} />
-      <Route path="/models/:id/edit" element={<EditModel />} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="models" />} />
     </Routes>
   );
 };
