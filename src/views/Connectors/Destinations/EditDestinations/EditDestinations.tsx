@@ -19,7 +19,7 @@ import SourceFormFooter from "../../Sources/SourcesForm/SourceFormFooter";
 
 const EditDestination = (): JSX.Element => {
   const { destinationId } = useParams();
-  const CONNECTOR_INFO_KEY = ["connectorInfo", destinationId];
+  const CONNECTOR_INFO_KEY = ["connectorInfo", "destination", destinationId];
   const queryClient = useQueryClient();
 
   const toast = useToast();

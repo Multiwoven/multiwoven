@@ -17,7 +17,7 @@ export const createSync = (
 ): Promise<ApiResponse<CreateSyncResponse>> =>
   multiwovenFetch<CreateSyncPayload, ApiResponse<CreateSyncResponse>>({
     method: "post",
-    url: `/syncs`,
+    url: "/syncs",
     data: payload,
   });
 
@@ -25,4 +25,12 @@ export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[]>> =>
   multiwovenFetch<null, ApiResponse<CreateSyncResponse[]>>({
     method: "get",
     url: `/syncs`,
+  });
+
+export const getSyncById = (
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: "get",
+    url: `/syncs/${id}`,
   });
