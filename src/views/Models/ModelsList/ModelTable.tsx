@@ -29,8 +29,13 @@ const TableItem = ({
   }
 };
 
+type TableRow = {
+  id: string;
+  model: unknown;
+};
+
 type ModelTableProps = {
-  handleOnRowClick: (args: ModelTableRow) => void;
+  handleOnRowClick: (args: TableRow) => void;
   modelData: APIData;
   isLoading: boolean;
 };

@@ -1,6 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
+import ModelTable from "@/components/ModelTable";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import ModelTable from "@/views/Models/ModelsList/ModelTable";
+
 import { Box } from "@chakra-ui/react";
 import { useContext } from "react";
 

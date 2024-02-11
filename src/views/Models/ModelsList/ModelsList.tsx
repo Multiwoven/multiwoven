@@ -15,6 +15,7 @@ const ModelsList = (): JSX.Element | null => {
   const handleOnRowClick = (row: any) => {
     navigate(row?.id);
   };
+
   const { data, isLoading } = useQuery({
     queryKey: ["models"],
     queryFn: () => getAllModels(),

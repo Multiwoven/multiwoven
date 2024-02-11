@@ -27,7 +27,7 @@ type TableRow = {
 type DestinationTableProps = {
   handleOnRowClick: (args: TableRow) => void;
   destinationData: ConnectorListResponse;
-  isLoading: boolean;
+  isLoading?: boolean;
 };
 
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {

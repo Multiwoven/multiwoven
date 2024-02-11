@@ -39,6 +39,7 @@ export type ModelPreviewResponse =
 
 export type ModelAttributes = {
   updated_at: string;
+  created_at: string;
   query: string;
   query_type: string;
   icon: string;
