@@ -28,4 +28,5 @@ export type DefineSQLProps = {
   isFooterVisible?: boolean;
   newQuery?: string;
   isUpdateButtonVisible: boolean;
+  isAlignToContentContainer?: boolean;
 };

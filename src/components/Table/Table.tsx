@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Image,
   Table,
   Tbody,
   Td,
@@ -22,6 +21,7 @@ const GenerateTable = ({
   borderRadius,
   maxHeight,
   onRowClick,
+  minWidth,
 }: TableType): JSX.Element => {
   const theadProps = headerColorVisible
     ? { bgColor: headerColor || "gray.200" }
@@ -32,6 +32,7 @@ const GenerateTable = ({
       borderColor="gray.400"
       borderRadius={borderRadius || "lg"}
       maxHeight={maxHeight}
+      minWidth={minWidth}
       overflowX="scroll"
     >
       {title ? title : <></>}

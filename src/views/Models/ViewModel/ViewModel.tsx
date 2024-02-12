@@ -108,7 +108,7 @@ const ViewModel = (): JSX.Element => {
           }
         />
         <VStack m={8}>
-          <Box w="5xl" mx="auto" bgColor="gray.100" rounded="xl">
+          <Box w="full" mx="auto" bgColor="gray.100" rounded="xl">
             <Flex
               w="full"
               roundedTop="xl"
@@ -151,6 +151,7 @@ const ViewModel = (): JSX.Element => {
                   formatOnPaste: true,
                   autoIndent: "full",
                   wordBasedSuggestions: true,
+                  scrollBeyondLastLine: false,
                   quickSuggestions: true,
                   tabCompletion: "on",
                   contextmenu: true,
@@ -160,7 +161,7 @@ const ViewModel = (): JSX.Element => {
             </Box>
           </Box>
           <Box
-            w="5xl"
+            w="full"
             mx="auto"
             bgColor="gray.100"
             px={8}

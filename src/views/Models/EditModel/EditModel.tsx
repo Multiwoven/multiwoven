@@ -8,6 +8,7 @@ import TopBar from "@/components/TopBar";
 import { useRef } from "react";
 import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
+import Loader from "@/components/Loader";
 
 const EditModel = (): JSX.Element => {
   const params = useParams();
@@ -42,7 +43,7 @@ const EditModel = (): JSX.Element => {
   };
 
   if (isLoading) {
-    return <>Loading....</>;
+    return <Loader />;
   }
 
   if (isError) {
@@ -58,6 +59,7 @@ const EditModel = (): JSX.Element => {
           hasPrefilledValues={true}
           prefillValues={prefillValues}
           isUpdateButtonVisible={true}
+          isAlignToContentContainer={true}
         />
       </ContentContainer>
     </Box>

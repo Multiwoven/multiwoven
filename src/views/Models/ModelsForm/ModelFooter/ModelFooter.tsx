@@ -1,7 +1,6 @@
 import { useUiConfig } from "@/utils/hooks";
 import { Box, Button, HStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 type ButtonConfig = {
   name: string;
@@ -25,7 +24,6 @@ type ModelFooterProps = {
 const ModelFooter = ({
   buttons,
   isAlignToContentContainer,
-  isBackRequired,
 }: ModelFooterProps): JSX.Element => {
   const [leftOffset, setLeftOffet] = useState<number>(0);
   const { maxContentWidth } = useUiConfig();
@@ -69,6 +67,7 @@ const ModelFooter = ({
               type={button.type || "button"}
               onClick={button.onClick}
               size="lg"
+              w="fit"
               isDisabled={button.isDisabled}
               isLoading={button.isLoading}
               color={button.color}
