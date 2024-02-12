@@ -45,6 +45,7 @@ const SourceFormFooter = ({
       left={leftOffset}
       right="0"
       borderWidth="thin"
+      borderColor="gray.400"
       bottom="0"
       backgroundColor="#fff"
       padding="10px 20px"
@@ -77,7 +78,12 @@ const SourceFormFooter = ({
         <ButtonGroup>
           {extra}
           {isBackRequired ? (
-            <Button onClick={() => navigate(-1)} size="lg" marginRight="10px" variant="ghost">
+            <Button
+              onClick={() => navigate(-1)}
+              size="lg"
+              marginRight="10px"
+              variant="ghost"
+            >
               Back
             </Button>
           ) : null}

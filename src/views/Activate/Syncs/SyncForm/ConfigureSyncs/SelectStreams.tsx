@@ -31,7 +31,7 @@ const SelectStreams = ({
       </Text>
       <Text fontWeight="600">Stream Name</Text>
       <Text fontSize="sm" marginBottom="10px">
-        Select the API from the destination that you wish to map.
+        Select the API from the Destination that you wish to map.
       </Text>
       <Select
         placeholder="Select option"

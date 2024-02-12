@@ -85,7 +85,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
           <ModalHeader>
             <Text>Edit Details</Text>
             <Text fontSize="md" color="gray.700" fontWeight="light">
-              Edit the settings for this model
+              Edit the settings for this Model
             </Text>
           </ModalHeader>
           <ModalBody>

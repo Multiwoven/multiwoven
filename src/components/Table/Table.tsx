@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Image,
   Table,
   Tbody,
   Td,
@@ -11,6 +10,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { TableType } from "./types";
+import EntityItem from "../EntityItem";
 
 const GenerateTable = ({
   title,
@@ -21,6 +21,7 @@ const GenerateTable = ({
   borderRadius,
   maxHeight,
   onRowClick,
+  minWidth,
 }: TableType): JSX.Element => {
   const theadProps = headerColorVisible
     ? { bgColor: headerColor || "gray.200" }
@@ -31,6 +32,7 @@ const GenerateTable = ({
       borderColor="gray.400"
       borderRadius={borderRadius || "lg"}
       maxHeight={maxHeight}
+      minWidth={minWidth}
       overflowX="scroll"
     >
       {title ? title : <></>}
@@ -48,7 +50,7 @@ const GenerateTable = ({
           {data.data.map((row, rowIndex) => (
             <Tr
               key={rowIndex}
-              _hover={{ backgroundColor: "gray.300", cursor: "pointer" }}
+              _hover={{ backgroundColor: "gray.200", cursor: "pointer" }}
               onClick={() => onRowClick?.(row)}
             >
               {data.columns.map((column, columnIndex) => (
@@ -59,20 +61,13 @@ const GenerateTable = ({
                       alignItems="center"
                       alignContent="center"
                     >
-                      <Image
-                        src={row.icon}
-                        h={10}
-                        p={1}
-                        border="1px"
-                        borderRadius="lg"
-                        borderColor="gray.400"
+                      <EntityItem
+                        name={row[column.key as keyof typeof row] || ""}
+                        icon={row.icon || ""}
                       />
-                      <Text fontSize="md" mx={2}>
-                        {row[column.key as keyof typeof row]}
-                      </Text>
                     </Flex>
                   ) : (
-                    row[column.key as keyof typeof row]
+                    <Text size="xs">{row[column.key as keyof typeof row]}</Text>
                   )}
                 </Td>
               ))}

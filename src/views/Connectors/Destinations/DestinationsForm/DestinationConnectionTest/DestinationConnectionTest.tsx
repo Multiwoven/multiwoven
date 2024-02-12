@@ -153,7 +153,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
               <AlertDescription>
                 {isAnyFailed
                   ? connectionResponse?.connection_status.message
-                  : `All tests passed. Continue to finish setting up your ${selectedDestination} source`}
+                  : `All tests passed. Continue to finish setting up your ${selectedDestination} Source`}
               </AlertDescription>
             </Box>
           </Alert>

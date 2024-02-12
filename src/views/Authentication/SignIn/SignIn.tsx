@@ -8,27 +8,32 @@ import {
   FieldInputProps,
 } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
-  Stack,
-  HStack,
-  FormLabel,
   Button,
   FormControl,
   Input,
   Heading,
   Text,
-  Link,
   Container,
-  Checkbox,
+  Stack,
+  FormLabel,
+  useToast,
+  Flex,
+  HStack,
 } from "@chakra-ui/react";
 import MultiwovenIcon from "@/assets/images/icon.png";
-import { login } from "@/services/common";
+import {
+  SignInErrorResponse,
+  SignInPayload,
+  signIn,
+} from "@/services/authentication";
 import Cookies from "js-cookie";
+import titleCase from "@/utils/TitleCase";
 import AuthFooter from "../AuthFooter";
 
-const LoginSchema = Yup.object().shape({
+const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
@@ -37,7 +42,11 @@ const LoginSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
-interface LoginFormProps {
+interface SignInFormProps {
+  label: string;
+  name: string;
+  type: string;
+  placeholder?: string;
   getFieldProps: (
     nameOrOptions:
       | string
@@ -50,126 +59,154 @@ interface LoginFormProps {
   ) => FieldInputProps<any>;
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
-  submitting: boolean;
 }
 
-const LoginForm = ({
+const FormField = ({
+  label,
+  name,
+  type,
   getFieldProps,
   touched,
   errors,
-  submitting,
-}: LoginFormProps) => (
-  <Form>
-    <FormControl isInvalid={!!(touched.email && errors.email)}>
-      <FormLabel htmlFor="email">Email</FormLabel>
-      <Input
-        type="email"
-        placeholder="Email"
-        variant="outline"
-        {...getFieldProps("email")}
-      />
-      <ErrorMessage name="email" />
-    </FormControl>
-
-    <FormControl mt={4} isInvalid={!!(touched.password && errors.password)}>
-      <FormLabel htmlFor="password">Password</FormLabel>
-      <Input
-        id="password"
-        type="password"
-        variant="outline"
-        placeholder="********"
-        {...getFieldProps("password")}
-      />
-      <ErrorMessage name="password" />
-    </FormControl>
-
-    <HStack mt={4} justify="space-between">
-      <Checkbox defaultChecked size="sm">
-        Remember me
-      </Checkbox>
-      <Button variant="text" size="sm">
-        Forgot password?
-      </Button>
-    </HStack>
-
-    <Button
-      mt={4}
-      minW={"100%"}
-      type="submit"
-      isLoading={submitting}
-      loadingText="Logging In"
-    >
-      Sign in
-    </Button>
-  </Form>
+  placeholder,
+}: SignInFormProps) => (
+  <FormControl isInvalid={!!(touched[name] && errors[name])}>
+    <FormLabel htmlFor={name}>{label}</FormLabel>
+    <Input
+      variant="outline"
+      placeholder={placeholder}
+      type={type}
+      {...getFieldProps(name)}
+    />
+    <ErrorMessage name={name} />
+  </FormControl>
 );
 
 const SignIn = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleSubmit = async (values: any): Promise<void> => {
+  const handleSubmit = async (values: SignInPayload) => {
     setSubmitting(true);
-    const result = await login(values);
-    if (result.success) {
-      const token = result?.data?.data?.attributes?.token;
-      Cookies?.set("authToken", token);
+    const result = await signIn(values);
+
+    if (result.data?.attributes) {
+      const token = result.data.attributes.token;
+      Cookies.set("authToken", token, {
+        secure: true,
+        sameSite: "Lax",
+      });
+      result.data.attributes.token;
       setSubmitting(false);
+      toast({
+        title: "Signed In",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-right",
+      });
       navigate("/");
     } else {
       setSubmitting(false);
+      result.data?.errors?.map((error: SignInErrorResponse) => {
+        toast({
+          title: titleCase(error.detail),
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+          colorScheme: "red",
+        });
+      });
     }
   };
 
   return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      onSubmit={(values) => handleSubmit(values)}
-      validationSchema={LoginSchema}
-    >
-      {({ getFieldProps, touched, errors }) => (
-        <Container
-          maxW="lg"
-          py={{ base: "12", md: "24" }}
-          px={{ base: "0", sm: "8" }}
+    <>
+      <Flex
+        justify="center"
+        w="100%"
+        minHeight="90vh"
+        alignItems="center"
+        overflowY="auto"
+      >
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onSubmit={(values) => handleSubmit(values)}
+          validationSchema={SignInSchema}
         >
-          <Stack spacing="8">
-            <Stack spacing="6" alignItems={"center"}>
-              <img src={MultiwovenIcon} width={55} />
-              <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-                <Heading size={{ base: "xs", md: "sm" }}>
-                  Log in to your account
-                </Heading>
-                <Text color="fg.muted">
-                  {`Don't have an account?`}{" "}
-                  <Link href="/sign-up" color="brand.500">
-                    Sign up
-                  </Link>
-                </Text>
-              </Stack>
-            </Stack>
-            <Box
-              py={{ base: "0", sm: "8" }}
-              px={{ base: "4", sm: "10" }}
-              bgColor="gray.100"
-              border="2px"
-              borderRadius="xl"
-              borderColor={"gray.400"}
-            >
-              <Stack spacing="6">
-                <LoginForm
-                  getFieldProps={getFieldProps}
-                  touched={touched}
-                  errors={errors}
-                  submitting={submitting}
-                />
-              </Stack>
-            </Box>
-          </Stack>
-          <AuthFooter />
-        </Container>
-      )}
-    </Formik>
+          {({ getFieldProps, touched, errors }) => (
+            <Form>
+              <Container width={{ base: "400px", sm: "500px" }} py="6">
+                <Stack spacing="8">
+                  <Stack spacing="6" alignItems={"center"}>
+                    <img src={MultiwovenIcon} width={55} />
+                    <Stack spacing="3" textAlign="center">
+                      <Heading size="sm">Sign in to your account</Heading>
+                      <HStack spacing={1} justify="center">
+                        <Text color="black.500" size="sm">
+                          Don't have an account?{" "}
+                        </Text>
+                        <Link to="/sign-up">
+                          <Text color="brand.500" size="sm">
+                            Sign Up
+                          </Text>
+                        </Link>
+                      </HStack>
+                    </Stack>
+                  </Stack>
+                  <Box
+                    padding="20px"
+                    borderRadius="xl"
+                    border="2px"
+                    borderColor="gray.400"
+                  >
+                    <Stack spacing="6">
+                      <Stack spacing="5">
+                        <FormField
+                          label="Email"
+                          placeholder="Enter email"
+                          name="email"
+                          type="text"
+                          getFieldProps={getFieldProps}
+                          touched={touched}
+                          errors={errors}
+                        />
+                        <FormField
+                          label="Password"
+                          placeholder="Enter password"
+                          name="password"
+                          type="password"
+                          getFieldProps={getFieldProps}
+                          touched={touched}
+                          errors={errors}
+                        />
+                      </Stack>
+                      <Stack spacing="6">
+                        <Button
+                          type="submit"
+                          isLoading={submitting}
+                          loadingText="Signing In"
+                          variant="solid"
+                          width="full"
+                        >
+                          Sign In
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </Box>
+                </Stack>
+              </Container>
+            </Form>
+          )}
+        </Formik>
+      </Flex>
+      <AuthFooter />
+    </>
   );
 };
 

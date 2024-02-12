@@ -1,7 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
 import TopBar from "@/components/TopBar";
 import { fetchSyncs } from "@/services/syncs";
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Box, Tag, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -12,6 +12,7 @@ import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
 import moment from "moment";
 import Loader from "@/components/Loader";
+import NoActivations from "../../NoSyncs/NoSyncs";
 
 type TableItem = {
   field: SyncColumnFields;
@@ -37,13 +38,22 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
       );
 
     case "lastUpdated":
-      return <Text>{moment().format("DD/MM/YYYY")}</Text>;
+      return <Text size="xs">{moment().format("DD/MM/YYYY")}</Text>;
 
     case "status":
       return (
-        <Badge colorScheme="green" variant="outline">
-          Active
-        </Badge>
+        <Tag
+          colorScheme="teal"
+          variant="outline"
+          size="xs"
+          bgColor="success.100"
+          p={1}
+          fontWeight={600}
+        >
+          <Text size="xs" fontWeight="semibold">
+            Active
+          </Text>
+        </Tag>
       );
   }
 };
@@ -81,12 +91,17 @@ const SyncsList = (): JSX.Element => {
     navigate(`${row.id}`);
   };
 
+  if (isLoading) return <Loader />;
+
+  if (!isLoading && tableData.data?.length === 0)
+    return <NoActivations activationType="sync" />;
+
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
         <TopBar
           name="Syncs"
-          ctaName="Add sync"
+          ctaName="Add Sync"
           ctaIcon={<FiPlus color="gray.100" />}
           onCtaClicked={() => navigate("new")}
           ctaBgColor="orange.500"

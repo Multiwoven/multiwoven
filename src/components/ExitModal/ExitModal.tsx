@@ -44,17 +44,12 @@ const ExitModal = (): JSX.Element => {
           <ModalFooter>
             <Box w="full">
               <Flex flexDir="row" justifyContent="center">
-                <Button
-                  variant="ghost"
-                  mr={3}
-                  onClick={onClose}
-                  size="md"
-                >
+                <Button variant="ghost" mr={3} onClick={onClose} size="md">
                   Cancel
                 </Button>
                 <Button
                   variant="solid"
-                  color='white'
+                  color="white"
                   rounded="lg"
                   pr={10}
                   pl={10}

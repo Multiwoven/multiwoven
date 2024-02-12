@@ -1,45 +1,90 @@
-import GenerateTable from "@/components/Table/Table";
-import { getAllModels } from "@/services/models";
-import { addIconDataToArray, ConvertToTableData } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import NoModels from "../NoModels";
+import { APIData, ModelAttributes } from "@/services/models";
 import Loader from "@/components/Loader";
+import { ModelColumnFields } from "../types";
+import EntityItem from "@/components/EntityItem";
+import { Text } from "@chakra-ui/react";
+import moment from "moment";
+import { useMemo } from "react";
+import { MODEL_TABLE_COLUMNS } from "../constants";
+import Table from "@/components/Table";
 
-type ModelTableProps = {
-  handleOnRowClick: (args: unknown) => void;
+type TableItem = {
+  field: ModelColumnFields;
+  data: ModelAttributes;
 };
 
-const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
-  const { data } = useQuery({
-    queryKey: ["models"],
-    queryFn: () => getAllModels(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+const TableItem = ({
+  field,
+  data,
+}: TableItem): JSX.Element | null | undefined => {
+  switch (field) {
+    case "name":
+      return <EntityItem icon={data.connector.icon} name={data.name} />;
+    case "query_type":
+      switch (data.query_type) {
+        case "raw_sql":
+          return (
+            <Text size="xs" fontWeight={600}>
+              SQL Query
+            </Text>
+          );
+      }
+      return <></>;
 
-  const models = data?.data?.data;
+    case "last_updated":
+      return <Text size="xs">{moment().format("DD/MM/YYYY")}</Text>;
+  }
+};
 
-  if (!models) {
-    return (
-      <Loader />
-    );
+type TableRow = {
+  id: string;
+  model: unknown;
+};
+
+type ModelTableProps = {
+  handleOnRowClick: (args: TableRow) => void;
+  modelData: APIData;
+  isLoading: boolean;
+};
+
+const ModelTable = ({
+  handleOnRowClick,
+  modelData,
+  isLoading,
+}: ModelTableProps): JSX.Element => {
+  const models = modelData?.data;
+  const tableData = useMemo(() => {
+    if (models && models?.length > 0) {
+      const rows = models.map(({ attributes, id }) => {
+        return MODEL_TABLE_COLUMNS.reduce(
+          (acc, { key }) => ({
+            [key]: <TableItem field={key} data={attributes} />,
+            id,
+            ...acc,
+          }),
+          {}
+        );
+      });
+
+      return {
+        columns: MODEL_TABLE_COLUMNS,
+        data: rows,
+      };
+    }
+  }, [modelData]);
+
+  if (!models || isLoading) {
+    return <Loader />;
   }
 
-  if (models.length === 0) return <NoModels />; 
-
-  const values = ConvertToTableData(addIconDataToArray(models), [
-    { name: "Name", key: "name", showIcon: true },
-    { name: "Query Type", key: "query_type" },
-    { name: "Updated At", key: "updated_at" },
-  ]);
-
   return (
-    <GenerateTable
-      data={values}
-      headerColorVisible={true}
-      onRowClick={handleOnRowClick}
-      maxHeight="2xl"
-    />
+    <>
+      {isLoading || !tableData ? (
+        <Loader />
+      ) : (
+        <Table data={tableData} onRowClick={handleOnRowClick} />
+      )}
+    </>
   );
 };
 

@@ -18,25 +18,25 @@ const SourcesForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "datasource",
-      name: "Select a data source",
+      name: "Select a Data Source",
       component: <SelectDataSourcesForm />,
       isRequireContinueCta: false,
     },
     {
       formKey: "connectToSources",
-      name: "Connect to source",
+      name: "Connect to your Source",
       component: <SourceConfigForm />,
       isRequireContinueCta: false,
     },
     {
       formKey: "testSource",
-      name: "Test your source",
+      name: "Test your Source",
       component: <SourceConnectionTest />,
       isRequireContinueCta: false,
     },
     {
       formKey: "finalizeSource",
-      name: "Finalize your source",
+      name: "Finalize your Source",
       component: <SourceFinalizeForm />,
       isRequireContinueCta: false,
     },

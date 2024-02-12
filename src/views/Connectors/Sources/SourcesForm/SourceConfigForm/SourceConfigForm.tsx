@@ -3,13 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorDefinition } from "@/services/connectors";
 import { useContext } from "react";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
 import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 import { useUiConfig } from "@/utils/hooks";
+
+import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
+
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -30,18 +33,7 @@ const SourceConfigForm = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading)
-    return (
-      <Box
-        height="30vh"
-        width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner size="lg" />
-      </Box>
-    );
+  if (isLoading) return <Loader />;
 
   const handleFormSubmit = async (formData: FormData) => {
     const processedFormData = processFormData(formData)
