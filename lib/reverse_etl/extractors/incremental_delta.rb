@@ -57,7 +57,7 @@ module ReverseEtl
 
       def find_or_initialize_sync_record(sync_run, primary_key)
         SyncRecord.find_by(sync_id: sync_run.sync_id, primary_key:) ||
-          sync_run.sync_records.new(sync_id: sync_run.sync_id, primary_key:, created_at: DateTime.now)
+          sync_run.sync_records.new(sync_id: sync_run.sync_id, primary_key:, created_at: DateTime.current)
       end
 
       def new_record?(sync_record, fingerprint)
