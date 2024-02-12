@@ -22,10 +22,10 @@ describe("Login Component", () => {
     const email = "test@example.com";
     const password = "password123";
 
-    fireEvent.change(getByPlaceholderText("Email"), {
+    fireEvent.change(getByPlaceholderText("Enter email"), {
       target: { value: email },
     });
-    fireEvent.change(getByPlaceholderText("Password"), {
+    fireEvent.change(getByPlaceholderText("Enter password"), {
       target: { value: password },
     });
 

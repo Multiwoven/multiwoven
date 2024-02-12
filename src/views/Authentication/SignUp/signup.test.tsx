@@ -28,19 +28,19 @@ describe("SignUp Component", () => {
     const confirmPassword = "password123";
 
     // form fields on change
-    fireEvent.change(getByPlaceholderText("Company Name"), {
+    fireEvent.change(getByPlaceholderText("Enter company name"), {
       target: { value: companyName },
     });
-    fireEvent.change(getByPlaceholderText("Name"), {
+    fireEvent.change(getByPlaceholderText("Enter name"), {
       target: { value: name },
     });
-    fireEvent.change(getByPlaceholderText("Email"), {
+    fireEvent.change(getByPlaceholderText("Enter email"), {
       target: { value: email },
     });
-    fireEvent.change(getByPlaceholderText("Password"), {
+    fireEvent.change(getByPlaceholderText("Choose password"), {
       target: { value: password },
     });
-    fireEvent.change(getByPlaceholderText("Confirm Password"), {
+    fireEvent.change(getByPlaceholderText("Confirm password"), {
       target: { value: confirmPassword },
     });
 
