@@ -1,23 +1,98 @@
+import EntityItem from "@/components/EntityItem";
+import Loader from "@/components/Loader";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import GenerateTable from "@/components/Table/Table";
-import { getUserConnectors } from "@/services/common";
-import { ConvertToTableData } from "@/utils";
-import { ColumnMapType } from "@/utils/types";
-import { Box, Spinner } from "@chakra-ui/react";
+import Table from "@/components/Table";
+import { getUserConnectors } from "@/services/connectors";
+import NoConnectors from "@/views/Connectors/NoConnectors";
+import { CONNECTOR_LIST_COLUMNS } from "@/views/Connectors/constant";
+import {
+  ConnectorAttributes,
+  ConnectorTableColumnFields,
+} from "@/views/Connectors/types";
+import { Box, Tag, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
+import moment from "moment";
+import { useContext, useMemo } from "react";
+
+type TableItem = {
+  field: ConnectorTableColumnFields;
+  attributes: ConnectorAttributes;
+};
+
+const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
+  switch (field) {
+    case "icon":
+      return (
+        <EntityItem icon={attributes.icon} name={attributes.connector_name} />
+      );
+
+    case "updated_at":
+      return (
+        <Text size="xs">
+          {moment(attributes?.updated_at).format("DD/MM/YY")}
+        </Text>
+      );
+
+    case "status":
+      return (
+        <Tag
+          colorScheme="teal"
+          variant="outline"
+          size="xs"
+          bgColor="success.100"
+          p={1}
+          fontWeight={600}
+        >
+          <Text size="xs" fontWeight="semibold">
+            Active
+          </Text>
+        </Tag>
+      );
+
+    default:
+      return (
+        <Text size="xs" fontWeight={600}>
+          {attributes?.[field]}
+        </Text>
+      );
+  }
+};
 
 const SelectModelSourceForm = (): JSX.Element | null => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["models", "data-source"],
-    queryFn: () => getUserConnectors("source"),
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    queryFn: () => getUserConnectors("Source"),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const connectors = data?.data;
+
+  const tableData = useMemo(() => {
+    if (connectors && connectors?.length > 0) {
+      const rows = connectors.map(({ attributes, id }) => {
+        return CONNECTOR_LIST_COLUMNS.reduce(
+          (acc, { key }) => ({
+            [key]: <TableItem field={key} attributes={attributes} />,
+            id,
+            ...acc,
+          }),
+          {}
+        );
+      });
+
+      return {
+        columns: CONNECTOR_LIST_COLUMNS,
+        data: rows,
+      };
+    }
+  }, [data]);
+
+  if (!connectors) return null;
+
+  if (!isLoading && !tableData) return <NoConnectors connectorType="source" />;
 
   const handleOnRowClick = (row: unknown) => {
     if (stepInfo?.formKey) {
@@ -25,36 +100,15 @@ const SelectModelSourceForm = (): JSX.Element | null => {
     }
   };
 
-  if (!connectors) {
-    return (
-      <Box mx="auto">
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Box>
-    );
-  }
-
-  const columns: ColumnMapType[] = [
-    { name: "Name", key: "name" },
-    { name: "Type", key: "connector_name", showIcon: true },
-    { name: "Created At", key: "created_at" },
-  ];
-
-  const values = ConvertToTableData(connectors?.data, columns);
-
   return (
     <>
       <Box w="6xl" mx="auto">
-        <GenerateTable
-          data={values}
-          headerColorVisible={true}
-          onRowClick={handleOnRowClick}
-        />
+        {isLoading || !tableData ? (
+          <Loader />
+        ) : (
+          <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
+          // <Table data={tableData} onRowClick={(row) => console.log(row)} />
+        )}
       </Box>
     </>
   );
