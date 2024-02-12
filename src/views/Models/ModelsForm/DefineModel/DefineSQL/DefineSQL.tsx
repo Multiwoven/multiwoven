@@ -143,7 +143,7 @@ const DefineSQL = ({
 
   return (
     <>
-      <Box w="6xl" mx="auto">
+      <Box w="100%" mx="auto">
         <VStack>
           <Box
             border="1px"
@@ -184,6 +184,20 @@ const DefineSQL = ({
                 onMount={handleEditorDidMount}
                 onChange={() => canMoveForward(false)}
                 theme="light"
+                options={{
+                  minimap: {
+                    enabled: false,
+                  },
+                  formatOnType: true,
+                  formatOnPaste: true,
+                  autoIndent: "full",
+                  wordBasedSuggestions: true,
+                  quickSuggestions: true,
+                  tabCompletion: "on",
+                  contextmenu: true,
+                  smoothScrolling: true,
+                  scrollBeyondLastLine: false,
+                }}
               />
             </Box>
           </Box>

@@ -23,6 +23,7 @@ import DeleteModelModal from "./DeleteModelModal";
 import EditModelModal from "./EditModelModal";
 import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
+import Loader from "@/components/Loader";
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
@@ -45,7 +46,7 @@ const ViewModel = (): JSX.Element => {
   });
 
   if (isLoading) {
-    return <>Loading....</>;
+    return <Loader />;
   }
 
   if (isError) {
@@ -142,7 +143,19 @@ const ViewModel = (): JSX.Element => {
                 value={prefillValues.query}
                 saveViewState={true}
                 theme="light"
-                options={{ readOnly: true }}
+                options={{
+                  minimap: {
+                    enabled: false,
+                  },
+                  formatOnType: true,
+                  formatOnPaste: true,
+                  autoIndent: "full",
+                  wordBasedSuggestions: true,
+                  quickSuggestions: true,
+                  tabCompletion: "on",
+                  contextmenu: true,
+                  readOnly: true,
+                }}
               />
             </Box>
           </Box>
