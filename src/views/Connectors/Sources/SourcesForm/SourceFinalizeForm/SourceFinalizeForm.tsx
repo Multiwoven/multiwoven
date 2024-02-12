@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { createNewConnector } from "@/services/connectors";
 import { useQueryClient } from "@tanstack/react-query";
 import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
-import { useUiConfig } from "@/utils/hooks";
 import ContentContainer from "@/components/ContentContainer";
 
 const finalDataSourceFormKey = "testSource";

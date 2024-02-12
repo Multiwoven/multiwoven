@@ -36,13 +36,13 @@ const SelectDataSourcesForm = (): JSX.Element => {
         gap="20px"
         marginBottom="20px"
         paddingY="10px"
-        maxWidth={maxContentWidth}
         width="100%"
       >
         {datasources.map((datasource) => (
           <Box
             key={datasource.name}
-            padding="20px"
+            paddingX="12px"
+            paddingY="8px"
             width="100%"
             borderRadius="8px"
             borderWidth="thin"
