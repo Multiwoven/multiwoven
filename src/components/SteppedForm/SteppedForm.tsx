@@ -2,25 +2,25 @@ import { useEffect } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { createContext, useReducer } from "react";
 import {
-	FormAction,
-	FormContextType,
-	FormState,
-	SteppedForm as SteppedFormType,
+  FormAction,
+  FormContextType,
+  FormState,
+  SteppedForm as SteppedFormType,
 } from "./types";
 import { updateFormDataForStep } from "./utils";
 import {
-	useNavigate,
-	useLocation,
-	createSearchParams,
-	useSearchParams,
+  useNavigate,
+  useLocation,
+  createSearchParams,
+  useSearchParams,
 } from "react-router-dom";
 import ExitModal from "../ExitModal";
 import { useUiConfig } from "@/utils/hooks";
 
 const initialState: FormState = {
-	currentStep: 0,
-	currentForm: null,
-	forms: [],
+  currentStep: 0,
+  currentForm: null,
+  forms: [],
 };
 
 const reducer = (state: FormState, action: FormAction) => {
@@ -65,10 +65,10 @@ const reducer = (state: FormState, action: FormAction) => {
 };
 
 export const SteppedFormContext = createContext<FormContextType>({
-	state: initialState,
-	dispatch: () => {},
-	stepInfo: null,
-	handleMoveForward: () => {},
+  state: initialState,
+  dispatch: () => {},
+  stepInfo: null,
+  handleMoveForward: () => {},
 });
 
 const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
@@ -153,8 +153,8 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
           padding="20px"
           display="flex"
           justifyContent="center"
-          borderBottom='1px'
-          borderColor='gray.400'
+          borderBottom="1px"
+          borderColor="gray.400"
         >
           <Box
             display="flex"
