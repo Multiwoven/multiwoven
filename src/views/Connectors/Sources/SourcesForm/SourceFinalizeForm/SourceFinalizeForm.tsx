@@ -19,12 +19,12 @@ import { createNewConnector } from "@/services/connectors";
 import { useQueryClient } from "@tanstack/react-query";
 import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
 import { useUiConfig } from "@/utils/hooks";
+import ContentContainer from "@/components/ContentContainer";
 
 const finalDataSourceFormKey = "testSource";
 
 const SourceFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { maxContentWidth } = useUiConfig();
   const { state } = useContext(SteppedFormContext);
   const { forms } = state;
   const toast = useToast();
@@ -86,7 +86,8 @@ const SourceFinalizeForm = (): JSX.Element | null => {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Box maxWidth={maxContentWidth} width="100%">
+      <ContentContainer>
+      <Box padding="24px" backgroundColor="gray.200" borderRadius="8px">
         <form onSubmit={formik.handleSubmit}>
           <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
             <Heading size="md" fontWeight="600" marginBottom="24px">
@@ -119,6 +120,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
                 resize="none"
                 onChange={formik.handleChange}
                 value={formik.values.description}
+                borderColor="gray.400"
               />
             </Box>
           </Box>
@@ -129,6 +131,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
           />
         </form>
       </Box>
+      </ContentContainer>
     </Box>
   );
 };

@@ -31,7 +31,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "updated_at":
       return (
-        <Text size="xs">
+        <Text fontSize="14px"  fontWeight={500}>
           {moment(attributes?.updated_at).format("DD/MM/YY")}
         </Text>
       );
@@ -46,7 +46,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
           p={1}
           fontWeight={600}
         >
-          <Text size="xs" fontWeight="semibold">
+          <Text fontSize="14px" fontWeight="semibold">
             Active
           </Text>
         </Tag>
@@ -54,7 +54,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     default:
       return (
-        <Text size="xs" fontWeight={600}>
+        <Text fontSize="14px" fontWeight={600}>
           {attributes?.[field]}
         </Text>
       );
@@ -92,7 +92,7 @@ const SourcesList = (): JSX.Element | null => {
     }
   }, [data]);
 
-  if (!connectors) return null;
+  if (isLoading) return   <Loader />;
 
   if (!isLoading && !tableData) return <NoConnectors connectorType="source" />;
 
@@ -107,14 +107,12 @@ const SourcesList = (): JSX.Element | null => {
           ctaButtonVariant="solid"
           isCtaVisible
         />
-        {isLoading || !tableData ? (
-          <Loader />
-        ) : (
-          <Table
-            data={tableData}
-            onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
-          />
-        )}
+    {
+      tableData ?    <Table
+      data={tableData}
+      onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
+    /> : null 
+    }
       </ContentContainer>
     </Box>
   );
