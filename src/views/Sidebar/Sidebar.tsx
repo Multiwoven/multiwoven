@@ -65,7 +65,7 @@ const menus: MenuArray = [
 const renderMenuSection = (section: MenuSection, index: number) => (
   <Stack key={index}>
     {section.heading && (
-      <Box paddingX="17px" marginTop="20px" marginBottom="5px">
+      <Box paddingX="17px">
         <Text textStyle="sm" size="xs" color="gray.600" fontWeight="extrabold">
           {section.heading}
         </Text>
