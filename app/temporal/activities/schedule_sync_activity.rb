@@ -11,7 +11,10 @@ module Activities
         Rails.logger.error(e)
       end
 
-      workflow_id = SecureRandom.uuid
+      source_connector_name = sync.source.connector_name.downcase
+      destination_connector_name = sync.destination.connector_name.downcase
+
+      workflow_id = "#{SecureRandom.uuid}-#{source_connector_name}-#{destination_connector_name}"
 
       Temporal.schedule_workflow(
         Workflows::SyncWorkflow, sync.schedule_cron_expression,

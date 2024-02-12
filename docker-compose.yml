@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   # Temporal services
   postgresql:
@@ -88,6 +88,8 @@ services:
     volumes:
       - .:/rails
     command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
+    stdin_open: true
+    tty: true
 # Volumes
 volumes:
   mw-pg-data:
