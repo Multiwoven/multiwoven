@@ -9,7 +9,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Image,
   Select,
   Spacer,
   Text,
@@ -23,6 +22,7 @@ import { UpdateModelPayload } from "./types";
 import DeleteModelModal from "./DeleteModelModal";
 import EditModelModal from "./EditModelModal";
 import ContentContainer from "@/components/ContentContainer";
+import EntityItem from "@/components/EntityItem";
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
@@ -56,7 +56,12 @@ const ViewModel = (): JSX.Element => {
 
   const prefillValues: PrefillValue = {
     connector_id: data?.data?.attributes.connector.id || "",
-    connector_icon: data?.data?.attributes.connector.icon || "",
+    connector_icon: (
+      <EntityItem
+        name={data?.data?.attributes.connector.name || ""}
+        icon={data?.data?.attributes.connector.icon || ""}
+      />
+    ),
     connector_name: data?.data?.attributes.connector.name || "",
     model_name: data?.data?.attributes.name || "",
     model_description: data?.data?.attributes.description || "",
@@ -112,15 +117,10 @@ const ViewModel = (): JSX.Element => {
               border="1px"
               borderColor="gray.400"
             >
-              <Image
-                src={data.data?.attributes.connector.icon || ""}
-                p={2}
-                mx={4}
-                h={12}
-                bgColor="gray.200"
-                rounded="lg"
+              <EntityItem
+                name={data.data?.attributes.connector.connector_name || ""}
+                icon={data.data?.attributes.connector.icon || ""}
               />
-              <Text>{data.data?.attributes.connector.connector_name}</Text>
               <Spacer />
               <Button variant="shell" onClick={() => navigate("edit")}>
                 Edit

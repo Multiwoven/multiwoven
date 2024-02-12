@@ -39,16 +39,20 @@ const DefineSQL = ({
   const [moveForward, canMoveForward] = useState(false);
 
   let connector_id: string = "";
-  let connector_icon: string = "";
+  let connector_icon: JSX.Element = <></>;
   let connector_name: string = "";
   let user_query: string = "";
 
   if (!hasPrefilledValues) {
     const extracted = extractData(state.forms);
     const connector_data = extracted.find((data) => data?.id);
+    console.log(connector_data?.icon);
+    console.log(connector_data?.name);
     connector_id = connector_data?.id || "";
-    connector_icon = connector_data?.icon || "";
+    connector_icon = connector_data?.icon || <></>;
     connector_name = connector_data?.name || "";
+
+    console.log(connector_icon, connector_name);
   } else {
     if (!prefillValues) return <></>;
 
@@ -151,15 +155,7 @@ const DefineSQL = ({
           >
             <Flex bgColor="gray.300" p={2} roundedTop="xl">
               <Flex w="full" alignItems="center">
-                <Image
-                  src={connector_icon}
-                  p={2}
-                  mx={4}
-                  h={12}
-                  bgColor="gray.100"
-                  rounded="lg"
-                />
-                <Text>{connector_name}</Text>
+                {connector_icon}
               </Flex>
               <Spacer />
               <HStack spacing={3}>

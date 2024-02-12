@@ -11,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { TableType } from "./types";
+import EntityItem from "../EntityItem";
 
 const GenerateTable = ({
   title,
@@ -59,20 +60,13 @@ const GenerateTable = ({
                       alignItems="center"
                       alignContent="center"
                     >
-                      <Image
-                        src={row.icon}
-                        h={10}
-                        p={1}
-                        border="1px"
-                        borderRadius="lg"
-                        borderColor="gray.400"
+                      <EntityItem
+                        name={row[column.key as keyof typeof row] || ""}
+                        icon={row.icon || ""}
                       />
-                      <Text fontSize="md" mx={2}>
-                        {row[column.key as keyof typeof row]}
-                      </Text>
                     </Flex>
                   ) : (
-                    row[column.key as keyof typeof row]
+                    <Text size="sm">{row[column.key as keyof typeof row]}</Text>
                   )}
                 </Td>
               ))}
