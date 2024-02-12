@@ -38,7 +38,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
       );
 
     case "lastUpdated":
-      return <Text>{moment().format("DD/MM/YYYY")}</Text>;
+      return <Text size="sm">{moment().format("DD/MM/YYYY")}</Text>;
 
     case "status":
       return (
