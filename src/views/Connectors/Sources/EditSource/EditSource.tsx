@@ -9,13 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
-import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import SourceFormFooter from "../SourcesForm/SourceFormFooter";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
 import { useEffect, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 import { RJSFSchema } from "@rjsf/utils";
+import Loader from "@/components/Loader";
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
@@ -140,18 +141,7 @@ const EditSource = (): JSX.Element => {
     }
   };
 
-  if (isConnectorInfoLoading || isConnectorDefinitionLoading)
-    return (
-      <Box
-        height="30vh"
-        width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner size="lg" />
-      </Box>
-    );
+  if (isConnectorInfoLoading || isConnectorDefinitionLoading) return <Loader />;
 
   return (
     <Box width="100%" display="flex" justifyContent="center">
@@ -166,8 +156,8 @@ const EditSource = (): JSX.Element => {
           borderWidth="thin"
           borderRadius="8px"
           marginBottom="100px"
-          border='1px'
-          borderColor='gray.400'
+          border="1px"
+          borderColor="gray.400"
         >
           <Form
             schema={connectorSchema?.connection_specification as RJSFSchema}
