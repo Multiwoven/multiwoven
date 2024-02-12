@@ -2,7 +2,6 @@ import { getUserProfile, logout } from "@/services/user";
 import {
   Avatar,
   Box,
-  Button,
   HStack,
   Popover,
   PopoverArrow,
