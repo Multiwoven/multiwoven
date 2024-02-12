@@ -41,8 +41,8 @@ const Profile = () => {
     }
   };
 
-  const OptionsPopover = () => {
-    return (
+  return (
+    <>
       <Popover closeOnEsc>
         <PopoverTrigger>
           <Box>
@@ -122,12 +122,6 @@ const Profile = () => {
           </PopoverBody>
         </PopoverContent>
       </Popover>
-    );
-  };
-
-  return (
-    <>
-      <OptionsPopover />
     </>
   );
 };
