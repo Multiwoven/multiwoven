@@ -21,7 +21,7 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
       variant="tertiary"
       justifyContent="start"
       backgroundColor={isActive ? "gray.400" : "none"}
-      _hover={{ bg: "gray.400" }}
+      _hover={!disabled ? { bg: "gray.400" } : {}}
       marginBottom="10px"
       width="100%"
       size="sm"
