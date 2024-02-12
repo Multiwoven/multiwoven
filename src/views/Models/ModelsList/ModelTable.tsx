@@ -21,10 +21,18 @@ const TableItem = ({
     case "name":
       return <EntityItem icon={data.connector.icon} name={data.name} />;
     case "query_type":
-      return <Text>METHOD</Text>;
+      switch (data.query_type) {
+        case "raw_sql":
+          return (
+            <Text size="sm" fontWeight={600}>
+              SQL Query
+            </Text>
+          );
+      }
+      return <></>;
 
     case "last_updated":
-      return <Text>{moment().format("DD/MM/YYYY")}</Text>;
+      return <Text size="sm">{moment().format("DD/MM/YYYY")}</Text>;
   }
 };
 

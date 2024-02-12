@@ -133,10 +133,9 @@ const MapFields = ({
       ))}
       <Box>
         <Button
-          variant="secondary"
+          variant="shell"
           onClick={handleOnAppendField}
           isDisabled={fields.length === modelColumns.length || !stream}
-          backgroundColor="#fff"
         >
           Add mapping
         </Button>

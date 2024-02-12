@@ -32,6 +32,12 @@ type DestinationTableProps = {
 
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
+    case "name":
+      return (
+        <Text size="sm" fontWeight={600}>
+          {attributes.name}
+        </Text>
+      );
     case "icon":
       return (
         <EntityItem

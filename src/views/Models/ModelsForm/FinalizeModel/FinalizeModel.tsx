@@ -100,7 +100,7 @@ const FinalizeModel = (): JSX.Element => {
 
   return (
     <>
-      <Box w="5xl" mx="auto" bgColor="gray.100" px={6} py={4}>
+      <Box w="5xl" mx="auto" bgColor="gray.300" px={6} py={4}>
         <Text mb={6} fontWeight="bold">
           Finalize settings for this Model
         </Text>

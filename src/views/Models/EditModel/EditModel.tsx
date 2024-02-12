@@ -7,6 +7,7 @@ import { PrefillValue } from "../ModelsForm/DefineModel/DefineSQL/types";
 import TopBar from "@/components/TopBar";
 import { useRef } from "react";
 import ContentContainer from "@/components/ContentContainer";
+import EntityItem from "@/components/EntityItem";
 
 const EditModel = (): JSX.Element => {
   const params = useParams();
@@ -21,9 +22,16 @@ const EditModel = (): JSX.Element => {
     refetchOnWindowFocus: true,
   });
 
+  console.log(data);
+
   const prefillValues: PrefillValue = {
     connector_id: data?.data?.attributes.connector.id || "",
-    connector_icon: data?.data?.attributes.connector.icon || "",
+    connector_icon: (
+      <EntityItem
+        name={data?.data?.attributes.connector.name || ""}
+        icon={data?.data?.attributes.connector.icon || ""}
+      />
+    ),
     connector_name: data?.data?.attributes.connector.name || "",
     model_name: data?.data?.attributes.name || "",
     model_description: data?.data?.attributes.description || "",
