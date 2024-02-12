@@ -34,7 +34,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
     case "name":
       return (
-        <Text size="sm" fontWeight={600}>
+        <Text size="xs" fontWeight={600}>
           {attributes.name}
         </Text>
       );
@@ -48,7 +48,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "updated_at":
       return (
-        <Text size="sm">
+        <Text size="xs">
           {moment(attributes?.updated_at).format("DD/MM/YYYY")}
         </Text>
       );
@@ -70,7 +70,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     default:
-      return <Text size="sm">{attributes?.[field]}</Text>;
+      return <Text size="xs">{attributes?.[field]}</Text>;
   }
 };
 

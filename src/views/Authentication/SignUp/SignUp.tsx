@@ -47,6 +47,7 @@ interface SignUpFormProps {
   label: string;
   name: string;
   type: string;
+  placeholder?: string;
   getFieldProps: (
     nameOrOptions:
       | string
@@ -68,16 +69,20 @@ const FormField = ({
   getFieldProps,
   touched,
   errors,
+  placeholder,
 }: SignUpFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <FormLabel htmlFor={name}>{label}</FormLabel>
     <Input
       variant="outline"
-      placeholder={label}
+      placeholder={placeholder}
+      color="black.600"
       type={type}
       {...getFieldProps(name)}
     />
-    <ErrorMessage name={name} />
+    <Text size="xs" color="red.500">
+      <ErrorMessage name={name} />
+    </Text>
   </FormControl>
 );
 
@@ -157,9 +162,13 @@ const SignUp = (): JSX.Element => {
                     <Stack spacing="3" textAlign="center">
                       <Heading size="sm">Create an account</Heading>
                       <HStack spacing={1} justify="center">
-                        <Text color="black.500">Already have an account?</Text>
+                        <Text color="black.500" size="sm">
+                          Already have an account?
+                        </Text>
                         <Link to="/sign-in">
-                          <Text color="brand.500">Sign In</Text>
+                          <Text color="brand.500" size="sm">
+                            Sign In
+                          </Text>
                         </Link>
                       </HStack>
                     </Stack>
@@ -174,6 +183,7 @@ const SignUp = (): JSX.Element => {
                       <Stack spacing="5">
                         <FormField
                           label="Company Name"
+                          placeholder="Enter company name"
                           name="company_name"
                           type="text"
                           getFieldProps={getFieldProps}
@@ -182,6 +192,7 @@ const SignUp = (): JSX.Element => {
                         />
                         <FormField
                           label="Name"
+                          placeholder="Enter name"
                           name="name"
                           type="text"
                           getFieldProps={getFieldProps}
@@ -190,6 +201,7 @@ const SignUp = (): JSX.Element => {
                         />
                         <FormField
                           label="Email"
+                          placeholder="Enter email"
                           name="email"
                           type="text"
                           getFieldProps={getFieldProps}
@@ -198,6 +210,7 @@ const SignUp = (): JSX.Element => {
                         />
                         <FormField
                           label="Password"
+                          placeholder="Choose password"
                           name="password"
                           type="password"
                           getFieldProps={getFieldProps}
@@ -206,6 +219,7 @@ const SignUp = (): JSX.Element => {
                         />
                         <FormField
                           label="Confirm Password"
+                          placeholder="Confirm password"
                           name="password_confirmation"
                           type="password"
                           getFieldProps={getFieldProps}

@@ -46,6 +46,7 @@ interface SignInFormProps {
   label: string;
   name: string;
   type: string;
+  placeholder?: string;
   getFieldProps: (
     nameOrOptions:
       | string
@@ -67,12 +68,13 @@ const FormField = ({
   getFieldProps,
   touched,
   errors,
+  placeholder,
 }: SignInFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <FormLabel htmlFor={name}>{label}</FormLabel>
     <Input
       variant="outline"
-      placeholder={label}
+      placeholder={placeholder}
       type={type}
       {...getFieldProps(name)}
     />
@@ -146,9 +148,13 @@ const SignIn = (): JSX.Element => {
                     <Stack spacing="3" textAlign="center">
                       <Heading size="sm">Sign in to your account</Heading>
                       <HStack spacing={1} justify="center">
-                        <Text color="black.500">Don't have an account? </Text>
+                        <Text color="black.500" size="sm">
+                          Don't have an account?{" "}
+                        </Text>
                         <Link to="/sign-up">
-                          <Text color="brand.500">Sign Up</Text>
+                          <Text color="brand.500" size="sm">
+                            Sign Up
+                          </Text>
                         </Link>
                       </HStack>
                     </Stack>
@@ -163,6 +169,7 @@ const SignIn = (): JSX.Element => {
                       <Stack spacing="5">
                         <FormField
                           label="Email"
+                          placeholder="Enter email"
                           name="email"
                           type="text"
                           getFieldProps={getFieldProps}
@@ -171,6 +178,7 @@ const SignIn = (): JSX.Element => {
                         />
                         <FormField
                           label="Password"
+                          placeholder="Enter password"
                           name="password"
                           type="password"
                           getFieldProps={getFieldProps}
