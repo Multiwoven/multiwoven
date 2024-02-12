@@ -19,3 +19,14 @@ export const getDestinationCategories = (data: Connector[]): string[] => [
   ALL_DESTINATIONS_CATEGORY,
   ...new Set(data.map((item) => item.category)),
 ];
+
+
+export const processFormData = (data: FormData)  => { 
+  const escapedCharacters = [/\\n/g];
+  let processedString = JSON.stringify(data);
+  escapedCharacters.forEach(character => { 
+    processedString = processedString.replace(character, 'n');
+  })
+
+  return JSON.parse(processedString)
+}

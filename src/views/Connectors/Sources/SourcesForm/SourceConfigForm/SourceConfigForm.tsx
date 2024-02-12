@@ -9,7 +9,10 @@ import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
 import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
 import { useUiConfig } from "@/utils/hooks";
+
 import Loader from "@/components/Loader";
+import { processFormData } from "@/views/Connectors/helpers";
+
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -33,11 +36,14 @@ const SourceConfigForm = (): JSX.Element | null => {
   if (isLoading) return <Loader />;
 
   const handleFormSubmit = async (formData: FormData) => {
-    handleMoveForward(stepInfo?.formKey as string, formData);
+    const processedFormData = processFormData(formData)
+    handleMoveForward(stepInfo?.formKey as string, processedFormData);
   };
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
+
+
 
   return (
     <Box
