@@ -17,7 +17,7 @@ import { useContext, useMemo } from "react";
 import SourceFormFooter from "../SourceFormFooter";
 import { CONNECTION_STATUS } from "@/views/Connectors/constant";
 import { FiAlertOctagon, FiCheck } from "react-icons/fi";
-import { useUiConfig } from "@/utils/hooks";
+import ContentContainer from "@/components/ContentContainer";
 
 const CONNECT_TO_SOURCES_KEY = "connectToSources";
 
@@ -30,7 +30,6 @@ const STATUS_COLOR_MAP = {
 const SourceConnectionTest = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
-  const { maxContentWidth } = useUiConfig();
 
   const selectedDataSource = forms.find(
     ({ stepKey }) => stepKey === "datasource"
@@ -69,12 +68,12 @@ const SourceConnectionTest = (): JSX.Element | null => {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Box maxWidth={maxContentWidth} width="100%">
+      <ContentContainer>
         <Box
-          padding="24px"
-          backgroundColor="gray.100"
+          backgroundColor="gray.200"
           borderRadius="8px"
-          marginBottom="20px"
+          padding="24px"
+          marginBottom="25px"
         >
           {CONNECTION_STATUS.map(({ status }) => {
             const statusMetaInfo = status({
@@ -121,17 +120,18 @@ const SourceConnectionTest = (): JSX.Element | null => {
                   ) : null}
                 </Box>
                 <Box marginLeft="10px">
-                  <Text fontWeight="600">{statusMetaInfo.text}</Text>
+                  <Text fontWeight="600"  color={STATUS_COLOR_MAP?.[statusMetaInfo.status]}>{statusMetaInfo.text}</Text>
                 </Box>
               </Box>
             );
           })}
           {isAnyFailed && connectionResponse ? (
             <Button
-              variant="outline"
+              variant="shell"
               borderColor="gray.500"
               isDisabled={isFetching}
               onClick={() => retrySourceConnection()}
+              color="black.500"
             >
               Test Again
             </Button>
@@ -153,7 +153,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
             </Box>
           </Alert>
         ) : null}
-      </Box>
+     </ContentContainer>
       <SourceFormFooter
         ctaName="Continue"
         onCtaClick={handleOnContinueClick}

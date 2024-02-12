@@ -38,9 +38,9 @@ const GenerateTable = ({
       {title ? title : <></>}
       <Table size={size} maxHeight={maxHeight}>
         <Thead {...theadProps} bgColor="gray.300">
-          <Tr>
+          <Tr >
             {data.columns.map((column, index) => (
-              <Th key={index} color="black.500" fontWeight={700}>
+              <Th key={index} color="black.500" fontWeight={700}  padding="20px">
                 {column.name}
               </Th>
             ))}
@@ -54,7 +54,7 @@ const GenerateTable = ({
               onClick={() => onRowClick?.(row)}
             >
               {data.columns.map((column, columnIndex) => (
-                <Td key={columnIndex}>
+                <Td key={columnIndex} padding="20px">
                   {column.showIcon ? (
                     <Flex
                       flexDir="row"
