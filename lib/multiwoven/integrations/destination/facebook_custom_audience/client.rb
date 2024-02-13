@@ -3,7 +3,8 @@
 module Multiwoven::Integrations::Destination
   module FacebookCustomAudience
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+    class Client < DestinationConnector  # rubocop:disable Metrics/ClassLength
+      MAX_CHUNK_SIZE = 10_000
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         access_token = connection_config[:access_token]
@@ -54,8 +55,8 @@ module Multiwoven::Integrations::Destination
         url = generate_url(sync_config, connection_config)
         write_success = 0
         write_failure = 0
-        records.each do |record|
-          payload = create_payload(record.with_indifferent_access, sync_config.stream.json_schema.with_indifferent_access)
+        records.each_slice(MAX_CHUNK_SIZE) do |chunk|
+          payload = create_payload(chunk, sync_config.stream.json_schema.with_indifferent_access)
           response = Multiwoven::Integrations::Core::HttpClient.request(
             url,
             sync_config.stream.request_method,
@@ -63,28 +64,22 @@ module Multiwoven::Integrations::Destination
             headers: auth_headers(access_token)
           )
           if success?(response)
-            write_success += 1
+            write_success += chunk.size
           else
-            write_failure += 1
+            write_failure += chunk.size
           end
         rescue StandardError => e
-          logger.error(
-            "FACEBOOK:RECORD:WRITE:FAILURE: #{e.message}"
-          )
-          write_failure += 1
+          handle_exception("FACEBOOK:RECORD:WRITE:EXCEPTION", "error", e)
+          write_failure += chunk.size
         end
+
         tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
           success: write_success,
           failed: write_failure
         )
         tracker.to_multiwoven_message
       rescue StandardError => e
-        # TODO: Handle rate limiting seperately
-        handle_exception(
-          "FACEBOOK:WRITE:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception("FACEBOOK:WRITE:EXCEPTION", "error", e)
       end
 
       private
@@ -93,28 +88,30 @@ module Multiwoven::Integrations::Destination
         sync_config.stream.url.gsub("{audience_id}", connection_config[:audience_id])
       end
 
-      def create_payload(record_data, json_schema)
-        schema, data = extract_schema_and_data(record_data, json_schema)
+      def create_payload(records, json_schema)
+        schema, data = extract_schema_and_data(records, json_schema)
         {
           "payload" => {
             "schema" => schema,
-            "data" => [data]
+            "data" => data
           }
         }
       end
 
-      def extract_schema_and_data(data, json_schema)
+      def extract_schema_and_data(records, json_schema)
         schema_properties = json_schema[:properties]
-        schema = data.keys.map(&:upcase)
-        encrypted_data_array = []
-
-        data.each do |key, value|
-          schema_key = key.upcase
-          encrypted_value = schema_properties[schema_key] && schema_properties[schema_key]["x-hashRequired"] ? Digest::SHA256.hexdigest(value.to_s) : value
-          encrypted_data_array << encrypted_value
+        schema = records.first.keys.map(&:to_s).map(&:upcase)
+        data = []
+        records.each do |record|
+          encrypted_data_array = []
+          record.with_indifferent_access.each do |key, value|
+            schema_key = key.upcase
+            encrypted_value = schema_properties[schema_key] && schema_properties[schema_key]["x-hashRequired"] ? Digest::SHA256.hexdigest(value.to_s) : value
+            encrypted_data_array << encrypted_value
+          end
+          data << encrypted_data_array
         end
-
-        [schema, encrypted_data_array]
+        [schema, data]
       end
 
       def auth_headers(access_token)
