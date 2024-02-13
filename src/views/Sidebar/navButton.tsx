@@ -51,13 +51,10 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
             borderRadius="4px"
             borderColor="gray.500"
             gap="10px"
+            px="2px"
+            display="flex"
           >
-            <Text
-              fontSize={10}
-              color="gray.600"
-              justifyContent="center"
-              alignSelf="center"
-            >
+            <Text fontSize="10px" fontWeight={500} color="gray.600">
               weaving soon
             </Text>
           </Box>
