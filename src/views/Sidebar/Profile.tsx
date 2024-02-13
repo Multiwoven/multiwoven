@@ -4,7 +4,6 @@ import {
   Box,
   HStack,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -82,7 +81,6 @@ const Profile = () => {
           </Box>
         </PopoverTrigger>
         <PopoverContent w="182px" border="1px" borderColor="gray.500">
-          <PopoverArrow />
           <PopoverBody margin={0} p={0}>
             <Box
               _hover={{ bgColor: "gray.200" }}
@@ -96,7 +94,9 @@ const Profile = () => {
               rounded="lg"
               as="button"
             >
-              <FiEdit3 />
+              <Box color="gray.600">
+                <FiEdit3 />
+              </Box>
               <Text size="sm" fontWeight="semibold" ml={3}>
                 Edit Profile
               </Text>
