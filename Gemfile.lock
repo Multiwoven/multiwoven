@@ -1659,9 +1659,10 @@ GEM
       activesupport
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
-    console (1.23.3)
+    console (1.23.4)
       fiber-annotation
       fiber-local
+      json
     crass (1.0.6)
     date (3.3.4)
     declarative (0.0.20)
@@ -1742,7 +1743,7 @@ GEM
     gli (2.21.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.63.0)
+    google-apis-bigquery_v2 (0.64.0)
       google-apis-core (>= 0.12.0, < 2.a)
     google-apis-core (0.13.0)
       addressable (~> 2.5, >= 2.5.1)
@@ -1752,7 +1753,7 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-cloud-bigquery (1.48.0)
+    google-cloud-bigquery (1.48.1)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.62)
       google-apis-core (~> 0.13)
@@ -1838,7 +1839,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.18)
+    multiwoven-integrations (0.1.19)
       activesupport
       async-websocket
       dry-schema
@@ -2078,7 +2079,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.18)
+  multiwoven-integrations (~> 0.1.19)
   newrelic_rpm
   parallel
   pg (~> 1.1)
