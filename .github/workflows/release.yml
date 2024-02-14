@@ -13,6 +13,7 @@ jobs:
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           release-type: ruby
           package-name: multiwoven-integrations
           bump-minor-pre-major: true
