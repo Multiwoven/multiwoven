@@ -57,14 +57,24 @@ Multiwoven provides a simple and powerful way to sync data from your data wareho
 
 ## Table of Contents
 
+- [Why Multiwoven?](#why-multiwoven)
+- [Table of Contents](#table-of-contents)
 - [Getting Started](#getting-started)
   - [Local Setup](#local-setup)
   - [Self-hosted Options](#self-hosted-options)
 - [Connectors](#connectors)
   - [Sources](#sources)
   - [Destinations](#destinations)
+    - [CRM](#crm)
+    - [Marketing Automation](#marketing-automation)
+    - [Customer Support](#customer-support)
+    - [Advertising](#advertising)
+    - [Collaboration](#collaboration)
+    - [Analytics](#analytics)
+    - [Others](#others)
 - [Contributing](#contributing)
 - [Need Help?](#need-help)
+  - [:warning: Development Status: Under Active Development](#warning-development-status-under-active-development)
 - [License](#license)
 
 ## Getting Started
@@ -87,14 +97,32 @@ To get started with Multiwoven, you can deploy the entire stack locally using Do
 git clone git@github.com:Multiwoven/multiwoven.git
 ```
 
-2. **Start the services:**
+2. **Go inside multiwoven folder:**
 
 ```bash
-docker-compose build
+cd multiwoven
 ```
 
+3. **Clone git Submodules:**
 ```bash
-docker-compose up
+git submodule update --init --recursive 
+```
+
+4. **Initialize .env file:**
+
+```bash
+mv example.env .env
+```
+
+5. **Start the services:**
+
+```bash
+docker-compose build && docker-compose up
+```
+
+UI can be access at the PORT 8000 :
+```bash
+http://localhost:8000
 ```
 
 For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose) in the documentation.
@@ -174,7 +202,7 @@ Before contributing to Multiwoven, please read our [Code of Conduct](https://doc
 
 We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 
-### ⚠️ Development Status: Under Active Development
+### :warning: Development Status: Under Active Development 
 This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a **new issue** with detailed information. Thank you for your support!
 
 ## License
