@@ -11,9 +11,9 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import ExitWarningImage from "@/assets/images/ExitWarning.png";
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import ExitWarningImage from '@/assets/images/ExitWarning.png';
 
 const ExitModal = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -21,39 +21,58 @@ const ExitModal = (): JSX.Element => {
 
   return (
     <>
-      <Button variant="shell" onClick={onOpen} w={24}>
+      <Button variant='shell' onClick={onOpen} w={24}>
         Exit
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay bg="blackAlpha.400" />
+        <ModalOverlay bg='blackAlpha.400' />
         <ModalContent>
-          <ModalCloseButton color="gray.300" />
-          <ModalBody mx="auto" pt={10}>
-            <Flex direction="column">
-              <Image src={ExitWarningImage} h={32} w={48} mx="auto" my={8} />
-              <Text fontWeight="bold" pt={8} fontSize={20} textAlign="center">
+          <ModalCloseButton color='gray.600' />
+          <ModalBody mx='auto' pt={8} pb={0}>
+            <Flex direction='column'>
+              <Image src={ExitWarningImage} h={32} w={48} mx='auto' my={8} />
+              <Text
+                fontWeight={700}
+                size='xl'
+                textAlign='center'
+                color='black.500'
+                letterSpacing='-0.2px'
+              >
                 Are you sure you want to exit?
               </Text>
-              <Text fontWeight="light" fontSize={14} textAlign="center">
+              <Text
+                fontWeight={400}
+                size='sm'
+                textAlign='center'
+                color='black.200'
+                letterSpacing='-0.14px'
+                pt={2}
+              >
                 Your progress will be lost
               </Text>
             </Flex>
           </ModalBody>
 
-          <ModalFooter>
-            <Box w="full">
-              <Flex flexDir="row" justifyContent="center">
-                <Button variant="ghost" mr={3} onClick={onClose} size="md">
+          <ModalFooter pt={8} pb={8}>
+            <Box w='full'>
+              <Flex flexDir='row' justifyContent='center'>
+                <Button
+                  variant='ghost'
+                  mr={3}
+                  onClick={onClose}
+                  size='md'
+                  color='black.500'
+                  letterSpacing='-0.14px'
+                >
                   Cancel
                 </Button>
                 <Button
-                  variant="solid"
-                  color="white"
-                  rounded="lg"
-                  pr={10}
-                  pl={10}
-                  onClick={() => navigate("*")}
+                  variant='solid'
+                  color='white'
+                  rounded='lg'
+                  onClick={() => navigate('*')}
+                  letterSpacing='-0.14px'
                 >
                   Exit
                 </Button>
