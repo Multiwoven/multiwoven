@@ -56,7 +56,6 @@ const ExitModal = (): JSX.Element => {
                 size='sm'
                 textAlign='center'
                 color='black.200'
-                letterSpacing='-0.14px'
                 pt={2}
               >
                 Your progress will be lost

@@ -43,7 +43,6 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
           size='sm'
           color='gray.700'
           fontWeight={500}
-          letterSpacing='-0.14px'
         >
           {moment().format('DD/MM/YYYY')}
         </Text>

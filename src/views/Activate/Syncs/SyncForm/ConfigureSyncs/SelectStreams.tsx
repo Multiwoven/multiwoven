@@ -31,7 +31,6 @@ const SelectStreams = ({
         mb={6}
         color='black.500'
         size='md'
-        letterSpacing='-0.16px'
       >
         Configure sync to {model?.connector?.connector_name}
       </Text>
@@ -39,7 +38,6 @@ const SelectStreams = ({
         fontWeight='600'
         color='black.500'
         size='sm'
-        letterSpacing='-0.14px'
       >
         Stream Name
       </Text>

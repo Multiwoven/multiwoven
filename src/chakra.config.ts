@@ -123,10 +123,12 @@ const extenstion = {
         md: {
           fontSize: '16px',
           lineHeight: '24px',
+          letterSpacing: '-0.16px',
         },
         sm: {
           fontSize: '14px',
           lineHeight: '20px',
+          letterSpacing: '-0.14px',
         },
         xs: {
           fontSize: '12px',

@@ -77,7 +77,6 @@ const GenerateTable = ({
                       size='sm'
                       color='gray.700'
                       fontWeight={500}
-                      letterSpacing='-0.14px'
                     >
                       {row[column.key as keyof typeof row]}
                     </Text>

@@ -52,7 +52,6 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
           size='sm'
           color='gray.700'
           fontWeight={500}
-          letterSpacing='-0.14px'
         >
           {moment(attributes?.updated_at).format('DD/MM/YYYY')}
         </Text>

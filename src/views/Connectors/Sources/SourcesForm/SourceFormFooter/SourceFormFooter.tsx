@@ -66,7 +66,7 @@ const SourceFormFooter = ({
             <Link to='https://docs.multiwoven.com'>
               <Box display='flex' alignItems='center' marginRight='20px'>
                 <Icon as={FiBookOpen} color='gray.600' />
-                <Text ml={2} size='sm' letterSpacing='-0.14px'>
+                <Text ml={2} size='sm'>
                   Read Documentation
                 </Text>
               </Box>
@@ -74,7 +74,7 @@ const SourceFormFooter = ({
             <Link to='https://docs.multiwoven.com'>
               <Box display='flex' alignItems='center'>
                 <Icon as={FiHeadphones} color='gray.600' />
-                <Text ml={2} size='sm' letterSpacing='-0.14px'>
+                <Text ml={2} size='sm'>
                   Contact Support
                 </Text>
               </Box>

@@ -84,7 +84,7 @@ const MapFields = ({
       borderRadius='8px'
       marginBottom='100px'
     >
-      <Text fontWeight={600} size='md' letterSpacing='-0.16px'>
+      <Text fontWeight={600} size='md'>
         Map fields to {destination?.attributes?.connector_name}
       </Text>
       <Text
