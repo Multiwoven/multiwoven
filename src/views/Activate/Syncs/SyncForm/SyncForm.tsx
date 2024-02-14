@@ -23,19 +23,19 @@ const SyncForm = (): JSX.Element => {
     },
     {
       formKey: "selectDestination",
-      name: "Select a Destination",
+      name: "Select a destination",
       component: <SelectDestination />,
       isRequireContinueCta: false,
     },
     {
       formKey: "configureSyncs",
-      name: "Configure Sync",
+      name: "Configure sync",
       component: <ConfigureSyncs />,
       isRequireContinueCta: false,
     },
     {
       formKey: "finaliseSync",
-      name: "Finalize Sync",
+      name: "Finalize sync",
       component: <FinaliseSync />,
       isRequireContinueCta: false,
     },
