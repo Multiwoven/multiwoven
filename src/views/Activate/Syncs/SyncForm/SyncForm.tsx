@@ -17,7 +17,7 @@ const SyncForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "selectModel",
-      name: "Select a Model",
+      name: "Select a model",
       component: <SelectModel />,
       isRequireContinueCta: false,
     },

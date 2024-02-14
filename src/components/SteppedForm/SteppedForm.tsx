@@ -1,21 +1,21 @@
-import { useEffect } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
-import { createContext, useReducer } from "react";
+import { useEffect } from 'react';
+import { Box, Button, Text } from '@chakra-ui/react';
+import { createContext, useReducer } from 'react';
 import {
   FormAction,
   FormContextType,
   FormState,
   SteppedForm as SteppedFormType,
-} from "./types";
-import { updateFormDataForStep } from "./utils";
+} from './types';
+import { updateFormDataForStep } from './utils';
 import {
   useNavigate,
   useLocation,
   createSearchParams,
   useSearchParams,
-} from "react-router-dom";
-import ExitModal from "../ExitModal";
-import { useUiConfig } from "@/utils/hooks";
+} from 'react-router-dom';
+import ExitModal from '../ExitModal';
+import { useUiConfig } from '@/utils/hooks';
 
 const initialState: FormState = {
   currentStep: 0,
@@ -25,12 +25,12 @@ const initialState: FormState = {
 
 const reducer = (state: FormState, action: FormAction) => {
   switch (action.type) {
-    case "NEXT_STEP":
+    case 'NEXT_STEP':
       return {
         ...state,
         currentStep: state.currentStep + 1,
       };
-    case "UPDATE_FORM": {
+    case 'UPDATE_FORM': {
       const { payload } = action;
       const newFormData = updateFormDataForStep({
         forms: state.forms,
@@ -43,7 +43,7 @@ const reducer = (state: FormState, action: FormAction) => {
         forms: newFormData,
       };
     }
-    case "UPDATE_CURRENT_FORM": {
+    case 'UPDATE_CURRENT_FORM': {
       const { payload } = action;
       return {
         ...state,
@@ -52,7 +52,7 @@ const reducer = (state: FormState, action: FormAction) => {
           : null,
       };
     }
-    case "UPDATE_STEP": {
+    case 'UPDATE_STEP': {
       const { payload } = action;
       return {
         ...state,
@@ -77,14 +77,14 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentStep, currentForm, forms } = state;
   const [searchParams, setSearchParams] = useSearchParams();
-  const step = searchParams.get("step");
+  const step = searchParams.get('step');
   const stepInfo = steps[state.currentStep];
   const { maxContentWidth } = useUiConfig();
 
   useEffect(() => {
     if (!step || forms.length === 0) {
       const params = {
-        step: "0",
+        step: '0',
       };
 
       setSearchParams(params, { replace: true });
@@ -94,7 +94,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
   useEffect(() => {
     if (step) {
       dispatch({
-        type: "UPDATE_STEP",
+        type: 'UPDATE_STEP',
         payload: {
           step: parseInt(step),
         },
@@ -113,7 +113,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     if (!isValidated) return;
 
     dispatch({
-      type: "UPDATE_FORM",
+      type: 'UPDATE_FORM',
       payload: {
         step: currentStep,
         data: currentFormData ?? { [stepKey]: data },
@@ -122,7 +122,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
     });
 
     dispatch({
-      type: "UPDATE_CURRENT_FORM",
+      type: 'UPDATE_CURRENT_FORM',
       payload: {
         data: null,
       },
@@ -145,28 +145,39 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
 
   return (
     <SteppedFormContext.Provider value={valuesToExpose}>
-      <Box width="100%">
+      <Box width='100%'>
         <Box
-          width="100%"
-          borderBottomWidth="thin"
-          padding="20px"
-          display="flex"
-          justifyContent="center"
-          borderBottom="1px"
-          borderColor="gray.400"
+          width='100%'
+          borderBottomWidth='thin'
+          padding='20px'
+          display='flex'
+          justifyContent='center'
+          borderBottom='1px'
+          borderColor='gray.400'
         >
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             maxWidth={maxContentWidth}
-            width="100%"
+            width='100%'
           >
             <Box>
-              <Text fontSize="l" color="gray">
+              <Text
+                size='xs'
+                color='gray.600'
+                letterSpacing={2.4}
+                fontWeight={700}
+              >
                 STEP {currentStep + 1} OF {steps.length}
               </Text>
-              <Text fontWeight="bold" fontSize="xl">
+              <Text
+                fontWeight={700}
+                color='black.500'
+                size='lg'
+                letterSpacing={-0.18}
+                marginTop='4px'
+              >
                 {stepInfo.name}
               </Text>
             </Box>
@@ -177,8 +188,8 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         </Box>
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (
-          <Box padding="10px" display="flex" justifyContent="center">
-            <Box maxWidth={maxContentWidth} width="100%">
+          <Box padding='10px' display='flex' justifyContent='center'>
+            <Box maxWidth={maxContentWidth} width='100%'>
               <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
                 Continue
               </Button>
