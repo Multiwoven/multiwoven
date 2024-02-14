@@ -46,18 +46,12 @@
 
 Multiwoven provides a simple and powerful way to sync data from your data warehouse to your business tools. With Multiwoven, you can easily connect to your data sources, model your data, and sync it to various destinations.
 
-## Features
-👉 **Sources:**
-Connect to a wide range of data warehouses. Multiwoven supports integrations with Redshift, Snowflake, Databricks, Google BigQuery, and more, providing a solid foundation for data extraction.
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
-👉 **Destinations:**
-With growing list of connectors, Multiwoven allows you to sync data to various destinations, including CRM, marketing automation, and customer support tools. Build your own connectors using multiwoven protocol.
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907527/Multiwoven/Github/image_6_nqkvlu.png "Example Title")
 
-👉 **Models:**
-Craft your data to fit your business needs. Multiwoven's data modeling features enable you to transform and structure your data using SQL queries, dbt models, and more.
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907791/Multiwoven/Github/image_7_ozahsr.png "Example Title")
 
-👉 **Syncs:**
-Sync data to various destinations, including CRM, marketing automation, and customer support tools. Map your models to your desired destination and let Multiwoven handle the rest.
 
 <p>⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
