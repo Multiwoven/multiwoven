@@ -40,6 +40,8 @@
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
 
+  <hr />
+
 ## Why Multiwoven?
 
 Multiwoven provides a simple and powerful way to sync data from your data warehouse to your business tools. With Multiwoven, you can easily connect to your data sources, model your data, and sync it to various destinations.
