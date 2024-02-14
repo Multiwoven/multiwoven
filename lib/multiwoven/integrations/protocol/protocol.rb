@@ -108,7 +108,7 @@ module Multiwoven
       attribute? :action, StreamAction
       attribute :json_schema, Types::Hash
       attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional
-
+      # Applicable for database streams
       attribute? :source_defined_cursor, Types::Bool.optional
       attribute? :default_cursor_field, Types::Array.of(Types::String).optional
       attribute? :source_defined_primary_key, Types::Array.of(Types::Array.of(Types::String)).optional
