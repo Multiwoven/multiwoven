@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.19)
+    multiwoven-integrations (0.1.20)
       activesupport
       async-websocket
       dry-schema
