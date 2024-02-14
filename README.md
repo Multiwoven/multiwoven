@@ -7,7 +7,7 @@
 <br/>
 
 <p align="center">
-<a href="https://github.com/Multiwoven/multiwoven-server/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven-server?style=flat-square" alt="GitHub stars"></a>
+<a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=flat-square" alt="GitHub stars"></a>
   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
   <a href="https://github.com/Multiwoven/multiwoven-server/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven-server?style=flat-square"></a>
   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple?style=flat-square" alt="License"></a>
