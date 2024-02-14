@@ -14,9 +14,10 @@ const EntityItem = ({ icon, name }: EntityItem): JSX.Element => {
         marginRight="12px"
         borderWidth="thin"
         borderColor="gray.400"
-        padding="5px"
+        padding="3px"
         borderRadius="8px"
-        backgroundColor="#fff"
+        backgroundColor="gray.100"
+        display="flex"
       >
         <Image src={icon} alt="icon" maxHeight="100%" />
       </Box>
