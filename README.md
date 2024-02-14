@@ -1,12 +1,4 @@
-<div align="center">
-  <a href="https://multiwoven.com?utm_source=github" target="_blank">
-    <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="240" />
-  </a>
-</div>
-
-![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707531725/Multiwoven/Docs/Core_Concepts_e21fqb.png)
-
-<br/>
+![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707921172/Multiwoven/Github/Github_Readme_-_Alt_gw8tbu.png)
 
 <p align="center">
 <a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=flat-square" alt="GitHub stars"></a>
