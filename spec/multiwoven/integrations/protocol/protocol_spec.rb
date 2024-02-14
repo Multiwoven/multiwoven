@@ -140,6 +140,34 @@ module Multiwoven
           expect(instance).to be_a(Stream)
 
           expect(instance.name).to eq("example_stream")
+          expect(instance.url).to eq("https://api.example.com/data")
+          expect(instance.batch_support).to eq(false)
+          expect(instance.batch_size).to eq(1)
+          expect(instance.supported_sync_modes).to eq(%w[full_refresh incremental])
+        end
+
+        it "creates an instance from JSON and batch param check" do
+          # TODO: move test json to different module
+          json_data = {
+            "name": "example_stream", "action": "create",
+            "json_schema": { "field1": "type1" },
+            "supported_sync_modes": %w[full_refresh incremental],
+            "source_defined_cursor": true,
+            "default_cursor_field": ["field1"],
+            "source_defined_primary_key": [["field1"], ["field2"]],
+            "namespace": "exampleNamespace",
+            "url": "https://api.example.com/data",
+            "request_method": "GET",
+            "batch_support": true,
+            "batch_size": 10_000
+          }.to_json
+          instance = Stream.from_json(json_data)
+          expect(instance).to be_a(Stream)
+
+          expect(instance.name).to eq("example_stream")
+          expect(instance.url).to eq("https://api.example.com/data")
+          expect(instance.batch_support).to eq(true)
+          expect(instance.batch_size).to eq(10_000)
           expect(instance.supported_sync_modes).to eq(%w[full_refresh incremental])
         end
       end

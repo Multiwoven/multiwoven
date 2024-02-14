@@ -4,6 +4,8 @@
       "name": "audience",
       "action": "create",
       "method": "POST",
+      "batch_support": true,
+      "batch_size": 10000,
       "url": "https://graph.facebook.com/v18.0/{audience_id}/users",
       "json_schema": {
         "type": "object",
