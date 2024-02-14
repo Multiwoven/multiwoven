@@ -62,17 +62,21 @@ const SourceFormFooter = ({
           justifyContent='space-between'
           alignItems='center'
         >
-          <Box display='flex'>
+          <Box display='flex' paddingX='16px' paddingY='10px'>
             <Link to='https://docs.multiwoven.com'>
               <Box display='flex' alignItems='center' marginRight='20px'>
                 <Icon as={FiBookOpen} color='gray.600' />
-                <Text marginLeft='5px'>Read Documentation</Text>
+                <Text ml={2} size='sm' letterSpacing='-0.14px'>
+                  Read Documentation
+                </Text>
               </Box>
             </Link>
             <Link to='https://docs.multiwoven.com'>
               <Box display='flex' alignItems='center'>
                 <Icon as={FiHeadphones} color='gray.600' />
-                <Text marginLeft='5px'>Contact Support</Text>
+                <Text ml={2} size='sm' letterSpacing='-0.14px'>
+                  Contact Support
+                </Text>
               </Box>
             </Link>
           </Box>
@@ -81,9 +85,10 @@ const SourceFormFooter = ({
             {isBackRequired ? (
               <Button
                 onClick={() => navigate(-1)}
-                size='lg'
                 marginRight='10px'
                 variant='ghost'
+                minWidth={0}
+                width='auto'
               >
                 Back
               </Button>
@@ -91,9 +96,10 @@ const SourceFormFooter = ({
             <Button
               type={ctaType}
               onClick={() => onCtaClick?.()}
-              size='lg'
               isDisabled={isCtaDisabled}
               isLoading={isCtaLoading}
+              minWidth={0}
+              width='auto'
             >
               {ctaName}
             </Button>
