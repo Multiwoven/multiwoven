@@ -4,6 +4,8 @@
   </a>
 </div>
 
+![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707531725/Multiwoven/Docs/Core_Concepts_e21fqb.png)
+
 <br/>
 
 <p align="center">
