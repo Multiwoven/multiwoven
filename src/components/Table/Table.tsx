@@ -73,7 +73,14 @@ const GenerateTable = ({
                       />
                     </Flex>
                   ) : (
-                    <Text size='xs'>{row[column.key as keyof typeof row]}</Text>
+                    <Text
+                      size='sm'
+                      color='gray.700'
+                      fontWeight={500}
+                      letterSpacing='-0.14px'
+                    >
+                      {row[column.key as keyof typeof row]}
+                    </Text>
                   )}
                 </Td>
               ))}

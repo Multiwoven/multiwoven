@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom';
 import ExitModal from '../ExitModal';
 import { useUiConfig } from '@/utils/hooks';
+import ContentContainer from '../ContentContainer';
 
 const initialState: FormState = {
   currentStep: 0,
@@ -149,7 +150,6 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         <Box
           width='100%'
           borderBottomWidth='thin'
-          padding='20px'
           display='flex'
           justifyContent='center'
           borderBottom='1px'
@@ -162,28 +162,37 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             maxWidth={maxContentWidth}
             width='100%'
           >
-            <Box>
-              <Text
-                size='xs'
-                color='gray.600'
-                letterSpacing={2.4}
-                fontWeight={700}
+            <ContentContainer>
+              <Box
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+                width='100%'
               >
-                STEP {currentStep + 1} OF {steps.length}
-              </Text>
-              <Text
-                fontWeight={700}
-                color='black.500'
-                size='lg'
-                letterSpacing={-0.18}
-                marginTop='4px'
-              >
-                {stepInfo.name}
-              </Text>
-            </Box>
-            <Box>
-              <ExitModal />
-            </Box>
+                <Box>
+                  <Text
+                    size='xs'
+                    color='gray.600'
+                    letterSpacing={2.4}
+                    fontWeight={700}
+                  >
+                    STEP {currentStep + 1} OF {steps.length}
+                  </Text>
+                  <Text
+                    fontWeight={700}
+                    color='black.500'
+                    size='lg'
+                    letterSpacing={-0.18}
+                    marginTop='4px'
+                  >
+                    {stepInfo.name}
+                  </Text>
+                </Box>
+                <Box>
+                  <ExitModal />
+                </Box>
+              </Box>
+            </ContentContainer>
           </Box>
         </Box>
         {stepInfo.component}

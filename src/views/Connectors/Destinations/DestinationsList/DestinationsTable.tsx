@@ -34,7 +34,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
     case "name":
       return (
-        <Text size="xs" fontWeight={600}>
+        <Text size="sm" fontWeight={600} color="black.500" letterSpacing="-0.14px">
           {attributes.name}
         </Text>
       );
@@ -48,22 +48,31 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "updated_at":
       return (
-        <Text size="xs">
-          {moment(attributes?.updated_at).format("DD/MM/YYYY")}
+        <Text
+          size='sm'
+          color='gray.700'
+          fontWeight={500}
+          letterSpacing='-0.14px'
+        >
+          {moment(attributes?.updated_at).format('DD/MM/YYYY')}
         </Text>
       );
 
     case "status":
       return (
         <Tag
-          colorScheme="teal"
-          variant="outline"
-          size="xs"
-          bgColor="success.100"
-          p={1}
+          colorScheme='teal'
+          size='xs'
+          bgColor='success.100'
+          paddingX={2}
           fontWeight={600}
+          borderColor='success.300'
+          borderWidth='1px'
+          borderStyle='solid'
+          height='22px'
+          borderRadius='4px'
         >
-          <Text size="xs" fontWeight="semibold">
+          <Text size='xs' fontWeight='semibold' color='success.600'>
             Active
           </Text>
         </Tag>

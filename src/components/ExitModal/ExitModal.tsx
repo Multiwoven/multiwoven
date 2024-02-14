@@ -21,7 +21,17 @@ const ExitModal = (): JSX.Element => {
 
   return (
     <>
-      <Button variant='shell' onClick={onOpen} w={24}>
+      <Button
+        variant='shell'
+        onClick={onOpen}
+        paddingX={6}
+        height='32px'
+        minWidth='0'
+        width='auto'
+        color='black.500'
+        borderRadius='6px'
+        letterSpacing='-0.12px'
+      >
         Exit
       </Button>
 
