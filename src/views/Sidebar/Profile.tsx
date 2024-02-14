@@ -2,9 +2,9 @@ import { getUserProfile, logout } from "@/services/user";
 import {
   Avatar,
   Box,
+  Button,
   HStack,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -82,26 +82,29 @@ const Profile = () => {
           </Box>
         </PopoverTrigger>
         <PopoverContent w="182px" border="1px" borderColor="gray.500">
-          <PopoverArrow />
           <PopoverBody margin={0} p={0}>
-            <Box
-              _hover={{ bgColor: "gray.200" }}
-              // bgColor="gray.300"
+            <Button
               w="100%"
               py={3}
               px={2}
               display="flex"
               flexDir="row"
               alignItems="center"
+              justifyContent="start"
+              border={0}
               rounded="lg"
               as="button"
+              variant="shell"
+              isDisabled={true}
             >
-              <FiEdit3 />
+              <Box color="gray.600">
+                <FiEdit3 />
+              </Box>
               <Text size="sm" fontWeight="semibold" ml={3}>
                 Edit Profile
               </Text>
-            </Box>
-            <Box
+            </Button>
+            <Button
               _hover={{ bgColor: "gray.200" }}
               w="100%"
               py={3}
@@ -113,12 +116,15 @@ const Profile = () => {
               rounded="lg"
               onClick={handleLogout}
               as="button"
+              justifyContent="start"
+              border={0}
+              variant="shell"
             >
               <FiLogOut />
               <Text size="sm" fontWeight="semibold" ml={3}>
                 Sign Out
               </Text>
-            </Box>
+            </Button>
           </PopoverBody>
         </PopoverContent>
       </Popover>

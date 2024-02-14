@@ -13,7 +13,6 @@ import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
 import ContentContainer from "@/components/ContentContainer";
 
-
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
@@ -35,37 +34,25 @@ const SourceConfigForm = (): JSX.Element | null => {
   if (isLoading) return <Loader />;
 
   const handleFormSubmit = async (formData: FormData) => {
-    const processedFormData = processFormData(formData)
+    const processedFormData = processFormData(formData);
     handleMoveForward(stepInfo?.formKey as string, processedFormData);
   };
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
-
-  // const uiSchema = { 
-  //   "title" : { 
-  //     "ui:"
-  //   }
-  // }
-
-
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      marginBottom="80px"
-    >
-       <ContentContainer>
+    <Box display="flex" justifyContent="center" marginBottom="80px">
+      <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
-        <Form
-          schema={connectorSchema}
-          validator={validator}
-          onSubmit={({ formData }) => handleFormSubmit(formData)}
-        >
-          <SourceFormFooter ctaName="Continue" ctaType="submit" />
-        </Form>
+          <Form
+            schema={connectorSchema}
+            validator={validator}
+            onSubmit={({ formData }) => handleFormSubmit(formData)}
+          >
+            <SourceFormFooter ctaName="Continue" ctaType="submit" />
+          </Form>
         </Box>
-       </ContentContainer>
+      </ContentContainer>
     </Box>
   );
 };
