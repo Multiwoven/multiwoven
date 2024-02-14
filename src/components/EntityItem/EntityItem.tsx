@@ -12,7 +12,7 @@ const EntityItem = ({ icon, name }: EntityItem): JSX.Element => {
         height="40px"
         width="40px"
         marginRight="12px"
-        borderWidth="thin"
+        borderWidth="1px"
         borderColor="gray.400"
         padding="3px"
         borderRadius="8px"
