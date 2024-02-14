@@ -94,7 +94,7 @@ git submodule update --init --recursive
 4. **Initialize .env file:**
 
 ```bash
-mv example.env .env
+mv .env.example .env
 ```
 
 5. **Start the services:**
@@ -103,12 +103,13 @@ mv example.env .env
 docker-compose build && docker-compose up
 ```
 
-UI can be access at the PORT 8000 :
+UI can be accessed at the PORT 8000 :
+
 ```bash
 http://localhost:8000
 ```
 
-For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose) in the documentation.
+For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose-dev) in the documentation.
 
 ### Self-hosted Options
 
