@@ -56,6 +56,7 @@ Multiwoven provides a simple and powerful way to sync data from your data wareho
 <p>⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
 ## Table of Contents
+
 - [Getting Started](#getting-started)
   - [Local Setup](#local-setup)
   - [Self-hosted Options](#self-hosted-options)
@@ -192,7 +193,7 @@ Before contributing to Multiwoven, please read our [Code of Conduct](https://doc
 
 We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 
-### ⚠️ Development Status: Under Active Development 
+### ⚠️ Development Status: Under Active Development
 This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a **new issue** with detailed information. Thank you for your support!
 
 ## License
