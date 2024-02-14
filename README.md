@@ -87,14 +87,33 @@ To get started with Multiwoven, you can deploy the entire stack locally using Do
 git clone git@github.com:Multiwoven/multiwoven.git
 ```
 
-2. **Start the services:**
+2. **Go inside multiwoven folder:**
 
 ```bash
-docker-compose build
+cd multiwoven
 ```
 
+3. **Clone git Submodules:**
+   
 ```bash
-docker-compose up
+git submodule update --init --recursive 
+```
+
+4. **Initialize .env file:**
+
+```bash
+mv example.env .env
+```
+
+5. **Start the services:**
+
+```bash
+docker-compose build && docker-compose up
+```
+
+UI can be access at the PORT 8000 :
+```bash
+http://localhost:8000
 ```
 
 For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose) in the documentation.
