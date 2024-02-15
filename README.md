@@ -1,5 +1,8 @@
-![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707921172/Multiwoven/Github/Github_Readme_-_Alt_gw8tbu.png)
+![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707980066/Multiwoven/Github/Github_Readme_-_Alt_1_ddqhlz.png)
 
+<p align="center">
+  <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
+</p>
 <p align="center">
 <a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=flat-square" alt="GitHub stars"></a>
   <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
@@ -12,7 +15,7 @@
 <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=flat-square&label=frontend%20CI" alt="CI"></a>
 </p>
 
-<h2 align="center">The open-source reverse ETL platform for data teams</h2>
+<h2 align="center">The open-source Reverse ETL platform for data teams</h2>
 
 <div align="center">Effortlessly sync customer data from the datawarehouse into your business tools.</div>
 
@@ -25,9 +28,7 @@
     ·
     <a href="https://multiwoven.com">Website</a>
     ·
-    <a href="https://github.com/Multiwoven/multiwoven-server/issues">Backend Issues</a>
-    ·
-    <a href="https://github.com/Multiwoven/multiwoven-ui/issues">Frontend Issues</a>
+    <a href="https://blog.multiwoven.com">Blog</a>
     ·
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
