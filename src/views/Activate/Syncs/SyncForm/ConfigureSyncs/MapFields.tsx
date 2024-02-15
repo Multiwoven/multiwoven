@@ -8,9 +8,9 @@ import FieldMap from './FieldMap';
 import {
   convertFieldMapToConfig,
   getPathFromObject,
-} from "@/views/Activate/Syncs/utils";
-import { useEffect, useMemo, useState } from "react";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+} from '@/views/Activate/Syncs/utils';
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
 type MapFieldsProps = {
   model: ModelEntity;
@@ -19,6 +19,7 @@ type MapFieldsProps = {
   data?: Record<string, string> | null;
   isEdit?: boolean;
   handleOnConfigChange: (args: Record<string, string>) => void;
+  configuration?: Record<string, string> | null;
 };
 
 const FieldStruct: FieldMapType = {
@@ -33,6 +34,7 @@ const MapFields = ({
   data,
   isEdit,
   handleOnConfigChange,
+  configuration,
 }: MapFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([FieldStruct]);
   const { data: previewModelData } = useQuery({
@@ -40,7 +42,7 @@ const MapFields = ({
     queryFn: () =>
       getModelPreviewById(model?.query, String(model?.connector?.id)),
     enabled: !!model?.connector?.id,
-    refetchOnMount: true,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
@@ -91,12 +93,17 @@ const MapFields = ({
 
   const mappedColumns = fields.map((item) => item.model);
 
+  const souceConfigList = configuration ? Object.keys(configuration) : [];
+  const destinationConfigList = configuration
+    ? Object.values(configuration)
+    : [];
+
   return (
     <Box
-      backgroundColor="gray.300"
-      padding="20px"
-      borderRadius="8px"
-      marginBottom={isEdit ? "20px" : "100px"}
+      backgroundColor='gray.300'
+      padding='20px'
+      borderRadius='8px'
+      marginBottom={isEdit ? '20px' : '100px'}
     >
       <Text fontWeight={600} size='md'>
         Map fields to {destination?.attributes?.connector_name}
@@ -124,9 +131,9 @@ const MapFields = ({
             icon={model.connector.icon}
             options={modelColumns}
             disabledOptions={mappedColumns}
-            value={fields[index].model}
             onChange={handleOnChange}
             isDisabled={!stream}
+            selectedConfigOptions={souceConfigList}
           />
           <Box
             width='80px'
@@ -143,9 +150,9 @@ const MapFields = ({
             entityName={destination.attributes.connector_name}
             icon={destination.attributes.icon}
             options={destinationColumns}
-            value={fields[index].destination}
             onChange={handleOnChange}
             isDisabled={!stream}
+            selectedConfigOptions={destinationConfigList}
           />
           <Box py='20px' position='relative' top='12px' color='gray.600'>
             <CloseButton
