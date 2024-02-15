@@ -41,28 +41,7 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
         >
           {label}
         </Text>
-        {disabled ? (
-          // <Box
-          //   w="71px"
-          //   h="20px"
-          //   alignItems="center"
-          //   alignContent="center"
-          //   bgColor="gray.200"
-          //   border="1px"
-          //   borderRadius="4px"
-          //   borderColor="gray.500"
-          //   gap="10px"
-          //   px="2px"
-          //   display="flex"
-          // >
-          //   <Text size="xxs" fontWeight="medium" color="gray.600">
-          //     weaving soon
-          //   </Text>
-          // </Box>
-          <Badge text="weaving soon" variant="default" />
-        ) : (
-          <></>
-        )}
+        {disabled ? <Badge text="weaving soon" variant="default" /> : <></>}
       </HStack>
     </Button>
   );
