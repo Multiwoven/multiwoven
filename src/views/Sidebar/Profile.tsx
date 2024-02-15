@@ -2,9 +2,9 @@ import { getUserProfile, logout } from "@/services/user";
 import {
   Avatar,
   Box,
+  Button,
   HStack,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -20,16 +20,16 @@ const Profile = () => {
   const { data } = useQuery({
     queryKey: ["users", "profile", "me"],
     queryFn: () => getUserProfile(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
-  
+
   const toast = useToast();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const logoutResponse = await logout();
-    if(logoutResponse.data) {
+    if (logoutResponse.data) {
       toast({
         title: "Signed out successfully",
         isClosable: true,
@@ -37,44 +37,75 @@ const Profile = () => {
         status: "success",
         position: "bottom-right",
       });
-      navigate('/sign-in');
+      navigate("/sign-in");
     }
-  }
+  };
 
-  const OptionsPopover = () => {
-    return (
+  return (
+    <>
       <Popover closeOnEsc>
         <PopoverTrigger>
-          <FiMoreVertical />
-        </PopoverTrigger>
-        <PopoverContent
-          bgColor="gray.300"
-          outline="none"
-          border="thin"
-          borderColor="gray.600"
-          w="182px"
-        >
-          <PopoverArrow />
-          <PopoverBody margin={0} p={0} border="thin" borderColor="gray.600">
+          <Box>
             <Box
-              _hover={{ bgColor: "gray.400" }}
               bgColor="gray.300"
+              px={2}
+              py={2}
+              rounded="xl"
+              w="208px"
+              _hover={{ bgColor: "gray.400" }}
+            >
+              <HStack w="192px" maxW="192px" spacing={0}>
+                <Avatar
+                  name={data?.data?.attributes.name}
+                  mr={1}
+                  bgColor="brand.400"
+                  marginRight={2}
+                  color="gray.100"
+                  size="sm"
+                  fontWeight="extrabold"
+                />
+                <VStack spacing={0} align="start">
+                  <Box w="128px" maxW="128px">
+                    <Text size="sm" fontWeight="500" noOfLines={1}>
+                      {data?.data?.attributes.name}
+                    </Text>
+                    <Text color="black.200" size="xs" noOfLines={1}>
+                      {data?.data?.attributes.email}
+                    </Text>
+                  </Box>
+                </VStack>
+                <Box>
+                  <FiMoreVertical />
+                </Box>
+              </HStack>
+            </Box>
+          </Box>
+        </PopoverTrigger>
+        <PopoverContent w="182px" border="1px" borderColor="gray.500">
+          <PopoverBody margin={0} p={0}>
+            <Button
               w="100%"
               py={3}
               px={2}
               display="flex"
               flexDir="row"
               alignItems="center"
+              justifyContent="start"
+              border={0}
               rounded="lg"
+              as="button"
+              variant="shell"
+              isDisabled={true}
             >
-              <FiEdit3 />
+              <Box color="gray.600">
+                <FiEdit3 />
+              </Box>
               <Text size="sm" fontWeight="semibold" ml={3}>
                 Edit Profile
               </Text>
-            </Box>
-            <Box
-              _hover={{ bgColor: "gray.400" }}
-              bgColor="gray.300"
+            </Button>
+            <Button
+              _hover={{ bgColor: "gray.200" }}
               w="100%"
               py={3}
               px={2}
@@ -84,38 +115,19 @@ const Profile = () => {
               color={"red.600"}
               rounded="lg"
               onClick={handleLogout}
+              as="button"
+              justifyContent="start"
+              border={0}
+              variant="shell"
             >
               <FiLogOut />
               <Text size="sm" fontWeight="semibold" ml={3}>
                 Sign Out
               </Text>
-            </Box>
+            </Button>
           </PopoverBody>
         </PopoverContent>
       </Popover>
-    );
-  };
-
-  return (
-    <>
-      <Box bgColor="gray.300" px={2} py={2} rounded="xl" w="208px">
-        <HStack w="192px" maxW="192px" spacing={0}>
-          <Avatar name={data?.data?.attributes.name} mr={1} bgColor='brand.400' marginRight={2} color='gray.100' size='sm' fontWeight='extrabold' />
-          <VStack spacing={0} align="start">
-            <Box w="128px" maxW="128px">
-              <Text size="sm" fontWeight="500" noOfLines={1}>
-                {data?.data?.attributes.name}
-              </Text>
-              <Text color="black.200" size="xs" noOfLines={1}>
-                {data?.data?.attributes.email}
-              </Text>
-            </Box>
-          </VStack>
-          <Box margin={0} _hover={{ bgColor: "gray.400" }} p={1} rounded="lg">
-            <OptionsPopover />
-          </Box>
-        </HStack>
-      </Box>
     </>
   );
 };

@@ -10,11 +10,11 @@ export const CONNECTORS: Record<ConnectorTypes, Record<string, string>> = {
     key: "source",
   },
   destination: {
-    name: "Destinations",
+    name: "Destination",
     key: "destination",
   },
   model: {
-    name: "Destination",
+    name: "Model",
     key: "model",
   },
 };

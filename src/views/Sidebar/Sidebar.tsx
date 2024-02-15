@@ -5,12 +5,12 @@ import {
   FiSettings,
   FiDatabase,
   FiTable,
-  FiPieChart,
-  FiMinimize,
-  FiMinimize2,
   FiBookOpen,
+  FiGrid,
+  FiRefreshCcw,
+  FiUsers,
+  FiHome,
 } from "react-icons/fi";
-import { HomeIcon } from "@heroicons/react/24/outline";
 import { NavButton } from "./navButton";
 import Profile from "./Profile";
 
@@ -18,6 +18,7 @@ type MenuItem = {
   title: string;
   link: string;
   Icon: any;
+  disabled?: boolean;
 };
 
 type MenuSection = {
@@ -28,12 +29,19 @@ type MenuSection = {
 type MenuArray = MenuSection[];
 
 const menus: MenuArray = [
-  { heading: null, menu: [{ title: "Dashboard", link: "/", Icon: HomeIcon }] },
+  {
+    heading: null,
+    menu: [{ title: "Dashboard", link: "/", Icon: FiHome, disabled: true }],
+  },
   {
     heading: "SETUP",
     menu: [
       { title: "Sources", link: "/setup/sources", Icon: FiDatabase },
-      { title: "Destinations", link: "/setup/destinations", Icon: FiMinimize },
+      {
+        title: "Destinations",
+        link: "/setup/destinations",
+        Icon: FiGrid,
+      },
     ],
   },
   {
@@ -43,8 +51,13 @@ const menus: MenuArray = [
   {
     heading: "ACTIVATE",
     menu: [
-      { title: "Syncs", link: "/activate/syncs", Icon: FiMinimize2 },
-      { title: "Audiences", link: "/audiences", Icon: FiPieChart },
+      { title: "Syncs", link: "/activate/syncs", Icon: FiRefreshCcw },
+      {
+        title: "Audiences",
+        link: "/audiences",
+        Icon: FiUsers,
+        disabled: true,
+      },
     ],
   },
 ];
@@ -52,7 +65,7 @@ const menus: MenuArray = [
 const renderMenuSection = (section: MenuSection, index: number) => (
   <Stack key={index}>
     {section.heading && (
-      <Box paddingX="17px" marginTop="20px" marginBottom="5px">
+      <Box paddingX="17px">
         <Text textStyle="sm" size="xs" color="gray.600" fontWeight="extrabold">
           {section.heading}
         </Text>
@@ -66,6 +79,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
               label={menuItem.title}
               icon={menuItem.Icon}
               isActive={isActive}
+              disabled={menuItem.disabled}
             />
           )}
         </NavLink>
@@ -78,8 +92,10 @@ const SideBarFooter = () => (
   <Stack position="absolute" bottom="0" left="0px" right="0px" margin="24px">
     <Box />
     <Stack spacing="0">
-      <NavButton label="Settings" icon={FiSettings} />
-      <NavButton label="Documentation" icon={FiBookOpen} />
+      <NavButton label="Settings" icon={FiSettings} disabled={true} />
+      <NavLink to="https://docs.multiwoven.com/get-started/introduction">
+        <NavButton label="Documentation" icon={FiBookOpen} />
+      </NavLink>
     </Stack>
     <Profile />
   </Stack>

@@ -3,7 +3,11 @@ import TopBar from "@/components/TopBar";
 import { Box } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getAllModels } from "@/services/models";
+import Loader from "@/components/Loader";
 import ModelTable from "./ModelTable";
+import NoModels from "../NoModels";
 
 const ModelsList = (): JSX.Element | null => {
   const navigate = useNavigate();
@@ -12,21 +16,37 @@ const ModelsList = (): JSX.Element | null => {
     navigate(row?.id);
   };
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["models"],
+    queryFn: () => getAllModels(),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoading && !data) return <Loader />;
+  if (data?.data?.length === 0) return <NoModels />;
+
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ContentContainer>
         <TopBar
           name={"Models"}
-          ctaName="Add model"
+          ctaName="Add Model"
           ctaIcon={<FiPlus color="gray.100" />}
-          ctaBgColor={"orange.500"}
-          ctaHoverBgColor={"orange.400"}
-          ctaColor={"white"}
+          ctaButtonVariant="solid"
           onCtaClicked={() => navigate("new")}
           isCtaVisible
         />
         <Box mt={16}>
-          <ModelTable handleOnRowClick={handleOnRowClick} />
+          {isLoading || !data ? (
+            <Loader />
+          ) : (
+            <ModelTable
+              handleOnRowClick={handleOnRowClick}
+              modelData={data}
+              isLoading={isLoading}
+            />
+          )}
         </Box>
         <Outlet />
       </ContentContainer>

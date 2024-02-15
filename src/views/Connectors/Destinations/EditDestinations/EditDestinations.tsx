@@ -9,13 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
-import { Box, Button, Spinner, useToast } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import TopBar from "@/components/TopBar";
 import ContentContainer from "@/components/ContentContainer";
 import { useEffect, useState } from "react";
 import { CreateConnectorPayload, TestConnectionPayload } from "../../types";
 import { RJSFSchema } from "@rjsf/utils";
 import SourceFormFooter from "../../Sources/SourcesForm/SourceFormFooter";
+import Loader from "@/components/Loader";
 
 const EditDestination = (): JSX.Element => {
   const { destinationId } = useParams();
@@ -148,18 +149,7 @@ const EditDestination = (): JSX.Element => {
     }
   };
 
-  if (isConnectorInfoLoading || isConnectorDefinitionLoading)
-    return (
-      <Box
-        height="30vh"
-        width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner size="lg" />
-      </Box>
-    );
+  if (isConnectorInfoLoading || isConnectorDefinitionLoading) return <Loader />;
 
   return (
     <Box width="100%" display="flex" justifyContent="center">
@@ -169,7 +159,7 @@ const EditDestination = (): JSX.Element => {
         </Box>
 
         <Box
-          backgroundColor="#fff"
+          backgroundColor="gray.100"
           padding="24px"
           borderWidth="thin"
           borderRadius="8px"

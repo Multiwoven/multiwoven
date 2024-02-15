@@ -29,7 +29,7 @@ const SelectDestinations = (): JSX.Element => {
   };
 
   return (
-    <Box display="flex" alignItems="center">
+    <Box display="flex" alignItems="center" justifyContent="center">
       <ContentContainer>
         <Box marginBottom="40px" display="flex" justifyContent="center">
           {destinationCategories.map((category) => {
@@ -37,11 +37,12 @@ const SelectDestinations = (): JSX.Element => {
             return (
               <Box
                 key={category}
-                padding="10px 15px"
+                padding="6px 15px"
                 borderRadius="100px"
                 backgroundColor={isSelected ? "brand.400" : "none"}
                 color={isSelected ? "#fff" : "none"}
                 borderWidth={isSelected ? "none" : "thin"}
+                borderColor={isSelected ? "none" : "gray.400"}
                 marginRight="20px"
                 cursor="pointer"
                 _hover={{

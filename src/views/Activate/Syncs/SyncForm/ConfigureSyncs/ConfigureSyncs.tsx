@@ -67,6 +67,7 @@ const ConfigureSyncs = (): JSX.Element | null => {
             ctaName="Continue"
             ctaType="submit"
             isCtaDisabled={!selectedStream}
+            isBackRequired
           />
         </form>
       </ContentContainer>

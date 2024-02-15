@@ -1,7 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
 import TopBar from "@/components/TopBar";
 import { fetchSyncs } from "@/services/syncs";
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Box, Text, Tag } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -10,8 +10,9 @@ import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from "../constants";
 import { CreateSyncResponse, SyncColumnFields } from "../types";
 import EntityItem from "@/components/EntityItem";
 import Table from "@/components/Table";
-import moment from "moment";
 import Loader from "@/components/Loader";
+import moment from 'moment';
+import NoActivations from '../../NoSyncs/NoSyncs';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -20,7 +21,7 @@ type TableItem = {
 
 const TableItem = ({ field, data }: TableItem): JSX.Element => {
   switch (field) {
-    case "model":
+    case 'model':
       return (
         <EntityItem
           icon={data.attributes.model.connector.icon}
@@ -28,7 +29,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case "destination":
+    case 'destination':
       return (
         <EntityItem
           icon={data.attributes.destination.icon}
@@ -41,11 +42,24 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         <Text>{moment(data.attributes.updated_at).format("DD/MM/YYYY")}</Text>
       );
 
-    case "status":
+    case 'status':
       return (
-        <Badge colorScheme="green" variant="outline">
-          Active
-        </Badge>
+        <Tag
+          colorScheme='teal'
+          size='xs'
+          bgColor='success.100'
+          paddingX={2}
+          fontWeight={600}
+          borderColor='success.300'
+          borderWidth='1px'
+          borderStyle='solid'
+          height='22px'
+          borderRadius='4px'
+        >
+          <Text size='xs' fontWeight='semibold' color='success.600'>
+            Active
+          </Text>
+        </Tag>
       );
   }
 };
@@ -79,21 +93,26 @@ const SyncsList = (): JSX.Element => {
     };
   }, [data]);
 
-  const handleOnSyncClick = (row: Record<"id", string>) => {
+  const handleOnSyncClick = (row: Record<'id', string>) => {
     navigate(`${row.id}`);
   };
 
+  if (isLoading) return <Loader />;
+
+  if (!isLoading && tableData.data?.length === 0)
+    return <NoActivations activationType='sync' />;
+
   return (
-    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+    <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
-          name="Syncs"
-          ctaName="Add sync"
-          ctaIcon={<FiPlus color="gray.100" />}
-          onCtaClicked={() => navigate("new")}
-          ctaBgColor="orange.500"
-          ctaColor="gray.900"
-          ctaHoverBgColor="orange.400"
+          name='Syncs'
+          ctaName='Add Sync'
+          ctaIcon={<FiPlus color='gray.100' />}
+          onCtaClicked={() => navigate('new')}
+          ctaBgColor='orange.500'
+          ctaColor='gray.900'
+          ctaHoverBgColor='orange.400'
           isCtaVisible
         />
         {!syncList && isLoading ? (

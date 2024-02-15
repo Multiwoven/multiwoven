@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Image,
   Table,
   Tbody,
   Td,
@@ -9,8 +8,9 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react";
-import { TableType } from "./types";
+} from '@chakra-ui/react';
+import { TableType } from './types';
+import EntityItem from '../EntityItem';
 
 const GenerateTable = ({
   title,
@@ -21,24 +21,32 @@ const GenerateTable = ({
   borderRadius,
   maxHeight,
   onRowClick,
+  minWidth,
 }: TableType): JSX.Element => {
   const theadProps = headerColorVisible
-    ? { bgColor: headerColor || "gray.200" }
+    ? { bgColor: headerColor || 'gray.200' }
     : {};
   return (
     <Box
-      border="1px"
-      borderColor="gray.400"
-      borderRadius={borderRadius || "lg"}
+      border='1px'
+      borderColor='gray.400'
+      borderRadius={borderRadius || 'lg'}
       maxHeight={maxHeight}
-      overflowX="scroll"
+      minWidth={minWidth}
+      overflowX='scroll'
     >
       {title ? title : <></>}
       <Table size={size} maxHeight={maxHeight}>
-        <Thead {...theadProps} bgColor="gray.300">
+        <Thead {...theadProps} bgColor='gray.300'>
           <Tr>
             {data.columns.map((column, index) => (
-              <Th key={index} color="black.500" fontWeight={700}>
+              <Th
+                key={index}
+                color='black.500'
+                fontWeight={700}
+                padding='16px'
+                letterSpacing='2.4px'
+              >
                 {column.name}
               </Th>
             ))}
@@ -48,31 +56,26 @@ const GenerateTable = ({
           {data.data.map((row, rowIndex) => (
             <Tr
               key={rowIndex}
-              _hover={{ backgroundColor: "gray.300", cursor: "pointer" }}
+              _hover={{ backgroundColor: 'gray.200', cursor: 'pointer' }}
               onClick={() => onRowClick?.(row)}
             >
               {data.columns.map((column, columnIndex) => (
-                <Td key={columnIndex}>
+                <Td key={columnIndex} padding='20px'>
                   {column.showIcon ? (
                     <Flex
-                      flexDir="row"
-                      alignItems="center"
-                      alignContent="center"
+                      flexDir='row'
+                      alignItems='center'
+                      alignContent='center'
                     >
-                      <Image
-                        src={row.icon}
-                        h={10}
-                        p={1}
-                        border="1px"
-                        borderRadius="lg"
-                        borderColor="gray.400"
+                      <EntityItem
+                        name={row[column.key as keyof typeof row] || ''}
+                        icon={row.icon || ''}
                       />
-                      <Text fontSize="md" mx={2}>
-                        {row[column.key as keyof typeof row]}
-                      </Text>
                     </Flex>
                   ) : (
-                    row[column.key as keyof typeof row]
+                    <Text size='sm' color='gray.700' fontWeight={500}>
+                      {row[column.key as keyof typeof row]}
+                    </Text>
                   )}
                 </Td>
               ))}

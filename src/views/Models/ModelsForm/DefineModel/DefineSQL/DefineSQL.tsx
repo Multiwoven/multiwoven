@@ -25,12 +25,14 @@ import ModelFooter from "../../ModelFooter";
 import { useNavigate } from "react-router-dom";
 import { DefineSQLProps } from "./types";
 import { UpdateModelPayload } from "@/views/Models/ViewModel/types";
+import ContentContainer from "@/components/ContentContainer";
 
 const DefineSQL = ({
   hasPrefilledValues = false,
   prefillValues,
   isFooterVisible = true,
   isUpdateButtonVisible = false,
+  isAlignToContentContainer = false,
 }: DefineSQLProps): JSX.Element => {
   const [tableData, setTableData] = useState<null | TableDataType>();
 
@@ -39,16 +41,20 @@ const DefineSQL = ({
   const [moveForward, canMoveForward] = useState(false);
 
   let connector_id: string = "";
-  let connector_icon: string = "";
+  let connector_icon: JSX.Element = <></>;
   let connector_name: string = "";
   let user_query: string = "";
 
   if (!hasPrefilledValues) {
     const extracted = extractData(state.forms);
     const connector_data = extracted.find((data) => data?.id);
+    console.log(connector_data?.icon);
+    console.log(connector_data?.name);
     connector_id = connector_data?.id || "";
-    connector_icon = connector_data?.icon || "";
+    connector_icon = connector_data?.icon || <></>;
     connector_name = connector_data?.name || "";
+
+    console.log(connector_icon, connector_name);
   } else {
     if (!prefillValues) return <></>;
 
@@ -138,125 +144,151 @@ const DefineSQL = ({
   }
 
   return (
-    <>
-      <Box w="6xl" mx="auto">
-        <VStack>
-          <Box
-            border="1px"
-            borderColor="gray.400"
-            w="4xl"
-            minH="100%"
-            h="xs"
-            rounded="xl"
-          >
-            <Flex bgColor="gray.200" p={2} roundedTop="xl">
-              <Flex w="full" alignItems="center">
-                <Image
-                  src={connector_icon}
-                  p={2}
-                  mx={4}
-                  h={12}
-                  bgColor="gray.100"
-                  rounded="lg"
-                />
-                <Text>{connector_name}</Text>
-              </Flex>
-              <Spacer />
-              <HStack spacing={3}>
-                <Button
-                  variant="shell"
-                  onClick={getPreview}
-                  isLoading={loading}
-                >
-                  {" "}
-                  Run Query{" "}
-                </Button>
-                <Button variant="shell">
-                  <Image src={StarsImage} w={6} mr={2} /> Beautify
-                </Button>
-              </HStack>
-            </Flex>
-            <Box p={3} w="100%" maxH="250px">
-              <Editor
-                width="100%"
-                height="240px"
-                language="mysql"
-                defaultLanguage="mysql"
-                defaultValue="Enter your query..."
-                value={user_query}
-                saveViewState={true}
-                onMount={handleEditorDidMount}
-                onChange={() => canMoveForward(false)}
-                theme="light"
-              />
-            </Box>
-          </Box>
-
-          {tableData ? (
-            <Box w="4xl" h="fit" maxHeight="xs">
-              <GenerateTable
-                maxHeight="xs"
-                data={tableData}
-                size="sm"
-                borderRadius="xl"
-              />
-            </Box>
-          ) : (
+    <Box justifyContent="center" display="flex">
+      <ContentContainer>
+        <Box w="full" mx="auto">
+          <VStack>
             <Box
               border="1px"
               borderColor="gray.400"
-              w="4xl"
+              w="full"
+              minW="4xl"
               minH="100%"
-              h="2xs"
+              h="xs"
               rounded="xl"
-              p={1}
-              alignItems="center"
-              justifyContent="center"
             >
-              <VStack mx="auto" mt={12}>
-                <Image src={EmptyQueryPreviewImage} h="20" />
-                <Text fontSize="md" fontWeight="bold">
-                  Ready to test your query?
-                </Text>
-                <Text fontSize="sm">Run your query to preview the rows</Text>
-              </VStack>
+              <Flex bgColor="gray.300" p={2} roundedTop="xl">
+                <Flex w="full" alignItems="center">
+                  {connector_icon}
+                </Flex>
+                <Spacer />
+                <HStack spacing={3}>
+                  <Button
+                    variant="shell"
+                    onClick={getPreview}
+                    isLoading={loading}
+                  >
+                    {" "}
+                    Run Query{" "}
+                  </Button>
+                  <Button variant="shell">
+                    <Image src={StarsImage} w={6} mr={2} /> Beautify
+                  </Button>
+                </HStack>
+              </Flex>
+              <Box p={3} w="100%" maxH="250px" bgColor="gray.100">
+                <Editor
+                  width="100%"
+                  height="240px"
+                  language="mysql"
+                  defaultLanguage="mysql"
+                  defaultValue="Enter your query..."
+                  value={user_query}
+                  saveViewState={true}
+                  onMount={handleEditorDidMount}
+                  onChange={() => canMoveForward(false)}
+                  theme="light"
+                  options={{
+                    minimap: {
+                      enabled: false,
+                    },
+                    formatOnType: true,
+                    formatOnPaste: true,
+                    autoIndent: "full",
+                    wordBasedSuggestions: true,
+                    quickSuggestions: true,
+                    tabCompletion: "on",
+                    contextmenu: true,
+                    smoothScrolling: true,
+                    scrollBeyondLastLine: false,
+                  }}
+                />
+              </Box>
             </Box>
-          )}
-        </VStack>
-      </Box>
-      {isFooterVisible ? (
-        <ModelFooter
-          buttons={[
-            {
-              name: "Back",
-              variant: "ghost",
-              color: "black",
-              onClick: () => navigate(-1),
-            },
-            {
-              name: "Continue",
-              isDisabled: !moveForward,
-              variant: "solid",
-              onClick: () =>
-                handleContinueClick(
-                  (editorRef?.current as any).getValue(),
-                  connector_id,
-                  tableData
-                ),
-            },
-          ]}
-        />
-      ) : (
-        <> </>
-      )}
-      {isUpdateButtonVisible ? (
-        <Button isDisabled={!moveForward} onClick={handleModelUpdate}>
-          Save Changes
-        </Button>
-      ) : (
-        <></>
-      )}
-    </>
+
+            {tableData ? (
+              <Box w="full" h="fit" maxHeight="xs">
+                <GenerateTable
+                  maxHeight="xs"
+                  minWidth="4xl"
+                  data={tableData}
+                  size="sm"
+                  borderRadius="xl"
+                />
+              </Box>
+            ) : (
+              <Box
+                border="1px"
+                borderColor="gray.400"
+                w="full"
+                minW="4xl"
+                minH="100%"
+                h="2xs"
+                rounded="xl"
+                p={1}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <VStack mx="auto" mt={12}>
+                  <Image src={EmptyQueryPreviewImage} h="20" />
+                  <Text fontSize="md" fontWeight="bold">
+                    Ready to test your query?
+                  </Text>
+                  <Text fontSize="sm">Run your query to preview the rows</Text>
+                </VStack>
+              </Box>
+            )}
+          </VStack>
+        </Box>
+        {isFooterVisible ? (
+          <ModelFooter
+            isAlignToContentContainer={isAlignToContentContainer}
+            buttons={[
+              {
+                name: "Back",
+                variant: "ghost",
+                color: "black",
+                onClick: () => navigate(-1),
+              },
+              {
+                name: "Continue",
+                isDisabled: !moveForward,
+                variant: "solid",
+                onClick: () =>
+                  handleContinueClick(
+                    (editorRef?.current as any).getValue(),
+                    connector_id,
+                    tableData
+                  ),
+              },
+            ]}
+          />
+        ) : (
+          <></>
+        )}
+        {isUpdateButtonVisible ? (
+          <ModelFooter
+            isAlignToContentContainer={isAlignToContentContainer}
+            buttons={[
+              {
+                name: "Cancel",
+                variant: "ghost",
+                color: "black",
+                onClick: () => navigate(-1),
+              },
+              {
+                name: "Save Changes",
+                isDisabled: !moveForward,
+                variant: "solid",
+                onClick: () => handleModelUpdate(),
+              },
+            ]}
+          />
+        ) : (
+          <></>
+        )}
+      </ContentContainer>
+    </Box>
   );
 };
 

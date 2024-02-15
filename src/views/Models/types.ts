@@ -58,3 +58,10 @@ export type ModelEntity = {
   icon: string;
   name: string;
 };
+
+export type ModelColumnFields = "name" | "query_type" | "last_updated";
+
+export type ModelColumnEntity = {
+  key: ModelColumnFields;
+  name: string;
+};

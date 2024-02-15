@@ -2,12 +2,13 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { getConnectorDefinition } from "@/services/connectors";
 import { useUiConfig } from "@/utils/hooks";
 import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 
 import validator from "@rjsf/validator-ajv8";
 import { Form } from "@rjsf/chakra-ui";
+import Loader from "@/components/Loader";
 
 const DestinationConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -28,18 +29,7 @@ const DestinationConfigForm = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading)
-    return (
-      <Box
-        height="30vh"
-        width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner size="lg" />
-      </Box>
-    );
+  if (isLoading) return <Loader />;
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;

@@ -1,70 +1,44 @@
-import {
-  Avatar,
-  HStack,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Text,
-} from "@chakra-ui/react";
+import GenerateTable from "@/components/Table/Table";
+import { getAllModels } from "@/services/models";
+import { addIconDataToArray, ConvertToTableData } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import NoModels from "@/views/Models/NoModels";
+import Loader from "@/components/Loader";
 
-type Models = {
-  data: {
-    id: string;
-    type: string;
-    attributes: {
-      name: string;
-      description: string;
-      query: string;
-      query_type: string;
-      created_at: string;
-      updated_at: string;
-    };
-  }[];
-  links: {
-    self: string;
-    first: string;
-    prev: string;
-    next: string;
-    last: string;
-  };
+type ModelTableProps = {
+  handleOnRowClick: (args: unknown) => void;
 };
 
-const ModelTable = ({ models }: { models: Models }): JSX.Element => {
+const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
+  const { data } = useQuery({
+    queryKey: ["models"],
+    queryFn: () => getAllModels(),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const models = data?.data;
+
+  if (!models) {
+    return <Loader />;
+  }
+
+  if (models.length === 0) return <NoModels />;
+
+  const values = ConvertToTableData(addIconDataToArray(models), [
+    { name: "Name", key: "name", showIcon: true },
+    { name: "Query Type", key: "query_type" },
+    { name: "Updated At", key: "updated_at" },
+  ]);
+
   return (
-    <Table size="sm" variant="simple" border="1">
-      <Thead>
-        <Tr>
-          <Th fontSize={12}>NAME</Th>
-          <Th fontSize={12}>METHOD</Th>
-          <Th fontSize={12}>LAST UPDATED</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {models.data.map((model) => (
-          <Tr key={model.id}>
-            <Td>
-              <HStack spacing="4">
-                <Avatar
-                  name={model.attributes.name}
-                  src={"../../assets/icons/" + model.attributes.name + ".svg"}
-                  boxSize="8"
-                />
-                <Text fontWeight="medium">{model.attributes.name}</Text>
-              </HStack>
-            </Td>
-            <Td>
-              <Text>{model.attributes.query_type}</Text>
-            </Td>
-            <Td>
-              <Text>{model.attributes.updated_at}</Text>
-            </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+    <GenerateTable
+      data={values}
+      headerColorVisible={true}
+      onRowClick={handleOnRowClick}
+      maxHeight="2xl"
+    />
   );
 };
+
 export default ModelTable;

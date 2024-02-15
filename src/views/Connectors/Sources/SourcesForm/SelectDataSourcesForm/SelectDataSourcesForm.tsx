@@ -5,6 +5,7 @@ import { getConnectorsDefintions } from "@/services/connectors";
 import { useQuery } from "@tanstack/react-query";
 import { DatasourceType } from "@/views/Connectors/types";
 import { useUiConfig } from "@/utils/hooks";
+import ContentContainer from "@/components/ContentContainer";
 
 const SelectDataSourcesForm = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -28,19 +29,20 @@ const SelectDataSourcesForm = (): JSX.Element => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
+      <ContentContainer>
       <Box
         display={{ base: "block", md: "grid" }}
         gridTemplateColumns="1fr 1fr"
         gap="20px"
         marginBottom="20px"
         paddingY="10px"
-        maxWidth={maxContentWidth}
         width="100%"
       >
         {datasources.map((datasource) => (
           <Box
             key={datasource.name}
-            padding="20px"
+            paddingX="12px"
+            paddingY="8px"
             width="100%"
             borderRadius="8px"
             borderWidth="thin"
@@ -52,9 +54,6 @@ const SelectDataSourcesForm = (): JSX.Element => {
             alignItems="center"
             onClick={() => handleOnClick(datasource)}
           >
-            <Box>
-              <Image src={datasource.icon} height="8" w="min" mr={3} />
-            </Box>
             <Box display="flex" alignItems="center">
               <Box
                 height="40px"
@@ -75,6 +74,7 @@ const SelectDataSourcesForm = (): JSX.Element => {
           </Box>
         ))}
       </Box>
+      </ContentContainer>
     </Box>
   );
 };

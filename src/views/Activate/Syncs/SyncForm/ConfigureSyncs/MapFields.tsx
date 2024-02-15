@@ -1,10 +1,10 @@
-import { ConnectorItem } from "@/views/Connectors/types";
-import { ModelEntity } from "@/views/Models/types";
-import { Box, Button, CloseButton, Text } from "@chakra-ui/react";
-import { getModelPreviewById } from "@/services/models";
-import { useQuery } from "@tanstack/react-query";
-import { FieldMap as FieldMapType, Stream } from "@/views/Activate/Syncs/types";
-import FieldMap from "./FieldMap";
+import { ConnectorItem } from '@/views/Connectors/types';
+import { ModelEntity } from '@/views/Models/types';
+import { Box, Button, CloseButton, Text } from '@chakra-ui/react';
+import { getModelPreviewById } from '@/services/models';
+import { useQuery } from '@tanstack/react-query';
+import { FieldMap as FieldMapType, Stream } from '@/views/Activate/Syncs/types';
+import FieldMap from './FieldMap';
 import {
   convertFieldMapToConfig,
   getPathFromObject,
@@ -22,8 +22,8 @@ type MapFieldsProps = {
 };
 
 const FieldStruct: FieldMapType = {
-  model: "",
-  destination: "",
+  model: '',
+  destination: '',
 };
 
 const MapFields = ({
@@ -36,7 +36,7 @@ const MapFields = ({
 }: MapFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([FieldStruct]);
   const { data: previewModelData } = useQuery({
-    queryKey: ["syncs", "preview-model", model?.connector?.id],
+    queryKey: ['syncs', 'preview-model', model?.connector?.id],
     queryFn: () =>
       getModelPreviewById(model?.query, String(model?.connector?.id)),
     enabled: !!model?.connector?.id,
@@ -71,7 +71,7 @@ const MapFields = ({
 
   const handleOnChange = (
     id: number,
-    type: "model" | "destination",
+    type: 'model' | 'destination',
     value: string
   ) => {
     const fieldsClone = [...fields];
@@ -98,22 +98,28 @@ const MapFields = ({
       borderRadius="8px"
       marginBottom={isEdit ? "20px" : "100px"}
     >
-      <Text fontWeight="600">
+      <Text fontWeight={600} size='md'>
         Map fields to {destination?.attributes?.connector_name}
       </Text>
-      <Text fontSize="sm" marginBottom="30px">
-        Select the API from the destination that you wish to map.
+      <Text
+        size='xs'
+        mb={6}
+        letterSpacing='-0.12px'
+        fontWeight={400}
+        color='black.200'
+      >
+        Select the API from the Destination that you wish to map.
       </Text>
       {fields.map((_, index) => (
         <Box
           key={`field-map-${index}`}
-          display="flex"
-          alignItems="flex-end"
-          marginBottom="30px"
+          display='flex'
+          alignItems='flex-end'
+          marginBottom='30px'
         >
           <FieldMap
             id={index}
-            fieldType="model"
+            fieldType='model'
             entityName={model.connector.connector_name}
             icon={model.connector.icon}
             options={modelColumns}
@@ -122,12 +128,18 @@ const MapFields = ({
             onChange={handleOnChange}
             isDisabled={!stream}
           />
-          <Box width="80px" padding="20px" position="relative" top="8px">
+          <Box
+            width='80px'
+            padding='20px'
+            position='relative'
+            top='8px'
+            color='gray.600'
+          >
             <ArrowRightIcon />
           </Box>
           <FieldMap
             id={index}
-            fieldType="destination"
+            fieldType='destination'
             entityName={destination.attributes.connector_name}
             icon={destination.attributes.icon}
             options={destinationColumns}
@@ -135,11 +147,11 @@ const MapFields = ({
             onChange={handleOnChange}
             isDisabled={!stream}
           />
-          <Box>
+          <Box py='20px' position='relative' top='12px' color='gray.600'>
             <CloseButton
-              size="sm"
-              marginLeft="10px"
-              _hover={{ backgroundColor: "none" }}
+              size='sm'
+              marginLeft='10px'
+              _hover={{ backgroundColor: 'none' }}
               onClick={() => handleRemoveMap(index)}
             />
           </Box>
@@ -147,10 +159,16 @@ const MapFields = ({
       ))}
       <Box>
         <Button
-          variant="secondary"
+          variant='shell'
           onClick={handleOnAppendField}
+          height='32px'
+          minWidth={0}
+          width='auto'
+          fontSize='12px'
+          fontWeight={700}
+          lineHeight='18px'
+          letterSpacing='-0.12px'
           isDisabled={fields.length === modelColumns.length || !stream}
-          backgroundColor="#fff"
         >
           Add mapping
         </Button>

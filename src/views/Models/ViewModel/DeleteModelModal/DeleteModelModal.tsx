@@ -40,7 +40,7 @@ const DeleteModelModal = (): JSX.Element => {
       navigate("/define/models");
     } catch (error) {
       toast({
-        title: "Unable to delete model",
+        title: "Unable to delete Model",
         description: "error",
         status: "error",
         isClosable: true,
@@ -69,10 +69,10 @@ const DeleteModelModal = (): JSX.Element => {
             <Flex direction="column">
               <Image src={ExitWarningImage} h={32} w={48} mx="auto" my={8} />
               <Text fontWeight="bold" pt={8} fontSize={20} textAlign="center">
-                Are you sure you want to delete this model?
+                Are you sure you want to delete this Model?
               </Text>
               <Text fontWeight="light" fontSize={14} textAlign="center">
-                This action will permanently delete the model and cannot be
+                This action will permanently delete the Model and cannot be
                 undone.
               </Text>
             </Flex>

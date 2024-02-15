@@ -18,13 +18,12 @@ import { useNavigate } from "react-router-dom";
 import { createNewConnector } from "@/services/connectors";
 import { useQueryClient } from "@tanstack/react-query";
 import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
-import { useUiConfig } from "@/utils/hooks";
+import ContentContainer from "@/components/ContentContainer";
 
 const finalDataSourceFormKey = "testSource";
 
 const SourceFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { maxContentWidth } = useUiConfig();
   const { state } = useContext(SteppedFormContext);
   const { forms } = state;
   const toast = useToast();
@@ -74,7 +73,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
         toast({
           status: "error",
           title: "An error occurred.",
-          description: "Something went wrong while creating source.",
+          description: "Something went wrong while creating your Source.",
           position: "bottom-right",
           isClosable: true,
         });
@@ -86,11 +85,12 @@ const SourceFinalizeForm = (): JSX.Element | null => {
 
   return (
     <Box display="flex" justifyContent="center">
-      <Box maxWidth={maxContentWidth} width="100%">
+      <ContentContainer>
+      <Box padding="24px" backgroundColor="gray.200" borderRadius="8px">
         <form onSubmit={formik.handleSubmit}>
           <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
             <Heading size="md" fontWeight="600" marginBottom="24px">
-              Finalize settings for this source
+              Finalize settings for this Source
             </Heading>
             <Box>
               <Text marginBottom="8px" fontWeight="600">
@@ -99,8 +99,8 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               <Input
                 name="connector_name"
                 type="text"
-                placeholder="Enter source name"
-                variant='outline'
+                placeholder="Enter Source name"
+                variant="outline"
                 marginBottom="24px"
                 onChange={formik.handleChange}
                 value={formik.values.connector_name}
@@ -115,10 +115,11 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               <Textarea
                 name="description"
                 placeholder="Enter a description"
-                background="#fff"
+                background="gray.100"
                 resize="none"
                 onChange={formik.handleChange}
                 value={formik.values.description}
+                borderColor="gray.400"
               />
             </Box>
           </Box>
@@ -129,6 +130,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
           />
         </form>
       </Box>
+      </ContentContainer>
     </Box>
   );
 };

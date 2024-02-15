@@ -74,7 +74,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
         toast({
           status: "error",
           title: "An error occurred.",
-          description: "Something went wrong while creating destination.",
+          description: "Something went wrong while creating the Destination.",
           position: "bottom-right",
           isClosable: true,
         });
@@ -90,7 +90,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
         <form onSubmit={formik.handleSubmit}>
           <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
             <Heading size="md" fontWeight="600" marginBottom="24px">
-              Finalize settings for this destination
+              Finalize settings for this Destination
             </Heading>
             <Box>
               <Text marginBottom="8px" fontWeight="600">
@@ -99,8 +99,8 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
               <Input
                 name="connector_name"
                 type="text"
-                placeholder="Enter destination name"
-                background="#fff"
+                placeholder="Enter Destination name"
+                background="gray.100"
                 marginBottom="24px"
                 onChange={formik.handleChange}
                 value={formik.values.connector_name}
@@ -115,7 +115,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
               <Textarea
                 name="description"
                 placeholder="Enter a description"
-                background="#fff"
+                background="gray.100"
                 resize="none"
                 onChange={formik.handleChange}
                 value={formik.values.description}
