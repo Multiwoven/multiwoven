@@ -71,14 +71,21 @@ const FormField = ({
   placeholder,
 }: SignInFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
-    <FormLabel htmlFor={name}>{label}</FormLabel>
+    <FormLabel htmlFor={name} fontSize="xs" fontWeight="medium">
+      {label}
+    </FormLabel>
     <Input
       variant="outline"
       placeholder={placeholder}
+      _placeholder={{ color: "black.100" }}
       type={type}
       {...getFieldProps(name)}
+      fontSize="sm"
+      color="black.500"
     />
-    <ErrorMessage name={name} />
+    <Text size="xs" color="red.500" mt={2}>
+      <ErrorMessage name={name} />
+    </Text>
   </FormControl>
 );
 
