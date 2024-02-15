@@ -40,7 +40,7 @@ const FieldMap = ({
           borderWidth='1px'
           borderStyle='solid'
           borderColor='gray.400'
-          color='gray.600'
+          color='black.500'
         >
           {options.map((option) => (
             <option
