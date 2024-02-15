@@ -23,8 +23,6 @@ const EditModel = (): JSX.Element => {
     refetchOnWindowFocus: true,
   });
 
-  console.log(data);
-
   const prefillValues: PrefillValue = {
     connector_id: data?.data?.attributes.connector.id || "",
     connector_icon: (

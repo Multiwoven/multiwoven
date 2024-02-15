@@ -48,8 +48,6 @@ const DefineSQL = ({
   if (!hasPrefilledValues) {
     const extracted = extractData(state.forms);
     const connector_data = extracted.find((data) => data?.id);
-    console.log(connector_data?.icon);
-    console.log(connector_data?.name);
     connector_id = connector_data?.id || "";
     connector_icon = connector_data?.icon || <></>;
   } else {

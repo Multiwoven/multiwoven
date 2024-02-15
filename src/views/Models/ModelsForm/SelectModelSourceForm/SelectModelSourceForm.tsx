@@ -108,7 +108,6 @@ const SelectModelSourceForm = (): JSX.Element | null => {
           <Loader />
         ) : (
           <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
-          // <Table data={tableData} onRowClick={(row) => console.log(row)} />
         )}
       </ContentContainer>
     </Box>
