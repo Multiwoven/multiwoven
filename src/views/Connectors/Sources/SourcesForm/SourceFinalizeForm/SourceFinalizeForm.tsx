@@ -115,7 +115,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
               <Textarea
                 name="description"
                 placeholder="Enter a description"
-                background="#fff"
+                background="gray.100"
                 resize="none"
                 onChange={formik.handleChange}
                 value={formik.values.description}

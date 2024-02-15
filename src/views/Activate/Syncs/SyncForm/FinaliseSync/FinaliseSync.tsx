@@ -1,7 +1,7 @@
-import ContentContainer from "@/components/ContentContainer";
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import { createSync } from "@/services/syncs";
-import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
+import ContentContainer from '@/components/ContentContainer';
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
+import { createSync } from '@/services/syncs';
+import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import {
   Box,
   Divider,
@@ -13,11 +13,11 @@ import {
   Text,
   Textarea,
   useToast,
-} from "@chakra-ui/react";
-import { useFormik } from "formik";
-import { useContext, useState } from "react";
-import { ConfigSync } from "../../types";
-import { useNavigate } from "react-router-dom";
+} from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import { useContext, useState } from 'react';
+import { ConfigSync } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 const FinaliseSync = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
@@ -27,17 +27,17 @@ const FinaliseSync = (): JSX.Element => {
 
   const { forms } = state;
   const syncConfigForm = forms.find(
-    (form) => form.stepKey === "configureSyncs"
+    (form) => form.stepKey === 'configureSyncs'
   );
   const syncConfigData = syncConfigForm?.data;
 
   const formik = useFormik({
     initialValues: {
-      description: "",
-      sync_mode: "full_refresh",
+      description: '',
+      sync_mode: 'full_refresh',
       sync_interval: 0,
-      sync_interval_unit: "minutes",
-      schedule_type: "automated",
+      sync_interval_unit: 'minutes',
+      schedule_type: 'automated',
     },
     onSubmit: async (data) => {
       setIsLoading(true);
@@ -52,22 +52,22 @@ const FinaliseSync = (): JSX.Element => {
         const response = await createSync(payload);
         if (response?.data?.attributes) {
           toast({
-            status: "success",
-            title: "Success!",
-            description: "Sync created successfully!",
-            position: "bottom-right",
+            status: 'success',
+            title: 'Success!',
+            description: 'Sync created successfully!',
+            position: 'bottom-right',
           });
 
-          navigate("/activate/syncs");
+          navigate('/activate/syncs');
           return;
         }
         throw new Error();
       } catch {
         toast({
-          status: "error",
-          title: "An error occurred.",
-          description: "Something went wrong while creating Sync.",
-          position: "bottom-right",
+          status: 'error',
+          title: 'An error occurred.',
+          description: 'Something went wrong while creating Sync.',
+          position: 'bottom-right',
           isClosable: true,
         });
       } finally {
@@ -77,65 +77,72 @@ const FinaliseSync = (): JSX.Element => {
   });
 
   return (
-    <Box display="flex" width="100%" justifyContent="center">
+    <Box display='flex' width='100%' justifyContent='center'>
       <ContentContainer>
         <form onSubmit={formik.handleSubmit}>
           <Box
-            backgroundColor="gray.300"
-            padding="20px"
-            borderRadius="8px"
-            marginBottom="100px"
+            backgroundColor='gray.300'
+            padding='20px'
+            borderRadius='8px'
+            marginBottom='100px'
           >
-            <Text fontWeight="600" marginBottom="20px">
+            <Text fontWeight='600' mb='6' size='md'>
               Finalise setting for this sync
             </Text>
-            <Text marginBottom="10px">Description (Optional)</Text>
+            <Text marginBottom='10px'>Description (Optional)</Text>
             <Textarea
-              name="description"
+              name='description'
               value={formik.values.description}
-              placeholder="Enter a description"
-              background="#fff"
-              resize="none"
-              marginBottom="30px"
+              placeholder='Enter a description'
+              background='gray.100'
+              resize='none'
+              mb='6'
               onChange={formik.handleChange}
+              borderWidth='1px'
+              borderStyle='solid'
+              borderColor='gray.400'
             />
 
-            <Box display="flex">
-              <Box minWidth="500px">
-                <Text marginBottom="20px" fontWeight="600">
+            <Box display='flex'>
+              <Box minWidth='500px'>
+                <Text mb='4' fontWeight='600' size='sm'>
                   Schedule type
                 </Text>
                 <RadioGroup
-                  name="schedule_type"
+                  name='schedule_type'
                   value={formik.values.schedule_type}
                   onClick={formik.handleChange}
                 >
-                  <Stack direction="column">
+                  <Stack direction='column'>
                     <Radio
-                      value="manual"
-                      display="flex"
-                      alignItems="flex-start"
-                      marginBottom="10px"
-                      backgroundColor="#fff"
+                      value='manual'
+                      display='flex'
+                      alignItems='flex-start'
+                      marginBottom='10px'
+                      backgroundColor='gray.100'
                       isDisabled
                     >
-                      <Box position="relative" top="-5px">
-                        <Text fontWeight="500">Manual </Text>
-                        <Text fontSize="sm">
-                          Trigger your sync manually in the app or using our API{" "}
+                      <Box position='relative' top='-5px'>
+                        <Text fontWeight='500' size='sm'>
+                          Manual{' '}
+                        </Text>
+                        <Text size='xs' color='black.200'>
+                          Trigger your sync manually in the app or using our API{' '}
                         </Text>
                       </Box>
                     </Radio>
                     <Radio
-                      value="automated"
-                      display="flex"
-                      alignItems="flex-start"
-                      backgroundColor="#fff"
-                      marginBottom="10px"
+                      value='automated'
+                      display='flex'
+                      alignItems='flex-start'
+                      backgroundColor='gray.100'
+                      marginBottom='10px'
                     >
-                      <Box position="relative" top="-5px">
-                        <Text fontWeight="500">Interval </Text>
-                        <Text fontSize="sm">
+                      <Box position='relative' top='-5px'>
+                        <Text fontWeight='500' size='sm'>
+                          Interval{' '}
+                        </Text>
+                        <Text size='xs' color='black.200'>
                           Schedule your sync to run on a set interval (e.g.,
                           once per hour)
                         </Text>
@@ -144,50 +151,59 @@ const FinaliseSync = (): JSX.Element => {
                   </Stack>
                 </RadioGroup>
               </Box>
-              <Box minWidth="400px">
-                {formik.values.schedule_type === "automated" ? (
+              <Box minWidth='400px'>
+                {formik.values.schedule_type === 'automated' ? (
                   <>
-                    <Text marginBottom="20px" fontWeight="600">
+                    <Text mb={4} fontWeight='600' size='sm'>
                       Schedule Configuration
                     </Text>
                     <Box
-                      border="thin"
-                      padding="5px 10px 5px 20px"
-                      display="flex"
-                      backgroundColor="#fff"
-                      borderRadius="8px"
-                      alignItems="center"
+                      border='thin'
+                      padding='5px 10px 5px 20px'
+                      display='flex'
+                      backgroundColor='gray.100'
+                      borderRadius='8px'
+                      alignItems='center'
+                      borderWidth='1px'
+                      borderStyle='solid'
+                      borderColor='gray.400'
                     >
                       <Box>
-                        <Text>Every</Text>
+                        <Text size='sm' fontWeight={500}>
+                          Every
+                        </Text>
                       </Box>
                       <Box>
                         <Input
-                          name="sync_interval"
-                          pr="4.5rem"
-                          type="number"
-                          placeholder="Enter a value"
-                          border="none"
-                          _focusVisible={{ border: "#fff" }}
+                          name='sync_interval'
+                          pr='4.5rem'
+                          type='number'
+                          placeholder='Enter a value'
+                          border='none'
+                          _focusVisible={{ border: '#fff' }}
                           value={formik.values.sync_interval}
                           onChange={formik.handleChange}
                           isRequired
+                          color='gray.600'
                         />
                       </Box>
                       <Divider
-                        orientation="vertical"
-                        height="24px"
-                        color="gray.400"
+                        orientation='vertical'
+                        height='24px'
+                        color='gray.400'
                       />
                       <Box>
                         <Select
-                          name="sync_interval_unit"
-                          border="none"
-                          _focusVisible={{ border: "#fff" }}
+                          name='sync_interval_unit'
+                          border='none'
+                          _focusVisible={{ border: '#fff' }}
                           value={formik.values.sync_interval_unit}
                           onChange={formik.handleChange}
                         >
-                          <option value="minutes">Minute(s)</option>
+                          <option value='minutes'>Minute(s)</option>
+                          <option value='hours'>Hour(s)</option>
+                          <option value='days'>Day(s)</option>
+                          <option value='weeks'>Week(s)</option>
                         </Select>
                       </Box>
                     </Box>
@@ -197,9 +213,10 @@ const FinaliseSync = (): JSX.Element => {
             </Box>
           </Box>
           <SourceFormFooter
-            ctaName="Finish"
-            ctaType="submit"
+            ctaName='Finish'
+            ctaType='submit'
             isCtaLoading={isLoading}
+            isBackRequired
           />
         </form>
       </ContentContainer>

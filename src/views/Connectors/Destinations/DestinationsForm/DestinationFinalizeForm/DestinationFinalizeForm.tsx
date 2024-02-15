@@ -100,7 +100,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
                 name="connector_name"
                 type="text"
                 placeholder="Enter Destination name"
-                background="#fff"
+                background="gray.100"
                 marginBottom="24px"
                 onChange={formik.handleChange}
                 value={formik.values.connector_name}
@@ -115,7 +115,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
               <Textarea
                 name="description"
                 placeholder="Enter a description"
-                background="#fff"
+                background="gray.100"
                 resize="none"
                 onChange={formik.handleChange}
                 value={formik.values.description}

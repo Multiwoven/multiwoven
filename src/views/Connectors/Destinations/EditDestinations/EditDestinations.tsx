@@ -159,7 +159,7 @@ const EditDestination = (): JSX.Element => {
         </Box>
 
         <Box
-          backgroundColor="#fff"
+          backgroundColor="gray.100"
           padding="24px"
           borderWidth="thin"
           borderRadius="8px"

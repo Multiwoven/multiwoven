@@ -1,18 +1,18 @@
-import ContentContainer from "@/components/ContentContainer";
-import TopBar from "@/components/TopBar";
-import { fetchSyncs } from "@/services/syncs";
-import { Box, Tag, Text } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { FiPlus } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { SYNC_TABLE_COLUMS } from "../constants";
-import { CreateSyncResponse, SyncColumnFields } from "../types";
-import EntityItem from "@/components/EntityItem";
-import Table from "@/components/Table";
-import moment from "moment";
-import Loader from "@/components/Loader";
-import NoActivations from "../../NoSyncs/NoSyncs";
+import ContentContainer from '@/components/ContentContainer';
+import TopBar from '@/components/TopBar';
+import { fetchSyncs } from '@/services/syncs';
+import { Box, Tag, Text } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { FiPlus } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { SYNC_TABLE_COLUMS } from '../constants';
+import { CreateSyncResponse, SyncColumnFields } from '../types';
+import EntityItem from '@/components/EntityItem';
+import Table from '@/components/Table';
+import moment from 'moment';
+import Loader from '@/components/Loader';
+import NoActivations from '../../NoSyncs/NoSyncs';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -21,7 +21,7 @@ type TableItem = {
 
 const TableItem = ({ field, data }: TableItem): JSX.Element => {
   switch (field) {
-    case "model":
+    case 'model':
       return (
         <EntityItem
           icon={data.attributes.source.icon}
@@ -29,7 +29,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case "destination":
+    case 'destination':
       return (
         <EntityItem
           icon={data.attributes.destination.icon}
@@ -37,20 +37,32 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case "lastUpdated":
-      return <Text size="xs">{moment().format("DD/MM/YYYY")}</Text>;
+    case 'lastUpdated':
+      return (
+        <Text
+          size='sm'
+          color='gray.700'
+          fontWeight={500}
+        >
+          {moment().format('DD/MM/YYYY')}
+        </Text>
+      );
 
-    case "status":
+    case 'status':
       return (
         <Tag
-          colorScheme="teal"
-          variant="outline"
-          size="xs"
-          bgColor="success.100"
-          p={1}
+          colorScheme='teal'
+          size='xs'
+          bgColor='success.100'
+          paddingX={2}
           fontWeight={600}
+          borderColor='success.300'
+          borderWidth='1px'
+          borderStyle='solid'
+          height='22px'
+          borderRadius='4px'
         >
-          <Text size="xs" fontWeight="semibold">
+          <Text size='xs' fontWeight='semibold' color='success.600'>
             Active
           </Text>
         </Tag>
@@ -61,7 +73,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 const SyncsList = (): JSX.Element => {
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
-    queryKey: ["activate", "syncs"],
+    queryKey: ['activate', 'syncs'],
     queryFn: () => fetchSyncs(),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -87,26 +99,26 @@ const SyncsList = (): JSX.Element => {
     };
   }, [data]);
 
-  const handleOnSyncClick = (row: Record<"id", string>) => {
+  const handleOnSyncClick = (row: Record<'id', string>) => {
     navigate(`${row.id}`);
   };
 
   if (isLoading) return <Loader />;
 
   if (!isLoading && tableData.data?.length === 0)
-    return <NoActivations activationType="sync" />;
+    return <NoActivations activationType='sync' />;
 
   return (
-    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+    <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
-          name="Syncs"
-          ctaName="Add Sync"
-          ctaIcon={<FiPlus color="gray.100" />}
-          onCtaClicked={() => navigate("new")}
-          ctaBgColor="orange.500"
-          ctaColor="gray.900"
-          ctaHoverBgColor="orange.400"
+          name='Syncs'
+          ctaName='Add Sync'
+          ctaIcon={<FiPlus color='gray.100' />}
+          onCtaClicked={() => navigate('new')}
+          ctaBgColor='orange.500'
+          ctaColor='gray.900'
+          ctaHoverBgColor='orange.400'
           isCtaVisible
         />
         {!syncList && isLoading ? (
