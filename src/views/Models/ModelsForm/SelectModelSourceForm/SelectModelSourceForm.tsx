@@ -1,3 +1,4 @@
+import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
 import Loader from "@/components/Loader";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
@@ -28,7 +29,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     case "updated_at":
       return (
-        <Text size="xs">
+        <Text size="sm">
           {moment(attributes?.updated_at).format("DD/MM/YY")}
         </Text>
       );
@@ -38,12 +39,12 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
         <Tag
           colorScheme="teal"
           variant="outline"
-          size="xs"
+          size="sm"
           bgColor="success.100"
           p={1}
           fontWeight={600}
         >
-          <Text size="xs" fontWeight="semibold">
+          <Text size="sm" fontWeight="semibold">
             Active
           </Text>
         </Tag>
@@ -51,7 +52,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
     default:
       return (
-        <Text size="xs" fontWeight={600}>
+        <Text size="sm" fontWeight={600}>
           {attributes?.[field]}
         </Text>
       );
@@ -101,16 +102,16 @@ const SelectModelSourceForm = (): JSX.Element | null => {
   };
 
   return (
-    <>
-      <Box w="6xl" mx="auto">
+    <Box width="100%" display="flex" justifyContent="center">
+      <ContentContainer>
         {isLoading || !tableData ? (
           <Loader />
         ) : (
           <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
           // <Table data={tableData} onRowClick={(row) => console.log(row)} />
         )}
-      </Box>
-    </>
+      </ContentContainer>
+    </Box>
   );
 };
 

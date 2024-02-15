@@ -1,17 +1,17 @@
-import ContentContainer from '@/components/ContentContainer';
-import TopBar from '@/components/TopBar';
-import { fetchSyncs } from '@/services/syncs';
-import { Box, Tag, Text } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { FiPlus } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { SYNC_TABLE_COLUMS } from '../constants';
-import { CreateSyncResponse, SyncColumnFields } from '../types';
-import EntityItem from '@/components/EntityItem';
-import Table from '@/components/Table';
+import ContentContainer from "@/components/ContentContainer";
+import TopBar from "@/components/TopBar";
+import { fetchSyncs } from "@/services/syncs";
+import { Box, Text, Tag } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { FiPlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from "../constants";
+import { CreateSyncResponse, SyncColumnFields } from "../types";
+import EntityItem from "@/components/EntityItem";
+import Table from "@/components/Table";
+import Loader from "@/components/Loader";
 import moment from 'moment';
-import Loader from '@/components/Loader';
 import NoActivations from '../../NoSyncs/NoSyncs';
 
 type TableItem = {
@@ -24,8 +24,8 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
     case 'model':
       return (
         <EntityItem
-          icon={data.attributes.source.icon}
-          name={data.attributes.source.connector_name}
+          icon={data.attributes.model.connector.icon}
+          name={data.attributes.model.connector.name}
         />
       );
 
@@ -37,15 +37,9 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case 'lastUpdated':
+    case "lastUpdated":
       return (
-        <Text
-          size='sm'
-          color='gray.700'
-          fontWeight={500}
-        >
-          {moment().format('DD/MM/YYYY')}
-        </Text>
+        <Text>{moment(data.attributes.updated_at).format("DD/MM/YYYY")}</Text>
       );
 
     case 'status':
@@ -73,7 +67,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 const SyncsList = (): JSX.Element => {
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
-    queryKey: ['activate', 'syncs'],
+    queryKey: SYNCS_LIST_QUERY_KEY,
     queryFn: () => fetchSyncs(),
     refetchOnMount: false,
     refetchOnWindowFocus: false,

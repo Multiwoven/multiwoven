@@ -24,7 +24,7 @@ const TableItem = ({
       switch (data.query_type) {
         case "raw_sql":
           return (
-            <Text size="xs" fontWeight={600}>
+            <Text size="sm" fontWeight="semibold">
               SQL Query
             </Text>
           );
@@ -32,7 +32,11 @@ const TableItem = ({
       return <></>;
 
     case "last_updated":
-      return <Text size="xs">{moment().format("DD/MM/YYYY")}</Text>;
+      return (
+        <Text size="sm" fontWeight="medium">
+          {moment().format("DD/MM/YYYY")}
+        </Text>
+      );
   }
 };
 

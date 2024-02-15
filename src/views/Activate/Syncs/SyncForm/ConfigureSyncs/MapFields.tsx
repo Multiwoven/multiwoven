@@ -8,14 +8,16 @@ import FieldMap from './FieldMap';
 import {
   convertFieldMapToConfig,
   getPathFromObject,
-} from '@/views/Activate/Syncs/utils';
-import { useMemo, useState } from 'react';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+} from "@/views/Activate/Syncs/utils";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 type MapFieldsProps = {
   model: ModelEntity;
   destination: ConnectorItem;
   stream: Stream | null;
+  data?: Record<string, string> | null;
+  isEdit?: boolean;
   handleOnConfigChange: (args: Record<string, string>) => void;
 };
 
@@ -28,6 +30,8 @@ const MapFields = ({
   model,
   destination,
   stream,
+  data,
+  isEdit,
   handleOnConfigChange,
 }: MapFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([FieldStruct]);
@@ -44,6 +48,16 @@ const MapFields = ({
     () => getPathFromObject(stream?.json_schema),
     [stream]
   );
+
+  useEffect(() => {
+    if (data) {
+      const fields = Object.keys(data).map((modelKey) => ({
+        model: modelKey,
+        destination: data[modelKey],
+      }));
+      setFields(fields);
+    }
+  }, [data]);
 
   if (!previewModelData || !Array.isArray(previewModelData)) return null;
 
@@ -79,10 +93,10 @@ const MapFields = ({
 
   return (
     <Box
-      backgroundColor='gray.300'
-      padding='20px'
-      borderRadius='8px'
-      marginBottom='100px'
+      backgroundColor="gray.300"
+      padding="20px"
+      borderRadius="8px"
+      marginBottom={isEdit ? "20px" : "100px"}
     >
       <Text fontWeight={600} size='md'>
         Map fields to {destination?.attributes?.connector_name}
@@ -107,7 +121,7 @@ const MapFields = ({
             id={index}
             fieldType='model'
             entityName={model.connector.connector_name}
-            icon={model.icon}
+            icon={model.connector.icon}
             options={modelColumns}
             disabledOptions={mappedColumns}
             value={fields[index].model}

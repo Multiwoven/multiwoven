@@ -1,4 +1,6 @@
-import { Button, Flex, HStack, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Heading, Text } from '@chakra-ui/react';
+import { Step } from '../Breadcrumbs/types';
+import Breadcrumbs from '../Breadcrumbs';
 
 type TopBarType = {
   name: string;
@@ -9,7 +11,8 @@ type TopBarType = {
   ctaHoverBgColor?: string;
   onCtaClicked?: () => void;
   isCtaVisible?: boolean;
-  extra?: JSX.Element;
+  extra?: JSX.Element | null;
+  breadcrumbSteps?: Step[];
   ctaButtonVariant?: string;
   ctaButtonWidth?: string;
   ctaButtonHeight?: string;
@@ -25,20 +28,21 @@ const TopBar = ({
   ctaButtonVariant = 'solid',
   ctaButtonWidth,
   ctaButtonHeight,
+  breadcrumbSteps = [],
 }: TopBarType): JSX.Element => (
   <Flex
     justifyContent='space-between'
     borderColor='gray.400'
-    marginBottom='48px'
+    marginBottom='30px'
   >
-    <Heading
-      fontWeight='700'
-      size='sm'
-      color='black.500'
-      letterSpacing='-0.3px'
-    >
-      {name}
-    </Heading>
+    <Box>
+      {breadcrumbSteps.length > 0 ? (
+        <Breadcrumbs steps={breadcrumbSteps} />
+      ) : null}
+      <Heading fontWeight='bold' size='sm'>
+        {name}
+      </Heading>
+    </Box>
     <HStack spacing={2}>
       {extra}
       {isCtaVisible ? (
@@ -48,7 +52,6 @@ const TopBar = ({
           width={ctaButtonWidth || '126px'}
           height={ctaButtonHeight || '40px'}
           onClick={onCtaClicked}
-          letterSpacing="-0.14px"
         >
           <Text size='sm'>{ctaName}</Text>
         </Button>

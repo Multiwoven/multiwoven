@@ -2,7 +2,7 @@ import {
   Box,
   Card,
   CardBody,
-  Heading,
+  HStack,
   Image,
   SimpleGrid,
   Stack,
@@ -14,6 +14,8 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
 import ModelFooter from "../ModelFooter";
 import { useNavigate } from "react-router-dom";
+import ContentContainer from "@/components/ContentContainer";
+import Badge from "@/components/Badge";
 
 const ModelMethod = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -26,16 +28,17 @@ const ModelMethod = (): JSX.Element => {
 
   const navigate = useNavigate();
   return (
-    <>
-      <Box mx="auto" w="6xl">
+    <Box width="100%" display="flex" justifyContent="center">
+      <ContentContainer>
         <SimpleGrid columns={3} spacing={8}>
           {modelMethods.map((method, index) => (
             <Card
               maxW="sm"
               key={index}
-              _hover={method.enabled ? { bgColor: "gray.50" } : {}}
-              variant={!method.enabled ? "filled" : "elevated"}
+              _hover={method.enabled ? { bgColor: "gray.200" } : {}}
+              variant="elevated"
               onClick={method.enabled ? () => handleOnClick(method) : () => {}}
+              opacity={method.enabled ? "1" : "0.6"}
             >
               <CardBody>
                 <Image
@@ -45,26 +48,35 @@ const ModelMethod = (): JSX.Element => {
                   w="full"
                 />
                 <Stack mt="6" spacing="3">
-                  <Heading size="md">{method.name}</Heading>
+                  <HStack>
+                    <Text size="lg" fontWeight="semibold">
+                      {method.name}
+                    </Text>
+                    {!method.enabled ? (
+                      <Badge text="weaving soon" variant="default" />
+                    ) : (
+                      <></>
+                    )}
+                  </HStack>
                   <Text>{method.description}</Text>
                 </Stack>
               </CardBody>
             </Card>
           ))}
         </SimpleGrid>
-      </Box>
-      <ModelFooter
-        buttons={[
-          {
-            name: "Back",
-            bgColor: "gray.300",
-            hoverBgColor: "gray.200",
-            color: "black",
-            onClick: () => navigate(-1),
-          },
-        ]}
-      />
-    </>
+        <ModelFooter
+          buttons={[
+            {
+              name: "Back",
+              bgColor: "gray.300",
+              hoverBgColor: "gray.200",
+              color: "black",
+              onClick: () => navigate(-1),
+            },
+          ]}
+        />
+      </ContentContainer>
+    </Box>
   );
 };
 
