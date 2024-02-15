@@ -35,7 +35,7 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
         />
         <Text
           color={"black.500"}
-          fontWeight={isActive ? "600" : "500"}
+          fontWeight={isActive ? "semibold" : "medium"}
           fontSize="sm"
         >
           {label}
@@ -54,7 +54,7 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
             px="2px"
             display="flex"
           >
-            <Text fontSize="10px" fontWeight={500} color="gray.600">
+            <Text fontSize="xxs" fontWeight="medium" color="gray.600">
               weaving soon
             </Text>
           </Box>

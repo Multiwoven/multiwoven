@@ -134,8 +134,19 @@ const extenstion = {
           fontSize: '12px',
           lineHeight: '18px',
         },
+        xxs: {
+          fontSize: "10px",
+          lineHeight: "18px",
+        },
       },
-      font: 'Manrope',
+      font: "Manrope",
+      weights: {
+        regular: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
+        extrabold: 800,
+      },
     },
     Heading: {
       sizes: {
@@ -159,6 +170,13 @@ const extenstion = {
           fontSize: '24px',
           lineHeight: '32px',
         },
+      },
+      weight: {
+        800: "extrabold",
+        700: "bold",
+        600: "semibold",
+        500: "medium",
+        400: "regular",
       },
     },
     Input: {
