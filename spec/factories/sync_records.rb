@@ -4,7 +4,9 @@ FactoryBot.define do
   factory :sync_record do
     association :sync
     association :sync_run
-    record { "" }
-    fingerprint { "MyString" }
+    primary_key { Faker::Config.random }
+    record { { gender: "male" } }
+    action { "destination_insert" }
+    fingerprint { Faker::Crypto.md5 }
   end
 end

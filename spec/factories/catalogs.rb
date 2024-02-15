@@ -18,8 +18,8 @@ FactoryBot.define do
     association :connector
     catalog do
       { "streams" => [
-        { "name" => "profile", "json_schema" => {} },
-        { "name" => "customer", "json_schema" => {} }
+        { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
+        { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
       ] }
     end
     catalog_hash { 1 }

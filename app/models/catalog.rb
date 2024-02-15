@@ -31,7 +31,9 @@ class Catalog < ApplicationRecord
       name: stream[:name],
       url: stream[:url],
       json_schema: stream[:json_schema],
-      request_method: stream[:request_method]
+      request_method: stream[:request_method],
+      batch_support: stream[:batch_support],
+      batch_size: stream[:batch_size]
     )
   end
 end

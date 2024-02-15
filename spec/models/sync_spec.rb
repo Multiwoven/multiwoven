@@ -43,8 +43,8 @@ RSpec.describe Sync, type: :model do
   describe "#to_protocol" do
     let(:streams) do
       [
-        { "name" => "profile", "json_schema" => {} },
-        { "name" => "customer", "json_schema" => {} }
+        { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
+        { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
       ]
     end
 

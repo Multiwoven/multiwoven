@@ -3,8 +3,7 @@
 module ReverseEtl
   module Extractors
     class IncrementalDelta < Base
-      # TODO: Take this from ENV
-      THREAD_COUNT = 3
+      THREAD_COUNT = (ENV["SYNC_EXTRACTOR_THREAD_POOL_SIZE"] || "5").to_i
 
       # TODO: Make it as class method
       def read(sync_run_id)
@@ -34,8 +33,7 @@ module ReverseEtl
 
       def process_records(records, sync_run, model)
         # TODO: parellelize this
-        # Parallel.each(records, in_threads: THREAD_COUNT) do |message|
-        records.each do |message|
+        Parallel.each(records, in_threads: THREAD_COUNT) do |message|
           process_record(message, sync_run, model)
         end
       end
