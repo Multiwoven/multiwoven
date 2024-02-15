@@ -14,6 +14,7 @@ import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
 import { ModelMethodType } from "./types";
 import ModelFooter from "../ModelFooter";
 import { useNavigate } from "react-router-dom";
+import ContentContainer from "@/components/ContentContainer";
 
 const ModelMethod = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -26,15 +27,15 @@ const ModelMethod = (): JSX.Element => {
 
   const navigate = useNavigate();
   return (
-    <>
-      <Box mx="auto" w="6xl">
+    <Box width="100%" display="flex" justifyContent="center">
+      <ContentContainer>
         <SimpleGrid columns={3} spacing={8}>
           {modelMethods.map((method, index) => (
             <Card
               maxW="sm"
               key={index}
               _hover={method.enabled ? { bgColor: "gray.50" } : {}}
-              variant={!method.enabled ? "filled" : "elevated"}
+              variant={!method.enabled ? "elevated" : "elevated"}
               onClick={method.enabled ? () => handleOnClick(method) : () => {}}
             >
               <CardBody>
@@ -45,6 +46,7 @@ const ModelMethod = (): JSX.Element => {
                   w="full"
                 />
                 <Stack mt="6" spacing="3">
+                  <Text textAlign="center">weaving soon</Text>
                   <Heading size="md">{method.name}</Heading>
                   <Text>{method.description}</Text>
                 </Stack>
@@ -52,19 +54,19 @@ const ModelMethod = (): JSX.Element => {
             </Card>
           ))}
         </SimpleGrid>
-      </Box>
-      <ModelFooter
-        buttons={[
-          {
-            name: "Back",
-            bgColor: "gray.300",
-            hoverBgColor: "gray.200",
-            color: "black",
-            onClick: () => navigate(-1),
-          },
-        ]}
-      />
-    </>
+        <ModelFooter
+          buttons={[
+            {
+              name: "Back",
+              bgColor: "gray.300",
+              hoverBgColor: "gray.200",
+              color: "black",
+              onClick: () => navigate(-1),
+            },
+          ]}
+        />
+      </ContentContainer>
+    </Box>
   );
 };
 

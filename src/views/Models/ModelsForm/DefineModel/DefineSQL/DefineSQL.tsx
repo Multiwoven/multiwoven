@@ -39,6 +39,7 @@ const DefineSQL = ({
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const [loading, setLoading] = useState(false);
   const [moveForward, canMoveForward] = useState(false);
+  const [runQuery, canRunQuery] = useState(prefillValues ? true : false);
 
   let connector_id: string = "";
   let connector_icon: JSX.Element = <></>;
@@ -53,8 +54,6 @@ const DefineSQL = ({
     connector_id = connector_data?.id || "";
     connector_icon = connector_data?.icon || <></>;
     connector_name = connector_data?.name || "";
-
-    console.log(connector_icon, connector_name);
   } else {
     if (!prefillValues) return <></>;
 
@@ -167,6 +166,7 @@ const DefineSQL = ({
                     variant="shell"
                     onClick={getPreview}
                     isLoading={loading}
+                    isDisabled={!runQuery}
                   >
                     {" "}
                     Run Query{" "}
@@ -186,7 +186,10 @@ const DefineSQL = ({
                   value={user_query}
                   saveViewState={true}
                   onMount={handleEditorDidMount}
-                  onChange={() => canMoveForward(false)}
+                  onChange={() => {
+                    canMoveForward(false);
+                    canRunQuery(true);
+                  }}
                   theme="light"
                   options={{
                     minimap: {
