@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   HStack,
-  Heading,
   Image,
   SimpleGrid,
   Stack,

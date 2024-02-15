@@ -43,7 +43,6 @@ const DefineSQL = ({
 
   let connector_id: string = "";
   let connector_icon: JSX.Element = <></>;
-  let connector_name: string = "";
   let user_query: string = "";
 
   if (!hasPrefilledValues) {
@@ -53,13 +52,11 @@ const DefineSQL = ({
     console.log(connector_data?.name);
     connector_id = connector_data?.id || "";
     connector_icon = connector_data?.icon || <></>;
-    connector_name = connector_data?.name || "";
   } else {
     if (!prefillValues) return <></>;
 
     connector_id = prefillValues.connector_id.toString();
     connector_icon = prefillValues.connector_icon;
-    connector_name = prefillValues.connector_name;
     user_query = prefillValues.query;
   }
 

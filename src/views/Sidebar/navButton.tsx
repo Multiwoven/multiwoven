@@ -1,13 +1,5 @@
 import Badge from "@/components/Badge";
-import {
-  As,
-  Box,
-  Button,
-  ButtonProps,
-  HStack,
-  Icon,
-  Text,
-} from "@chakra-ui/react";
+import { As, Button, ButtonProps, HStack, Icon, Text } from "@chakra-ui/react";
 
 interface NavButtonProps extends ButtonProps {
   icon: As;
