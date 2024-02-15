@@ -54,7 +54,7 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
             px="2px"
             display="flex"
           >
-            <Text fontSize="xxs" fontWeight="medium" color="gray.600">
+            <Text size="xxs" fontWeight="medium" color="gray.600">
               weaving soon
             </Text>
           </Box>
