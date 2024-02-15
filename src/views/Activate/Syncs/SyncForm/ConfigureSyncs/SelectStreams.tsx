@@ -26,19 +26,10 @@ const SelectStreams = ({
       borderRadius='8px'
       marginBottom='20px'
     >
-      <Text
-        fontWeight='600'
-        mb={6}
-        color='black.500'
-        size='md'
-      >
+      <Text fontWeight='600' mb={6} color='black.500' size='md'>
         Configure sync to {model?.connector?.connector_name}
       </Text>
-      <Text
-        fontWeight='600'
-        color='black.500'
-        size='sm'
-      >
+      <Text fontWeight='600' color='black.500' size='sm'>
         Stream Name
       </Text>
       <Text size='xs' mb='3' color='black.200' fontWeight={400}>
@@ -46,13 +37,13 @@ const SelectStreams = ({
       </Text>
       <Select
         placeholder='Select stream name'
-        backgroundColor='#fff'
+        backgroundColor='gray.100'
         maxWidth='500px'
         onChange={(e) => handleOnStreamChange(e.target.value)}
         borderWidth='1px'
         borderStyle='solid'
         borderColor='gray.400'
-        color="gray.600"
+        color='gray.600'
       >
         {streams.map((stream, index) => (
           <option key={stream.name} value={index}>

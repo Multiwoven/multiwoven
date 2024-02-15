@@ -33,7 +33,7 @@ const FieldMap = ({
         <Select
           value={value}
           placeholder={`Select a field from ${entityName}`}
-          backgroundColor='#fff'
+          backgroundColor='gray.100'
           isDisabled={isDisabled}
           onChange={(e) => onChange(id, fieldType, e.target.value)}
           isRequired

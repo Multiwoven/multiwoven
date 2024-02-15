@@ -94,7 +94,7 @@ const FinaliseSync = (): JSX.Element => {
               name='description'
               value={formik.values.description}
               placeholder='Enter a description'
-              background='#fff'
+              background='gray.100'
               resize='none'
               mb='6'
               onChange={formik.handleChange}
@@ -119,7 +119,7 @@ const FinaliseSync = (): JSX.Element => {
                       display='flex'
                       alignItems='flex-start'
                       marginBottom='10px'
-                      backgroundColor='#fff'
+                      backgroundColor='gray.100'
                       isDisabled
                     >
                       <Box position='relative' top='-5px'>
@@ -135,7 +135,7 @@ const FinaliseSync = (): JSX.Element => {
                       value='automated'
                       display='flex'
                       alignItems='flex-start'
-                      backgroundColor='#fff'
+                      backgroundColor='gray.100'
                       marginBottom='10px'
                     >
                       <Box position='relative' top='-5px'>
@@ -161,7 +161,7 @@ const FinaliseSync = (): JSX.Element => {
                       border='thin'
                       padding='5px 10px 5px 20px'
                       display='flex'
-                      backgroundColor='#fff'
+                      backgroundColor='gray.100'
                       borderRadius='8px'
                       alignItems='center'
                       borderWidth='1px'
