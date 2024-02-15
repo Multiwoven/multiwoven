@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardBody,
+  HStack,
   Heading,
   Image,
   SimpleGrid,
@@ -15,6 +16,7 @@ import { ModelMethodType } from "./types";
 import ModelFooter from "../ModelFooter";
 import { useNavigate } from "react-router-dom";
 import ContentContainer from "@/components/ContentContainer";
+import Badge from "@/components/Badge";
 
 const ModelMethod = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -34,9 +36,10 @@ const ModelMethod = (): JSX.Element => {
             <Card
               maxW="sm"
               key={index}
-              _hover={method.enabled ? { bgColor: "gray.50" } : {}}
-              variant={!method.enabled ? "elevated" : "elevated"}
+              _hover={method.enabled ? { bgColor: "gray.200" } : {}}
+              variant="elevated"
               onClick={method.enabled ? () => handleOnClick(method) : () => {}}
+              opacity={method.enabled ? "1" : "0.6"}
             >
               <CardBody>
                 <Image
@@ -46,8 +49,16 @@ const ModelMethod = (): JSX.Element => {
                   w="full"
                 />
                 <Stack mt="6" spacing="3">
-                  <Text textAlign="center">weaving soon</Text>
-                  <Heading size="md">{method.name}</Heading>
+                  <HStack>
+                    <Text size="lg" fontWeight="semibold">
+                      {method.name}
+                    </Text>
+                    {!method.enabled ? (
+                      <Badge text="weaving soon" variant="default" />
+                    ) : (
+                      <></>
+                    )}
+                  </HStack>
                   <Text>{method.description}</Text>
                 </Stack>
               </CardBody>
