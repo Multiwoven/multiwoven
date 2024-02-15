@@ -1,3 +1,4 @@
+# .github/workflows/push_gem.yml
 
 name: release
 
@@ -7,36 +8,22 @@ on:
       - main
 
 jobs:
-  release-please:
+  push:
+    name: Push gem to RubyGems.org
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write # IMPORTANT: this permission is required for `rake release` to push the release tag
+
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
-        id: release
+      # Set up
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          release-type: ruby
-          package-name: multiwoven-integrations
-          version-file: "lib/multiwoven/integrations/rollout.rb"
-      # Checkout code if release was created
-      - uses: actions/checkout@v2
-        if: ${{ steps.release.outputs.release_created }}
-      # Setup ruby if a release was created
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2.0
-        if: ${{ steps.release.outputs.release_created }}
-      # Bundle install
-      - run: bundle install
-        if: ${{ steps.release.outputs.release_created }}
-      # Publish gem to ruby gems
-      - name: publish gem
-        run: |
-          mkdir -p $HOME/.gem
-          touch $HOME/.gem/credentials
-          chmod 0600 $HOME/.gem/credentials
-          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
-          gem build *.gemspec
-          gem push *.gem
-        env:
-          GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_AUTH_TOKEN}}"
-        if: ${{ steps.release.outputs.release_created }}
+          bundler-cache: true
+          ruby-version: ruby
+
+      # Release
+      - uses: rubygems/release-gem@v1
