@@ -36,7 +36,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     name: "Homepage",
     url: "/",
     component: (
-      <SuspenseWithLoader redirectRoute="/">
+      <SuspenseWithLoader redirectRoute="/setup/sources">
         {/* <Dashboard /> */}
         <Navigate to="/setup/sources" />
       </SuspenseWithLoader>
