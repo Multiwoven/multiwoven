@@ -32,7 +32,9 @@ module Multiwoven::Integrations::Destination
             name: stream["name"],
             json_schema: stream["json_schema"],
             request_method: stream["method"],
-            action: stream["action"]
+            action: stream["action"],
+            batch_support: stream["batch_support"],
+            batch_size: stream["batch_size"]
           )
         end
 
