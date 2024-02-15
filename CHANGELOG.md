@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+### [0.4.1](https://www.github.com/Multiwoven/multiwoven-integrations/compare/v0.4.0...v0.4.1) (2024-02-15)
+
+
+### Bug Fixes
+
+* Add batch params to stream ([#68](https://www.github.com/Multiwoven/multiwoven-integrations/issues/68)) ([080530f](https://www.github.com/Multiwoven/multiwoven-integrations/commit/080530f8280b467c8e40a3b6429f178ad18fa05e))
+
 ## [0.4.0](https://www.github.com/Multiwoven/multiwoven-integrations/compare/v0.3.0...v0.4.0) (2024-02-14)
 
 
