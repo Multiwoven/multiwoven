@@ -1,4 +1,4 @@
-# .github/workflows/push_gem.yml
+# .github/workflows/release.yml
 
 name: release
 
