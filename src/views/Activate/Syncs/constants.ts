@@ -1,3 +1,4 @@
+import { Step } from "@/components/Breadcrumbs/types";
 import { SyncColumnEntity } from "./types";
 
 export const SYNC_TABLE_COLUMS: SyncColumnEntity[] = [
@@ -18,3 +19,16 @@ export const SYNC_TABLE_COLUMS: SyncColumnEntity[] = [
     name: "Status",
   },
 ];
+
+export const EDIT_SYNC_FORM_STEPS: Step[] = [
+  {
+    name: "Syncs",
+    url: "/activate/syncs",
+  },
+  {
+    name: "Sync",
+    url: "",
+  },
+];
+
+export const SYNCS_LIST_QUERY_KEY = ["activate", "syncs-list"];

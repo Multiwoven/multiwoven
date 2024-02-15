@@ -1,9 +1,7 @@
 import ContentContainer from "@/components/ContentContainer";
 import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import { getCatalog } from "@/services/syncs";
 import { ModelEntity } from "@/views/Models/types";
 import { Box } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { FormEvent, useContext, useState } from "react";
 import SelectStreams from "./SelectStreams";
 import { Stream } from "@/views/Activate/Syncs/types";
@@ -28,17 +26,6 @@ const ConfigureSyncs = (): JSX.Element | null => {
   );
   const selectedDestination = destinationInfo?.data
     ?.selectDestination as ConnectorItem;
-  const destinationId = selectedDestination?.id;
-
-  const { data: catalogData } = useQuery({
-    queryKey: ["syncs", "catalog", destinationId],
-    queryFn: () => getCatalog(destinationId),
-    enabled: !!destinationId,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
-
-  if (!catalogData) return null;
 
   const handleOnStreamChange = (stream: Stream) => {
     setSelectedStream(stream);
@@ -68,7 +55,7 @@ const ConfigureSyncs = (): JSX.Element | null => {
           <SelectStreams
             model={selectedModel}
             onChange={handleOnStreamChange}
-            streams={catalogData?.data?.attributes?.catalog?.streams}
+            destination={selectedDestination}
           />
           <MapFields
             model={selectedModel}

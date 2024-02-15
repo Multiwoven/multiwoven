@@ -1,3 +1,4 @@
+import { ModelEntity } from "@/views/Models/types";
 import { RJSFSchema } from "@rjsf/utils";
 
 export type Stream = {
@@ -28,11 +29,11 @@ export type FieldMap = {
 };
 
 export type ConfigSync = {
-  source_id: number;
-  destination_id: number;
-  model_id: number;
+  source_id: string;
+  destination_id: string;
+  model_id: string;
   schedule_type: "automated";
-  configuration: Record<string, unknown>;
+  configuration: Record<string, string>;
   stream_name: string;
 };
 
@@ -48,11 +49,13 @@ export type CreateSyncPayload = {
 
 export type CreateSyncResponse = {
   attributes: {
-    configuration: Record<string, unknown>;
+    created_at: Date;
+    updated_at: Date;
+    configuration: Record<string, string>;
     destination_id: number;
     model_id: number;
     schedule_type: "automated";
-    source_id: number;
+    source_id: string;
     status: string;
     stream_name: string;
     sync_interval: number;
@@ -62,12 +65,15 @@ export type CreateSyncResponse = {
       connector_name: string;
       icon: string;
       name: string;
+      id: string;
     };
     destination: {
       connector_name: string;
       icon: string;
       name: string;
+      id: string;
     };
+    model: ModelEntity;
   };
   id: string;
   type: "syncs";
@@ -82,4 +88,12 @@ export type SyncColumnFields =
 export type SyncColumnEntity = {
   key: SyncColumnFields;
   name: string;
+};
+
+export type FinalizeSyncFormFields = {
+  description?: string;
+  sync_mode: "full_refresh";
+  sync_interval: number;
+  sync_interval_unit: "minutes";
+  schedule_type: "automated";
 };

@@ -17,7 +17,7 @@ export const createSync = (
 ): Promise<ApiResponse<CreateSyncResponse>> =>
   multiwovenFetch<CreateSyncPayload, ApiResponse<CreateSyncResponse>>({
     method: "post",
-    url: `/syncs`,
+    url: "/syncs",
     data: payload,
   });
 
@@ -25,4 +25,30 @@ export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[]>> =>
   multiwovenFetch<null, ApiResponse<CreateSyncResponse[]>>({
     method: "get",
     url: `/syncs`,
+  });
+
+export const getSyncById = (
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: "get",
+    url: `/syncs/${id}`,
+  });
+
+export const editSync = (
+  payload: CreateSyncPayload,
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<CreateSyncPayload, ApiResponse<CreateSyncResponse>>({
+    method: "put",
+    url: `/syncs/${id}`,
+    data: payload,
+  });
+
+export const deleteSync = (
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: "delete",
+    url: `/syncs/${id}`,
   });

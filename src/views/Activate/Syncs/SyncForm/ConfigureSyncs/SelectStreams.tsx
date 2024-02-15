@@ -1,18 +1,46 @@
-import { Box, Text, Select } from '@chakra-ui/react';
-import { Stream } from '../../types';
-import { ModelEntity } from '@/views/Models/types';
+import { Box, Text, Select } from "@chakra-ui/react";
+import { DiscoverResponse, Stream } from "@/views/Activate/Syncs/types";
+import { ModelEntity } from "@/views/Models/types";
+import { useQuery } from "@tanstack/react-query";
+import { getCatalog } from "@/services/syncs";
+import { ConnectorItem } from "@/views/Connectors/types";
+import { useEffect } from "react";
 
 type SelectStreamsProps = {
   model: ModelEntity;
-  streams: Stream[];
-  onChange: (stream: Stream) => void;
+  destination: ConnectorItem;
+  isEdit?: boolean;
+  placeholder?: string;
+  onChange?: (stream: Stream) => void;
+  onStreamsLoad?: (catalog: DiscoverResponse) => void;
 };
 
 const SelectStreams = ({
   model,
-  streams,
+  destination,
+  isEdit,
+  placeholder,
   onChange,
-}: SelectStreamsProps): JSX.Element => {
+  onStreamsLoad,
+}: SelectStreamsProps): JSX.Element | null => {
+  const { data: catalogData } = useQuery({
+    queryKey: ["syncs", "catalog", destination.id],
+    queryFn: () => getCatalog(destination.id),
+    enabled: !!destination.id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (catalogData) {
+      onStreamsLoad?.(catalogData);
+    }
+  }, [catalogData]);
+
+  if (!catalogData) return null;
+
+  const streams = catalogData?.data?.attributes?.catalog?.streams;
+
   const handleOnStreamChange = (streamNumber: string) => {
     if (!streamNumber) return;
 
@@ -29,21 +57,18 @@ const SelectStreams = ({
       <Text fontWeight='600' mb={6} color='black.500' size='md'>
         Configure sync to {model?.connector?.connector_name}
       </Text>
-      <Text fontWeight='600' color='black.500' size='sm'>
-        Stream Name
-      </Text>
-      <Text size='xs' mb='3' color='black.200' fontWeight={400}>
-        Select the API from the Destination that you wish to map.
+      <Text fontWeight="600">Stream Name</Text>
+      <Text fontSize="sm" marginBottom="10px">
+        {isEdit
+          ? "You cannot change the API once the mapping is done."
+          : "Select the API from the destination that you wish to map."}
       </Text>
       <Select
-        placeholder='Select stream name'
-        backgroundColor='gray.100'
-        maxWidth='500px'
+        placeholder={isEdit ? placeholder : "Select option"}
+        backgroundColor="#fff"
+        maxWidth="500px"
         onChange={(e) => handleOnStreamChange(e.target.value)}
-        borderWidth='1px'
-        borderStyle='solid'
-        borderColor='gray.400'
-        color='gray.600'
+        isDisabled={isEdit}
       >
         {streams.map((stream, index) => (
           <option key={stream.name} value={index}>
