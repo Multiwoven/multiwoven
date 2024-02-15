@@ -11,11 +11,10 @@ const Loader = (): JSX.Element => {
       <Center>
         <Box>
           <Spinner
-            thickness="4px"
-            speed="0.65s"
+            speed="0.8s"
             emptyColor="gray.200"
-            color="brand.500"
-            size="xl"
+            color="brand.300"
+            size="lg"
           />
         </Box>
       </Center>

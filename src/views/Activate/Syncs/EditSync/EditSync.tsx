@@ -1,29 +1,29 @@
-import ContentContainer from "@/components/ContentContainer";
-import TopBar from "@/components/TopBar";
-import { Box, Divider, Text, useToast } from "@chakra-ui/react";
+import ContentContainer from '@/components/ContentContainer';
+import TopBar from '@/components/TopBar';
+import { Box, Divider, Text, useToast } from '@chakra-ui/react';
 import {
   EDIT_SYNC_FORM_STEPS,
   SYNCS_LIST_QUERY_KEY,
-} from "@/views/Activate/Syncs/constants";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { editSync, getSyncById } from "@/services/syncs";
-import Loader from "@/components/Loader";
-import React, { useEffect, useState } from "react";
-import MappedInfo from "./MappedInfo";
-import moment from "moment";
-import SelectStreams from "@/views/Activate/Syncs/SyncForm/ConfigureSyncs/SelectStreams";
-import MapFields from "../SyncForm/ConfigureSyncs/MapFields";
-import { getConnectorInfo } from "@/services/connectors";
+} from '@/views/Activate/Syncs/constants';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { editSync, getSyncById } from '@/services/syncs';
+import Loader from '@/components/Loader';
+import React, { useEffect, useState } from 'react';
+import MappedInfo from './MappedInfo';
+import moment from 'moment';
+import SelectStreams from '@/views/Activate/Syncs/SyncForm/ConfigureSyncs/SelectStreams';
+import MapFields from '../SyncForm/ConfigureSyncs/MapFields';
+import { getConnectorInfo } from '@/services/connectors';
 import {
   CreateSyncPayload,
   DiscoverResponse,
   FinalizeSyncFormFields,
   Stream,
-} from "@/views/Activate/Syncs/types";
-import ScheduleForm from "./ScheduleForm";
-import { FormikProps, useFormik } from "formik";
-import FormFooter from "@/components/FormFooter";
+} from '@/views/Activate/Syncs/types';
+import ScheduleForm from './ScheduleForm';
+import { FormikProps, useFormik } from 'formik';
+import FormFooter from '@/components/FormFooter';
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
@@ -41,7 +41,7 @@ const EditSync = (): JSX.Element | null => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["sync", syncId],
+    queryKey: ['sync', syncId],
     queryFn: () => getSyncById(syncId as string),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -52,7 +52,7 @@ const EditSync = (): JSX.Element | null => {
 
   const { data: destinationFetchResponse, isLoading: isConnectorInfoLoading } =
     useQuery({
-      queryKey: ["sync", "destination", syncData?.destination.id],
+      queryKey: ['sync', 'destination', syncData?.destination.id],
       queryFn: () => getConnectorInfo(syncData?.destination.id as string),
       refetchOnMount: true,
       refetchOnWindowFocus: false,
@@ -61,10 +61,10 @@ const EditSync = (): JSX.Element | null => {
 
   const formik: FormikProps<FinalizeSyncFormFields> = useFormik({
     initialValues: {
-      sync_mode: "full_refresh",
+      sync_mode: 'full_refresh',
       sync_interval: 0,
-      sync_interval_unit: "minutes",
-      schedule_type: "automated",
+      sync_interval_unit: 'minutes',
+      schedule_type: 'automated',
     },
     onSubmit: async (data) => {
       setIsEditLoading(true);
@@ -92,27 +92,27 @@ const EditSync = (): JSX.Element | null => {
           const editSyncResponse = await editSync(payload, syncId as string);
           if (editSyncResponse.data.attributes) {
             toast({
-              title: "Sync updated successfully",
-              status: "success",
+              title: 'Sync updated successfully',
+              status: 'success',
               duration: 3000,
               isClosable: true,
-              position: "bottom-right",
+              position: 'bottom-right',
             });
 
             queryClient.removeQueries({
               queryKey: SYNCS_LIST_QUERY_KEY,
             });
 
-            navigate("/activate/syncs");
+            navigate('/activate/syncs');
             return;
           }
         }
       } catch {
         toast({
-          status: "error",
-          title: "Error!!",
-          description: "Something went wrong while editing the sync",
-          position: "bottom-right",
+          status: 'error',
+          title: 'Error!!',
+          description: 'Something went wrong while editing the sync',
+          position: 'bottom-right',
           isClosable: true,
         });
       } finally {
@@ -124,10 +124,10 @@ const EditSync = (): JSX.Element | null => {
   useEffect(() => {
     if (isError) {
       toast({
-        status: "error",
-        title: "Error!!",
-        description: "Something went wrong",
-        position: "bottom-right",
+        status: 'error',
+        title: 'Error!!',
+        description: 'Something went wrong',
+        position: 'bottom-right',
         isClosable: true,
       });
     }
@@ -137,9 +137,9 @@ const EditSync = (): JSX.Element | null => {
     if (syncFetchResponse) {
       formik.setValues({
         sync_interval: syncData?.sync_interval ?? 0,
-        sync_interval_unit: syncData?.sync_interval_unit ?? "minutes",
-        sync_mode: syncData?.sync_mode ?? "full_refresh",
-        schedule_type: syncData?.schedule_type ?? "automated",
+        sync_interval_unit: syncData?.sync_interval_unit ?? 'minutes',
+        sync_mode: syncData?.sync_mode ?? 'full_refresh',
+        schedule_type: syncData?.schedule_type ?? 'automated',
       });
 
       setConfiguration(syncFetchResponse.data.attributes.configuration);
@@ -163,11 +163,11 @@ const EditSync = (): JSX.Element | null => {
     <form onSubmit={formik.handleSubmit}>
       <ContentContainer>
         <TopBar
-          name="Sync"
+          name='Sync'
           breadcrumbSteps={EDIT_SYNC_FORM_STEPS}
           extra={
             syncData?.model ? (
-              <Box display="flex" alignItems="center">
+              <Box display='flex' alignItems='center'>
                 <MappedInfo
                   source={{
                     name: syncData?.model.connector.name,
@@ -179,15 +179,17 @@ const EditSync = (): JSX.Element | null => {
                   }}
                 />
                 <Divider
-                  orientation="vertical"
-                  height="24px"
-                  borderColor="gray.600"
-                  opacity="1"
-                  marginX="13px"
+                  orientation='vertical'
+                  height='24px'
+                  borderColor='gray.500'
+                  opacity='1'
+                  marginX='13px'
                 />
-                <Text size="sm" fontWeight={600}>
-                  Last updated :{" "}
-                  <b>{moment(syncData.updated_at).format("DD/MM/YYYY")}</b>
+                <Text size='sm' fontWeight='medium'>
+                  Last updated :{' '}
+                </Text>
+                <Text size='sm' fontWeight='semibold'>
+                  {moment(syncData.updated_at).format('DD/MM/YYYY')}
                 </Text>
               </Box>
             ) : null
@@ -214,8 +216,8 @@ const EditSync = (): JSX.Element | null => {
           </React.Fragment>
         ) : null}
         <FormFooter
-          ctaName="Save Changes"
-          ctaType="submit"
+          ctaName='Save Changes'
+          ctaType='submit'
           isCtaLoading={isEditLoading}
           isAlignToContentContainer
         />
