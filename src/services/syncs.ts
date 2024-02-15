@@ -44,3 +44,11 @@ export const editSync = (
     url: `/syncs/${id}`,
     data: payload,
   });
+
+export const deleteSync = (
+  id: string
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: "delete",
+    url: `/syncs/${id}`,
+  });

@@ -24,6 +24,7 @@ import {
 import ScheduleForm from './ScheduleForm';
 import { FormikProps, useFormik } from 'formik';
 import FormFooter from '@/components/FormFooter';
+import SyncActions from './SyncActions';
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
@@ -191,6 +192,7 @@ const EditSync = (): JSX.Element | null => {
                 <Text size='sm' fontWeight='semibold'>
                   {moment(syncData.updated_at).format('DD/MM/YYYY')}
                 </Text>
+                <SyncActions />
               </Box>
             ) : null
           }
