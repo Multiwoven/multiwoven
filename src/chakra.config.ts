@@ -135,11 +135,11 @@ const extenstion = {
           lineHeight: '18px',
         },
         xxs: {
-          fontSize: "10px",
-          lineHeight: "18px",
+          fontSize: '10px',
+          lineHeight: '18px',
         },
       },
-      font: "Manrope",
+      font: 'Manrope',
       weights: {
         regular: 400,
         medium: 500,
@@ -172,11 +172,11 @@ const extenstion = {
         },
       },
       weight: {
-        800: "extrabold",
-        700: "bold",
-        600: "semibold",
-        500: "medium",
-        400: "regular",
+        800: 'extrabold',
+        700: 'bold',
+        600: 'semibold',
+        500: 'medium',
+        400: 'regular',
       },
     },
     Input: {
