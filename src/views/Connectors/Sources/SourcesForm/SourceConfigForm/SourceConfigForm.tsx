@@ -64,8 +64,13 @@ const SourceConfigForm = (): JSX.Element | null => {
 const uiSchema = {
   "ui:order": ["host", "port", "database", "credentials", "schema"],
   "ui:layout": {
+    //? Specify that we must follow grid layout
     display: "grid",
+    //? Specify the number of columns
     cols: 2,
+    //? This can be read as the number of columns that each item
+    //? in the grid should take (similar to in css). Its applied according to what is
+    //? specified in the ui:order
     colspans: [2, 1, 1, 2, 2]
   },
   host: {
