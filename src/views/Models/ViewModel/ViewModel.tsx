@@ -156,7 +156,15 @@ const ViewModel = (): JSX.Element => {
                 icon={data.data?.attributes.connector.icon || ''}
               />
               <Spacer />
-              <Button variant='shell' onClick={() => navigate('edit')}>
+              <Button
+                variant='shell'
+                onClick={() => navigate('edit')}
+                minWidth='0'
+                width='auto'
+                height='32px'
+                fontSize='12px'
+                paddingX={3}
+              >
                 Edit
               </Button>
             </Flex>

@@ -96,8 +96,10 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
         <ModalContent>
           <ModalCloseButton color='gray.300' />
           <ModalHeader>
-            <Text>Edit Details</Text>
-            <Text fontSize='md' color='gray.700' fontWeight='light'>
+            <Text size='xl' fontWeight='bold'>
+              Edit Details
+            </Text>
+            <Text size='sm' color='black.200' fontWeight={400}>
               Edit the settings for this Model
             </Text>
           </ModalHeader>
@@ -130,6 +132,9 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                       variant='outline'
                       placeholder='Enter a name'
                       bgColor='white'
+                      borderStyle='solid'
+                      borderWidth='1'
+                      borderColor='gray.400'
                     />
                     <Text color='red.500' fontSize='sm'>
                       <ErrorMessage name='modelName' />
@@ -139,7 +144,12 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                     <FormLabel htmlFor='description' fontWeight='bold'>
                       <Flex alignItems='center' fontSize='sm'>
                         Description{' '}
-                        <Text ml={2} fontSize='xs'>
+                        <Text
+                          ml={2}
+                          size='xs'
+                          color='gray.600'
+                          fontWeight={400}
+                        >
                           {' '}
                           (optional)
                         </Text>
@@ -151,6 +161,9 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                       name='description'
                       placeholder='Enter a description'
                       bgColor='white'
+                      borderStyle='solid'
+                      borderWidth='1'
+                      borderColor='gray.400'
                     />
                   </FormControl>
                 </VStack>
@@ -162,14 +175,19 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                       color='black'
                       mr={3}
                       onClick={onClose}
-                      size='md'
-                      pr={8}
-                      pl={8}
-                      rounded='lg'
+                      paddingX={4}
+                      minWidth='0'
+                      width='auto'
                     >
                       Cancel
                     </Button>
-                    <Button type='submit' isLoading={loading}>
+                    <Button
+                      type='submit'
+                      isLoading={loading}
+                      paddingX={4}
+                      minWidth='0'
+                      width='auto'
+                    >
                       Save Changes
                     </Button>
                   </Flex>
