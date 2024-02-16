@@ -23,5 +23,6 @@ jobs:
         run: |
           curl -X POST -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
           -H 'Content-type: application/json' \
-          --data '{"channel":"$SLACK_CHANNEL_ID","text":"${{ steps.fetch_stargazer.outputs.stargazer }} just starred the repo! :star:"}' \
+          --data '{"channel":"'"$SLACK_CHANNEL_ID"'","text":"'"${{ steps.fetch_stargazer.outputs.stargazer }}"' just starred the repo! :star:"}' \
           https://slack.com/api/chat.postMessage
+        
