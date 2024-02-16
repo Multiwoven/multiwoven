@@ -94,7 +94,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered size='2xl'>
         <ModalOverlay bg='blackAlpha.400' />
         <ModalContent>
-          <ModalCloseButton color='gray.300' />
+          <ModalCloseButton color='gray.600' />
           <ModalHeader>
             <Text size='xl' fontWeight='bold'>
               Edit Details
@@ -167,7 +167,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                     />
                   </FormControl>
                 </VStack>
-                <Box w='full' pt={8}>
+                <Box w='full' pt={8} paddingBottom={5}>
                   <Flex flexDir='row' justifyContent='end'>
                     <Button
                       bgColor='gray.300'

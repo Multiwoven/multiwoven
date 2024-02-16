@@ -77,7 +77,7 @@ const DeleteModelModal = (): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bg='blackAlpha.400' />
         <ModalContent>
-          <ModalCloseButton color='gray.300' />
+          <ModalCloseButton color='gray.600' />
           <ModalBody mx='auto' pt={10}>
             <Flex direction='column'>
               <Image src={ExitWarningImage} h={32} w={48} mx='auto' my={8} />
