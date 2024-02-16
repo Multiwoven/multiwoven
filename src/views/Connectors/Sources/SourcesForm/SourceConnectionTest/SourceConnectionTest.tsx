@@ -92,7 +92,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
                 height="30px"
               >
                 <Box>
-                  {statusMetaInfo.status === "loading" ? <Spinner /> : null}
+                  {statusMetaInfo.status === "loading" ? <Spinner color="black.100" emptyColor="gray.400" thickness="3px" /> : null}
                   {statusMetaInfo.status === "success" ? (
                     <Box
                       display="flex"
