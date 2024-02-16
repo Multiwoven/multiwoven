@@ -8,21 +8,22 @@ jobs:
   postMessage:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch latest stargazer
-        id: fetch_stargazer
+      - name: Fetch repository details
+        id: fetch_repo_details
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_STAR=$(curl -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/stargazers" | jq -r '.[0].login')
-          echo "::set-output name=stargazer::$LATEST_STAR"
+          REPO_INFO=$(curl -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY")
+          STARS_COUNT=$(echo "$REPO_INFO" | jq '.stargazers_count')
+          echo "::set-output name=stars_count::$STARS_COUNT"
 
       - name: Send message to Slack
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
         run: |
+          MESSAGE_TEXT=":clap: Someone starred the Multiwoven Repo\n:star: Total Stars: ${{ steps.fetch_repo_details.outputs.stars_count }}"
           curl -X POST -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
           -H 'Content-type: application/json' \
-          --data '{"channel":"'"$SLACK_CHANNEL_ID"'","text":"'"${{ steps.fetch_stargazer.outputs.stargazer }}"' just starred the repo! :star:"}' \
+          --data '{"channel":"'"$SLACK_CHANNEL_ID"'","text":"'"$MESSAGE_TEXT"'"}' \
           https://slack.com/api/chat.postMessage
-        
