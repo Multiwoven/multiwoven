@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "Klaviyo",
+    "title": "Klaviyo",
     "connector_type": "destination",
     "category": "Marketing Automation",
     "documentation_url": "https://docs.mutliwoven.com",

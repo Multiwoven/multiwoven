@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "Snowflake",
+    "title": "Snowflake",
     "connector_type": "source",
     "category": "Data Warehouse",
     "documentation_url": "https://docs.mutliwoven.com",

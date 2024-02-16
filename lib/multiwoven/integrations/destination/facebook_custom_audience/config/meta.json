@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "FacebookCustomAudience",
+    "title": "Facebook Custom Audiences",
     "connector_type": "destination",
     "category": "Adtech",
     "documentation_url": "https://docs.mutliwoven.com",

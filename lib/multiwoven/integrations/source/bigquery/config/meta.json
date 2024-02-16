@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "Bigquery",
+    "title": "Google BigQuery",
     "connector_type": "source",
     "category": "Data Warehouse",
     "documentation_url": "https://docs.mutliwoven.com",

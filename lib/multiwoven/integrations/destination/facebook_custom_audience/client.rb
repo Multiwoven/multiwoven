@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module FacebookCustomAudience
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector  # rubocop:disable Metrics/ClassLength
+    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
       MAX_CHUNK_SIZE = 10_000
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access

@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "SalesforceCrm",
+    "title": "Salesforce CRM",
     "connector_type": "destination",
     "category": "CRM",
     "documentation_url": "https://docs.mutliwoven.com",

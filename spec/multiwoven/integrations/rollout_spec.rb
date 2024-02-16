@@ -25,5 +25,20 @@ RSpec.describe Multiwoven::Integrations do
         end
       end
     end
+
+    context "when meta.json is created" do
+      it "include valid fields" do
+        enabled_destinations = Multiwoven::Integrations::ENABLED_DESTINATIONS
+
+        enabled_destinations.each do |destination|
+          class_name = "Multiwoven::Integrations::Destination::#{destination}::Client"
+          meta_json_keys = Object.const_get(class_name).new.send("meta_data")[:data].keys
+
+          expect(meta_json_keys).to include(:name, :title, :connector_type, :category,
+                                            :documentation_url, :github_issue_label, :icon,
+                                            :license, :release_stage, :support_level, :tags)
+        end
+      end
+    end
   end
 end

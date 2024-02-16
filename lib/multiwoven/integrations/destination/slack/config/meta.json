@@ -1,6 +1,7 @@
 {
   "data": {
     "name": "Slack",
+    "title": "Slack",
     "connector_type": "destination",
     "category": "Team Collaboration",
     "documentation_url": "https://docs.mutliwoven.com",
