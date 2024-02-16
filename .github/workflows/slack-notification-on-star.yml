@@ -22,7 +22,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
         run: |
-          MESSAGE_TEXT=":clap: Someone starred the Multiwoven Repo\n:star: Total Stars: ${{ steps.fetch_repo_details.outputs.stars_count }}"
+          MESSAGE_TEXT=":clap: Someone starred the Multiwoven Repo\n\n:star: Total Stars: *${{ steps.fetch_repo_details.outputs.stars_count }}*"
           curl -X POST -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
           -H 'Content-type: application/json' \
           --data '{"channel":"'"$SLACK_CHANNEL_ID"'","text":"'"$MESSAGE_TEXT"'"}' \
