@@ -61,9 +61,7 @@ const MapFields = ({
     }
   }, [data]);
 
-  if (!previewModelData || !Array.isArray(previewModelData)) return null;
-
-  const firstRow = previewModelData[0];
+  const firstRow = Array.isArray(previewModelData) && previewModelData[0];
 
   const modelColumns = Object.keys(firstRow ?? {});
 

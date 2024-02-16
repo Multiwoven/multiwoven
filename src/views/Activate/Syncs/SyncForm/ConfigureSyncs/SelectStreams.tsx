@@ -39,18 +39,18 @@ const SelectStreams = ({
     }
   }, [catalogData]);
 
-  if (!catalogData) return null;
-
   const streams = catalogData?.data?.attributes?.catalog?.streams;
 
   const handleOnStreamChange = (streamNumber: string) => {
     if (!streamNumber) return;
 
-    const selectedStream = streams[parseInt(streamNumber)];
-    onChange?.(selectedStream);
+    if (streams) {
+      const selectedStream = streams[parseInt(streamNumber)];
+      onChange?.(selectedStream);
+    }
   };
 
-  const selectedStreamIndex = streams.findIndex(
+  const selectedStreamIndex = streams?.findIndex(
     (stream) => stream.name === selectedStream?.name
   );
 
@@ -78,7 +78,7 @@ const SelectStreams = ({
         isDisabled={isEdit}
         value={selectedStreamIndex}
       >
-        {streams.map((stream, index) => (
+        {streams?.map((stream, index) => (
           <option key={stream.name} value={index}>
             {stream.name}
           </option>
