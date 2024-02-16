@@ -1,0 +1,27 @@
+name: Notify Slack on Star
+
+on:
+  watch:
+    types: [started]
+
+jobs:
+  postMessage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest stargazer
+        id: fetch_stargazer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST_STAR=$(curl -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/stargazers" | jq -r '.[0].login')
+          echo "::set-output name=stargazer::$LATEST_STAR"
+
+      - name: Send message to Slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+        run: |
+          curl -X POST -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+          -H 'Content-type: application/json' \
+          --data '{"channel":"$SLACK_CHANNEL_ID","text":"${{ steps.fetch_stargazer.outputs.stargazer }} just starred the repo! :star:"}' \
+          https://slack.com/api/chat.postMessage
