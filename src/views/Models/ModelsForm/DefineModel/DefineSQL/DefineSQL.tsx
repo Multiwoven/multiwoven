@@ -26,6 +26,7 @@ import { DefineSQLProps } from './types';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
 import ContentContainer from '@/components/ContentContainer';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -137,7 +138,7 @@ const DefineSQL = ({
 
   return (
     <Box justifyContent='center' display='flex'>
-      <ContentContainer>
+      <ContentContainer applyPadding={isUpdateButtonVisible ? false : true}>
         <Box w='full' mx='auto'>
           <VStack>
             <Box
@@ -256,23 +257,31 @@ const DefineSQL = ({
           </VStack>
         </Box>
       </ContentContainer>
-      <SourceFormFooter
-        ctaName='Continue'
-        ctaType='button'
-        isBackRequired
-        isContinueCtaRequired
-        isCtaDisabled={!moveForward}
-        secondaryCtaText={isUpdateButtonVisible ? 'Cancel' : 'Back'}
-        onCtaClick={() => {
-          isUpdateButtonVisible
-            ? handleModelUpdate()
-            : handleContinueClick(
-                (editorRef?.current as any).getValue(),
-                connector_id,
-                tableData
-              );
-        }}
-      />
+      {isUpdateButtonVisible ? (
+        <FormFooter
+          ctaName='Save Changes'
+          ctaType='button'
+          isCtaDisabled={!moveForward}
+          isAlignToContentContainer
+          isBackRequired
+          onCtaClick={handleModelUpdate}
+        />
+      ) : (
+        <SourceFormFooter
+          ctaName='Continue'
+          ctaType='button'
+          isBackRequired
+          isContinueCtaRequired
+          isCtaDisabled={!moveForward}
+          onCtaClick={() => {
+            handleContinueClick(
+              (editorRef?.current as any).getValue(),
+              connector_id,
+              tableData
+            );
+          }}
+        />
+      )}
     </Box>
   );
 };

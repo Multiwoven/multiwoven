@@ -98,7 +98,7 @@ const ViewModel = (): JSX.Element => {
     }
   }
 
-  const EDIT_SYNC_FORM_STEPS: Step[] = [
+  const EDIT_MODEL_FORM_STEPS: Step[] = [
     {
       name: 'Models',
       url: '/define/models',
@@ -114,7 +114,7 @@ const ViewModel = (): JSX.Element => {
       <ContentContainer>
         <TopBar
           name={prefillValues?.model_name}
-          breadcrumbSteps={EDIT_SYNC_FORM_STEPS}
+          breadcrumbSteps={EDIT_MODEL_FORM_STEPS}
           extra={
             <Box display='flex' alignItems='center'>
               <Box display='flex' alignItems='center'>
