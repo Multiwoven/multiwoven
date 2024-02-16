@@ -1771,7 +1771,7 @@ GEM
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.11.0)
       google-protobuf (~> 3.18)
-    googleauth (1.10.0)
+    googleauth (1.11.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
       jwt (>= 1.4, < 3.0)
@@ -1839,7 +1839,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.24)
+    multiwoven-integrations (0.1.25)
       activesupport
       async-websocket
       dry-schema
@@ -1955,7 +1955,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    restforce (7.2.0)
+    restforce (7.3.0)
       faraday (>= 1.1.0, < 2.10.0)
       faraday-follow_redirects (<= 0.3.0, < 1.0.0)
       faraday-multipart (>= 1.0.0, < 2.0.0)
@@ -2008,7 +2008,7 @@ GEM
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
-    signet (0.18.0)
+    signet (0.19.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
@@ -2079,7 +2079,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.24)
+  multiwoven-integrations (~> 0.1.25)
   newrelic_rpm
   parallel
   pg (~> 1.1)
