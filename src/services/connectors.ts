@@ -8,6 +8,7 @@ import {
   TestConnectionResponse,
 } from "@/views/Connectors/types";
 import { apiRequest, multiwovenFetch } from "./common";
+import { RJSFSchema } from "@rjsf/utils";
 
 type ConnectorsDefinationApiResponse = {
   success: boolean;
@@ -17,11 +18,17 @@ type ConnectorsDefinationApiResponse = {
 type ConnectorDefinationApiResponse = {
   success: boolean;
   data?: {
-    icon: string;
-    name: string;
-    connector_spec: Record<string, unknown>;
-  };
-};
+    icon: string
+    name: string
+    connector_spec: {
+      documentation_url: string;
+      connection_specification: RJSFSchema;
+      supports_normalization: boolean;
+      supports_dbt: boolean;
+      stream_type: string;
+    }
+  }
+}
 
 export const getConnectorsDefintions = async (
   connectorType: string

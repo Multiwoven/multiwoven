@@ -47,7 +47,7 @@ const SourceConfigForm = (): JSX.Element | null => {
       <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
           <Form
-            uiSchema={(connectorSchema as any).title.toLowerCase() === "amazon redshift" ? uiSchema : undefined}
+            uiSchema={connectorSchema.title?.toLowerCase() === "amazon redshift" ? uiSchema : undefined}
             schema={connectorSchema}
             validator={validator}
             templates={{ObjectFieldTemplate: MWObjectFieldTemplate, TitleFieldTemplate: MWTitleField}}
