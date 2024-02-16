@@ -77,6 +77,8 @@ const ConfigureSyncs = ({
             ctaType='submit'
             isCtaDisabled={!selectedStream}
             isBackRequired
+            isContinueCtaRequired
+            isDocumentsSectionRequired
           />
         </form>
       </ContentContainer>

@@ -103,8 +103,8 @@ const FinaliseSync = (): JSX.Element => {
               borderColor='gray.400'
             />
 
-            <Box display='flex'>
-              <Box minWidth='500px'>
+            <Box display='flex' justifyContent='space-between'>
+              <Box mr={4}>
                 <Text mb='4' fontWeight='600' size='sm'>
                   Schedule type
                 </Text>
@@ -151,7 +151,7 @@ const FinaliseSync = (): JSX.Element => {
                   </Stack>
                 </RadioGroup>
               </Box>
-              <Box minWidth='400px'>
+              <Box>
                 {formik.values.schedule_type === 'automated' ? (
                   <>
                     <Text mb={4} fontWeight='600' size='sm'>
@@ -217,6 +217,7 @@ const FinaliseSync = (): JSX.Element => {
             ctaType='submit'
             isCtaLoading={isLoading}
             isBackRequired
+            isContinueCtaRequired
           />
         </form>
       </ContentContainer>

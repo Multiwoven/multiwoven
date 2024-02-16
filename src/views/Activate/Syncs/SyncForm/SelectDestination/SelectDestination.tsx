@@ -9,6 +9,7 @@ import { Box } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useContext, Dispatch, SetStateAction } from 'react';
 import { Stream } from '@/views/Activate/Syncs/types';
+import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 
 const SelectDestination = ({
   setSelectedStream,
@@ -45,11 +46,18 @@ const SelectDestination = ({
         {isLoading || !data ? (
           <Loader />
         ) : (
-          <DestinationsTable
-            handleOnRowClick={(data) => handleOnRowClick(data)}
-            destinationData={data}
-            isLoading={isLoading}
-          />
+          <>
+            <DestinationsTable
+              handleOnRowClick={(data) => handleOnRowClick(data)}
+              destinationData={data}
+              isLoading={isLoading}
+            />
+            <SourceFormFooter
+              ctaName='Continue'
+              ctaType='submit'
+              isBackRequired
+            />
+          </>
         )}
       </ContentContainer>
     </Box>
