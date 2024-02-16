@@ -13,6 +13,7 @@ import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
 import ContentContainer from "@/components/ContentContainer";
 import MWObjectFieldTemplate from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/MWObjectFieldTemplate";
+import MWTitleField from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/MWTitleField";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -45,15 +46,25 @@ const SourceConfigForm = (): JSX.Element | null => {
     <Box display="flex" justifyContent="center" marginBottom="80px">
       <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
-          <Form
-            uiSchema={uiSchema}
-            schema={connectorSchema}
-            validator={validator}
-            templates={{ObjectFieldTemplate: MWObjectFieldTemplate}}
-            onSubmit={({ formData }) => handleFormSubmit(formData)}
-          >
-            <SourceFormFooter ctaName="Continue" ctaType="submit" />
-          </Form>
+          {(connectorSchema as any).title.toLowerCase() === "amazon redshift"
+            ? <Form
+                uiSchema={uiSchema}
+                schema={schema as any}
+                validator={validator}
+                templates={{ObjectFieldTemplate: MWObjectFieldTemplate, TitleFieldTemplate: MWTitleField}}
+                onSubmit={({ formData }) => handleFormSubmit(formData)}
+              >
+                <SourceFormFooter ctaName="Continue" ctaType="submit" />
+              </Form>
+            : <Form
+                schema={connectorSchema}
+                validator={validator}
+                templates={{ObjectFieldTemplate: MWObjectFieldTemplate}}
+                onSubmit={({ formData }) => handleFormSubmit(formData)}
+              >
+                <SourceFormFooter ctaName="Continue" ctaType="submit" />
+              </Form>
+          }
         </Box>
       </ContentContainer>
     </Box>
@@ -67,6 +78,9 @@ const uiSchema = {
     cols: 2,
     colspans: [2, 1, 1, 2, 2]
   },
+  host: {
+    "ui:placeholder": "redshift-host.us-east-1.redshift.amazonaws.com",
+  },
   credentials: {
     "ui:layout": {
       display: "grid",
@@ -79,8 +93,6 @@ const uiSchema = {
   }
 }
 
-// @ts-expect-error This is for illustration
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const schema = {
   $schema: "http://json-schema.org/draft-07/schema#",
   title: "Amazon Redshift",
