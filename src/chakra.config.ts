@@ -74,6 +74,11 @@ const extenstion = {
               bgColor: "brand.400",
             },
           },
+          _disabled: {
+            _hover: {
+              bgColor: "brand.400",
+            },
+          },
         },
         outline: {
           bgColor: "gray.100",
@@ -84,12 +89,18 @@ const extenstion = {
           _loading: {
             _hover: { bgColor: "brand.400", color: "white" },
           },
+          _disabled: {
+            _hover: { bgColor: "brand.400", color: "white" },
+          },
         },
         ghost: {
           bgColor: "gray.400",
           _hover: { bgColor: "gray.500", color: "black" },
           color: "black",
           _loading: {
+            _hover: { bgColor: "gray.500", color: "black" },
+          },
+          _disabled: {
             _hover: { bgColor: "gray.500", color: "black" },
           },
         },
@@ -101,6 +112,9 @@ const extenstion = {
           borderWidth: "1px",
           borderStyle: "solid",
           _loading: {
+            _hover: { bgColor: "gray.300", color: "black" },
+          },
+          _disabled: {
             _hover: { bgColor: "gray.300", color: "black" },
           },
         },
