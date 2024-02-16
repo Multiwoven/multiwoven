@@ -7,15 +7,14 @@ import {
   SimpleGrid,
   Stack,
   Text,
-} from "@chakra-ui/react";
-import { modelMethods } from "./methods";
-import { useContext } from "react";
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import { ModelMethodType } from "./types";
-import ModelFooter from "../ModelFooter";
-import { useNavigate } from "react-router-dom";
-import ContentContainer from "@/components/ContentContainer";
-import Badge from "@/components/Badge";
+} from '@chakra-ui/react';
+import { modelMethods } from './methods';
+import { useContext } from 'react';
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
+import { ModelMethodType } from './types';
+import ContentContainer from '@/components/ContentContainer';
+import Badge from '@/components/Badge';
+import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 
 const ModelMethod = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -26,55 +25,50 @@ const ModelMethod = (): JSX.Element => {
     }
   };
 
-  const navigate = useNavigate();
   return (
-    <Box width="100%" display="flex" justifyContent="center">
+    <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <SimpleGrid columns={3} spacing={8}>
           {modelMethods.map((method, index) => (
             <Card
-              maxW="sm"
+              maxW='sm'
               key={index}
-              _hover={method.enabled ? { bgColor: "gray.200" } : {}}
-              variant="elevated"
+              _hover={method.enabled ? { bgColor: 'gray.200' } : {}}
+              variant='elevated'
               onClick={method.enabled ? () => handleOnClick(method) : () => {}}
-              opacity={method.enabled ? "1" : "0.6"}
+              opacity={method.enabled ? '1' : '0.6'}
+              cursor={method.enabled ? 'pointer' : 'auto'}
+              borderWidth='1px'
+              borderStyle='solid'
+              borderColor='gray.400'
             >
               <CardBody>
                 <Image
                   src={method.image}
                   alt={method.type}
-                  borderRadius="lg"
-                  w="full"
+                  borderRadius='lg'
+                  w='full'
                 />
-                <Stack mt="6" spacing="3">
+                <Stack mt='6' spacing='3'>
                   <HStack>
-                    <Text size="lg" fontWeight="semibold">
+                    <Text size='lg' fontWeight='semibold'>
                       {method.name}
                     </Text>
                     {!method.enabled ? (
-                      <Badge text="weaving soon" variant="default" />
+                      <Badge text='weaving soon' variant='default' />
                     ) : (
                       <></>
                     )}
                   </HStack>
-                  <Text>{method.description}</Text>
+                  <Text size='sm' color='black.200' fontWeight='regular'>
+                    {method.description}
+                  </Text>
                 </Stack>
               </CardBody>
             </Card>
           ))}
         </SimpleGrid>
-        <ModelFooter
-          buttons={[
-            {
-              name: "Back",
-              bgColor: "gray.300",
-              hoverBgColor: "gray.200",
-              color: "black",
-              onClick: () => navigate(-1),
-            },
-          ]}
-        />
+        <SourceFormFooter ctaName='Continue' ctaType='submit' isBackRequired />
       </ContentContainer>
     </Box>
   );

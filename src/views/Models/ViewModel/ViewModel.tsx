@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { PrefillValue } from "../ModelsForm/DefineModel/DefineSQL/types";
-import TopBar from "@/components/TopBar/TopBar";
-import { getModelById, putModelById } from "@/services/models";
-import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
+import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
+import TopBar from '@/components/TopBar/TopBar';
+import { getModelById, putModelById } from '@/services/models';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Step } from '@/components/Breadcrumbs/types';
+
 import {
   Box,
   Button,
@@ -14,27 +16,28 @@ import {
   Text,
   VStack,
   useToast,
-} from "@chakra-ui/react";
-import { Editor } from "@monaco-editor/react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { UpdateModelPayload } from "./types";
-import DeleteModelModal from "./DeleteModelModal";
-import EditModelModal from "./EditModelModal";
-import ContentContainer from "@/components/ContentContainer";
-import EntityItem from "@/components/EntityItem";
-import Loader from "@/components/Loader";
+  Divider,
+} from '@chakra-ui/react';
+import { Editor } from '@monaco-editor/react';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { UpdateModelPayload } from './types';
+import ContentContainer from '@/components/ContentContainer';
+import EntityItem from '@/components/EntityItem';
+import Loader from '@/components/Loader';
+import moment from 'moment';
+import ModelActions from './ModelActions';
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
   const toast = useToast();
   const navigate = useNavigate();
 
-  const model_id = params.id || "";
+  const model_id = params.id || '';
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["modelByID"],
-    queryFn: () => getModelById(model_id || ""),
+    queryKey: ['modelByID'],
+    queryFn: () => getModelById(model_id || ''),
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     retryOnMount: true,
@@ -42,7 +45,7 @@ const ViewModel = (): JSX.Element => {
   });
 
   const validationSchema = Yup.object().shape({
-    primaryKey: Yup.string().required("Primary Key is required"),
+    primaryKey: Yup.string().required('Primary Key is required'),
   });
 
   if (isLoading) {
@@ -56,19 +59,19 @@ const ViewModel = (): JSX.Element => {
   if (!data) return <></>;
 
   const prefillValues: PrefillValue = {
-    connector_id: data?.data?.attributes.connector.id || "",
+    connector_id: data?.data?.attributes.connector.id || '',
     connector_icon: (
       <EntityItem
-        name={data?.data?.attributes.connector.name || ""}
-        icon={data?.data?.attributes.connector.icon || ""}
+        name={data?.data?.attributes.connector.name || ''}
+        icon={data?.data?.attributes.connector.icon || ''}
       />
     ),
-    connector_name: data?.data?.attributes.connector.name || "",
-    model_name: data?.data?.attributes.name || "",
-    model_description: data?.data?.attributes.description || "",
-    primary_key: data?.data?.attributes.primary_key || "",
-    query: data?.data?.attributes.query || "",
-    query_type: data?.data?.attributes.query_type || "",
+    connector_name: data?.data?.attributes.connector.name || '',
+    model_name: data?.data?.attributes.name || '',
+    model_description: data?.data?.attributes.description || '',
+    primary_key: data?.data?.attributes.primary_key || '',
+    query: data?.data?.attributes.query || '',
+    query_type: data?.data?.attributes.query_type || '',
     model_id: model_id,
   };
 
@@ -77,8 +80,8 @@ const ViewModel = (): JSX.Element => {
       model: {
         name: prefillValues.model_name,
         description: prefillValues.model_description,
-        primary_key: primary_key || "",
-        connector_id: data?.data?.attributes.connector.id || "",
+        primary_key: primary_key || '',
+        connector_id: data?.data?.attributes.connector.id || '',
         query: prefillValues.query,
         query_type: prefillValues.query_type,
       },
@@ -86,74 +89,104 @@ const ViewModel = (): JSX.Element => {
     const modelUpdateResponse = await putModelById(model_id, updatePayload);
     if (modelUpdateResponse.data) {
       toast({
-        title: "Model updated successfully",
-        status: "success",
+        title: 'Model updated successfully',
+        status: 'success',
         duration: 3000,
         isClosable: true,
-        position: "bottom-right",
+        position: 'bottom-right',
       });
     }
   }
 
+  const EDIT_SYNC_FORM_STEPS: Step[] = [
+    {
+      name: 'Models',
+      url: '/define/models',
+    },
+    {
+      name: data.data?.attributes?.name || '',
+      url: '',
+    },
+  ];
+
   return (
-    <Box width="100%" display="flex" justifyContent="center">
+    <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <TopBar
-          name={prefillValues.model_name}
+          name={prefillValues?.model_name}
+          breadcrumbSteps={EDIT_SYNC_FORM_STEPS}
           extra={
-            <>
-              <DeleteModelModal />
-              <EditModelModal {...prefillValues} />
-            </>
+            <Box display='flex' alignItems='center'>
+              <Box display='flex' alignItems='center'>
+                <EntityItem
+                  name={data.data?.attributes.connector.connector_name || ''}
+                  icon={data.data?.attributes.connector.icon || ''}
+                />
+              </Box>
+              <Divider
+                orientation='vertical'
+                height='24px'
+                borderColor='gray.500'
+                opacity='1'
+                marginX='13px'
+              />
+              <Text size='sm' fontWeight='medium'>
+                Last updated :{' '}
+              </Text>
+              <Text size='sm' fontWeight='semibold'>
+                {moment(data.data?.attributes?.updated_at).format('DD/MM/YYYY')}
+              </Text>
+              <ModelActions prefillValues={prefillValues} />
+            </Box>
           }
         />
-        <VStack m={8}>
-          <Box w="full" mx="auto" bgColor="gray.100" rounded="xl">
+        <VStack>
+          <Box w='full' mx='auto' bgColor='gray.100' rounded='xl'>
             <Flex
-              w="full"
-              roundedTop="xl"
-              alignItems="center"
-              bgColor="gray.300"
+              w='full'
+              roundedTop='xl'
+              alignItems='center'
+              bgColor='gray.300'
               p={2}
-              border="1px"
-              borderColor="gray.400"
+              border='1px'
+              borderColor='gray.400'
             >
               <EntityItem
-                name={data.data?.attributes.connector.connector_name || ""}
-                icon={data.data?.attributes.connector.icon || ""}
+                name={data.data?.attributes.connector.connector_name || ''}
+                icon={data.data?.attributes.connector.icon || ''}
               />
               <Spacer />
-              <Button variant="shell" onClick={() => navigate("edit")}>
+              <Button variant='shell' onClick={() => navigate('edit')}>
                 Edit
               </Button>
             </Flex>
             <Box
-              borderX="1px"
-              borderBottom="1px"
-              roundedBottom="lg"
+              borderX='1px'
+              borderBottom='1px'
+              roundedBottom='lg'
               py={2}
-              borderColor="gray.400"
+              borderColor='gray.400'
             >
               <Editor
-                width="100%"
-                height="280px"
-                language="mysql"
-                defaultLanguage="mysql"
-                defaultValue="Enter your query..."
+                width='100%'
+                height='280px'
+                language='mysql'
+                defaultLanguage='mysql'
+                defaultValue='Enter your query...'
                 value={prefillValues.query}
                 saveViewState={true}
-                theme="light"
+                theme='light'
                 options={{
                   minimap: {
                     enabled: false,
                   },
                   formatOnType: true,
                   formatOnPaste: true,
-                  autoIndent: "full",
+                  autoIndent: 'full',
                   wordBasedSuggestions: true,
                   scrollBeyondLastLine: false,
                   quickSuggestions: true,
-                  tabCompletion: "on",
+                  tabCompletion: 'on',
                   contextmenu: true,
                   readOnly: true,
                 }}
@@ -161,20 +194,20 @@ const ViewModel = (): JSX.Element => {
             </Box>
           </Box>
           <Box
-            w="full"
-            mx="auto"
-            bgColor="gray.100"
+            w='full'
+            mx='auto'
+            bgColor='gray.100'
             px={8}
             py={6}
-            rounded="xl"
-            border="1px"
-            borderColor="gray.400"
+            rounded='xl'
+            border='1px'
+            borderColor='gray.400'
           >
-            <Text mb={6} fontWeight="bold">
+            <Text mb={6} fontWeight='bold'>
               Configure your model
             </Text>
             <Formik
-              initialValues={{ primaryKey: "" }}
+              initialValues={{ primaryKey: '' }}
               validationSchema={validationSchema}
               onSubmit={(values) => handleModelUpdate(values.primaryKey)}
             >
@@ -182,23 +215,23 @@ const ViewModel = (): JSX.Element => {
                 <VStack>
                   <FormControl>
                     <FormLabel
-                      htmlFor="primaryKey"
-                      fontSize="sm"
-                      fontWeight="bold"
+                      htmlFor='primaryKey'
+                      fontSize='sm'
+                      fontWeight='bold'
                     >
                       Primary Key
                     </FormLabel>
                     <Field
                       as={Select}
                       placeholder={prefillValues.primary_key}
-                      name="primaryKey"
-                      bgColor="gray.100"
-                      borderColor="gray.600"
-                      w="lg"
+                      name='primaryKey'
+                      bgColor='gray.100'
+                      borderColor='gray.600'
+                      w='lg'
                       isDisabled
                     />
-                    <Text color="red.500" fontSize="sm">
-                      <ErrorMessage name="primaryKey" />
+                    <Text color='red.500' fontSize='sm'>
+                      <ErrorMessage name='primaryKey' />
                     </Text>
                   </FormControl>
                 </VStack>
