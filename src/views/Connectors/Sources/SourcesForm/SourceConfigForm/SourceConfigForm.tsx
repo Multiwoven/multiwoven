@@ -12,7 +12,7 @@ import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormF
 import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
 import ContentContainer from "@/components/ContentContainer";
-import ObjectFieldTemplate from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/CustomObjectFieldTemplate";
+import ObjectFieldTemplate from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/MWObjectFieldTemplate";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -46,6 +46,12 @@ const SourceConfigForm = (): JSX.Element | null => {
       <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
           <Form
+            uiSchema={{
+              'ui:layout': {
+                display: 'grid',
+                cols: 2,
+              },
+            }}
             schema={connectorSchema}
             validator={validator}
             templates={{ObjectFieldTemplate: ObjectFieldTemplate}}
@@ -60,17 +66,16 @@ const SourceConfigForm = (): JSX.Element | null => {
 };
 
 /**
-
 {
 	"connection_specification": {
 		"$schema": "http://json-schema.org/draft-07/schema#",
-		"title": "Snowflake",
+		"title": "Amazon Redshift",
 		"type": "object",
 		"required": [
 			"host",
-			"role",
-			"warehouse",
-			"database"
+			"port",
+			"database",
+			"schema"
 		],
 		"properties": {
 			"credentials": {
@@ -89,16 +94,16 @@ const SourceConfigForm = (): JSX.Element | null => {
 						"readOnly": true
 					},
 					"username": {
-						"description": "The username you created to allow multiwoven to access the database.",
+						"description": "Username refers to your individual Redshift login credentials. At a minimum, the user associated with these credentials must be granted read access to the data intended for synchronization.",
 						"examples": [
-							"MULTIWOVEN_USER"
+							"REDSHIFT_USER"
 						],
 						"type": "string",
 						"title": "Username",
 						"order": 1
 					},
 					"password": {
-						"description": "The password associated with the username.",
+						"description": "This field requires the password associated with the user account specified in the preceding section.",
 						"type": "string",
 						"multiwoven_secret": true,
 						"title": "Password",
@@ -108,55 +113,40 @@ const SourceConfigForm = (): JSX.Element | null => {
 				"order": 0
 			},
 			"host": {
-				"description": "The host domain of the snowflake instance (must include the account, region, cloud environment, and end with snowflakecomputing.com).",
+				"description": "The hostname or IP address of your Redshift cluster represents a critical connectivity parameter. To retrieve this information, access the Redshift web console, proceed to the Clusters panel, and select your specific cluster. Within the cluster's details, locate and copy the Endpoint string, ensuring to omit the port number and database name appended at the conclusion.",
 				"examples": [
-					"accountname.us-east-2.aws.snowflakecomputing.com"
+					"example-redshift-cluster.abcdefg.us-west-2.redshift.amazonaws.com"
 				],
 				"type": "string",
-				"title": "Account Name",
+				"title": "Host",
 				"order": 1
 			},
-			"role": {
-				"description": "The role you created for multiwoven to access Snowflake.",
+			"port": {
+				"description": "The port number for your Redshift cluster, which defaults to 5439, may vary based on your configuration. To verify the specific port number assigned to your cluster, access the Redshift web console, proceed to the Clusters panel, and select your cluster. You can find the port number displayed within the Properties tab.",
 				"examples": [
-					"MULTIWOVEN_ROLE"
+					"5439"
 				],
 				"type": "string",
-				"title": "Role",
+				"title": "Port",
 				"order": 2
 			},
-			"warehouse": {
-				"description": "The warehouse you created for multiwoven to access data.",
-				"examples": [
-					"MULTIWOVEN_WAREHOUSE"
-				],
-				"type": "string",
-				"title": "Warehouse",
-				"order": 3
-			},
 			"database": {
-				"description": "The database you created for multiwoven to access data.",
+				"description": "The specific Redshift database to connect to.",
 				"examples": [
-					"MULTIWOVEN_DATABASE"
+					"REDSHIFT_DB"
 				],
 				"type": "string",
 				"title": "Database",
-				"order": 4
+				"order": 3
 			},
 			"schema": {
-				"description": "The source Snowflake schema tables. Leave empty to access tables from multiple schemas.",
+				"description": "The schema within the Redshift database.",
 				"examples": [
-					"MULTIWOVEN_SCHEMA"
+					"REDSHIFT_SCHEMA"
 				],
 				"type": "string",
 				"title": "Schema",
-				"order": 5
-			},
-			"jdbc_url_params": {
-				"description": "Additional properties to pass to the JDBC URL string when connecting to the database formatted as 'key=value' pairs separated by the symbol '&'. (example: key1=value1&key2=value2&key3=value3).",
-				"title": "JDBC URL Params",
-				"type": "string",
-				"order": 6
+				"order": 4
 			}
 		}
 	}

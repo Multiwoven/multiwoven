@@ -1,6 +1,6 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import {
-  canExpand,
+//   canExpand,
   descriptionId,
   FormContextType,
   getTemplate,
@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
   titleId,
 } from '@rjsf/utils';
+import DefaultObjectFieldTemplate from "@rjsf/chakra-ui/src/ObjectFieldTemplate";
 
 export default function ObjectFieldTemplate<
   T = any,
@@ -21,13 +22,13 @@ export default function ObjectFieldTemplate<
     title,
     properties,
     required,
-    disabled,
-    readonly,
+    // disabled,
+    // readonly,
     uiSchema,
     idSchema,
     schema,
-    formData,
-    onAddClick,
+    // formData,
+    // onAddClick,
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -37,13 +38,23 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions
   );
+  
+  const layout = uiOptions.layout as Record<string, string>;
+
+  if (layout?.display !== "grid" || !layout?.cols) {
+    return <DefaultObjectFieldTemplate {...props}  />
+  }
+
   // Button templates are not overridden in the uiSchema
-  const {
-    ButtonTemplates: { AddButton },
-  } = registry.templates;
+//   const {
+//     ButtonTemplates: { AddButton },
+//   } = registry.templates;
+  const gridTemplate = `repeat(${layout.cols}, 1fr)`;
 
   return (
     <>
+        Custom template
+
       {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
@@ -63,7 +74,18 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid gap={description ? 2 : 6} mb={4}>
+      
+    <Grid templateColumns={gridTemplate} gap={6} >
+        {properties.map((element, index) =>
+          element.hidden ? (
+            element.content
+          ) : (
+            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
+          )
+        )}
+    </Grid>
+      
+      {/* <Grid gap={description ? 2 : 6} mb={4}>
         {properties.map((element, index) =>
           element.hidden ? (
             element.content
@@ -82,7 +104,7 @@ export default function ObjectFieldTemplate<
             />
           </GridItem>
         )}
-      </Grid>
+      </Grid> */}
     </>
   );
 }
