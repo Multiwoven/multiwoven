@@ -207,7 +207,9 @@ const extenstion = {
       variants: {
         outline: {
           field: {
+            bg: "white",
             width: "100%",
+            height: "40px",
             border: "1px",
             borderColor: "gray.400",
             boxSizing: "border-box",
