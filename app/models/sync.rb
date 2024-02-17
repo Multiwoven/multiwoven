@@ -42,6 +42,8 @@ class Sync < ApplicationRecord
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
 
+  default_scope { order(updated_at: :desc) }
+
   def to_protocol
     catalog = destination.catalog
     Multiwoven::Integrations::Protocol::SyncConfig.new(

@@ -49,4 +49,26 @@ RSpec.describe Model, type: :model do
       expect(model).to have_many(:syncs).dependent(:destroy)
     end
   end
+
+  describe "#default_scope" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:model) { create_list(:model, 4, connector: source) }
+
+    context "when a multiple models are created" do
+      it "returns the model in descending order of updated_at" do
+        expect(Model.all).to eq(model.sort_by(&:updated_at).reverse)
+      end
+    end
+
+    context "when a model is updated" do
+      it "returns the model in descending order of updated_at" do
+        model.first.update(updated_at: DateTime.current + 1.week)
+        model.last.update(updated_at: DateTime.current - 1.week)
+
+        expect(Model.all).to eq(model.sort_by(&:updated_at).reverse)
+      end
+    end
+  end
 end

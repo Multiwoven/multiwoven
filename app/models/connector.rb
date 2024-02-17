@@ -31,6 +31,8 @@ class Connector < ApplicationRecord
   has_many :models, dependent: :destroy
   has_one :catalog, dependent: :destroy
 
+  default_scope { order(updated_at: :desc) }
+
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end

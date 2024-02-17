@@ -107,4 +107,23 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "#default_scope" do
+    let(:connector) { create_list(:connector, 4) }
+
+    context "when a multiple connector are created" do
+      it "returns the connector in descending order of updated_at" do
+        expect(Connector.all).to eq(connector.sort_by(&:updated_at).reverse)
+      end
+    end
+
+    context "when a connector is updated" do
+      it "returns the connector in descending order of updated_at" do
+        connector.first.update!(updated_at: DateTime.current + 1.week)
+        connector.last.update!(updated_at: DateTime.current - 1.week)
+
+        expect(Connector.all).to eq(connector.sort_by(&:updated_at).reverse)
+      end
+    end
+  end
 end

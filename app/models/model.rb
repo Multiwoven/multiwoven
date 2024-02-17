@@ -27,6 +27,8 @@ class Model < ApplicationRecord
 
   has_many :syncs, dependent: :destroy
 
+  default_scope { order(updated_at: :desc) }
+
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(
       name:,
