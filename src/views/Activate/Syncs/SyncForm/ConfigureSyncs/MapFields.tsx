@@ -22,11 +22,6 @@ type MapFieldsProps = {
   configuration?: Record<string, string> | null;
 };
 
-const FieldStruct: FieldMapType = {
-  model: '',
-  destination: '',
-};
-
 const MapFields = ({
   model,
   destination,
@@ -36,13 +31,15 @@ const MapFields = ({
   handleOnConfigChange,
   configuration,
 }: MapFieldsProps): JSX.Element | null => {
-  const [fields, setFields] = useState<FieldMapType[]>([FieldStruct]);
+  const [fields, setFields] = useState<FieldMapType[]>([
+    { model: '', destination: '' },
+  ]);
   const { data: previewModelData } = useQuery({
     queryKey: ['syncs', 'preview-model', model?.connector?.id],
     queryFn: () =>
       getModelPreviewById(model?.query, String(model?.connector?.id)),
     enabled: !!model?.connector?.id,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
@@ -66,7 +63,7 @@ const MapFields = ({
   const modelColumns = Object.keys(firstRow ?? {});
 
   const handleOnAppendField = () => {
-    setFields([...fields, FieldStruct]);
+    setFields([...fields, { model: '', destination: '' }]);
   };
 
   const handleOnChange = (
@@ -95,6 +92,23 @@ const MapFields = ({
   const destinationConfigList = configuration
     ? Object.values(configuration)
     : [];
+
+  useEffect(() => {
+    let FieldStruct: FieldMapType[] = [];
+    if (configuration) {
+      if (Object.keys(configuration).length === 0) {
+        FieldStruct = [{ model: '', destination: '' }];
+      } else {
+        FieldStruct = Object.entries(configuration).map(
+          ([model, destination]) => ({
+            model,
+            destination,
+          })
+        );
+      }
+      setFields(FieldStruct);
+    }
+  }, []);
 
   return (
     <Box

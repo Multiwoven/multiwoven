@@ -46,7 +46,6 @@ const GenerateTable = ({
                 fontWeight={700}
                 padding='16px'
                 letterSpacing='2.4px'
-                textTransform='none'
               >
                 {column.name}
               </Th>
