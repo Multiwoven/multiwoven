@@ -76,7 +76,7 @@ const DeleteModelModal = (): JSX.Element => {
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bg='blackAlpha.400' />
-        <ModalContent>
+        <ModalContent minWidth='540px'>
           <ModalCloseButton color='gray.600' />
           <ModalBody mx='auto' pt={10}>
             <Flex direction='column'>
@@ -91,7 +91,7 @@ const DeleteModelModal = (): JSX.Element => {
             </Flex>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter paddingBottom='8'>
             <Box w='full'>
               <Flex flexDir='row' justifyContent='center'>
                 <Button
@@ -103,16 +103,16 @@ const DeleteModelModal = (): JSX.Element => {
                   size='md'
                   pr={8}
                   pl={8}
-                  rounded='lg'
                 >
                   Cancel
                 </Button>
                 <Button
                   variant='solid'
-                  rounded='lg'
                   pr={10}
                   pl={10}
                   onClick={handleDeleteModel}
+                  backgroundColor='error.500'
+                  _hover={{ bgColor: 'error.400' }}
                 >
                   Delete
                 </Button>
