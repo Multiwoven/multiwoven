@@ -10,10 +10,11 @@ import {
   ConnectorAttributes,
   ConnectorTableColumnFields,
 } from "@/views/Connectors/types";
-import { Box, Tag, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { useContext, useMemo } from "react";
+import StatusTag from "@/components/StatusTag";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -35,20 +36,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "status":
-      return (
-        <Tag
-          colorScheme="teal"
-          variant="outline"
-          size="sm"
-          bgColor="success.100"
-          p={1}
-          fontWeight={600}
-        >
-          <Text size="sm" fontWeight="semibold">
-            Active
-          </Text>
-        </Tag>
-      );
+      return <StatusTag status='Active' />;
 
     default:
       return (

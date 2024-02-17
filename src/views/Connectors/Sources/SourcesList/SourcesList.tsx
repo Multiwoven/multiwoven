@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Box, Tag, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import TopBar from "@/components/TopBar";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import ContentContainer from "@/components/ContentContainer";
 import EntityItem from "@/components/EntityItem";
 import Loader from "@/components/Loader";
 import NoConnectors from "@/views/Connectors/NoConnectors";
+import StatusTag from "@/components/StatusTag";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -37,20 +38,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "status":
-      return (
-        <Tag
-          colorScheme="teal"
-          variant="outline"
-          size="xs"
-          bgColor="success.100"
-          p={1}
-          fontWeight={600}
-        >
-          <Text fontSize="14px" fontWeight="semibold">
-            Active
-          </Text>
-        </Tag>
-      );
+      return <StatusTag status='Active' />;
 
     default:
       return (

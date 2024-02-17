@@ -18,28 +18,28 @@ const ModelsForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "datasource",
-      name: "Select a Data Source",
+      name: "Select a data source",
       component: <SelectModelSourceForm />,
       isRequireContinueCta: false,
       beforeNextStep: () => true,
     },
     {
       formKey: "selectModelType",
-      name: "Select a Modelling Method",
+      name: "Select a modelling method",
       component: <ModelMethod />,
       isRequireContinueCta: false,
       beforeNextStep: () => true,
     },
     {
       formKey: "defineModel",
-      name: "Define your Model",
+      name: "Define your model",
       component: <DefineModel isUpdateButtonVisible={false} />,
       isRequireContinueCta: false,
       beforeNextStep: () => true,
     },
     {
       formKey: "finalizeModel",
-      name: "Finalize Model",
+      name: "Finalize model",
       component: <FinalizeModel />,
       isRequireContinueCta: false,
       beforeNextStep: () => true,
@@ -47,11 +47,11 @@ const ModelsForm = (): JSX.Element => {
   ];
 
   return (
-    <Drawer isOpen onClose={() => navigate(-1)} placement="right" size="100%">
+    <Drawer isOpen onClose={() => navigate(-1)} placement='right' size='100%'>
       <DrawerOverlay />
-      <DrawerContent>
-        <DrawerBody>
-          <Box width="100%">
+      <DrawerContent padding='0px'>
+        <DrawerBody padding='0px'>
+          <Box width='100%'>
             <SteppedForm steps={steps} />
           </Box>
         </DrawerBody>

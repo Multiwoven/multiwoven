@@ -1,4 +1,4 @@
-import { putModelById } from "@/services/models";
+import { putModelById } from '@/services/models';
 import {
   Box,
   Button,
@@ -17,14 +17,14 @@ import {
   useToast,
   Input,
   Textarea,
-} from "@chakra-ui/react";
-import { FiEdit3 } from "react-icons/fi";
-import { useParams } from "react-router-dom";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { PrefillValue } from "../../ModelsForm/DefineModel/DefineSQL/types";
-import { ModelSubmitFormValues, UpdateModelPayload } from "../types";
-import { useState } from "react";
+} from '@chakra-ui/react';
+import { FiEdit3 } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { PrefillValue } from '../../ModelsForm/DefineModel/DefineSQL/types';
+import { ModelSubmitFormValues, UpdateModelPayload } from '../types';
+import { useState } from 'react';
 
 const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +33,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
   const params = useParams();
   const toast = useToast();
 
-  const model_id = params.id || "";
+  const model_id = params.id || '';
 
   async function handleModelUpdate(values: ModelSubmitFormValues) {
     const updatePayload: UpdateModelPayload = {
@@ -41,7 +41,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
         name: values.modelName,
         description: values.description,
         primary_key: prefillValues.primary_key,
-        connector_id: prefillValues.connector_id || "",
+        connector_id: prefillValues.connector_id || '',
         query: prefillValues.query,
         query_type: prefillValues.query_type,
       },
@@ -50,11 +50,11 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
     const modelUpdateResponse = await putModelById(model_id, updatePayload);
     if (modelUpdateResponse.data) {
       toast({
-        title: "Model updated successfully",
-        status: "success",
+        title: 'Model updated successfully',
+        status: 'success',
         duration: 3000,
         isClosable: true,
-        position: "bottom-right",
+        position: 'bottom-right',
       });
       setLoading(false);
       onClose();
@@ -63,28 +63,43 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
   }
 
   const validationSchema = Yup.object().shape({
-    modelName: Yup.string().required("Model name is required"),
+    modelName: Yup.string().required('Model name is required'),
     description: Yup.string(),
   });
 
   return (
     <>
       <Button
-        variant="outline"
-        size="lg"
+        _hover={{ bgColor: 'gray.200' }}
+        w='100%'
+        py={3}
+        px={2}
+        display='flex'
+        flexDir='row'
+        alignItems='center'
+        color={'red.600'}
+        rounded='lg'
         onClick={onOpen}
-        leftIcon={<FiEdit3 />}
+        as='button'
+        justifyContent='start'
+        border={0}
+        variant='shell'
       >
-        Edit Details
+        <FiEdit3 color='#98A2B3' />
+        <Text size='sm' fontWeight='medium' ml={3} color='black.500'>
+          Edit details
+        </Text>
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
-        <ModalOverlay bg="blackAlpha.400" />
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size='2xl'>
+        <ModalOverlay bg='blackAlpha.400' />
         <ModalContent>
-          <ModalCloseButton color="gray.300" />
+          <ModalCloseButton color='gray.600' />
           <ModalHeader>
-            <Text>Edit Details</Text>
-            <Text fontSize="md" color="gray.700" fontWeight="light">
+            <Text size='xl' fontWeight='bold'>
+              Edit Details
+            </Text>
+            <Text size='sm' color='black.200' fontWeight={400}>
               Edit the settings for this Model
             </Text>
           </ModalHeader>
@@ -104,59 +119,75 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                 <VStack spacing={5}>
                   <FormControl>
                     <FormLabel
-                      htmlFor="modelName"
-                      fontSize="sm"
-                      fontWeight="semibold"
+                      htmlFor='modelName'
+                      fontSize='sm'
+                      fontWeight='semibold'
                     >
                       Model Name
                     </FormLabel>
                     <Field
                       as={Input}
-                      id="modelName"
-                      name="modelName"
-                      variant="outline"
-                      placeholder="Enter a name"
-                      bgColor="white"
+                      id='modelName'
+                      name='modelName'
+                      variant='outline'
+                      placeholder='Enter a name'
+                      bgColor='white'
+                      borderStyle='solid'
+                      borderWidth='1'
+                      borderColor='gray.400'
                     />
-                    <Text color="red.500" fontSize="sm">
-                      <ErrorMessage name="modelName" />
+                    <Text color='red.500' fontSize='sm'>
+                      <ErrorMessage name='modelName' />
                     </Text>
                   </FormControl>
                   <FormControl>
-                    <FormLabel htmlFor="description" fontWeight="bold">
-                      <Flex alignItems="center" fontSize="sm">
-                        Description{" "}
-                        <Text ml={2} fontSize="xs">
-                          {" "}
+                    <FormLabel htmlFor='description' fontWeight='bold'>
+                      <Flex alignItems='center' fontSize='sm'>
+                        Description{' '}
+                        <Text
+                          ml={2}
+                          size='xs'
+                          color='gray.600'
+                          fontWeight={400}
+                        >
+                          {' '}
                           (optional)
                         </Text>
                       </Flex>
                     </FormLabel>
                     <Field
                       as={Textarea}
-                      id="description"
-                      name="description"
-                      placeholder="Enter a description"
-                      bgColor="white"
+                      id='description'
+                      name='description'
+                      placeholder='Enter a description'
+                      bgColor='white'
+                      borderStyle='solid'
+                      borderWidth='1'
+                      borderColor='gray.400'
                     />
                   </FormControl>
                 </VStack>
-                <Box w="full" pt={8}>
-                  <Flex flexDir="row" justifyContent="end">
+                <Box w='full' pt={8} paddingBottom={5}>
+                  <Flex flexDir='row' justifyContent='end'>
                     <Button
-                      bgColor="gray.300"
-                      variant="ghost"
-                      color="black"
+                      bgColor='gray.300'
+                      variant='ghost'
+                      color='black'
                       mr={3}
                       onClick={onClose}
-                      size="md"
-                      pr={8}
-                      pl={8}
-                      rounded="lg"
+                      paddingX={4}
+                      minWidth='0'
+                      width='auto'
                     >
                       Cancel
                     </Button>
-                    <Button type="submit" isLoading={loading}>
+                    <Button
+                      type='submit'
+                      isLoading={loading}
+                      paddingX={4}
+                      minWidth='0'
+                      width='auto'
+                    >
                       Save Changes
                     </Button>
                   </Flex>

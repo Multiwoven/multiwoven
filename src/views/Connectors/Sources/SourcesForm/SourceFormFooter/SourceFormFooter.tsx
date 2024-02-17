@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 type SourceFormFooterProps = {
   ctaName: string;
+  secondaryCtaText?: string;
   ctaType?: 'button' | 'reset' | 'submit' | undefined;
   onCtaClick?: undefined | (() => void);
   isCtaDisabled?: boolean;
@@ -29,6 +30,7 @@ const SourceFormFooter = ({
   isCtaDisabled = false,
   isContinueCtaRequired = false,
   isDocumentsSectionRequired = false,
+  secondaryCtaText = 'Back',
 }: SourceFormFooterProps): JSX.Element => {
   const [leftOffset, setLeftOffet] = useState<number>(0);
   const { maxContentWidth } = useUiConfig();
@@ -98,7 +100,7 @@ const SourceFormFooter = ({
                 minWidth={0}
                 width='auto'
               >
-                Back
+                {secondaryCtaText}
               </Button>
             ) : null}
             {isContinueCtaRequired ? (
