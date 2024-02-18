@@ -61,7 +61,7 @@ const SourceConfigForm = (): JSX.Element | null => {
       <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
           <Form
-            uiSchema={connectorSchema.title?.toLowerCase() === "amazon redshift" ? uiSchema : undefined}
+            uiSchema={connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined}
             schema={connectorSchema}
             validator={validator}
             templates={templateOverrides}
@@ -75,31 +75,36 @@ const SourceConfigForm = (): JSX.Element | null => {
   );
 };
 
-const uiSchema = {
-  "ui:order": ["host", "port", "database", "credentials", "schema"],
-  "ui:layout": {
-    //? Specify that we must follow grid layout
-    display: "grid",
-    //? Specify the number of columns
-    cols: 2,
-    //? This can be read as the number of columns that each item
-    //? in the grid should take (similar to in css). Its applied according to what is
-    //? specified in the ui:order
-    colspans: [2, 1, 1, 2, 2]
-  },
-  host: {
-    "ui:placeholder": "redshift-host.us-east-1.redshift.amazonaws.com",
-  },
-  credentials: {
+/**
+ * TODO: Discuss with backend team and move this to backend
+ */
+const uiSchemas: Record<string, RJSFSchema> = {
+  "amazon redshift": {
+    "ui:order": ["host", "port", "database", "credentials", "schema"],
     "ui:layout": {
+      //? Specify that we must follow grid layout
       display: "grid",
+      //? Specify the number of columns
       cols: 2,
-      colspans: [1, 1]
+      //? This can be read as the number of columns that each item
+      //? in the grid should take (similar to in css). Its applied according to what is
+      //? specified in the ui:order
+      colspans: [2, 1, 1, 2, 2],
     },
-    auth_type: {
-      "ui:widget": "hidden"
-    }
-  }
+    host: {
+      "ui:placeholder": "redshift-host.us-east-1.redshift.amazonaws.com",
+    },
+    credentials: {
+      "ui:layout": {
+        display: "grid",
+        cols: 2,
+        colspans: [1, 1],
+      },
+      auth_type: {
+        "ui:widget": "hidden",
+      },
+    },
+  },
 }
 
 export default SourceConfigForm;
