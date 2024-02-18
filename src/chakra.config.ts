@@ -227,14 +227,16 @@ const extenstion = {
   fontSizes: {
     b3: "1rem",
     b4: "0.875rem",
+    b5: "0.75rem",
   },
   lineHeights: {
     b3: "1.5rem",
     b4: "1.25rem",
+    b5: "1.125rem",
   },
   letterSpacings: {
     b3: "-0.16px",
-    b4: "-0.875px",
+    b4: "-0.12px",
   },
   fontWeights: {
     semiBold: 600,

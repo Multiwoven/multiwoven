@@ -18,6 +18,7 @@ import FieldTemplate from "@/views/Connectors/Sources/rjsf/FieldTemplate";
 import { FormProps } from "@rjsf/core";
 import { RJSFSchema } from "@rjsf/utils";
 import BaseInputTemplate from "@/views/Connectors/Sources/rjsf/BaseInputTemplate";
+import DescriptionFieldTemplate from "@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -52,6 +53,7 @@ const SourceConfigForm = (): JSX.Element | null => {
     TitleFieldTemplate: TitleFieldTemplate,
     FieldTemplate: FieldTemplate,
     BaseInputTemplate: BaseInputTemplate,
+    DescriptionFieldTemplate: DescriptionFieldTemplate,
   }
 
   return (
