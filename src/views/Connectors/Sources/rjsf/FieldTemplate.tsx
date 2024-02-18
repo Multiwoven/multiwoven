@@ -43,10 +43,18 @@ export default function FieldTemplate<
     return <div style={{ display: 'none' }}>{children}</div>;
   }
   
+  const patchedStyle = {
+    ...style,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    flexGrow: 1,
+  }
+  
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
-      style={style}
+      style={patchedStyle}
       disabled={disabled}
       id={id}
       label={label}
@@ -58,7 +66,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0}>
+      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0} display="flex" flexDirection="column" flexGrow={1}>
         {children}
         {errors}
         {help}

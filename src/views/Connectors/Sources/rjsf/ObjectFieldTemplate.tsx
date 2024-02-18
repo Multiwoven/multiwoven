@@ -83,7 +83,12 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <GridItem key={`${idSchema.$id}-${element.name}-${index}`} colSpan={Number(layout.colspans[index])}>
+            <GridItem
+              key={`${idSchema.$id}-${element.name}-${index}`}
+              colSpan={Number(layout.colspans[index])}
+              display="flex"
+              flexDirection="column"
+            >
               {element.content}
             </GridItem>
           )
