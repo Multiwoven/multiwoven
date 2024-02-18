@@ -12,7 +12,7 @@ export default function DescriptionFieldTemplate<
 
   if (typeof description === 'string') {
     return (
-      <Text id={id} mt={2} mb={1} color="black.200" fontSize="b5" letterSpacing="b5" lineHeight="b5">
+      <Text id={id} mt={2} mb={1} color="black.200" fontSize="b5" letterSpacing="b5" lineHeight="b5" maxWidth="700px">
         {description}
       </Text>
     );
