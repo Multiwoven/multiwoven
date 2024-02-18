@@ -161,7 +161,7 @@ const EditSync = (): JSX.Element | null => {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} style={{ backgroundColor: '#F9FAFB' }}>
       <ContentContainer>
         <TopBar
           name='Sync'
