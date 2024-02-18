@@ -89,7 +89,15 @@ const FinaliseSync = (): JSX.Element => {
             <Text fontWeight='600' mb='6' size='md'>
               Finalise setting for this sync
             </Text>
-            <Text marginBottom='10px'>Description (Optional)</Text>
+            <Box display='flex' alignItems='center' marginBottom='8px'>
+              <Text size='sm' fontWeight='semibold'>
+                Description
+              </Text>
+              <Text size='xs' color='gray.600' ml={1} fontWeight={400}>
+                (Optional)
+              </Text>
+            </Box>
+
             <Textarea
               name='description'
               value={formik.values.description}

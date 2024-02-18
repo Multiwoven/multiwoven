@@ -58,6 +58,7 @@ const GenerateTable = ({
               key={rowIndex}
               _hover={{ backgroundColor: 'gray.200', cursor: 'pointer' }}
               onClick={() => onRowClick?.(row)}
+              backgroundColor='gray.100'
             >
               {data.columns.map((column, columnIndex) => (
                 <Td key={columnIndex} padding='20px'>

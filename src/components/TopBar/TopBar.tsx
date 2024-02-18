@@ -52,6 +52,7 @@ const TopBar = ({
           width={ctaButtonWidth || '126px'}
           height={ctaButtonHeight || '40px'}
           onClick={onCtaClicked}
+          fontSize='16px'
         >
           <Text size='sm'>{ctaName}</Text>
         </Button>
