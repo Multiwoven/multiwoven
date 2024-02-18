@@ -44,7 +44,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
           </VStack>
           <Button
             onClick={() =>
-              navigate('/setup/destinations/new', { replace: true })
+              navigate('/setup/sources/new', { replace: true })
             }
             leftIcon={<FiPlus />}
             variant='solid'
