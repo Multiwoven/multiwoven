@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import Table from "@/components/Table";
-import { Tag, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 
 import {
   ConnectorAttributes,
@@ -13,6 +13,7 @@ import moment from "moment";
 import { CONNECTOR_LIST_COLUMNS } from "@/views/Connectors/constant";
 import EntityItem from "@/components/EntityItem";
 import Loader from "@/components/Loader";
+import StatusTag from "@/components/StatusTag";
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -58,24 +59,7 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
 
     case "status":
-      return (
-        <Tag
-          colorScheme='teal'
-          size='xs'
-          bgColor='success.100'
-          paddingX={2}
-          fontWeight={600}
-          borderColor='success.300'
-          borderWidth='1px'
-          borderStyle='solid'
-          height='22px'
-          borderRadius='4px'
-        >
-          <Text size='xs' fontWeight='semibold' color='success.600'>
-            Active
-          </Text>
-        </Tag>
-      );
+      return <StatusTag status='Active' />;
 
     default:
       return <Text size="xs">{attributes?.[field]}</Text>;

@@ -53,7 +53,7 @@ const SourceConfigForm = (): JSX.Element | null => {
             templates={{ObjectFieldTemplate: MWObjectFieldTemplate, TitleFieldTemplate: MWTitleField}}
             onSubmit={({ formData }) => handleFormSubmit(formData)}
           >
-            <SourceFormFooter ctaName="Continue" ctaType="submit" />
+            <SourceFormFooter ctaName="Continue" ctaType="submit" isContinueCtaRequired isDocumentsSectionRequired />
           </Form>
         </Box>
       </ContentContainer>

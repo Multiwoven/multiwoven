@@ -213,6 +213,7 @@ const EditSync = (): JSX.Element | null => {
               handleOnConfigChange={handleOnConfigChange}
               data={configuration}
               isEdit
+              configuration={configuration}
             />
             <ScheduleForm formik={formik} />
           </React.Fragment>

@@ -1,6 +1,6 @@
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
-import { extractDataByKey } from "@/utils";
-import { ColumnMapType } from "@/utils/types";
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
+import { extractDataByKey } from '@/utils';
+import { ColumnMapType } from '@/utils/types';
 import {
   Box,
   Flex,
@@ -12,17 +12,17 @@ import {
   Textarea,
   VStack,
   useToast,
-} from "@chakra-ui/react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useContext, useState } from "react";
-import * as Yup from "yup";
-import ModelFooter from "../ModelFooter";
-import { useQueryClient } from "@tanstack/react-query";
+} from '@chakra-ui/react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useContext, useState } from 'react';
+import * as Yup from 'yup';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useNavigate } from "react-router-dom";
-import { FinalizeForm } from "./types";
-import { CreateModelPayload } from "../../types";
-import { createNewModel } from "@/services/models";
+import { useNavigate } from 'react-router-dom';
+import { FinalizeForm } from './types';
+import { CreateModelPayload } from '../../types';
+import { createNewModel } from '@/services/models';
+import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 
 type ModelConfig = {
   id: number;
@@ -41,7 +41,7 @@ const FinalizeModel = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
   const defineModelData: StepData = extractDataByKey<StepData>(
     state.forms,
-    "defineModel"
+    'defineModel'
   );
 
   const navigate = useNavigate();
@@ -50,9 +50,9 @@ const FinalizeModel = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
-    modelName: Yup.string().required("Model name is required"),
+    modelName: Yup.string().required('Model name is required'),
     description: Yup.string(),
-    primaryKey: Yup.string().required("Primary Key is required"),
+    primaryKey: Yup.string().required('Primary Key is required'),
   });
 
   async function handleModelSubmit(values: FinalizeForm) {
@@ -73,24 +73,24 @@ const FinalizeModel = (): JSX.Element => {
       const createConnectorResponse = await createNewModel(payload);
       if (createConnectorResponse?.data) {
         queryClient.removeQueries({
-          queryKey: ["Create Model"],
+          queryKey: ['Create Model'],
         });
         toast({
-          status: "success",
-          title: "Success!!",
-          description: "Model created successfully!",
-          position: "bottom-right",
+          status: 'success',
+          title: 'Success!!',
+          description: 'Model created successfully!',
+          position: 'bottom-right',
         });
-        navigate("/define/models");
+        navigate('/define/models');
       } else {
         throw new Error();
       }
     } catch {
       toast({
-        status: "error",
-        title: "An error occurred.",
-        description: "Something went wrong while creating Model.",
-        position: "bottom-right",
+        status: 'error',
+        title: 'An error occurred.',
+        description: 'Something went wrong while creating Model.',
+        position: 'bottom-right',
         isClosable: true,
       });
     } finally {
@@ -100,15 +100,22 @@ const FinalizeModel = (): JSX.Element => {
 
   return (
     <>
-      <Box w="5xl" mx="auto" bgColor="gray.300" px={6} py={4}>
-        <Text mb={6} fontWeight="bold">
+      <Box
+        bgColor='gray.300'
+        px={6}
+        py={4}
+        marginTop={6}
+        marginX='30px'
+        borderRadius='8px'
+      >
+        <Text mb={6} fontWeight='semibold' size='md'>
           Finalize settings for this Model
         </Text>
         <Formik
           initialValues={{
-            modelName: "",
-            description: "",
-            primaryKey: "",
+            modelName: '',
+            description: '',
+            primaryKey: '',
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
@@ -119,51 +126,67 @@ const FinalizeModel = (): JSX.Element => {
             <VStack spacing={5}>
               <FormControl>
                 <FormLabel
-                  htmlFor="modelName"
-                  fontSize="sm"
-                  fontWeight="semibold"
+                  htmlFor='modelName'
+                  fontSize='sm'
+                  fontWeight='semibold'
                 >
                   Model Name
                 </FormLabel>
                 <Field
                   as={Input}
-                  id="modelName"
-                  name="modelName"
-                  placeholder="Enter a name"
-                  bgColor="white"
+                  id='modelName'
+                  name='modelName'
+                  placeholder='Enter a name'
+                  bgColor='white'
+                  borderWidth='1'
+                  borderStyle='solid'
+                  borderColor='gray.400'
+                  fontSize='sm'
                 />
-                <Text color="red.500" fontSize="sm">
-                  <ErrorMessage name="modelName" />
+                <Text color='red.500' fontSize='sm'>
+                  <ErrorMessage name='modelName' />
                 </Text>
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="description" fontWeight="bold">
-                  <Flex alignItems="center" fontSize="sm">
-                    Description{" "}
-                    <Text ml={2} fontSize="xs">
-                      {" "}
+                <FormLabel htmlFor='description' fontWeight='semibold'>
+                  <Flex alignItems='center' fontSize='sm'>
+                    Description{' '}
+                    <Text ml={2} size='xs' color='gray.600' fontWeight={400}>
+                      {' '}
                       (optional)
                     </Text>
                   </Flex>
                 </FormLabel>
                 <Field
                   as={Textarea}
-                  id="description"
-                  name="description"
-                  placeholder="Enter a description"
-                  bgColor="white"
+                  id='description'
+                  name='description'
+                  placeholder='Enter a description'
+                  bgColor='white'
+                  borderWidth='1'
+                  borderStyle='solid'
+                  borderColor='gray.400'
+                  fontSize='sm'
                 />
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="primaryKey" fontSize="sm" fontWeight="bold">
+                <FormLabel
+                  htmlFor='primaryKey'
+                  fontSize='sm'
+                  fontWeight='semibold'
+                >
                   Primary Key
                 </FormLabel>
                 <Field
                   as={Select}
-                  placeholder="Select Primary Key"
-                  name="primaryKey"
-                  bgColor="white"
-                  w="lg"
+                  placeholder='Select Primary Key'
+                  name='primaryKey'
+                  bgColor='white'
+                  w='lg'
+                  borderWidth='1'
+                  borderStyle='solid'
+                  borderColor='gray.400'
+                  fontSize='sm'
                 >
                   {(defineModelData.data.defineModel.columns ?? []).map(
                     ({ key, name }: ColumnMapType, index: number) => (
@@ -173,26 +196,17 @@ const FinalizeModel = (): JSX.Element => {
                     )
                   )}
                 </Field>
-                <Text color="red.500" fontSize="sm">
-                  <ErrorMessage name="primaryKey" />
+                <Text color='red.500' fontSize='sm'>
+                  <ErrorMessage name='primaryKey' />
                 </Text>
               </FormControl>
             </VStack>
-            <ModelFooter
-              buttons={[
-                {
-                  name: "Back",
-                  variant: "ghost",
-                  color: "black",
-                  onClick: () => navigate(-1),
-                },
-                {
-                  name: "Finish",
-                  variant: "solid",
-                  isLoading: isLoading,
-                  type: "submit",
-                },
-              ]}
+            <SourceFormFooter
+              isCtaLoading={isLoading}
+              ctaType='submit'
+              ctaName='Finish'
+              isBackRequired
+              isContinueCtaRequired
             />
           </Form>
         </Formik>

@@ -48,11 +48,18 @@ const SyncActions = () => {
             <Box
               cursor='pointer'
               bgColor='gray.300'
-              px={2}
-              py={2}
+              px={3}
               ml={6}
-              rounded='xl'
               _hover={{ bgColor: 'gray.400' }}
+              border='1px'
+              borderColor='gray.500'
+              borderStyle='solid'
+              borderRadius='6px'
+              height='32px'
+              width='32px'
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
             >
               <Box>
                 <FiMoreHorizontal />
@@ -60,7 +67,13 @@ const SyncActions = () => {
             </Box>
           </Box>
         </PopoverTrigger>
-        <PopoverContent w='182px' border='1px' borderColor='gray.500' mr={8}>
+        <PopoverContent
+          w='182px'
+          border='1px'
+          borderColor='gray.400'
+          borderStyle='solid'
+          mr={8}
+        >
           <PopoverBody margin={0} p={0}>
             <Button
               _hover={{ bgColor: 'gray.200' }}
