@@ -12,8 +12,12 @@ import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormF
 import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
 import ContentContainer from "@/components/ContentContainer";
-import MWObjectFieldTemplate from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/MWObjectFieldTemplate";
-import MWTitleField from "@/views/Connectors/Sources/SourcesForm/SourceConfigForm/MWTitleField";
+import ObjectFieldTemplate from "@/views/Connectors/Sources/rjsf/ObjectFieldTemplate";
+import TitleFieldTemplate from "@/views/Connectors/Sources/rjsf/TitleFieldTemplate";
+import FieldTemplate from "@/views/Connectors/Sources/rjsf/FieldTemplate";
+import { FormProps } from "@rjsf/core";
+import { RJSFSchema } from "@rjsf/utils";
+import BaseInputTemplate from "@/views/Connectors/Sources/rjsf/BaseInputTemplate";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -42,6 +46,14 @@ const SourceConfigForm = (): JSX.Element | null => {
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
+  
+  const templateOverrides: FormProps<any, RJSFSchema, any>["templates"] = {
+    ObjectFieldTemplate: ObjectFieldTemplate,
+    TitleFieldTemplate: TitleFieldTemplate,
+    FieldTemplate: FieldTemplate,
+    BaseInputTemplate: BaseInputTemplate,
+  }
+
   return (
     <Box display="flex" justifyContent="center" marginBottom="80px">
       <ContentContainer>
@@ -50,7 +62,7 @@ const SourceConfigForm = (): JSX.Element | null => {
             uiSchema={connectorSchema.title?.toLowerCase() === "amazon redshift" ? uiSchema : undefined}
             schema={connectorSchema}
             validator={validator}
-            templates={{ObjectFieldTemplate: MWObjectFieldTemplate, TitleFieldTemplate: MWTitleField}}
+            templates={templateOverrides}
             onSubmit={({ formData }) => handleFormSubmit(formData)}
           >
             <SourceFormFooter ctaName="Continue" ctaType="submit" isContinueCtaRequired isDocumentsSectionRequired />

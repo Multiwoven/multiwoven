@@ -13,7 +13,7 @@ import {
 import DefaultObjectFieldTemplate from "@rjsf/chakra-ui/src/ObjectFieldTemplate"
 
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
