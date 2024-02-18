@@ -224,6 +224,21 @@ const extenstion = {
     heading: "Manrope, sans-serif",
     body: "Manrope, sans-serif",
   },
+  fontSizes: {
+    b3: "1rem",
+    b4: "0.875rem",
+  },
+  lineHeights: {
+    b3: "1.5rem",
+    b4: "1.25rem",
+  },
+  letterSpacings: {
+    b3: "-0.16px",
+    b4: "-0.875px",
+  },
+  fontWeights: {
+    semiBold: 600,
+  }
 };
 
 const mwTheme = extendTheme(extenstion);
