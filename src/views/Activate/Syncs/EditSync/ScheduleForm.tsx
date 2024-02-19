@@ -20,7 +20,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
   return (
     <Box
       backgroundColor={isEdit ? 'gray.100' : 'gray.300'}
-      padding='20px'
+      padding='24px'
       borderRadius='8px'
       marginBottom={'100px'}
     >
