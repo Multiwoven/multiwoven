@@ -1795,7 +1795,7 @@ GEM
     ice_nine (0.11.2)
     interactor (3.1.2)
     io-console (0.7.1)
-    io-event (1.4.3)
+    io-event (1.4.4)
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
@@ -1839,7 +1839,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.25)
+    multiwoven-integrations (0.1.27)
       activesupport
       async-websocket
       dry-schema
@@ -2079,7 +2079,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.25)
+  multiwoven-integrations (~> 0.1.27)
   newrelic_rpm
   parallel
   pg (~> 1.1)
