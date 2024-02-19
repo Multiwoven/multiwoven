@@ -28,6 +28,12 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   const image =
     connectorType === 'source' ? NoSourcesImage : NoDestinationsImage;
 
+  function onClickAddConnector() {
+    const path = connectorType === 'source' ? 'sources' : 'destinations';
+
+    navigate(`/setup/${path}/new`, { replace: true })
+  }
+
   return (
     <Flex
       width='100%'
@@ -43,9 +49,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
             <Text size='sm'>{description} </Text>
           </VStack>
           <Button
-            onClick={() =>
-              navigate('/setup/sources/new', { replace: true })
-            }
+            onClick={onClickAddConnector}
             leftIcon={<FiPlus />}
             variant='solid'
             w='fit'
