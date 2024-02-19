@@ -6,7 +6,7 @@
     "category": "Data Warehouse",
     "documentation_url": "https://docs.mutliwoven.com",
     "github_issue_label": "source-snowflake",
-    "icon": "snowflake.svg",
+    "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

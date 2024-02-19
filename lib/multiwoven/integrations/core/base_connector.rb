@@ -18,10 +18,19 @@ module Multiwoven
       def meta_data
         client_meta_data = read_json(META_DATA_PATH).deep_symbolize_keys
         icon_name = client_meta_data[:data][:icon]
-        icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}/assets/images/connectors/#{icon_name}"
+        icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}#{relative_path}/#{icon_name}"
         client_meta_data[:data][:icon] = icon_url
         # returns hash
         @meta_data ||= client_meta_data
+      end
+
+      def relative_path
+        path = Object.const_source_location(self.class.to_s)[0]
+        connector_folder = File.dirname(path)
+        marker = "multiwoven-integrations"
+        parts = connector_folder.split(marker)
+
+        parts.last if parts.length > 1
       end
 
       # Connection config is a hash

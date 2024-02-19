@@ -6,7 +6,7 @@
     "category": "Adtech",
     "documentation_url": "https://docs.mutliwoven.com",
     "github_issue_label": "destination-facebook",
-    "icon": "facebook.svg",
+    "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

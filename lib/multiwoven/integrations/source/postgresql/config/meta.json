@@ -1,11 +1,11 @@
 {
   "data": {
-    "name": "Bigquery",
-    "title": "Google BigQuery",
+    "name": "Postgresql",
+    "title": "PostgreSQL",
     "connector_type": "source",
     "category": "Data Warehouse",
     "documentation_url": "https://docs.mutliwoven.com",
-    "github_issue_label": "source-bigquery",
+    "github_issue_label": "source-postgresql",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
