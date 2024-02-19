@@ -27,10 +27,10 @@ module Multiwoven
       def relative_path
         path = Object.const_source_location(self.class.to_s)[0]
         connector_folder = File.dirname(path)
-        marker = "multiwoven-integrations"
+        marker = "/lib/multiwoven/integrations/"
         parts = connector_folder.split(marker)
 
-        parts.last if parts.length > 1
+        marker + parts.last if parts.length > 1
       end
 
       # Connection config is a hash
