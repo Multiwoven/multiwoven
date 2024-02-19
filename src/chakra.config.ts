@@ -207,7 +207,9 @@ const extenstion = {
       variants: {
         outline: {
           field: {
+            bg: "white",
             width: "100%",
+            height: "40px",
             border: "1px",
             borderColor: "gray.400",
             boxSizing: "border-box",
@@ -222,6 +224,23 @@ const extenstion = {
     heading: "Manrope, sans-serif",
     body: "Manrope, sans-serif",
   },
+  fontSizes: {
+    b3: "1rem",
+    b4: "0.875rem",
+    b5: "0.75rem",
+  },
+  lineHeights: {
+    b3: "1.5rem",
+    b4: "1.25rem",
+    b5: "1.125rem",
+  },
+  letterSpacings: {
+    b3: "-0.16px",
+    b4: "-0.12px",
+  },
+  fontWeights: {
+    semiBold: 600,
+  }
 };
 
 const mwTheme = extendTheme(extenstion);
