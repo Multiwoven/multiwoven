@@ -215,7 +215,7 @@ const EditSync = (): JSX.Element | null => {
               isEdit
               configuration={configuration}
             />
-            <ScheduleForm formik={formik} />
+            <ScheduleForm formik={formik} isEdit />
           </React.Fragment>
         ) : null}
         <FormFooter
