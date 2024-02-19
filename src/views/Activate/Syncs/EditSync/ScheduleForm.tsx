@@ -90,6 +90,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 borderWidth='1px'
                 borderStyle='solid'
                 borderColor='gray.400'
+                height='40px'
               >
                 <Box>
                   <Text>Every</Text>
