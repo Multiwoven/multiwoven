@@ -161,7 +161,7 @@ const EditSync = (): JSX.Element | null => {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} style={{ backgroundColor: '#F9FAFB' }}>
       <ContentContainer>
         <TopBar
           name='Sync'
@@ -215,7 +215,7 @@ const EditSync = (): JSX.Element | null => {
               isEdit
               configuration={configuration}
             />
-            <ScheduleForm formik={formik} />
+            <ScheduleForm formik={formik} isEdit />
           </React.Fragment>
         ) : null}
         <FormFooter

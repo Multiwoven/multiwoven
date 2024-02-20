@@ -13,13 +13,14 @@ import { FinalizeSyncFormFields } from '../types';
 
 type ScheduleFormProps = {
   formik: FormikProps<FinalizeSyncFormFields>;
+  isEdit?: boolean;
 };
 
-const ScheduleForm = ({ formik }: ScheduleFormProps) => {
+const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
   return (
     <Box
-      backgroundColor='gray.300'
-      padding='20px'
+      backgroundColor={isEdit ? 'gray.100' : 'gray.300'}
+      padding='24px'
       borderRadius='8px'
       marginBottom={'100px'}
     >
@@ -42,7 +43,6 @@ const ScheduleForm = ({ formik }: ScheduleFormProps) => {
                 display='flex'
                 alignItems='flex-start'
                 marginBottom='10px'
-                backgroundColor='#fff'
                 isDisabled
               >
                 <Box position='relative' top='-5px'>
@@ -90,6 +90,7 @@ const ScheduleForm = ({ formik }: ScheduleFormProps) => {
                 borderWidth='1px'
                 borderStyle='solid'
                 borderColor='gray.400'
+                height='40px'
               >
                 <Box>
                   <Text>Every</Text>

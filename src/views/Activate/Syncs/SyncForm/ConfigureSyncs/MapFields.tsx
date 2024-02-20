@@ -112,8 +112,8 @@ const MapFields = ({
 
   return (
     <Box
-      backgroundColor='gray.300'
-      padding='20px'
+      backgroundColor={isEdit ? 'gray.100' : 'gray.300'}
+      padding='24px'
       borderRadius='8px'
       marginBottom={isEdit ? '20px' : '100px'}
     >
