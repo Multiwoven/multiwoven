@@ -126,6 +126,8 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
             ctaName="Finish"
             ctaType="submit"
             isCtaLoading={isLoading}
+            isContinueCtaRequired
+            isBackRequired
           />
         </form>
       </Box>

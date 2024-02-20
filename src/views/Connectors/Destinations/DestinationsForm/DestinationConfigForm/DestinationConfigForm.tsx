@@ -51,7 +51,12 @@ const DestinationConfigForm = (): JSX.Element | null => {
           validator={validator}
           onSubmit={({ formData }) => handleFormSubmit(formData)}
         >
-          <SourceFormFooter ctaName="Continue" ctaType="submit" />
+          <SourceFormFooter
+            ctaName="Continue"
+            ctaType="submit"
+            isContinueCtaRequired
+            isBackRequired
+          />
         </Form>
       </Box>
     </Box>

@@ -159,7 +159,12 @@ const DestinationConnectionTest = (): JSX.Element | null => {
           </Alert>
         ) : null}
       </Box>
-      <SourceFormFooter ctaName="Continue" onCtaClick={handleOnContinueClick} />
+      <SourceFormFooter
+        ctaName="Continue"
+        onCtaClick={handleOnContinueClick}
+        isContinueCtaRequired
+        isBackRequired
+      />
     </Box>
   );
 };
