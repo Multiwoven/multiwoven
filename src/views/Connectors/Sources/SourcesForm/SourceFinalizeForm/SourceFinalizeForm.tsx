@@ -1,26 +1,19 @@
-import {
-  Box,
-  Heading,
-  Input,
-  Text,
-  Textarea,
-  useToast,
-} from "@chakra-ui/react";
-import SourceFormFooter from "../SourceFormFooter";
-import { useFormik } from "formik";
-import { useContext, useState } from "react";
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { Box, Input, Text, Textarea, useToast } from '@chakra-ui/react';
+import SourceFormFooter from '../SourceFormFooter';
+import { useFormik } from 'formik';
+import { useContext, useState } from 'react';
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import {
   CreateConnectorPayload,
   TestConnectionPayload,
-} from "@/views/Connectors/types";
-import { useNavigate } from "react-router-dom";
-import { createNewConnector } from "@/services/connectors";
-import { useQueryClient } from "@tanstack/react-query";
-import { SOURCES_LIST_QUERY_KEY } from "@/views/Connectors/constant";
-import ContentContainer from "@/components/ContentContainer";
+} from '@/views/Connectors/types';
+import { useNavigate } from 'react-router-dom';
+import { createNewConnector } from '@/services/connectors';
+import { useQueryClient } from '@tanstack/react-query';
+import { SOURCES_LIST_QUERY_KEY } from '@/views/Connectors/constant';
+import ContentContainer from '@/components/ContentContainer';
 
-const finalDataSourceFormKey = "testSource";
+const finalDataSourceFormKey = 'testSource';
 
 const SourceFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,7 +31,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
   const formik = useFormik({
     initialValues: {
       connector_name: finalDataSourceForm.name,
-      description: "",
+      description: '',
     },
     onSubmit: async (formData) => {
       setIsLoading(true);
@@ -47,7 +40,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
           connector: {
             configuration: finalDataSourceForm.connection_spec,
             name: formData.connector_name,
-            connector_type: "source",
+            connector_type: 'source',
             connector_name: finalDataSourceForm.name,
             description: formData.description,
           },
@@ -60,21 +53,21 @@ const SourceFinalizeForm = (): JSX.Element | null => {
           });
 
           toast({
-            status: "success",
-            title: "Success!!",
-            description: "Source created successfully!",
-            position: "bottom-right",
+            status: 'success',
+            title: 'Success!!',
+            description: 'Source created successfully!',
+            position: 'bottom-right',
           });
-          navigate("/setup/sources");
+          navigate('/setup/sources');
         } else {
           throw new Error();
         }
       } catch {
         toast({
-          status: "error",
-          title: "An error occurred.",
-          description: "Something went wrong while creating your Source.",
-          position: "bottom-right",
+          status: 'error',
+          title: 'An error occurred.',
+          description: 'Something went wrong while creating your Source.',
+          position: 'bottom-right',
           isClosable: true,
         });
       } finally {
@@ -84,51 +77,66 @@ const SourceFinalizeForm = (): JSX.Element | null => {
   });
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box display='flex' justifyContent='center'>
       <ContentContainer>
-        <Box padding="24px" backgroundColor="gray.200" borderRadius="8px">
+        <Box width='100%'>
           <form onSubmit={formik.handleSubmit}>
-            <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
-              <Heading size="md" fontWeight="600" marginBottom="24px">
-                Finalize settings for this Source
-              </Heading>
+            <Box
+              padding='24px'
+              backgroundColor='gray.300'
+              borderRadius='8px'
+              marginBottom='16px'
+            >
+              <Text size='md' fontWeight='semibold' marginBottom='24px'>
+                Finalize settings for this Destination
+              </Text>
               <Box>
-                <Text marginBottom="8px" fontWeight="600">
-                  Source Name
+                <Text marginBottom='8px' fontWeight='semibold' size='sm'>
+                  Destination Name
                 </Text>
                 <Input
-                  name="connector_name"
-                  type="text"
-                  placeholder="Enter Source name"
-                  variant="outline"
-                  marginBottom="24px"
+                  name='connector_name'
+                  type='text'
+                  placeholder='Enter Destination name'
+                  background='gray.100'
+                  marginBottom='24px'
                   onChange={formik.handleChange}
                   value={formik.values.connector_name}
                   required
+                  borderStyle='solid'
+                  borderWidth='1px'
+                  borderColor='gray.400'
+                  fontSize='14px'
                 />
-                <Box display="flex">
-                  <Text marginBottom="8px" fontWeight="600">
+                <Box display='flex' alignItems='center' marginBottom='8px'>
+                  <Text size='sm' fontWeight='semibold'>
                     Description
-                  </Text>{" "}
-                  <Text>(Optional)</Text>
+                  </Text>
+                  <Text size='xs' color='gray.600' ml={1} fontWeight={400}>
+                    (Optional)
+                  </Text>
                 </Box>
                 <Textarea
-                  name="description"
-                  placeholder="Enter a description"
-                  background="gray.100"
-                  resize="none"
+                  name='description'
+                  placeholder='Enter a description'
+                  background='gray.100'
+                  resize='none'
                   onChange={formik.handleChange}
                   value={formik.values.description}
-                  borderColor="gray.400"
+                  borderStyle='solid'
+                  borderWidth='1px'
+                  borderColor='gray.400'
+                  fontSize='14px'
                 />
               </Box>
             </Box>
             <SourceFormFooter
-              ctaName="Finish"
-              ctaType="submit"
+              ctaName='Finish'
+              ctaType='submit'
               isCtaLoading={isLoading}
               isContinueCtaRequired
               isBackRequired
+              isDocumentsSectionRequired
             />
           </form>
         </Box>

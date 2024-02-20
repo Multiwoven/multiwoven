@@ -211,7 +211,7 @@ const SourceConnectionTest = (): JSX.Element | null => {
           isContinueCtaRequired
           isBackRequired
           isDocumentsSectionRequired
-          isCtaDisabled={!isAnyFailed}
+          isCtaDisabled={isFetching}
         />
       </ContentContainer>
     </Box>
