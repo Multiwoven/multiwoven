@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from "react"
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { ChangeEvent, FocusEvent } from 'react';
+import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,8 +10,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
-} from "@rjsf/utils"
-import { ChakraUiSchema, getChakra } from "@rjsf/chakra-ui/lib/utils"
+} from '@rjsf/utils';
+import { ChakraUiSchema, getChakra } from '@rjsf/chakra-ui/lib/utils';
 
 export default function BaseInputTemplate<
   T = unknown,
@@ -38,27 +38,29 @@ export default function BaseInputTemplate<
     placeholder,
     disabled,
     registry,
-  } = props
-  const inputProps = getInputProps<T, S, F>(schema, type, options)
-  const chakraProps = getChakra({ uiSchema: uiSchema as ChakraUiSchema })
+  } = props;
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const chakraProps = getChakra({ uiSchema: uiSchema as ChakraUiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === "" ? options.emptyValue : value)
+    onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value)
+    onBlur(id, value);
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, value)
+    onFocus(id, value);
 
   const DescriptionFieldTemplate = getTemplate(
-    "DescriptionFieldTemplate",
+    'DescriptionFieldTemplate',
     registry,
     uiSchema
-  )
+  );
   const displayLabel = registry.schemaUtils.getDisplayLabel(
     schema,
     uiSchema,
     registry.globalUiOptions
-  )
+  );
+
+  console.log(label);
 
   return (
     <FormControl
@@ -68,9 +70,9 @@ export default function BaseInputTemplate<
       isRequired={required}
       isReadOnly={readonly}
       isInvalid={rawErrors && rawErrors.length > 0}
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
+      display='flex'
+      flexDirection='column'
+      justifyContent='space-between'
       flexGrow={1}
     >
       <div>
@@ -78,9 +80,9 @@ export default function BaseInputTemplate<
           <FormLabel
             htmlFor={id}
             id={`${id}-label`}
-            fontSize="b4"
-            letterSpacing="b4"
-            fontWeight="semiBold"
+            fontSize='b4'
+            letterSpacing='b4'
+            fontWeight='semiBold'
             mb={1}
           >
             {label}
@@ -102,7 +104,7 @@ export default function BaseInputTemplate<
         <Input
           id={id}
           name={id}
-          value={value || value === 0 ? value : ""}
+          value={value || value === 0 ? value : ''}
           onChange={onChangeOverride || _onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
@@ -122,11 +124,11 @@ export default function BaseInputTemplate<
                   : []
               )
               .map((example: any) => {
-                return <option key={example} value={example} />
+                return <option key={example} value={example} />;
               })}
           </datalist>
         ) : null}
       </div>
     </FormControl>
-  )
+  );
 }
