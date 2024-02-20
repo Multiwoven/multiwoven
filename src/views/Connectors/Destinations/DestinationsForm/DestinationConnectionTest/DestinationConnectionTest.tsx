@@ -28,6 +28,12 @@ const STATUS_COLOR_MAP = {
   loading: 'gray.800',
 };
 
+const STATUS_TEXT_COLOR = {
+  success: 'success.500',
+  failed: 'error.500',
+  loading: 'black.100',
+};
+
 const DestinationConnectionTest = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
@@ -101,7 +107,13 @@ const DestinationConnectionTest = (): JSX.Element | null => {
                 >
                   <Box>
                     {statusMetaInfo.status === 'loading' ? (
-                      <Spinner height='20px' width='20px' />
+                      <Spinner
+                        display='flex'
+                        emptyColor='gray.400'
+                        color='black.100'
+                        height='20px'
+                        width='20px'
+                      />
                     ) : null}
                     {statusMetaInfo.status === 'success' ? (
                       <Box
@@ -141,11 +153,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
                     <Text
                       fontWeight='semibold'
                       size='md'
-                      color={
-                        statusMetaInfo.status === 'loading'
-                          ? 'black.100'
-                          : 'black.500'
-                      }
+                      color={STATUS_TEXT_COLOR[statusMetaInfo.status]}
                     >
                       {statusMetaInfo.text}
                     </Text>
@@ -190,7 +198,12 @@ const DestinationConnectionTest = (): JSX.Element | null => {
                     ? 'Could not open a connection to remote host'
                     : 'Connected successfully!'}
                 </AlertTitle>
-                <AlertDescription>
+                <AlertDescription
+                  color='black.200'
+                  fontSize='12px'
+                  fontWeight={400}
+                  letterSpacing='-0.14px'
+                >
                   {isAnyFailed
                     ? connectionResponse?.connection_status.message
                     : `All tests passed. Continue to finish setting up your ${selectedDestination} Source`}
@@ -205,6 +218,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
           isContinueCtaRequired
           isBackRequired
           isDocumentsSectionRequired
+          isCtaDisabled={isAnyFailed}
         />
       </ContentContainer>
     </Box>

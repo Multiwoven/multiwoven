@@ -45,8 +45,12 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
         <VStack spacing={8}>
           <VStack>
             <Image src={image} />
-            <Heading size='xs'>No {type}s added</Heading>
-            <Text size='sm'>{description} </Text>
+            <Heading size='xs' fontWeight='semibold'>
+              No {type}s added
+            </Heading>
+            <Text size='sm' color='black.200'>
+              {description}{' '}
+            </Text>
           </VStack>
           <Button
             onClick={onClickAddConnector}
