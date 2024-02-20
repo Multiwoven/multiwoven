@@ -73,7 +73,7 @@ const SelectDataSourcesForm = (): JSX.Element => {
                 />
               </Box>
               <Text fontWeight='semibold' size='sm'>
-                {datasource.name}
+                {datasource.title}
               </Text>
             </Box>
           ))}
