@@ -42,7 +42,7 @@ const NoModels = (): JSX.Element => {
             </Text>
           </VStack>
           <Button
-            onClick={() => navigate('new')}
+            onClick={() => navigate('/define/models/new', { replace: true })}
             leftIcon={<FiPlus />}
             letterSpacing='-0.14px'
           >

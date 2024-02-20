@@ -83,9 +83,10 @@ const FormFooter = ({
           {isBackRequired ? (
             <Button
               onClick={() => navigate(-1)}
-              size='lg'
               marginRight='10px'
               variant='ghost'
+              minWidth={0}
+              width='auto'
             >
               Back
             </Button>

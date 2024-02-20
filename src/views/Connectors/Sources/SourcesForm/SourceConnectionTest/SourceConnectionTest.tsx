@@ -92,7 +92,13 @@ const SourceConnectionTest = (): JSX.Element | null => {
                 height="30px"
               >
                 <Box>
-                  {statusMetaInfo.status === "loading" ? <Spinner /> : null}
+                  {statusMetaInfo.status === "loading" ? (
+                    <Spinner
+                      color="black.100"
+                      emptyColor="gray.400"
+                      thickness="3px"
+                    />
+                  ) : null}
                   {statusMetaInfo.status === "success" ? (
                     <Box
                       display="flex"
@@ -120,7 +126,12 @@ const SourceConnectionTest = (): JSX.Element | null => {
                   ) : null}
                 </Box>
                 <Box marginLeft="10px">
-                  <Text fontWeight="600"  color={STATUS_COLOR_MAP?.[statusMetaInfo.status]}>{statusMetaInfo.text}</Text>
+                  <Text
+                    fontWeight="600"
+                    color={STATUS_COLOR_MAP?.[statusMetaInfo.status]}
+                  >
+                    {statusMetaInfo.text}
+                  </Text>
                 </Box>
               </Box>
             );
@@ -153,10 +164,11 @@ const SourceConnectionTest = (): JSX.Element | null => {
             </Box>
           </Alert>
         ) : null}
-     </ContentContainer>
+      </ContentContainer>
       <SourceFormFooter
         ctaName="Continue"
         onCtaClick={handleOnContinueClick}
+        isContinueCtaRequired
         isBackRequired
       />
     </Box>

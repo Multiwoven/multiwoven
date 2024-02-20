@@ -12,6 +12,13 @@ import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormF
 import Loader from "@/components/Loader";
 import { processFormData } from "@/views/Connectors/helpers";
 import ContentContainer from "@/components/ContentContainer";
+import ObjectFieldTemplate from "@/views/Connectors/Sources/rjsf/ObjectFieldTemplate";
+import TitleFieldTemplate from "@/views/Connectors/Sources/rjsf/TitleFieldTemplate";
+import FieldTemplate from "@/views/Connectors/Sources/rjsf/FieldTemplate";
+import { FormProps } from "@rjsf/core";
+import { RJSFSchema } from "@rjsf/utils";
+import BaseInputTemplate from "@/views/Connectors/Sources/rjsf/BaseInputTemplate";
+import DescriptionFieldTemplate from "@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate";
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -40,21 +47,64 @@ const SourceConfigForm = (): JSX.Element | null => {
 
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
+  
+  const templateOverrides: FormProps<any, RJSFSchema, any>["templates"] = {
+    ObjectFieldTemplate: ObjectFieldTemplate,
+    TitleFieldTemplate: TitleFieldTemplate,
+    FieldTemplate: FieldTemplate,
+    BaseInputTemplate: BaseInputTemplate,
+    DescriptionFieldTemplate: DescriptionFieldTemplate,
+  }
+
   return (
     <Box display="flex" justifyContent="center" marginBottom="80px">
       <ContentContainer>
         <Box backgroundColor="gray.200" padding="20px" borderRadius="8px">
           <Form
+            uiSchema={connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined}
             schema={connectorSchema}
             validator={validator}
+            templates={templateOverrides}
             onSubmit={({ formData }) => handleFormSubmit(formData)}
           >
-            <SourceFormFooter ctaName="Continue" ctaType="submit" />
+            <SourceFormFooter ctaName="Continue" ctaType="submit" isContinueCtaRequired isDocumentsSectionRequired />
           </Form>
         </Box>
       </ContentContainer>
     </Box>
   );
 };
+
+/**
+ * TODO: Discuss with backend team and move this to backend
+ */
+export const uiSchemas: Record<string, RJSFSchema> = {
+  "amazon redshift": {
+    "ui:order": ["host", "port", "database", "credentials", "schema"],
+    "ui:layout": {
+      //? Specify that we must follow grid layout
+      display: "grid",
+      //? Specify the number of columns
+      cols: 2,
+      //? This can be read as the number of columns that each item
+      //? in the grid should take (similar to in css). Its applied according to what is
+      //? specified in the ui:order
+      colspans: [2, 1, 1, 2, 2],
+    },
+    host: {
+      "ui:placeholder": "redshift-host.us-east-1.redshift.amazonaws.com",
+    },
+    credentials: {
+      "ui:layout": {
+        display: "grid",
+        cols: 2,
+        colspans: [1, 1],
+      },
+      auth_type: {
+        "ui:widget": "hidden",
+      },
+    },
+  },
+}
 
 export default SourceConfigForm;

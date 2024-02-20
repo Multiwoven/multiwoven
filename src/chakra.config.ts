@@ -69,6 +69,16 @@ const extenstion = {
           bgColor: "brand.400",
           _hover: { bgColor: "brand.300" },
           color: "white",
+          _loading: {
+            _hover: {
+              bgColor: "brand.400",
+            },
+          },
+          _disabled: {
+            _hover: {
+              bgColor: "brand.400",
+            },
+          },
         },
         outline: {
           bgColor: "gray.100",
@@ -76,11 +86,23 @@ const extenstion = {
           color: "brand.400",
           outline: "1px",
           borderColor: "brand.400",
+          _loading: {
+            _hover: { bgColor: "brand.400", color: "white" },
+          },
+          _disabled: {
+            _hover: { bgColor: "brand.400", color: "white" },
+          },
         },
         ghost: {
           bgColor: "gray.400",
           _hover: { bgColor: "gray.500", color: "black" },
           color: "black",
+          _loading: {
+            _hover: { bgColor: "gray.500", color: "black" },
+          },
+          _disabled: {
+            _hover: { bgColor: "gray.500", color: "black" },
+          },
         },
         shell: {
           bgColor: "gray.100",
@@ -89,6 +111,12 @@ const extenstion = {
           borderColor: "gray.500",
           borderWidth: "1px",
           borderStyle: "solid",
+          _loading: {
+            _hover: { bgColor: "gray.300", color: "black" },
+          },
+          _disabled: {
+            _hover: { bgColor: "gray.300", color: "black" },
+          },
         },
       },
       sizes: {
@@ -131,6 +159,11 @@ const extenstion = {
           fontSize: "14px",
           lineHeight: "20px",
           fontWeight: "700",
+        },
+      },
+      loading: {
+        _hover: {
+          bgColor: "green.200",
         },
       },
     },
@@ -207,7 +240,9 @@ const extenstion = {
       variants: {
         outline: {
           field: {
+            bg: "white",
             width: "100%",
+            height: "40px",
             border: "1px",
             borderColor: "gray.400",
             boxSizing: "border-box",
@@ -222,6 +257,23 @@ const extenstion = {
     heading: "Manrope, sans-serif",
     body: "Manrope, sans-serif",
   },
+  fontSizes: {
+    b3: "1rem",
+    b4: "0.875rem",
+    b5: "0.75rem",
+  },
+  lineHeights: {
+    b3: "1.5rem",
+    b4: "1.25rem",
+    b5: "1.125rem",
+  },
+  letterSpacings: {
+    b3: "-0.16px",
+    b4: "-0.12px",
+  },
+  fontWeights: {
+    semiBold: 600,
+  }
 };
 
 const mwTheme = extendTheme(extenstion);

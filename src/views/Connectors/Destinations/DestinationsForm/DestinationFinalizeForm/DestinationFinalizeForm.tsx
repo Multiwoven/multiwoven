@@ -1,26 +1,20 @@
-import {
-  Box,
-  Heading,
-  Input,
-  Text,
-  Textarea,
-  useToast,
-} from "@chakra-ui/react";
-import { useFormik } from "formik";
-import { useContext, useState } from "react";
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import { Box, Input, Text, Textarea, useToast } from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import { useContext, useState } from 'react';
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import {
   CreateConnectorPayload,
   TestConnectionPayload,
-} from "@/views/Connectors/types";
-import { useNavigate } from "react-router-dom";
-import { createNewConnector } from "@/services/connectors";
-import { useQueryClient } from "@tanstack/react-query";
-import { DESTINATIONS_LIST_QUERY_KEY } from "@/views/Connectors/constant";
-import { useUiConfig } from "@/utils/hooks";
-import SourceFormFooter from "@/views/Connectors/Sources/SourcesForm/SourceFormFooter";
+} from '@/views/Connectors/types';
+import { useNavigate } from 'react-router-dom';
+import { createNewConnector } from '@/services/connectors';
+import { useQueryClient } from '@tanstack/react-query';
+import { DESTINATIONS_LIST_QUERY_KEY } from '@/views/Connectors/constant';
+import { useUiConfig } from '@/utils/hooks';
+import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import ContentContainer from '@/components/ContentContainer';
 
-const finalDestinationConfigFormKey = "testDestination";
+const finalDestinationConfigFormKey = 'testDestination';
 
 const DestinationFinalizeForm = (): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,7 +33,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
   const formik = useFormik({
     initialValues: {
       connector_name: finalDestinationConfigForm.name,
-      description: "",
+      description: '',
     },
     onSubmit: async (formData) => {
       setIsLoading(true);
@@ -48,7 +42,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
           connector: {
             configuration: finalDestinationConfigForm.connection_spec,
             name: formData.connector_name,
-            connector_type: "destination",
+            connector_type: 'destination',
             connector_name: finalDestinationConfigForm.name,
             description: formData.description,
           },
@@ -61,21 +55,21 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
           });
 
           toast({
-            status: "success",
-            title: "Success!!",
-            description: "Destination created successfully!",
-            position: "bottom-right",
+            status: 'success',
+            title: 'Success!!',
+            description: 'Destination created successfully!',
+            position: 'bottom-right',
           });
-          navigate("/setup/destinations");
+          navigate('/setup/destinations');
         } else {
           throw new Error();
         }
       } catch {
         toast({
-          status: "error",
-          title: "An error occurred.",
-          description: "Something went wrong while creating the Destination.",
-          position: "bottom-right",
+          status: 'error',
+          title: 'An error occurred.',
+          description: 'Something went wrong while creating the Destination.',
+          position: 'bottom-right',
           isClosable: true,
         });
       } finally {
@@ -85,50 +79,70 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
   });
 
   return (
-    <Box display="flex" justifyContent="center">
-      <Box maxWidth={maxContentWidth} width="100%">
-        <form onSubmit={formik.handleSubmit}>
-          <Box padding="24px" backgroundColor="gray.100" borderRadius="8px">
-            <Heading size="md" fontWeight="600" marginBottom="24px">
-              Finalize settings for this Destination
-            </Heading>
-            <Box>
-              <Text marginBottom="8px" fontWeight="600">
-                Destination Name
+    <Box width='100%' display='flex' justifyContent='center'>
+      <ContentContainer>
+        <Box maxWidth={maxContentWidth} width='100%'>
+          <form onSubmit={formik.handleSubmit}>
+            <Box
+              padding='24px'
+              backgroundColor='gray.300'
+              borderRadius='8px'
+              marginBottom='16px'
+            >
+              <Text size='md' fontWeight='semibold' marginBottom='24px'>
+                Finalize settings for this Destination
               </Text>
-              <Input
-                name="connector_name"
-                type="text"
-                placeholder="Enter Destination name"
-                background="gray.100"
-                marginBottom="24px"
-                onChange={formik.handleChange}
-                value={formik.values.connector_name}
-                required
-              />
-              <Box display="flex">
-                <Text marginBottom="8px" fontWeight="600">
-                  Description
-                </Text>{" "}
-                <Text>(Optional)</Text>
+              <Box>
+                <Text marginBottom='8px' fontWeight='semibold' size='sm'>
+                  Destination Name
+                </Text>
+                <Input
+                  name='connector_name'
+                  type='text'
+                  placeholder='Enter Destination name'
+                  background='gray.100'
+                  marginBottom='24px'
+                  onChange={formik.handleChange}
+                  value={formik.values.connector_name}
+                  required
+                  borderStyle='solid'
+                  borderWidth='1px'
+                  borderColor='gray.400'
+                  fontSize='14px'
+                />
+                <Box display='flex' alignItems='center' marginBottom='8px'>
+                  <Text size='sm' fontWeight='semibold'>
+                    Description
+                  </Text>
+                  <Text size='xs' color='gray.600' ml={1} fontWeight={400}>
+                    (Optional)
+                  </Text>
+                </Box>
+                <Textarea
+                  name='description'
+                  placeholder='Enter a description'
+                  background='gray.100'
+                  resize='none'
+                  onChange={formik.handleChange}
+                  value={formik.values.description}
+                  borderStyle='solid'
+                  borderWidth='1px'
+                  borderColor='gray.400'
+                  fontSize='14px'
+                />
               </Box>
-              <Textarea
-                name="description"
-                placeholder="Enter a description"
-                background="gray.100"
-                resize="none"
-                onChange={formik.handleChange}
-                value={formik.values.description}
-              />
             </Box>
-          </Box>
-          <SourceFormFooter
-            ctaName="Finish"
-            ctaType="submit"
-            isCtaLoading={isLoading}
-          />
-        </form>
-      </Box>
+            <SourceFormFooter
+              ctaName='Finish'
+              ctaType='submit'
+              isCtaLoading={isLoading}
+              isContinueCtaRequired
+              isBackRequired
+              isDocumentsSectionRequired
+            />
+          </form>
+        </Box>
+      </ContentContainer>
     </Box>
   );
 };

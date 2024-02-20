@@ -29,20 +29,26 @@ const SelectDestinations = (): JSX.Element => {
   };
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="center">
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      width="100%"
+    >
       <ContentContainer>
-        <Box marginBottom="40px" display="flex" justifyContent="center">
+        <Box marginBottom="20px" display="flex" justifyContent="center">
           {destinationCategories.map((category) => {
             const isSelected = category === selectedCategory;
             return (
               <Box
                 key={category}
-                padding="6px 15px"
+                padding="6px 12px"
                 borderRadius="100px"
                 backgroundColor={isSelected ? "brand.400" : "none"}
-                color={isSelected ? "#fff" : "none"}
-                borderWidth={isSelected ? "none" : "thin"}
-                borderColor={isSelected ? "none" : "gray.400"}
+                color={isSelected ? "gray.100" : "black.200"}
+                borderWidth="1px"
+                borderStyle="solid"
+                borderColor={isSelected ? "primary.400" : "gray.400"}
                 marginRight="20px"
                 cursor="pointer"
                 _hover={{
@@ -50,7 +56,9 @@ const SelectDestinations = (): JSX.Element => {
                 }}
                 onClick={() => setSelectedCategory(category)}
               >
-                <Text>{category}</Text>
+                <Text size="xs" fontWeight="semibold">
+                  {category}
+                </Text>
               </Box>
             );
           })}
@@ -64,16 +72,16 @@ const SelectDestinations = (): JSX.Element => {
                   key={connector.name}
                   display="flex"
                   alignItems="center"
-                  marginX="20px"
+                  margin={3}
                   borderWidth="thin"
                   padding="20px"
                   borderRadius="8px"
-                  marginY="20px"
                   cursor="pointer"
                   borderColor="gray.400"
                   _hover={{
                     backgroundColor: "gray.200",
                   }}
+                  height="56px"
                   onClick={() => onDestinationSelect(connector)}
                 >
                   <Box
@@ -83,14 +91,22 @@ const SelectDestinations = (): JSX.Element => {
                     borderWidth="thin"
                     padding="5px"
                     borderRadius="8px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    backgroundColor="gray.100"
                   >
                     <Image
                       src={connector.icon}
                       alt="source icon"
                       maxHeight="100%"
+                      height="24px"
+                      width="24px"
                     />
                   </Box>
-                  <Text fontWeight="bold">{connector.name}</Text>
+                  <Text fontWeight="semibold" size="sm">
+                    {connector.title}
+                  </Text>
                 </Box>
               ) : null
             )}

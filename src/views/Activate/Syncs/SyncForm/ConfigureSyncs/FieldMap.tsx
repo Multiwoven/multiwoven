@@ -8,9 +8,9 @@ type FieldMapProps = {
   entityName: string;
   options: string[];
   disabledOptions?: string[];
-  value: string;
   isDisabled: boolean;
   onChange: (id: number, type: 'model' | 'destination', value: string) => void;
+  selectedConfigOptions?: string[];
 };
 
 const FieldMap = ({
@@ -20,9 +20,9 @@ const FieldMap = ({
   entityName,
   options,
   disabledOptions = [],
-  value,
   onChange,
   isDisabled,
+  selectedConfigOptions,
 }: FieldMapProps): JSX.Element => {
   return (
     <Box width='100%'>
@@ -31,16 +31,16 @@ const FieldMap = ({
       </Box>
       <Box>
         <Select
-          value={value}
+          value={selectedConfigOptions?.[id]}
           placeholder={`Select a field from ${entityName}`}
-          backgroundColor='gray.100'
+          backgroundColor={isDisabled ? 'gray.300' : 'gray.100'}
           isDisabled={isDisabled}
           onChange={(e) => onChange(id, fieldType, e.target.value)}
           isRequired
           borderWidth='1px'
           borderStyle='solid'
           borderColor='gray.400'
-          color='gray.600'
+          color='black.500'
         >
           {options.map((option) => (
             <option

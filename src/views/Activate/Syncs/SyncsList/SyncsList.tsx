@@ -1,18 +1,19 @@
-import ContentContainer from "@/components/ContentContainer";
-import TopBar from "@/components/TopBar";
-import { fetchSyncs } from "@/services/syncs";
-import { Box, Text, Tag } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { FiPlus } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from "../constants";
-import { CreateSyncResponse, SyncColumnFields } from "../types";
-import EntityItem from "@/components/EntityItem";
-import Table from "@/components/Table";
-import Loader from "@/components/Loader";
+import ContentContainer from '@/components/ContentContainer';
+import TopBar from '@/components/TopBar';
+import { fetchSyncs } from '@/services/syncs';
+import { Box, Text } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { FiPlus } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from '../constants';
+import { CreateSyncResponse, SyncColumnFields } from '../types';
+import EntityItem from '@/components/EntityItem';
+import Table from '@/components/Table';
+import Loader from '@/components/Loader';
 import moment from 'moment';
 import NoActivations from '../../NoSyncs/NoSyncs';
+import StatusTag from '@/components/StatusTag';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -39,28 +40,11 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 
     case "lastUpdated":
       return (
-        <Text>{moment(data.attributes.updated_at).format("DD/MM/YYYY")}</Text>
+        <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>
       );
 
     case 'status':
-      return (
-        <Tag
-          colorScheme='teal'
-          size='xs'
-          bgColor='success.100'
-          paddingX={2}
-          fontWeight={600}
-          borderColor='success.300'
-          borderWidth='1px'
-          borderStyle='solid'
-          height='22px'
-          borderRadius='4px'
-        >
-          <Text size='xs' fontWeight='semibold' color='success.600'>
-            Active
-          </Text>
-        </Tag>
-      );
+      return <StatusTag status='Active' />;
   }
 };
 
@@ -103,7 +87,13 @@ const SyncsList = (): JSX.Element => {
     return <NoActivations activationType='sync' />;
 
   return (
-    <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
+    <Box
+      width='100%'
+      display='flex'
+      flexDirection='column'
+      alignItems='center'
+      backgroundColor='gray.200'
+    >
       <ContentContainer>
         <TopBar
           name='Syncs'
