@@ -78,7 +78,7 @@ const SourceConfigForm = (): JSX.Element | null => {
 /**
  * TODO: Discuss with backend team and move this to backend
  */
-const uiSchemas: Record<string, RJSFSchema> = {
+export const uiSchemas: Record<string, RJSFSchema> = {
   "amazon redshift": {
     "ui:order": ["host", "port", "database", "credentials", "schema"],
     "ui:layout": {

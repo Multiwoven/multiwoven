@@ -16,6 +16,7 @@ import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate
 import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
 import { FormProps } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
+import { uiSchemas } from '@/views/Connectors/Sources/SourcesForm/SourceConfigForm/SourceConfigForm';
 
 const DestinationConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -66,6 +67,11 @@ const DestinationConfigForm = (): JSX.Element | null => {
             validator={validator}
             onSubmit={({ formData }) => handleFormSubmit(formData)}
             templates={templateOverrides}
+            uiSchema={
+              connectorSchema.title
+                ? uiSchemas[connectorSchema.title.toLowerCase()]
+                : undefined
+            }
           >
             <SourceFormFooter
               ctaName='Finish'
