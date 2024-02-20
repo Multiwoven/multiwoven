@@ -103,6 +103,7 @@ export type SourceListColumnType = {
 export type Connector = {
   icon: string;
   name: string;
+  title: string;
   category: string;
   connector_spec: Record<string, unknown>;
 };
