@@ -38,7 +38,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case 'lastUpdated':
+    case "lastUpdated":
       return (
         <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>
       );
