@@ -22,8 +22,8 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   const type = connectorType === 'source' ? 'Source' : 'Destination';
   const description =
     connectorType === 'source'
-      ? 'Add a destination where your data will be sent'
-      : 'Configure a source where your data is stored and managed';
+      ? 'Configure a source where your data is stored and managed'
+      : 'Add a destination where your data will be sent';
 
   const image =
     connectorType === 'source' ? NoSourcesImage : NoDestinationsImage;
@@ -31,7 +31,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   function onClickAddConnector() {
     const path = connectorType === 'source' ? 'sources' : 'destinations';
 
-    navigate(`/setup/${path}/new`, { replace: true })
+    navigate(`/setup/${path}/new`, { replace: true });
   }
 
   return (
@@ -45,8 +45,12 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
         <VStack spacing={8}>
           <VStack>
             <Image src={image} />
-            <Heading size='xs'>No {type}s added</Heading>
-            <Text size='sm'>{description} </Text>
+            <Heading size='xs' fontWeight='semibold'>
+              No {type}s added
+            </Heading>
+            <Text size='sm' color='black.200'>
+              {description}{' '}
+            </Text>
           </VStack>
           <Button
             onClick={onClickAddConnector}

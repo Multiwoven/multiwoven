@@ -111,7 +111,7 @@ export default function BaseInputTemplate<
           {...inputProps}
           list={schema.examples ? examplesId<T>(id) : undefined}
           aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
-          mt={2}
+          mt={1}
         />
         {Array.isArray(schema.examples) ? (
           <datalist id={examplesId<T>(id)}>
