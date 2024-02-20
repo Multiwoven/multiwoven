@@ -24,7 +24,12 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     let!(:sync_record_batch1) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch) }
     let!(:sync_record_batch2) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch) }
     let!(:sync_record_individual) { create(:sync_record, sync: sync_individual, sync_run: sync_run_individual) }
+    let(:activity) { instance_double("LoaderActivity") }
 
+    before do
+      allow(activity).to receive(:heartbeat)
+      allow(activity).to receive(:cancel_requested).and_return(false)
+    end
     context "when batch support is enabled" do
       tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
         success: 2,
@@ -39,7 +44,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
-        subject.write(sync_run_batch.id)
+        expect(subject).to receive(:heartbeat).once.with(activity)
+        subject.write(sync_run_batch.id, activity)
         expect(sync_run_batch.sync_records.count).to eq(2)
         sync_run_batch.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("success")
@@ -62,7 +68,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
-        subject.write(sync_run_batch.id)
+        expect(subject).to receive(:heartbeat).once.with(activity)
+        subject.write(sync_run_batch.id, activity)
         expect(sync_run_batch.sync_records.count).to eq(2)
         sync_run_batch.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
@@ -82,7 +89,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       it "calls process_individual_records method" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
-        subject.write(sync_run_individual.id)
+        expect(subject).to receive(:heartbeat).once.with(activity)
+        subject.write(sync_run_individual.id, activity)
         expect(sync_run_individual.sync_records.count).to eq(1)
         sync_run_individual.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("success")
@@ -102,7 +110,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       it "calls process_individual_records method" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
-        subject.write(sync_run_individual.id)
+        expect(subject).to receive(:heartbeat).once.with(activity)
+        subject.write(sync_run_individual.id, activity)
         expect(sync_run_individual.sync_records.count).to eq(1)
         sync_run_individual.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
