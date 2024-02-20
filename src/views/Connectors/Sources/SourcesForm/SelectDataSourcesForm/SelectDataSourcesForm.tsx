@@ -67,7 +67,7 @@ const SelectDataSourcesForm = (): JSX.Element => {
                     maxHeight="100%"
                   />
                 </Box>
-                <Text fontWeight="bold">{datasource.name}</Text>
+                <Text fontWeight="bold">{datasource.title}</Text>
               </Box>
             </Box>
           ))}
