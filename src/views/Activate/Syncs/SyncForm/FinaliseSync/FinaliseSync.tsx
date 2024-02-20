@@ -175,6 +175,7 @@ const FinaliseSync = (): JSX.Element => {
                       borderWidth='1px'
                       borderStyle='solid'
                       borderColor='gray.400'
+                      height='40px'
                     >
                       <Box>
                         <Text size='sm' fontWeight={500}>

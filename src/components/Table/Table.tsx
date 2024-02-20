@@ -61,7 +61,7 @@ const GenerateTable = ({
               backgroundColor='gray.100'
             >
               {data.columns.map((column, columnIndex) => (
-                <Td key={columnIndex} padding='20px'>
+                <Td key={columnIndex} padding='16px'>
                   {column.showIcon ? (
                     <Flex
                       flexDir='row'
