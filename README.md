@@ -77,7 +77,7 @@ To get started with Multiwoven, you can deploy the entire stack locally using Do
 1. **Clone the repository:**
 
 ```bash
-git clone git@github.com:Multiwoven/multiwoven.git
+git clone --recurse-submodules git@github.com:Multiwoven/multiwoven.git
 ```
 
 2. **Go inside multiwoven folder:**
