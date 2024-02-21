@@ -20,6 +20,13 @@ import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
 import EntityItem from '@/components/EntityItem';
 import moment from 'moment';
+import ObjectFieldTemplate from '@/views/Connectors/Sources/rjsf/ObjectFieldTemplate';
+import TitleFieldTemplate from '@/views/Connectors/Sources/rjsf/TitleFieldTemplate';
+import FieldTemplate from '@/views/Connectors/Sources/rjsf/FieldTemplate';
+import { FormProps } from '@rjsf/core';
+import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate';
+import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
+import { uiSchemas } from '../SourcesForm/SourceConfigForm/SourceConfigForm';
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
@@ -157,6 +164,14 @@ const EditSource = (): JSX.Element => {
     },
   ];
 
+  const templateOverrides: FormProps<any, RJSFSchema, any>['templates'] = {
+    ObjectFieldTemplate: ObjectFieldTemplate,
+    TitleFieldTemplate: TitleFieldTemplate,
+    FieldTemplate: FieldTemplate,
+    BaseInputTemplate: BaseInputTemplate,
+    DescriptionFieldTemplate: DescriptionFieldTemplate,
+  };
+
   return (
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
@@ -191,7 +206,7 @@ const EditSource = (): JSX.Element => {
         />
 
         <Box
-          backgroundColor='gray.200'
+          backgroundColor='gray.100'
           padding='24px'
           borderWidth='thin'
           borderRadius='8px'
@@ -200,11 +215,19 @@ const EditSource = (): JSX.Element => {
           borderColor='gray.400'
         >
           <Form
+            uiSchema={
+              connectorSchema?.connection_specification?.title
+                ? uiSchemas[
+                    connectorSchema?.connection_specification?.title.toLowerCase()
+                  ]
+                : undefined
+            }
             schema={connectorSchema?.connection_specification as RJSFSchema}
             validator={validator}
             formData={formData}
             onSubmit={({ formData }) => handleOnTestClick(formData)}
             onChange={({ formData }) => setFormData(formData)}
+            templates={templateOverrides}
           >
             <SourceFormFooter
               ctaName='Save Changes'
@@ -223,6 +246,7 @@ const EditSource = (): JSX.Element => {
                   isLoading={isTestRunning}
                   minWidth={0}
                   width='auto'
+                  backgroundColor='gray.300'
                 >
                   Test Connection
                 </Button>
