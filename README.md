@@ -146,7 +146,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 - [ ] HubSpot
 
 #### Marketing Automation
-- [x] [Klavio](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
+- [x] [Klaviyo](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
 
