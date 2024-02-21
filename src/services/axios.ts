@@ -2,8 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const domain = import.meta.env.VITE_API_HOST || "http://localhost:3000";
-console.log(domain);
-
 export const axiosInstance = axios.create({
   baseURL: domain,
 });
