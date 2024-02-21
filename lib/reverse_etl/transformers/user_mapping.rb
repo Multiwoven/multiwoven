@@ -8,7 +8,9 @@ module ReverseEtl
         record = sync_record.record
         transform_record(record, mapping)
       rescue StandardError => e
-        Rails.logger.error("Error transforming record: #{e.message}")
+        Temporal.logger.error(error_message: e.message,
+                              sync_run_id: sync_run.id,
+                              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
       end
 
       private

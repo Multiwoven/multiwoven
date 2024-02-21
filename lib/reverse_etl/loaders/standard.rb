@@ -64,7 +64,9 @@ module ReverseEtl
             successfull_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           end
         rescue StandardError => e
-          Rails.logger.error(e)
+          Temporal.logger.error(error_message: e.message,
+                                sync_run_id: sync_run.id,
+                                stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
       end

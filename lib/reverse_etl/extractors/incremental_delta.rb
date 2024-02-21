@@ -47,12 +47,14 @@ module ReverseEtl
       def process_record(message, sync_run, model)
         record = message.record
         fingerprint = generate_fingerprint(record.data)
-        primary_key = record.data.with_indifferent_access[model.primary_key.downcase]
+        primary_key = record.data.with_indifferent_access[model.primary_key]
 
         sync_record = find_or_initialize_sync_record(sync_run, primary_key)
         update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
       rescue StandardError => e
-        Rails.logger.error(e)
+        Temporal.logger.error(error_message: e.message,
+                              sync_run_id: sync_run.id,
+                              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
       end
 
       def generate_fingerprint(data)

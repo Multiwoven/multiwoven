@@ -17,17 +17,17 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   let(:client) { Multiwoven::Integrations::Source::Snowflake::Client.new }
   let(:record1) do
     Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
-                                                                  "first_name" => "John" },
+                                                                  "first_name" => "John", "Last Name" => "Doe" },
                                                           emitted_at: DateTime.now.to_i).to_multiwoven_message
   end
   let(:record2) do
     Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 2, "email" => "test2@mail.com",
-                                                                  "first_name" => "Mark" },
+                                                                  "first_name" => "Mark", "Last Name" => "Doe" },
                                                           emitted_at: DateTime.now.to_i).to_multiwoven_message
   end
   let(:record3) do
     Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 2, "email" => "test2@mail.com",
-                                                                  "first_name" => "Mark" },
+                                                                  "first_name" => "Mark", "Last Name" => "Doe" },
                                                           emitted_at: DateTime.now.to_i).to_multiwoven_message
   end
 
