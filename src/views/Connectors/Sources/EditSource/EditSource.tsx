@@ -27,6 +27,7 @@ import { FormProps } from '@rjsf/core';
 import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate';
 import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
 import { uiSchemas } from '../SourcesForm/SourceConfigForm/SourceConfigForm';
+import SourceActions from './SourceActions';
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
@@ -201,6 +202,7 @@ const EditSource = (): JSX.Element => {
                   'DD/MM/YYYY'
                 )}
               </Text>
+              <SourceActions />
             </Box>
           }
         />
