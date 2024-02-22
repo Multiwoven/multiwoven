@@ -1,0 +1,122 @@
+{
+    "streams": [
+      {
+        "name": "profile",
+        "action": "create",
+        "url": "https://a.klaviyo.com/api/profiles",
+        "method": "POST",
+        "json_schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "profile"
+                  ]
+                },
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "phone_number": {
+                      "type": "string"
+                    },
+                    "external_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "organization": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "location": {
+                      "type": "object",
+                      "properties": {
+                        "address1": {
+                          "type": "string"
+                        },
+                        "address2": {
+                          "type": "string"
+                        },
+                        "city": {
+                          "type": "string"
+                        },
+                        "country": {
+                          "type": "string"
+                        },
+                        "region": {
+                          "type": "string"
+                        },
+                        "zip": {
+                          "type": "string"
+                        },
+                        "timezone": {
+                          "type": "string"
+                        },
+                        "ip": {
+                          "type": "string",
+                          "format": "ipv4"
+                        }
+                      }
+          
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "phone_number"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "attributes"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        "supported_sync_modes": [
+          "full_refresh",
+          "incremental"
+        ],
+        "source_defined_cursor": true,
+        "default_cursor_field": [
+          "updated"
+        ],
+        "source_defined_primary_key": [
+          [
+            "id",
+            "email"
+          ]
+        ]
+        
+      }
+    ]
+  }

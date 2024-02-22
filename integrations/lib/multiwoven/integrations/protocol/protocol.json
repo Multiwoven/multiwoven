@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mutliwoven Protocol",
+  "type": "object",
+  "description": "Mutliwoven protocol schema",
+  "version": "1.0.0",
+  "definitions": {
+    "SyncMode": {
+      "type": "string",
+      "enum": [
+        "full_refresh",
+        "incremental"
+      ]
+    },
+    "SyncStatus": {
+      "type": "string",
+      "enum": [
+        "STARTED",
+        "RUNNING",
+        "COMPLETE",
+        "INCOMPLETE"
+      ]
+    },
+    "DestinationSyncMode": {
+      "type": "string",
+      "enum": [
+        "append",
+        "overwrite",
+        "append_dedup"
+      ]
+    },
+    "ProtocolModel": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "ConnectionStatus": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/Types/String.enum(SUCCEEDED,FAILED)"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "ConnectorSpecification": {
+      "type": "object",
+      "properties": {
+        "documentation_url": {
+          "type": "string"
+        },
+        "changelog_url": {
+          "type": "string"
+        },
+        "connection_specification": {
+          "type": "object"
+        },
+        "supports_normalization": {
+          "type": "boolean",
+          "default": false
+        },
+        "supports_dbt": {
+          "type": "boolean",
+          "default": false
+        },
+        "supported_destination_sync_modes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DestinationSyncMode"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "LogMessage": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "$ref": "#/definitions/Types/String.enum(FATAL,ERROR,WARN,INFO,DEBUG,TRACE)"
+        },
+        "message": {
+          "type": "string"
+        },
+        "stack_trace": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "RecordMessage": {
+      "type": "object",
+      "properties": {
+        "stream": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        },
+        "emitted_at": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Stream": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "json_schema": {
+          "type": "object"
+        },
+        "supported_sync_modes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SyncMode"
+          }
+        },
+        "source_defined_cursor": {
+          "type": "boolean"
+        },
+        "default_cursor_field": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_defined_primary_key": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Catalog": {
+      "type": "object",
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Stream"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "SyncConfig": {
+      "type": "object",
+      "properties": {
+        "stream": {
+          "$ref": "#/definitions/Stream"
+        },
+        "sync_mode": {
+          "$ref": "#/definitions/SyncMode"
+        },
+        "cursor_field": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destination_sync_mode": {
+          "$ref": "#/definitions/DestinationSyncMode"
+        },
+        "primary_key": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,80 @@
+# .rubocop.yml
+
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rails
+
+AllCops:
+  SuggestExtensions: false
+  TargetRubyVersion: 3.2
+  Exclude:
+    - 'db/migrate/**/*.rb'
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+    - 'config/**/*'
+    - 'log/**/*'
+    - 'tmp/**/*'
+    - 'bin/**/*'
+
+# Layout
+Layout/LineLength:
+  Max: 120
+
+# Metrics
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - 'config/routes/api.rb'  # If your routes are separated for API, else keep 'config/routes.rb'
+
+Metrics/AbcSize:
+  Max: 50
+
+Metrics/MethodLength:
+  Max: 50
+
+# Rails specific cops
+Rails:
+  Enabled: true
+
+Rails/TimeZone:
+  EnforcedStyle: strict
+
+Rails/Output:
+  Enabled: false  # Generally, you don't output in API-only applications
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: true
+
+Rails/InverseOf:
+  Enabled: true
+
+Rails/ReversibleMigration:
+  Enabled: true
+
+Rails/RequestReferer:
+  EnforcedStyle: referrer
+
+Rails/Date:
+  EnforcedStyle: strict
+
+# Style
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false  # Documentation is usually not enforced in a smaller, agile team
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Exclude specs from certain checks
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/ClassLength:
+  Max: 120 # or an appropriate number for your project
+
+
+# ... you can continue to add or modify cops here.

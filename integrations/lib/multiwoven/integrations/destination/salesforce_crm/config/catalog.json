@@ -1,0 +1,317 @@
+{
+  "streams": [
+    {
+      "name": "Account",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "Id": {
+            "type": "string"
+          },
+          "IsDeleted": {
+            "type": "boolean"
+          },
+          "MasterRecordId": {
+            "type": ["string", "null"]
+          },
+          "Name": {
+            "type": "string"
+          },
+          "Type": {
+            "type": ["string", "null"],
+            "enum": [
+              "Prospect",
+              "Customer - Direct",
+              "Customer - Channel",
+              "Channel Partner / Reseller",
+              "Installation Partner",
+              "Technology Partner",
+              "Other"
+            ]
+          },
+          "ParentId": {
+            "type": ["string", "null"]
+          },
+          "BillingStreet": {
+            "type": ["string", "null"]
+          },
+          "BillingCity": {
+            "type": ["string", "null"]
+          },
+          "BillingState": {
+            "type": ["string", "null"]
+          },
+          "BillingPostalCode": {
+            "type": ["string", "null"]
+          },
+          "BillingCountry": {
+            "type": ["string", "null"]
+          },
+          "BillingLatitude": {
+            "type": ["number", "null"]
+          },
+          "BillingLongitude": {
+            "type": ["number", "null"]
+          },
+          "BillingGeocodeAccuracy": {
+            "type": ["string", "null"],
+            "enum": [
+              "Address",
+              "NearAddress",
+              "Block",
+              "Street",
+              "ExtendedZip",
+              "Zip",
+              "Neighborhood",
+              "City",
+              "County",
+              "State",
+              "Unknown"
+            ]
+          },
+          "BillingAddress": {
+            "type": ["string", "null"],
+            "enum": [
+              "Address",
+              "NearAddress",
+              "Block",
+              "Street",
+              "ExtendedZip",
+              "Zip",
+              "Neighborhood",
+              "City",
+              "County",
+              "State",
+              "Unknown"
+            ]
+          },
+          "ShippingStreet": {
+            "type": ["string", "null"]
+          },
+          "ShippingCity": {
+            "type": ["string", "null"]
+          },
+          "ShippingState": {
+            "type": ["string", "null"]
+          },
+          "ShippingPostalCode": {
+            "type": ["string", "null"]
+          },
+          "ShippingCountry": {
+            "type": ["string", "null"]
+          },
+          "ShippingLatitude": {
+            "type": ["number", "null"]
+          },
+          "ShippingLongitude": {
+            "type": ["number", "null"]
+          },
+          "ShippingGeocodeAccuracy": {
+            "type": ["string", "null"]
+          },
+          "ShippingAddress": {
+            "type": ["string", "null"]
+          },
+          "Phone": {
+            "type": ["string", "null"]
+          },
+          "Fax": {
+            "type": ["string", "null"]
+          },
+          "AccountNumber": {
+            "type": ["string", "null"]
+          },
+          "Website": {
+            "type": ["string", "null"],
+            "format": "uri"
+          },
+          "PhotoUrl": {
+            "type": ["string", "null"],
+            "format": "uri"
+          },
+          "Sic": {
+            "type": ["string", "null"]
+          },
+          "Industry": {
+            "type": ["string", "null"],
+            "enum": [
+              "Agriculture",
+              "Apparel",
+              "Banking",
+              "Biotechnology",
+              "Chemicals",
+              "Communications",
+              "Construction",
+              "Consulting",
+              "Education",
+              "Electronics",
+              "Energy",
+              "Engineering",
+              "Entertainment",
+              "Environmental",
+              "Finance",
+              "Food & Beverage",
+              "Government",
+              "Healthcare",
+              "Hospitality",
+              "Insurance",
+              "Machinery",
+              "Manufacturing",
+              "Media",
+              "Not For Profit",
+              "Recreation",
+              "Retail",
+              "Shipping",
+              "Technology",
+              "Telecommunications",
+              "Transportation",
+              "Utilities",
+              "Other"
+            ]
+          },
+          "AnnualRevenue": {
+            "type": ["number", "null"]
+          },
+          "NumberOfEmployees": {
+            "type": ["integer", "null"]
+          },
+          "Ownership": {
+            "type": ["string", "null"],
+            "enum": ["Public", "Private", "Subsidiary", "Other"]
+          },
+          "TickerSymbol": {
+            "type": ["string", "null"]
+          },
+          "Description": {
+            "type": ["string", "null"]
+          },
+          "Rating": {
+            "type": ["string", "null"],
+            "enum": ["Hot", "Warm", "Cold"]
+          },
+          "Site": {
+            "type": ["string", "null"]
+          },
+          "OwnerId": {
+            "type": "string"
+          },
+          "CreatedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedById": {
+            "type": "string"
+          },
+          "LastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastModifiedById": {
+            "type": "string"
+          },
+          "SystemModstamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "LastActivityDate": {
+            "type": ["string", "null"],
+            "format": "date"
+          },
+          "LastViewedDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "LastReferencedDate": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "Jigsaw": {
+            "type": ["string", "null"]
+          },
+          "JigsawCompanyId": {
+            "type": ["string", "null"]
+          },
+          "CleanStatus": {
+            "type": ["string", "null"],
+            "enum": [
+              "In Sync",
+              "Different",
+              "Reviewed",
+              "Not Found",
+              "Inactive",
+              "Not Compared",
+              "Select Match",
+              "Skipped"
+            ]
+          },
+          "AccountSource": {
+            "type": ["string", "null"],
+            "enum": [
+              "Web",
+              "Phone Inquiry",
+              "Partner Referral",
+              "Purchased List",
+              "Other"
+            ]
+          },
+          "DunsNumber": {
+            "type": ["string", "null"]
+          },
+          "Tradestyle": {
+            "type": ["string", "null"]
+          },
+          "NaicsCode": {
+            "type": ["string", "null"]
+          },
+          "NaicsDesc": {
+            "type": ["string", "null"]
+          },
+          "YearStarted": {
+            "type": ["string", "null"]
+          },
+          "SicDesc": {
+            "type": ["string", "null"]
+          },
+          "DandbCompanyId": {
+            "type": ["string", "null"]
+          },
+          "OperatingHoursId": {
+            "type": ["string", "null"]
+          },
+          "CustomerPriority__c": {
+            "type": ["string", "null"],
+            "enum": ["High", "Low", "Medium"]
+          },
+          "SLA__c": {
+            "type": ["string", "null"],
+            "enum": ["Gold", "Silver", "Platinum", "Bronze"]
+          },
+          "Active__c": {
+            "type": ["string", "null"],
+            "enum": ["Yes", "No"]
+          },
+          "NumberofLocations__c": {
+            "type": ["number", "null"]
+          },
+          "UpsellOpportunity__c": {
+            "type": ["string", "null"],
+            "enum": ["Yes", "No", "Maybe"]
+          },
+          "SLASerialNumber__c": {
+            "type": ["string", "null"]
+          },
+          "SLAExpirationDate__c": {
+            "type": ["string", "null"],
+            "format": "date"
+          }
+        }
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["Id"]]
+    }
+  ]
+}

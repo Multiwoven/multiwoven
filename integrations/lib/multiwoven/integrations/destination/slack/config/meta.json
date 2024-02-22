@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Slack",
+    "title": "Slack",
+    "connector_type": "destination",
+    "category": "Team Collaboration",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-slack",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

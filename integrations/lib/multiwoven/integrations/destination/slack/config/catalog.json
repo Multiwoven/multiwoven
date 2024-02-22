@@ -1,0 +1,20 @@
+{
+  "streams": [
+    {
+      "name": "chat_postMessage",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": ["string", "null"]
+          }
+        },
+        "oneOf": [{ "required": ["text"] }]
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true
+    }
+  ]
+}

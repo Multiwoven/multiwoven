@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "SalesforceCrm",
+    "title": "Salesforce CRM",
+    "connector_type": "destination",
+    "category": "CRM",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-salesforce-crm",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

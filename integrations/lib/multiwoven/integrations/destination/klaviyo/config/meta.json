@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Klaviyo",
+    "title": "Klaviyo",
+    "connector_type": "destination",
+    "category": "Marketing Automation",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-klaviyo",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

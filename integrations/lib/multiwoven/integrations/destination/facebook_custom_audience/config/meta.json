@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "FacebookCustomAudience",
+    "title": "Facebook Custom Audiences",
+    "connector_type": "destination",
+    "category": "Adtech",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-facebook",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
