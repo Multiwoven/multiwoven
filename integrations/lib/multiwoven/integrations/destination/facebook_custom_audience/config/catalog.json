@@ -1,0 +1,39 @@
+{
+  "streams": [
+    {
+      "name": "audience",
+      "action": "create",
+      "method": "POST",
+      "batch_support": true,
+      "batch_size": 10000,
+      "url": "https://graph.facebook.com/v18.0/{audience_id}/users",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "EMAIL": { "type": ["string", "null"], "default": null, "title": "Email", "x-hashRequired": true },
+          "PHONE": { "type": ["string", "null"], "default": null, "title": "Phone", "x-hashRequired": true },
+          "GEN": { "type": ["string", "null"], "default": null, "title": "Gender", "x-hashRequired": true },   
+          "FI": { "type": ["string", "null"], "default": null, "title": "First Initial", "x-hashRequired": true },
+          "FN": { "type": ["string", "null"], "default": null, "title": "First Name", "x-hashRequired": true },
+          "DOBD": { "type": ["string", "null"], "default": null, "title": "Date of Birth (Day)", "x-hashRequired": true },
+          "DOBM": { "type": ["string", "null"], "default": null, "title": "Date of Birth (Month)", "x-hashRequired": true },
+          "DOBY": { "type": ["string", "null"], "default": null, "title": "Date of Birth (Year)", "x-hashRequired": true },
+          "LN": { "type": ["string", "null"], "default": null, "title": "Last Name", "x-hashRequired": true },
+          "CT": { "type": ["string", "null"], "default": null, "title": "City", "x-hashRequired": true },
+          "ST": { "type": ["string", "null"], "default": null, "title": "State", "x-hashRequired": true },
+          "ZIP": { "type": ["string", "null"], "default": null, "title": "Zip Code", "x-hashRequired": true },
+          "COUNTRY": { "type": ["string", "null"], "default": null, "title": "Country", "x-hashRequired": true },
+          "EXTERN_ID": { "type": ["string", "null"], "default": null, "title": "External ID", "x-hashRequired": false},
+          "LOOKALIKE_VALUE": { "type": ["number", "null"], "default": null, "title": "Lookalike Value", "x-hashRequired": false },
+          "MADID": { "type": ["string", "null"], "default": null, "title": "Mobile ID", "x-hashRequired": false },
+          "PAGEUID": { "type": ["string", "null"], "default": null, "title": "Page-Scoped ID", "x-hashRequired": false }
+        }
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["email"]]
+    }
+  ]
+}
