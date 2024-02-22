@@ -34,7 +34,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "does not create a user and returns an error" do
         post :signup, params: { email: "test", password: "pass", password_confirmation: "wrong" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_empty
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "does not log in a user and returns an error" do
         post :login, params: { email: "wrong", password: "wrong" }
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_nil
       end
     end
@@ -72,7 +72,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
     context "with invalid email" do
       it "does not send reset password instructions and returns an error" do
-        post :forgot_password, params: { email: "wrong" }
+        post :forgot_password, params: { email: "nothing@123.com" }
 
         expect(response).to have_http_status(:not_found)
         expect(response_errors).not_to be_empty

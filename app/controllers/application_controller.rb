@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
   include ScriptVault::Tracker
   before_action :authenticate_user!
+  before_action :validate_contract
   around_action :handle_with_exception
 
   private
@@ -26,6 +27,14 @@ class ApplicationController < ActionController::API
   end
 
   protected
+
+  def validate_contract
+    contract = "#{controller_name.singularize.camelcase}Contracts::#{action_name.camelize}".constantize
+    result = contract.new.call(params.to_unsafe_h)
+    return unless result.errors.any?
+
+    render json: { errors: result.errors.to_h }, status: :bad_request
+  end
 
   def format_errors(model)
     model.errors.messages.each_with_object({}) do |(attribute, messages), formatted_errors|

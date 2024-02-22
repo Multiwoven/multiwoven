@@ -6,6 +6,8 @@ module Api
     class WorkspacesController < ApplicationController
       include Workspaces
 
+      skip_before_action :validate_contract
+
       def index
         result = ListAll.call(user: current_user)
         @workspaces = result.workspaces

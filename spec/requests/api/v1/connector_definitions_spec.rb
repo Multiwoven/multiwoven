@@ -64,7 +64,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         .and_return(connection_status.new(status: "succeeded").to_multiwoven_message)
 
       post check_connection_api_v1_connector_definitions_path,
-           params: { type: "source", name: "snowflake", connection_spec: {} },
+           params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
            headers: auth_headers(user)
 
       expect(response).to have_http_status(:ok)
@@ -78,7 +78,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         .and_return(connection_status.new(status: "failed").to_multiwoven_message)
 
       post check_connection_api_v1_connector_definitions_path,
-           params: { type: "source", name: "snowflake", connection_spec: {} },
+           params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
            headers: auth_headers(user)
 
       expect(response).to have_http_status(:ok)

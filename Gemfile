@@ -22,6 +22,7 @@ gem "rails", "~> 7.1.1"  # Core Rails gem
 
 # API Support
 gem "active_model_serializers", "~> 0.10.0"
+gem "dry-validation"
 gem "jbuilder"
 gem "jwt"
 gem "kaminari"
@@ -34,6 +35,7 @@ gem "devise-jwt"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
+gem "pg_query"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 
 # Third-Party Tools for Monitoring, Error Reporting, etc.

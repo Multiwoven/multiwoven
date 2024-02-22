@@ -58,7 +58,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
       it "returns an error response while fetch model" do
         get "/api/v1/models/test", headers: auth_headers(user)
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -100,7 +100,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         request_body[:model][:connector_id] = "connector_id_wrong"
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user))
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -142,14 +142,14 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       it "returns an error response when wrong model_id" do
         put "/api/v1/models/test", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:bad_request)
       end
 
       it "returns an error response when update fails" do
         request_body[:model][:connector_id] = "connector_id_wrong"
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -169,7 +169,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       end
 
       it "returns an error response while delete wrong model" do
-        delete "/api/v1/models/test", headers: auth_headers(user)
+        delete "/api/v1/models/99", headers: auth_headers(user)
         expect(response).to have_http_status(:not_found)
       end
     end

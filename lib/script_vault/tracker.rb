@@ -19,6 +19,8 @@ module ScriptVault
     end
 
     def _track_event(event_name, properties = {})
+      return if Rails.env.test?
+
       metadata = { distinct_id: current_user.unique_id, insert_id: SecureRandom.uuid,
                    email: current_user.email, name: current_user.name,
                    organization_name: current_organization.name, workspace_name: current_workspace.name }

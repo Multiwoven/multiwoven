@@ -4,6 +4,7 @@ module Api
   module V1
     class WorkspaceUsersController < ApplicationController
       include WorkspaceUsers
+      skip_before_action :validate_contract
       before_action :set_workspace
       before_action :authorize_admin!, except: [:index]
 

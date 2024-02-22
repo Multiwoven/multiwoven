@@ -75,7 +75,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       end
 
       it "returns an error response while fetch sync" do
-        get "/api/v1/syncs/test", headers: auth_headers(user)
+        get "/api/v1/syncs/999", headers: auth_headers(user)
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -95,7 +95,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           },
           sync_interval: 10,
           sync_interval_unit: "minutes",
-          stream_name: "profile"
+          stream_name: "profile",
+          sync_mode: "full_refresh"
         }
       }
     end
@@ -130,7 +131,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         request_body[:sync][:source_id] = "connector_id_wrong"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -174,7 +175,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       end
 
       it "returns an error response when wrong sync_id" do
-        put "/api/v1/syncs/test", params: request_body.to_json, headers:
+        put "/api/v1/syncs/99", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
         expect(response).to have_http_status(:not_found)
       end
@@ -183,7 +184,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         request_body[:sync][:source_id] = "connector_id_wrong"
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -203,7 +204,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       end
 
       it "returns an error response while delete wrong sync" do
-        delete "/api/v1/syncs/test", headers: auth_headers(user)
+        delete "/api/v1/syncs/999", headers: auth_headers(user)
         expect(response).to have_http_status(:not_found)
       end
     end

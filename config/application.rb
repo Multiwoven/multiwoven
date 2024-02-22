@@ -41,6 +41,7 @@ module MultiwovenServer
     config.autoload_paths << Rails.root.join('app', 'interactors')
     config.autoload_paths << Rails.root.join('app', 'temporal')
     config.autoload_paths << Rails.root.join('app', 'middleware')
+    config.autoload_paths << Rails.root.join('app', 'contracts')
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
