@@ -45,7 +45,6 @@ Multiwoven provides a simple and powerful way to sync data from your data wareho
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907791/Multiwoven/Github/image_7_ozahsr.png "Example Title")
 
-
 <p>⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
 
 ## Table of Contents
@@ -110,21 +109,20 @@ For more details, check out the local [deployment guide](https://docs.multiwoven
 
 Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Below is a guide to deploying Multiwoven on different platforms:
 
-| Provider | Documentation |
-|:---------|:--------------|
-| **Docker** | [Deployment Guide](https://docs.multiwoven.com/guides/setup/docker-compose) |
-| **AWS EC2** | [Deployment Guide](#) |
-| **AWS ECS** | [Deployment Guide](#) |
-| **AWS EKS (Kubernetes)** | [Deployment Guide](#) |
-| **Azure VMs** | Deployment Guide |
-| **Azure AKS (Kubernetes)** | Deployment Guide |
-| **Google Cloud GKE (Kubernetes)** | Deployment Guide |
-| **Google Cloud Compute Engine** | [Deployment Guide](#) |
-| **Digital Ocean Droplets** | [Deployment Guide](#) |
-| **Digital Ocean Kubernetes** | Deployment Guide |
-| **OpenShift** | Deployment Guide |
-| **Helm Charts** | [Deployment Guide](#) |
-
+| Provider                          | Documentation                                                               |
+| :-------------------------------- | :-------------------------------------------------------------------------- |
+| **Docker**                        | [Deployment Guide](https://docs.multiwoven.com/guides/setup/docker-compose) |
+| **AWS EC2**                       | [Deployment Guide](https://docs.multiwoven.com/guides/setup/ec2)            |
+| **AWS ECS**                       | [Deployment Guide](#)                                                       |
+| **AWS EKS (Kubernetes)**          | [Deployment Guide](#)                                                       |
+| **Azure VMs**                     | Deployment Guide                                                            |
+| **Azure AKS (Kubernetes)**        | Deployment Guide                                                            |
+| **Google Cloud GKE (Kubernetes)** | Deployment Guide                                                            |
+| **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.multiwoven.com/guides/setup/gce)            |
+| **Digital Ocean Droplets**        | [Deployment Guide](#)                                                       |
+| **Digital Ocean Kubernetes**      | Deployment Guide                                                            |
+| **OpenShift**                     | Deployment Guide                                                            |
+| **Helm Charts**                   | [Deployment Guide](https://docs.multiwoven.com/guides/setup/helm)           |
 
 ## Connectors
 
@@ -141,34 +139,41 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 ### Destinations
 
 #### CRM
+
 - [x] [Salesforce](https://docs.multiwoven.com/destinations/crm/salesforce)
 - [ ] Zoho CRM
 - [ ] HubSpot
 
 #### Marketing Automation
+
 - [x] [Klaviyo](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
 
 #### Customer Support
+
 - [ ] Zendesk
 - [ ] Freshdesk
 - [ ] Intercom
 
 #### Advertising
+
 - [ ] Google Ads
 - [x] [Facebook Ads](https://docs.multiwoven.com/destinations/adtech/facebook-ads)
 
 #### Collaboration
+
 - [x] [Slack](https://docs.multiwoven.com/destinations/team-collaboration/slack)
 - [ ] Google Sheets
 
 #### Analytics
+
 - [ ] Google Analytics
 - [ ] Mixpanel
 - [ ] Amplitude
 
 #### Others
+
 Coming soon!
 
 ## Contributing
@@ -182,7 +187,9 @@ Before contributing to Multiwoven, please read our [Code of Conduct](https://doc
 We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 
 ### ⚠️ Development Status: Under Active Development
+
 This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a **new issue** with detailed information. Thank you for your support!
 
 ## License
+
 Multiwoven is licensed under the AGPLv3 License. See the [LICENSE](https://github.com/Multiwoven/multiwoven/blob/main/LICENSE) file for details.
