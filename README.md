@@ -4,15 +4,16 @@
   <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
 </p>
 <p align="center">
-<a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=flat-square" alt="GitHub stars"></a>
-  <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-server/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven-server?style=flat-square"></a>
-  <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-purple?style=flat-square" alt="License"></a>
+<a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=for-the-badge" alt="GitHub stars"></a>
+<a href="https://github.com/Multiwoven/multiwoven/releases">
+  <img src="https://img.shields.io/github/v/release/Multiwoven/multiwoven?display_name=release&style=for-the-badge" alt="GitHub release (latest)">
+</a>
+  <a href="https://github.com/Multiwoven/multiwoven/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven/main?style=for-the-badge"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Multiwoven/multiwoven?style=for-the-badge" alt="License"></a>
   <br />
-  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/docker-build.yml?style=flat-square&label=backend-docker-build" alt="server-docker-build"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/ci.yml?style=flat-square&label=backend%20CI" alt="server-ci"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-integrations/ci.yml?style=flat-square&label=connectors%20CI" alt="CI"></a>
-<a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=flat-square&label=frontend%20CI" alt="CI"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/ci.yml?style=for-the-badge&label=server-build" alt="server-ci"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-integrations/ci.yml?style=for-the-badge&label=integrations-build" alt="integrations-ci"></a>
+  <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
 <h2 align="center">The open-source Reverse ETL platform for data teams</h2>
@@ -37,7 +38,7 @@
 
 ## Why Multiwoven?
 
-Multiwoven provides a simple and powerful way to sync data from your data warehouse to your business tools. With Multiwoven, you can easily connect to your data sources, model your data, and sync it to various destinations.
+Multiwoven provides a simple way to sync customer data from your data warehouse into your business tools. It is designed to help data teams build and maintain data pipelines without writing any code. With Multiwoven, you can easily sync data from your data warehouse into your business tools, such as CRM, marketing automation, customer support, and advertising platforms.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
@@ -77,7 +78,7 @@ To get started with Multiwoven, you can deploy the entire stack locally using Do
 1. **Clone the repository:**
 
 ```bash
-git clone --recurse-submodules git@github.com:Multiwoven/multiwoven.git
+git clone git@github.com:Multiwoven/multiwoven.git
 ```
 
 2. **Go inside multiwoven folder:**
@@ -136,7 +137,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 - [x] [Google BigQuery](https://docs.multiwoven.com/sources/bquery)
 - [x] [Snowflake](https://docs.multiwoven.com/sources/snowflake)
 - [ ] Databricks
-- [ ] PostgreSQL
+- [x] PostgreSQL
 
 ### Destinations
 
@@ -175,7 +176,7 @@ Coming soon!
 
 We ❤️ contributions and feedback! Help make Multiwoven better for everyone!
 
-Before contributing to Multiwoven, please read our [Code of Conduct](https://docs.multiwoven.com/community-support/code-of-conduct) and [Contributing Guidelines](https://docs.multiwoven.com/community-support/contribution). As a contributor, you are expected to adhere to these guidelines and follow the best practices.
+Before contributing to Multiwoven, please read our [Code of Conduct](https://github.com/Multiwoven/multiwoven/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/Multiwoven/multiwoven/blob/main/CONTRIBUTING.md). As a contributor, you are expected to adhere to these guidelines and follow the best practices.
 
 ## Need Help?
 

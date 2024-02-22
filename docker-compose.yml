@@ -60,7 +60,7 @@ services:
       - mw-redis-data:/data
   multiwoven-server:
     build:
-      context: ./multiwoven-server
+      context: ./server
       dockerfile: Dockerfile.dev
       args:
         TARGETARCH: ${TARGETARCH:-amd64}
@@ -73,7 +73,7 @@ services:
     env_file: .env
   multiwoven-ui:
     build:
-      context: ./multiwoven-ui
+      context: ./ui
       dockerfile: Dockerfile.dev
     ports:
       - "8000:8000"
@@ -82,7 +82,7 @@ services:
   # Multiwoven worker
   multiwoven-worker:
     build:
-      context: ./multiwoven-server
+      context: ./server
       dockerfile: Dockerfile.dev
     depends_on:
       - db
