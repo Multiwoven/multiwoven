@@ -18,12 +18,13 @@ import {
   Text,
   Container,
   Stack,
-  FormLabel,
   useToast,
   Flex,
   HStack,
+  Image,
+  Checkbox,
 } from "@chakra-ui/react";
-import MultiwovenIcon from "@/assets/images/icon.png";
+import MultiwovenIcon from "@/assets/images/icon-white.png";
 import {
   SignInErrorResponse,
   SignInPayload,
@@ -32,6 +33,7 @@ import {
 import Cookies from "js-cookie";
 import titleCase from "@/utils/TitleCase";
 import AuthFooter from "../AuthFooter";
+import HiddenInput from "@/components/HiddenInput";
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
@@ -43,7 +45,6 @@ const SignInSchema = Yup.object().shape({
 });
 
 interface SignInFormProps {
-  label: string;
   name: string;
   type: string;
   placeholder?: string;
@@ -62,7 +63,6 @@ interface SignInFormProps {
 }
 
 const FormField = ({
-  label,
   name,
   type,
   getFieldProps,
@@ -71,10 +71,31 @@ const FormField = ({
   placeholder,
 }: SignInFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
-    <FormLabel htmlFor={name} fontSize="xs" fontWeight="medium">
-      {label}
-    </FormLabel>
     <Input
+      variant="outline"
+      placeholder={placeholder}
+      _placeholder={{ color: "black.100" }}
+      type={type}
+      {...getFieldProps(name)}
+      fontSize="sm"
+      color="black.500"
+    />
+    <Text size="xs" color="red.500" mt={2}>
+      <ErrorMessage name={name} />
+    </Text>
+  </FormControl>
+);
+
+const HiddenFormField = ({
+  name,
+  type,
+  getFieldProps,
+  touched,
+  errors,
+  placeholder,
+}: SignInFormProps) => (
+  <FormControl isInvalid={!!(touched[name] && errors[name])}>
+    <HiddenInput
       variant="outline"
       placeholder={placeholder}
       _placeholder={{ color: "black.100" }}
@@ -151,20 +172,17 @@ const SignIn = (): JSX.Element => {
               <Container width={{ base: "400px", sm: "500px" }} py="6">
                 <Stack spacing="8">
                   <Stack spacing="6" alignItems={"center"}>
-                    <img src={MultiwovenIcon} width={55} />
-                    <Stack spacing="3" textAlign="center">
-                      <Heading size="sm">Sign in to your account</Heading>
-                      <HStack spacing={1} justify="center">
-                        <Text color="black.500" size="sm">
-                          Don't have an account?{" "}
-                        </Text>
-                        <Link to="/sign-up">
-                          <Text color="brand.500" size="sm">
-                            Sign Up
-                          </Text>
-                        </Link>
-                      </HStack>
-                    </Stack>
+                    <Box
+                      bgColor="brand.400"
+                      h="80px"
+                      w="80px"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      borderRadius="11px"
+                    >
+                      <Image src={MultiwovenIcon} width="45px" />
+                    </Box>
                   </Stack>
                   <Box
                     padding="20px"
@@ -172,10 +190,15 @@ const SignIn = (): JSX.Element => {
                     border="2px"
                     borderColor="gray.400"
                   >
+                    <Stack spacing="8px" textAlign="center" mb="32px">
+                      <Heading size="xs" fontWeight="semibold">
+                        Let's activate your data
+                      </Heading>
+                      <Text>Sign In to your Multiwoven account</Text>
+                    </Stack>
                     <Stack spacing="6">
-                      <Stack spacing="5">
+                      <Stack spacing="3">
                         <FormField
-                          label="Email"
                           placeholder="Enter email"
                           name="email"
                           type="text"
@@ -183,8 +206,7 @@ const SignIn = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <FormField
-                          label="Password"
+                        <HiddenFormField
                           placeholder="Enter password"
                           name="password"
                           type="password"
@@ -192,6 +214,25 @@ const SignIn = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
+                        {/* <PasswordField /> */}
+                        <HStack justify="space-between">
+                          <Checkbox
+                            defaultChecked
+                            colorScheme="brand"
+                            size="sm"
+                          >
+                            <Text size="xs" fontWeight="medium">
+                              Stay signed in
+                            </Text>
+                          </Checkbox>
+                          <Text
+                            size="xs"
+                            color="brand.400"
+                            fontWeight="semibold"
+                          >
+                            Forgot password?
+                          </Text>
+                        </HStack>
                       </Stack>
                       <Stack spacing="6">
                         <Button
@@ -204,6 +245,16 @@ const SignIn = (): JSX.Element => {
                           Sign In
                         </Button>
                       </Stack>
+                      <HStack spacing={1} justify="center">
+                        <Text color="black.500" size="xs">
+                          Don't have an account?{" "}
+                        </Text>
+                        <Link to="/sign-up">
+                          <Text color="brand.500" size="xs">
+                            Sign Up
+                          </Text>
+                        </Link>
+                      </HStack>
                     </Stack>
                   </Box>
                 </Stack>
