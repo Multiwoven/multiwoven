@@ -11,14 +11,16 @@ import {
 import { FiMoreHorizontal, FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteConnector } from '@/services/connectors';
-const SourceActions = () => {
+const SourceActions = ({ connectorType }: { connectorType: string }) => {
   const toast = useToast();
   const navigate = useNavigate();
-  const { sourceId } = useParams();
+  const { sourceId, destinationId } = useParams();
 
-  const handleDeleteSource = async () => {
+  const handleDeleteConnector = async () => {
     try {
-      await deleteConnector(sourceId as string);
+      const connectorId =
+        connectorType === 'sources' ? sourceId : destinationId;
+      await deleteConnector(connectorId as string);
       toast({
         title: 'Connector deleted successfully',
         isClosable: true,
@@ -26,7 +28,7 @@ const SourceActions = () => {
         status: 'success',
         position: 'bottom-right',
       });
-      navigate('/setup/sources');
+      navigate(`/setup/${connectorType}`);
       return;
     } catch {
       toast({
@@ -84,7 +86,7 @@ const SourceActions = () => {
               alignItems='center'
               color={'red.600'}
               rounded='lg'
-              onClick={handleDeleteSource}
+              onClick={handleDeleteConnector}
               as='button'
               justifyContent='start'
               border={0}
