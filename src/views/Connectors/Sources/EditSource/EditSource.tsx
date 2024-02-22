@@ -202,7 +202,7 @@ const EditSource = (): JSX.Element => {
                   'DD/MM/YYYY'
                 )}
               </Text>
-              <SourceActions />
+              <SourceActions connectorType='sources' />
             </Box>
           }
         />

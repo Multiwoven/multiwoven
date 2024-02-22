@@ -43,7 +43,7 @@ const TopBar = ({
         {name}
       </Heading>
     </Box>
-    <HStack spacing={2}>
+    <HStack spacing={2} style={{ alignItems: 'flex-end' }}>
       {extra}
       {isCtaVisible ? (
         <Button

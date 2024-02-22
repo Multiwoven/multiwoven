@@ -38,7 +38,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case "lastUpdated":
+    case 'lastUpdated':
       return (
         <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>
       );
@@ -53,7 +53,7 @@ const SyncsList = (): JSX.Element => {
   const { data, isLoading } = useQuery({
     queryKey: SYNCS_LIST_QUERY_KEY,
     queryFn: () => fetchSyncs(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
@@ -84,7 +84,7 @@ const SyncsList = (): JSX.Element => {
   if (isLoading) return <Loader />;
 
   if (!isLoading && tableData.data?.length === 0)
-    return <NoActivations activationType='sync' />;
+    return <NoActivations activationType='Sync' />;
 
   return (
     <Box

@@ -37,7 +37,7 @@ const ModelsList = (): JSX.Element | null => {
           onCtaClicked={() => navigate("new")}
           isCtaVisible
         />
-        <Box mt={16}>
+        <Box>
           {isLoading || !data ? (
             <Loader />
           ) : (
