@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const domain = import.meta.env.VITE_API_HOST || "http://localhost:3000";
+export const domain =
+  import.meta.env.VITE_API_HOST + "/api/v1/" || "http://localhost:3000/api/v1/";
 export const axiosInstance = axios.create({
   baseURL: domain,
 });
