@@ -18,13 +18,13 @@ const DestinationsForm = (): JSX.Element => {
   const steps = [
     {
       formKey: "destination",
-      name: "Select a destination",
+      name: "Select a Destination",
       component: <SelectDestinations />,
       isRequireContinueCta: false,
     },
     {
       formKey: "destinationConfig",
-      name: "Connect your destination",
+      name: "Connect your Destination",
       component: <DestinationConfigForm />,
       isRequireContinueCta: false,
     },
