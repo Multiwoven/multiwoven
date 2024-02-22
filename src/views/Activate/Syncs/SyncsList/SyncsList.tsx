@@ -53,7 +53,7 @@ const SyncsList = (): JSX.Element => {
   const { data, isLoading } = useQuery({
     queryKey: SYNCS_LIST_QUERY_KEY,
     queryFn: () => fetchSyncs(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
