@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { FiEdit3, FiLogOut, FiMoreVertical } from 'react-icons/fi';
+import { FiLogOut, FiMoreVertical } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
@@ -45,13 +45,13 @@ const Profile = () => {
     <>
       <Popover closeOnEsc>
         <PopoverTrigger>
-          <Box>
+          <Box cursor='pointer'>
             <Box
               bgColor='gray.200'
               px={2}
               py={2}
               rounded='lg'
-              _hover={{ bgColor: 'gray.400' }}
+              _hover={{ bgColor: 'gray.300' }}
             >
               <HStack spacing={0}>
                 <Avatar
@@ -80,29 +80,8 @@ const Profile = () => {
             </Box>
           </Box>
         </PopoverTrigger>
-        <PopoverContent w='182px' border='1px' borderColor='gray.500'>
+        <PopoverContent w='182px' border='1px' borderColor='gray.400'>
           <PopoverBody margin={0} p={0}>
-            <Button
-              w='100%'
-              py={3}
-              px={2}
-              display='flex'
-              flexDir='row'
-              alignItems='center'
-              justifyContent='start'
-              border={0}
-              rounded='lg'
-              as='button'
-              variant='shell'
-              isDisabled={true}
-            >
-              <Box color='gray.600'>
-                <FiEdit3 />
-              </Box>
-              <Text size='sm' fontWeight='semibold' ml={3}>
-                Edit Profile
-              </Text>
-            </Button>
             <Button
               _hover={{ bgColor: 'gray.200' }}
               w='100%'
@@ -111,7 +90,7 @@ const Profile = () => {
               display='flex'
               flexDir='row'
               alignItems='center'
-              color={'red.600'}
+              color='error.400'
               rounded='lg'
               onClick={handleLogout}
               as='button'
@@ -120,7 +99,7 @@ const Profile = () => {
               variant='shell'
             >
               <FiLogOut />
-              <Text size='sm' fontWeight='semibold' ml={3}>
+              <Text size='sm' fontWeight={400} ml={3} color='error.500'>
                 Sign Out
               </Text>
             </Button>
