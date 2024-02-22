@@ -1,0 +1,96 @@
+version: "3"
+services:
+  # Temporal services
+  postgresql:
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:${TEMPORAL_POSTGRESQL_VERSION}
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+  temporal:
+    container_name: temporal
+    depends_on:
+      - postgresql
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    ports:
+      - 7233:7233
+    labels:
+      kompose.volume.type: configMap
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
+    stdin_open: true
+    tty: true
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    ports:
+      - 8080:8080
+  # Multiwoven services
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+    volumes:
+      - mw-pg-data:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    volumes:
+      - mw-redis-data:/data
+  multiwoven-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        TARGETARCH: ${TARGETARCH:-amd64}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+      - temporal
+    env_file: .env
+    volumes:
+      - .:/rails
+    stdin_open: true
+    tty: true
+  # Multiwoven worker
+  multiwoven-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db
+      - redis
+      - temporal
+    env_file: .env
+    volumes:
+      - .:/rails
+    command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
+    stdin_open: true
+    tty: true
+# Volumes
+volumes:
+  mw-pg-data:
+  mw-redis-data:
