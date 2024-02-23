@@ -46,12 +46,12 @@ module Reports
       total_grouped = @sync_activity.group_by_minute(:created_at, n: @interval).count
       error_grouped = @sync_activity.where.not(error: nil).group_by_minute(:created_at, n: @interval).count
 
-      total_grouped.map do |time_interval, total_rows|
+      total_grouped.map do |time_interval, total_count|
         {
           time_slice: time_interval,
-          total_rows:,
+          total_count:,
           failed_count: error_grouped[time_interval].to_i,
-          success_count: total_rows - error_grouped[time_interval].to_i
+          success_count: total_count - error_grouped[time_interval].to_i
         }
       end
     end
@@ -63,12 +63,12 @@ module Reports
       successful_group_data = grouped_data.sum(:successful_rows)
       failed_group_data = grouped_data.sum(:failed_rows)
 
-      grouped_data.sum(:total_rows).map do |time_interval, total_rows|
+      grouped_data.sum(:total_rows).map do |time_interval, total_count|
         {
           time_slice: time_interval,
-          total_rows:,
+          total_count:,
           failed_count: successful_group_data[time_interval].to_i,
-          success_count: total_rows - failed_group_data[time_interval].to_i
+          success_count: total_count - failed_group_data[time_interval].to_i
         }
       end
     end
