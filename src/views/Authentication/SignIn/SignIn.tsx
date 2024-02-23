@@ -170,25 +170,25 @@ const SignIn = (): JSX.Element => {
           {({ getFieldProps, touched, errors }) => (
             <Form>
               <Container width={{ base: "400px", sm: "500px" }} py="6">
-                <Stack spacing="8">
-                  <Box
-                    bgColor="brand.400"
-                    h="80px"
-                    w="80px"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    borderRadius="11px"
-                    position="fixed"
-                    left="48%"
-                    top="19%"
-                  >
-                    <Image src={MultiwovenIcon} width="45px" />
+                <Stack>
+                  <Box position="relative" top="12">
+                    <Box
+                      bgColor="brand.400"
+                      h="80px"
+                      w="80px"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      borderRadius="11px"
+                      mx="auto"
+                    >
+                      <Image src={MultiwovenIcon} width="45px" />
+                    </Box>
                   </Box>
                   <Box
                     padding="20px"
-                    borderRadius="xl"
-                    border="2px"
+                    borderRadius="10px"
+                    border="1px"
                     borderColor="gray.400"
                     paddingTop="60px"
                   >
@@ -196,7 +196,9 @@ const SignIn = (): JSX.Element => {
                       <Heading size="xs" fontWeight="semibold">
                         Let's activate your data
                       </Heading>
-                      <Text size="sm">Sign In to your Multiwoven account</Text>
+                      <Text size="sm" color="black.200">
+                        Sign In to your Multiwoven account
+                      </Text>
                     </Stack>
                     <Stack spacing="6">
                       <Stack spacing="3">
@@ -248,11 +250,15 @@ const SignIn = (): JSX.Element => {
                         </Button>
                       </Stack>
                       <HStack spacing={1} justify="center">
-                        <Text color="black.500" size="xs">
+                        <Text color="black.500" size="xs" fontWeight="medium">
                           Don't have an account?{" "}
                         </Text>
                         <Link to="/sign-up">
-                          <Text color="brand.500" size="xs">
+                          <Text
+                            color="brand.400"
+                            size="xs"
+                            fontWeight="semibold"
+                          >
                             Sign Up
                           </Text>
                         </Link>

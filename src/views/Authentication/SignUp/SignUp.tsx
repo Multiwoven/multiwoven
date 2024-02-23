@@ -181,20 +181,21 @@ const SignUp = (): JSX.Element => {
           {({ getFieldProps, touched, errors }) => (
             <Form>
               <Container width={{ base: "400px", sm: "500px" }} py="6">
-                <Stack spacing="8">
-                  <Box
-                    bgColor="brand.400"
-                    h="80px"
-                    w="80px"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    borderRadius="11px"
-                    position="fixed"
-                    left="48%"
-                    top="8%"
-                  >
-                    <Image src={MultiwovenIcon} width="45px" />
+                <Stack>
+                  <Box position="relative" top="12">
+                    <Box
+                      bgColor="brand.400"
+                      h="80px"
+                      w="80px"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      borderRadius="11px"
+                      mx="auto"
+                      // left="48%"
+                    >
+                      <Image src={MultiwovenIcon} width="45px" />
+                    </Box>
                   </Box>
                   <Box
                     padding="20px"
@@ -207,10 +208,12 @@ const SignUp = (): JSX.Element => {
                       <Heading size="xs" fontWeight="semibold">
                         Get started with Multiwoven
                       </Heading>
-                      <Text size="sm">Sign up and create your account</Text>
+                      <Text size="sm" color="black.200">
+                        Sign up and create your account
+                      </Text>
                     </Stack>
-                    <Stack spacing="6">
-                      <Stack spacing="5">
+                    <Stack spacing="20px">
+                      <Stack spacing="16px">
                         <FormField
                           placeholder="Enter company name"
                           name="company_name"
@@ -251,20 +254,42 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <HStack spacing={1} justify="center">
-                          <Text color="black.500" size="xs">
+                        <HStack spacing={1}>
+                          <Text
+                            color="black.200"
+                            size="xs"
+                            fontWeight="regular"
+                          >
                             By creating an account, I agree to the{" "}
                           </Text>
-                          <Link to="/sign-in">
-                            <Text color="brand.500" size="xs">
+                          <Link
+                            to="https://multiwoven.com/terms"
+                            target="_blank"
+                          >
+                            <Text
+                              color="brand.400"
+                              size="xs"
+                              fontWeight="medium"
+                            >
                               Terms
                             </Text>
                           </Link>
-                          <Text color="black.500" size="xs">
-                            &
+                          <Text
+                            color="black.200"
+                            size="xs"
+                            fontWeight="regular"
+                          >
+                            and
                           </Text>
-                          <Link to="/sign-in">
-                            <Text color="brand.500" size="xs">
+                          <Link
+                            to="https://multiwoven.com/privacy"
+                            target="_blank"
+                          >
+                            <Text
+                              color="brand.400"
+                              size="xs"
+                              fontWeight="medium"
+                            >
                               Privacy Policy
                             </Text>
                           </Link>
@@ -274,18 +299,22 @@ const SignUp = (): JSX.Element => {
                         <Button
                           type="submit"
                           isLoading={submitting}
-                          loadingText="Signing Up"
+                          loadingText="Creating Account"
                           variant="solid"
                           width="full"
                         >
-                          Sign up
+                          Create Account
                         </Button>
                         <HStack spacing={1} justify="center">
-                          <Text color="black.500" size="xs">
+                          <Text color="black.500" size="xs" fontWeight="medium">
                             Do you have an account?{" "}
                           </Text>
                           <Link to="/sign-in">
-                            <Text color="brand.500" size="xs">
+                            <Text
+                              color="brand.400"
+                              size="xs"
+                              fontWeight="semibold"
+                            >
                               Sign In
                             </Text>
                           </Link>
