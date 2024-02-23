@@ -13,17 +13,19 @@ const AuthFooter = (): JSX.Element => {
       alignItems="center"
     >
       <HStack>
-        <Text color="black.100" fontWeight={400} size="sm">
+        <Text color="black.100" fontWeight={400} size="xs">
           © Multiwoven Inc. All rights reserved.
-        </Text>{" "}
+        </Text>
         <Link to="https://multiwoven.com/terms">
-          <Text color="brand.500" size="sm" fontWeight={500}>
+          <Text color="brand.500" size="xs" fontWeight={500}>
             Terms of use
           </Text>
         </Link>
-        <Text size="sm">•</Text>{" "}
+        <Text size="xs" color="black.100">
+          •
+        </Text>
         <Link to="https://multiwoven.com/privacy">
-          <Text color="brand.500" size="sm" fontWeight={500}>
+          <Text color="brand.500" size="xs" fontWeight={500}>
             Privacy Policy
           </Text>
         </Link>
