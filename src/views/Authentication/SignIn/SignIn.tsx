@@ -37,7 +37,7 @@ import HiddenInput from "@/components/HiddenInput";
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Invalid email address")
+    .email("Please enter a valid email address")
     .required("Email is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
@@ -214,7 +214,7 @@ const SignIn = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        {/* <PasswordField /> */}
+                        ={" "}
                         <HStack justify="space-between">
                           <Checkbox
                             defaultChecked
