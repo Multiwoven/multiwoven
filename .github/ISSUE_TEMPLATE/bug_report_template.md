@@ -4,7 +4,6 @@ about: Report a bug in the Multiwoven UI
 title: "[BUG]: Brief Description" # e.g [BUG]: BigQuery Connector Authentication Failure
 labels: 'bug'
 assignees: ''
-
 ---
 
 ## Description
