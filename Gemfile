@@ -7,6 +7,7 @@ ruby "3.2.0"
 # Core
 gem "aasm"
 gem "aws-sdk"
+gem "groupdate"
 gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"

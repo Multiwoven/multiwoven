@@ -3,7 +3,6 @@
 class SyncRun < ApplicationRecord
   validates :sync_id, presence: true
   validates :status, presence: true
-
   validates :started_at, presence: true
   validates :finished_at, presence: true
   validates :total_rows, presence: true
@@ -13,6 +12,7 @@ class SyncRun < ApplicationRecord
   enum :status, %i[pending in_progress success failed incomplete]
 
   belongs_to :sync
+  belongs_to :workspace
   has_many :sync_records, dependent: :nullify
 
   after_initialize :set_defaults, if: :new_record?

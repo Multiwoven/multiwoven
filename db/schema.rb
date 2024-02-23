@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_22_110415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -79,6 +79,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "current_offset", default: 0
+    t.integer "workspace_id"
+    t.integer "source_id"
+    t.integer "destination_id"
+    t.integer "model_id"
   end
 
   create_table "syncs", force: :cascade do |t|
