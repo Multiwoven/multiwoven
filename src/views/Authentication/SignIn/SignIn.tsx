@@ -24,7 +24,7 @@ import {
   Image,
   Checkbox,
 } from "@chakra-ui/react";
-import MultiwovenIcon from "@/assets/images/icon-white.png";
+import MultiwovenIcon from "@/assets/images/icon-white.svg";
 import {
   SignInErrorResponse,
   SignInPayload,
@@ -87,7 +87,7 @@ const FormField = ({
   </FormControl>
 );
 
-const HiddenFormField = ({
+const PasswordField = ({
   name,
   type,
   getFieldProps,
@@ -184,7 +184,11 @@ const SignIn = (): JSX.Element => {
                       borderRadius="11px"
                       mx="auto"
                     >
-                      <Image src={MultiwovenIcon} width="45px" />
+                      <Image
+                        src={MultiwovenIcon}
+                        width="45px"
+                        alt="Multiwoven Logo in White"
+                      />
                     </Box>
                   </Box>
                   <Box
@@ -212,7 +216,7 @@ const SignIn = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <HiddenFormField
+                        <PasswordField
                           placeholder="Enter password"
                           name="password"
                           type="password"
@@ -237,7 +241,7 @@ const SignIn = (): JSX.Element => {
                             color="brand.400"
                             fontWeight="semibold"
                           >
-                            Forgot password?
+                            Forgot Password?
                           </Text>
                         </HStack>
                       </Stack>

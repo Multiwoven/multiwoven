@@ -23,7 +23,7 @@ import {
   HStack,
   Image,
 } from "@chakra-ui/react";
-import MultiwovenIcon from "@/assets/images/icon-white.png";
+import MultiwovenIcon from "@/assets/images/icon-white.svg";
 import { signUp } from "@/services/authentication";
 import Cookies from "js-cookie";
 import titleCase from "@/utils/TitleCase";
@@ -87,7 +87,7 @@ const FormField = ({
   </FormControl>
 );
 
-const HiddenFormField = ({
+const PasswordField = ({
   name,
   type,
   getFieldProps,
@@ -194,9 +194,12 @@ const SignUp = (): JSX.Element => {
                       alignItems="center"
                       borderRadius="11px"
                       mx="auto"
-                      // left="48%"
                     >
-                      <Image src={MultiwovenIcon} width="45px" />
+                      <Image
+                        src={MultiwovenIcon}
+                        width="45px"
+                        alt="Multiwoven Logo in White"
+                      />
                     </Box>
                   </Box>
                   <Box
@@ -240,7 +243,7 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <HiddenFormField
+                        <PasswordField
                           placeholder="Choose password"
                           name="password"
                           type="password"
@@ -248,7 +251,7 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <HiddenFormField
+                        <PasswordField
                           placeholder="Confirm password"
                           name="password_confirmation"
                           type="password"
