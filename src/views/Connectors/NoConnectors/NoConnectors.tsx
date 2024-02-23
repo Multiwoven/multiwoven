@@ -23,7 +23,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   const description =
     connectorType === 'source'
       ? 'Configure a source where your data is stored and managed'
-      : 'Add a destination where your data will be sent';
+      : 'Add a Destination where your data will be sent';
 
   const image =
     connectorType === 'source' ? NoSourcesImage : NoDestinationsImage;

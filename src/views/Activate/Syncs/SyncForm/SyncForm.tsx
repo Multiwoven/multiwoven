@@ -25,13 +25,13 @@ const SyncForm = (): JSX.Element => {
   const steps = [
     {
       formKey: 'selectModel',
-      name: 'Select a model',
+      name: 'Select a Model',
       component: <SelectModel />,
       isRequireContinueCta: false,
     },
     {
       formKey: 'selectDestination',
-      name: 'Select a destination',
+      name: 'Select a Destination',
       component: (
         <SelectDestination
           setSelectedStream={setSelectedStream}
@@ -42,7 +42,7 @@ const SyncForm = (): JSX.Element => {
     },
     {
       formKey: 'configureSyncs',
-      name: 'Configure sync',
+      name: 'Configure Sync',
       component: (
         <ConfigureSyncs
           selectedStream={selectedStream}
@@ -55,7 +55,7 @@ const SyncForm = (): JSX.Element => {
     },
     {
       formKey: 'finaliseSync',
-      name: 'Finalize sync',
+      name: 'Finalize Sync',
       component: <FinaliseSync />,
       isRequireContinueCta: false,
     },
