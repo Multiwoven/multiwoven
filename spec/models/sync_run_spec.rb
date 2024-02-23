@@ -10,6 +10,10 @@ RSpec.describe SyncRun, type: :model do
   it { should validate_presence_of(:total_rows) }
   it { should validate_presence_of(:successful_rows) }
   it { should validate_presence_of(:failed_rows) }
+  it { should validate_presence_of(:workspace_id) }
+  it { should validate_presence_of(:source_id) }
+  it { should validate_presence_of(:destination_id) }
+  it { should validate_presence_of(:model_id) }
 
   it { should belong_to(:sync) }
   it { should have_many(:sync_records) }
