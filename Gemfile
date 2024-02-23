@@ -39,6 +39,8 @@ gem "async-websocket", "~> 0.8.0"
 
 gem "git"
 
+gem "ruby-limiter"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

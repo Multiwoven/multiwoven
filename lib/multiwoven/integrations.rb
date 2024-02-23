@@ -14,6 +14,7 @@ require "restforce"
 require "logger"
 require "slack-ruby-client"
 require "git"
+require "ruby-limiter"
 
 # Service
 require_relative "integrations/config"
@@ -23,6 +24,7 @@ require_relative "integrations/service"
 # Core
 require_relative "integrations/core/constants"
 require_relative "integrations/core/utils"
+require_relative "integrations/core/rate_limiter"
 require_relative "integrations/protocol/protocol"
 require_relative "integrations/core/base_connector"
 require_relative "integrations/core/source_connector"

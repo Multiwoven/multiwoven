@@ -43,6 +43,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
   spec.add_runtime_dependency "restforce"
+  spec.add_runtime_dependency "ruby-limiter"
   spec.add_runtime_dependency "ruby-odbc"
   spec.add_runtime_dependency "sequel"
   spec.add_runtime_dependency "slack-ruby-client"
