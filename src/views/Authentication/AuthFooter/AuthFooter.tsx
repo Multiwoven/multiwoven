@@ -17,7 +17,7 @@ const AuthFooter = (): JSX.Element => {
           © Multiwoven Inc. All rights reserved.
         </Text>
         <Link to="https://multiwoven.com/terms">
-          <Text color="brand.500" size="xs" fontWeight={500}>
+          <Text color="black.500" size="xs" fontWeight={500}>
             Terms of use
           </Text>
         </Link>
@@ -25,7 +25,7 @@ const AuthFooter = (): JSX.Element => {
           •
         </Text>
         <Link to="https://multiwoven.com/privacy">
-          <Text color="brand.500" size="xs" fontWeight={500}>
+          <Text color="black.500" size="xs" fontWeight={500}>
             Privacy Policy
           </Text>
         </Link>
