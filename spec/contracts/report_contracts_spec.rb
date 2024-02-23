@@ -8,10 +8,10 @@ RSpec.describe ReportContracts::Index do
   context "with valid parameters" do
     let(:valid_params) do
       {
-        type: "workspace_activity",
-        metric: "total_sync_run_rows",
+        type: Reports::ActivityReport::TYPE[:workspace_activity],
+        metric: Reports::ActivityReport::METRICS[:total_sync_run_rows],
         connector_id: 1,
-        time_period: "one_week"
+        time_period: Reports::ActivityReport::TIME_PERIODS[:one_week]
       }
     end
 
@@ -23,9 +23,9 @@ RSpec.describe ReportContracts::Index do
   context "with missing required parameters" do
     let(:invalid_params) do
       {
-        metric: "total_sync_run_rows",
+        metric: Reports::ActivityReport::METRICS[:total_sync_run_rows],
         connector_id: 1,
-        time_period: "one_week"
+        time_period: Reports::ActivityReport::TIME_PERIODS[:one_week]
       }
     end
 

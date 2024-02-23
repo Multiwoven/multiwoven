@@ -10,17 +10,17 @@ module ReportContracts
     end
 
     rule(:type) do
-      key.failure("invalid type") unless !key? || %w[workspace_activity].include?(value.downcase)
+      key.failure("invalid type") unless !key? || Reports::ActivityReport::TYPE.keys.include?(value.downcase.to_sym)
     end
 
     rule(:metric) do
-      unless !key? || %w[sync_run_trigged total_sync_run_rows all].include?(value.downcase)
+      unless !key? || Reports::ActivityReport::METRICS.keys.include?(value.downcase.to_sym)
         key.failure("invalid metric")
       end
     end
 
     rule(:time_period) do
-      unless !key? || %w[one_week one_day].include?(value.downcase)
+      unless !key? || Reports::ActivityReport::TIME_PERIODS.keys.include?(value.downcase.to_sym)
         key.failure("invalid time_period. Possible values are 'one_week' or 'one_day'")
       end
     end

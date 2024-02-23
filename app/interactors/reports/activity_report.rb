@@ -4,13 +4,28 @@ module Reports
   class ActivityReport
     include Interactor
 
-    SLICE = 20
+    SLICE_SIZE = 30
+
+    TIME_PERIODS = {
+      one_week: "one_week",
+      one_day: "one_day"
+    }.freeze
+
+    METRICS = {
+      sync_run_triggered: "sync_run_triggered",
+      total_sync_run_rows: "total_sync_run_rows",
+      all: "all"
+    }.freeze
+
+    TYPE = {
+      workspace_activity: "workspace_activity"
+    }.freeze
 
     def call
       type = context.type
 
-      case type
-      when "workspace_activity"
+      case type.to_sym
+      when :workspace_activity
         generate_workspace_activity_report
       end
     end
@@ -19,12 +34,12 @@ module Reports
 
     def generate_workspace_activity_report
       connector_id = context.connector_id
-      time_period = context.time_period || "one_week"
-      metric = context.metric || "all"
+      time_period = context.time_period || :one_week
+      metric = context.metric || :all
 
       start_time = calculate_start_time(time_period)
       end_time = Time.zone.now
-      @interval = (((end_time - start_time) / 60) / SLICE).to_i
+      @interval = (((end_time - start_time) / 60) / SLICE_SIZE).to_i
       @sync_activity = fetch_sync_activity(start_time, end_time)
       filter_sync_activity(connector_id) if connector_id.present?
 
@@ -81,10 +96,10 @@ module Reports
     end
 
     def calculate_start_time(time_period)
-      case time_period
-      when "one_week"
+      case time_period.to_sym
+      when :one_week
         1.week.ago.beginning_of_day
-      when "one_day"
+      when :one_day
         1.day.ago.beginning_of_day
       end
     end
