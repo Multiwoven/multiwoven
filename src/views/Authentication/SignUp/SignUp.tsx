@@ -79,6 +79,7 @@ const FormField = ({
       {...getFieldProps(name)}
       fontSize="sm"
       color="black.500"
+      focusBorderColor="brand.400"
     />
     <Text size="xs" color="red.500" mt={2}>
       <ErrorMessage name={name} />
@@ -103,6 +104,7 @@ const HiddenFormField = ({
       {...getFieldProps(name)}
       fontSize="sm"
       color="black.500"
+      focusBorderColor="brand.400"
     />
     <Text size="xs" color="red.500" mt={2}>
       <ErrorMessage name={name} />
