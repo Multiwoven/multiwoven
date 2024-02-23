@@ -18,16 +18,17 @@ import {
   Text,
   Container,
   Stack,
-  FormLabel,
   useToast,
   Flex,
   HStack,
+  Image,
 } from "@chakra-ui/react";
-import MultiwovenIcon from "@/assets/images/icon.png";
+import MultiwovenIcon from "@/assets/images/icon-white.png";
 import { signUp } from "@/services/authentication";
 import Cookies from "js-cookie";
 import titleCase from "@/utils/TitleCase";
 import AuthFooter from "../AuthFooter";
+import HiddenInput from "@/components/HiddenInput";
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required("Company name is required"),
@@ -44,7 +45,6 @@ const SignUpSchema = Yup.object().shape({
 });
 
 interface SignUpFormProps {
-  label: string;
   name: string;
   type: string;
   placeholder?: string;
@@ -63,7 +63,6 @@ interface SignUpFormProps {
 }
 
 const FormField = ({
-  label,
   name,
   type,
   getFieldProps,
@@ -72,10 +71,31 @@ const FormField = ({
   placeholder,
 }: SignUpFormProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
-    <FormLabel htmlFor={name} fontSize="xs" fontWeight="medium">
-      {label}
-    </FormLabel>
     <Input
+      variant="outline"
+      placeholder={placeholder}
+      _placeholder={{ color: "black.100" }}
+      type={type}
+      {...getFieldProps(name)}
+      fontSize="sm"
+      color="black.500"
+    />
+    <Text size="xs" color="red.500" mt={2}>
+      <ErrorMessage name={name} />
+    </Text>
+  </FormControl>
+);
+
+const HiddenFormField = ({
+  name,
+  type,
+  getFieldProps,
+  touched,
+  errors,
+  placeholder,
+}: SignUpFormProps) => (
+  <FormControl isInvalid={!!(touched[name] && errors[name])}>
+    <HiddenInput
       variant="outline"
       placeholder={placeholder}
       _placeholder={{ color: "black.100" }}
@@ -149,6 +169,7 @@ const SignUp = (): JSX.Element => {
       >
         <Formik
           initialValues={{
+            company_name: "",
             name: "",
             email: "",
             password: "",
@@ -161,32 +182,36 @@ const SignUp = (): JSX.Element => {
             <Form>
               <Container width={{ base: "400px", sm: "500px" }} py="6">
                 <Stack spacing="8">
-                  <Stack spacing="6" alignItems={"center"}>
-                    <img src={MultiwovenIcon} width={55} />
-                    <Stack spacing="3" textAlign="center">
-                      <Heading size="sm">Create an account</Heading>
-                      <HStack spacing={1} justify="center">
-                        <Text color="black.500" size="sm">
-                          Already have an account?
-                        </Text>
-                        <Link to="/sign-in">
-                          <Text color="brand.500" size="sm">
-                            Sign In
-                          </Text>
-                        </Link>
-                      </HStack>
-                    </Stack>
-                  </Stack>
+                  <Box
+                    bgColor="brand.400"
+                    h="80px"
+                    w="80px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius="11px"
+                    position="fixed"
+                    left="48%"
+                    top="8%"
+                  >
+                    <Image src={MultiwovenIcon} width="45px" />
+                  </Box>
                   <Box
                     padding="20px"
-                    borderRadius="xl"
-                    border="2px"
+                    borderRadius="10px"
+                    border="1px"
                     borderColor="gray.400"
+                    paddingTop="60px"
                   >
+                    <Stack spacing="8px" textAlign="center" mb="32px">
+                      <Heading size="xs" fontWeight="semibold">
+                        Get started with Multiwoven
+                      </Heading>
+                      <Text size="sm">Sign up and create your account</Text>
+                    </Stack>
                     <Stack spacing="6">
                       <Stack spacing="5">
                         <FormField
-                          label="Company Name"
                           placeholder="Enter company name"
                           name="company_name"
                           type="text"
@@ -195,7 +220,6 @@ const SignUp = (): JSX.Element => {
                           errors={errors}
                         />
                         <FormField
-                          label="Name"
                           placeholder="Enter name"
                           name="name"
                           type="text"
@@ -204,7 +228,6 @@ const SignUp = (): JSX.Element => {
                           errors={errors}
                         />
                         <FormField
-                          label="Email"
                           placeholder="Enter email"
                           name="email"
                           type="text"
@@ -212,8 +235,7 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <FormField
-                          label="Password"
+                        <HiddenFormField
                           placeholder="Choose password"
                           name="password"
                           type="password"
@@ -221,8 +243,7 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
-                        <FormField
-                          label="Confirm Password"
+                        <HiddenFormField
                           placeholder="Confirm password"
                           name="password_confirmation"
                           type="password"
@@ -230,6 +251,24 @@ const SignUp = (): JSX.Element => {
                           touched={touched}
                           errors={errors}
                         />
+                        <HStack spacing={1} justify="center">
+                          <Text color="black.500" size="xs">
+                            By creating an account, I agree to the{" "}
+                          </Text>
+                          <Link to="/sign-in">
+                            <Text color="brand.500" size="xs">
+                              Terms
+                            </Text>
+                          </Link>
+                          <Text color="black.500" size="xs">
+                            &
+                          </Text>
+                          <Link to="/sign-in">
+                            <Text color="brand.500" size="xs">
+                              Privacy Policy
+                            </Text>
+                          </Link>
+                        </HStack>
                       </Stack>
                       <Stack spacing="6">
                         <Button
@@ -241,6 +280,16 @@ const SignUp = (): JSX.Element => {
                         >
                           Sign up
                         </Button>
+                        <HStack spacing={1} justify="center">
+                          <Text color="black.500" size="xs">
+                            Do you have an account?{" "}
+                          </Text>
+                          <Link to="/sign-in">
+                            <Text color="brand.500" size="xs">
+                              Sign In
+                            </Text>
+                          </Link>
+                        </HStack>
                       </Stack>
                     </Stack>
                   </Box>
