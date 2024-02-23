@@ -27,6 +27,8 @@ module Reports
       case type.to_sym
       when :workspace_activity
         generate_workspace_activity_report
+      else
+        raise ArgumentError, "Invalid type: #{type}"
       end
     end
 

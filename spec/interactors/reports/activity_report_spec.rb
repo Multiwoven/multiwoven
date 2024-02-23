@@ -37,6 +37,14 @@ RSpec.describe Reports::ActivityReport do
         expect(total_sync_run_rows[0]["failed_count"]).to eq(1)
       end
     end
+
+    context "with invalide type" do
+      it "raises an error" do
+        expect do
+          described_class.call(type: "invalid", metric: "total_sync_run_rows", connector_id: 1, time_period: "one_week")
+        end.to raise_error(ArgumentError)
+      end
+    end
   end
 
   describe "private methods" do
