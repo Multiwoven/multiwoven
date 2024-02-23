@@ -194,7 +194,7 @@ const SignIn = (): JSX.Element => {
                       <Heading size="xs" fontWeight="semibold">
                         Let's activate your data
                       </Heading>
-                      <Text>Sign In to your Multiwoven account</Text>
+                      <Text size="sm">Sign In to your Multiwoven account</Text>
                     </Stack>
                     <Stack spacing="6">
                       <Stack spacing="3">
