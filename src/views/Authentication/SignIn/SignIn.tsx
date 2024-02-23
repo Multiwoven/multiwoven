@@ -171,24 +171,26 @@ const SignIn = (): JSX.Element => {
             <Form>
               <Container width={{ base: "400px", sm: "500px" }} py="6">
                 <Stack spacing="8">
-                  <Stack spacing="6" alignItems={"center"}>
-                    <Box
-                      bgColor="brand.400"
-                      h="80px"
-                      w="80px"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      borderRadius="11px"
-                    >
-                      <Image src={MultiwovenIcon} width="45px" />
-                    </Box>
-                  </Stack>
+                  <Box
+                    bgColor="brand.400"
+                    h="80px"
+                    w="80px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius="11px"
+                    position="fixed"
+                    left="48%"
+                    top="19%"
+                  >
+                    <Image src={MultiwovenIcon} width="45px" />
+                  </Box>
                   <Box
                     padding="20px"
                     borderRadius="xl"
                     border="2px"
                     borderColor="gray.400"
+                    paddingTop="60px"
                   >
                     <Stack spacing="8px" textAlign="center" mb="32px">
                       <Heading size="xs" fontWeight="semibold">
