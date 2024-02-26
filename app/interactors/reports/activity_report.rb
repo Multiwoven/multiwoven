@@ -48,6 +48,9 @@ module Reports
       @workspace_activities = fetch_activities(params[:created_at])
       filter_activity(params[:connector_id]) if params[:connector_id].present?
       context.workspace_activity = send(params[:metric])
+      context.workspace_activity = {
+        data: send(params[:metric])
+      }
     end
 
     def fetch_activities(created_at)
