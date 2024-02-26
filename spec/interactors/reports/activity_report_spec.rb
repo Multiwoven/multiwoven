@@ -18,19 +18,22 @@ RSpec.describe Reports::ActivityReport do
         result = described_class.call(report_params)
 
         expect(result.success?).to eq(true)
-        expect(result.workspace_activity)
-        expect(result.workspace_activity).to include(
+        workspace_activity = result.workspace_activity.with_indifferent_access
+        expect(workspace_activity)
+
+        expect(workspace_activity[:data]).to include(
           sync_run_triggered: a_kind_of(Array),
           total_sync_run_rows: a_kind_of(Array)
         )
-        sync_run_triggered = result.workspace_activity.with_indifferent_access[:sync_run_triggered]
+        sync_run_triggered = workspace_activity[:data][:sync_run_triggered]
+
         expect(sync_run_triggered.count).to eq(1)
         expect(sync_run_triggered[0]["time_slice"]).not_to be_nil
         expect(sync_run_triggered[0]["total_count"]).to eq(1)
         expect(sync_run_triggered[0]["success_count"]).to eq(0)
         expect(sync_run_triggered[0]["failed_count"]).to eq(1)
 
-        total_sync_run_rows = result.workspace_activity.with_indifferent_access[:total_sync_run_rows]
+        total_sync_run_rows = workspace_activity[:data][:total_sync_run_rows]
         expect(total_sync_run_rows.count).to eq(1)
         expect(total_sync_run_rows[0]["time_slice"]).not_to be_nil
         expect(total_sync_run_rows[0]["total_count"]).to eq(2)

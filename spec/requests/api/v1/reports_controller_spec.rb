@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
       it "returns success and time slices " do
         get "/api/v1/reports?type=workspace_activity", headers: auth_headers(user)
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body).with_indifferent_access
+        response_hash = JSON.parse(response.body).with_indifferent_access[:data]
         expect(response_hash).to include(
           sync_run_triggered: a_kind_of(Array),
           total_sync_run_rows: a_kind_of(Array)

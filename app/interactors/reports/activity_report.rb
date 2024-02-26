@@ -4,6 +4,8 @@ module Reports
   class ActivityReport
     include Interactor
 
+    attr_accessor :workspace_activities, :interval
+
     SLICE_SIZE = 30
 
     TIME_PERIODS = {
