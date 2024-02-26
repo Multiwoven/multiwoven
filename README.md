@@ -97,7 +97,10 @@ Follow the steps [here](https://github.com/Multiwoven/multiwoven-server/tree/mai
 
 ## Contributing
 
-The contribution documentation is available [here](https://github.com/Multiwoven/multiwoven-ui/blob/main/CONTRIBUTING.md)
+We ❤️ contributions and feedback! Help make Multiwoven better for everyone!
+
+Before contributing to Multiwoven, please read our [Code of Conduct](https://github.com/Multiwoven/multiwoven/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/Multiwoven/multiwoven-ui/blob/main/CONTRIBUTING.md). As a contributor, you are expected to adhere to these guidelines and follow the best practices.
+
 
 ## Need Help?
 
@@ -105,4 +108,4 @@ We are always here to help you. If you have any questions or need help with Mult
 
 ## License
 
-Multiwoven is open-source under the GNU Affero General Public License Version 3 (AGPLv3) or any later version.
+Multiwoven Server © 2023 Multiwoven Inc. Released under the [GNU Affero General Public License v3.0](https://github.com/Multiwoven/multiwoven/blob/main/LICENSE).
