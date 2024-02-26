@@ -4,9 +4,18 @@ require "rails_helper"
 
 RSpec.describe Reports::ActivityReport do
   let(:workspace) { create(:workspace) }
-  let(:sync_run) { create(:sync_run, workspace:, total_rows: 3, successful_rows: 2, failed_rows: 1, error: "failed") }
+  let(:source) do
+    create(:connector, connector_type: "source", connector_name: "Snowflake")
+  end
+  let(:destination) { create(:connector, connector_type: "destination") }
+  let!(:catalog) { create(:catalog, connector: destination) }
+  let!(:sync) { create(:sync, source:, destination:) }
+
+  let(:sync_run) do
+    create(:sync_run, sync:, workspace:, total_rows: 3, successful_rows: 2, failed_rows: 1, error: "failed")
+  end
   let!(:sync_run_sucess) do
-    create(:sync_run, workspace:, total_rows: 1, successful_rows: 1, failed_rows: 0, error: nil)
+    create(:sync_run, sync:, workspace:, total_rows: 1, successful_rows: 1, failed_rows: 0, error: nil)
   end
 
   let(:connector_id) { sync_run.source_id }

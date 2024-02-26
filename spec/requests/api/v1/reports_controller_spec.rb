@@ -3,31 +3,33 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::ReportsController", type: :request do
-  let(:workspace) { create(:workspace) }
-  let(:user) { workspace.workspace_users.first.user }
-  let(:connectors) do
+  let!(:workspace) { create(:workspace) }
+  let!(:user) { workspace.workspace_users.first.user }
+  let!(:connectors) do
     [
       create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo"),
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
-  let(:model) do
+
+  before do
+    create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
+    create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
+  end
+
+  let!(:model) do
     create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
 
-  let!(:syncs) do
-    [
-      create(:sync, workspace:, model:, source: connectors.second, destination: connectors.first)
-    ]
-  end
+  let!(:sync) { create(:sync, workspace:, model:, source: connectors.second, destination: connectors.first) }
 
   let!(:sync_runs) do
     [
-      create(:sync_run, workspace:, model:, source: connectors.second, destination: connectors.first,
+      create(:sync_run, workspace:, model:, sync:,
                         total_rows: 2, successful_rows: 1, failed_rows: 1, error: "failed"),
-      create(:sync_run, workspace:, model:, source: connectors.second, destination: connectors.first,
+      create(:sync_run, workspace:, model:, sync:,
                         total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil),
-      create(:sync_run, workspace:, model:, source: connectors.second, destination: connectors.first,
+      create(:sync_run, workspace:, model:, sync:,
                         total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil)
     ]
   end
