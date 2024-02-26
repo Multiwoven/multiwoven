@@ -9,8 +9,6 @@
 <p align="center">
    <a href="https://github.com/Multiwoven/multiwoven"><img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
    <a href="https://github.com/Multiwoven/multiwoven-server/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL-blue.svg" alt="AGPL License"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml"><img src="https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml/badge.svg" alt="Docker Build"></a><br />
   <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability" alt="Maintainability"></a>
   <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage" alt="Test Coverage"></a>
 </p>
@@ -26,9 +24,9 @@
   <br/>
   <a href="https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g">Slack</a>
     ·
-    <a href="https://github.com/Multiwoven/multiwoven-server/issues/new">Report Bug</a>
+    <a href="https://github.com/Multiwoven/multiwoven-ui/issues/new">Report Bug</a>
     ·
-    <a href="https://github.com/Multiwoven/multiwoven-server/issues/new">Request Feature</a>
+    <a href="https://github.com/Multiwoven/multiwoven-ui/issues/new">Request Feature</a>
     ·
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
 </p>
@@ -100,7 +98,6 @@ Follow the steps [here](https://github.com/Multiwoven/multiwoven-server/tree/mai
 We ❤️ contributions and feedback! Help make Multiwoven better for everyone!
 
 Before contributing to Multiwoven, please read our [Code of Conduct](https://github.com/Multiwoven/multiwoven/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/Multiwoven/multiwoven-ui/blob/main/CONTRIBUTING.md). As a contributor, you are expected to adhere to these guidelines and follow the best practices.
-
 
 ## Need Help?
 
