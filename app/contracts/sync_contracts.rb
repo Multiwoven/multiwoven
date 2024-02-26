@@ -25,7 +25,9 @@ module SyncContracts
         required(:sync_interval_unit).filled(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
-        required(:configuration).filled(:hash)
+
+        # update filled with validating array of hashes
+        required(:configuration).filled
       end
     end
 
@@ -55,7 +57,9 @@ module SyncContracts
         optional(:status).filled(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
-        optional(:configuration).filled(:hash)
+
+        # update filled with validating array of hashes
+        optional(:configuration).filled
       end
     end
 
@@ -76,5 +80,9 @@ module SyncContracts
     params do
       required(:id).filled(:integer)
     end
+  end
+
+  class Configurations < Dry::Validation::Contract
+    params {}
   end
 end

@@ -11,6 +11,12 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
+
+  before do
+    create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
+    create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
+  end
+
   let(:model) do
     create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
@@ -134,6 +140,18 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response).to have_http_status(:bad_request)
       end
     end
+
+    context "when stream name is not present" do
+      it "creates a new sync and returns success" do
+        error_message = "Add a valid stream_name associated with destination connector"
+        request_body[:sync][:stream_name] = "random"
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+
+        result = JSON.parse(response.body)
+        expect(result["errors"][0]["source"]["stream_name"]).to eq(error_message)
+      end
+    end
   end
 
   describe "PUT /api/v1/syncs - Update sync" do
@@ -207,6 +225,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         delete "/api/v1/syncs/999", headers: auth_headers(user)
         expect(response).to have_http_status(:not_found)
       end
+    end
+  end
+
+  describe "#configurations" do
+    it "returns the configurations" do
+      get "/api/v1/syncs/configurations", headers: auth_headers(user)
+
+      result = JSON.parse(response.body).with_indifferent_access
+      expect(result[:data].keys.last).to eq("configurations")
     end
   end
 end

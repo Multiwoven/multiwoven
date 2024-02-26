@@ -9,6 +9,11 @@ RSpec.describe Syncs::CreateSync do
   let(:model) { create(:model, workspace:, connector: source) }
   let(:sync) { build(:sync, workspace:, source:, destination:, model:) }
 
+  before do
+    create(:catalog, connector: source)
+    create(:catalog, connector: destination)
+  end
+
   context "with valid params" do
     it "creates a sync" do
       result = described_class.call(

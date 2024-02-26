@@ -9,6 +9,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require "rspec/rails"
 require "support/auth_helper"
 require "temporal/testing"
+require "timecop"
 
 Temporal::Testing.local!
 # Add additional requires below this line. Rails is not loaded until this point!
