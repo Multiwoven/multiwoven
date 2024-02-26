@@ -27,6 +27,7 @@ class Sync < ApplicationRecord
   validates :sync_interval_unit, presence: true
   validates :stream_name, presence: true
   validates :status, presence: true
+  validate :stream_name_exists?
 
   enum :schedule_type, %i[manual automated]
   enum :status, %i[healthy failed aborted in_progress disabled]
@@ -89,5 +90,15 @@ class Sync < ApplicationRecord
     )
   rescue StandardError => e
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+  end
+
+  def stream_name_exists?
+    return if destination.blank?
+
+    stream = destination.catalog.find_stream_by_name(stream_name)
+    return if stream.present?
+
+    errors.add(:stream_name,
+               "Add a valid stream_name associated with destination connector")
   end
 end

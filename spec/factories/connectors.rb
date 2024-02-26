@@ -22,7 +22,7 @@ FactoryBot.define do
       { "public_api_key" => "config_v", "private_api_key" => "config_value_2" }
     end
     name { Faker::Name.name }
-    connector_name { "klaviyo" }
+    connector_name { "Klaviyo" }
 
     to_create { |instance| instance.save(validate: false) }
   end

@@ -27,6 +27,7 @@ gem "dry-validation"
 gem "jbuilder"
 gem "jwt"
 gem "kaminari"
+gem "liquid"
 gem "rack-cors"
 
 # AuthN & AuthZ
@@ -52,6 +53,7 @@ group :development, :test do
   gem "shoulda-matchers", "~> 5.0"
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
+  gem "timecop"
 end
 
 # Development Environment

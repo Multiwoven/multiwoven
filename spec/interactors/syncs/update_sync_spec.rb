@@ -9,6 +9,11 @@ RSpec.describe Syncs::UpdateSync do
   let(:model) { create(:model, workspace:, connector: source) }
   let(:sync) { create(:sync, status: 0, workspace:, source:, destination:, model:) }
 
+  before do
+    create(:catalog, connector: source)
+    create(:catalog, connector: destination)
+  end
+
   context "with valid params" do
     it "updates sync" do
       expect(sync.status).to eql("healthy")

@@ -6,6 +6,7 @@ module Activities
       start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
       heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "120").to_i
     )
+
     retry_policy(
       interval: (ENV["TEMPORAL_ACTIVITY_RETRY_INTERVAL_IN_SEC"] || "1").to_i,
       backoff: (ENV["TEMPORAL_ACTIVITY_RETRY_BACK_OFF"] || "1").to_i,
@@ -13,6 +14,7 @@ module Activities
       # TODO: non_retriable_errors
       # non_retriable_errors: [TerminalGuess]
     )
+
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
