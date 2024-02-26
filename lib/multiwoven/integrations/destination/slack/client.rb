@@ -19,7 +19,7 @@ module Multiwoven
           end
 
           def discover(_connection_config = nil)
-            catalog = build_catalog(load_catalog_streams)
+            catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
             handle_exception("SLACK:DISCOVER:EXCEPTION", "error", e)
@@ -97,20 +97,8 @@ module Multiwoven
             ConnectionStatus.new(status: ConnectionStatusType["failed"], message: error.message).to_multiwoven_message
           end
 
-          def load_catalog_streams
-            catalog_json = read_json(CATALOG_SPEC_PATH)
-            catalog_json["streams"].map { |stream| build_stream(stream) }
-          end
-
-          def build_stream(stream)
-            Multiwoven::Integrations::Protocol::Stream.new(
-              name: stream["name"], json_schema: stream["json_schema"],
-              action: stream["action"]
-            )
-          end
-
-          def build_catalog(streams)
-            Multiwoven::Integrations::Protocol::Catalog.new(streams: streams)
+          def load_catalog
+            read_json(CATALOG_SPEC_PATH)
           end
 
           def tracking_message(success, failure)

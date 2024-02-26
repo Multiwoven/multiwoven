@@ -7,7 +7,7 @@ module Multiwoven
         stream = sync_config.stream
 
         @queue ||= Limiter::RateQueue.new(stream.request_rate_limit, interval: stream.rate_limit_unit_seconds) do
-          puts "Hit the limit, waiting"
+          Integrations::Service.logger.info("Hit the limit for stream: #{stream.name}, waiting")
         end
 
         @queue.shift

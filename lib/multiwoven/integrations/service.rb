@@ -3,11 +3,10 @@
 module Multiwoven
   module Integrations
     class Service
+      def initialize
+        yield(self.class.config) if block_given?
+      end
       class << self
-        def initialize
-          yield(config) if block_given?
-        end
-
         def connectors
           {
             source: build_connectors(

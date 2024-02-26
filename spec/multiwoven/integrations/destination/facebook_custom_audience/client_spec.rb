@@ -96,10 +96,18 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
       message = client.discover
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit_unit).to eql("minute")
+      expect(catalog.request_rate_concurrency).to eql(10)
+
       expect(catalog.streams.first.name).to eq("audience")
       expect(catalog.streams.first.request_method).to eql("POST")
       expect(catalog.streams.first.batch_support).to eql(true)
       expect(catalog.streams.first.batch_size).to eql(10_000)
+
+      expect(catalog.streams.first.request_rate_limit).to eql(0)
+      expect(catalog.streams.first.request_rate_limit_unit).to eql("minute")
+      expect(catalog.streams.first.request_rate_concurrency).to eql(0)
     end
   end
 

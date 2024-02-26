@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
+RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
 
   before(:each) do
@@ -85,6 +85,22 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do
         expect(response.connection_status.status).to eq("failed")
         expect(response.connection_status.message).to eq("not_authed")
       end
+    end
+  end
+
+  describe "#discover" do
+    it "returns a catalog" do
+      message = client.discover
+      catalog = message.catalog
+      expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+      expect(catalog.request_rate_limit).to eql(60)
+      expect(catalog.request_rate_limit_unit).to eql("minute")
+      expect(catalog.request_rate_concurrency).to eql(10)
+
+      message_stream = catalog.streams.first
+      expect(message_stream.request_rate_limit).to eql(60)
+      expect(message_stream.request_rate_limit_unit).to eql("minute")
+      expect(message_stream.request_rate_concurrency).to eql(1)
     end
   end
 

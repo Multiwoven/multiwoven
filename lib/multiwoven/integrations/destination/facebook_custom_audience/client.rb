@@ -25,23 +25,7 @@ module Multiwoven::Integrations::Destination
 
       def discover(_connection_config = nil)
         catalog_json = read_json(CATALOG_SPEC_PATH)
-
-        streams = catalog_json["streams"].map do |stream|
-          Multiwoven::Integrations::Protocol::Stream.new(
-            url: stream["url"],
-            name: stream["name"],
-            json_schema: stream["json_schema"],
-            request_method: stream["method"],
-            action: stream["action"],
-            batch_support: stream["batch_support"],
-            batch_size: stream["batch_size"]
-          )
-        end
-
-        catalog = Multiwoven::Integrations::Protocol::Catalog.new(
-          streams: streams
-        )
-
+        catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
         handle_exception(

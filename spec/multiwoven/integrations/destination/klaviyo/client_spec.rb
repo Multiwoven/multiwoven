@@ -84,10 +84,16 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
       message = subject.discover
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit_unit).to eql("minute")
+      expect(catalog.request_rate_concurrency).to eql(10)
 
       profile_stream = catalog.streams.first
       expect(profile_stream.url).to eql("https://a.klaviyo.com/api/profiles")
       expect(profile_stream.request_method).to eql("POST")
+      expect(profile_stream.request_rate_limit).to eql(0)
+      expect(profile_stream.request_rate_limit_unit).to eql("minute")
+      expect(profile_stream.request_rate_concurrency).to eql(0)
     end
   end
 

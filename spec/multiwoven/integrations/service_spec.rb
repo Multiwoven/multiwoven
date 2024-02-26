@@ -3,7 +3,7 @@
 RSpec.describe Multiwoven::Integrations::Service do
   describe ".initialize" do
     it "yields with config object" do
-      expect { |b| described_class.initialize(&b) }.to yield_with_args(Multiwoven::Integrations::Config)
+      expect { |b| described_class.new(&b) }.to yield_with_args(Multiwoven::Integrations::Config)
     end
   end
 
