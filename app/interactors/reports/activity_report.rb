@@ -72,14 +72,15 @@ module Reports
       return [] unless @workspace_activities
 
       total_grouped = @workspace_activities.group_by_minute(:created_at, n: @interval).count
-      error_grouped = @workspace_activities.where.not(error: nil).group_by_minute(:created_at, n: @interval).count
+      failed_grouped = @workspace_activities.where.not(error: nil).group_by_minute(:created_at, n: @interval).count
+      success_grouped = @workspace_activities.where(error: nil).group_by_minute(:created_at, n: @interval).count
 
       total_grouped.map do |time_interval, total_count|
         {
           time_slice: time_interval,
           total_count:,
-          failed_count: error_grouped[time_interval].to_i,
-          success_count: total_count - error_grouped[time_interval].to_i
+          failed_count: failed_grouped[time_interval].to_i,
+          success_count: success_grouped[time_interval].to_i
         }
       end
     end
@@ -95,8 +96,8 @@ module Reports
         {
           time_slice: time_interval,
           total_count:,
-          failed_count: successful_group_data[time_interval].to_i,
-          success_count: total_count - failed_group_data[time_interval].to_i
+          failed_count: failed_group_data[time_interval].to_i,
+          success_count: successful_group_data[time_interval].to_i
         }
       end
     end

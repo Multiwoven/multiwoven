@@ -4,7 +4,11 @@ require "rails_helper"
 
 RSpec.describe Reports::ActivityReport do
   let(:workspace) { create(:workspace) }
-  let(:sync_run) { create(:sync_run, workspace:, total_rows: 2, successful_rows: 1, failed_rows: 1, error: "failed") }
+  let(:sync_run) { create(:sync_run, workspace:, total_rows: 3, successful_rows: 2, failed_rows: 1, error: "failed") }
+  let!(:sync_run_sucess) do
+    create(:sync_run, workspace:, total_rows: 1, successful_rows: 1, failed_rows: 0, error: nil)
+  end
+
   let(:connector_id) { sync_run.source_id }
   let(:start_time) { 1.week.ago.beginning_of_day }
   let(:end_time) { Time.zone.now }
@@ -29,15 +33,15 @@ RSpec.describe Reports::ActivityReport do
 
         expect(sync_run_triggered.count).to eq(1)
         expect(sync_run_triggered[0]["time_slice"]).not_to be_nil
-        expect(sync_run_triggered[0]["total_count"]).to eq(1)
-        expect(sync_run_triggered[0]["success_count"]).to eq(0)
+        expect(sync_run_triggered[0]["total_count"]).to eq(2)
+        expect(sync_run_triggered[0]["success_count"]).to eq(1)
         expect(sync_run_triggered[0]["failed_count"]).to eq(1)
 
         total_sync_run_rows = workspace_activity[:data][:total_sync_run_rows]
         expect(total_sync_run_rows.count).to eq(1)
         expect(total_sync_run_rows[0]["time_slice"]).not_to be_nil
-        expect(total_sync_run_rows[0]["total_count"]).to eq(2)
-        expect(total_sync_run_rows[0]["success_count"]).to eq(1)
+        expect(total_sync_run_rows[0]["total_count"]).to eq(4)
+        expect(total_sync_run_rows[0]["success_count"]).to eq(3)
         expect(total_sync_run_rows[0]["failed_count"]).to eq(1)
       end
     end
