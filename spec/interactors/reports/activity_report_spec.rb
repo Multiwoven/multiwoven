@@ -9,6 +9,7 @@ RSpec.describe Reports::ActivityReport do
   let(:start_time) { 1.week.ago.beginning_of_day }
   let(:end_time) { Time.zone.now }
   let(:interval) { (((end_time - start_time) / 60) / Reports::ActivityReport::SLICE).to_i }
+  let(:created_at) { start_time..end_time }
 
   describe "#call" do
     context "when type is workspace_activity" do
@@ -51,9 +52,9 @@ RSpec.describe Reports::ActivityReport do
     let(:report_params) { { workspace:, type: "workspace_activity", connector_id: } }
     let(:result) { described_class.new(report_params) }
 
-    describe "#fetch_sync_activity" do
-      it "fetches sync activity within specified time range" do
-        sync_activity = result.send(:fetch_sync_activity, start_time, end_time)
+    describe "#fetch_activities" do
+      it "fetch sync activities within specified time range" do
+        sync_activity = result.send(:fetch_activities, created_at)
         expect(sync_activity).not_to be_empty
         expect(sync_activity.pluck(:workspace_id).uniq).to eq([workspace.id])
       end
