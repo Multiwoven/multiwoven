@@ -12,7 +12,6 @@ We welcome contributions to Multiwoven-UI! This document provides guidelines for
 - [Requesting Enhancements](#requesting-enhancements)
 - [Development Process](#development-process)
 - [Testing](#testing)
-- [Style Guide](#style-guide)
 - [Community and Support](#community-and-support)
 
 ## Code of Conduct
@@ -53,7 +52,8 @@ git push origin feature/my-new-feature
 - **Describe Your Changes** : Provide a clear and detailed description of what your changes do, why you chose this solution, and any alternative solutions you considered. 
 - **Update Documentation** : If your changes require it, update the documentation accordingly. 
 - **Follow the Style Guide** : Make sure your contributions adhere to our style guidelines. 
-- **Pass All Tests** : Ensure that your code passes all the tests.
+- **Follow the Commit Guideline** : Make sure your commit messages are as per our [commit guidelines](https://docs.multiwoven.com/community-support/commit-message-guidelines).
+- **Write Tests** : Ensure that there are unit tests for your changes and all the tests pass.
 
 ## Reporting Bugs
 
@@ -69,7 +69,7 @@ For feature requests:
 
 ## Development Process
 
-We use a standard fork and pull request workflow. Work on your forked repository, and when you're ready to contribute back, submit a pull request.
+We use a standard fork and pull request workflow. Work on your forked repository, and when you're ready to contribute back, submit a pull request to the remote develop branch.
 
 ## Testing 
 
@@ -77,13 +77,10 @@ We use a standard fork and pull request workflow. Work on your forked repository
 - **Run Tests** : Ensure all tests pass before submitting a pull request:
 
 ```bash
-npm test
+npm run test
 ```
-## Style Guide
-
-Refer to our [Style Guide](https://docs.multiwoven.com) for coding standards and practices. This includes guidelines for JavaScript/TypeScript, CSS, and Chakra UI.
 
 ## Community and Support 
 
-- **Join the Conversation** : Participate in discussions on our [Community Forums]() . 
+- **Join the Conversation** : We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 - **Stay Informed** : Follow project updates and announcements.

@@ -45,7 +45,7 @@ describe("SignUp Component", () => {
     });
 
     // click on sign up
-    fireEvent.click(getByText("Sign up"));
+    fireEvent.click(getByText("Create Account"));
 
     // Verify the expected outcome after the API call
     await waitFor(() => {
