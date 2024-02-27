@@ -1,5 +1,5 @@
-import { ModelEntity } from "@/views/Models/types";
-import { RJSFSchema } from "@rjsf/utils";
+import { ModelEntity } from '@/views/Models/types';
+import { RJSFSchema } from '@rjsf/utils';
 
 export type Stream = {
   action: string;
@@ -19,7 +19,7 @@ export type DiscoverResponse = {
       };
     };
     id: string;
-    type: "catalogs";
+    type: 'catalogs';
   };
 };
 
@@ -32,7 +32,7 @@ export type ConfigSync = {
   source_id: string;
   destination_id: string;
   model_id: string;
-  schedule_type: "automated";
+  schedule_type: 'automated';
   configuration: Record<string, string>;
   stream_name: string;
 };
@@ -47,6 +47,10 @@ export type CreateSyncPayload = {
   sync: SyncEntity;
 };
 
+export type ErrorResponse = {
+  errors: { detail: string }[];
+};
+
 export type CreateSyncResponse = {
   attributes: {
     created_at: Date;
@@ -54,13 +58,13 @@ export type CreateSyncResponse = {
     configuration: Record<string, string>;
     destination_id: number;
     model_id: number;
-    schedule_type: "automated";
+    schedule_type: 'automated';
     source_id: string;
     status: string;
     stream_name: string;
     sync_interval: number;
-    sync_interval_unit: "minutes";
-    sync_mode: "full_refresh";
+    sync_interval_unit: 'minutes';
+    sync_mode: 'full_refresh';
     source: {
       connector_name: string;
       icon: string;
@@ -76,14 +80,14 @@ export type CreateSyncResponse = {
     model: ModelEntity;
   };
   id: string;
-  type: "syncs";
+  type: 'syncs';
 };
 
 export type SyncColumnFields =
-  | "model"
-  | "destination"
-  | "lastUpdated"
-  | "status";
+  | 'model'
+  | 'destination'
+  | 'lastUpdated'
+  | 'status';
 
 export type SyncColumnEntity = {
   key: SyncColumnFields;
@@ -92,8 +96,8 @@ export type SyncColumnEntity = {
 
 export type FinalizeSyncFormFields = {
   description?: string;
-  sync_mode: "full_refresh";
+  sync_mode: 'full_refresh';
   sync_interval: number;
-  sync_interval_unit: "minutes";
-  schedule_type: "automated";
+  sync_interval_unit: 'minutes';
+  schedule_type: 'automated';
 };
