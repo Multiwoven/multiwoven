@@ -26,11 +26,14 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
   let!(:sync_runs) do
     [
       create(:sync_run, workspace:, model:, sync:,
-                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: "failed"),
+                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: "failed", source: connectors.second,
+                        destination: connectors.first),
       create(:sync_run, workspace:, model:, sync:,
-                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil),
+                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil, source: connectors.second,
+                        destination: connectors.first),
       create(:sync_run, workspace:, model:, sync:,
-                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil)
+                        total_rows: 2, successful_rows: 1, failed_rows: 1, error: nil, source: connectors.second,
+                        destination: connectors.first)
     ]
   end
 
@@ -44,7 +47,8 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and time slices " do
-        get "/api/v1/reports?type=workspace_activity", headers: auth_headers(user)
+        get "/api/v1/reports?type=workspace_activity&connector_ids[]=#{connectors.first.id}",
+            headers: auth_headers(user)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access[:data]
         expect(response_hash).to include(

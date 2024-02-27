@@ -5,7 +5,7 @@ module ReportContracts
     params do
       required(:type).filled(:string)
       optional(:metric).filled(:string)
-      optional(:connector_id).filled(:integer)
+      optional(:connector_ids).filled(:array).each(:integer)
       optional(:time_period).filled(:string)
     end
 
@@ -23,6 +23,9 @@ module ReportContracts
       unless !key? || Reports::ActivityReport::TIME_PERIODS.keys.include?(value.downcase.to_sym)
         key.failure("invalid time_period. Possible values are 'one_week' or 'one_day'")
       end
+    end
+    rule(:connector_ids) do
+      key.failure("each connector_id must be greater than 0") if value&.any? { |id| id <= 0 }
     end
   end
 end

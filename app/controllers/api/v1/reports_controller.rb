@@ -19,7 +19,7 @@ module Api
       private
 
       def report_params
-        params.permit(:type, :connector_id, :time_period, :metric).merge(workspace: current_workspace)
+        params.permit(:type, :time_period, :metric, connector_ids: []).merge(workspace: current_workspace)
       end
     end
   end

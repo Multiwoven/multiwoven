@@ -11,14 +11,16 @@ RSpec.describe Reports::ActivityReport do
   let!(:catalog) { create(:catalog, connector: destination) }
   let!(:sync) { create(:sync, source:, destination:) }
 
-  let(:sync_run) do
-    create(:sync_run, sync:, workspace:, total_rows: 3, successful_rows: 2, failed_rows: 1, error: "failed")
-  end
-  let!(:sync_run_sucess) do
-    create(:sync_run, sync:, workspace:, total_rows: 1, successful_rows: 1, failed_rows: 0, error: nil)
+  let!(:sync_runs) do
+    [
+      create(:sync_run, sync:, workspace:, total_rows: 3, successful_rows: 2, failed_rows: 1, error: "failed", source:,
+                        destination:),
+      create(:sync_run, sync:, workspace:, total_rows: 1, successful_rows: 1, failed_rows: 0, error: nil, source:,
+                        destination:)
+    ]
   end
 
-  let(:connector_id) { sync_run.source_id }
+  let(:connector_id) { source.id }
   let(:start_time) { 1.week.ago.beginning_of_day }
   let(:end_time) { Time.zone.now }
   let(:interval) { (((end_time - start_time) / 60) / Reports::ActivityReport::SLICE).to_i }
@@ -27,7 +29,7 @@ RSpec.describe Reports::ActivityReport do
   describe "#call" do
     context "when type is workspace_activity" do
       it "generates workspace activity report" do
-        report_params = { workspace:, type: "workspace_activity", connector_id: }
+        report_params = { workspace:, type: "workspace_activity", connector_ids: [connector_id] }
         result = described_class.call(report_params)
 
         expect(result.success?).to eq(true)
@@ -58,14 +60,15 @@ RSpec.describe Reports::ActivityReport do
     context "with invalide type" do
       it "raises an error" do
         expect do
-          described_class.call(type: "invalid", metric: "total_sync_run_rows", connector_id: 1, time_period: "one_week")
+          described_class.call(type: "invalid", metric: "total_sync_run_rows", connector_ids: [1],
+                               time_period: "one_week")
         end.to raise_error(ArgumentError)
       end
     end
   end
 
   describe "private methods" do
-    let(:report_params) { { workspace:, type: "workspace_activity", connector_id: } }
+    let(:report_params) { { workspace:, type: "workspace_activity", connector_ids: [connector_id] } }
     let(:result) { described_class.new(report_params) }
 
     describe "#fetch_activities" do

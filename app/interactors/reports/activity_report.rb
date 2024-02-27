@@ -39,7 +39,7 @@ module Reports
         end_time: Time.zone.now
       }
       params[:created_at] = params[:start_time]..params[:end_time]
-      params[:connector_id] = context.connector_id if params[:connector_id].present?
+      params[:connector_ids] = context.connector_ids if context.connector_ids.present?
       params
     end
 
@@ -48,7 +48,7 @@ module Reports
       @interval = ((params[:end_time] - params[:start_time]) / 60 / SLICE_SIZE).to_i
 
       @workspace_activities = fetch_activities(params[:created_at])
-      filter_activity(params[:connector_id]) if params[:connector_id].present?
+      filter_activity(params[:connector_ids]) if params[:connector_ids].present?
       context.workspace_activity = send(params[:metric])
       context.workspace_activity = {
         data: send(params[:metric])
@@ -59,9 +59,9 @@ module Reports
       scope.sync_runs.where(created_at:)
     end
 
-    def filter_activity(connector_id)
-      @workspace_activities = @workspace_activities.where("source_id = :connector_id OR destination_id = :connector_id",
-                                                          connector_id:)
+    def filter_activity(connector_ids)
+      @workspace_activities = @workspace_activities.where("source_id IN (:connector_ids) OR
+        destination_id IN (:connector_ids)", connector_ids:)
     end
 
     def scope

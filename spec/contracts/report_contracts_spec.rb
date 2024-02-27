@@ -10,7 +10,7 @@ RSpec.describe ReportContracts::Index do
       {
         type: Reports::ActivityReport::TYPE[:workspace_activity],
         metric: Reports::ActivityReport::METRICS[:total_sync_run_rows],
-        connector_id: 1,
+        connector_ids: [1],
         time_period: Reports::ActivityReport::TIME_PERIODS[:one_week]
       }
     end
@@ -24,7 +24,7 @@ RSpec.describe ReportContracts::Index do
     let(:invalid_params) do
       {
         metric: Reports::ActivityReport::METRICS[:total_sync_run_rows],
-        connector_id: 1,
+        connector_ids: [1],
         time_period: Reports::ActivityReport::TIME_PERIODS[:one_week]
       }
     end
