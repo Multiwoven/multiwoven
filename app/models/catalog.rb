@@ -27,13 +27,28 @@ class Catalog < ApplicationRecord
 
   def stream_to_protocol(stream)
     stream = stream.with_indifferent_access
+
+    if stream["request_rate_limit"]
+      # stream specific rate limit
+      request_rate_limit = stream["request_rate_limit"]
+      request_rate_limit_unit = stream["request_rate_limit_unit"]
+      request_rate_concurrency = stream["request_rate_concurrency"]
+    else
+      # global rate limit
+      request_rate_limit = catalog["request_rate_limit"]
+      request_rate_limit_unit = catalog["request_rate_limit_unit"]
+      request_rate_concurrency = catalog["request_rate_concurrency"]
+    end
     Multiwoven::Integrations::Protocol::Stream.new(
       name: stream[:name],
       url: stream[:url],
       json_schema: stream[:json_schema],
       request_method: stream[:request_method],
       batch_support: stream[:batch_support],
-      batch_size: stream[:batch_size]
+      batch_size: stream[:batch_size],
+      request_rate_limit:,
+      request_rate_limit_unit:,
+      request_rate_concurrency:
     )
   end
 end

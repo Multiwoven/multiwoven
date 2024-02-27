@@ -49,7 +49,15 @@ RSpec.describe Sync, type: :model do
     end
 
     let(:destination) { create(:connector, connector_type: "destination") }
-    let!(:catalog) { create(:catalog, connector: destination, catalog: { "streams" => streams }) }
+    let!(:catalog) do
+      create(:catalog, connector: destination,
+                       catalog: {
+                         "request_rate_limit" => 60,
+                         "request_rate_limit_unit" => "minute",
+                         "request_rate_concurrency" => 2,
+                         "streams" => streams
+                       })
+    end
 
     let(:sync) { create(:sync, destination:) }
 

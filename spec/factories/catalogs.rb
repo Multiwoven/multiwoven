@@ -17,10 +17,15 @@ FactoryBot.define do
     association :workspace
     association :connector
     catalog do
-      { "streams" => [
-        { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
-        { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
-      ] }
+      {
+        "streams" => [
+          { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
+          { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
+        ],
+        "request_rate_limit" => 60,
+        "request_rate_limit_unit" => "minute",
+        "request_rate_concurrency" => 2
+      }
     end
     catalog_hash { 1 }
   end

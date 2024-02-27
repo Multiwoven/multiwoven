@@ -11,6 +11,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     let!(:catalog) do
       create(:catalog, connector: destination,
                        catalog: {
+                         "request_rate_limit" => 60,
+                         "request_rate_limit_unit" => "minute",
+                         "request_rate_concurrency" => 2,
                          "streams" => [{ "name" => "batch", "batch_support" => true, "batch_size" => 10,
                                          "json_schema" => {} },
                                        { "name" => "individual", "batch_support" => false, "batch_size" => 1,
@@ -116,6 +119,13 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         sync_run_individual.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
         end
+      end
+
+      it "request concurrency" do
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
+        expect(Parallel).to receive(:each).with(anything, in_threads: catalog.catalog["request_rate_concurrency"]).once
+        subject.write(sync_run_individual.id, activity)
       end
     end
   end

@@ -26,7 +26,10 @@ module ReverseEtl
           successfull_sync_records = []
           failed_sync_records = []
 
-          Parallel.each(sync_records, in_threads: THREAD_COUNT) do |sync_record|
+          # concurrent request rate limit
+          concurrency = sync_config.stream.request_rate_concurrency || THREAD_COUNT
+
+          Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
             record = transformer.transform(sync, sync_record)
             report = client.write(sync_config, [record]).tracking
 

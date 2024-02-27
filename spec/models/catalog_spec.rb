@@ -46,4 +46,59 @@ RSpec.describe Catalog, type: :model do
       expect(stream).to be_nil
     end
   end
+
+  describe "#to_protocol" do
+    let(:catalog) do
+      Catalog.create(
+        catalog: {
+          "streams" => [
+            {
+              "name" => "test_stream",
+              "url" => "http://example.com",
+              "json_schema" => {},
+              "request_method" => "GET",
+              "batch_support" => false,
+              "batch_size" => 0,
+              "request_rate_limit" => 10,
+              "request_rate_limit_unit" => "minute",
+              "request_rate_concurrency" => 1
+            }
+          ],
+          "request_rate_limit" => 5,
+          "request_rate_limit_unit" => "minute",
+          "request_rate_concurrency" => 2
+        },
+        catalog_hash: "examplehash"
+      )
+    end
+
+    context "with stream specific rate limits" do
+      it "returns a protocol object with stream specific rate limits" do
+        stream = catalog.find_stream_by_name("test_stream")
+        protocol = catalog.stream_to_protocol(stream)
+
+        expect(protocol.name).to eq("test_stream")
+        expect(protocol.url).to eq("http://example.com")
+        expect(protocol.json_schema).to eq({})
+        expect(protocol.request_method).to eq("GET")
+        expect(protocol.batch_support).to be_falsey
+        expect(protocol.batch_size).to eq(0)
+        expect(protocol.request_rate_limit).to eq(10)
+        expect(protocol.request_rate_limit_unit).to eq("minute")
+        expect(protocol.request_rate_concurrency).to eq(1)
+      end
+
+      context "with global rate limits" do
+        it "returns a protocol object with global rate limits" do
+          stream = catalog.catalog["streams"].first.except("request_rate_limit", "request_rate_limit_unit",
+                                                           "request_rate_concurrency")
+          protocol = catalog.stream_to_protocol(stream)
+
+          expect(protocol.request_rate_limit).to eq(5)
+          expect(protocol.request_rate_limit_unit).to eq("minute")
+          expect(protocol.request_rate_concurrency).to eq(2)
+        end
+      end
+    end
+  end
 end

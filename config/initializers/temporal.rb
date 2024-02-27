@@ -10,3 +10,8 @@ Temporal.configure do |config|
   config.task_queue = ENV.fetch('TEMPORAL_TASK_QUEUE', 'sync-dev')
   config.metrics_adapter = Temporal::MetricsAdapters::Log.new(metrics_logger)
 end
+
+
+Multiwoven::Integrations::Service.new do |config|
+  config.logger = Temporal.logger
+end
