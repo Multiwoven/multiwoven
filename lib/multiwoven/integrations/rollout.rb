@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.29"
+    VERSION = "0.1.30"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -16,6 +16,7 @@ module Multiwoven
       SalesforceCrm
       FacebookCustomAudience
       Slack
+      Hubspot
     ].freeze
   end
 end

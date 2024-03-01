@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.29)
+    multiwoven-integrations (0.1.30)
       activesupport
       async-websocket
       dry-schema
@@ -15,6 +15,7 @@ PATH
       dry-types
       git
       google-cloud-bigquery
+      hubspot-api-client
       pg
       rake
       restforce
@@ -95,6 +96,8 @@ GEM
       dry-inflector (~> 1.0)
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
+    ethon (0.16.0)
+      ffi (>= 1.15.0)
     faraday (2.8.1)
       base64
       faraday-net_http (>= 2.0, < 3.1)
@@ -107,6 +110,7 @@ GEM
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
     faraday-net_http (3.0.2)
+    ffi (1.16.3)
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
     git (1.19.1)
@@ -146,6 +150,9 @@ GEM
     hashdiff (1.1.0)
     hashie (5.0.0)
     httpclient (2.8.3)
+    hubspot-api-client (17.2.0)
+      json (~> 2.1, >= 2.1.0)
+      typhoeus (~> 1.4.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -233,6 +240,8 @@ GEM
       hashie
     timers (4.3.5)
     trailblazer-option (0.1.2)
+    typhoeus (1.4.1)
+      ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
@@ -260,6 +269,7 @@ DEPENDENCIES
   dry-types
   git
   google-cloud-bigquery
+  hubspot-api-client
   multiwoven-integrations!
   pg
   rake (~> 13.0)

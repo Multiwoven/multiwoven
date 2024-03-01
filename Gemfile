@@ -39,6 +39,8 @@ gem "async-websocket", "~> 0.8.0"
 
 gem "git"
 
+gem "hubspot-api-client"
+
 gem "ruby-limiter"
 
 group :development, :test do

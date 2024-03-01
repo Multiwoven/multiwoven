@@ -15,6 +15,7 @@ require "logger"
 require "slack-ruby-client"
 require "git"
 require "ruby-limiter"
+require "hubspot-api-client"
 
 # Service
 require_relative "integrations/config"
@@ -42,6 +43,7 @@ require_relative "integrations/destination/klaviyo/client"
 require_relative "integrations/destination/salesforce_crm/client"
 require_relative "integrations/destination/facebook_custom_audience/client"
 require_relative "integrations/destination/slack/client"
+require_relative "integrations/destination/hubspot/client"
 
 module Multiwoven
   module Integrations
