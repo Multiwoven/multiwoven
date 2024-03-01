@@ -7,7 +7,7 @@ FactoryBot.define do
     association :model
     association :source, factory: :connector
     association :destination, factory: :connector
-    status { 1 }
+    status { "pending" }
     started_at { "2024-01-08 01:47:34" }
     finished_at { "2024-01-08 01:47:34" }
     total_rows { 1 }

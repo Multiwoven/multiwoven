@@ -31,7 +31,7 @@ RSpec.describe Sync, type: :model do
   it { should validate_presence_of(:sync_interval_unit) }
 
   it { should define_enum_for(:schedule_type).with_values(manual: 0, automated: 1) }
-  it { should define_enum_for(:status).with_values(healthy: 0, failed: 1, aborted: 2, in_progress: 3, disabled: 4) }
+  it { should define_enum_for(:status).with_values(disabled: 0, healthy: 1, pending: 2, failed: 3, aborted: 4) }
   it { should define_enum_for(:sync_mode).with_values(full_refresh: 0, incremental: 1) }
 
   it { should belong_to(:workspace) }
@@ -160,6 +160,110 @@ RSpec.describe Sync, type: :model do
         sync.last.update(updated_at: DateTime.current - 1.week)
 
         expect(Sync.all).to eq(sync.sort_by(&:updated_at).reverse)
+      end
+    end
+  end
+
+  describe "AASM states" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+
+    it "starts in pending state" do
+      expect(sync).to have_state(:pending)
+    end
+
+    it "transitions from pending to healthy" do
+      expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
+    end
+
+    it "transitions from pending to failed" do
+      expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
+    end
+
+    it "transitions from any state to disabled" do
+      expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
+    end
+
+    it "transitions from any state to disabled" do
+      sync.complete
+      expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+    end
+
+    it "transitions from disabled to pending" do
+      sync.disable
+      expect(sync).to transition_from(:disabled).to(:pending).on_event(:enable)
+    end
+
+    describe "#set_defaults" do
+      let(:new_sync) { Sync.new }
+
+      it "sets default values" do
+        expect(new_sync.status).to eq("pending")
+      end
+    end
+
+    describe "AASM states" do
+      let(:source) do
+        create(:connector, connector_type: "source", connector_name: "Snowflake")
+      end
+      let(:destination) { create(:connector, connector_type: "destination") }
+      let!(:catalog) { create(:catalog, connector: destination) }
+      let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+      context "when transition is allowed" do
+        it "starts in pending state" do
+          expect(sync).to have_state(:pending)
+        end
+
+        it "transitions from pending to healthy" do
+          expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
+          expect(sync).to have_state(:healthy)
+        end
+
+        it "transitions from pending to failed" do
+          expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
+          expect(sync).to have_state(:failed)
+        end
+
+        it "transitions from healthy to failed" do
+          expect(sync).to transition_from(:healthy).to(:failed).on_event(:fail)
+          expect(sync).to have_state(:failed)
+        end
+
+        it "transitions from any healthy to disabled" do
+          expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
+          expect(sync).to have_state(:disabled)
+        end
+
+        it "transitions from any state to disabled" do
+          sync.complete
+          expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+          expect(sync).to have_state(:disabled)
+        end
+      end
+
+      context "when transition is not allowed" do
+        it "does not transition from disable to healthy directly" do
+          sync.complete
+          expect(sync).to have_state(:healthy)
+          expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+          expect(sync).to have_state(:disabled)
+          expect do
+            sync.complete
+          end.to raise_error(AASM::InvalidTransition)
+          expect(sync).to have_state(:disabled)
+        end
+        it "does not transition from healthy to pending directly" do
+          sync.complete
+          expect(sync).to have_state(:healthy)
+          expect do
+            sync.enable
+          end.to raise_error(AASM::InvalidTransition)
+          expect(sync).to have_state(:healthy)
+        end
       end
     end
   end

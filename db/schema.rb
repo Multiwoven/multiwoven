@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_22_110415) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_28_112259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_110415) do
     t.integer "action"
     t.string "primary_key"
     t.integer "status", default: 0
+    t.text "error"
     t.index ["sync_id", "fingerprint"], name: "index_sync_records_on_sync_id_and_fingerprint", unique: true
   end
 
@@ -83,6 +84,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_110415) do
     t.integer "source_id"
     t.integer "destination_id"
     t.integer "model_id"
+    t.integer "total_query_rows"
   end
 
   create_table "syncs", force: :cascade do |t|

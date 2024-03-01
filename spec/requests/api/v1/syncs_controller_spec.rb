@@ -95,7 +95,6 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           destination_id: connectors.first.id,
           model_id: model.id,
           schedule_type: "manual",
-          status: "in_progress",
           configuration: {
             "test": "test"
           },
@@ -130,7 +129,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval_unit))
           .to eq(request_body.dig(:sync, :sync_interval_unit))
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
-        expect(response_hash.dig(:data, :attributes, :status)).to eq(request_body.dig(:sync, :status))
+        expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
       end
 
       it "returns an error response when creation fails" do
@@ -147,7 +146,6 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         request_body[:sync][:stream_name] = "random"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user))
-
         result = JSON.parse(response.body)
         expect(result["errors"][0]["source"]["stream_name"]).to eq(error_message)
       end
@@ -162,7 +160,6 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           destination_id: connectors.first.id,
           model_id: model.id,
           schedule_type: "manual",
-          status: "in_progress",
           configuration: {
             "test": "test"
           },

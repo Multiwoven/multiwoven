@@ -7,7 +7,7 @@ RSpec.describe Syncs::UpdateSync do
   let(:source) { create(:connector, workspace:) }
   let(:destination) { create(:connector, workspace:) }
   let(:model) { create(:model, workspace:, connector: source) }
-  let(:sync) { create(:sync, status: 0, workspace:, source:, destination:, model:) }
+  let(:sync) { create(:sync, status: 1, workspace:, source:, destination:, model:) }
 
   before do
     create(:catalog, connector: source)
@@ -19,7 +19,7 @@ RSpec.describe Syncs::UpdateSync do
       expect(sync.status).to eql("healthy")
       result = described_class.call(
         sync:,
-        sync_params: { status: 1 }
+        sync_params: { status: 3 }
       )
       expect(result.success?).to eq(true)
       expect(result.sync.persisted?).to eql(true)

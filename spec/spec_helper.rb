@@ -3,6 +3,8 @@
 # spec/spec_helper.rb or spec/rails_helper.rb
 require "simplecov"
 require "simplecov_json_formatter"
+require "aasm/rspec"
+
 SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
 SimpleCov.start "rails"
 

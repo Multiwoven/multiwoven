@@ -7,17 +7,26 @@ module ReverseEtl
 
       # TODO: Make it as class method
       def read(sync_run_id, activity)
-        sync_run = setup_sync_run(sync_run_id)
+        total_query_count = 0
+        sync_run = SyncRun.find(sync_run_id)
+
+        return log_error(sync_run) unless sync_run.may_query?
+
+        sync_run.query!
+
         source_client = setup_source_client(sync_run.sync)
 
         batch_query_params = batch_params(source_client, sync_run)
         model = sync_run.sync.model
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
+          total_query_count += records.count
           process_records(records, sync_run, model)
           heartbeat(activity)
           sync_run.update(current_offset:)
         end
+        # change state querying to queued
+        sync_run.queue!
       end
 
       private
@@ -27,18 +36,11 @@ module ReverseEtl
         raise StandardError, "Cancel activity request received" if activity.cancel_requested
       end
 
-      def setup_sync_run(sync_run_id)
-        SyncRun.find(sync_run_id).tap do |sync_run|
-          sync_run.update(status: :in_progress, started_at: DateTime.now)
-        end
-      end
-
       def setup_source_client(sync)
         sync.source.connector_client.new
       end
 
       def process_records(records, sync_run, model)
-        # TODO: parellelize this
         Parallel.each(records, in_threads: THREAD_COUNT) do |message|
           process_record(message, sync_run, model)
         end
@@ -84,6 +86,14 @@ module ReverseEtl
           record: record.data
         )
         sync_record.save!
+      end
+
+      def log_error(sync_run)
+        Temporal.logger.error(
+          eerror_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
+          sync_run_id: sync_run.id,
+          stack_trace: nil
+        )
       end
     end
   end

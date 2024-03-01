@@ -17,7 +17,6 @@ module SyncContracts
     params do
       required(:sync).hash do
         optional(:source_id).filled(:integer)
-        optional(:status).filled(:string)
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
         required(:schedule_type).filled(:string)
@@ -54,7 +53,6 @@ module SyncContracts
         optional(:schedule_type).filled(:string)
         optional(:sync_interval).filled(:integer)
         optional(:sync_interval_unit).filled(:string)
-        optional(:status).filled(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
 

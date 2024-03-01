@@ -5,7 +5,7 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      return unless sync_run.in_progress?
+      return log_error(sync_run) unless sync_run.may_complete?
 
       total_rows, successful_rows, failed_rows = fetch_record_counts(sync_run)
 
@@ -13,9 +13,9 @@ module Activities
         finished_at: Time.zone.now,
         total_rows:,
         successful_rows:,
-        failed_rows:,
-        status: determine_status(failed_rows, total_rows)
+        failed_rows:
       )
+      sync_run.update_success
     end
 
     private
@@ -27,10 +27,12 @@ module Activities
       [total, success, failed]
     end
 
-    def determine_status(failed_rows, total_rows)
-      # TODO: Update status as incomplete if sync run retry exhausted
-      # Sync failure should be marked based on threshold failure percentage
-      failed_rows == total_rows ? :failed : :success
+    def log_error(sync_run)
+      Temporal.logger.error(
+        error_message: "SyncRun cannot complete from its current state: #{sync_run.status}",
+        sync_run_id: sync_run.id,
+        stack_trace: nil
+      )
     end
   end
 end

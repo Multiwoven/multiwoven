@@ -89,7 +89,6 @@ module Api
                                       :destination_id,
                                       :model_id,
                                       :schedule_type,
-                                      :status,
                                       :sync_interval,
                                       :sync_mode,
                                       :sync_interval_unit,
