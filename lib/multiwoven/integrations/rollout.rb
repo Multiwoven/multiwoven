@@ -2,13 +2,14 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.30"
+    VERSION = "0.1.31"
 
     ENABLED_SOURCES = %w[
       Snowflake
       Redshift
       Bigquery
       Postgresql
+      Databricks
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

@@ -37,6 +37,7 @@ require_relative "integrations/source/snowflake/client"
 require_relative "integrations/source/redshift/client"
 require_relative "integrations/source/bigquery/client"
 require_relative "integrations/source/postgresql/client"
+require_relative "integrations/source/databricks/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
