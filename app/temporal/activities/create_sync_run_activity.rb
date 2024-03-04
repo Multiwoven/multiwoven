@@ -4,7 +4,7 @@ module Activities
   class CreateSyncRunActivity < Temporal::Activity
     def execute(sync_id)
       sync = Sync.find(sync_id)
-      sync_run = SyncRun.find_or_initialize_by(sync_id:) do |run|
+      sync_run = SyncRun.find_or_initialize_by(sync_id:, status: :pending) do |run|
         run.workspace_id = sync.workspace_id
         run.source_id = sync.source_id
         run.destination_id = sync.destination_id
