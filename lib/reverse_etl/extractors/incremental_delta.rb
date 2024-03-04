@@ -7,7 +7,7 @@ module ReverseEtl
 
       # TODO: Make it as class method
       def read(sync_run_id, activity)
-        total_query_count = 0
+        total_query_rows = 0
         sync_run = SyncRun.find(sync_run_id)
 
         return log_error(sync_run) unless sync_run.may_query?
@@ -20,10 +20,10 @@ module ReverseEtl
         model = sync_run.sync.model
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
-          total_query_count += records.count
+          total_query_rows += records.count
           process_records(records, sync_run, model)
           heartbeat(activity)
-          sync_run.update(current_offset:)
+          sync_run.update(current_offset:, total_query_rows:)
         end
         # change state querying to queued
         sync_run.queue!
