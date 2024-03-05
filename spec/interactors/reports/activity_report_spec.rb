@@ -27,6 +27,7 @@ RSpec.describe Reports::ActivityReport do
   let(:created_at) { start_time..end_time }
 
   describe "#call" do
+    let(:slice_size) { Reports::ActivityReport::SLICE_SIZE }
     context "when type is workspace_activity" do
       it "generates workspace activity report" do
         report_params = { workspace:, type: "workspace_activity", connector_ids: [connector_id] }
@@ -42,18 +43,18 @@ RSpec.describe Reports::ActivityReport do
         )
         sync_run_triggered = workspace_activity[:data][:sync_run_triggered]
 
-        expect(sync_run_triggered.count).to eq(1)
-        expect(sync_run_triggered[0]["time_slice"]).not_to be_nil
-        expect(sync_run_triggered[0]["total_count"]).to eq(2)
-        expect(sync_run_triggered[0]["success_count"]).to eq(1)
-        expect(sync_run_triggered[0]["failed_count"]).to eq(1)
+        expect(sync_run_triggered.count).to eq(slice_size)
+        expect(sync_run_triggered[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(sync_run_triggered[slice_size - 1]["total_count"]).to eq(2)
+        expect(sync_run_triggered[slice_size - 1]["success_count"]).to eq(1)
+        expect(sync_run_triggered[slice_size - 1]["failed_count"]).to eq(1)
 
         total_sync_run_rows = workspace_activity[:data][:total_sync_run_rows]
-        expect(total_sync_run_rows.count).to eq(1)
-        expect(total_sync_run_rows[0]["time_slice"]).not_to be_nil
-        expect(total_sync_run_rows[0]["total_count"]).to eq(4)
-        expect(total_sync_run_rows[0]["success_count"]).to eq(3)
-        expect(total_sync_run_rows[0]["failed_count"]).to eq(1)
+        expect(total_sync_run_rows.count).to eq(slice_size)
+        expect(total_sync_run_rows[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(4)
+        expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
+        expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(1)
       end
     end
 

@@ -6,7 +6,7 @@ module Reports
 
     attr_accessor :workspace_activities, :interval
 
-    SLICE_SIZE = 30
+    SLICE_SIZE = (ENV["REPORT_TIME_SLICE_SIZE"] || "30").to_i
 
     TIME_PERIODS = {
       one_week: "one_week",
@@ -40,12 +40,14 @@ module Reports
       }
       params[:created_at] = params[:start_time]..params[:end_time]
       params[:connector_ids] = context.connector_ids if context.connector_ids.present?
+      params[:range] = params[:start_time]..params[:end_time]
       params
     end
 
     def workspace_activity
       params = filter_params
-      @interval = ((params[:end_time] - params[:start_time]) / 60 / SLICE_SIZE).to_i
+      total_duration_minutes = (params[:end_time] - params[:start_time]) / 60
+      @interval = (total_duration_minutes / (SLICE_SIZE - 1)).to_i
 
       @workspace_activities = fetch_activities(params[:created_at])
       filter_activity(params[:connector_ids]) if params[:connector_ids].present?
@@ -71,9 +73,16 @@ module Reports
     def sync_run_triggered
       return [] unless @workspace_activities
 
-      total_grouped = @workspace_activities.group_by_minute(:created_at, n: @interval).count
-      failed_grouped = @workspace_activities.where.not(error: nil).group_by_minute(:created_at, n: @interval).count
-      success_grouped = @workspace_activities.where(error: nil).group_by_minute(:created_at, n: @interval).count
+      params = filter_params
+
+      total_grouped = @workspace_activities.group_by_minute(:created_at, n: @interval,
+                                                                         range: params[:range]).count
+      failed_grouped = @workspace_activities.where.not(error: nil).group_by_minute(:created_at, n: @interval,
+                                                                                                range: params[:range])
+                                            .count
+      success_grouped = @workspace_activities.where(error: nil).group_by_minute(:created_at, n: @interval,
+                                                                                             range: params[:range])
+                                             .count
 
       total_grouped.map do |time_interval, total_count|
         {
@@ -88,7 +97,8 @@ module Reports
     def total_sync_run_rows
       return [] unless @workspace_activities
 
-      grouped_data = @workspace_activities.group_by_minute(:created_at, n: @interval)
+      params = filter_params
+      grouped_data = @workspace_activities.group_by_minute(:created_at, n: @interval, range: params[:range])
       successful_group_data = grouped_data.sum(:successful_rows)
       failed_group_data = grouped_data.sum(:failed_rows)
 
