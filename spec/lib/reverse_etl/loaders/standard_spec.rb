@@ -29,8 +29,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     let!(:sync_run_started) do
       create(:sync_run, sync: sync_individual, source:, destination:, status: "started")
     end
-    let!(:sync_record_batch1) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch) }
-    let!(:sync_record_batch2) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch) }
+    let!(:sync_record_batch1) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch, primary_key: "key1") }
+    let!(:sync_record_batch2) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch, primary_key: "key2") }
     let!(:sync_record_individual) { create(:sync_record, sync: sync_individual, sync_run: sync_run_individual) }
     let(:activity) { instance_double("LoaderActivity") }
 

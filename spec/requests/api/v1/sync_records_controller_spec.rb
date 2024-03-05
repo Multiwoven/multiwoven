@@ -18,8 +18,8 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
   end
   let!(:sync_records) do
     [
-      create(:sync_record, sync:, sync_run:, status: "success"),
-      create(:sync_record, sync:, sync_run:, status: "failed")
+      create(:sync_record, sync:, sync_run:, status: "success", primary_key: "key1"),
+      create(:sync_record, sync:, sync_run:, status: "failed", primary_key: "key2")
     ]
   end
 

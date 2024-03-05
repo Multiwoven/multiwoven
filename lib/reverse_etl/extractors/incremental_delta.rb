@@ -64,6 +64,12 @@ module ReverseEtl
       end
 
       def find_or_initialize_sync_record(sync_run, primary_key)
+        # In parallel processing, we encountered a scenario where one thread was processing and had not yet persisted
+        # to the database, while another thread attempted to create a new record with the same primary key
+        # for a synchronization. To prevent this, we used database constraints. However,
+        # in future cases where a synchronization contains both create and update operations,
+        # there might be a risk of losing either the update or the create due to these concurrent operations.
+        # we can use  ActiveRecord::Base.transaction  to prevent such scenarios
         SyncRecord.find_by(sync_id: sync_run.sync_id, primary_key:) ||
           sync_run.sync_records.new(sync_id: sync_run.sync_id, primary_key:, created_at: DateTime.current)
       end
