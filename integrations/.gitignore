@@ -11,3 +11,4 @@
 .rspec_status
 /.byebug_history
 spec/.DS_Store
+.DS_Store

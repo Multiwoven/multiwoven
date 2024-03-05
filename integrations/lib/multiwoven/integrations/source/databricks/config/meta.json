@@ -1,0 +1,16 @@
+{
+    "data": {
+      "name": "Databricks",
+      "title": "Databricks",
+      "connector_type": "source",
+      "category": "Data Warehouse",
+      "documentation_url": "https://docs.mutliwoven.com",
+      "github_issue_label": "source-databricks",
+      "icon": "icon.svg",
+      "license": "MIT",
+      "release_stage": "alpha",
+      "support_level": "community",
+      "tags": ["language:ruby", "multiwoven"]
+    }
+  }
+  

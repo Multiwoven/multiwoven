@@ -1,0 +1,351 @@
+{
+  "request_rate_limit": 600,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "contacts",
+      "action": "create",
+      "json_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "HubSpot CRM",
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "The contact's email address."
+              },
+              "firstname": {
+                "type": "string",
+                "description": "The contact's first name."
+              },
+              "lastname": {
+                "type": "string",
+                "description": "The contact's last name."
+              },
+              "phone": {
+                "type": "string",
+                "description": "The contact's phone number."
+              },
+              "company": {
+                "type": "string",
+                "description": "The contact's company name."
+              },
+              "website": {
+                "type": "string",
+                "format": "uri",
+                "description": "The contact's website URL."
+              },
+              "lifecyclestage": {
+                "type": "string",
+                "description": "The contact's lifecycle stage."
+              }
+            },
+            "additionalProperties": {
+              "type": ["string", "number", "boolean"],
+              "description": "Allows for additional custom properties with basic data types."
+            }
+          },
+          "associations": {
+            "type": "array",
+            "description": "An array of associated objects for the contact.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "to": {
+                  "type": "object",
+                  "required": ["id"],
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique identifier of the associated object."
+                    }
+                  }
+                },
+                "types": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["associationCategory", "associationTypeId"],
+                    "properties": {
+                      "associationCategory": {
+                        "type": "string",
+                        "description": "The category of the association.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED",
+                          "INTEGRATOR_DEFINED"
+                        ]
+                      },
+                      "associationTypeId": {
+                        "type": "integer",
+                        "description": "The unique identifier of the association type."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"]
+    },
+    {
+      "name": "companies",
+      "action": "create",
+      "json_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "associations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "types": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "associationCategory": {
+                              "type": "string",
+                              "enum": [
+                                "HUBSPOT_DEFINED",
+                                "USER_DEFINED",
+                                "INTEGRATOR_DEFINED"
+                              ]
+                            },
+                            "associationTypeId": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "to": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    },
+                    "industry": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["name", "domain"]
+                }
+              },
+              "required": ["properties"]
+            }
+          }
+        },
+        "required": ["inputs"]
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"]
+    },
+    {
+      "name": "deals",
+      "action": "create",
+      "json_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "pattern": "^[0-9]+(\\.[0-9]{1,2})?$"
+              },
+              "closedate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "dealname": {
+                "type": "string"
+              },
+              "pipeline": {
+                "type": "string"
+              },
+              "dealstage": {
+                "type": "string",
+                "enum": [
+                  "appointmentscheduled",
+                  "qualifiedtobuy",
+                  "presentationscheduled",
+                  "decisionmakerboughtin",
+                  "contractsent",
+                  "closedwon",
+                  "closedlost"
+                ]
+              },
+              "hubspot_owner_id": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              }
+            },
+            "required": ["dealname", "pipeline", "dealstage"]
+          },
+          "associations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "to": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": ["id"]
+                },
+                "types": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "associationCategory": {
+                        "type": "string",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED",
+                          "INTEGRATOR_DEFINED"
+                        ]
+                      },
+                      "associationTypeId": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": ["associationCategory", "associationTypeId"]
+                  }
+                }
+              },
+              "required": ["to", "types"]
+            }
+          }
+        },
+        "required": ["properties"]
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"]
+    },
+    {
+      "name": "line_items",
+      "action": "create",
+      "json_schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "price": {
+                "type": "string",
+                "pattern": "^[0-9]+(\\.[0-9]{1,2})?$"
+              },
+              "quantity": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "hs_product_id": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "recurringbillingfrequency": {
+                "type": "string"
+              },
+              "hs_recurring_billing_period": {
+                "type": "string"
+              }
+            },
+            "required": ["name", "price"]
+          },
+          "associations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "to": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": ["id"]
+                },
+                "types": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "associationCategory": {
+                        "type": "string",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED",
+                          "INTEGRATOR_DEFINED"
+                        ]
+                      },
+                      "associationTypeId": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": ["associationCategory", "associationTypeId"]
+                  }
+                }
+              },
+              "required": ["to", "types"]
+            }
+          }
+        },
+        "required": ["properties", "associations"]
+      },
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"]
+    }
+  ]
+}

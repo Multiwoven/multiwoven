@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
 
   before(:each) do
@@ -10,17 +10,13 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
   let(:client) { described_class.new }
   let(:connection_config) do
     {
-      oauth_token: "oauth_token",
-      refresh_token: "refresh_token",
-      instance_url: "https://your-instance-url.salesforce.com",
-      client_id: "client_id",
-      client_secret: "client_secret"
+      access_token: "access_token"
     }
   end
 
-  let(:salesforce_account_json_schema) do
+  let(:hubspot_contacts_json_schema) do
     catalog = client.discover.catalog
-    catalog.streams.find { |stream| stream.name == "Account" }.json_schema
+    catalog.streams.find { |stream| stream.name == "contacts" }.json_schema
   end
 
   let(:sync_config_json) do
@@ -32,7 +28,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
         }
       },
       destination: {
-        name: "Salesforce CRM",
+        name: "Hubspot CRM",
         type: "destination",
         connection_specification: connection_config
       },
@@ -43,9 +39,9 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
         primary_key: "id"
       },
       stream: {
-        name: "Account",
+        name: "contacts",
         action: "create",
-        json_schema: salesforce_account_json_schema
+        json_schema: hubspot_contacts_json_schema
       },
       sync_mode: "full_refresh",
       cursor_field: "timestamp",
@@ -54,8 +50,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
 
   let(:records) do
     [
-      build_record(1, "Account Name 1"),
-      build_record(2, "Account Name 2")
+      build_record("developer@multiwoven.com"),
+      build_record("developer_second@multiwoven.com")
     ]
   end
 
@@ -94,8 +90,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
       message = client.discover
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(100_000)
-      expect(catalog.request_rate_limit_unit).to eql("day")
+      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
 
       account_stream = catalog.streams.first
@@ -108,8 +104,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
   describe "#write" do
     context "when the write operation is successful" do
       before do
-        stub_create_request(1, "Account Name 1", 200)
-        stub_create_request(2, "Account Name 2", 200)
+        stub_create_request("developer@multiwoven.com", 200)
+        stub_create_request("developer_second@multiwoven.com", 200)
       end
 
       it "increments the success count" do
@@ -122,8 +118,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
 
     context "when the write operation fails" do
       before do
-        stub_create_request(1, "Account Name 1", 403)
-        stub_create_request(2, "Account Name 2", 403)
+        stub_create_request("developer@multiwoven.com", 403)
+        stub_create_request("developer_second@multiwoven.com", 403)
       end
 
       it "increments the failure count" do
@@ -137,24 +133,32 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
 
   describe "#meta_data" do
     it "serves it github image url as icon" do
-      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{client.class::MAIN_BRANCH_SHA}/lib/multiwoven/integrations/destination/salesforce_crm/icon.svg"
+      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{client.class::MAIN_BRANCH_SHA}/lib/multiwoven/integrations/destination/hubspot/icon.svg"
       expect(client.send(:meta_data)[:data][:icon]).to eq(image_url)
     end
   end
 
   private
 
-  def build_record(id, name)
-    { "Id": id, "Name": name, NonListedField: "NonListedField Value" }
+  def build_record(email)
+    {
+      "properties": { "email": email }
+    }
   end
 
-  def stub_create_request(id, name, response_code)
-    stub_request(:post, "https://your-instance-url.salesforce.com/services/data/v59.0/sobjects/Account")
+  def stub_create_request(email, response_code)
+    stub_request(:post, "https://api.hubapi.com/crm/v3/objects/contacts")
       .with(
-        body: hash_including("Id" => id, "Name" => name),
-        headers: { "Accept" => "*/*", "Authorization" => "OAuth",
-                   "Content-Type" => "application/json" }
-      ).to_return(status: response_code, body: "", headers: {})
+        body: "{\"properties\":{\"email\":\"#{email}\"}}",
+        headers: {
+          "Accept" => "application/json",
+          "Authorization" => "Bearer access_token",
+          "Content-Type" => "application/json",
+          "Expect" => "",
+          "User-Agent" => "hubspot-api-client-ruby; 17.2.0"
+        }
+      )
+      .to_return(status: response_code, body: "", headers: {})
   end
 
   def sync_config

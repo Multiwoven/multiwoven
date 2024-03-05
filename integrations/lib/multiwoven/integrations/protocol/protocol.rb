@@ -23,6 +23,7 @@ module Multiwoven
       "rate_limit", "connection_config"
     )
     LogLevel = Types::String.enum("fatal", "error", "warn", "info", "debug", "trace")
+    RequestRateLimitingUnit = Types::String.default("minute").enum("minute", "hour", "day")
 
     class ProtocolModel < Dry::Struct
       extend Multiwoven::Integrations::Core::Utils
@@ -108,20 +109,45 @@ module Multiwoven
       attribute? :action, StreamAction
       attribute :json_schema, Types::Hash
       attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional
+
       # Applicable for database streams
       attribute? :source_defined_cursor, Types::Bool.optional
       attribute? :default_cursor_field, Types::Array.of(Types::String).optional
       attribute? :source_defined_primary_key, Types::Array.of(Types::Array.of(Types::String)).optional
+
       attribute? :namespace, Types::String.optional
       # Applicable for API streams
       attribute? :url, Types::String.optional
       attribute? :request_method, Types::String.optional
       attribute :batch_support, Types::Bool.default(false)
       attribute :batch_size, Types::Integer.default(1)
+
+      # Rate limits
+      attribute? :request_rate_limit, Types::Integer
+      attribute? :request_rate_limit_unit, RequestRateLimitingUnit
+      attribute? :request_rate_concurrency, Types::Integer
+
+      def rate_limit_unit_seconds
+        case request_rate_limit_unit
+        when "minute"
+          60 # Seconds in a minute
+        when "hour"
+          3600 # Seconds in an hour
+        when "day"
+          86_400 # Seconds in a day
+        else
+          1 # Default case, consider as seconds or handle as error
+        end
+      end
     end
 
     class Catalog < ProtocolModel
       attribute :streams, Types::Array.of(Stream)
+
+      # Rate limits
+      attribute? :request_rate_limit, Types::Integer.default(60)
+      attribute? :request_rate_limit_unit, RequestRateLimitingUnit
+      attribute? :request_rate_concurrency, Types::Integer.default(10)
 
       def to_multiwoven_message
         MultiwovenMessage.new(

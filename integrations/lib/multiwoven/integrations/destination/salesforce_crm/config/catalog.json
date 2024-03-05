@@ -1,4 +1,7 @@
 {
+  "request_rate_limit":  100000,
+  "request_rate_limit_unit": "day",
+  "request_rate_concurrency": 10,
   "streams": [
     {
       "name": "Account",

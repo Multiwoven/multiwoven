@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
+require "stringio"
+
 module Multiwoven
   module Integrations
     module Destination
-      module Slack
+      module Hubspot
         include Multiwoven::Integrations::Core
 
         class Client < DestinationConnector
-          attr_accessor :channel_id
-
           def check_connection(connection_config)
-            configure_slack(connection_config[:api_token])
-            client = ::Slack::Web::Client.new
-            client.auth_test
+            connection_config = connection_config.with_indifferent_access
+            initialize_client(connection_config)
+            authenticate_client
             success_status
           rescue StandardError => e
+            handle_exception("HUBSPOT:CRM:DISCOVER:EXCEPTION", "error", e)
             failure_status(e)
           end
 
@@ -22,71 +23,59 @@ module Multiwoven
             catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("SLACK:DISCOVER:EXCEPTION", "error", e)
+            handle_exception("HUBSPOT:CRM:DISCOVER:EXCEPTION", "error", e)
           end
 
           def write(sync_config, records, action = "create")
-            # Currently as we only create a message for each record in slack, we are not using actions.
-            # This will be changed in future.
-
             @action = sync_config.stream.action || action
-            connection_config = sync_config.destination.connection_specification.with_indifferent_access
-            configure_slack(connection_config[:api_token])
-            @client = ::Slack::Web::Client.new
-            @channel_id = connection_config[:channel_id]
+            initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("SLACK:WRITE:EXCEPTION", "error", e)
+            handle_exception("HUBSPOT:CRM:WRITE:EXCEPTION", "error", e)
           end
 
           private
 
-          def configure_slack(api_token)
-            ::Slack.configure do |config|
-              config.token = api_token
-            end
+          def initialize_client(config)
+            config = config.with_indifferent_access
+            @client = ::Hubspot::Client.new(access_token: config[:access_token])
           end
 
           def process_records(records, stream)
             write_success = 0
             write_failure = 0
+            properties = stream.json_schema.with_indifferent_access[:properties]
             records.each do |record_object|
-              process_record(stream, record_object.with_indifferent_access)
+              record = extract_data(record_object, properties)
+              send_data_to_hubspot(stream.name, record)
               write_success += 1
             rescue StandardError => e
+              handle_exception("HUBSPOT:CRM:WRITE:EXCEPTION", "error", e)
               write_failure += 1
-              handle_exception("SLACK:CRM:WRITE:EXCEPTION", "error", e)
             end
             tracking_message(write_success, write_failure)
           end
 
-          def process_record(stream, record)
-            send_data_to_slack(stream[:name], record)
+          def send_data_to_hubspot(stream_name, record = {})
+            args = build_args(@action, stream_name, record)
+            hubspot_stream = @client.crm.send(stream_name)
+            hubspot_data = { simple_public_object_input_for_create: args }
+            hubspot_stream.basic_api.send(@action, hubspot_data)
           end
 
-          def send_data_to_slack(stream_name, record = {})
-            args = build_args(stream_name, record)
-            @client.send(stream_name, **args)
-          end
-
-          def build_args(stream_name, record)
-            case stream_name
-            when "chat_postMessage"
-              { channel: channel_id, text: slack_code_block(record) }
+          def build_args(action, stream_name, record)
+            case action
+            when :upsert
+              [stream_name, record[:external_key], record]
+            when :destroy
+              [stream_name, record[:id]]
             else
-              raise "Stream name not found: #{stream_name}"
+              record
             end
           end
 
-          def slack_code_block(data)
-            longest_key = data.keys.map(&:to_s).max_by(&:length).length
-            table_str = "```\n"
-            data.each do |key, value|
-              table_str += "#{key.to_s.ljust(longest_key)} : #{value}\n"
-            end
-            table_str += "```"
-
-            table_str
+          def authenticate_client
+            @client.crm.contacts.basic_api.get_page
           end
 
           def success_status
@@ -105,6 +94,10 @@ module Multiwoven
             Multiwoven::Integrations::Protocol::TrackingMessage.new(
               success: success, failed: failure
             ).to_multiwoven_message
+          end
+
+          def log_debug(message)
+            Multiwoven::Integrations::Service.logger.debug(message)
           end
         end
       end

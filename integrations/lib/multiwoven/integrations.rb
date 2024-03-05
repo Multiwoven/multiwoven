@@ -14,6 +14,8 @@ require "restforce"
 require "logger"
 require "slack-ruby-client"
 require "git"
+require "ruby-limiter"
+require "hubspot-api-client"
 
 # Service
 require_relative "integrations/config"
@@ -23,6 +25,7 @@ require_relative "integrations/service"
 # Core
 require_relative "integrations/core/constants"
 require_relative "integrations/core/utils"
+require_relative "integrations/core/rate_limiter"
 require_relative "integrations/protocol/protocol"
 require_relative "integrations/core/base_connector"
 require_relative "integrations/core/source_connector"
@@ -34,12 +37,14 @@ require_relative "integrations/source/snowflake/client"
 require_relative "integrations/source/redshift/client"
 require_relative "integrations/source/bigquery/client"
 require_relative "integrations/source/postgresql/client"
+require_relative "integrations/source/databricks/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
 require_relative "integrations/destination/salesforce_crm/client"
 require_relative "integrations/destination/facebook_custom_audience/client"
 require_relative "integrations/destination/slack/client"
+require_relative "integrations/destination/hubspot/client"
 
 module Multiwoven
   module Integrations

@@ -72,6 +72,31 @@ module Multiwoven
       def success?(response)
         response && %w[200 201].include?(response.code.to_s)
       end
+
+      def build_catalog(catalog_json)
+        streams = catalog_json["streams"].map { |stream_json| build_stream(stream_json) }
+        Multiwoven::Integrations::Protocol::Catalog.new(
+          streams: streams,
+          request_rate_limit: catalog_json["request_rate_limit"] || 60,
+          request_rate_limit_unit: catalog_json["request_rate_limit_unit"] || "minute",
+          request_rate_concurrency: catalog_json["request_rate_concurrency"] || 10
+        )
+      end
+
+      def build_stream(stream_json)
+        Multiwoven::Integrations::Protocol::Stream.new(
+          name: stream_json["name"],
+          url: stream_json["url"],
+          action: stream_json["action"],
+          request_method: stream_json["method"],
+          batch_support: stream_json["batch_support"] || false,
+          batch_size: stream_json["batch_size"] || 1,
+          json_schema: stream_json["json_schema"],
+          request_rate_limit: stream_json["request_rate_limit"].to_i,
+          request_rate_limit_unit: stream_json["request_rate_limit_unit"] || "minute",
+          request_rate_concurrency: stream_json["request_rate_concurrency"].to_i
+        )
+      end
     end
   end
 end

@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module Klaviyo
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+    class Client < DestinationConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         api_key = connection_config[:private_api_key]
@@ -20,19 +20,7 @@ module Multiwoven::Integrations::Destination
       def discover(_connection_config = nil)
         catalog_json = read_json(CATALOG_SPEC_PATH)
 
-        streams = catalog_json["streams"].map do |stream|
-          Multiwoven::Integrations::Protocol::Stream.new(
-            name: stream["name"],
-            json_schema: stream["json_schema"],
-            url: stream["url"],
-            request_method: stream["method"],
-            action: stream["action"]
-          )
-        end
-
-        catalog = Multiwoven::Integrations::Protocol::Catalog.new(
-          streams: streams
-        )
+        catalog = build_catalog(catalog_json)
 
         catalog.to_multiwoven_message
       rescue StandardError => e

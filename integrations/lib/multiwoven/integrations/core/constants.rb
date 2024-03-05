@@ -12,9 +12,11 @@ module Multiwoven
       CONNECTOR_SPEC_PATH = "config/spec.json"
       CATALOG_SPEC_PATH   = "config/catalog.json"
       SNOWFLAKE_MAC_DRIVER_PATH = "/opt/snowflake/snowflakeodbc/lib/universal/libSnowflake.dylib"
+      DATABRICKS_MAC_DRIVER_PATH = "/Library/simba/spark/lib/libsparkodbc_sb64-universal.dylib"
       MAIN_BRANCH_SHA = Git.ls_remote("https://github.com/Multiwoven/multiwoven-integrations")["head"][:sha]
 
       SNOWFLAKE_DRIVER_PATH = ENV["SNOWFLAKE_DRIVER_PATH"] || SNOWFLAKE_MAC_DRIVER_PATH
+      DATABRICKS_DRIVER_PATH = ENV["DATABRICKS_DRIVER_PATH"] || DATABRICKS_MAC_DRIVER_PATH
 
       # CONNECTORS
       KLAVIYO_AUTH_ENDPOINT = "https://a.klaviyo.com/api/lists/"
