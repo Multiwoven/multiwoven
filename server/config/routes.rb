@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   # Health Check
   get "up" => "rails/health#show", as: :rails_health_check
-  
+
   # API routes
   namespace :api do
     namespace :v1 do
@@ -26,7 +26,14 @@ Rails.application.routes.draw do
         end
       end
       resources :models
-      resources :syncs
+      resources :syncs do
+        collection do
+          get :configurations
+        end
+        resources :sync_runs, only: [:index] do
+          resources :sync_records, only: [:index]
+        end
+      end
       resources :connector_definitions, only: [:index, :show] do
         collection do
           post :check_connection
@@ -35,6 +42,11 @@ Rails.application.routes.draw do
       resources :users, only: [] do
         collection do
           get :me
+        end
+      end
+      resources :reports do
+        collection do
+          get :workspace_activity
         end
       end
     end

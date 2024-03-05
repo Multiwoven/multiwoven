@@ -7,6 +7,7 @@ worker = Temporal::Worker.new
 
 worker.register_workflow(Workflows::SyncWorkflow)
 worker.register_workflow(Workflows::ScheduleSyncWorkflow)
+worker.register_workflow(Workflows::TerminateWorkflow)
 
 worker.add_activity_middleware(Middlewares::DatabaseMiddleware)
 worker.register_activity(Activities::FetchSyncActivity)
@@ -15,6 +16,7 @@ worker.register_activity(Activities::ExtractorActivity)
 worker.register_activity(Activities::LoaderActivity)
 worker.register_activity(Activities::ReporterActivity)
 worker.register_activity(Activities::ScheduleSyncActivity)
+worker.register_activity(Activities::TerminateWorkflowActivity)
 
 # TODO: add logging middleware to all workflows and activities
 

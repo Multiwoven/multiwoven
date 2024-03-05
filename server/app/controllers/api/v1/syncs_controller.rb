@@ -56,12 +56,26 @@ module Api
       end
 
       def destroy
-        sync.destroy!
+        sync.discard
         head :no_content
       end
 
       # TODO: Sync trigger API
       # def trigger; end
+
+      def configurations
+        result = SyncConfigurations.call
+
+        if result.success?
+          render json: result.configurations, status: :ok
+        elsif result.failure?
+          render_error(
+            message: "Unable to fetch sync configurations",
+            status: :unprocessable_entity,
+            details: format_errors(result.error)
+          )
+        end
+      end
 
       private
 
@@ -70,17 +84,28 @@ module Api
       end
 
       def sync_params
-        params.require(:sync).permit(:source_id,
-                                     :destination_id,
-                                     :model_id,
-                                     :schedule_type,
-                                     :status,
-                                     :sync_interval,
-                                     :sync_mode,
-                                     :sync_interval_unit,
-                                     :stream_name,
-                                     configuration: {})
-              .merge(workspace_id: current_workspace.id)
+        strong_params = params.require(:sync)
+                              .permit(:source_id,
+                                      :destination_id,
+                                      :model_id,
+                                      :schedule_type,
+                                      :sync_interval,
+                                      :sync_mode,
+                                      :sync_interval_unit,
+                                      :stream_name,
+                                      configuration: %i[from
+                                                        to
+                                                        mapping_type
+                                                        value
+                                                        value_type
+                                                        template])
+
+        # TODO: Need to remove this once we implement template and static mapping in frontend
+        if params.to_unsafe_h[:sync][:configuration].is_a?(Hash)
+          strong_params.merge!(configuration: params.to_unsafe_h[:sync][:configuration])
+        end
+
+        strong_params
       end
     end
   end

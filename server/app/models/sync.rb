@@ -17,6 +17,11 @@
 #  updated_at        :datetime         not null
 #
 class Sync < ApplicationRecord
+  include AASM
+  include Discard::Model
+
+  default_scope -> { kept }
+
   validates :workspace_id, presence: true
   validates :source_id, presence: true
   validates :destination_id, presence: true
@@ -27,9 +32,10 @@ class Sync < ApplicationRecord
   validates :sync_interval_unit, presence: true
   validates :stream_name, presence: true
   validates :status, presence: true
+  validate :stream_name_exists?
 
   enum :schedule_type, %i[manual automated]
-  enum :status, %i[healthy failed aborted in_progress disabled]
+  enum :status, %i[disabled healthy pending failed aborted]
   enum :sync_mode, %i[full_refresh incremental]
   enum :sync_interval_unit, %i[minutes hours days]
 
@@ -41,8 +47,32 @@ class Sync < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
+  after_discard :delete_workflow
 
   default_scope { order(updated_at: :desc) }
+
+  aasm column: :status, whiny_transitions: true do
+    state :pending, initial: true
+    state :healthy
+    state :failed
+    state :disabled
+
+    event :complete do
+      transitions from: :pending, to: :healthy
+    end
+
+    event :fail do
+      transitions from: %i[pending healthy], to: :failed
+    end
+
+    event :disable do
+      transitions from: %i[pending healthy failed], to: :disabled
+    end
+
+    event :enable do
+      transitions from: :disabled, to: :pending
+    end
+  end
 
   def to_protocol
     catalog = destination.catalog
@@ -59,7 +89,7 @@ class Sync < ApplicationRecord
   end
 
   def set_defaults
-    self.status ||= "healthy"
+    self.status ||= self.class.aasm.initial_state.to_s
   end
 
   def schedule_cron_expression
@@ -89,5 +119,24 @@ class Sync < ApplicationRecord
     )
   rescue StandardError => e
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+  end
+
+  def delete_workflow
+    Temporal.start_workflow(
+      Workflows::TerminateWorkflow,
+      workflow_id
+    )
+  rescue StandardError => e
+    Rails.logger.error "Failed to Terminate Temporal. Error: #{e.message}"
+  end
+
+  def stream_name_exists?
+    return if destination.blank?
+
+    stream = destination.catalog.find_stream_by_name(stream_name)
+    return if stream.present?
+
+    errors.add(:stream_name,
+               "Add a valid stream_name associated with destination connector")
   end
 end

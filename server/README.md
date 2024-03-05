@@ -37,6 +37,7 @@
 **Multiwoven Server**  repository contains the backend codebase for the Multiwoven platform. It is built using Ruby on Rails and Temporal Workflow Engine. The server is responsible for handling the API requests, managing the data sync workflows, and orchestrating the data sync jobs.
 
 ## Table of Contents
+
 - [Technology Stack](#technology-stack)
 - [Local Setup](#local-setup)
 - [Resources](#resources)
@@ -91,12 +92,10 @@ http://localhost:3000
 
 For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose-dev) in the documentation.
 
-
 ### Resources
 
-* [Product Documentation](https://www.docs.multiwoven.com)
-* [API Reference](https://www.docs.multiwoven.com/api)
-
+- [Product Documentation](https://docs.multiwoven.com)
+- [API Reference](https://docs.multiwoven.com/api-reference/introduction)
 
 ## Contributing
 
@@ -109,6 +108,7 @@ Before contributing to Multiwoven, please read our [Code of Conduct](https://git
 We are always here to help you. If you have any questions or need help with Multiwoven, please feel free to reach out to us on [Slack](https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g). We are open to discuss new ideas, features, and improvements.
 
 ### ⚠️ Development Status: Under Active Development
+
 This project is under active development, As we work towards stabilizing and enhancing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a new issue with detailed information. Your feedback is crucial in helping us improve. Thank you for your support!
 
 ## License

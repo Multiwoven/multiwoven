@@ -34,6 +34,15 @@ RSpec.describe Connector, type: :model do
     it { should belong_to(:workspace) }
     it { should have_many(:models).dependent(:destroy) }
     it { should have_one(:catalog).dependent(:destroy) }
+    it {
+      is_expected.to have_many(:source_syncs).class_name("Sync")
+                                             .with_foreign_key("source_id").dependent(:destroy)
+    }
+    it {
+      is_expected.to have_many(:destination_syncs).class_name("Sync")
+                                                  .with_foreign_key("destination_id")
+                                                  .dependent(:destroy)
+    }
   end
 
   describe "#to_protocol" do

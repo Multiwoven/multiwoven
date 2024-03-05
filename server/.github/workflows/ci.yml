@@ -50,11 +50,13 @@ jobs:
       run: bundle exec rspec
 
     - name: Install cc-test-reporter
+      if: github.event_name == 'push'
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
 
     - name: Upload Coverage to Code Climate
+      if: github.event_name == 'push'
       run: |
         ./cc-test-reporter before-build
         ./cc-test-reporter after-build --exit-code $?

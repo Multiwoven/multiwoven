@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,7 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
     t.integer "action"
     t.string "primary_key"
     t.integer "status", default: 0
+    t.text "error"
     t.index ["sync_id", "fingerprint"], name: "index_sync_records_on_sync_id_and_fingerprint", unique: true
+    t.index ["sync_id", "primary_key"], name: "index_sync_records_on_sync_id_and_primary_key", unique: true
   end
 
   create_table "sync_runs", force: :cascade do |t|
@@ -79,6 +81,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "current_offset", default: 0
+    t.integer "workspace_id"
+    t.integer "source_id"
+    t.integer "destination_id"
+    t.integer "model_id"
+    t.integer "total_query_rows"
   end
 
   create_table "syncs", force: :cascade do |t|
@@ -98,6 +105,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_124507) do
     t.integer "sync_interval_unit"
     t.string "stream_name"
     t.string "workflow_id"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_syncs_on_discarded_at"
   end
 
   create_table "users", force: :cascade do |t|

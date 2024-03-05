@@ -6,6 +6,12 @@ module ReverseEtl
       THREAD_COUNT = (ENV["SYNC_LOADER_THREAD_POOL_SIZE"] || "5").to_i
       def write(sync_run_id, activity)
         sync_run = SyncRun.find(sync_run_id)
+
+        return log_error(sync_run) unless sync_run.may_progress?
+
+        # change state queued to in_progress
+        sync_run.progress!
+
         sync = sync_run.sync
         sync_config = sync.to_protocol
         if sync_config.stream.batch_support
@@ -26,7 +32,10 @@ module ReverseEtl
           successfull_sync_records = []
           failed_sync_records = []
 
-          Parallel.each(sync_records, in_threads: THREAD_COUNT) do |sync_record|
+          # concurrent request rate limit
+          concurrency = sync_config.stream.request_rate_concurrency || THREAD_COUNT
+
+          Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
             record = transformer.transform(sync, sync_record)
             report = client.write(sync_config, [record]).tracking
 
@@ -79,6 +88,14 @@ module ReverseEtl
       def heartbeat(activity)
         activity.heartbeat
         raise StandardError, "Cancel activity request received" if activity.cancel_requested
+      end
+
+      def log_error(sync_run)
+        Temporal.logger.error(
+          eerror_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
+          sync_run_id: sync_run.id,
+          stack_trace: nil
+        )
       end
     end
   end

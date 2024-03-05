@@ -17,7 +17,6 @@ module SyncContracts
     params do
       required(:sync).hash do
         optional(:source_id).filled(:integer)
-        optional(:status).filled(:string)
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
         required(:schedule_type).filled(:string)
@@ -25,7 +24,9 @@ module SyncContracts
         required(:sync_interval_unit).filled(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
-        required(:configuration).filled(:hash)
+
+        # update filled with validating array of hashes
+        required(:configuration).filled
       end
     end
 
@@ -52,10 +53,11 @@ module SyncContracts
         optional(:schedule_type).filled(:string)
         optional(:sync_interval).filled(:integer)
         optional(:sync_interval_unit).filled(:string)
-        optional(:status).filled(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
-        optional(:configuration).filled(:hash)
+
+        # update filled with validating array of hashes
+        optional(:configuration).filled
       end
     end
 
@@ -76,5 +78,9 @@ module SyncContracts
     params do
       required(:id).filled(:integer)
     end
+  end
+
+  class Configurations < Dry::Validation::Contract
+    params {}
   end
 end

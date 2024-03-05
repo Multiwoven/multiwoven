@@ -29,6 +29,9 @@ class Connector < ApplicationRecord
   belongs_to :workspace
 
   has_many :models, dependent: :destroy
+  has_many :source_syncs, class_name: "Sync", foreign_key: "source_id", dependent: :destroy # rubocop:disable Rails/InverseOf
+  has_many :destination_syncs, class_name: "Sync", # rubocop:disable Rails/InverseOf
+                               foreign_key: "destination_id", dependent: :destroy
   has_one :catalog, dependent: :destroy
 
   default_scope { order(updated_at: :desc) }
