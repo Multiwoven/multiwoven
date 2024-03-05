@@ -7,13 +7,17 @@ import { useMemo } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from '../constants';
-import { CreateSyncResponse, SyncColumnFields } from '../types';
 import EntityItem from '@/components/EntityItem';
 import Table from '@/components/Table';
 import Loader from '@/components/Loader';
 import moment from 'moment';
 import NoActivations from '../../NoSyncs/NoSyncs';
 import StatusTag from '@/components/StatusTag';
+import {
+  ErrorResponse,
+  CreateSyncResponse,
+  SyncColumnFields,
+} from '@/views/Activate/Syncs/types';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -38,7 +42,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
         />
       );
 
-    case "lastUpdated":
+    case 'lastUpdated':
       return (
         <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>
       );
@@ -53,14 +57,22 @@ const SyncsList = (): JSX.Element => {
   const { data, isLoading } = useQuery({
     queryKey: SYNCS_LIST_QUERY_KEY,
     queryFn: () => fetchSyncs(),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
   const syncList = data?.data;
 
   const tableData = useMemo(() => {
-    const rows = (syncList ?? [])?.map((data) => {
+    if ((syncList as ErrorResponse)?.errors?.length > 0) {
+      return {
+        error: (syncList as ErrorResponse).errors[0]?.detail,
+        columns: [],
+        data: [],
+      };
+    }
+
+    const rows = ((syncList as CreateSyncResponse[]) ?? [])?.map((data) => {
       return SYNC_TABLE_COLUMS.reduce(
         (acc, { key }) => ({
           [key]: <TableItem field={key} data={data} />,
@@ -74,6 +86,7 @@ const SyncsList = (): JSX.Element => {
     return {
       columns: SYNC_TABLE_COLUMS,
       data: rows,
+      error: '',
     };
   }, [data]);
 
@@ -84,7 +97,7 @@ const SyncsList = (): JSX.Element => {
   if (isLoading) return <Loader />;
 
   if (!isLoading && tableData.data?.length === 0)
-    return <NoActivations activationType='sync' />;
+    return <NoActivations activationType='Sync' />;
 
   return (
     <Box

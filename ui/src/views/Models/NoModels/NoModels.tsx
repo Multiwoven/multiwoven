@@ -30,7 +30,7 @@ const NoModels = (): JSX.Element => {
               letterSpacing='-0.24px'
               fontWeight={600}
             >
-              No models added
+              No Models added
             </Heading>
             <Text
               size='sm'
@@ -38,7 +38,7 @@ const NoModels = (): JSX.Element => {
               letterSpacing='-0.14px'
               fontWeight={400}
             >
-              Add a model to describe how your data source will be queried{' '}
+              Add a Model to describe how your data source will be queried{' '}
             </Text>
           </VStack>
           <Button
@@ -46,7 +46,7 @@ const NoModels = (): JSX.Element => {
             leftIcon={<FiPlus />}
             letterSpacing='-0.14px'
           >
-            Add model
+            Add Model
           </Button>
         </VStack>
       </Center>

@@ -20,7 +20,7 @@ const NoActivations = ({ activationType }: NoActivationsProps): JSX.Element => {
   const navigate = useNavigate();
 
   const description =
-    activationType === 'sync'
+    activationType.toLocaleLowerCase() === 'sync'
       ? 'Add a Sync to declare how you want query results from a Model to appear in your destination'
       : '';
 

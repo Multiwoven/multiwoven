@@ -17,7 +17,7 @@ const DestinationsList = (): JSX.Element | null => {
   const { data, isLoading } = useQuery({
     queryKey: DESTINATIONS_LIST_QUERY_KEY,
     queryFn: () => getUserConnectors("destination"),
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
