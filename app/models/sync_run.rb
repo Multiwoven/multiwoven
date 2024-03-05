@@ -25,7 +25,7 @@ class SyncRun < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
 
-  aasm column: :status, whiny_transitions: true do # rubocop:disable Metrics/BlockLength
+  aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
     state :started
     state :querying
