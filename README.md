@@ -16,9 +16,9 @@
   <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
-<h2 align="center">The open-source Reverse ETL platform for data teams</h2>
+<h2 align="center">The Open Source Hightouch and Census Alternative</h2>
 
-<div align="center">Effortlessly sync customer data from the datawarehouse into your business tools.</div>
+<div align="center">Effortlessly sync customer data from your data warehouse into any business tool.</div>
 
 <p align="center">
     <br />
@@ -38,7 +38,7 @@
 
 ## Why Multiwoven?
 
-Multiwoven provides a simple way to sync customer data from your data warehouse into your business tools. It is designed to help data teams build and maintain data pipelines without writing any code. With Multiwoven, you can easily sync data from your data warehouse into your business tools, such as CRM, marketing automation, customer support, and advertising platforms.
+Multiwoven makes it easy to build and maintain data pipelines without writing any code. Sync any table from your data warehouse into any downstream business tool with just a few clicks. By self-hosting Multiwoven, you can keep your data secure and compliant with your organization's policies.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
@@ -134,8 +134,8 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 - [x] [Amazon Redshift](https://docs.multiwoven.com/sources/redshift)
 - [x] [Google BigQuery](https://docs.multiwoven.com/sources/bquery)
 - [x] [Snowflake](https://docs.multiwoven.com/sources/snowflake)
-- [ ] Databricks
-- [x] PostgreSQL
+- [x] [Databricks](https://docs.multiwoven.com/sources/databricks)
+- [x] [PostgreSQL](https://docs.multiwoven.com/sources/postgresql)
 
 ### Destinations
 
@@ -143,7 +143,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 
 - [x] [Salesforce](https://docs.multiwoven.com/destinations/crm/salesforce)
 - [ ] Zoho CRM
-- [ ] HubSpot
+- [x] [HubSpot](https://docs.multiwoven.com/destinations/crm/hubspot)
 
 #### Marketing Automation
 
@@ -175,7 +175,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 
 #### Others
 
-Coming soon!
+🧵..Weaving in more connectors to support a wide range of destinations.
 
 ## Contributing
 
@@ -189,8 +189,14 @@ We are always here to help you. If you have any questions or need help with Mult
 
 ### ⚠️ Development Status: Under Active Development
 
-This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a **new issue** with detailed information. Thank you for your support!
+This project is under active development, As we work towards stabilizing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. Thank you for your support!
 
 ## License
 
 Multiwoven is licensed under the AGPLv3 License. See the [LICENSE](https://github.com/Multiwoven/multiwoven/blob/main/LICENSE) file for details.
+
+## Contributors
+
+<a href="https://github.com/Multiwoven/multiwoven/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Multiwoven/multiwoven" />
+</a>
