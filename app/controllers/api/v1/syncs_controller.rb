@@ -56,7 +56,7 @@ module Api
       end
 
       def destroy
-        sync.destroy!
+        sync.discard
         head :no_content
       end
 

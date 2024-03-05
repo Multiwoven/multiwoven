@@ -1676,6 +1676,8 @@ GEM
       devise (~> 4.0)
       warden-jwt_auth (~> 0.8)
     diff-lcs (1.5.0)
+    discard (1.3.0)
+      activerecord (>= 4.2, < 8)
     docile (1.4.0)
     drb (2.2.0)
       ruby2_keywords
@@ -2096,6 +2098,7 @@ DEPENDENCIES
   byebug
   devise
   devise-jwt
+  discard
   dry-validation
   factory_bot_rails
   faker

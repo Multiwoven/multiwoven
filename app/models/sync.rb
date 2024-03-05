@@ -18,6 +18,9 @@
 #
 class Sync < ApplicationRecord
   include AASM
+  include Discard::Model
+
+  default_scope -> { kept }
 
   validates :workspace_id, presence: true
   validates :source_id, presence: true
@@ -44,6 +47,7 @@ class Sync < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
+  after_discard :delete_workflow
 
   default_scope { order(updated_at: :desc) }
 
@@ -115,6 +119,15 @@ class Sync < ApplicationRecord
     )
   rescue StandardError => e
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+  end
+
+  def delete_workflow
+    Temporal.start_workflow(
+      Workflows::TerminateWorkflow,
+      workflow_id
+    )
+  rescue StandardError => e
+    Rails.logger.error "Failed to Terminate Temporal. Error: #{e.message}"
   end
 
   def stream_name_exists?
