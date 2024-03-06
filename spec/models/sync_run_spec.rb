@@ -102,4 +102,50 @@ RSpec.describe SyncRun, type: :model do
       end
     end
   end
+
+  describe "#discard" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let!(:sync1) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let!(:sync_run_discard) { create(:sync_run, sync:) }
+    let!(:sync_run) { create(:sync_run, sync: sync1) }
+    let!(:sync_record) do
+      create(:sync_record, sync:, sync_run: sync_run_discard, fingerprint: "unique_fingerprint", primary_key: "key1")
+    end
+
+    before do
+      sync.discard
+    end
+
+    it "excludes discarded records from default queries" do
+      sync_run_discard.reload
+      expect(SyncRun.discarded).to be_empty
+      expect(SyncRun.with_discarded.discarded).to include(sync_run_discard)
+      expect(SyncRun.all).not_to include(sync_run_discard)
+    end
+
+    it "allows accessing discarded records through unscoped or discarded" do
+      sync_run_discard.reload
+      sync_run.reload
+      sync.reload
+      expect(SyncRun.unscoped).to include(sync_run, sync_run_discard)
+      expect(SyncRun.with_discarded.discarded).to include(sync_run_discard)
+    end
+
+    it "discards all associated sync_runs" do
+      sync_run_discard.reload
+      sync_run.reload
+      expect(sync_run_discard.discarded_at).not_to be_nil
+      expect(sync_run.discarded_at).to be_nil
+    end
+
+    it "calls the perform_post_discard_sync_run method" do
+      sync_record.reload
+      expect(sync_record.sync_run_id).to be_nil
+    end
+  end
 end

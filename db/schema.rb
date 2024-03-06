@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_06_072140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
     t.integer "destination_id"
     t.integer "model_id"
     t.integer "total_query_rows"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_sync_runs_on_discarded_at"
   end
 
   create_table "syncs", force: :cascade do |t|

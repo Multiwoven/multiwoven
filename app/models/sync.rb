@@ -20,8 +20,6 @@ class Sync < ApplicationRecord
   include AASM
   include Discard::Model
 
-  default_scope -> { kept }
-
   validates :workspace_id, presence: true
   validates :source_id, presence: true
   validates :destination_id, presence: true
@@ -47,9 +45,9 @@ class Sync < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
-  after_discard :delete_workflow
+  after_discard :perform_post_discard_sync
 
-  default_scope { order(updated_at: :desc) }
+  default_scope -> { kept.order(updated_at: :desc) }
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
@@ -121,13 +119,14 @@ class Sync < ApplicationRecord
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
   end
 
-  def delete_workflow
+  def perform_post_discard_sync
+    sync_runs.discard_all
     Temporal.start_workflow(
       Workflows::TerminateWorkflow,
       workflow_id
     )
   rescue StandardError => e
-    Rails.logger.error "Failed to Terminate Temporal. Error: #{e.message}"
+    Rails.logger.error "Failed to Run post delete sync. Error: #{e.message}"
   end
 
   def stream_name_exists?
