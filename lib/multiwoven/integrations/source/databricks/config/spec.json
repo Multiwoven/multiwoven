@@ -5,40 +5,35 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Databricks",
       "type": "object",
-      "required": ["host", "port", "database", "schema"],
+      "required": ["host", "port", "http_path", "catalog", "schema"],
       "properties": {
-        "title": "",
-        "type": "object",
-        "required": ["host", "port", "access_token", "http_path", "catalog", "schema"],
-        "properties": {
         "host": {
-            "title": "Server Hostname",
-            "description": "Server host name for the Databricks Cluster. It is different from the SQL Endpoint Cluster.",
-            "type": "string",
-            "examples": "abc-12345678-wxyz.cloud.databricks.com",
-            "order": 0
+          "title": "Server Hostname",
+          "description": "Server host name for the Databricks Cluster. It is different from the SQL Endpoint Cluster.",
+          "type": "string",
+          "examples": ["abc-12345678-wxyz.cloud.databricks.com"],
+          "order": 0
         },
         "port": {
-            "title": "Port",
-            "description": "",
-            "type": "string",
-            "default": "443",
-            "order": 1
+          "title": "Port",
+          "description": "",
+          "type": "string",
+          "default": "443",
+          "order": 1
         },
         "access_token": {
-            "title": "Personal Access Token",
-            "description": "",
-            "type": "string",
-            "multiwoven_secret": true,
-            "order": 2
-        }
+          "title": "Personal Access Token",
+          "description": "",
+          "type": "string",
+          "multiwoven_secret": true,
+          "order": 2
         },
         "http_path": {
-        "title": "HTTP Path",
-        "description": "",
-        "examples": "sql/protocolvx/o/1234567489/0000-1111111-abcd90",
-        "type": "string",
-        "order": 3
+          "title": "HTTP Path",
+          "description": "",
+          "examples": ["sql/protocolvx/o/1234567489/0000-1111111-abcd90"],
+          "type": "string",
+          "order": 3
         },
         "catalog": {
           "description": "The name of the catalog",
@@ -48,7 +43,7 @@
           "order": 4
         },
         "schema": {
-          "description": " The default schema tables are written.",
+          "description": "The default schema tables are written.",
           "default": "default",
           "type": "string",
           "title": "Database schema",
