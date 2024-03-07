@@ -98,6 +98,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do # ruboc
       expect(account_stream.request_rate_limit).to eql(0)
       expect(account_stream.request_rate_limit_unit).to eql("minute")
       expect(account_stream.request_rate_concurrency).to eql(0)
+
+      catalog.streams.each do |stream|
+        expect(stream.supported_sync_modes).to eql(%w[incremental])
+      end
     end
   end
 

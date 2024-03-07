@@ -106,7 +106,6 @@
           ]
         },
         "supported_sync_modes": [
-          "full_refresh",
           "incremental"
         ],
         "source_defined_cursor": true,

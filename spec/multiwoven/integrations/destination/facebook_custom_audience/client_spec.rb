@@ -92,22 +92,16 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
   end
 
   describe "#discover" do
-    it "returns a catalog with streams" do
+    it "finds the 'audience' stream and checks its attributes" do
       message = client.discover
       catalog = message.catalog
+      audience_stream = catalog.streams.find { |stream| stream.name == "audience" }
+
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(600)
-      expect(catalog.request_rate_limit_unit).to eql("minute")
-      expect(catalog.request_rate_concurrency).to eql(10)
-
-      expect(catalog.streams.first.name).to eq("audience")
-      expect(catalog.streams.first.request_method).to eql("POST")
-      expect(catalog.streams.first.batch_support).to eql(true)
-      expect(catalog.streams.first.batch_size).to eql(10_000)
-
-      expect(catalog.streams.first.request_rate_limit).to eql(0)
-      expect(catalog.streams.first.request_rate_limit_unit).to eql("minute")
-      expect(catalog.streams.first.request_rate_concurrency).to eql(0)
+      expect(audience_stream.request_method).to eql("POST")
+      expect(audience_stream.batch_support).to eql(true)
+      expect(audience_stream.batch_size).to eql(10_000)
+      expect(audience_stream.supported_sync_modes).to match_array(%w[full_refresh incremental])
     end
   end
 

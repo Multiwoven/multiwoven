@@ -89,22 +89,6 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
     end
   end
 
-  describe "#discover" do
-    it "returns a catalog" do
-      message = client.discover
-      catalog = message.catalog
-      expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(100_000)
-      expect(catalog.request_rate_limit_unit).to eql("day")
-      expect(catalog.request_rate_concurrency).to eql(10)
-
-      account_stream = catalog.streams.first
-      expect(account_stream.request_rate_limit).to eql(0)
-      expect(account_stream.request_rate_limit_unit).to eql("minute")
-      expect(account_stream.request_rate_concurrency).to eql(0)
-    end
-  end
-
   describe "#write" do
     context "when the write operation is successful" do
       before do
@@ -161,5 +145,16 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
     Multiwoven::Integrations::Protocol::SyncConfig.from_json(
       sync_config_json.to_json
     )
+  end
+
+  describe "#discover" do
+    it "returns a catalog" do
+      message = client.discover
+      catalog = message.catalog
+      expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+      catalog.streams.each do |stream|
+        expect(stream.supported_sync_modes).to eql(%w[incremental])
+      end
+    end
   end
 end

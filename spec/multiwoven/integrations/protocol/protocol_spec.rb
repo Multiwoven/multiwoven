@@ -155,7 +155,6 @@ module Multiwoven
           json_data = {
             "name": "example_stream", "action": "create",
             "json_schema": { "field1": "type1" },
-            "supported_sync_modes": %w[full_refresh incremental],
             "source_defined_cursor": true,
             "default_cursor_field": ["field1"],
             "source_defined_primary_key": [["field1"], ["field2"]],
@@ -175,7 +174,7 @@ module Multiwoven
           expect(instance.url).to eq("https://api.example.com/data")
           expect(instance.batch_support).to eq(true)
           expect(instance.batch_size).to eq(10_000)
-          expect(instance.supported_sync_modes).to eq(%w[full_refresh incremental])
+          expect(instance.supported_sync_modes).to eq(%w[incremental])
 
           expect(instance.request_rate_limit).to eq(100)
           expect(instance.request_rate_limit_unit).to eq("minute")

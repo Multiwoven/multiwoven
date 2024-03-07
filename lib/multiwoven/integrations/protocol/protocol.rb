@@ -108,20 +108,18 @@ module Multiwoven
       attribute :name, Types::String
       attribute? :action, StreamAction
       attribute :json_schema, Types::Hash
-      attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional
+      attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional.default(["incremental"])
 
       # Applicable for database streams
       attribute? :source_defined_cursor, Types::Bool.optional
       attribute? :default_cursor_field, Types::Array.of(Types::String).optional
       attribute? :source_defined_primary_key, Types::Array.of(Types::Array.of(Types::String)).optional
-
       attribute? :namespace, Types::String.optional
       # Applicable for API streams
       attribute? :url, Types::String.optional
       attribute? :request_method, Types::String.optional
       attribute :batch_support, Types::Bool.default(false)
       attribute :batch_size, Types::Integer.default(1)
-
       # Rate limits
       attribute? :request_rate_limit, Types::Integer
       attribute? :request_rate_limit_unit, RequestRateLimitingUnit

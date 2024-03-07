@@ -101,6 +101,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do # rubocop
       expect(message_stream.request_rate_limit).to eql(60)
       expect(message_stream.request_rate_limit_unit).to eql("minute")
       expect(message_stream.request_rate_concurrency).to eql(1)
+
+      catalog.streams.each do |stream|
+        expect(stream.supported_sync_modes).to eql(%w[incremental])
+      end
     end
   end
 

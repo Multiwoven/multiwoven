@@ -94,7 +94,7 @@
           }
         }
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["updated"]
     },
@@ -176,7 +176,7 @@
         },
         "required": ["inputs"]
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": [ "incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["updated"]
     },
@@ -264,7 +264,7 @@
         },
         "required": ["properties"]
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["updated"]
     },
@@ -343,7 +343,7 @@
         },
         "required": ["properties", "associations"]
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["updated"]
     }
