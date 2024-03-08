@@ -16,7 +16,7 @@
   <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
-<h2 align="center">The Open Source Hightouch and Census Alternative</h2>
+<h2 align="center">Open Source Hightouch, Census, and RudderStack Alternative</h2>
 
 <div align="center">Effortlessly sync customer data from your data warehouse into any business tool.</div>
 
