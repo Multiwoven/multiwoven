@@ -121,9 +121,13 @@ class Sync < ApplicationRecord
 
   def perform_post_discard_sync
     sync_runs.discard_all
+    terminate_workflow_id = "terminate-#{workflow_id}"
     Temporal.start_workflow(
       Workflows::TerminateWorkflow,
-      workflow_id
+      workflow_id,
+      options: {
+        workflow_id: terminate_workflow_id
+      }
     )
   rescue StandardError => e
     Rails.logger.error "Failed to Run post delete sync. Error: #{e.message}"

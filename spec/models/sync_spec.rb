@@ -308,7 +308,8 @@ RSpec.describe Sync, type: :model do
     it "calls the perform_post_discard_sync method" do
       expect(sync_discard.discarded_at).not_to be_nil
       expect(Temporal).to have_received(:start_workflow)
-        .with(Workflows::TerminateWorkflow, sync.workflow_id)
+        .with(Workflows::TerminateWorkflow, sync.workflow_id,
+              hash_including(options: hash_including(workflow_id: a_string_starting_with("terminate-"))))
     end
   end
 end
