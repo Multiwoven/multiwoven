@@ -1,8 +1,15 @@
-![Banner](https://res.cloudinary.com/dspflukeu/image/upload/v1707980066/Multiwoven/Github/Github_Readme_-_Alt_1_ddqhlz.png)
-
 <p align="center">
   <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
 </p>
+
+<h1 align="center">The Open Source Salesforce CDP Alternative</h1>
+
+<p align="center">
+Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgres) into a Customer Data Platform (CDP)
+</p>
+
+
+
 <p align="center">
 <a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=for-the-badge" alt="GitHub stars"></a>
 <a href="https://github.com/Multiwoven/multiwoven/releases">
@@ -16,21 +23,17 @@
   <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
-<h2 align="center">Open Source Hightouch, Census, and RudderStack Alternative</h2>
-
-<div align="center">Effortlessly sync customer data from your data warehouse into any business tool.</div>
-
 <p align="center">
     <br />
     <a href="https://docs.multiwoven.com" rel=""><strong>Explore the docs »</strong></a>
     <br />
   <br/>
   <a href="https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g">Slack</a>
-    ·
+   •
     <a href="https://multiwoven.com">Website</a>
-    ·
+    •
     <a href="https://blog.multiwoven.com">Blog</a>
-    ·
+   •
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
 
@@ -38,7 +41,7 @@
 
 ## Why Multiwoven?
 
-Multiwoven makes it easy to build and maintain data pipelines without writing any code. Sync any table from your data warehouse into any downstream business tool with just a few clicks. By self-hosting Multiwoven, you can keep your data secure and compliant with your organization's policies.
+Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable CDP. It is built on top of open-source technologies and is designed to be easily integrated with your existing data warehouse and data lake. It is a great alternative to Salesforce CDP, Segment, and other proprietary CDPs.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
