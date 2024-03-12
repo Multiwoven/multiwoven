@@ -29,6 +29,8 @@ gem "webmock", "~> 3.0"
 
 gem "activesupport"
 
+gem "google-apis-sheets_v4"
+
 gem "google-cloud-bigquery"
 
 gem "restforce", "~> 7.1.0"

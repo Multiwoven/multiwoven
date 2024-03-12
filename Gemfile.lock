@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.33)
+    multiwoven-integrations (0.1.34)
       activesupport
       async-websocket
       dry-schema
@@ -128,6 +128,8 @@ GEM
       retriable (>= 2.0, < 4.a)
       rexml
       webrick
+    google-apis-sheets_v4 (0.26.0)
+      google-apis-core (>= 0.11.0, < 2.a)
     google-cloud-bigquery (1.45.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.1)
@@ -268,6 +270,7 @@ DEPENDENCIES
   dry-struct
   dry-types
   git
+  google-apis-sheets_v4
   google-cloud-bigquery
   hubspot-api-client
   multiwoven-integrations!

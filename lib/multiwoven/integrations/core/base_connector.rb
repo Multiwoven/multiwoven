@@ -57,6 +57,14 @@ module Multiwoven
         file_contents = File.read(file_path)
         JSON.parse(file_contents)
       end
+
+      def success_status
+        ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
+      end
+
+      def failure_status(error)
+        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: error.message).to_multiwoven_message
+      end
     end
   end
 end
