@@ -48,6 +48,7 @@ require_relative "integrations/destination/facebook_custom_audience/client"
 require_relative "integrations/destination/slack/client"
 require_relative "integrations/destination/hubspot/client"
 require_relative "integrations/destination/google_sheets/client"
+require_relative "integrations/destination/airtable/client"
 
 module Multiwoven
   module Integrations
