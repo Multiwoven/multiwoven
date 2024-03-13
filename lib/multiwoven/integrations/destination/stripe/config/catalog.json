@@ -1,0 +1,128 @@
+{
+  "request_rate_limit": 100000,
+  "request_rate_limit_unit": "day",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "Customer",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "payment_method": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "line1": {
+                "type": "string"
+              },
+              "line2": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              }
+            }
+          },
+          "shipping": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "address": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "line1": {
+                    "type": "string"
+                  },
+                  "line2": {
+                    "type": "string"
+                  },
+                  "postal_code": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  }
+                }
+              },
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["Id"]]
+    },
+    {
+      "name": "Product",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"]
+    }
+  ]
+}

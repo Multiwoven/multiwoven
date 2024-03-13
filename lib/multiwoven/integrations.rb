@@ -18,6 +18,7 @@ require "ruby-limiter"
 require "hubspot-api-client"
 require "google/apis/sheets_v4"
 require "stringio"
+require "stripe"
 
 # Service
 require_relative "integrations/config"
@@ -49,6 +50,7 @@ require_relative "integrations/destination/slack/client"
 require_relative "integrations/destination/hubspot/client"
 require_relative "integrations/destination/google_sheets/client"
 require_relative "integrations/destination/airtable/client"
+require_relative "integrations/destination/stripe/client"
 
 module Multiwoven
   module Integrations

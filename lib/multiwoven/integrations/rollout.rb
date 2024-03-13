@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.35"
+    VERSION = "0.1.36"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -20,6 +20,7 @@ module Multiwoven
       Hubspot
       GoogleSheets
       Airtable
+      Stripe
     ].freeze
   end
 end
