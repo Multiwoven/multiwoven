@@ -2,7 +2,7 @@
   <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
 </p>
 
-<h1 align="center">The Open Source Salesforce CDP Alternative</h1>
+<h1 align="center">Open Source Reverse ETL and Customer Data Platform (CDP)</h1>
 
 <p align="center">
 Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgres) into a Customer Data Platform (CDP)
@@ -41,7 +41,7 @@ Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgr
 
 ## Why Multiwoven?
 
-Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable CDP. It is built on top of open-source technologies and is designed to be easily integrated with your existing data warehouse and data lake. It is a great alternative to Salesforce CDP, Segment, and other proprietary CDPs.
+Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable CDP and Reverse ETL platform. It is built on top of open-source technologies and is designed to be easily integrated with your existing data warehouse and data lake, an open-source alternative to tools like **Hightouch**, **Census**, and **RudderStack**.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
@@ -49,7 +49,7 @@ Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and c
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907791/Multiwoven/Github/image_7_ozahsr.png "Example Title")
 
-<p>⭐ Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.</p>
+⭐ *Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.*
 
 ## Table of Contents
 
