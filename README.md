@@ -2,7 +2,7 @@
   <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
 </p>
 
-<h1 align="center">Open Source Reverse ETL and Customer Data Platform (CDP)</h1>
+<h1 align="center">Open Source Reverse ETL & Customer Data Platform (CDP)</h1>
 
 <p align="center">
 Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgres) into a Customer Data Platform (CDP)
@@ -168,7 +168,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 #### Collaboration
 
 - [x] [Slack](https://docs.multiwoven.com/destinations/team-collaboration/slack)
-- [ ] Google Sheets
+- [x] [Google Sheets](https://docs.multiwoven.com/destinations/productivity-tools/google-sheets)
 
 #### Analytics
 
