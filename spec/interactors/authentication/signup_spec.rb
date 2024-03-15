@@ -13,8 +13,8 @@ RSpec.describe Authentication::Signup, type: :interactor do
         {
           name: "Test User",
           email: "user@example.com",
-          password: "password",
-          password_confirmation: "password",
+          password: "Password@123",
+          password_confirmation: "Password@123",
           company_name: "Test Company"
         }
       end
@@ -56,8 +56,8 @@ RSpec.describe Authentication::Signup, type: :interactor do
         {
           name: "Test User",
           email: "user@example.com",
-          password: "password",
-          password_confirmation: "password"
+          password: "Password@123",
+          password_confirmation: "Password@123"
           # company_name is omitted
         }
       end
@@ -89,7 +89,7 @@ RSpec.describe Authentication::Signup, type: :interactor do
           {
             name: "User",
             email: "user@example.com",
-            password: "password",
+            password: "Password@123",
             password_confirmation: "wrong_password"
           }
         end
@@ -108,8 +108,8 @@ RSpec.describe Authentication::Signup, type: :interactor do
           {
             name: "Test User",
             email: "",
-            password: "password",
-            password_confirmation: "password"
+            password: "Password@123",
+            password_confirmation: "Password@123"
           }
         end
 
@@ -127,8 +127,8 @@ RSpec.describe Authentication::Signup, type: :interactor do
           {
             name: "",
             email: "user@example.com",
-            password: "password",
-            password_confirmation: "password"
+            password: "Password@123",
+            password_confirmation: "Password@123"
           }
         end
 
@@ -147,8 +147,8 @@ RSpec.describe Authentication::Signup, type: :interactor do
           {
             name: "Test User",
             email: "user@example.com",
-            password: "password",
-            password_confirmation: "password",
+            password: "Password@123",
+            password_confirmation: "Password@123",
             company_name: "Existing Company"
           }
         end

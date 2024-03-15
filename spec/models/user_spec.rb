@@ -90,5 +90,39 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # Additional tests for any other custom methods in User model
+  describe "password complexity" do
+    it "is invalid if the password does not meet complexity requirements" do
+      user = User.new(password: "password", email: "test@example.com", name: "Test User")
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to include(
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
+      )
+    end
+
+    it "is valid if the password meets complexity requirements" do
+      user = User.new(password: "Test123!", email: "test@example.com", name: "Test User")
+      expect(user).to be_valid
+    end
+  end
+
+  describe "invalid password lock" do
+    before do
+      @user = User.create!(
+        email: "lock@example.com",
+        password: "ValidPassword1!",
+        name: "Lock Test User"
+      )
+    end
+
+    it "locks the user after 5 failed attempts" do
+      expect(@user.access_locked?).to be_falsey
+      5.times do
+        @user.valid_for_authentication? do
+          false
+        end
+      end
+
+      expect(@user.access_locked?).to be_truthy
+    end
+  end
 end

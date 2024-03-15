@@ -85,8 +85,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "resets the password and returns a success message" do
         token = user.send_reset_password_instructions
         post :reset_password,
-             params: { reset_password_token: token, password: "newpassword123",
-                       password_confirmation: "newpassword123" }
+             params: { reset_password_token: token, password: "newPassword@123",
+                       password_confirmation: "newPassword@123" }
 
         expect(response).to have_http_status(:ok)
         expect(response_data["attributes"]["message"]).to eq("Password successfully reset.")
@@ -96,8 +96,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     context "with invalid reset password token" do
       it "does not reset the password and returns an error" do
         post :reset_password,
-             params: { reset_password_token: "wrong", password: "newpassword123",
-                       password_confirmation: "newpassword123" }
+             params: { reset_password_token: "wrong", password: "newPassword@123",
+                       password_confirmation: "newPassword@123" }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty

@@ -7,11 +7,11 @@ require "rails_helper"
 RSpec.describe Authentication::Login, type: :interactor do
   subject(:context) { described_class.call(params:) }
 
-  let(:user) { create(:user, password: "password", password_confirmation: "password") }
+  let(:user) { create(:user, password: "Password@123", password_confirmation: "Password@123") }
 
   describe ".call" do
     context "when given valid credentials" do
-      let(:params) { { email: user.email, password: "password" } }
+      let(:params) { { email: user.email, password: "Password@123" } }
 
       context "with a verified user" do
         before { user.update!(confirmed_at: Time.current) }
@@ -37,7 +37,7 @@ RSpec.describe Authentication::Login, type: :interactor do
     end
 
     context "when given an invalid email" do
-      let(:params) { { email: "not_found@example.com", password: "password" } }
+      let(:params) { { email: "not_found@example.com", password: "Password@123" } }
 
       it "fails" do
         expect(context).to be_failure
@@ -61,7 +61,7 @@ RSpec.describe Authentication::Login, type: :interactor do
     end
 
     context "handling exceptions" do
-      let(:params) { { email: user.email, password: "password" } }
+      let(:params) { { email: user.email, password: "Password@123" } }
 
       it "handles unexpected errors gracefully" do
         allow(User).to receive(:find_by).and_raise(StandardError)
