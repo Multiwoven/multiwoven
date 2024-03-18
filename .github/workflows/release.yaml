@@ -1,0 +1,55 @@
+name: Prepare Release Branch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  prepare_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+      - name: Get latest tag
+        id: latesttag
+        run: echo ::set-output name=tag::$(git describe --tags `git rev-list --tags --max-count=1`)
+
+      - name: Increment version
+        id: nextversion
+        run: |
+          LATEST_TAG=${{ steps.latesttag.outputs.tag }}
+          IFS='.' read -ra VERSION <<< "${LATEST_TAG//v/}"
+          let VERSION[1]++
+          echo ::set-output name=version::v${VERSION[0]}.${VERSION[1]}.0
+
+      # - name: Create Release Branch
+      #   run: |
+      #     BRANCH_NAME=release-${{ steps.nextversion.outputs.version }}
+      #     git checkout -b $BRANCH_NAME
+      #     git push origin $BRANCH_NAME
+
+      - name: Generate changelog using git-cliff
+        uses: orhun/git-cliff-action@v1
+        with:
+          config: gitcliff.toml # Specify the path to your gitcliff configuration file if it's not in the repository root
+          output: CHANGELOG.md # The output file for the generated changelog
+          tag: ${{ steps.nextversion.outputs.version }} # Use the dynamically calculated next version as the tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Assuming you need to update a version file in your repository
+      - name: Update version file
+        run: |
+          echo ${{ steps.nextversion.outputs.version }} > VERSION
+          git add VERSION
+          git commit -m "Update version file to ${{ steps.nextversion.outputs.version }}"
+          git push
+
+      # Add any other necessary steps for preparing the release
+      # This could include updating configuration files, running scripts, etc.
