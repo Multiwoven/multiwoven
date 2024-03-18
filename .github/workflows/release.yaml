@@ -28,11 +28,11 @@ jobs:
           let VERSION[1]++
           echo ::set-output name=version::v${VERSION[0]}.${VERSION[1]}.0
 
-      - name: Create Release Branch
-        run: |
-          BRANCH_NAME=release-${{ steps.nextversion.outputs.version }}
-          git checkout -b $BRANCH_NAME
-          git push origin $BRANCH_NAME
+      # - name: Create Release Branch
+      #   run: |
+      #     BRANCH_NAME=release-${{ steps.nextversion.outputs.version }}
+      #     git checkout -b $BRANCH_NAME
+      #     git push origin $BRANCH_NAME
 
       - name: Generate changelog
         run: |
