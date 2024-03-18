@@ -34,14 +34,14 @@ jobs:
       #     git checkout -b $BRANCH_NAME
       #     git push origin $BRANCH_NAME
 
-      - name: Generate changelog
-        run: |
-          curl -L https://github.com/orhun/git-cliff/releases/download/v0.1.0/git-cliff-linux-x86_64 -o git-cliff
-          chmod +x git-cliff
-          ./git-cliff --config gitcliff.toml > CHANGELOG.md
-          git add CHANGELOG.md
-          git commit -m "Generate changelog for ${{ steps.nextversion.outputs.version }}"
-          git push
+      - name: Generate changelog using git-cliff
+        uses: orhun/git-cliff-action@v1
+        with:
+          config: gitcliff.toml # Specify the path to your gitcliff configuration file if it's not in the repository root
+          output: CHANGELOG.md # The output file for the generated changelog
+          tag: ${{ steps.nextversion.outputs.version }} # Use the dynamically calculated next version as the tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Assuming you need to update a version file in your repository
       - name: Update version file
