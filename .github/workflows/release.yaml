@@ -1,9 +1,9 @@
 name: Prepare Release Branch
 
 on:
-  schedule:
-    - cron: "0 0 * * 0" # This runs at midnight every Sunday
-  workflow_dispatch: # Allows manual triggering
+  pull_request:
+    branches:
+      - main
 
 jobs:
   prepare_release:
