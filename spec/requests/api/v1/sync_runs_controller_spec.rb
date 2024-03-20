@@ -44,6 +44,7 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           expect(row.dig(:attributes, :successful_rows)).to eq(sync_run.successful_rows)
           expect(row.dig(:attributes, :failed_rows)).to eq(sync_run.failed_rows)
           expect(row.dig(:attributes, :status)).to eq(sync_run.status)
+          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs?page=1")
         end
       end
     end

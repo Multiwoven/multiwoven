@@ -48,6 +48,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash[:data][0][:attributes][:model].keys).to include("id", "name", "description", "query",
                                                                              "query_type", "primary_key", "created_at",
                                                                              "updated_at", "connector")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1")
       end
     end
   end
