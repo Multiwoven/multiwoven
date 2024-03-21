@@ -12,4 +12,11 @@ module SyncRunContracts
       key.failure("must be a valid status") if value && !SyncRun.statuses.include?(value)
     end
   end
+
+  class Show < Dry::Validation::Contract
+    params do
+      required(:sync_id).filled(:integer)
+      required(:id).filled(:integer)
+    end
+  end
 end

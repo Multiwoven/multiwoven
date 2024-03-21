@@ -30,7 +30,7 @@ Rails.application.routes.draw do
         collection do
           get :configurations
         end
-        resources :sync_runs, only: [:index] do
+        resources :sync_runs, only: [:index, :show] do
           resources :sync_records, only: [:index]
         end
       end
