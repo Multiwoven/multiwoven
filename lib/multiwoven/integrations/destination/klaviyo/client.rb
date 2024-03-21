@@ -4,6 +4,7 @@ module Multiwoven::Integrations::Destination
   module Klaviyo
     include Multiwoven::Integrations::Core
     class Client < DestinationConnector
+      prepend Multiwoven::Integrations::Core::RateLimiter
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         api_key = connection_config[:private_api_key]

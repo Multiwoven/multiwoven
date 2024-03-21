@@ -20,7 +20,7 @@ module Multiwoven
       "tracking"
     )
     ControlMessageType = Types::String.enum(
-      "rate_limit", "connection_config"
+      "rate_limit", "connection_config", "full_refresh"
     )
     LogLevel = Types::String.enum("fatal", "error", "warn", "info", "debug", "trace")
     RequestRateLimitingUnit = Types::String.default("minute").enum("minute", "hour", "day")
@@ -170,6 +170,7 @@ module Multiwoven
     class ControlMessage < ProtocolModel
       attribute :type, ControlMessageType
       attribute :emitted_at, Types::Integer
+      attribute? :status, ConnectionStatusType.optional
       attribute? :meta, Types::Hash
 
       def to_multiwoven_message

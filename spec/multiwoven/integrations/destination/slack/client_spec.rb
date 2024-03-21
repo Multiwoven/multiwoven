@@ -43,6 +43,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do # rubocop
       stream: {
         name: "chat_postMessage",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: slack_json_schema
       },
       sync_mode: "full_refresh",

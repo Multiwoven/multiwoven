@@ -347,7 +347,15 @@ module Multiwoven
       json_data = {
         "type": "rate_limit",
         "emitted_at": 1_638_449_455_000,
-        "meta": { "key": "value" }
+        "meta": { "key": "value" },
+        "status": ConnectionStatusType["succeeded"]
+      }.to_json
+
+      fullrefresh_json_data = {
+        "type": "full_refresh",
+        "emitted_at": 1_638_449_455_000,
+        "meta": { "key": "value" },
+        "status": ConnectionStatusType["succeeded"]
       }.to_json
 
       describe ".from_json" do
@@ -358,6 +366,16 @@ module Multiwoven
           expect(control_message.type).to eq("rate_limit")
           expect(control_message.emitted_at).to eq(1_638_449_455_000)
           expect(control_message.meta).to eq(key: "value")
+        end
+
+        it "creates an full refresh instance from JSON" do
+          control_message = described_class.from_json(fullrefresh_json_data)
+
+          expect(control_message).to be_a(described_class)
+          expect(control_message.type).to eq("full_refresh")
+          expect(control_message.emitted_at).to eq(1_638_449_455_000)
+          expect(control_message.meta).to eq(key: "value")
+          expect(control_message.status).to eq(ConnectionStatusType["succeeded"])
         end
       end
 

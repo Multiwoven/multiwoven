@@ -56,7 +56,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do # rubo
         "supported_sync_modes": %w[incremental],
         "source_defined_cursor": true,
         "cursor_field": "timestamp",
-        "destination_sync_mode": "insert"
+        "destination_sync_mode": "insert",
+        "request_rate_limit": 4,
+        "rate_limit_unit_seconds": 1
       },
       "sync_mode": "incremental",
       "cursor_field": "timestamp",

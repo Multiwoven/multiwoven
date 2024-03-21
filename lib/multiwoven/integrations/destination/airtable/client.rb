@@ -7,6 +7,7 @@ module Multiwoven
       module Airtable
         include Multiwoven::Integrations::Core
         class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+          prepend Multiwoven::Integrations::Core::RateLimiter
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access

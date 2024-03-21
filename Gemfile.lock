@@ -7,13 +7,14 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.36)
+    multiwoven-integrations (0.1.37)
       activesupport
       async-websocket
       dry-schema
       dry-struct
       dry-types
       git
+      google-apis-sheets_v4
       google-cloud-bigquery
       hubspot-api-client
       pg
@@ -23,6 +24,7 @@ PATH
       ruby-odbc
       sequel
       slack-ruby-client
+      stripe
 
 GEM
   remote: https://rubygems.org/

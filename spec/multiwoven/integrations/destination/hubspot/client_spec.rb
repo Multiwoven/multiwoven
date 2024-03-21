@@ -41,6 +41,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do # ruboc
       stream: {
         name: "contacts",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: hubspot_contacts_json_schema
       },
       sync_mode: "full_refresh",

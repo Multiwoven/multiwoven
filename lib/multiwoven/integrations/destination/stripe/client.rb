@@ -9,6 +9,7 @@ module Multiwoven
         API_VERSION = "59.0"
 
         class Client < DestinationConnector
+          prepend Multiwoven::Integrations::Core::RateLimiter
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
             initialize_client(connection_config)

@@ -45,6 +45,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do #
       stream: {
         name: "Account",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: salesforce_account_json_schema
       },
       sync_mode: "full_refresh",

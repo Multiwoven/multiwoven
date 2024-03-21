@@ -41,6 +41,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Stripe::Client do
       stream: {
         name: "Customer",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: stripe_customer_json_schema
       },
       sync_mode: "incremental",
