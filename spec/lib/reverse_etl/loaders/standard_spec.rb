@@ -166,5 +166,59 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         expect(sync_run_started).to have_state(:started)
       end
     end
+
+    context "Full Refresh: Clearing Records Failure for Sync processing individual" do
+      control = Multiwoven::Integrations::Protocol::ControlMessage.new(
+        type: "full_refresh",
+        emitted_at: Time.zone.now.to_i,
+        status: Multiwoven::Integrations::Protocol::ConnectionStatusType["failed"],
+        meta: { detail: "failed" }
+      )
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
+      let(:multiwoven_message) { control.to_multiwoven_message }
+      let(:client) { instance_double(sync_individual.destination.connector_client) }
+
+      it "sync run started to in_progress" do
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
+        expect(subject).not_to receive(:heartbeat)
+        expect(sync_run_individual).to have_state(:queued)
+        expect do
+          subject.write(sync_run_individual.id, activity)
+        end.to raise_error(Activities::LoaderActivity::FullRefreshFailed)
+
+        sync_run_individual.reload
+
+        expect(sync_run_individual).to have_state(:failed)
+      end
+    end
+
+    context "Full Refresh: Clearing Records Failure for Sync processing for batch" do
+      control = Multiwoven::Integrations::Protocol::ControlMessage.new(
+        type: "full_refresh",
+        emitted_at: Time.zone.now.to_i,
+        status: Multiwoven::Integrations::Protocol::ConnectionStatusType["failed"],
+        meta: { detail: "failed" }
+      )
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) do
+        [transformer.transform(sync_batch, sync_record_batch1), transformer.transform(sync_batch, sync_record_batch2)]
+      end
+      let(:multiwoven_message) { control.to_multiwoven_message }
+      let(:client) { instance_double(sync_batch.destination.connector_client) }
+      it "calls process_batch_records method" do
+        allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
+        expect(subject).not_to receive(:heartbeat)
+        expect(sync_run_batch).to have_state(:queued)
+        expect do
+          subject.write(sync_run_batch.id, activity)
+        end.to raise_error(Activities::LoaderActivity::FullRefreshFailed)
+
+        sync_run_batch.reload
+        expect(sync_run_batch).to have_state(:failed)
+      end
+    end
   end
 end

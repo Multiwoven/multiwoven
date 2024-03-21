@@ -81,7 +81,7 @@ class Sync < ApplicationRecord
       stream: catalog.stream_to_protocol(
         catalog.find_stream_by_name(stream_name)
       ),
-      sync_mode: Multiwoven::Integrations::Protocol::SyncMode["incremental"],
+      sync_mode: Multiwoven::Integrations::Protocol::SyncMode[sync_mode],
       destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"]
     )
   end

@@ -23,15 +23,27 @@ module Activities
       sync_run.start
       sync_run.update(started_at: Time.zone.now)
 
-      # TODO: Select extraction strategy
-      # based on sync mode eg: incremental/full_refresh
-      extractor = ReverseEtl::Extractors::IncrementalDelta.new
+      extractor = select_extractor(sync_run)
       extractor.read(sync_run.id, activity)
+    end
+
+    private
+
+    def select_extractor(sync_run)
+      sync_mode = sync_run.sync.sync_mode.to_sym
+      case sync_mode
+      when :incremental
+        ReverseEtl::Extractors::IncrementalDelta.new
+      when :full_refresh
+        ReverseEtl::Extractors::FullRefresh.new
+      else
+        raise "Unsupported sync mode: #{sync_mode}"
+      end
     end
 
     def log_error(sync_run)
       Temporal.logger.error(
-        eerror_message: "SyncRun cannot start from its current state: #{sync_run.status}",
+        error_message: "SyncRun cannot start from its current state: #{sync_run.status}",
         sync_run_id: sync_run.id,
         stack_trace: nil
       )

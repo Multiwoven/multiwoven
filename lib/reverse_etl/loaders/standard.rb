@@ -37,13 +37,14 @@ module ReverseEtl
 
           Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
             record = transformer.transform(sync, sync_record)
-            report = client.write(sync_config, [record]).tracking
-
-            if report.success.zero?
+            report = handle_response(client.write(sync_config, [record]), sync_run)
+            if report.tracking.success.zero?
               failed_sync_records << sync_record.id
             else
               successfull_sync_records << sync_record.id
             end
+          rescue Activities::LoaderActivity::FullRefreshFailed
+            raise
           rescue StandardError => e
             Rails.logger(e)
           end
@@ -65,19 +66,39 @@ module ReverseEtl
         Parallel.each(sync_run.sync_records.pending.find_in_batches(batch_size:),
                       in_threads: THREAD_COUNT) do |sync_records|
           transformed_records = sync_records.map { |sync_record| transformer.transform(sync, sync_record) }
-          report = client.write(sync_config, transformed_records).tracking
+          report = handle_response(client.write(sync_config, transformed_records), sync_run)
           heartbeat(activity)
-          if report.success.zero?
+          if report.tracking.success.zero?
             failed_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           else
             successfull_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           end
+        rescue Activities::LoaderActivity::FullRefreshFailed
+          raise
         rescue StandardError => e
           Temporal.logger.error(error_message: e.message,
                                 sync_run_id: sync_run.id,
                                 stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
+      end
+
+      def handle_response(report, sync_run)
+        is_multiwoven_tracking_message = report.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage) &&
+                                         report.type == "tracking" &&
+                                         report.tracking.is_a?(Multiwoven::Integrations::Protocol::TrackingMessage)
+        raise_non_retryable_error(report, sync_run) unless is_multiwoven_tracking_message
+        report
+      end
+
+      def raise_non_retryable_error(report, sync_run)
+        sync_run.failed!
+        Temporal.logger.error(
+          error_message: "Full refresh failed type:#{report.control.type} status: #{report.control.status}",
+          sync_run_id: sync_run.id,
+          stack_trace: nil
+        )
+        raise Activities::LoaderActivity::FullRefreshFailed, "Full refresh failed (non-retryable)"
       end
 
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
@@ -92,7 +113,7 @@ module ReverseEtl
 
       def log_error(sync_run)
         Temporal.logger.error(
-          eerror_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
+          error_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
         )

@@ -3,14 +3,12 @@
 module ReverseEtl
   module Extractors
     class IncrementalDelta < Base
-      THREAD_COUNT = (ENV["SYNC_EXTRACTOR_THREAD_POOL_SIZE"] || "5").to_i
-
       # TODO: Make it as class method
       def read(sync_run_id, activity)
         total_query_rows = 0
         sync_run = SyncRun.find(sync_run_id)
 
-        return log_error(sync_run) unless sync_run.may_query?
+        return log_sync_run_error(sync_run) unless sync_run.may_query?
 
         sync_run.query!
 
@@ -31,15 +29,6 @@ module ReverseEtl
 
       private
 
-      def heartbeat(activity)
-        activity.heartbeat
-        raise StandardError, "Cancel activity request received" if activity.cancel_requested
-      end
-
-      def setup_source_client(sync)
-        sync.source.connector_client.new
-      end
-
       def process_records(records, sync_run, model)
         Parallel.each(records, in_threads: THREAD_COUNT) do |message|
           process_record(message, sync_run, model)
@@ -57,10 +46,6 @@ module ReverseEtl
         Temporal.logger.error(error_message: e.message,
                               sync_run_id: sync_run.id,
                               stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
-      end
-
-      def generate_fingerprint(data)
-        Digest::SHA1.hexdigest(data.to_json)
       end
 
       def find_or_initialize_sync_record(sync_run, primary_key)
@@ -92,14 +77,6 @@ module ReverseEtl
           record: record.data
         )
         sync_record.save!
-      end
-
-      def log_error(sync_run)
-        Temporal.logger.error(
-          eerror_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
-          sync_run_id: sync_run.id,
-          stack_trace: nil
-        )
       end
     end
   end
