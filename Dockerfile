@@ -5,9 +5,6 @@ FROM node:18 as build-stage
 # Set the working directory in the Docker container
 WORKDIR /app
 
-# ENV Variable
-ENV VITE_API_HOST='https://api.multiwoven.com'
-
 # Copy package.json and package-lock.json (or yarn.lock if using Yarn)
 COPY package*.json ./
 
