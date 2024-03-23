@@ -1,34 +1,45 @@
-import { Step } from "@/components/Breadcrumbs/types";
-import { SyncColumnEntity } from "./types";
+import { SyncColumnEntity, SyncRunsColumnEntity } from './types';
 
 export const SYNC_TABLE_COLUMS: SyncColumnEntity[] = [
   {
-    key: "model",
-    name: "Model",
+    key: 'model',
+    name: 'Model',
   },
   {
-    key: "destination",
-    name: "Destination",
+    key: 'destination',
+    name: 'Destination',
   },
   {
-    key: "lastUpdated",
-    name: "Last Updated",
+    key: 'lastUpdated',
+    name: 'Last Updated',
   },
   {
-    key: "status",
-    name: "Status",
+    key: 'status',
+    name: 'Status',
   },
 ];
 
-export const EDIT_SYNC_FORM_STEPS: Step[] = [
+export const SYNC_RUNS_COLUMNS: SyncRunsColumnEntity[] = [
   {
-    name: "Syncs",
-    url: "/activate/syncs",
+    key: 'status',
+    name: 'status',
   },
   {
-    name: "Sync",
-    url: "",
+    key: 'start_time',
+    name: 'start_time',
+  },
+  {
+    key: 'duration',
+    name: 'Duration',
+  },
+  {
+    key: 'rows_queried',
+    name: 'Rows Queried',
+  },
+  {
+    key: 'results',
+    name: 'Results',
   },
 ];
 
-export const SYNCS_LIST_QUERY_KEY = ["activate", "syncs-list"];
+export const SYNCS_LIST_QUERY_KEY = ['activate', 'syncs-list'];

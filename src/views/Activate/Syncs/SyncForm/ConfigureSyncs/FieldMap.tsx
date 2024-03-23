@@ -1,5 +1,7 @@
 import EntityItem from '@/components/EntityItem';
 import { Box, Select } from '@chakra-ui/react';
+import TemplateMapping from './TemplateMapping/TemplateMapping';
+import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 
 type FieldMapProps = {
   id: number;
@@ -10,7 +12,7 @@ type FieldMapProps = {
   disabledOptions?: string[];
   isDisabled: boolean;
   onChange: (id: number, type: 'model' | 'destination', value: string) => void;
-  selectedConfigOptions?: string[];
+  selectedConfigOptions?: FieldMapType[] | null;
 };
 
 const FieldMap = ({
@@ -29,29 +31,37 @@ const FieldMap = ({
       <Box marginBottom='10px'>
         <EntityItem icon={icon} name={entityName} />
       </Box>
-      <Box>
-        <Select
-          value={selectedConfigOptions?.[id]}
-          placeholder={`Select a field from ${entityName}`}
-          backgroundColor={isDisabled ? 'gray.300' : 'gray.100'}
-          isDisabled={isDisabled}
-          onChange={(e) => onChange(id, fieldType, e.target.value)}
-          isRequired
-          borderWidth='1px'
-          borderStyle='solid'
-          borderColor='gray.400'
-          color='black.500'
-        >
-          {options.map((option) => (
-            <option
-              key={option}
-              value={option}
-              disabled={disabledOptions.includes?.(option)}
-            >
-              {option}
-            </option>
-          ))}
-        </Select>
+      <Box position='relative'>
+        {fieldType === 'destination' ? (
+          <Select
+            value={selectedConfigOptions?.[id]?.to}
+            placeholder={`Select a field from ${entityName}`}
+            backgroundColor={isDisabled ? 'gray.300' : 'gray.100'}
+            isDisabled={isDisabled}
+            onChange={(e) => onChange(id, fieldType, e.target.value)}
+            isRequired
+            borderWidth='1px'
+            borderStyle='solid'
+            borderColor={isDisabled ? 'gray.500' : 'gray.400'}
+            color='black.500'
+            _placeholder={{ color: isDisabled ? 'black.500' : 'gray.600' }}
+          >
+            {options.map((option) => (
+              <option key={option} value={option} disabled={disabledOptions.includes?.(option)}>
+                {option}
+              </option>
+            ))}
+          </Select>
+        ) : (
+          <TemplateMapping
+            entityName={entityName}
+            isDisabled={isDisabled}
+            columnOptions={options}
+            handleUpdateConfig={onChange}
+            mappingId={id}
+            selectedConfig={selectedConfigOptions?.[id]?.from}
+          />
+        )}
       </Box>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/layout";
+import { Heading } from '@chakra-ui/layout';
 
 const Homepage = (): JSX.Element => {
   return (

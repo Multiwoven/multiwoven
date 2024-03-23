@@ -1,1 +1,1 @@
-export { default } from "./FormFooter";
+export { default } from './FormFooter';

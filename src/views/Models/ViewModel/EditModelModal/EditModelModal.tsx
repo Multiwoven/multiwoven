@@ -14,7 +14,6 @@ import {
   Text,
   VStack,
   useDisclosure,
-  useToast,
   Input,
   Textarea,
 } from '@chakra-ui/react';
@@ -23,6 +22,8 @@ import { useParams } from 'react-router-dom';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { PrefillValue } from '../../ModelsForm/DefineModel/DefineSQL/types';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 import { ModelSubmitFormValues, UpdateModelPayload } from '../types';
 import { useState } from 'react';
 
@@ -31,7 +32,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
   const [loading, setLoading] = useState(false);
 
   const params = useParams();
-  const toast = useToast();
+  const showToast = useCustomToast();
 
   const model_id = params.id || '';
 
@@ -49,9 +50,9 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
 
     const modelUpdateResponse = await putModelById(model_id, updatePayload);
     if (modelUpdateResponse.data) {
-      toast({
+      showToast({
         title: 'Model updated successfully',
-        status: 'success',
+        status: CustomToastStatus.Success,
         duration: 3000,
         isClosable: true,
         position: 'bottom-right',
@@ -118,11 +119,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
               <Form>
                 <VStack spacing={5}>
                   <FormControl>
-                    <FormLabel
-                      htmlFor='modelName'
-                      fontSize='sm'
-                      fontWeight='semibold'
-                    >
+                    <FormLabel htmlFor='modelName' fontSize='sm' fontWeight='semibold'>
                       Model Name
                     </FormLabel>
                     <Field
@@ -144,12 +141,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
                     <FormLabel htmlFor='description' fontWeight='bold'>
                       <Flex alignItems='center' fontSize='sm'>
                         Description{' '}
-                        <Text
-                          ml={2}
-                          size='xs'
-                          color='gray.600'
-                          fontWeight={400}
-                        >
+                        <Text ml={2} size='xs' color='gray.600' fontWeight={400}>
                           {' '}
                           (optional)
                         </Text>

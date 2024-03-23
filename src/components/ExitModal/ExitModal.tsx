@@ -51,13 +51,7 @@ const ExitModal = (): JSX.Element => {
               >
                 Are you sure you want to exit?
               </Text>
-              <Text
-                fontWeight={400}
-                size='sm'
-                textAlign='center'
-                color='black.200'
-                pt={2}
-              >
+              <Text fontWeight={400} size='sm' textAlign='center' color='black.200' pt={2}>
                 Your progress will be lost
               </Text>
             </Flex>

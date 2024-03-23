@@ -13,6 +13,9 @@ RUN npm ci
 # Copy the rest of your application code
 COPY . .
 
+# ENV Variable
+ENV VITE_API_HOST='https://api.multiwoven.com'
+
 EXPOSE 8000
 
 # Command to run the Vite development server

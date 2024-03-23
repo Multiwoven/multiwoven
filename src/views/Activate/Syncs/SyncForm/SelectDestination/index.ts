@@ -1,1 +1,1 @@
-export { default } from "./SelectDestination";
+export { default } from './SelectDestination';

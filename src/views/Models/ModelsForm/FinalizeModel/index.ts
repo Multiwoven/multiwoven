@@ -1,1 +1,1 @@
-export { default } from "./FinalizeModel";
+export { default } from './FinalizeModel';

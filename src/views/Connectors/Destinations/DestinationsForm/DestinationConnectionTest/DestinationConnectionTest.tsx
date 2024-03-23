@@ -39,24 +39,16 @@ const DestinationConnectionTest = (): JSX.Element | null => {
   const { forms } = state;
   const { maxContentWidth } = useUiConfig();
 
-  const selectedDestination = forms.find(
-    ({ stepKey }) => stepKey === 'destination'
-  )?.data?.destination as string;
+  const selectedDestination = forms.find(({ stepKey }) => stepKey === 'destination')?.data
+    ?.destination as string;
 
-  const destinationConfigForm = forms.find(
-    ({ stepKey }) => stepKey === CONNECT_TO_DESTINATION_KEY
-  );
+  const destinationConfigForm = forms.find(({ stepKey }) => stepKey === CONNECT_TO_DESTINATION_KEY);
 
   const { data } = destinationConfigForm ?? {};
   const destinationConfig = data?.[CONNECT_TO_DESTINATION_KEY];
   const processedDestinationConfig = useMemo(
-    () =>
-      processConnectorConfigData(
-        destinationConfig,
-        selectedDestination,
-        'destination'
-      ),
-    [forms]
+    () => processConnectorConfigData(destinationConfig, selectedDestination, 'destination'),
+    [forms],
   );
 
   const {
@@ -65,15 +57,13 @@ const DestinationConnectionTest = (): JSX.Element | null => {
     isFetching,
   } = useQuery({
     queryKey: ['connector_definition', 'test-connection', 'destination'],
-    queryFn: () =>
-      getConnectionStatus(processedDestinationConfig as TestConnectionPayload),
+    queryFn: () => getConnectionStatus(processedDestinationConfig as TestConnectionPayload),
     enabled: !!processedDestinationConfig,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
-  const isAnyFailed =
-    connectionResponse?.connection_status.status !== 'succeeded';
+  const isAnyFailed = connectionResponse?.connection_status.status !== 'succeeded';
 
   const handleOnContinueClick = () => {
     handleMoveForward(stepInfo?.formKey as string, processedDestinationConfig);
@@ -83,12 +73,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <Box maxWidth={maxContentWidth} width='100%'>
-          <Box
-            padding='24px'
-            backgroundColor='gray.300'
-            borderRadius='8px'
-            marginBottom='16px'
-          >
+          <Box padding='24px' backgroundColor='gray.300' borderRadius='8px' marginBottom='16px'>
             {CONNECTION_STATUS.map(({ status }) => {
               const statusMetaInfo = status({
                 data: connectionResponse,
@@ -141,11 +126,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
                         height='20px'
                         width='20px'
                       >
-                        <Icon
-                          as={FiAlertOctagon}
-                          boxSize={4}
-                          color='gray.100'
-                        />
+                        <Icon as={FiAlertOctagon} boxSize={4} color='gray.100' />
                       </Box>
                     ) : null}
                   </Box>
@@ -189,11 +170,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
               paddingY='12px'
             >
               <Box>
-                <AlertTitle
-                  fontSize='14px'
-                  fontWeight='semibold'
-                  letterSpacing='-0.14px'
-                >
+                <AlertTitle fontSize='14px' fontWeight='semibold' letterSpacing='-0.14px'>
                   {isAnyFailed
                     ? 'Could not open a connection to remote host'
                     : 'Connected successfully!'}

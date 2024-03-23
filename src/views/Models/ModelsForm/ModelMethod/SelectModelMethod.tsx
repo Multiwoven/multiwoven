@@ -1,13 +1,4 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  HStack,
-  Image,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Card, CardBody, HStack, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { modelMethods } from './methods';
 import { useContext } from 'react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
@@ -43,19 +34,14 @@ const ModelMethod = (): JSX.Element => {
               borderColor='gray.400'
             >
               <CardBody>
-                <Image
-                  src={method.image}
-                  alt={method.type}
-                  borderRadius='lg'
-                  w='full'
-                />
+                <Image src={method.image} alt={method.type} borderRadius='lg' w='full' />
                 <Stack mt='6' spacing='3'>
                   <HStack>
                     <Text size='lg' fontWeight='semibold'>
                       {method.name}
                     </Text>
                     {!method.enabled ? (
-                      <Badge text='weaving soon' variant='default' />
+                      <Badge text='weaving soon' variant='default' width='fit-content' />
                     ) : (
                       <></>
                     )}

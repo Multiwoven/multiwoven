@@ -1,1 +1,1 @@
-export { default } from "./ConfigureSyncs";
+export { default } from './ConfigureSyncs';

@@ -11,7 +11,6 @@ import {
   Text,
   Textarea,
   VStack,
-  useToast,
 } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useContext, useState } from 'react';
@@ -23,6 +22,8 @@ import { FinalizeForm } from './types';
 import { CreateModelPayload } from '../../types';
 import { createNewModel } from '@/services/models';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 
 type ModelConfig = {
   id: number;
@@ -33,20 +34,17 @@ type ModelConfig = {
 
 type StepData = {
   step: number;
-  data: { [key: string]: ModelConfig | any };
+  data: { [key: string]: ModelConfig };
   stepKey: string;
 };
 
 const FinalizeModel = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
-  const defineModelData: StepData = extractDataByKey<StepData>(
-    state.forms,
-    'defineModel'
-  );
+  const defineModelData: StepData = extractDataByKey<StepData>(state.forms, 'defineModel');
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const toast = useToast();
+  const showToast = useCustomToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
@@ -75,8 +73,8 @@ const FinalizeModel = (): JSX.Element => {
         queryClient.removeQueries({
           queryKey: ['Create Model'],
         });
-        toast({
-          status: 'success',
+        showToast({
+          status: CustomToastStatus.Success,
           title: 'Success!!',
           description: 'Model created successfully!',
           position: 'bottom-right',
@@ -86,8 +84,8 @@ const FinalizeModel = (): JSX.Element => {
         throw new Error();
       }
     } catch {
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'An error occurred.',
         description: 'Something went wrong while creating Model.',
         position: 'bottom-right',
@@ -100,14 +98,7 @@ const FinalizeModel = (): JSX.Element => {
 
   return (
     <>
-      <Box
-        bgColor='gray.300'
-        px={6}
-        py={4}
-        marginTop={6}
-        marginX='30px'
-        borderRadius='8px'
-      >
+      <Box bgColor='gray.300' px={6} py={4} marginTop={6} marginX='30px' borderRadius='8px'>
         <Text mb={6} fontWeight='semibold' size='md'>
           Finalize settings for this Model
         </Text>
@@ -125,11 +116,7 @@ const FinalizeModel = (): JSX.Element => {
           <Form>
             <VStack spacing={5}>
               <FormControl>
-                <FormLabel
-                  htmlFor='modelName'
-                  fontSize='sm'
-                  fontWeight='semibold'
-                >
+                <FormLabel htmlFor='modelName' fontSize='sm' fontWeight='semibold'>
                   Model Name
                 </FormLabel>
                 <Field
@@ -170,11 +157,7 @@ const FinalizeModel = (): JSX.Element => {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel
-                  htmlFor='primaryKey'
-                  fontSize='sm'
-                  fontWeight='semibold'
-                >
+                <FormLabel htmlFor='primaryKey' fontSize='sm' fontWeight='semibold'>
                   Primary Key
                 </FormLabel>
                 <Field
@@ -193,7 +176,7 @@ const FinalizeModel = (): JSX.Element => {
                       <option key={index} value={key}>
                         {name}
                       </option>
-                    )
+                    ),
                   )}
                 </Field>
                 <Text color='red.500' fontSize='sm'>

@@ -1,1 +1,1 @@
-export { default } from "./ContentContainer";
+export { default } from './ContentContainer';

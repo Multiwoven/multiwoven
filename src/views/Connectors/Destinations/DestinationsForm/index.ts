@@ -1,1 +1,1 @@
-export { default } from "./DestinationsForm";
+export { default } from './DestinationsForm';

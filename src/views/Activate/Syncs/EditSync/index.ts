@@ -1,1 +1,1 @@
-export { default } from "./EditSync";
+export { default } from './EditSync';

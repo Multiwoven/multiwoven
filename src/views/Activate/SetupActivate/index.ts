@@ -1,1 +1,1 @@
-export { default } from "./SetupActivate";
+export { default } from './SetupActivate';

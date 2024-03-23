@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import validator from '@rjsf/validator-ajv8';
 import { Form } from '@rjsf/chakra-ui';
-import { Box, Button, useToast, Divider, Text } from '@chakra-ui/react';
+import { Box, Button, Divider, Text } from '@chakra-ui/react';
 import SourceFormFooter from '../SourcesForm/SourceFormFooter';
 import TopBar from '@/components/TopBar';
 import ContentContainer from '@/components/ContentContainer';
@@ -28,32 +28,30 @@ import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate
 import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
 import { uiSchemas } from '../SourcesForm/SourceConfigForm/SourceConfigForm';
 import SourceActions from './SourceActions';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<unknown>(null);
 
   const [isTestRunning, setIsTestRunning] = useState<boolean>(false);
   const [testedFormData, setTestedFormData] = useState<unknown>(null);
 
-  const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } =
-    useQuery({
-      queryKey: ['connectorInfo', sourceId],
-      queryFn: () => getConnectorInfo(sourceId as string),
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-      enabled: !!sourceId,
-    });
+  const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } = useQuery({
+    queryKey: ['connectorInfo', sourceId],
+    queryFn: () => getConnectorInfo(sourceId as string),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    enabled: !!sourceId,
+  });
 
   const connectorInfo = connectorInfoResponse?.data;
   const connectorName = connectorInfo?.attributes?.connector_name;
 
-  const {
-    data: connectorDefinitionResponse,
-    isLoading: isConnectorDefinitionLoading,
-  } = useQuery({
+  const { data: connectorDefinitionResponse, isLoading: isConnectorDefinitionLoading } = useQuery({
     queryKey: ['connector_definition', connectorName],
     queryFn: () => getConnectorDefinition('source', connectorName as string),
     refetchOnMount: false,
@@ -84,8 +82,8 @@ const EditSource = (): JSX.Element => {
   const { isPending: isEditLoading, mutate } = useMutation({
     mutationFn: handleOnSaveChanges,
     onSettled: () => {
-      toast({
-        status: 'success',
+      showToast({
+        status: CustomToastStatus.Success,
         title: 'Success!!',
         description: 'Connector Updated',
         position: 'bottom-right',
@@ -94,8 +92,8 @@ const EditSource = (): JSX.Element => {
       navigate('/setup/sources');
     },
     onError: () => {
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'Error!!',
         description: 'Something went wrong',
         position: 'bottom-right',
@@ -121,8 +119,8 @@ const EditSource = (): JSX.Element => {
         testingConnectionResponse?.connection_status?.status === 'succeeded';
 
       if (isConnectionSucceeded) {
-        toast({
-          status: 'success',
+        showToast({
+          status: CustomToastStatus.Success,
           title: 'Connection successful',
           position: 'bottom-right',
           isClosable: true,
@@ -131,16 +129,16 @@ const EditSource = (): JSX.Element => {
         return;
       }
 
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'Connection failed',
         description: testingConnectionResponse?.connection_status?.message,
         position: 'bottom-right',
         isClosable: true,
       });
     } catch (e) {
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'Connection failed',
         description: 'Something went wrong!',
         position: 'bottom-right',
@@ -198,9 +196,7 @@ const EditSource = (): JSX.Element => {
                 Last updated :{' '}
               </Text>
               <Text size='sm' fontWeight='semibold'>
-                {moment(connectorInfo?.attributes?.updated_at).format(
-                  'DD/MM/YYYY'
-                )}
+                {moment(connectorInfo?.attributes?.updated_at).format('DD/MM/YYYY')}
               </Text>
               <SourceActions connectorType='sources' />
             </Box>
@@ -219,9 +215,7 @@ const EditSource = (): JSX.Element => {
           <Form
             uiSchema={
               connectorSchema?.connection_specification?.title
-                ? uiSchemas[
-                    connectorSchema?.connection_specification?.title.toLowerCase()
-                  ]
+                ? uiSchemas[connectorSchema?.connection_specification?.title.toLowerCase()]
                 : undefined
             }
             schema={connectorSchema?.connection_specification as RJSFSchema}

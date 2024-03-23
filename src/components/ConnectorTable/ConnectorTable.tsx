@@ -10,8 +10,8 @@ import {
   Flex,
   Text,
   Badge,
-} from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 interface Payload {
   id: string;
@@ -41,12 +41,12 @@ interface Payload {
   status?: string;
 }
 
-const ConnectorTable = ({ payload }: { payload: Payload[] }) : JSX.Element => {
+const ConnectorTable = ({ payload }: { payload: Payload[] }): JSX.Element => {
   const navigate = useNavigate();
 
   return (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant='simple'>
         <Thead>
           <Tr>
             <Th>Name</Th>
@@ -60,36 +60,36 @@ const ConnectorTable = ({ payload }: { payload: Payload[] }) : JSX.Element => {
             <Tr
               onClick={() =>
                 navigate(
-                  "/" +
+                  '/' +
                     item.attributes.connector_type +
-                    "s/" +
+                    's/' +
                     item.id +
-                    "?type=" +
+                    '?type=' +
                     item.attributes.connector_type +
-                    "&name=" +
-                    item.connector_name.toLowerCase()
+                    '&name=' +
+                    item.connector_name.toLowerCase(),
                 )
               }
               key={item.id}
-              _hover={{ backgroundColor: "gray.100" }}
+              _hover={{ backgroundColor: 'gray.100' }}
             >
               <Td>
-                <Text as="b">{item.attributes.name}</Text>
+                <Text as='b'>{item.attributes.name}</Text>
               </Td>
               <Td>
                 <Flex>
                   <Image
-                    src={"/icons/" + item.icon}
+                    src={'/icons/' + item.icon}
                     alt={`${item.connector_name} Icon`}
-                    boxSize="20px"
+                    boxSize='20px'
                     mr={2}
                   />
-                  <Text fontSize="sm">{item.connector_name}</Text>
+                  <Text fontSize='sm'>{item.connector_name}</Text>
                 </Flex>
               </Td>
               <Td>{item.attributes.updated_at}</Td>
               <Td>
-                <Badge colorScheme="blue" p={2} rounded="lg">
+                <Badge colorScheme='blue' p={2} rounded='lg'>
                   {item.status}
                 </Badge>
               </Td>

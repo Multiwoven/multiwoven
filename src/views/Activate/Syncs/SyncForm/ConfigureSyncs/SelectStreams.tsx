@@ -50,9 +50,7 @@ const SelectStreams = ({
     }
   };
 
-  const selectedStreamIndex = streams?.findIndex(
-    (stream) => stream.name === selectedStream?.name
-  );
+  const selectedStreamIndex = streams?.findIndex((stream) => stream.name === selectedStream?.name);
 
   return (
     <Box

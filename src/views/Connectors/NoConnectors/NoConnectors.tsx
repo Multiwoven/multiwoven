@@ -1,12 +1,4 @@
-import {
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Image,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, Center, Flex, Heading, Image, Text, VStack } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 import NoSourcesImage from '@/assets/images/NoSources.png';
 import NoDestinationsImage from '@/assets/images/NoDestinations.png';
@@ -25,8 +17,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
       ? 'Configure a source where your data is stored and managed'
       : 'Add a Destination where your data will be sent';
 
-  const image =
-    connectorType === 'source' ? NoSourcesImage : NoDestinationsImage;
+  const image = connectorType === 'source' ? NoSourcesImage : NoDestinationsImage;
 
   function onClickAddConnector() {
     const path = connectorType === 'source' ? 'sources' : 'destinations';
@@ -35,12 +26,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
   }
 
   return (
-    <Flex
-      width='100%'
-      height='100vh'
-      alignContent='center'
-      justifyContent='center'
-    >
+    <Flex width='100%' height='100vh' alignContent='center' justifyContent='center'>
       <Center>
         <VStack spacing={8}>
           <VStack>
@@ -52,12 +38,7 @@ const NoConnectors = ({ connectorType }: NoConnectorsProps): JSX.Element => {
               {description}{' '}
             </Text>
           </VStack>
-          <Button
-            onClick={onClickAddConnector}
-            leftIcon={<FiPlus />}
-            variant='solid'
-            w='fit'
-          >
+          <Button onClick={onClickAddConnector} leftIcon={<FiPlus />} variant='solid' w='fit'>
             Add {type}
           </Button>
         </VStack>

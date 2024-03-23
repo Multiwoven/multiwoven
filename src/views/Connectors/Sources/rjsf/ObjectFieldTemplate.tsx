@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Grid, GridItem } from '@chakra-ui/react';
 import {
   canExpand,
   descriptionId,
@@ -9,8 +9,8 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
-} from "@rjsf/utils"
-import DefaultObjectFieldTemplate from "@rjsf/chakra-ui/src/ObjectFieldTemplate"
+} from '@rjsf/utils';
+import DefaultObjectFieldTemplate from '@rjsf/chakra-ui/src/ObjectFieldTemplate';
 
 export default function ObjectFieldTemplate<
   T = unknown,
@@ -30,32 +30,31 @@ export default function ObjectFieldTemplate<
     formData,
     onAddClick,
     registry,
-  } = props
+  } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema)
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
-    uiOptions
-  )
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions)
+    uiOptions,
+  );
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
 
-  const layout = uiOptions.layout as Record<string, string>
+  const layout = uiOptions.layout as Record<string, string>;
 
-  if (layout?.display !== "grid" || !layout?.cols || !Array.isArray(layout?.colspans)) {
-    return <DefaultObjectFieldTemplate {...props} />
+  if (layout?.display !== 'grid' || !layout?.cols || !Array.isArray(layout?.colspans)) {
+    return <DefaultObjectFieldTemplate {...props} />;
   }
 
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
-  } = registry.templates
-  const gridTemplate = `repeat(${layout.cols}, 1fr)`
+  } = registry.templates;
+  const gridTemplate = `repeat(${layout.cols}, 1fr)`;
 
   return (
     <>
@@ -86,18 +85,18 @@ export default function ObjectFieldTemplate<
             <GridItem
               key={`${idSchema.$id}-${element.name}-${index}`}
               colSpan={Number(layout.colspans[index])}
-              display="flex"
-              flexDirection="column"
+              display='flex'
+              flexDirection='column'
             >
               {element.content}
             </GridItem>
-          )
+          ),
         )}
       </Grid>
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
-        <GridItem justifySelf="flex-end">
+        <GridItem justifySelf='flex-end'>
           <AddButton
-            className="object-property-expand"
+            className='object-property-expand'
             onClick={onAddClick(schema)}
             disabled={disabled || readonly}
             uiSchema={uiSchema}
@@ -106,5 +105,5 @@ export default function ObjectFieldTemplate<
         </GridItem>
       )}
     </>
-  )
+  );
 }

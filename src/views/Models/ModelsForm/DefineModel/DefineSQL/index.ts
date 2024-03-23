@@ -1,1 +1,1 @@
-export { default } from "./DefineSQL";
+export { default } from './DefineSQL';

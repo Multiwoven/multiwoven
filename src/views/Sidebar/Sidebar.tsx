@@ -31,7 +31,7 @@ type MenuArray = MenuSection[];
 const menus: MenuArray = [
   {
     heading: null,
-    menu: [{ title: 'Dashboard', link: '/', Icon: FiHome, disabled: true }],
+    menu: [{ title: 'Dashboard', link: '/', Icon: FiHome }],
   },
   {
     heading: 'SETUP',
@@ -66,12 +66,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
   <Stack key={index}>
     {section.heading && (
       <Box paddingX='16px'>
-        <Text
-          size='xs'
-          color='gray.600'
-          fontWeight='bold'
-          letterSpacing='2.4px'
-        >
+        <Text size='xs' color='gray.600' fontWeight='bold' letterSpacing='2.4px'>
           {section.heading}
         </Text>
       </Box>
@@ -110,7 +105,6 @@ const Sidebar = (): JSX.Element => {
   return (
     <Flex
       position='relative'
-      
       as='section'
       minH='100vh'
       bg='bg.canvas'
@@ -118,13 +112,7 @@ const Sidebar = (): JSX.Element => {
       borderRightStyle='solid'
       borderRightColor='gray.400'
     >
-      <Flex
-        flex='1'
-        bg='bg.surface'
-        maxW={{ base: 'full', sm: 'xs' }}
-        paddingX={4}
-        paddingY={6}
-      >
+      <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
         <Stack justify='space-between' spacing='1' width='full'>
           <Stack spacing='6' shouldWrapChildren>
             <Flex justifyContent='center'>

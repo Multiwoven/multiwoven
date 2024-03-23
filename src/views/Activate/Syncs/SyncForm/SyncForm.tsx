@@ -2,25 +2,17 @@ import { useState } from 'react';
 import SteppedForm from '@/components/SteppedForm';
 import { Stream } from '@/views/Activate/Syncs/types';
 
-import {
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerOverlay,
-} from '@chakra-ui/react';
+import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import SelectModel from './SelectModel';
 import SelectDestination from './SelectDestination';
 import ConfigureSyncs from './ConfigureSyncs';
 import FinaliseSync from './FinaliseSync';
+import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 
 const SyncForm = (): JSX.Element => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
-  const [configuration, setConfiguration] = useState<Record<
-    string,
-    string
-  > | null>(null);
+  const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
   const navigate = useNavigate();
   const steps = [
     {

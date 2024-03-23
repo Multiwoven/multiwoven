@@ -21,9 +21,7 @@ import { uiSchemas } from '@/views/Connectors/Sources/SourcesForm/SourceConfigFo
 const DestinationConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
-  const selectedDestination = forms.find(
-    ({ stepKey }) => stepKey === 'destination'
-  );
+  const selectedDestination = forms.find(({ stepKey }) => stepKey === 'destination');
 
   const destination = selectedDestination?.data?.destination as string;
   if (!destination) return null;
@@ -56,21 +54,14 @@ const DestinationConfigForm = (): JSX.Element | null => {
   return (
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
-        <Box
-          backgroundColor='gray.300'
-          padding='20px'
-          borderRadius='8px'
-          marginBottom='100px'
-        >
+        <Box backgroundColor='gray.300' padding='20px' borderRadius='8px' marginBottom='100px'>
           <Form
             schema={connectorSchema}
             validator={validator}
             onSubmit={({ formData }) => handleFormSubmit(formData)}
             templates={templateOverrides}
             uiSchema={
-              connectorSchema.title
-                ? uiSchemas[connectorSchema.title.toLowerCase()]
-                : undefined
+              connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined
             }
           >
             <SourceFormFooter

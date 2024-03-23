@@ -12,17 +12,19 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react';
 import { FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import ExitWarningImage from '@/assets/images/ExitWarning.png';
 
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
+
 const DeleteModelModal = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const params = useParams();
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
 
   const model_id = params.id || '';
@@ -30,19 +32,19 @@ const DeleteModelModal = (): JSX.Element => {
   async function handleDeleteModel() {
     try {
       await deleteModelById(model_id);
-      toast({
+      showToast({
         title: 'Model deleted successfully',
-        status: 'success',
+        status: CustomToastStatus.Success,
         isClosable: true,
         duration: 5000,
         position: 'bottom-right',
       });
       navigate('/define/models');
     } catch (error) {
-      toast({
+      showToast({
         title: 'Unable to delete Model',
         description: 'error',
-        status: 'error',
+        status: CustomToastStatus.Error,
         isClosable: true,
         duration: 5000,
         position: 'bottom-right',
@@ -85,8 +87,7 @@ const DeleteModelModal = (): JSX.Element => {
                 Are you sure you want to delete this Model?
               </Text>
               <Text fontWeight='light' fontSize={14} textAlign='center'>
-                This action will permanently delete the Model and cannot be
-                undone.
+                This action will permanently delete the Model and cannot be undone.
               </Text>
             </Flex>
           </ModalBody>

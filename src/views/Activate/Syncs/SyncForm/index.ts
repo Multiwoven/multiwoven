@@ -1,1 +1,1 @@
-export { default } from "./SyncForm";
+export { default } from './SyncForm';

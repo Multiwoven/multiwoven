@@ -10,8 +10,9 @@ import {
   PopoverTrigger,
   Text,
   VStack,
-  useToast,
 } from '@chakra-ui/react';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 import { useQuery } from '@tanstack/react-query';
 import { FiLogOut, FiMoreVertical } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -24,17 +25,17 @@ const Profile = () => {
     refetchOnWindowFocus: false,
   });
 
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const logoutResponse = await logout();
     if (logoutResponse.data) {
-      toast({
+      showToast({
         title: 'Signed out successfully',
         isClosable: true,
         duration: 5000,
-        status: 'success',
+        status: CustomToastStatus.Success,
         position: 'bottom-right',
       });
       navigate('/sign-in');
@@ -46,16 +47,10 @@ const Profile = () => {
       <Popover closeOnEsc>
         <PopoverTrigger>
           <Box cursor='pointer'>
-            <Box
-              bgColor='gray.200'
-              px={2}
-              py={2}
-              rounded='lg'
-              _hover={{ bgColor: 'gray.300' }}
-            >
+            <Box bgColor='gray.200' px={2} py={2} rounded='lg' _hover={{ bgColor: 'gray.300' }}>
               <HStack spacing={0}>
                 <Avatar
-                  name={data?.data?.attributes.name}
+                  name={data?.data?.attributes?.name}
                   mr={1}
                   bgColor='brand.400'
                   marginRight={2}
@@ -66,10 +61,10 @@ const Profile = () => {
                 <VStack spacing={0} align='start'>
                   <Box w='128px' maxW='128px'>
                     <Text size='sm' fontWeight='semibold' noOfLines={1}>
-                      {data?.data?.attributes.name}
+                      {data?.data?.attributes?.name}
                     </Text>
                     <Text color='black.200' size='xs' noOfLines={1}>
-                      {data?.data?.attributes.email}
+                      {data?.data?.attributes?.email}
                     </Text>
                   </Box>
                 </VStack>

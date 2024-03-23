@@ -11,7 +11,7 @@ import { FormControl } from '@chakra-ui/react';
 export default function FieldTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
@@ -36,21 +36,21 @@ export default function FieldTemplate<
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
-  
+
   const patchedStyle = {
     ...style,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     flexGrow: 1,
-  }
-  
+  };
+
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -66,7 +66,13 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0} display="flex" flexDirection="column" flexGrow={1}>
+      <FormControl
+        isRequired={required}
+        isInvalid={rawErrors && rawErrors.length > 0}
+        display='flex'
+        flexDirection='column'
+        flexGrow={1}
+      >
         {children}
         {errors}
         {help}

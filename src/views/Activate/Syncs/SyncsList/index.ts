@@ -1,1 +1,1 @@
-export { default } from "./SyncsList";
+export { default } from './SyncsList';

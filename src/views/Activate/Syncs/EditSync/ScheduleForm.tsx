@@ -1,13 +1,4 @@
-import {
-  Box,
-  Divider,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Divider, Input, Radio, RadioGroup, Select, Stack, Text } from '@chakra-ui/react';
 import { FormikProps } from 'formik';
 import { FinalizeSyncFormFields } from '../types';
 
@@ -66,8 +57,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                     Interval{' '}
                   </Text>
                   <Text size='xs' color='black.200'>
-                    Schedule your sync to run on a set interval (e.g., once per
-                    hour)
+                    Schedule your sync to run on a set interval (e.g., once per hour)
                   </Text>
                 </Box>
               </Radio>
@@ -90,6 +80,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 borderWidth='1px'
                 borderStyle='solid'
                 borderColor='gray.400'
+                height='40px'
               >
                 <Box>
                   <Text>Every</Text>
@@ -105,13 +96,10 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                     value={formik.values.sync_interval}
                     onChange={formik.handleChange}
                     isRequired
+                    height='35px'
                   />
                 </Box>
-                <Divider
-                  orientation='vertical'
-                  height='24px'
-                  color='gray.400'
-                />
+                <Divider orientation='vertical' height='24px' color='gray.400' />
                 <Box>
                   <Select
                     name='sync_interval_unit'

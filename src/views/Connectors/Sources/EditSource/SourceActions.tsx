@@ -6,33 +6,33 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  useToast,
 } from '@chakra-ui/react';
 import { FiMoreHorizontal, FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteConnector } from '@/services/connectors';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 const SourceActions = ({ connectorType }: { connectorType: string }) => {
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
   const { sourceId, destinationId } = useParams();
 
   const handleDeleteConnector = async () => {
     try {
-      const connectorId =
-        connectorType === 'sources' ? sourceId : destinationId;
+      const connectorId = connectorType === 'sources' ? sourceId : destinationId;
       await deleteConnector(connectorId as string);
-      toast({
+      showToast({
         title: 'Connector deleted successfully',
         isClosable: true,
         duration: 5000,
-        status: 'success',
+        status: CustomToastStatus.Success,
         position: 'bottom-right',
       });
       navigate(`/setup/${connectorType}`);
       return;
     } catch {
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'Error!!',
         description: 'Something went wrong while deleting the connector',
         position: 'bottom-right',
@@ -68,13 +68,7 @@ const SourceActions = ({ connectorType }: { connectorType: string }) => {
             </Box>
           </Box>
         </PopoverTrigger>
-        <PopoverContent
-          w='182px'
-          border='1px'
-          borderColor='gray.400'
-          borderStyle='solid'
-          mr={8}
-        >
+        <PopoverContent w='182px' border='1px' borderColor='gray.400' borderStyle='solid' mr={8}>
           <PopoverBody margin={0} p={0}>
             <Button
               _hover={{ bgColor: 'gray.200' }}

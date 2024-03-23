@@ -1,1 +1,1 @@
-export { default } from "./AuthFooter";
+export { default } from './AuthFooter';

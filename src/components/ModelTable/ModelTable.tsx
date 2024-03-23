@@ -1,9 +1,9 @@
-import GenerateTable from "@/components/Table/Table";
-import { getAllModels } from "@/services/models";
-import { addIconDataToArray, ConvertToTableData } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import NoModels from "@/views/Models/NoModels";
-import Loader from "@/components/Loader";
+import GenerateTable from '@/components/Table/Table';
+import { getAllModels } from '@/services/models';
+import { addIconDataToArray, ConvertToTableData } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import NoModels from '@/views/Models/NoModels';
+import Loader from '@/components/Loader';
 
 type ModelTableProps = {
   handleOnRowClick: (args: unknown) => void;
@@ -11,7 +11,7 @@ type ModelTableProps = {
 
 const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
   const { data } = useQuery({
-    queryKey: ["models"],
+    queryKey: ['models'],
     queryFn: () => getAllModels(),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
@@ -26,9 +26,9 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
   if (models.length === 0) return <NoModels />;
 
   const values = ConvertToTableData(addIconDataToArray(models), [
-    { name: "Name", key: "name", showIcon: true },
-    { name: "Query Type", key: "query_type" },
-    { name: "Updated At", key: "updated_at" },
+    { name: 'Name', key: 'name', showIcon: true },
+    { name: 'Query Type', key: 'query_type' },
+    { name: 'Updated At', key: 'updated_at' },
   ]);
 
   return (
@@ -36,7 +36,7 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
       data={values}
       headerColorVisible={true}
       onRowClick={handleOnRowClick}
-      maxHeight="2xl"
+      maxHeight='2xl'
     />
   );
 };

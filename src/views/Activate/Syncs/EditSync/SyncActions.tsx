@@ -6,32 +6,33 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  useToast,
 } from '@chakra-ui/react';
 import { FiMoreHorizontal, FiTrash2 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteSync } from '@/services/syncs';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 
 const SyncActions = () => {
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
   const { syncId } = useParams();
 
   const handleDeleteSync = async () => {
     try {
       await deleteSync(syncId as string);
-      toast({
+      showToast({
         title: 'Sync deleted successfully',
         isClosable: true,
         duration: 5000,
-        status: 'success',
+        status: CustomToastStatus.Success,
         position: 'bottom-right',
       });
       navigate('/activate/syncs');
       return;
     } catch {
-      toast({
-        status: 'error',
+      showToast({
+        status: CustomToastStatus.Error,
         title: 'Error!!',
         description: 'Something went wrong while deleting the sync',
         position: 'bottom-right',
@@ -67,13 +68,7 @@ const SyncActions = () => {
             </Box>
           </Box>
         </PopoverTrigger>
-        <PopoverContent
-          w='182px'
-          border='1px'
-          borderColor='gray.400'
-          borderStyle='solid'
-          mr={8}
-        >
+        <PopoverContent w='182px' border='1px' borderColor='gray.400' borderStyle='solid' mr={8}>
           <PopoverBody margin={0} p={0}>
             <Button
               _hover={{ bgColor: 'gray.200' }}

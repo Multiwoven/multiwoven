@@ -44,23 +44,15 @@ export default function BaseInputTemplate<
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, value);
+  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
+  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
 
-  const DescriptionFieldTemplate = getTemplate(
-    'DescriptionFieldTemplate',
-    registry,
-    uiSchema
-  );
+  const DescriptionFieldTemplate = getTemplate('DescriptionFieldTemplate', registry, uiSchema);
   const displayLabel = registry.schemaUtils.getDisplayLabel(
     schema,
     uiSchema,
-    registry.globalUiOptions
+    registry.globalUiOptions,
   );
-
-  console.log(label);
 
   return (
     <FormControl
@@ -87,7 +79,7 @@ export default function BaseInputTemplate<
           >
             {label}
           </FormLabel>,
-          hideLabel || !label
+          hideLabel || !label,
         )}
 
         {displayLabel && schema.description && (
@@ -121,7 +113,7 @@ export default function BaseInputTemplate<
               .concat(
                 schema.default && !schema.examples.includes(schema.default)
                   ? ([schema.default] as string[])
-                  : []
+                  : [],
               )
               .map((example: any) => {
                 return <option key={example} value={example} />;
