@@ -52,6 +52,7 @@ require_relative "integrations/destination/hubspot/client"
 require_relative "integrations/destination/google_sheets/client"
 require_relative "integrations/destination/airtable/client"
 require_relative "integrations/destination/stripe/client"
+require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
 
 module Multiwoven
   module Integrations

@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.37"
+    VERSION = "0.1.38"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -21,6 +21,7 @@ module Multiwoven
       GoogleSheets
       Airtable
       Stripe
+      SalesforceConsumerGoodsCloud
     ].freeze
   end
 end
