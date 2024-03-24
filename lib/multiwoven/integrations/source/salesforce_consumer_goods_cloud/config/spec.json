@@ -19,7 +19,7 @@
         "title": "Username",
         "order": 0
       },
-      "refresh_token": {
+      "password": {
         "type": "string",
         "title": "Password",
         "order": 1
