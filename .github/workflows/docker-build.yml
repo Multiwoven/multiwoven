@@ -24,6 +24,6 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -t ${{ env.IMAGE_NAME }}:${{ github.sha }} --build-arg VITE_API_HOST=${{ env.VITE_API_HOST }} .
+        docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
         docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
