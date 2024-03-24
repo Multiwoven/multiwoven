@@ -9,7 +9,7 @@ module Multiwoven
         include Multiwoven::Integrations::Core
 
         API_VERSION = "59.0"
-        SALESFORCE_OBJECTS = %w[Account User].freeze
+        SALESFORCE_OBJECTS = %w[Account User Visit RetailStore].freeze
 
         class Client < SourceConnector # rubocop:disable Metrics/ClassLength
           prepend Multiwoven::Integrations::Core::RateLimiter
@@ -55,13 +55,29 @@ module Multiwoven
 
           private
 
+          def query(connection, query)
+            exclude_keys = ["attributes"]
+            queried_data = connection.query(query)
+            results = queried_data.map do |record|
+              record.reject { |key, _| exclude_keys.include?(key) }
+            end
+            results.map do |row|
+              RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+            end
+          end
+
+          def create_connection(connection_config)
+            initialize_client(connection_config)
+          end
+
           def initialize_client(config)
             config = config.with_indifferent_access
             @client = Restforce.new(username: config[:username],
                                     password: config[:password] + config[:security_token],
                                     host: config[:host],
                                     client_id: config[:client_id],
-                                    client_secret: config[:client_secret])
+                                    client_secret: config[:client_secret],
+                                    api_version: API_VERSION)
           end
 
           def salesforce_field_to_json_schema_type(sf_field) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
