@@ -2,6 +2,9 @@
 # Use a Node.js image to build the app
 FROM node:18 as build-stage
 
+ARG VITE_API_HOST
+ENV VITE_API_HOST=${VITE_API_HOST}
+
 # Set the working directory in the Docker container
 WORKDIR /app
 
