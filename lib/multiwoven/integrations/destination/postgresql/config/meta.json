@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Postgresql",
+    "title": "PostgreSQL",
+    "connector_type": "destination",
+    "category": "Data Warehouse",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-postgresql",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

@@ -38,6 +38,7 @@ require_relative "integrations/core/base_connector"
 require_relative "integrations/core/source_connector"
 require_relative "integrations/core/destination_connector"
 require_relative "integrations/core/http_client"
+require_relative "integrations/core/query_builder"
 
 # Source
 require_relative "integrations/source/snowflake/client"
@@ -58,6 +59,7 @@ require_relative "integrations/destination/airtable/client"
 require_relative "integrations/destination/stripe/client"
 require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/destination/sftp/client"
+require_relative "integrations/destination/postgresql/client"
 
 module Multiwoven
   module Integrations
