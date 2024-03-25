@@ -147,7 +147,7 @@ module Multiwoven
       attribute? :request_rate_limit, Types::Integer.default(60)
       attribute? :request_rate_limit_unit, RequestRateLimitingUnit
       attribute? :request_rate_concurrency, Types::Integer.default(10)
-      attribute? :schema_mode, Types::Array.of(SchemaMode).optional.default(["schema"])
+      attribute? :schema_mode, Types::String.optional.default("schema")
 
       def to_multiwoven_message
         MultiwovenMessage.new(

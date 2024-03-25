@@ -82,7 +82,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
-      expect(catalog.schema_mode).to eql(["schemaless"])
+      expect(catalog.schema_mode).to eql("schemaless")
       expect(catalog.streams[0].batch_support).to eql(true)
       expect(catalog.streams[0].batch_size).to eql(100_000)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])

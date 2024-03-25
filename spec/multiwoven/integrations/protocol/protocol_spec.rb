@@ -202,7 +202,7 @@ module Multiwoven
           expect(instance.request_rate_limit).to eq(60)
           expect(instance.request_rate_limit_unit).to eq("minute")
           expect(instance.request_rate_concurrency).to eq(10)
-          expect(instance.schema_mode).to eql(["schema"])
+          expect(instance.schema_mode).to eql("schema")
           expect(instance.streams.first).to be_a(Stream)
           expect(instance.streams.first.name).to eq("example_stream")
         end

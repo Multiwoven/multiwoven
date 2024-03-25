@@ -2,7 +2,7 @@
   "request_rate_limit": 600,
   "request_rate_limit_unit": "minute",
   "request_rate_concurrency": 10,
-  "schema_mode": ["schemaless"],
+  "schema_mode": "schemaless",
   "streams": [
     {
       "name": "sftp",
