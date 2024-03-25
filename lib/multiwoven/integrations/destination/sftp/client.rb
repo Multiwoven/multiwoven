@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module Sftp
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector
+    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
       prepend Multiwoven::Integrations::Core::Fullrefresher
       prepend Multiwoven::Integrations::Core::RateLimiter
 
@@ -37,16 +37,21 @@ module Multiwoven::Integrations::Destination
       def write(sync_config, records, _action = "insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         file_path = generate_file_path(sync_config)
+        local_file_name = generate_local_file_name(sync_config)
         csv_content = generate_csv_content(records)
         write_success = 0
         write_failure = 0
-        # 10000 records in single
-        with_sftp_client(connection_config) do |sftp|
-          sftp.file.open(file_path, "w") { |file| file.puts(csv_content) }
-          write_success += records.size
-        rescue StandardError => e
-          handle_exception("SFTP:RECORD:WRITE:EXCEPTION", "error", e)
-          write_failure += records.size
+
+        Tempfile.create([local_file_name, ".csv"]) do |tempfile|
+          tempfile.write(csv_content)
+          tempfile.close
+          with_sftp_client(connection_config) do |sftp|
+            sftp.upload!(tempfile.path, file_path)
+            write_success += records.size
+          rescue StandardError => e
+            handle_exception("SFTP:RECORD:WRITE:EXCEPTION", "error", e)
+            write_failure += records.size
+          end
         end
         tracking_message(write_success, write_failure)
       rescue StandardError => e
@@ -78,9 +83,15 @@ module Multiwoven::Integrations::Destination
       private
 
       def generate_file_path(sync_config)
+        connection_specification = sync_config.destination.connection_specification.with_indifferent_access
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
         file_name = "#{sync_config.stream.name}_#{timestamp}.csv"
-        File.join(sync_config.destination.connection_specification[:destination_path], file_name)
+        File.join(connection_specification[:destination_path], file_name)
+      end
+
+      def generate_local_file_name(sync_config)
+        timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
+        "#{sync_config.stream.name}_#{timestamp}"
       end
 
       def generate_csv_content(records)

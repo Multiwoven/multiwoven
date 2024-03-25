@@ -2,13 +2,13 @@
   "request_rate_limit": 600,
   "request_rate_limit_unit": "minute",
   "request_rate_concurrency": 10,
+  "schema_mode": ["schemaless"],
   "streams": [
     {
       "name": "sftp",
       "batch_support": true,
-      "batch_size": 10000,
+      "batch_size": 100000,
       "action": "create",
-      "schema_mode": ["schemaless"],
       "json_schema": {},
       "supported_sync_modes": ["full_refresh","incremental"]
     }

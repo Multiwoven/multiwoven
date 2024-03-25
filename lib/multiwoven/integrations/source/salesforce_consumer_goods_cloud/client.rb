@@ -39,8 +39,13 @@ module Multiwoven
           def read(sync_config)
             connection_config = sync_config.source.connection_specification.with_indifferent_access
             initialize_client(connection_config)
+            return [] if sync_config.offset&.> 2000
+
+            # TODO: Salesforce imposes a limit on the use of OFFSET in SOQL queries, where you cannot skip(offset) more than 2000 records.
+            # This limitation can hinder the retrieval of large datasets in a single query.
+            # To overcome this, we need a cursor-based pagination strategy instead of relying on OFFSET.
+            # query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
             query = sync_config.model.query
-            query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
             exclude_keys = ["attributes"]
             queried_data = @client.query(query)
             results = queried_data.map do |record|

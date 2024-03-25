@@ -82,9 +82,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
+      expect(catalog.schema_mode).to eql(["schemaless"])
       expect(catalog.streams[0].batch_support).to eql(true)
-      expect(catalog.streams[0].batch_size).to eql(10_000)
-      expect(catalog.streams[0].schema_mode).to eql(["schemaless"])
+      expect(catalog.streams[0].batch_size).to eql(100_000)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
     end
   end
@@ -92,9 +92,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
   describe "#write" do
     it "successfully writes records" do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
-      allow(mock_sftp_session).to receive(:file).and_return(mock_sftp_file)
-      allow(mock_sftp_file).to receive(:open).with(any_args).and_yield(mock_sftp_file)
-      allow(mock_sftp_file).to receive(:puts).with(csv_content)
+      allow(client).to receive(:generate_csv_content).and_return(csv_content)
+      allow(mock_sftp_session).to receive(:upload!).and_return(true)
       response = client.write(sync_config, records, "insert")
       expect(response.tracking.success).to eq(records.size)
       expect(response.tracking.failed).to eq(0)
@@ -102,9 +101,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
 
     it "handles the failure and increments the failure count" do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
-      allow(mock_sftp_session).to receive(:file).and_return(mock_sftp_file)
-      allow(mock_sftp_file).to receive(:open).with(anything, "w").and_raise(StandardError, "SFTP write failed")
-
+      allow(mock_sftp_session).to receive(:upload!).and_raise(StandardError, "SFTP upload failed")
       response = client.write(sync_config, records, "insert")
 
       # Account for handling failure outside the inner rescue block
