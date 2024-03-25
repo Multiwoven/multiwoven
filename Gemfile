@@ -47,6 +47,10 @@ gem "ruby-limiter"
 
 gem "stripe"
 
+gem "net-sftp"
+
+gem "csv"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

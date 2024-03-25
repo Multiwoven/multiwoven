@@ -7,9 +7,10 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.41)
+    multiwoven-integrations (0.1.42)
       activesupport
       async-websocket
+      csv
       dry-schema
       dry-struct
       dry-types
@@ -17,6 +18,7 @@ PATH
       google-apis-sheets_v4
       google-cloud-bigquery
       hubspot-api-client
+      net-sftp
       pg
       rake
       restforce
@@ -62,6 +64,7 @@ GEM
       fiber-local
     crack (0.4.5)
       rexml
+    csv (3.2.6)
     declarative (0.0.20)
     diff-lcs (1.5.0)
     docile (1.4.0)
@@ -169,6 +172,9 @@ GEM
     multi_json (1.15.0)
     multipart-post (2.3.0)
     mutex_m (0.2.0)
+    net-sftp (4.0.0)
+      net-ssh (>= 5.0.0, < 8.0.0)
+    net-ssh (7.2.1)
     os (1.1.4)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -269,6 +275,7 @@ DEPENDENCIES
   activesupport
   async-websocket (~> 0.8.0)
   byebug
+  csv
   dry-schema
   dry-struct
   dry-types
@@ -277,6 +284,7 @@ DEPENDENCIES
   google-cloud-bigquery
   hubspot-api-client
   multiwoven-integrations!
+  net-sftp
   pg
   rake (~> 13.0)
   restforce (~> 7.1.0)

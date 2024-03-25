@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport"
   spec.add_runtime_dependency "async-websocket"
+  spec.add_runtime_dependency "csv"
   spec.add_runtime_dependency "dry-schema"
   spec.add_runtime_dependency "dry-struct"
   spec.add_runtime_dependency "dry-types"
@@ -42,6 +43,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "google-apis-sheets_v4"
   spec.add_runtime_dependency "google-cloud-bigquery"
   spec.add_runtime_dependency "hubspot-api-client"
+  spec.add_runtime_dependency "net-sftp"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
   spec.add_runtime_dependency "restforce"

@@ -19,6 +19,9 @@ require "hubspot-api-client"
 require "google/apis/sheets_v4"
 require "stringio"
 require "stripe"
+require "net/sftp"
+require "csv"
+require "securerandom"
 
 # Service
 require_relative "integrations/config"
@@ -54,6 +57,7 @@ require_relative "integrations/destination/google_sheets/client"
 require_relative "integrations/destination/airtable/client"
 require_relative "integrations/destination/stripe/client"
 require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
+require_relative "integrations/destination/sftp/client"
 
 module Multiwoven
   module Integrations

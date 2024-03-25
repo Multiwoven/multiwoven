@@ -95,7 +95,8 @@ module Multiwoven
           request_rate_limit: stream_json["request_rate_limit"].to_i,
           request_rate_limit_unit: stream_json["request_rate_limit_unit"] || "minute",
           request_rate_concurrency: stream_json["request_rate_concurrency"].to_i,
-          supported_sync_modes: stream_json["supported_sync_modes"]
+          supported_sync_modes: stream_json["supported_sync_modes"],
+          schema_mode: stream_json["schema_mode"]
         )
       end
     end
