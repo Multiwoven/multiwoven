@@ -119,7 +119,7 @@ GEM
       protocol-http1 (~> 0.18.0)
       protocol-http2 (~> 0.16.0)
       traces (>= 0.10.0)
-    async-io (1.41.0)
+    async-io (1.42.0)
       async
     async-pool (0.4.0)
       async (>= 1.25)
@@ -1664,6 +1664,7 @@ GEM
       fiber-local
       json
     crass (1.0.6)
+    csv (3.3.0)
     date (3.3.4)
     declarative (0.0.20)
     devise (4.9.3)
@@ -1858,9 +1859,10 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.41)
+    multiwoven-integrations (0.1.43)
       activesupport
       async-websocket
+      csv
       dry-schema
       dry-struct
       dry-types
@@ -1868,6 +1870,7 @@ GEM
       google-apis-sheets_v4
       google-cloud-bigquery
       hubspot-api-client
+      net-sftp
       pg
       rake
       restforce
@@ -1886,8 +1889,11 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
+    net-sftp (4.0.0)
+      net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.4.0.1)
       net-protocol
+    net-ssh (7.2.1)
     newrelic_rpm (9.7.0)
     nio4r (2.7.0)
     nokogiri (1.16.0-aarch64-linux)
@@ -2113,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.41)
+  multiwoven-integrations (~> 0.1.43)
   newrelic_rpm
   parallel
   pg (~> 1.1)
