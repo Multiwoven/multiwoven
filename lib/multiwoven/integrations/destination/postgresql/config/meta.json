@@ -3,7 +3,7 @@
     "name": "Postgresql",
     "title": "PostgreSQL",
     "connector_type": "destination",
-    "category": "Data Warehouse",
+    "category": "Database",
     "documentation_url": "https://docs.mutliwoven.com",
     "github_issue_label": "destination-postgresql",
     "icon": "icon.svg",
