@@ -16,7 +16,7 @@ module ReverseEtl
         batch_query_params = batch_params(source_client, sync_run)
 
         # TODO: Need to move on flush/clean temporal activity after Loader activity
-        flush_records(sync_run)
+        # flush_records(sync_run)
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           total_query_rows += records.count

@@ -4,7 +4,7 @@ module Activities
   class ExtractorActivity < Temporal::Activity
     timeouts(
       start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
-      heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "180").to_i
+      heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "1200").to_i
     )
 
     retry_policy(
