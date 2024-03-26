@@ -66,15 +66,12 @@ module Multiwoven::Integrations::Destination
         connection_specification = sync_config.destination.connection_specification.with_indifferent_access
         with_sftp_client(connection_specification) do |sftp|
           files = sftp.dir.glob(connection_specification[:destination_path], "*")
-
           files.each do |file|
             sftp.remove!(File.join(connection_specification[:destination_path], file.name))
           end
-          if sftp.dir.entries(connection_specification[:destination_path]).size == 2
-            control_message("Successfully cleared data.", "succeeded")
-          else
-            control_message("Failed to clear data.", "failed")
-          end
+          return control_message("Successfully cleared data.", "succeeded") if sftp.dir.entries(connection_specification[:destination_path]).size <= 2
+
+          return control_message("Failed to clear data.", "failed")
         end
       rescue StandardError => e
         control_message(e.message, "failed")

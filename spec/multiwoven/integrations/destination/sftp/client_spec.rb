@@ -131,6 +131,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
     let(:mock_sftp_dir) { instance_double("Net::SFTP::Operations::Dir") }
     let(:directory_entries_before) { [double("entry", name: "."), double("entry", name: ".."), double("entry", name: "file1.txt"), double("entry", name: "file2.txt")] }
     let(:directory_entries_after) { [double("entry", name: "."), double("entry", name: "..")] } # Simulating an empty directory after deletion
+    let(:directory_entries_after_with_data) { [double("entry", name: "."), double("entry", name: ".."), double("entry", name: "test.csv")] } # Simulating an empty directory after deletion
 
     before do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
@@ -158,6 +159,18 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
         response = client.clear_all_records(sync_config)
         expect(response).to have_attributes(
           control: have_attributes(status: "failed", meta: { detail: "Failed to remove file" })
+        )
+      end
+    end
+
+    context "clearing files is failed" do
+      it "returns a failure control message" do
+        allow(mock_sftp_dir).to receive(:entries).and_return(directory_entries_after_with_data)
+
+        response = client.clear_all_records(sync_config)
+        expect(response.control.status).to eq("failed")
+        expect(response).to have_attributes(
+          control: have_attributes(status: "failed", meta: { detail: "Failed to clear data." })
         )
       end
     end
