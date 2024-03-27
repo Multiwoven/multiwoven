@@ -106,7 +106,7 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    async (2.9.0)
+    async (2.10.0)
       console (~> 1.10)
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
@@ -1859,7 +1859,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.48)
+    multiwoven-integrations (0.1.49)
       activesupport
       async-websocket
       csv
@@ -2119,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.48)
+  multiwoven-integrations (~> 0.1.49)
   newrelic_rpm
   parallel
   pg (~> 1.1)
