@@ -1,5 +1,6 @@
-# Use a Node.js image
-FROM node:18
+# Stage 1: Build the application
+# Use a Node.js image to build the app
+FROM node:18 as build-stage
 
 # Set the working directory in the Docker container
 WORKDIR /app
@@ -13,8 +14,21 @@ RUN npm install
 # Copy the rest of your application code
 COPY . .
 
-# Expose the port your app runs on
+# Build the application
+RUN npm run build
+
+# Stage 2: Serve the application
+# Use Nginx to serve the static files
+FROM nginx:alpine
+
+# Copy built assets from the build stage to the Nginx server directory
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Copy custom Nginx configuration file
+COPY server-config/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 8000
 EXPOSE 8000
 
-# Start the server
-CMD ["npm", "start"]
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]
