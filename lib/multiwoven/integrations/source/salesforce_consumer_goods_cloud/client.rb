@@ -47,10 +47,10 @@ module Multiwoven
             # To overcome this, we need a cursor-based pagination strategy instead of relying on OFFSET.
             # query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
             query = sync_config.model.query
-            exclude_keys = ["attributes"]
+            query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
             queried_data = @client.query(query)
             results = queried_data.map do |record|
-              record.reject { |key, _| exclude_keys.include?(key) }
+              flatten_nested_hash(record)
             end
             results.map do |row|
               RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
@@ -62,14 +62,25 @@ module Multiwoven
           private
 
           def query(connection, query)
-            exclude_keys = ["attributes"]
             queried_data = connection.query(query)
+
             results = queried_data.map do |record|
-              record.reject { |key, _| exclude_keys.include?(key) }
+              flatten_nested_hash(record)
             end
             results.map do |row|
               RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
             end
+          end
+
+          def flatten_nested_hash(record, prefix = nil)
+            record = record.reject { |key, _| key == "attributes" }
+            record.flat_map do |key, value|
+              if value.is_a?(Hash)
+                flatten_nested_hash(value, prefix ? "#{prefix}_#{key}" : key)
+              else
+                { prefix ? "#{prefix}_#{key}" : key => value }
+              end
+            end.reduce({}, :merge)
           end
 
           def create_connection(connection_config)

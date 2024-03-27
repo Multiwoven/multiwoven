@@ -208,6 +208,64 @@ RSpec.describe Multiwoven::Integrations::Source::SalesforceConsumerGoodsCloud::C
     end
   end
 
+  describe "#flatten_nested_hash" do
+    it "returns a flattened hash" do
+      record =
+        {
+          attributes: {
+            type: "Visit",
+            url: "/services/data/v59.0/sobjects/Visit/0Z51U000000bvweSAA"
+          },
+          User: {
+            attributes: {
+              type: "User",
+              url: "/services/data/v59.0/sobjects/User/0051U00000860MrQAI"
+            },
+            Username: "fl016465@cona.com.lfln011",
+            Test: {
+              attributes: {
+                type: "User",
+                url: "/services/data/v59.0/sobjects/User/0051U00000860MrQAI"
+              },
+              Sample: "sample"
+
+            }
+
+          },
+          RecordType: {
+            attributes: {
+              type: "RecordType",
+              url: "/services/data/v59.0/sobjects/RecordType/0121U000000eLVMQA2"
+            },
+            Name: "Picture of Success Visit"
+          },
+          Account: {
+            attributes: {
+              type: "Account",
+              url: "/services/data/v59.0/sobjects/Account/0011U00001RpDYCQA3"
+            },
+            AccountNumber: "0600370301",
+            OnboardedAccountNumber__c: nil
+          },
+          PlannedVisitStartTime: "2021-03-23T13:00:00.000+0000",
+          PlannedVisitEndTime: "2021-03-23T13:30:00.000+0000"
+        }.with_indifferent_access
+
+      expected_result = {
+        User_Username: "fl016465@cona.com.lfln011",
+        RecordType_Name: "Picture of Success Visit",
+        Account_AccountNumber: "0600370301",
+        Account_OnboardedAccountNumber__c: nil,
+        PlannedVisitStartTime: "2021-03-23T13:00:00.000+0000",
+        PlannedVisitEndTime: "2021-03-23T13:30:00.000+0000",
+        User_Test_Sample: "sample"
+      }.with_indifferent_access
+
+      result = client.send(:flatten_nested_hash, record)
+      expect(result).to eq(expected_result)
+    end
+  end
+
   private
 
   def sync_config
