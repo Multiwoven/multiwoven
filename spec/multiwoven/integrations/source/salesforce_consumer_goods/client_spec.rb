@@ -188,6 +188,7 @@ RSpec.describe Multiwoven::Integrations::Source::SalesforceConsumerGoodsCloud::C
         allow(@client).to receive(:describe).with("User").and_return(sample_user_description)
         allow(@client).to receive(:describe).with("Visit").and_return(sample_account_description)
         allow(@client).to receive(:describe).with("RetailStore").and_return(sample_user_description)
+        allow(@client).to receive(:describe).with("RecordType").and_return(sample_user_description)
 
         allow(client).to receive(:create_json_schema_for_object).and_return(sample_account_schema, sample_user_schema)
 

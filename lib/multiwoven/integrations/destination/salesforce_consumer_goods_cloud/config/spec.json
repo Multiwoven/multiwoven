@@ -6,26 +6,27 @@
     "title": "Salesforce Consumer Goods Cloud",
     "type": "object",
     "required": [
-      "access_token",
-      "refresh_token",
-      "instance_url",
+      "username",
+      "password",
+      "host",
+      "security_token",
       "client_id",
       "client_secret"
     ],
     "properties": {
-      "access_token": {
+      "username": {
         "type": "string",
-        "title": "Access Token",
+        "title": "Username",
         "order": 0
       },
-      "refresh_token": {
+      "password": {
         "type": "string",
-        "title": "Refresh Token",
+        "title": "Password",
         "order": 1
       },
-      "instance_url": {
+      "host": {
         "type": "string",
-        "title": "Instance URL",
+        "title": "Host",
         "order": 2
       },
       "client_id": {
@@ -37,6 +38,11 @@
         "type": "string",
         "title": "Client Secret",
         "order": 4
+      },
+      "security_token": {
+        "type": "string",
+        "title": "Security Token",
+        "order": 5
       }
     }
   }
