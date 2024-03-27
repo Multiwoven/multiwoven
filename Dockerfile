@@ -17,18 +17,24 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Stage 2: Serve the application
-# Use Nginx to serve the static files
-FROM nginx:alpine
+# Stage 2: Serve the application with Express
+# Use Node.js image for runtime
+FROM node:18 as serve-stage
 
-# Copy built assets from the build stage to the Nginx server directory
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Set the working directory in the Docker container
+WORKDIR /app
 
-# Copy custom Nginx configuration file
-COPY server-config/nginx.conf /etc/nginx/conf.d/default.conf
+# Install Express
+RUN npm install express
 
-# Expose port 8000
+# Copy built assets from the build stage to the serve directory
+COPY --from=build-stage /app/dist /app/dist
+
+# Copy the Express server script
+COPY server.js /app
+
+# Expose the port your app runs on
 EXPOSE 8000
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Express server
+CMD ["node", "server.js"]
