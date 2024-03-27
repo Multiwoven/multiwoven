@@ -41,5 +41,9 @@ RSpec.describe Liquid::CustomFilters do
     it "date format '%m/%d/%Y %H:%M'" do
       expect(to_datetime("1/26/2024 9:20 AM", "%m/%d/%Y %H:%M")).to eq("2024-01-26T09:20:00+00:00")
     end
+
+    it "handles nil value'" do
+      expect(to_datetime(nil, "%m/%d/%Y %H:%M")).to eq(nil)
+    end
   end
 end

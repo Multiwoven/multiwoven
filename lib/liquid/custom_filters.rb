@@ -28,7 +28,9 @@ module Liquid
     end
 
     def to_datetime(input, existing_date_format)
-      DateTime.strptime(input, existing_date_format).iso8601
+      return input if input.blank?
+
+      DateTime.strptime(input, existing_date_format)&.iso8601
     end
 
     private
