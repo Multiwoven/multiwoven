@@ -1859,7 +1859,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.47)
+    multiwoven-integrations (0.1.48)
       activesupport
       async-websocket
       csv
@@ -2119,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.47)
+  multiwoven-integrations (~> 0.1.48)
   newrelic_rpm
   parallel
   pg (~> 1.1)
