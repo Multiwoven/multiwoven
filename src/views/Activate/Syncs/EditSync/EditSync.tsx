@@ -2,7 +2,7 @@ import ContentContainer from '@/components/ContentContainer';
 import { SYNCS_LIST_QUERY_KEY } from '@/views/Activate/Syncs/constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { editSync, getSyncById } from '@/services/syncs';
+import { editSync, getCatalog, getSyncById } from '@/services/syncs';
 import Loader from '@/components/Loader';
 import React, { useEffect, useState } from 'react';
 import SelectStreams from '@/views/Activate/Syncs/SyncForm/ConfigureSyncs/SelectStreams';
@@ -15,17 +15,21 @@ import {
   CreateSyncPayload,
   DiscoverResponse,
   FinalizeSyncFormFields,
+  SchemaMode,
   Stream,
 } from '@/views/Activate/Syncs/types';
 import ScheduleForm from './ScheduleForm';
 import { FormikProps, useFormik } from 'formik';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
+import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
+  const [selectedSyncMode, setSelectedSyncMode] = useState('');
+
   const { syncId } = useParams();
   const showToast = useCustomToast();
   const navigate = useNavigate();
@@ -51,6 +55,14 @@ const EditSync = (): JSX.Element | null => {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: !!syncData?.destination.id,
+  });
+
+  const { data: catalogData } = useQuery({
+    queryKey: ['syncs', 'catalog', syncData?.destination.id],
+    queryFn: () => getCatalog(syncData?.destination?.id as string),
+    enabled: !!syncData?.destination.id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const formik: FormikProps<FinalizeSyncFormFields> = useFormik({
@@ -79,7 +91,7 @@ const EditSync = (): JSX.Element | null => {
               stream_name: syncData?.stream_name,
               sync_interval: data.sync_interval,
               sync_interval_unit: data.sync_interval_unit,
-              sync_mode: data.sync_mode,
+              sync_mode: selectedSyncMode,
             },
           };
 
@@ -150,6 +162,7 @@ const EditSync = (): JSX.Element | null => {
         });
         setConfiguration(transformedConfigs);
       }
+      setSelectedSyncMode(syncData?.sync_mode ?? 'full_refresh');
     }
   }, [syncFetchResponse]);
 
@@ -165,26 +178,44 @@ const EditSync = (): JSX.Element | null => {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit} style={{ backgroundColor: '#F9FAFB' }}>
+    <form onSubmit={formik.handleSubmit} style={{ backgroundColor: 'gray.200' }}>
       <ContentContainer>
         {isLoading || isConnectorInfoLoading || !syncData ? <Loader /> : null}
         {syncData && destinationFetchResponse?.data ? (
           <React.Fragment>
-            <SelectStreams
-              model={syncData?.model}
-              destination={destinationFetchResponse?.data}
-              onStreamsLoad={handleOnStreamsLoad}
-              isEdit
-            />
-            <MapFields
-              model={syncData?.model}
-              destination={destinationFetchResponse?.data}
-              stream={selectedStream}
-              handleOnConfigChange={handleOnConfigChange}
-              data={configuration}
-              isEdit
-              configuration={configuration}
-            />
+            {/* will be changed to get schema mode in the sync data in the future */}
+            <>
+              <SelectStreams
+                model={syncData?.model}
+                destination={destinationFetchResponse?.data}
+                onStreamsLoad={handleOnStreamsLoad}
+                isEdit
+                setSelectedSyncMode={setSelectedSyncMode}
+                selectedSyncMode={selectedSyncMode}
+                selectedStreamName={syncData?.stream_name}
+              />
+              {catalogData?.data.attributes.catalog.schema_mode === SchemaMode.schemaless ? (
+                <MapCustomFields
+                  model={syncData?.model}
+                  destination={destinationFetchResponse?.data}
+                  handleOnConfigChange={handleOnConfigChange}
+                  data={configuration}
+                  isEdit
+                  configuration={configuration}
+                />
+              ) : (
+                <MapFields
+                  model={syncData?.model}
+                  destination={destinationFetchResponse?.data}
+                  stream={selectedStream}
+                  handleOnConfigChange={handleOnConfigChange}
+                  data={configuration}
+                  isEdit
+                  configuration={configuration}
+                />
+              )}
+            </>
+
             <ScheduleForm formik={formik} isEdit />
           </React.Fragment>
         ) : null}

@@ -4,6 +4,18 @@ import { expect } from '@jest/globals';
 import Cookies from 'js-cookie';
 import SignIn from '../SignIn';
 
+jest.mock('@/chakra.config.ts', () => ({
+  default: {
+    extendThemeWithEnv: jest.fn(),
+  },
+  'import.meta': {
+    env: {
+      VITE_LOGO_URL: 'mocked_logo_url',
+      VITE_BRAND_COLOR: 'mocked_brand_color',
+    },
+  },
+}));
+
 jest.mock('@/services/common', () => ({
   login: jest.fn().mockResolvedValue({
     success: true,

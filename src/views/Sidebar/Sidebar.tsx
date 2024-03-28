@@ -14,6 +14,8 @@ import {
 import { NavButton } from './navButton';
 import Profile from './Profile';
 
+import mwTheme from '@/chakra.config';
+
 type MenuItem = {
   title: string;
   link: string;
@@ -102,6 +104,7 @@ const SideBarFooter = () => (
 );
 
 const Sidebar = (): JSX.Element => {
+  const { logoUrl } = mwTheme;
   return (
     <Flex
       position='relative'
@@ -116,7 +119,7 @@ const Sidebar = (): JSX.Element => {
         <Stack justify='space-between' spacing='1' width='full'>
           <Stack spacing='6' shouldWrapChildren>
             <Flex justifyContent='center'>
-              <img width={160} src={IconImage} alt='IconImage' />
+              <img width={160} src={logoUrl ? logoUrl : IconImage} alt='IconImage' />
             </Flex>
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />

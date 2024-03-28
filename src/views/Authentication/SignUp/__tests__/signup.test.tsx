@@ -4,6 +4,18 @@ import { expect } from '@jest/globals';
 import { MemoryRouter } from 'react-router-dom';
 import SignUp from '../SignUp'; // Update the path based on your project structure
 
+jest.mock('@/chakra.config.ts', () => ({
+  default: {
+    extendThemeWithEnv: jest.fn(),
+  },
+  'import.meta': {
+    env: {
+      VITE_LOGO_URL: 'mocked_logo_url',
+      VITE_BRAND_COLOR: 'mocked_brand_color',
+    },
+  },
+}));
+
 jest.mock('@/services/authentication', () => ({
   signUp: jest.fn().mockResolvedValue({
     data: {
