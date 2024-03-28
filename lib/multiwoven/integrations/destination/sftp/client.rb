@@ -11,7 +11,7 @@ module Multiwoven::Integrations::Destination
         connection_config = connection_config.with_indifferent_access
         with_sftp_client(connection_config) do |sftp|
           stream = SecureRandom.uuid
-          test_path = "/path/to/test/#{stream}"
+          test_path = "#{connection_config[:destination_path]}/#{stream}"
           test_file_operations(sftp, test_path)
           return success_status
         end
