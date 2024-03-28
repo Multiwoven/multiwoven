@@ -43,7 +43,8 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsClo
       expect(result[:name]).to eq("TestObject")
       expect(result[:action]).to eq("create")
       expect(result[:json_schema]).to be_a(Hash)
-      expect(result[:json_schema][:batch_support]).to eq(false)
+      expect(result[:batch_support]).to eq(false)
+      expect(result[:batch_size]).to eq(0)
       expect(result[:required]).to contain_exactly("Field1")
       expect(result[:supported_sync_modes]).to contain_exactly("incremental")
       expect(result[:source_defined_cursor]).to be true

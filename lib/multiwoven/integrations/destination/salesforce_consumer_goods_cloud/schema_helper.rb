@@ -100,7 +100,6 @@ module Multiwoven
             json_schema = {
               "$schema": "http://json-schema.org/draft-07/schema#",
               "title": metadata["name"],
-              "batch_support": false,
               "type": "object",
               "additionalProperties": true,
               "properties": fields_schema
@@ -121,7 +120,9 @@ module Multiwoven
               "supported_sync_modes": %w[incremental],
               "source_defined_cursor": true,
               "default_cursor_field": ["updated"],
-              "source_defined_primary_key": [primary_key]
+              "source_defined_primary_key": [primary_key],
+              "batch_support": false,
+              "batch_size": 0
             }
           end
         end
