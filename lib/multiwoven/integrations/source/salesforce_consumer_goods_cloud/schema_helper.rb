@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    module Destination
+    module Source
       module SalesforceConsumerGoodsCloud
         module SchemaHelper
           include Core::Constants
@@ -117,7 +117,7 @@ module Multiwoven
               "action": "create",
               "json_schema": json_schema,
               "required": required,
-              "supported_sync_modes": %w[full_refresh incremental],
+              "supported_sync_modes": %w[incremental],
               "source_defined_cursor": true,
               "default_cursor_field": ["updated"],
               "source_defined_primary_key": [primary_key]

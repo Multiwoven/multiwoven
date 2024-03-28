@@ -50,7 +50,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsClo
         rate_limit_unit_seconds: 1,
         json_schema: salesforce_account_json_schema
       },
-      sync_mode: "full_refresh",
+      sync_mode: "incremental",
       cursor_field: "timestamp",
       destination_sync_mode: "insert" }.with_indifferent_access
   end
@@ -63,6 +63,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsClo
         "$schema" => "http://json-schema.org/draft-07/schema#",
         "title" => "User",
         "type" => "object",
+        "batch_supported" => false,
         "additionalProperties" => true,
         "properties" => {
           "Id" => { "type" => "string" },
@@ -80,6 +81,7 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsClo
         "$schema" => "http://json-schema.org/draft-07/schema#",
         "title" => "Account",
         "type" => "object",
+        "batch_supported" => false,
         "additionalProperties" => true,
         "properties" => {
           "Id" => { "type" => "string" },
