@@ -111,7 +111,7 @@ GEM
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
-    async-http (0.63.0)
+    async-http (0.64.0)
       async (>= 1.25)
       async-io (>= 1.28)
       async-pool (>= 0.2)
@@ -1859,7 +1859,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.51)
+    multiwoven-integrations (0.1.52)
       activesupport
       async-websocket
       csv
@@ -2119,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.51)
+  multiwoven-integrations (~> 0.1.52)
   newrelic_rpm
   parallel
   pg (~> 1.1)
