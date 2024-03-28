@@ -12,7 +12,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.1.49"
+gem "multiwoven-integrations", "~> 0.1.50"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
