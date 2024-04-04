@@ -13,11 +13,7 @@ import Loader from '@/components/Loader';
 import moment from 'moment';
 import NoActivations from '../../NoSyncs/NoSyncs';
 import StatusTag from '@/components/StatusTag';
-import {
-  ErrorResponse,
-  CreateSyncResponse,
-  SyncColumnFields,
-} from '@/views/Activate/Syncs/types';
+import { ErrorResponse, CreateSyncResponse, SyncColumnFields } from '@/views/Activate/Syncs/types';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -43,9 +39,7 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
       );
 
     case 'lastUpdated':
-      return (
-        <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>
-      );
+      return <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>;
 
     case 'status':
       return <StatusTag status='Active' />;
@@ -79,7 +73,7 @@ const SyncsList = (): JSX.Element => {
           id: data.id,
           ...acc,
         }),
-        {}
+        {},
       );
     });
 
@@ -96,8 +90,7 @@ const SyncsList = (): JSX.Element => {
 
   if (isLoading) return <Loader />;
 
-  if (!isLoading && tableData.data?.length === 0)
-    return <NoActivations activationType='Sync' />;
+  if (!isLoading && tableData.data?.length === 0) return <NoActivations activationType='Sync' />;
 
   return (
     <Box

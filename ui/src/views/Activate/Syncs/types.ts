@@ -1,18 +1,26 @@
 import { ModelEntity } from '@/views/Models/types';
 import { RJSFSchema } from '@rjsf/utils';
+import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 
 export type Stream = {
   action: string;
   name: string;
   json_schema: RJSFSchema;
   url: string;
+  supported_sync_modes: string[];
 };
+
+export enum SchemaMode {
+  schema = 'schema',
+  schemaless = 'schemaless',
+}
 
 export type DiscoverResponse = {
   data: {
     attributes: {
       catalog: {
         streams: Stream[];
+        schema_mode: SchemaMode;
         catalog_hash: string;
         connector_id: number;
         workspace_id: number;
@@ -24,8 +32,24 @@ export type DiscoverResponse = {
 };
 
 export type FieldMap = {
-  model: string;
-  destination: string;
+  from: string;
+  to: string;
+  mapping_type: string;
+  isRequired?: boolean;
+};
+
+export type SyncsConfigurationForTemplateMapping = {
+  data: {
+    configurations: {
+      catalog_mapping_types: {
+        static: Record<string, string>;
+        template: {
+          filter: Record<string, { description: string }>;
+          variable: Record<string, string>;
+        };
+      };
+    };
+  };
 };
 
 export type ConfigSync = {
@@ -33,7 +57,7 @@ export type ConfigSync = {
   destination_id: string;
   model_id: string;
   schedule_type: 'automated';
-  configuration: Record<string, string>;
+  configuration: FieldMapType[];
   stream_name: string;
 };
 
@@ -83,11 +107,7 @@ export type CreateSyncResponse = {
   type: 'syncs';
 };
 
-export type SyncColumnFields =
-  | 'model'
-  | 'destination'
-  | 'lastUpdated'
-  | 'status';
+export type SyncColumnFields = 'model' | 'destination' | 'lastUpdated' | 'status';
 
 export type SyncColumnEntity = {
   key: SyncColumnFields;
@@ -100,4 +120,37 @@ export type FinalizeSyncFormFields = {
   sync_interval: number;
   sync_interval_unit: 'minutes';
   schedule_type: 'automated';
+};
+
+export type SyncRunsResponse = {
+  attributes: {
+    sync_id: string;
+    status: string;
+    source_id: string;
+    destination_id: string;
+    started_at: string;
+    finished_at: string;
+    created_at: string;
+    updated_at: string;
+    duration: number;
+    total_query_rows: number;
+    total_rows: number;
+    successful_rows: number;
+    failed_rows: number;
+    error: ErrorResponse | null;
+  };
+  id: string;
+  type: 'sync_runs';
+};
+
+export type SyncRunsColumnFields =
+  | 'status'
+  | 'start_time'
+  | 'duration'
+  | 'rows_queried'
+  | 'results';
+
+export type SyncRunsColumnEntity = {
+  key: SyncRunsColumnFields;
+  name: string;
 };

@@ -15,7 +15,6 @@ import {
   Spacer,
   Text,
   VStack,
-  useToast,
   Divider,
 } from '@chakra-ui/react';
 import { Editor } from '@monaco-editor/react';
@@ -27,10 +26,12 @@ import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import moment from 'moment';
 import ModelActions from './ModelActions';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
 
   const model_id = params.id || '';
@@ -88,9 +89,9 @@ const ViewModel = (): JSX.Element => {
     };
     const modelUpdateResponse = await putModelById(model_id, updatePayload);
     if (modelUpdateResponse.data) {
-      toast({
+      showToast({
         title: 'Model updated successfully',
-        status: 'success',
+        status: CustomToastStatus.Success,
         duration: 3000,
         isClosable: true,
         position: 'bottom-right',
@@ -168,13 +169,7 @@ const ViewModel = (): JSX.Element => {
                 Edit
               </Button>
             </Flex>
-            <Box
-              borderX='1px'
-              borderBottom='1px'
-              roundedBottom='lg'
-              py={2}
-              borderColor='gray.400'
-            >
+            <Box borderX='1px' borderBottom='1px' roundedBottom='lg' py={2} borderColor='gray.400'>
               <Editor
                 width='100%'
                 height='280px'
@@ -222,11 +217,7 @@ const ViewModel = (): JSX.Element => {
               <Form>
                 <VStack>
                   <FormControl>
-                    <FormLabel
-                      htmlFor='primaryKey'
-                      fontSize='sm'
-                      fontWeight='bold'
-                    >
+                    <FormLabel htmlFor='primaryKey' fontSize='sm' fontWeight='bold'>
                       Primary Key
                     </FormLabel>
                     <Field

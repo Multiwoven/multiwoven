@@ -1,1 +1,1 @@
-export { default } from "./SetupModels";
+export { default } from './SetupModels';

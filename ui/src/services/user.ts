@@ -1,4 +1,4 @@
-import { multiwovenFetch } from "./common";
+import { multiwovenFetch } from './common';
 
 export type ProfileAPIResponse = {
   data?: {
@@ -24,12 +24,12 @@ export type LogoutAPIResponse = {
 
 export const getUserProfile = async (): Promise<ProfileAPIResponse> =>
   multiwovenFetch<null, ProfileAPIResponse>({
-    method: "get",
-    url: "/users/me",
+    method: 'get',
+    url: '/users/me',
   });
 
-export const logout = async () : Promise<LogoutAPIResponse> =>
+export const logout = async (): Promise<LogoutAPIResponse> =>
   multiwovenFetch<null, LogoutAPIResponse>({
-    method: "delete",
-    url: "/logout",
+    method: 'delete',
+    url: '/logout',
   });

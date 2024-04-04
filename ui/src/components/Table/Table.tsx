@@ -1,14 +1,4 @@
-import {
-  Box,
-  Flex,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { TableType } from './types';
 import EntityItem from '../EntityItem';
 
@@ -23,9 +13,7 @@ const GenerateTable = ({
   onRowClick,
   minWidth,
 }: TableType): JSX.Element => {
-  const theadProps = headerColorVisible
-    ? { bgColor: headerColor || 'gray.200' }
-    : {};
+  const theadProps = headerColorVisible ? { bgColor: headerColor || 'gray.200' } : {};
   return (
     <Box
       border='1px'
@@ -63,11 +51,7 @@ const GenerateTable = ({
               {data.columns.map((column, columnIndex) => (
                 <Td key={columnIndex} padding='16px'>
                   {column.showIcon ? (
-                    <Flex
-                      flexDir='row'
-                      alignItems='center'
-                      alignContent='center'
-                    >
+                    <Flex flexDir='row' alignItems='center' alignContent='center'>
                       <EntityItem
                         name={row[column.key as keyof typeof row] || ''}
                         icon={row.icon || ''}

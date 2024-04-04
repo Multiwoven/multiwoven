@@ -20,12 +20,42 @@ import { RJSFSchema } from '@rjsf/utils';
 import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate';
 import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
 
+/**
+ * TODO: Discuss with backend team and move this to backend
+ */
+export const uiSchemas: Record<string, RJSFSchema> = {
+  'amazon redshift': {
+    'ui:order': ['host', 'port', 'database', 'credentials', 'schema'],
+    'ui:layout': {
+      //? Specify that we must follow grid layout
+      display: 'grid',
+      //? Specify the number of columns
+      cols: 2,
+      //? This can be read as the number of columns that each item
+      //? in the grid should take (similar to in css). Its applied according to what is
+      //? specified in the ui:order
+      colspans: [2, 1, 1, 2, 2],
+    },
+    host: {
+      'ui:placeholder': 'redshift-host.us-east-1.redshift.amazonaws.com',
+    },
+    credentials: {
+      'ui:layout': {
+        display: 'grid',
+        cols: 2,
+        colspans: [1, 1],
+      },
+      auth_type: {
+        'ui:widget': 'hidden',
+      },
+    },
+  },
+};
+
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
-  const selectedDataSource = forms.find(
-    ({ stepKey }) => stepKey === 'datasource'
-  );
+  const selectedDataSource = forms.find(({ stepKey }) => stepKey === 'datasource');
   const datasource = selectedDataSource?.data?.datasource as string;
 
   if (!datasource) return null;
@@ -62,9 +92,7 @@ const SourceConfigForm = (): JSX.Element | null => {
         <Box backgroundColor='gray.200' padding='24px' borderRadius='8px'>
           <Form
             uiSchema={
-              connectorSchema.title
-                ? uiSchemas[connectorSchema.title.toLowerCase()]
-                : undefined
+              connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined
             }
             schema={connectorSchema}
             validator={validator}
@@ -83,38 +111,6 @@ const SourceConfigForm = (): JSX.Element | null => {
       </ContentContainer>
     </Box>
   );
-};
-
-/**
- * TODO: Discuss with backend team and move this to backend
- */
-export const uiSchemas: Record<string, RJSFSchema> = {
-  'amazon redshift': {
-    'ui:order': ['host', 'port', 'database', 'credentials', 'schema'],
-    'ui:layout': {
-      //? Specify that we must follow grid layout
-      display: 'grid',
-      //? Specify the number of columns
-      cols: 2,
-      //? This can be read as the number of columns that each item
-      //? in the grid should take (similar to in css). Its applied according to what is
-      //? specified in the ui:order
-      colspans: [2, 1, 1, 2, 2],
-    },
-    host: {
-      'ui:placeholder': 'redshift-host.us-east-1.redshift.amazonaws.com',
-    },
-    credentials: {
-      'ui:layout': {
-        display: 'grid',
-        cols: 2,
-        colspans: [1, 1],
-      },
-      auth_type: {
-        'ui:widget': 'hidden',
-      },
-    },
-  },
 };
 
 export default SourceConfigForm;

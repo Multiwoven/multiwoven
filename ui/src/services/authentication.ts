@@ -1,4 +1,4 @@
-import { multiwovenFetch } from "./common";
+import { multiwovenFetch } from './common';
 
 export type SignUpPayload = {
   email: string;
@@ -48,14 +48,14 @@ export type ApiResponse<T> = {
 
 export const signUp = async (payload: SignUpPayload) =>
   multiwovenFetch<SignUpPayload, ApiResponse<AuthResponse>>({
-    method: "post",
-    url: "/signup",
+    method: 'post',
+    url: '/signup',
     data: payload,
   });
 
 export const signIn = async (payload: SignInPayload) =>
   multiwovenFetch<SignInPayload, ApiResponse<SignInResponse>>({
-    method: "post",
-    url: "/login",
+    method: 'post',
+    url: '/login',
     data: payload,
   });

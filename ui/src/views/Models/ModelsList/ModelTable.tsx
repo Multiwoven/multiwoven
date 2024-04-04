@@ -1,40 +1,37 @@
-import { APIData, ModelAttributes } from "@/services/models";
-import Loader from "@/components/Loader";
-import { ModelColumnFields } from "../types";
-import EntityItem from "@/components/EntityItem";
-import { Text } from "@chakra-ui/react";
-import moment from "moment";
-import { useMemo } from "react";
-import { MODEL_TABLE_COLUMNS } from "../constants";
-import Table from "@/components/Table";
+import { APIData, ModelAttributes } from '@/services/models';
+import Loader from '@/components/Loader';
+import { ModelColumnFields } from '../types';
+import EntityItem from '@/components/EntityItem';
+import { Text } from '@chakra-ui/react';
+import moment from 'moment';
+import { useMemo } from 'react';
+import { MODEL_TABLE_COLUMNS } from '../constants';
+import Table from '@/components/Table';
 
 type TableItem = {
   field: ModelColumnFields;
   data: ModelAttributes;
 };
 
-const TableItem = ({
-  field,
-  data,
-}: TableItem): JSX.Element | null | undefined => {
+const TableItem = ({ field, data }: TableItem): JSX.Element | null | undefined => {
   switch (field) {
-    case "name":
+    case 'name':
       return <EntityItem icon={data.connector.icon} name={data.name} />;
-    case "query_type":
+    case 'query_type':
       switch (data.query_type) {
-        case "raw_sql":
+        case 'raw_sql':
           return (
-            <Text size="sm" fontWeight="semibold">
+            <Text size='sm' fontWeight='semibold'>
               SQL Query
             </Text>
           );
       }
       return <></>;
 
-    case "last_updated":
+    case 'last_updated':
       return (
-        <Text size="sm" fontWeight="medium">
-          {moment().format("DD/MM/YYYY")}
+        <Text size='sm' fontWeight='medium'>
+          {moment().format('DD/MM/YYYY')}
         </Text>
       );
   }
@@ -51,11 +48,7 @@ type ModelTableProps = {
   isLoading: boolean;
 };
 
-const ModelTable = ({
-  handleOnRowClick,
-  modelData,
-  isLoading,
-}: ModelTableProps): JSX.Element => {
+const ModelTable = ({ handleOnRowClick, modelData, isLoading }: ModelTableProps): JSX.Element => {
   const models = modelData?.data;
   const tableData = useMemo(() => {
     if (models && models?.length > 0) {
@@ -66,7 +59,7 @@ const ModelTable = ({
             id,
             ...acc,
           }),
-          {}
+          {},
         );
       });
 

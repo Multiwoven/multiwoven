@@ -1,1 +1,1 @@
-export { default } from "./FinaliseSync";
+export { default } from './FinaliseSync';

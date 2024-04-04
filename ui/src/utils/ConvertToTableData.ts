@@ -15,20 +15,16 @@ export type ModelData = {
 
 export function ConvertToTableData(
   apiData: GetAllModelsResponse[] = [],
-  columnMap: ColumnMapType[]
+  columnMap: ColumnMapType[],
 ): TableDataType {
   const data = apiData.map((item) => {
     const rowData: ModelAttributes = item.attributes;
 
     if (item.id) rowData['id'] = item.id;
     if (item.attributes.updated_at)
-      rowData['updated_at'] = moment(item.attributes.updated_at).format(
-        'DD/MM/YYYY'
-      );
+      rowData['updated_at'] = moment(item.attributes.updated_at).format('DD/MM/YYYY');
     if (item.attributes.updated_at)
-      rowData['created_at'] = moment(item.attributes.updated_at).format(
-        'DD/MM/YYYY'
-      );
+      rowData['created_at'] = moment(item.attributes.updated_at).format('DD/MM/YYYY');
     return rowData;
   });
 
@@ -42,9 +38,7 @@ type Field = {
   [key: string]: string | number | null;
 };
 
-export function ConvertModelPreviewToTableData(
-  apiData: Array<Field>
-): TableDataType {
+export function ConvertModelPreviewToTableData(apiData: Array<Field>): TableDataType {
   const column_names = Object.keys(apiData[0]);
 
   const columns = column_names.map((column_name) => {

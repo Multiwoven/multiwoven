@@ -8,7 +8,7 @@ export type ModelTableDataType = {
 };
 
 export type ColumnMapType = {
-	name: string;
-	key: string;
-	showIcon?: boolean;
+  name: string;
+  key: string;
+  showIcon?: boolean;
 };

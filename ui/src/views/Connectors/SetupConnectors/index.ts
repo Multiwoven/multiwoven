@@ -1,1 +1,1 @@
-export { default } from "./SetupConnectors";
+export { default } from './SetupConnectors';

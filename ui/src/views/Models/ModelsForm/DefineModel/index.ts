@@ -1,1 +1,1 @@
-export { default } from "./DefineModel";
+export { default } from './DefineModel';

@@ -1,10 +1,4 @@
-import {
-  Box,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-} from '@chakra-ui/react';
+import { Box, Popover, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import EditModelModal from './EditModelModal';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';

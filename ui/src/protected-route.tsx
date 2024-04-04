@@ -20,7 +20,7 @@ const Protected: React.FC<ProtectedProps> = ({ children }) => {
   }
 
   if (!isLoggedIn) {
-    return <Navigate to="/sign-in" replace />;
+    return <Navigate to='/sign-in' replace />;
   }
 
   return children;

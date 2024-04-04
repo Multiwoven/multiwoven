@@ -1,4 +1,4 @@
-import { ColumnMapType } from "@/utils/types";
+import { ColumnMapType } from '@/utils/types';
 
 export type TableDataType = {
   columns: Array<ColumnMapType>;

@@ -1,9 +1,9 @@
-import ContentContainer from "@/components/ContentContainer";
-import ModelTable from "@/components/ModelTable";
-import { SteppedFormContext } from "@/components/SteppedForm/SteppedForm";
+import ContentContainer from '@/components/ContentContainer';
+import ModelTable from '@/components/ModelTable';
+import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 
-import { Box } from "@chakra-ui/react";
-import { useContext } from "react";
+import { Box } from '@chakra-ui/react';
+import { useContext } from 'react';
 
 const SelectModel = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -13,7 +13,7 @@ const SelectModel = (): JSX.Element => {
   };
 
   return (
-    <Box width="100%" display="flex" justifyContent="center">
+    <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <ModelTable handleOnRowClick={handleOnRowClick} />
       </ContentContainer>

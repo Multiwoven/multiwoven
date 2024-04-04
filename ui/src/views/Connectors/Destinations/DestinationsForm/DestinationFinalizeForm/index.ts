@@ -1,1 +1,1 @@
-export { default } from "./DestinationFinalizeForm";
+export { default } from './DestinationFinalizeForm';

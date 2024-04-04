@@ -32,10 +32,7 @@ const FormFooter = ({
 
   useEffect(() => {
     if (isAlignToContentContainer) {
-      setLeftOffet(
-        document.getElementById(contentContainerId)?.getBoundingClientRect()
-          ?.left ?? 0
-      );
+      setLeftOffet(document.getElementById(contentContainerId)?.getBoundingClientRect()?.left ?? 0);
     }
   }, [isAlignToContentContainer]);
 

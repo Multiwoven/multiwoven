@@ -30,15 +30,9 @@ const TopBar = ({
   ctaButtonHeight,
   breadcrumbSteps = [],
 }: TopBarType): JSX.Element => (
-  <Flex
-    justifyContent='space-between'
-    borderColor='gray.400'
-    marginBottom='30px'
-  >
+  <Flex justifyContent='space-between' borderColor='gray.400' marginBottom='30px'>
     <Box>
-      {breadcrumbSteps.length > 0 ? (
-        <Breadcrumbs steps={breadcrumbSteps} />
-      ) : null}
+      {breadcrumbSteps.length > 0 ? <Breadcrumbs steps={breadcrumbSteps} /> : null}
       <Heading fontWeight='bold' size='sm'>
         {name}
       </Heading>

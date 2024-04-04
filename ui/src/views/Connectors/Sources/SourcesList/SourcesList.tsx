@@ -4,10 +4,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 import TopBar from '@/components/TopBar';
 import { useNavigate } from 'react-router-dom';
-import {
-  SOURCES_LIST_QUERY_KEY,
-  CONNECTOR_LIST_COLUMNS,
-} from '@/views/Connectors/constant';
+import { SOURCES_LIST_QUERY_KEY, CONNECTOR_LIST_COLUMNS } from '@/views/Connectors/constant';
 import Table from '@/components/Table';
 import { getUserConnectors } from '@/services/connectors';
 import { ConnectorAttributes, ConnectorTableColumnFields } from '../../types';
@@ -26,9 +23,7 @@ type TableItem = {
 const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
   switch (field) {
     case 'icon':
-      return (
-        <EntityItem icon={attributes.icon} name={attributes.connector_name} />
-      );
+      return <EntityItem icon={attributes.icon} name={attributes.connector_name} />;
 
     case 'updated_at':
       return (
@@ -69,7 +64,7 @@ const SourcesList = (): JSX.Element | null => {
             id,
             ...acc,
           }),
-          {}
+          {},
         );
       });
 
@@ -96,10 +91,7 @@ const SourcesList = (): JSX.Element | null => {
           isCtaVisible
         />
         {tableData ? (
-          <Table
-            data={tableData}
-            onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)}
-          />
+          <Table data={tableData} onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)} />
         ) : null}
       </ContentContainer>
     </Box>

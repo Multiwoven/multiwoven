@@ -1,1 +1,1 @@
-export { default } from "./ViewModel";
+export { default } from './ViewModel';

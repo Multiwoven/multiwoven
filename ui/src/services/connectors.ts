@@ -31,19 +31,16 @@ type ConnectorDefinationApiResponse = {
 };
 
 export const getConnectorsDefintions = async (
-  connectorType: string
+  connectorType: string,
 ): Promise<ConnectorsDefinationApiResponse> => {
   return apiRequest('/connector_definitions?type=' + connectorType, null);
 };
 
 export const getConnectorDefinition = async (
   connectorType: string,
-  connectorName: string
+  connectorName: string,
 ): Promise<ConnectorDefinationApiResponse> => {
-  return apiRequest(
-    '/connector_definitions/' + connectorName + '?type=' + connectorType,
-    null
-  );
+  return apiRequest('/connector_definitions/' + connectorName + '?type=' + connectorType, null);
 };
 
 export const getConnectionStatus = async (payload: TestConnectionPayload) =>
@@ -54,7 +51,7 @@ export const getConnectionStatus = async (payload: TestConnectionPayload) =>
   });
 
 export const createNewConnector = async (
-  payload: CreateConnectorPayload
+  payload: CreateConnectorPayload,
 ): Promise<CreateConnectorResponse> =>
   multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
     method: 'post',
@@ -62,9 +59,7 @@ export const createNewConnector = async (
     data: payload,
   });
 
-export const getConnectorInfo = async (
-  id: string
-): Promise<ConnectorInfoResponse> =>
+export const getConnectorInfo = async (id: string): Promise<ConnectorInfoResponse> =>
   multiwovenFetch<null, ConnectorInfoResponse>({
     method: 'get',
     url: `/connectors/${id}`,
@@ -72,7 +67,7 @@ export const getConnectorInfo = async (
 
 export const updateConnector = async (
   payload: CreateConnectorPayload,
-  id: string
+  id: string,
 ): Promise<CreateConnectorResponse> =>
   multiwovenFetch<CreateConnectorPayload, CreateConnectorResponse>({
     method: 'put',
@@ -80,9 +75,7 @@ export const updateConnector = async (
     data: payload,
   });
 
-export const getUserConnectors = async (
-  connectorType: string
-): Promise<ConnectorListResponse> => {
+export const getUserConnectors = async (connectorType: string): Promise<ConnectorListResponse> => {
   return multiwovenFetch<null, ConnectorListResponse>({
     method: 'get',
     url: `/connectors?type=${connectorType}`,
@@ -90,10 +83,14 @@ export const getUserConnectors = async (
   });
 };
 
-export const deleteConnector = async (
-  id: string
-): Promise<ConnectorInfoResponse> =>
+export const deleteConnector = async (id: string): Promise<ConnectorInfoResponse> =>
   multiwovenFetch<null, ConnectorInfoResponse>({
     method: 'delete',
     url: `/connectors/${id}`,
+  });
+
+export const getAllConnectors = async (): Promise<ConnectorListResponse> =>
+  multiwovenFetch<null, ConnectorListResponse>({
+    method: 'get',
+    url: '/connectors',
   });

@@ -12,23 +12,22 @@ import {
   Stack,
   Text,
   Textarea,
-  useToast,
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { ConfigSync } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import { CustomToastStatus } from '@/components/Toast/index';
+import useCustomToast from '@/hooks/useCustomToast';
 
 const FinaliseSync = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
+  const showToast = useCustomToast();
   const navigate = useNavigate();
 
   const { forms } = state;
-  const syncConfigForm = forms.find(
-    (form) => form.stepKey === 'configureSyncs'
-  );
+  const syncConfigForm = forms.find((form) => form.stepKey === 'configureSyncs');
   const syncConfigData = syncConfigForm?.data;
 
   const formik = useFormik({
@@ -51,8 +50,8 @@ const FinaliseSync = (): JSX.Element => {
 
         const response = await createSync(payload);
         if (response?.data?.attributes) {
-          toast({
-            status: 'success',
+          showToast({
+            status: CustomToastStatus.Success,
             title: 'Success!',
             description: 'Sync created successfully!',
             position: 'bottom-right',
@@ -63,8 +62,8 @@ const FinaliseSync = (): JSX.Element => {
         }
         throw new Error();
       } catch {
-        toast({
-          status: 'error',
+        showToast({
+          status: CustomToastStatus.Error,
           title: 'An error occurred.',
           description: 'Something went wrong while creating Sync.',
           position: 'bottom-right',
@@ -80,12 +79,7 @@ const FinaliseSync = (): JSX.Element => {
     <Box display='flex' width='100%' justifyContent='center'>
       <ContentContainer>
         <form onSubmit={formik.handleSubmit}>
-          <Box
-            backgroundColor='gray.300'
-            padding='20px'
-            borderRadius='8px'
-            marginBottom='100px'
-          >
+          <Box backgroundColor='gray.300' padding='20px' borderRadius='8px' marginBottom='100px'>
             <Text fontWeight='600' mb='6' size='md'>
               Finalise setting for this sync
             </Text>
@@ -151,8 +145,7 @@ const FinaliseSync = (): JSX.Element => {
                           Interval{' '}
                         </Text>
                         <Text size='xs' color='black.200'>
-                          Schedule your sync to run on a set interval (e.g.,
-                          once per hour)
+                          Schedule your sync to run on a set interval (e.g., once per hour)
                         </Text>
                       </Box>
                     </Radio>
@@ -194,13 +187,10 @@ const FinaliseSync = (): JSX.Element => {
                           onChange={formik.handleChange}
                           isRequired
                           color='gray.600'
+                          height='35px'
                         />
                       </Box>
-                      <Divider
-                        orientation='vertical'
-                        height='24px'
-                        color='gray.400'
-                      />
+                      <Divider orientation='vertical' height='24px' color='gray.400' />
                       <Box>
                         <Select
                           name='sync_interval_unit'

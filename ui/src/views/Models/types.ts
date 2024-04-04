@@ -41,7 +41,7 @@ export type ModelEntity = {
     id: number;
     name: string;
     description: string | null;
-    connector_type: "source";
+    connector_type: 'source';
     workspace_id: number;
     created_at: string;
     updated_at: string;
@@ -59,7 +59,7 @@ export type ModelEntity = {
   name: string;
 };
 
-export type ModelColumnFields = "name" | "query_type" | "last_updated";
+export type ModelColumnFields = 'name' | 'query_type' | 'last_updated';
 
 export type ModelColumnEntity = {
   key: ModelColumnFields;

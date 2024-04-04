@@ -22,16 +22,8 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
       height='36px'
     >
       <HStack spacing='2'>
-        <Icon
-          as={icon}
-          boxSize='4'
-          color={isActive ? 'black.500' : 'gray.600'}
-        />
-        <Text
-          color='black.500'
-          fontWeight={isActive ? 'semibold' : 'medium'}
-          size='sm'
-        >
+        <Icon as={icon} boxSize='4' color={isActive ? 'black.500' : 'gray.600'} />
+        <Text color='black.500' fontWeight={isActive ? 'semibold' : 'medium'} size='sm'>
           {label}
         </Text>
         {disabled ? <Badge text='weaving soon' variant='default' /> : <></>}

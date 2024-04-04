@@ -1,1 +1,1 @@
-export type ConnectorTypes = "source" | "destination" | "model";
+export type ConnectorTypes = 'source' | 'destination' | 'model';

@@ -1,1 +1,1 @@
-export { default } from "./ExitModal";
+export { default } from './ExitModal';

@@ -1,1 +1,1 @@
-export { default } from "./EntityItem";
+export { default } from './EntityItem';

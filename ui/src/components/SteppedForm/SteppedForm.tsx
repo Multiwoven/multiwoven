@@ -1,19 +1,9 @@
 import { useEffect } from 'react';
 import { Box, Button, Text } from '@chakra-ui/react';
 import { createContext, useReducer } from 'react';
-import {
-  FormAction,
-  FormContextType,
-  FormState,
-  SteppedForm as SteppedFormType,
-} from './types';
+import { FormAction, FormContextType, FormState, SteppedForm as SteppedFormType } from './types';
 import { updateFormDataForStep } from './utils';
-import {
-  useNavigate,
-  useLocation,
-  createSearchParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { useNavigate, useLocation, createSearchParams, useSearchParams } from 'react-router-dom';
 import ExitModal from '../ExitModal';
 import { useUiConfig } from '@/utils/hooks';
 import ContentContainer from '../ContentContainer';
@@ -48,9 +38,7 @@ const reducer = (state: FormState, action: FormAction) => {
       const { payload } = action;
       return {
         ...state,
-        currentForm: payload?.stepKey
-          ? { [payload?.stepKey as string]: payload?.data }
-          : null,
+        currentForm: payload?.stepKey ? { [payload?.stepKey]: payload?.data } : null,
       };
     }
     case 'UPDATE_STEP': {
@@ -163,19 +151,9 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
             width='100%'
           >
             <ContentContainer>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-                width='100%'
-              >
+              <Box display='flex' justifyContent='space-between' alignItems='center' width='100%'>
                 <Box>
-                  <Text
-                    size='xs'
-                    color='gray.600'
-                    letterSpacing={2.4}
-                    fontWeight={700}
-                  >
+                  <Text size='xs' color='gray.600' letterSpacing={2.4} fontWeight={700}>
                     STEP {currentStep + 1} OF {steps.length}
                   </Text>
                   <Text
@@ -199,9 +177,7 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
         {stepInfo.isRequireContinueCta ? (
           <Box padding='10px' display='flex' justifyContent='center'>
             <Box maxWidth={maxContentWidth} width='100%'>
-              <Button onClick={() => handleMoveForward(stepInfo.formKey)}>
-                Continue
-              </Button>
+              <Button onClick={() => handleMoveForward(stepInfo.formKey)}>Continue</Button>
             </Box>
           </Box>
         ) : null}

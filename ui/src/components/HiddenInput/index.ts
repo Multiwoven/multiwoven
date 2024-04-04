@@ -1,1 +1,1 @@
-export { default } from "./HiddenInput";
+export { default } from './HiddenInput';

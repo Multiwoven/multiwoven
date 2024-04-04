@@ -1,1 +1,1 @@
-export { default } from "./SelectModelMethod";
+export { default } from './SelectModelMethod';
