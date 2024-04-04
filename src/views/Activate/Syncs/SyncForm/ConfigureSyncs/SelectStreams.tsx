@@ -20,7 +20,6 @@ type SelectStreamsProps = {
 };
 
 const SelectStreams = ({
-  model,
   destination,
   selectedSyncMode,
   selectedStreamName,
@@ -82,7 +81,7 @@ const SelectStreams = ({
       marginBottom='20px'
     >
       <Text fontWeight='600' mb={6} color='black.500' size='md'>
-        Configure sync to {model?.connector?.connector_name}
+        Configure sync to {destination.attributes.connector_name}.
       </Text>
       <Box display='flex' alignItems='flex-end' gap='12px'>
         <Box width='100%'>

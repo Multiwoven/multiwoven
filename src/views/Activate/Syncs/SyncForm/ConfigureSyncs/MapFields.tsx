@@ -146,7 +146,7 @@ const MapFields = ({
         Map fields to {destination?.attributes?.connector_name}
       </Text>
       <Text size='xs' mb={6} letterSpacing='-0.12px' fontWeight={400} color='black.200'>
-        Select the API from the Destination that you wish to map.
+        {`Configure how the columns in your query results should be mapped to fields in ${destination.attributes.connector_name}.`}
       </Text>
       {fields.map(({ isRequired = false }, index) => (
         <Box key={`field-map-${index}`} display='flex' alignItems='flex-end' marginBottom='30px'>
