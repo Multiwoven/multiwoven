@@ -1,0 +1,30 @@
+name: Create Release Note on Merge
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  release-on-merge:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.commits && contains(github.event.commits[0].message, 'Multiwoven release ') && contains(github.ref, 'refs/heads/main') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important to fetch all history for tags
+
+      - name: Get the latest tag
+        id: latest-tag
+        run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          tag: ${{ env.LATEST_TAG }}
+          name: Release ${{ env.LATEST_TAG }}
+          bodyFile: release-notes.md
+          draft: false
+          prerelease: false
