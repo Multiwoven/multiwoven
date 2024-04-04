@@ -5,7 +5,7 @@
   "schema_mode": "schemaless",
   "streams": [
     {
-      "name": "visits",
+      "name": "sftp",
       "batch_support": true,
       "batch_size": 100000,
       "action": "create",

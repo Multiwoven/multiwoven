@@ -38,6 +38,12 @@
         "type": "string",
         "description": "Path to the directory where files will be written.",
         "order": 4
+      },
+      "file_name": {
+        "title": "File Name",
+        "type": "string",
+        "description": "Name of the file to be written.",
+        "order": 5
       }
     }
   }

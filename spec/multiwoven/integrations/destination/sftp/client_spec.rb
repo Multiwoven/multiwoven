@@ -16,7 +16,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       username: "test_username",
       port: 22,
       password: "test_password",
-      destination_path: "/"
+      destination_path: "/multiwoven",
+      file_name: "test"
     }.with_indifferent_access
   end
   let(:sync_config_json) do
@@ -83,6 +84,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
       expect(catalog.schema_mode).to eql("schemaless")
+      expect(catalog.streams[0].name).to eql("sftp")
       expect(catalog.streams[0].batch_support).to eql(true)
       expect(catalog.streams[0].batch_size).to eql(100_000)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
@@ -173,6 +175,18 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
           control: have_attributes(status: "failed", meta: { detail: "Failed to clear data." })
         )
       end
+    end
+  end
+
+  describe "#generate_local_file_name" do
+    it "generate file name for to upload sftp" do
+      expect(client.send(:generate_local_file_name, sync_config)).to include("test_")
+    end
+  end
+
+  describe "#generate_file_path" do
+    it "generate file" do
+      expect(client.send(:generate_file_path, sync_config)).to include("/multiwoven/test_")
     end
   end
 

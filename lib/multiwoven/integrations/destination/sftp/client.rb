@@ -82,13 +82,14 @@ module Multiwoven::Integrations::Destination
       def generate_file_path(sync_config)
         connection_specification = sync_config.destination.connection_specification.with_indifferent_access
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
-        file_name = "#{sync_config.stream.name}_#{timestamp}.csv"
+        file_name = "#{connection_specification[:file_name]}_#{timestamp}.csv"
         File.join(connection_specification[:destination_path], file_name)
       end
 
       def generate_local_file_name(sync_config)
+        connection_specification = sync_config.destination.connection_specification.with_indifferent_access
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
-        "#{sync_config.stream.name}_#{timestamp}"
+        "#{connection_specification[:file_name]}_#{timestamp}"
       end
 
       def generate_csv_content(records)
