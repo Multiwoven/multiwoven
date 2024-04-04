@@ -30,6 +30,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(models.count)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
       end
     end
   end

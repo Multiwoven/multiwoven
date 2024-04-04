@@ -27,8 +27,7 @@ class Catalog < ApplicationRecord
 
   def stream_to_protocol(stream)
     stream = stream.with_indifferent_access
-
-    if stream["request_rate_limit"]
+    if stream["request_rate_limit"] && !stream["request_rate_limit"].zero?
       # stream specific rate limit
       request_rate_limit = stream["request_rate_limit"]
       request_rate_limit_unit = stream["request_rate_limit_unit"]

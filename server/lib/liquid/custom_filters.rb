@@ -27,6 +27,12 @@ module Liquid
       end
     end
 
+    def to_datetime(input, existing_date_format)
+      return input if input.blank?
+
+      DateTime.strptime(input, existing_date_format)&.iso8601
+    end
+
     private
 
     def apply_cast_method(input, method)

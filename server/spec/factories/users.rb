@@ -24,8 +24,8 @@ FactoryBot.define do
     name { Faker::Name.name }
     email { Faker::Internet.unique.email }
     unique_id { SecureRandom.uuid }
-    password { "password" }
-    password_confirmation { "password" }
+    password {  "testPassword@123" }
+    password_confirmation { "testPassword@123" }
     company_name { Faker::Company.name }
     trait :verified do
       confirmed_at { Time.current }

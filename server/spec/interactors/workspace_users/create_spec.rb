@@ -58,4 +58,30 @@ RSpec.describe WorkspaceUsers::Create, type: :interactor do
       end
     end
   end
+
+  describe "#generate_complex_password" do
+    subject(:interactor) { described_class.new }
+
+    let(:generated_password) { interactor.send(:generate_complex_password, 16) }
+
+    it "generates a password of the correct length" do
+      expect(generated_password.length).to eq 16
+    end
+
+    it "includes at least one uppercase letter" do
+      expect(generated_password).to match(/[A-Z]/)
+    end
+
+    it "includes at least one lowercase letter" do
+      expect(generated_password).to match(/[a-z]/)
+    end
+
+    it "includes at least one digit" do
+      expect(generated_password).to match(/\d/)
+    end
+
+    it "includes at least one special character" do
+      expect(generated_password).to match(/[\#?!@$%\^&*-]/)
+    end
+  end
 end

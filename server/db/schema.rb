@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_14_102143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
     t.integer "destination_id"
     t.integer "model_id"
     t.integer "total_query_rows"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_sync_runs_on_discarded_at"
   end
 
   create_table "syncs", force: :cascade do |t|
@@ -122,10 +124,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_05_120454) do
     t.datetime "confirmed_at"
     t.string "name"
     t.string "unique_id"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unique_id"], name: "index_users_on_unique_id"
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
   create_table "workspace_users", force: :cascade do |t|

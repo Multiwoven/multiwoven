@@ -21,7 +21,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
+         :recoverable, :rememberable, :validatable,
+         :lockable, :timeoutable, :jwt_authenticatable, jwt_revocation_strategy: self
 
   before_create :assign_unique_id
 
@@ -29,7 +30,9 @@ class User < ApplicationRecord
 
   validates :name, :email, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
   validates :email, format: { with: VALID_EMAIL_REGEX }
+  validate :password_complexity
 
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
@@ -52,5 +55,12 @@ class User < ApplicationRecord
 
   def assign_unique_id
     self.unique_id = SecureRandom.uuid
+  end
+
+  def password_complexity
+    return if password.blank? || password =~ VALID_PASSWORD_REGEX
+
+    errors.add :password,
+               "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
   end
 end

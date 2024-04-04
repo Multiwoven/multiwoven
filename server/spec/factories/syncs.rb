@@ -29,5 +29,6 @@ FactoryBot.define do
     stream_name { "profile" }
     sync_interval_unit { "hours" }
     status { "pending" }
+    sync_mode { "incremental" }
   end
 end

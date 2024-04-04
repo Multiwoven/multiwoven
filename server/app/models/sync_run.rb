@@ -2,6 +2,9 @@
 
 class SyncRun < ApplicationRecord
   include AASM
+  include Discard::Model
+
+  default_scope -> { kept }
 
   validates :sync_id, presence: true
   validates :status, presence: true
@@ -24,6 +27,7 @@ class SyncRun < ApplicationRecord
   has_many :sync_records, dependent: :nullify
 
   after_initialize :set_defaults, if: :new_record?
+  after_discard :perform_post_discard_sync_run
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
@@ -75,6 +79,10 @@ class SyncRun < ApplicationRecord
     self.total_rows ||= 0
     self.successful_rows ||= 0
     self.failed_rows ||= 0
+  end
+
+  def perform_post_discard_sync_run
+    sync_records.update_all(sync_run_id: nil) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def update_success

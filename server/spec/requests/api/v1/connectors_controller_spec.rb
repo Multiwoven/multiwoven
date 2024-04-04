@@ -27,6 +27,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(connectors.count)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
 
       it "returns success and all source connectors" do
@@ -36,6 +37,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data].count).to eql(1)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("source")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
 
       it "returns success and destination connectors" do
@@ -45,6 +47,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data].count).to eql(1)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
 
       it "returns an error response for connectors" do

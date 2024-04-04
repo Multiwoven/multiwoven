@@ -65,6 +65,22 @@ RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
         exit 1; \
     fi
 
+
+RUN apt-get update -qq && \
+    apt-get install -y unzip 
+
+RUN apt-get update -qq && \
+    apt-get install -y libsasl2-modules-gssapi-mit
+
+RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
+        wget --quiet https://databricks-bi-artifacts.s3.us-east-2.amazonaws.com/simbaspark-drivers/odbc/2.7.7/SimbaSparkODBC-2.7.7.1016-Debian-64bit.zip -O /tmp/databricks_odbc.zip && \
+        unzip /tmp/databricks_odbc.zip -d /tmp && \
+        dpkg -i /tmp/simbaspark_*.deb && \
+        rm -rf /tmp/*; \
+    fi
+# ARM64 version of the Simba Spark ODBC driver is not currently available
+
+
 # Change back to the root directory before copying the Rails app
 # Rails app lives here
 WORKDIR /rails
