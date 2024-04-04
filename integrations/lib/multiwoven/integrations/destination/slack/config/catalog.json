@@ -13,7 +13,7 @@
         },
         "oneOf": [{ "required": ["text"] }]
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": ["incremental"],
       "request_rate_limit":  60,
       "request_rate_limit_unit": "minute",
       "request_rate_concurrency": 1

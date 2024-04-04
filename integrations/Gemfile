@@ -29,6 +29,8 @@ gem "webmock", "~> 3.0"
 
 gem "activesupport"
 
+gem "google-apis-sheets_v4"
+
 gem "google-cloud-bigquery"
 
 gem "restforce", "~> 7.1.0"
@@ -42,6 +44,12 @@ gem "git"
 gem "hubspot-api-client"
 
 gem "ruby-limiter"
+
+gem "stripe"
+
+gem "net-sftp"
+
+gem "csv"
 
 group :development, :test do
   gem "simplecov", require: false

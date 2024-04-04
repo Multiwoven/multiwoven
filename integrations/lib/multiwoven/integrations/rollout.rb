@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.31"
+    VERSION = "0.1.53"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -10,6 +10,7 @@ module Multiwoven
       Bigquery
       Postgresql
       Databricks
+      SalesforceConsumerGoodsCloud
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -18,6 +19,12 @@ module Multiwoven
       FacebookCustomAudience
       Slack
       Hubspot
+      GoogleSheets
+      Airtable
+      Stripe
+      SalesforceConsumerGoodsCloud
+      Sftp
+      Postgresql
     ].freeze
   end
 end

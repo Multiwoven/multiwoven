@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "SalesforceConsumerGoodsCloud",
+    "title": "Salesforce Consumer Goods Cloud",
+    "connector_type": "destination",
+    "connector_sub_type": "api",
+    "category": "Retail",
+    "documentation_url": "https://docs.multiwoven.com/destinations/retail/salesforce_consumer_goods_cloud",
+    "github_issue_label": "destination-salesforce-consumer-goods-cloud",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

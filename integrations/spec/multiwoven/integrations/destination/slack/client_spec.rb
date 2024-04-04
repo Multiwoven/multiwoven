@@ -43,6 +43,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do # rubocop
       stream: {
         name: "chat_postMessage",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: slack_json_schema
       },
       sync_mode: "full_refresh",
@@ -101,6 +103,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Slack::Client do # rubocop
       expect(message_stream.request_rate_limit).to eql(60)
       expect(message_stream.request_rate_limit_unit).to eql("minute")
       expect(message_stream.request_rate_concurrency).to eql(1)
+
+      catalog.streams.each do |stream|
+        expect(stream.supported_sync_modes).to eql(%w[incremental])
+      end
     end
   end
 

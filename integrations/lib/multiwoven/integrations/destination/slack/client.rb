@@ -7,6 +7,7 @@ module Multiwoven
         include Multiwoven::Integrations::Core
 
         class Client < DestinationConnector
+          prepend Multiwoven::Integrations::Core::RateLimiter
           attr_accessor :channel_id
 
           def check_connection(connection_config)

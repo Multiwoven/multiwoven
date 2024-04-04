@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Stripe",
+    "title": "Stripe",
+    "connector_type": "destination",
+    "category": "Payments",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-stripe",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

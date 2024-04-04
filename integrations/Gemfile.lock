@@ -7,15 +7,18 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.31)
+    multiwoven-integrations (0.1.53)
       activesupport
       async-websocket
+      csv
       dry-schema
       dry-struct
       dry-types
       git
+      google-apis-sheets_v4
       google-cloud-bigquery
       hubspot-api-client
+      net-sftp
       pg
       rake
       restforce
@@ -23,6 +26,7 @@ PATH
       ruby-odbc
       sequel
       slack-ruby-client
+      stripe
 
 GEM
   remote: https://rubygems.org/
@@ -60,6 +64,7 @@ GEM
       fiber-local
     crack (0.4.5)
       rexml
+    csv (3.2.6)
     declarative (0.0.20)
     diff-lcs (1.5.0)
     docile (1.4.0)
@@ -128,6 +133,8 @@ GEM
       retriable (>= 2.0, < 4.a)
       rexml
       webrick
+    google-apis-sheets_v4 (0.26.0)
+      google-apis-core (>= 0.11.0, < 2.a)
     google-cloud-bigquery (1.45.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.1)
@@ -165,6 +172,9 @@ GEM
     multi_json (1.15.0)
     multipart-post (2.3.0)
     mutex_m (0.2.0)
+    net-sftp (4.0.0)
+      net-ssh (>= 5.0.0, < 8.0.0)
+    net-ssh (7.2.1)
     os (1.1.4)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -238,6 +248,7 @@ GEM
       faraday-multipart
       gli
       hashie
+    stripe (10.11.0)
     timers (4.3.5)
     trailblazer-option (0.1.2)
     typhoeus (1.4.1)
@@ -264,13 +275,16 @@ DEPENDENCIES
   activesupport
   async-websocket (~> 0.8.0)
   byebug
+  csv
   dry-schema
   dry-struct
   dry-types
   git
+  google-apis-sheets_v4
   google-cloud-bigquery
   hubspot-api-client
   multiwoven-integrations!
+  net-sftp
   pg
   rake (~> 13.0)
   restforce (~> 7.1.0)
@@ -282,6 +296,7 @@ DEPENDENCIES
   simplecov
   simplecov_json_formatter
   slack-ruby-client
+  stripe
   webmock (~> 3.0)
 
 BUNDLED WITH

@@ -33,7 +33,7 @@
           "PAGEUID": { "type": ["string", "null"], "default": null, "title": "Page-Scoped ID", "x-hashRequired": false }
         }
       },
-      "supported_sync_modes": ["full_refresh", "incremental"],
+      "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["updated"],
       "source_defined_primary_key": [["email"]]

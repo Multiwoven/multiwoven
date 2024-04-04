@@ -155,7 +155,6 @@ module Multiwoven
           json_data = {
             "name": "example_stream", "action": "create",
             "json_schema": { "field1": "type1" },
-            "supported_sync_modes": %w[full_refresh incremental],
             "source_defined_cursor": true,
             "default_cursor_field": ["field1"],
             "source_defined_primary_key": [["field1"], ["field2"]],
@@ -175,7 +174,7 @@ module Multiwoven
           expect(instance.url).to eq("https://api.example.com/data")
           expect(instance.batch_support).to eq(true)
           expect(instance.batch_size).to eq(10_000)
-          expect(instance.supported_sync_modes).to eq(%w[full_refresh incremental])
+          expect(instance.supported_sync_modes).to eq(%w[incremental])
 
           expect(instance.request_rate_limit).to eq(100)
           expect(instance.request_rate_limit_unit).to eq("minute")
@@ -203,6 +202,7 @@ module Multiwoven
           expect(instance.request_rate_limit).to eq(60)
           expect(instance.request_rate_limit_unit).to eq("minute")
           expect(instance.request_rate_concurrency).to eq(10)
+          expect(instance.schema_mode).to eql("schema")
           expect(instance.streams.first).to be_a(Stream)
           expect(instance.streams.first.name).to eq("example_stream")
         end
@@ -348,7 +348,15 @@ module Multiwoven
       json_data = {
         "type": "rate_limit",
         "emitted_at": 1_638_449_455_000,
-        "meta": { "key": "value" }
+        "meta": { "key": "value" },
+        "status": ConnectionStatusType["succeeded"]
+      }.to_json
+
+      fullrefresh_json_data = {
+        "type": "full_refresh",
+        "emitted_at": 1_638_449_455_000,
+        "meta": { "key": "value" },
+        "status": ConnectionStatusType["succeeded"]
       }.to_json
 
       describe ".from_json" do
@@ -359,6 +367,16 @@ module Multiwoven
           expect(control_message.type).to eq("rate_limit")
           expect(control_message.emitted_at).to eq(1_638_449_455_000)
           expect(control_message.meta).to eq(key: "value")
+        end
+
+        it "creates an full refresh instance from JSON" do
+          control_message = described_class.from_json(fullrefresh_json_data)
+
+          expect(control_message).to be_a(described_class)
+          expect(control_message.type).to eq("full_refresh")
+          expect(control_message.emitted_at).to eq(1_638_449_455_000)
+          expect(control_message.meta).to eq(key: "value")
+          expect(control_message.status).to eq(ConnectionStatusType["succeeded"])
         end
       end
 

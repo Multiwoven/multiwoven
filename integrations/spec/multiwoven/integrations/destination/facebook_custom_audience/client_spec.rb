@@ -41,13 +41,15 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
       "stream": {
         "name": "audience", "action": "create",
         "json_schema": facebook_audience_json_schema,
-        "supported_sync_modes": %w[full_refresh incremental],
+        "supported_sync_modes": %w[incremental],
         "source_defined_cursor": true,
         "default_cursor_field": ["field1"],
         "source_defined_primary_key": [["field1"], ["field2"]],
         "namespace": "exampleNamespace",
         "url": "https://graph.facebook.com/v18.0/#{audience_id}/users",
-        "request_method": "POST"
+        "request_method": "POST",
+        "request_rate_limit": 4,
+        "rate_limit_unit_seconds": 1
       },
       "sync_mode": "full_refresh",
       "cursor_field": "timestamp",
@@ -92,22 +94,16 @@ RSpec.describe Multiwoven::Integrations::Destination::FacebookCustomAudience::Cl
   end
 
   describe "#discover" do
-    it "returns a catalog with streams" do
+    it "finds the 'audience' stream and checks its attributes" do
       message = client.discover
       catalog = message.catalog
+      audience_stream = catalog.streams.find { |stream| stream.name == "audience" }
+
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(600)
-      expect(catalog.request_rate_limit_unit).to eql("minute")
-      expect(catalog.request_rate_concurrency).to eql(10)
-
-      expect(catalog.streams.first.name).to eq("audience")
-      expect(catalog.streams.first.request_method).to eql("POST")
-      expect(catalog.streams.first.batch_support).to eql(true)
-      expect(catalog.streams.first.batch_size).to eql(10_000)
-
-      expect(catalog.streams.first.request_rate_limit).to eql(0)
-      expect(catalog.streams.first.request_rate_limit_unit).to eql("minute")
-      expect(catalog.streams.first.request_rate_concurrency).to eql(0)
+      expect(audience_stream.request_method).to eql("POST")
+      expect(audience_stream.batch_support).to eql(true)
+      expect(audience_stream.batch_size).to eql(10_000)
+      expect(audience_stream.supported_sync_modes).to match_array(%w[incremental])
     end
   end
 

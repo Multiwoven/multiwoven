@@ -41,6 +41,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do # ruboc
       stream: {
         name: "contacts",
         action: "create",
+        request_rate_limit: 4,
+        rate_limit_unit_seconds: 1,
         json_schema: hubspot_contacts_json_schema
       },
       sync_mode: "full_refresh",
@@ -98,6 +100,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do # ruboc
       expect(account_stream.request_rate_limit).to eql(0)
       expect(account_stream.request_rate_limit_unit).to eql("minute")
       expect(account_stream.request_rate_concurrency).to eql(0)
+
+      catalog.streams.each do |stream|
+        expect(stream.supported_sync_modes).to eql(%w[incremental])
+      end
     end
   end
 

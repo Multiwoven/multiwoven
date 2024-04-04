@@ -20,10 +20,11 @@ module Multiwoven
       "tracking"
     )
     ControlMessageType = Types::String.enum(
-      "rate_limit", "connection_config"
+      "rate_limit", "connection_config", "full_refresh"
     )
     LogLevel = Types::String.enum("fatal", "error", "warn", "info", "debug", "trace")
     RequestRateLimitingUnit = Types::String.default("minute").enum("minute", "hour", "day")
+    SchemaMode = Types::String.enum("schema", "schemaless")
 
     class ProtocolModel < Dry::Struct
       extend Multiwoven::Integrations::Core::Utils
@@ -108,20 +109,18 @@ module Multiwoven
       attribute :name, Types::String
       attribute? :action, StreamAction
       attribute :json_schema, Types::Hash
-      attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional
+      attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional.default(["incremental"])
 
       # Applicable for database streams
       attribute? :source_defined_cursor, Types::Bool.optional
       attribute? :default_cursor_field, Types::Array.of(Types::String).optional
       attribute? :source_defined_primary_key, Types::Array.of(Types::Array.of(Types::String)).optional
-
       attribute? :namespace, Types::String.optional
       # Applicable for API streams
       attribute? :url, Types::String.optional
       attribute? :request_method, Types::String.optional
       attribute :batch_support, Types::Bool.default(false)
       attribute :batch_size, Types::Integer.default(1)
-
       # Rate limits
       attribute? :request_rate_limit, Types::Integer
       attribute? :request_rate_limit_unit, RequestRateLimitingUnit
@@ -148,6 +147,7 @@ module Multiwoven
       attribute? :request_rate_limit, Types::Integer.default(60)
       attribute? :request_rate_limit_unit, RequestRateLimitingUnit
       attribute? :request_rate_concurrency, Types::Integer.default(10)
+      attribute? :schema_mode, Types::String.optional.default("schema")
 
       def to_multiwoven_message
         MultiwovenMessage.new(
@@ -172,6 +172,7 @@ module Multiwoven
     class ControlMessage < ProtocolModel
       attribute :type, ControlMessageType
       attribute :emitted_at, Types::Integer
+      attribute? :status, ConnectionStatusType.optional
       attribute? :meta, Types::Hash
 
       def to_multiwoven_message
