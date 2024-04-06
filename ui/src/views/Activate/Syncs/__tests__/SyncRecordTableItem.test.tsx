@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { TableItem } from '../SyncRecords/SyncRecordsTableItem';
-import { SyncRecordResponse } from '../types';
+import { SyncRecordResponse, SyncRecordStatus } from '../types';
 import { expect } from '@jest/globals';
 import '@testing-library/jest-dom';
 
@@ -16,7 +16,7 @@ describe('TableItem', () => {
           id: '1',
           name: 'John Doe',
         },
-        status: 'success',
+        status: SyncRecordStatus.success,
         action: 'destination_insert',
         error: null,
         created_at: '',
@@ -33,7 +33,7 @@ describe('TableItem', () => {
           id: '2',
           name: 'Jane Doe',
         },
-        status: 'failed',
+        status: SyncRecordStatus.failed,
         action: 'destination_insert',
         error: null,
         created_at: '',

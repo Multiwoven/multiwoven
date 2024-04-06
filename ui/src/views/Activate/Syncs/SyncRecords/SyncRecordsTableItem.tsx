@@ -1,4 +1,4 @@
-import { SyncRecordResponse } from '../types';
+import { SyncRecordResponse, SyncRecordStatus } from '../types';
 import StatusTag from '@/components/StatusTag';
 import { StatusTagVariants } from '@/components/StatusTag/StatusTag';
 import { Text } from '@chakra-ui/react';
@@ -11,7 +11,7 @@ type TableItem = {
 export const TableItem = ({ field, data }: TableItem): JSX.Element => {
   switch (field) {
     case 'status': {
-      return data.attributes.status === 'success' ? (
+      return data.attributes.status === SyncRecordStatus.success ? (
         <StatusTag variant={StatusTagVariants.success} status='Added' />
       ) : (
         <StatusTag variant={StatusTagVariants.failed} status='Failed' />

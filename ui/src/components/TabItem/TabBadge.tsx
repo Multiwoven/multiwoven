@@ -1,10 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 
-export const TabBadge = ({
-  text,
-}: {
-  text: string;
-}): JSX.Element => {
+export const TabBadge = ({ text }: { text: string }): JSX.Element => {
   return (
     <Box
       height='fit-content'

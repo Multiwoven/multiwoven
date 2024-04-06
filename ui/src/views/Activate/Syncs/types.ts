@@ -17,7 +17,7 @@ export enum SchemaMode {
 
 export enum SyncRecordStatus {
   success = 'success',
-  failed = 'failed'
+  failed = 'failed',
 }
 
 export type DiscoverResponse = {
@@ -167,7 +167,7 @@ export type SyncRecordResponse = {
     sync_id: string;
     sync_run_id: string;
     record: Record<string, string | null>;
-    status: string;
+    status: SyncRecordStatus;
     action: 'destination_insert' | 'destination_update' | 'destination_delete';
     error: null;
     created_at: string;

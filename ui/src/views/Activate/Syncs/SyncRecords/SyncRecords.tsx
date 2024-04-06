@@ -98,7 +98,7 @@ const SyncRecords = (): JSX.Element => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     setSearchParams({ page: currentPage.toString() });
   }, [currentPage, setSearchParams]);
 
@@ -121,7 +121,9 @@ const SyncRecords = (): JSX.Element => {
       <Tabs
         size='md'
         variant='indicator'
-        onChange={(index) => setCurrentFilter(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)}
+        onChange={(index) =>
+          setCurrentFilter(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)
+        }
         background='gray.300'
         padding='4px'
         borderRadius='8px'
