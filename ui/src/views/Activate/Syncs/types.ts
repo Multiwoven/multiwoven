@@ -7,20 +7,13 @@ export type Stream = {
   name: string;
   json_schema: RJSFSchema;
   url: string;
-  supported_sync_modes: string[];
 };
-
-export enum SchemaMode {
-  schema = 'schema',
-  schemaless = 'schemaless',
-}
 
 export type DiscoverResponse = {
   data: {
     attributes: {
       catalog: {
         streams: Stream[];
-        schema_mode: SchemaMode;
         catalog_hash: string;
         connector_id: number;
         workspace_id: number;
@@ -132,7 +125,7 @@ export type SyncRunsResponse = {
     finished_at: string;
     created_at: string;
     updated_at: string;
-    duration: number;
+    duration: number | null;
     total_query_rows: number;
     total_rows: number;
     successful_rows: number;
@@ -153,4 +146,19 @@ export type SyncRunsColumnFields =
 export type SyncRunsColumnEntity = {
   key: SyncRunsColumnFields;
   name: string;
+};
+
+export type SyncRecordResponse = {
+  id: string;
+  type: 'sync_records';
+  attributes: {
+    sync_id: string;
+    sync_run_id: string;
+    record: Record<string, string | null>;
+    status: string;
+    action: 'destination_insert' | 'destination_update' | 'destination_delete';
+    error: null;
+    created_at: string;
+    updated_at: string;
+  };
 };

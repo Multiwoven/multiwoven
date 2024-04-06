@@ -10,9 +10,11 @@ enum PAGE_CHANGE_BUTTON_TYPE {
 const PageChangeButton = ({
   type,
   handlePageChange,
+  isEnabled,
 }: {
   type: PAGE_CHANGE_BUTTON_TYPE;
   handlePageChange: () => void;
+  isEnabled: boolean;
 }) => (
   <Button
     height='24px'
@@ -29,6 +31,7 @@ const PageChangeButton = ({
     minWidth='0'
     padding={0}
     _hover={{ backgroundColor: 'gray.300' }}
+    isDisabled={isEnabled ? false : true}
   >
     {type === PAGE_CHANGE_BUTTON_TYPE.PREVIOUS ? (
       <MdKeyboardArrowLeft color='#98A2B3' />
@@ -38,18 +41,28 @@ const PageChangeButton = ({
   </Button>
 );
 
-const Pagination = ({
-  currentPage,
-  handlePrevPage,
-  handleNextPage,
-}: {
+type PaginationProps = {
   currentPage: number;
+  isPrevPageEnabled: boolean;
+  isNextPageEnabled: boolean;
   handlePrevPage: () => void;
   handleNextPage: () => void;
-}) => (
+};
+
+const Pagination = ({
+  currentPage,
+  isPrevPageEnabled,
+  isNextPageEnabled,
+  handlePrevPage,
+  handleNextPage,
+}: PaginationProps) => (
   <Box width='352px'>
     <Stack direction='row' justify='end' spacing={4} alignItems='center' gap='6px'>
-      <PageChangeButton type={PAGE_CHANGE_BUTTON_TYPE.PREVIOUS} handlePageChange={handlePrevPage} />
+      <PageChangeButton
+        isEnabled={isPrevPageEnabled}
+        type={PAGE_CHANGE_BUTTON_TYPE.PREVIOUS}
+        handlePageChange={handlePrevPage}
+      />
       <Box
         height='24px'
         width='24px'
@@ -66,7 +79,11 @@ const Pagination = ({
           {currentPage}
         </Text>
       </Box>
-      <PageChangeButton type={PAGE_CHANGE_BUTTON_TYPE.NEXT} handlePageChange={handleNextPage} />
+      <PageChangeButton
+        isEnabled={isNextPageEnabled}
+        type={PAGE_CHANGE_BUTTON_TYPE.NEXT}
+        handlePageChange={handleNextPage}
+      />
     </Stack>
   </Box>
 );

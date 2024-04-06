@@ -14,7 +14,7 @@ import { ConnectorItem } from '../Connectors/types';
 import { useState } from 'react';
 import NoConnectorsFound from '@/assets/images/empty-state-illustration.svg';
 
-import Pagination from './Pagination';
+import Pagination from '@/components/Pagination';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -182,6 +182,8 @@ const ListConnectors = ({
       </Box>
       <Pagination
         currentPage={currentPage}
+        isNextPageEnabled={currentPage < totalPages}
+        isPrevPageEnabled={currentPage > 1}
         handlePrevPage={handlePrevPage}
         handleNextPage={handleNextPage}
       />

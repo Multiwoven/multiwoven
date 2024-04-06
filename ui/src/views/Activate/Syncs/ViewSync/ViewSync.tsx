@@ -1,6 +1,6 @@
 import TopBar from '@/components/TopBar';
 import { getSyncById } from '@/services/syncs';
-import { Box, Divider, TabIndicator, TabList, Tabs, Text, useToast } from '@chakra-ui/react';
+import { Box, Divider, TabIndicator, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import MappedInfo from '../EditSync/MappedInfo';
@@ -13,6 +13,8 @@ import TabItem from '@/components/TabItem';
 import Loader from '@/components/Loader';
 import SyncRuns from '../SyncRuns';
 import { Step } from '@/components/Breadcrumbs/types';
+import useCustomToast from '@/hooks/useCustomToast';
+import { CustomToastStatus } from '@/components/Toast';
 
 enum SyncTabs {
   Tab1 = 'runs',
@@ -22,7 +24,7 @@ enum SyncTabs {
 const ViewSync = (): JSX.Element => {
   const [syncTab, setSyncTab] = useState<SyncTabs>(SyncTabs.Tab1);
   const { syncId } = useParams();
-  const toast = useToast();
+  const toast = useCustomToast();
 
   const {
     data: syncFetchResponse,
@@ -52,7 +54,7 @@ const ViewSync = (): JSX.Element => {
   useEffect(() => {
     if (isError) {
       toast({
-        status: 'error',
+        status: CustomToastStatus.Error,
         title: 'Error!',
         description: 'Something went wrong',
         position: 'bottom-right',

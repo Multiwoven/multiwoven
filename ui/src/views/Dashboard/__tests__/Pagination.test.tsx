@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Pagination from '@/views/Dashboard/Pagination';
+import Pagination from '@/components/Pagination';
 import { expect } from '@jest/globals';
 
 describe('Pagination Component', () => {
@@ -10,6 +10,8 @@ describe('Pagination Component', () => {
     render(
       <Pagination
         currentPage={1}
+        isNextPageEnabled={true}
+        isPrevPageEnabled={true}
         handlePrevPage={handlePrevPage}
         handleNextPage={handleNextPage}
       />,
