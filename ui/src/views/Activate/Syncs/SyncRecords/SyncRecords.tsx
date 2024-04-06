@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Box, Image, TabList, Tabs, Text } from '@chakra-ui/react';
+import { Box, Image, Tabs, Text } from '@chakra-ui/react';
 
 import { getSyncRecords } from '@/services/syncs';
 
 import Loader from '@/components/Loader';
 import Table from '@/components/Table';
 import ContentContainer from '@/components/ContentContainer';
-import TabItem from '@/components/TabItem';
 
 import { TableItem } from '@/views/Activate/Syncs/SyncRecords/SyncRecordsTableItem';
 import Pagination from '@/components/Pagination';
@@ -17,6 +16,8 @@ import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
 import { SyncRecordsTopBar } from './SyncRecordsTopBar';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
+import { SyncRecordStatus } from '../types';
+import { FilterTabs } from './FilterTabs';
 
 const SyncRecords = (): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,11 +27,7 @@ const SyncRecords = (): JSX.Element => {
   const pageId = searchParams.get('page');
   const [currentPage, setCurrentPage] = useState(Number(pageId) || 1);
 
-  useEffect(() => {
-    setSearchParams({ page: currentPage.toString() });
-  }, [currentPage, setSearchParams]);
-
-  const [currentFilter, setCurrentFilter] = useState<'success' | 'failed'>('success');
+  const [currentFilter, setCurrentFilter] = useState<SyncRecordStatus>(SyncRecordStatus.success);
 
   const {
     data: syncRunRecords,
@@ -101,28 +98,9 @@ const SyncRecords = (): JSX.Element => {
     }
   };
 
-  const FilterTabs = () => {
-    return (
-      <TabList gap='8px'>
-        <TabItem
-          text='Successful'
-          action={() => setCurrentFilter('success')}
-          isBadgeVisible
-          badgeText={syncRunRecords?.data
-            .filter((record) => record.attributes.status === 'success')
-            .length.toString()}
-        />
-        <TabItem
-          text='Failed'
-          action={() => setCurrentFilter('failed')}
-          isBadgeVisible
-          badgeText={syncRunRecords?.data
-            .filter((record) => record.attributes.status === 'failed')
-            .length.toString()}
-        />
-      </TabList>
-    );
-  };
+    useEffect(() => {
+    setSearchParams({ page: currentPage.toString() });
+  }, [currentPage, setSearchParams]);
 
   useEffect(() => {
     if (isSyncRecordsError) {
@@ -143,7 +121,7 @@ const SyncRecords = (): JSX.Element => {
       <Tabs
         size='md'
         variant='indicator'
-        onChange={(index) => setCurrentFilter(index === 0 ? 'success' : 'failed')}
+        onChange={(index) => setCurrentFilter(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)}
         background='gray.300'
         padding='4px'
         borderRadius='8px'
@@ -153,7 +131,7 @@ const SyncRecords = (): JSX.Element => {
         width='fit-content'
         height='fit'
       >
-        <FilterTabs />
+        <FilterTabs setFilter={setCurrentFilter} syncRunRecords={syncRunRecords} />
       </Tabs>
       {isSyncRecordsLoading ? (
         <Loader />
