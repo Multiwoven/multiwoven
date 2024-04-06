@@ -1,0 +1,56 @@
+name: server-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "server/**"
+
+env:
+  DB_HOST: localhost
+  DB_USERNAME: postgres
+  DB_PASSWORD: postgres
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: multiwoven_test
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.0
+
+      - name: Bundle Install
+        run: bundle install
+        working-directory: ./server
+
+      - name: Database Setup
+        run: bundle exec rake db:create db:schema:load --trace
+        working-directory: ./server
+
+      - name: Run RuboCop
+        run: bundle exec rubocop
+        working-directory: ./server
+
+      - name: Run Tests
+        run: bundle exec rspec
+        working-directory: ./server
