@@ -27,7 +27,7 @@ const TabItem = ({ text, action, isBadgeVisible, badgeText, extra }: TabItemProp
       <Text fontSize='xs' fontWeight='semibold'>
         {text}
       </Text>
-      {isBadgeVisible && badgeText ? <TabBadge text={badgeText} isTabSelected={true} /> : null}
+      {isBadgeVisible && badgeText ? <TabBadge text={badgeText} /> : null}
       {extra}
     </Tab>
   );

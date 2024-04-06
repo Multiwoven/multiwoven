@@ -31,7 +31,7 @@ const PageChangeButton = ({
     minWidth='0'
     padding={0}
     _hover={{ backgroundColor: 'gray.300' }}
-    isDisabled={isEnabled ? false : true}
+    isDisabled={!isEnabled}
   >
     {type === PAGE_CHANGE_BUTTON_TYPE.PREVIOUS ? (
       <MdKeyboardArrowLeft color='#98A2B3' />

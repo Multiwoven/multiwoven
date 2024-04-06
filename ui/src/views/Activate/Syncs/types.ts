@@ -15,6 +15,11 @@ export enum SchemaMode {
   schemaless = 'schemaless',
 }
 
+export enum SyncRecordStatus {
+  success = 'success',
+  failed = 'failed'
+}
+
 export type DiscoverResponse = {
   data: {
     attributes: {
