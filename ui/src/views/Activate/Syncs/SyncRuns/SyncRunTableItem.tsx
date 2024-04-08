@@ -3,7 +3,7 @@ import { SyncRunsColumnFields, SyncRunsResponse } from '../types';
 import moment from 'moment';
 import StatusTag from '@/components/StatusTag';
 import { ResultEntity } from './ResultEntity';
-import { StatusTagVariants } from '@/components/StatusTag/StatusTag';
+import { StatusTagText, StatusTagVariants } from '@/components/StatusTag/StatusTag';
 
 type TableItem = {
   field: SyncRunsColumnFields;
@@ -21,17 +21,16 @@ export const TableItem = ({ field, data }: TableItem): JSX.Element => {
       );
 
     case 'duration':
-      return <Text fontSize='sm'>{data.attributes.duration} seconds</Text>;
+      return <Text fontSize='sm'>{data.attributes.duration?.toPrecision(3)} seconds</Text>;
 
     case 'rows_queried':
       return <Text fontSize='sm'>{data.attributes.total_query_rows} rows</Text>;
 
     case 'status': {
-      return data.attributes.status === 'success' ? (
-        <StatusTag variant={StatusTagVariants.success} status='Healthy' />
-      ) : (
-        <StatusTag variant={StatusTagVariants.error} status='Failed' />
-      );
+      const variant = data.attributes.status as StatusTagVariants;
+      const tagText = StatusTagText[variant];
+
+      return <StatusTag variant={variant} status={tagText} />;
     }
 
     case 'results':

@@ -1,0 +1,37 @@
+name: Ruby - Integrations
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "integrations/**"
+
+  pull_request:
+    paths:
+      - "integrations/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - "3.2.0"
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+        working-directory: ./integrations
+
+      - name: Run the default task
+        run: bundle exec rake
+        working-directory: ./integrations

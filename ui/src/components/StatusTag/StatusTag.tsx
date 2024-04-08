@@ -2,7 +2,13 @@ import { Tag, Text } from '@chakra-ui/react';
 
 export enum StatusTagVariants {
   success = 'success',
-  error = 'error',
+  pending = 'pending',
+  started = 'started',
+  querying = 'querying',
+  queued = 'queued',
+  in_progress = 'in_progress',
+  paused = 'paused',
+  failed = 'failed',
 }
 
 type StatusTagProps = {
@@ -25,11 +31,52 @@ const theme: VariantTheme = {
     borderColor: 'success.300',
     textColor: 'success.600',
   },
-  error: {
+  failed: {
     bgColor: 'error.100',
     borderColor: 'error.300',
     textColor: 'error.600',
   },
+  pending: {
+    bgColor: 'warning.100',
+    borderColor: 'warning.300',
+    textColor: 'warning.600',
+  },
+  in_progress: {
+    bgColor: 'warning.100',
+    borderColor: 'warning.300',
+    textColor: 'warning.600',
+  },
+  started: {
+    bgColor: 'gray.100',
+    borderColor: 'gray.300',
+    textColor: 'gray.600',
+  },
+  querying: {
+    bgColor: 'gray.100',
+    borderColor: 'gray.300',
+    textColor: 'gray.600',
+  },
+  queued: {
+    bgColor: 'gray.100',
+    borderColor: 'gray.300',
+    textColor: 'gray.600',
+  },
+  paused: {
+    bgColor: 'gray.100',
+    borderColor: 'gray.300',
+    textColor: 'gray.600',
+  },
+};
+
+export const StatusTagText = {
+  success: 'Success',
+  pending: 'Pending',
+  started: 'Started',
+  querying: 'Querying',
+  queued: 'Queued',
+  in_progress: 'In Progress',
+  paused: 'Paused',
+  failed: 'Failed',
 };
 
 const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => {

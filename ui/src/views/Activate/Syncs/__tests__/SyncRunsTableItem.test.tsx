@@ -55,7 +55,7 @@ describe('TableItem', () => {
 
   it('should render duration correctly', () => {
     render(<TableItem field='duration' data={mockSyncRunsData[0]} />);
-    expect(screen.getByText('1 seconds')).toBeTruthy();
+    expect(screen.getByText('1.00 seconds')).toBeTruthy();
   });
 
   it('should render rows queried correctly', () => {
@@ -65,7 +65,7 @@ describe('TableItem', () => {
 
   it('should render status correctly for success', () => {
     render(<TableItem field='status' data={mockSyncRunsData[0]} />);
-    expect(screen.getByText('Healthy')).toBeTruthy();
+    expect(screen.getByText('Success')).toBeTruthy();
   });
 
   it('should render status correctly for failure', () => {

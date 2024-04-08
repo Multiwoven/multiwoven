@@ -1,0 +1,94 @@
+name: Release Workflow
+
+on:
+  schedule:
+    - cron: "0 0 * * 2" # Run at 00:00 every Tuesday
+  workflow_dispatch:
+    inputs:
+      versionType:
+        description: "Version update type (major, minor, patch)"
+        required: true
+        default: "minor"
+
+jobs:
+  prepare-changelog:
+    name: Prepare changelog
+    runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate new version
+        id: versioning
+        run: |
+          # This script assumes tags are in the format vMajor.Minor.Patch
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $LATEST_TAG"
+          IFS='.' read -ra VERSION <<< "${LATEST_TAG//v/}"
+          MAJOR=${VERSION[0]}
+          MINOR=${VERSION[1]}
+          PATCH=${VERSION[2]}
+
+          if [ "${{ github.event.inputs.versionType }}" == "major" ]; then
+            let MAJOR+=1
+            MINOR=0
+            PATCH=0
+          elif [ "${{ github.event.inputs.versionType }}" == "minor" ]; then
+            let MINOR+=1
+            PATCH=0
+          elif [ "${{ github.event.inputs.versionType }}" == "patch" ]; then
+            let PATCH+=1
+            MINOR=0
+            MAJOR=0
+          else
+            let MINOR+=1
+            MAJOR=0
+            PATCH=0
+          fi
+
+          NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+          echo "New tag: $NEW_TAG"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "::set-output name=new_tag::$NEW_TAG"
+
+      - name: Create and push tag
+        run: |
+          git config user.name developer-united
+          git config user.email developer@multiwoven.com
+          git tag ${{ steps.versioning.outputs.new_tag }}
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/multiwoven/multiwoven --tags
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@main
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --no-exec --github-repo ${{ github.repository }}
+        env:
+          OUTPUT: release-notes.md
+
+      - name: Write the changelog to release-notes.md
+        run: echo "${{ steps.git-cliff.outputs.content }}" > release-notes.md
+
+      - name: Create a new branch and push release-notes.md
+        run: |
+          git config user.name github-actions
+          git config user.email developer@multiwoven.com
+          git checkout -b release-changes-${{ steps.versioning.outputs.new_tag }}
+          git add release-notes.md
+          git commit -m "Multiwoven release ${{ steps.versioning.outputs.new_tag }}"
+          git push --set-upstream origin release-changes-${{ steps.versioning.outputs.new_tag }}
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          pr_title: "Multiwoven release ${{ steps.versioning.outputs.new_tag }}"
+          pr_body: "This PR updates the release-notes.md for the upcoming release. Please review and merge to trigger the release."
+          source_branch: "release-changes-${{ steps.versioning.outputs.new_tag }}"
+          destination_branch: "main"
+          pr_label: "release,auto-pr"
