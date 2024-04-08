@@ -126,4 +126,29 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
 
     # TODO: test for partial recovery via currrent offset
   end
+
+  describe "#process_record" do
+    let(:sync_run) do
+      create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
+    end
+    let(:model) { create(:model) }
+
+    context "when the primary key is blank" do
+      it "does not call update_or_create_sync_record" do
+        message = double("Message", record: double("Record", data: { "TestPrimaryKey" => nil }))
+        expect(subject).not_to receive(:find_or_initialize_sync_record)
+        expect(subject).not_to receive(:update_or_create_sync_record)
+        subject.send(:process_record, message, sync_run, model)
+      end
+    end
+
+    context "when the primary key is not blank" do
+      it "calls find_or_initialize_sync_record and update_or_create_sync_record" do
+        message = double("Message", record: double("Record", data: { "TestPrimaryKey" => 1 }))
+        expect(subject).to receive(:find_or_initialize_sync_record)
+        expect(subject).to receive(:update_or_create_sync_record)
+        subject.send(:process_record, message, sync_run, model)
+      end
+    end
+  end
 end
