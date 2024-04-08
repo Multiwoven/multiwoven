@@ -24,6 +24,8 @@ class WorkspaceUser < ApplicationRecord
   # TODO: use enum here
   validates :role, inclusion: { in: [ADMIN, MEMBER, VIEWER] }
 
+  scope :admins, -> { where(role: ADMIN) }
+
   def admin?
     role == ADMIN
   end
