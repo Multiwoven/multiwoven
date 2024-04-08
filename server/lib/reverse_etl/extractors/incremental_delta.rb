@@ -40,7 +40,7 @@ module ReverseEtl
         fingerprint = generate_fingerprint(record.data)
         primary_key = record.data.with_indifferent_access[model.primary_key]
 
-        return if primary_key.blank?
+        raise StandardError, "Primary key cannot be blank" if primary_key.blank?
 
         sync_record = find_or_initialize_sync_record(sync_run, primary_key)
         update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
