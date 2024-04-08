@@ -28,6 +28,7 @@ class SyncRun < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run
+  # after_commit :send_notification, if: :new_record?
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true

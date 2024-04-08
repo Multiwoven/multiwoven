@@ -1902,6 +1902,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
+    noticed (2.2.2)
+      rails (>= 6.1.0)
     oj (3.16.3)
       bigdecimal (>= 3.0)
     orm_adapter (0.5.0)
@@ -2121,6 +2123,7 @@ DEPENDENCIES
   liquid
   multiwoven-integrations (~> 0.1.52)
   newrelic_rpm
+  noticed (~> 2.2)
   parallel
   pg (~> 1.1)
   pg_query
