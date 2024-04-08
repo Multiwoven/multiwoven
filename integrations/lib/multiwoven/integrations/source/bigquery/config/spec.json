@@ -1,6 +1,7 @@
 {
   "documentation_url": "https://docs.multiwoven.com/integrations/sources/bigquery",
   "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Google BigQuery",
