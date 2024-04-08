@@ -307,7 +307,7 @@ module Multiwoven
     end
 
     RSpec.describe Model do
-      describe ".from_json" do
+      context ".from_json" do
         it "creates an instance from JSON" do
           json_data = {
             "name": "example_model",
@@ -324,10 +324,27 @@ module Multiwoven
           expect(model.primary_key).to eq("id")
         end
       end
+
+      context "query_type validations" do
+        it "has a query_type 'sql'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "raw_sql", primary_key: "id")
+          expect(ModelQueryType.values).to include(model.query_type)
+        end
+
+        it "has a query_type 'soql'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "soql", primary_key: "id")
+          expect(ModelQueryType.values).to include(model.query_type)
+        end
+
+        it "has a query_type 'dbt'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "dbt", primary_key: "id")
+          expect(ModelQueryType.values).to include(model.query_type)
+        end
+      end
     end
 
     RSpec.describe Connector do
-      describe ".from_json" do
+      context ".from_json" do
         it "creates an instance from JSON" do
           json_data =  {
             "name": "example_connector",
@@ -340,6 +357,23 @@ module Multiwoven
           expect(connector.name).to eq("example_connector")
           expect(connector.type).to eq("source")
           expect(connector.connection_specification).to eq(key: "value")
+        end
+      end
+
+      context "connector_query_type validations" do
+        it "has a connector_query_type 'sql'" do
+          connector = Connector.new(name: "Test", type: "source", query_type: "soql", connection_specification: {})
+          expect(ModelQueryType.values).to include(connector.query_type)
+        end
+
+        it "has a connector_query_type 'soql'" do
+          connector = Connector.new(name: "Test", type: "destination", query_type: "soql", connection_specification: {})
+          expect(ModelQueryType.values).to include(connector.query_type)
+        end
+
+        it "has a query_type default raw_sql " do
+          connector = Connector.new(name: "Test", type: "destination", connection_specification: {})
+          expect(connector.query_type).to eq("raw_sql")
         end
       end
     end
