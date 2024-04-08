@@ -71,8 +71,8 @@ const Dashboard = (): JSX.Element | null => {
     setReportTime(timePeriod);
   };
 
-  const syncRunTriggeredData = report?.data.sync_run_triggered;
-  const syncRunRowsData = report?.data.total_sync_run_rows;
+  const syncRunTriggeredData = report?.data?.sync_run_triggered;
+  const syncRunRowsData = report?.data?.total_sync_run_rows;
 
   if (isLoading) {
     return <Loader />;

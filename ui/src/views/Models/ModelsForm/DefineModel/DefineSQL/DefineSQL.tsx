@@ -18,6 +18,7 @@ import ContentContainer from '@/components/ContentContainer';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
+import { format } from 'sql-formatter';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -30,10 +31,10 @@ const DefineSQL = ({
   const [loading, setLoading] = useState(false);
   const [moveForward, canMoveForward] = useState(false);
   const [runQuery, canRunQuery] = useState(prefillValues ? true : false);
+  const [userQuery, setUserQuery] = useState(prefillValues?.query || '');
 
   let connector_id: string = '';
   let connector_icon: JSX.Element = <></>;
-  let user_query: string = '';
 
   if (!hasPrefilledValues) {
     const extracted = extractData(state.forms);
@@ -45,7 +46,6 @@ const DefineSQL = ({
 
     connector_id = prefillValues.connector_id.toString();
     connector_icon = prefillValues.connector_icon;
-    user_query = prefillValues.query;
   }
 
   const showToast = useCustomToast();
@@ -167,6 +167,7 @@ const DefineSQL = ({
                     fontSize='12px'
                     height='32px'
                     paddingX={3}
+                    onClick={() => setUserQuery(format(userQuery))}
                   >
                     <Image src={StarsImage} w={6} mr={2} /> Beautify
                   </Button>
@@ -179,12 +180,13 @@ const DefineSQL = ({
                   language='mysql'
                   defaultLanguage='mysql'
                   defaultValue='Enter your query...'
-                  value={user_query}
+                  value={userQuery}
                   saveViewState={true}
                   onMount={handleEditorDidMount}
-                  onChange={() => {
+                  onChange={(query) => {
                     canMoveForward(false);
                     canRunQuery(true);
+                    setUserQuery(query as string);
                   }}
                   theme='light'
                   options={{
