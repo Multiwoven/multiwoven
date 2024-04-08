@@ -3,6 +3,7 @@ import {
   CreateSyncResponse,
   DiscoverResponse,
   ErrorResponse,
+  SyncRecordResponse,
   SyncsConfigurationForTemplateMapping,
   SyncRunsResponse,
 } from '@/views/Activate/Syncs/types';
@@ -34,10 +35,32 @@ export const getSyncById = (id: string): Promise<ApiResponse<CreateSyncResponse>
     url: `/syncs/${id}`,
   });
 
-export const getSyncRunsById = (id: string): Promise<ApiResponse<Array<SyncRunsResponse>>> =>
+export const getSyncRunsBySyncId = (
+  id: string,
+  page: string = '1',
+): Promise<ApiResponse<Array<SyncRunsResponse>>> =>
   multiwovenFetch<null, ApiResponse<Array<SyncRunsResponse>>>({
     method: 'get',
-    url: `/syncs/${id}/sync_runs`,
+    url: `/syncs/${id}/sync_runs?page=${page}&per_page=10`,
+  });
+
+export const getSyncRunById = (
+  syncId: string,
+  syncRunId: string,
+): Promise<ApiResponse<SyncRunsResponse>> =>
+  multiwovenFetch<null, ApiResponse<SyncRunsResponse>>({
+    method: 'get',
+    url: `/syncs/${syncId}/sync_runs/${syncRunId}`,
+  });
+
+export const getSyncRecords = (
+  syncId: string,
+  runId: string,
+  page: string = '1',
+): Promise<ApiResponse<Array<SyncRecordResponse>>> =>
+  multiwovenFetch<null, ApiResponse<Array<SyncRecordResponse>>>({
+    method: 'get',
+    url: `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10`,
   });
 
 export const editSync = (
