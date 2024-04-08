@@ -371,23 +371,6 @@ module Multiwoven
           expect(connector.connection_specification).to eq(key: "value")
         end
       end
-
-      context "connector_query_type validations" do
-        it "has a connector_query_type 'sql'" do
-          connector = Connector.new(name: "Test", type: "source", query_type: "soql", connection_specification: {})
-          expect(ModelQueryType.values).to include(connector.query_type)
-        end
-
-        it "has a connector_query_type 'soql'" do
-          connector = Connector.new(name: "Test", type: "destination", query_type: "soql", connection_specification: {})
-          expect(ModelQueryType.values).to include(connector.query_type)
-        end
-
-        it "has a query_type default raw_sql " do
-          connector = Connector.new(name: "Test", type: "destination", connection_specification: {})
-          expect(connector.query_type).to eq("raw_sql")
-        end
-      end
     end
 
     RSpec.describe Multiwoven::Integrations::Protocol::ControlMessage do
