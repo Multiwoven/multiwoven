@@ -104,7 +104,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
           schema: "public"
         },
         name: "AWS Redshift",
-        connector_name: "Redshift"
+        connector_name: "Redshift",
+        query_type: "raw_sql"
       }
     }
 
@@ -281,6 +282,47 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
           { "Content-Type": "application/json" }.merge(auth_headers(user))
 
         expect(response).to have_http_status(:bad_request)
+      end
+
+      it "returns failure status for a invalid query" do
+        request_body[:query] = "invalid"
+        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "#validate_query" do
+    let(:request_body) do
+      {
+        query: "SELECT * FROM table_name"
+      }
+    end
+    before do
+      allow(Utils::QueryValidator).to receive(:validate_query).and_return(nil)
+    end
+
+    context "when query is valid" do
+      it "does not raise an error" do
+        expect do
+          post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+            { "Content-Type": "application/json" }.merge(auth_headers(user))
+        end.not_to raise_error
+      end
+    end
+
+    context "when query is invalid" do
+      before do
+        allow(Utils::QueryValidator).to receive(:validate_query).and_raise(StandardError, "Invalid query")
+      end
+
+      it "renders an error message" do
+        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+            { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("Query validation failed: Invalid query")
       end
     end
   end

@@ -24,12 +24,6 @@ module ModelContracts
       end
     end
 
-    rule(model: :query) do
-      # PgQuery.parse(value)
-    rescue PgQuery::ParseError
-      key.failure("contains invalid SQL syntax")
-    end
-
     rule(model: :query_type) do
       key.failure("invalid query type") unless Multiwoven::Integrations::Protocol::ModelQueryType.include?(value)
     end
@@ -44,16 +38,6 @@ module ModelContracts
         optional(:query).filled(:string)
         optional(:query_type).filled(:string)
         optional(:primary_key).filled(:string)
-      end
-    end
-
-    rule(model: :query) do
-      if key?
-        begin
-          # PgQuery.parse(value)
-        rescue PgQuery::ParseError => e
-          key.failure("contains invalid SQL syntax: #{e.message}")
-        end
       end
     end
 

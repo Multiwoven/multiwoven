@@ -5,6 +5,7 @@ module Api
     class ConnectorsController < ApplicationController
       include Connectors
       before_action :set_connector, only: %i[show update destroy discover query_source]
+      before_action :validate_query, only: %i[query_source]
       after_action :event_logger
 
       def index
@@ -112,10 +113,19 @@ module Api
         )
       end
 
+      def validate_query
+        Utils::QueryValidator.validate_query(@connector.query_type, params[:query])
+      rescue StandardError => e
+        render_error(
+          message: "Query validation failed: #{e.message}",
+          status: :unprocessable_entity
+        )
+      end
+
       def connector_params
         params.require(:connector).permit(:workspace_id,
                                           :connector_type,
-                                          :connector_name, :name, :description,
+                                          :connector_name, :name, :description,:query_type,
                                           configuration: {})
       end
     end

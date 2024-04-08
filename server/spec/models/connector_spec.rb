@@ -135,4 +135,10 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "query_type" do
+    it "defines query_type enum with specified values" do
+      expect(Connector.query_types).to eq({ "raw_sql" => 0, "soql" => 1 })
+    end
+  end
 end

@@ -62,28 +62,22 @@ RSpec.describe "ModelContracts" do
       end
     end
 
-    context "with invalid SQL syntax in query" do
+    context "with invalid query_type" do
       let(:invalid_inputs) do
         {
           model: {
             connector_id: 1,
             name: "Model Name",
             query: "SELECT FROM table;",
-            query_type: "raw_sql",
+            query_type: "test",
             primary_key: "id"
           }
         }
       end
 
       it "fails validation due to invalid SQL syntax" do
-        allow(PgQuery).to receive(:parse).with("SELECT FROM table;").and_raise(
-          PgQuery::ParseError.new(
-            "invalid syntax",
-            __FILE__, __LINE__, -1
-          )
-        )
-        # result = contract.call(invalid_inputs)
-        # expect(result.errors[:model][:query]).to include("contains invalid SQL syntax")
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:model][:query_type]).to include("invalid query type")
       end
     end
   end
@@ -98,15 +92,33 @@ RSpec.describe "ModelContracts" do
           model: {
             name: "Updated Model Name",
             query: "SELECT * FROM updated_table;",
-            query_type: "raw_sql",
+            query_type: "soql",
             primary_key: "updated_id"
           }
         }
       end
 
       it "passes validation" do
-        allow(PgQuery).to receive(:parse).with("SELECT * FROM updated_table;").and_return(true)
         expect(contract.call(valid_inputs)).to be_success
+      end
+    end
+
+    context "with invalid query_type" do
+      let(:invalid_inputs) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query: "SELECT FROM table;",
+            query_type: "test",
+            primary_key: "id"
+          }
+        }
+      end
+
+      it "fails validation due to invalid SQL syntax" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:model][:query_type]).to include("invalid query type")
       end
     end
   end

@@ -1755,7 +1755,7 @@ GEM
     gli (2.21.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.66.0)
+    google-apis-bigquery_v2 (0.67.0)
       google-apis-core (>= 0.14.0, < 2.a)
     google-apis-core (0.14.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -1859,7 +1859,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.52)
+    multiwoven-integrations (0.1.54)
       activesupport
       async-websocket
       csv
@@ -1893,7 +1893,7 @@ GEM
       net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.4.0.1)
       net-protocol
-    net-ssh (7.2.1)
+    net-ssh (7.2.3)
     newrelic_rpm (9.7.0)
     nio4r (2.7.0)
     nokogiri (1.16.0-aarch64-linux)
@@ -1920,14 +1920,14 @@ GEM
     protocol-http2 (0.16.0)
       protocol-hpack (~> 1.4)
       protocol-http (~> 0.18)
-    protocol-rack (0.4.1)
+    protocol-rack (0.5.0)
       protocol-http (~> 0.23)
       rack (>= 1.0)
     protocol-websocket (0.12.1)
       protocol-http (~> 0.2)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
@@ -1986,7 +1986,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    restforce (7.3.0)
+    restforce (7.3.1)
       faraday (>= 1.1.0, < 2.10.0)
       faraday-follow_redirects (<= 0.3.0, < 1.0.0)
       faraday-multipart (>= 1.0.0, < 2.0.0)
@@ -2036,7 +2036,7 @@ GEM
     ruby-limiter (2.3.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    sequel (5.78.0)
+    sequel (5.79.0)
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -2060,7 +2060,7 @@ GEM
       gli
       hashie
     stringio (3.1.0)
-    stripe (10.13.0)
+    stripe (10.14.0)
     thor (1.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
@@ -2119,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.52)
+  multiwoven-integrations (~> 0.1.54)
   newrelic_rpm
   parallel
   pg (~> 1.1)

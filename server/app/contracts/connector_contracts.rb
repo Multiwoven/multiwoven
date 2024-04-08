@@ -26,12 +26,19 @@ module ConnectorContracts
         required(:connector_name).filled(:string)
         required(:connector_type).filled(:string)
         required(:configuration).filled(:hash)
+        required(:query_type).filled(:string)
       end
     end
 
     rule(connector: :connector_type) do
       unless Multiwoven::Integrations::Protocol::ConnectorType.include?(value.downcase)
         key.failure("invalid connector type")
+      end
+    end
+
+    rule(connector: :query_type) do
+      unless Multiwoven::Integrations::Protocol::ConnectorQueryType.include?(value.downcase)
+        key.failure("invalid query_type")
       end
     end
 
@@ -56,12 +63,19 @@ module ConnectorContracts
         optional(:connector_name).filled(:string)
         optional(:connector_type).filled(:string)
         optional(:configuration).filled(:hash)
+        optional(:query_type).filled(:string)
       end
     end
 
     rule(connector: :connector_type) do
       unless !key? || Multiwoven::Integrations::Protocol::ConnectorType.include?(value.downcase)
         key.failure("invalid connector type")
+      end
+    end
+
+    rule(connector: :query_type) do
+      unless !key? || Multiwoven::Integrations::Protocol::ConnectorQueryType.include?(value.downcase)
+        key.failure("invalid query_type")
       end
     end
 
@@ -94,12 +108,6 @@ module ConnectorContracts
     params do
       required(:id).filled(:integer)
       required(:query).filled(:string)
-    end
-    # TODO: introduce query_type SOQL
-    rule(:query) do
-      # PgQuery.parse(value)
-    rescue PgQuery::ParseError => e
-      key.failure("contains invalid SQL syntax: #{e.message}")
     end
   end
 end
