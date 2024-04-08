@@ -125,7 +125,7 @@ module Api
       def connector_params
         params.require(:connector).permit(:workspace_id,
                                           :connector_type,
-                                          :connector_name, :name, :description,:query_type,
+                                          :connector_name, :name, :description, :query_type,
                                           configuration: {})
       end
     end

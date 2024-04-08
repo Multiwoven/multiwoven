@@ -12,7 +12,7 @@ module Utils
         end
       when :soql
         begin
-          # TODO SOQL
+          # TODO: SOQL
         rescue StandardError => e
           raise StandardError, "Query contains invalid SOQL syntax: #{e.message}"
         end
