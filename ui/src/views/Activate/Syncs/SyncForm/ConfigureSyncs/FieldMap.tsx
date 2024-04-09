@@ -80,7 +80,13 @@ const FieldMap = ({
             disabledOptions={disabledOptions}
           />
         ) : fieldType === 'custom' ? (
-          <Input value={value} onChange={(e) => onChange(id, fieldType, e.target.value)} />
+          <Input
+            value={value}
+            onChange={(e) => onChange(id, fieldType, e.target.value)}
+            isDisabled={isDisabled}
+            borderColor={isDisabled ? 'gray.500' : 'gray.400'}
+            backgroundColor={isDisabled ? 'gray.300' : 'gray.100'}
+          />
         ) : (
           <TemplateMapping
             entityName={entityName}
