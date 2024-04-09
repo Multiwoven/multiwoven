@@ -38,22 +38,34 @@ module Multiwoven
         "supports_normalization" => true,
         "supports_dbt" => true,
         "supported_destination_sync_modes" => ["insert"]
-      }.to_json
+      }
 
       describe ".from_json" do
         it "creates an instance from JSON" do
-          instance = ConnectorSpecification.from_json(json_data)
+          instance = ConnectorSpecification.from_json(json_data.to_json)
           expect(instance).to be_a(ConnectorSpecification)
           expect(instance.connection_specification).to eq(key: "value")
           expect(instance.supports_normalization).to eq(true)
           expect(instance.supports_dbt).to eq(true)
           expect(instance.supported_destination_sync_modes).to eq(["insert"])
+          expect(instance.connector_query_type).to eq(nil)
+        end
+
+        it "creates an instance from JSON connector_query_type soql" do
+          json_data[:connector_query_type] = "soql"
+          instance = ConnectorSpecification.from_json(json_data.to_json)
+          expect(instance).to be_a(ConnectorSpecification)
+          expect(instance.connection_specification).to eq(key: "value")
+          expect(instance.supports_normalization).to eq(true)
+          expect(instance.supports_dbt).to eq(true)
+          expect(instance.supported_destination_sync_modes).to eq(["insert"])
+          expect(instance.connector_query_type).to eq("soql")
         end
       end
 
       describe "#to_multiwoven_message" do
         it "converts to a MultiwovenMessage" do
-          connector_spec = described_class.from_json(json_data)
+          connector_spec = described_class.from_json(json_data.to_json)
           multiwoven_message = connector_spec.to_multiwoven_message
 
           expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
@@ -357,23 +369,6 @@ module Multiwoven
           expect(connector.name).to eq("example_connector")
           expect(connector.type).to eq("source")
           expect(connector.connection_specification).to eq(key: "value")
-        end
-      end
-
-      context "connector_query_type validations" do
-        it "has a connector_query_type 'sql'" do
-          connector = Connector.new(name: "Test", type: "source", query_type: "soql", connection_specification: {})
-          expect(ModelQueryType.values).to include(connector.query_type)
-        end
-
-        it "has a connector_query_type 'soql'" do
-          connector = Connector.new(name: "Test", type: "destination", query_type: "soql", connection_specification: {})
-          expect(ModelQueryType.values).to include(connector.query_type)
-        end
-
-        it "has a query_type default raw_sql " do
-          connector = Connector.new(name: "Test", type: "destination", connection_specification: {})
-          expect(connector.query_type).to eq("raw_sql")
         end
       end
     end

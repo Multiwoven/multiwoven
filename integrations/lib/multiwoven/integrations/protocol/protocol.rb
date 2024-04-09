@@ -57,6 +57,7 @@ module Multiwoven
       attribute :supports_dbt, Types::Bool.default(false)
       attribute :stream_type, StreamType
       attribute? :supported_destination_sync_modes, Types::Array.of(DestinationSyncMode).optional
+      attribute? :connector_query_type, ConnectorQueryType
 
       def to_multiwoven_message
         MultiwovenMessage.new(
@@ -70,7 +71,6 @@ module Multiwoven
       attribute :name, Types::String
       attribute :type, ConnectorType
       attribute :connection_specification, Types::Hash
-      attribute :query_type, ConnectorQueryType.optional.default("raw_sql")
     end
 
     class LogMessage < ProtocolModel
