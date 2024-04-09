@@ -1,4 +1,4 @@
-import ContentContainer from '@/components/ContentContainer';
+import { Box } from '@chakra-ui/react';
 import { SYNCS_LIST_QUERY_KEY } from '@/views/Activate/Syncs/constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -179,7 +179,7 @@ const EditSync = (): JSX.Element | null => {
 
   return (
     <form onSubmit={formik.handleSubmit} style={{ backgroundColor: 'gray.200' }}>
-      <ContentContainer>
+      <Box width='100%' pt='20px'>
         {isLoading || isConnectorInfoLoading || !syncData ? <Loader /> : null}
         {syncData && destinationFetchResponse?.data ? (
           <React.Fragment>
@@ -228,7 +228,7 @@ const EditSync = (): JSX.Element | null => {
           isContinueCtaRequired
           isBackRequired
         />
-      </ContentContainer>
+      </Box>
     </form>
   );
 };
