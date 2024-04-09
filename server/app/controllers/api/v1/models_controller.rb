@@ -72,9 +72,7 @@ module Api
       end
 
       def validate_query
-        return if params.dig(:model, :query).blank?
-
-        query_type = @model.present? ? @model.query_type : params.dig(:model, :query_type)
+        query_type = @model.present? ? @model.connector.connector_query_type : @connector.connector_query_type
         Utils::QueryValidator.validate_query(query_type, params.dig(:model, :query))
       rescue StandardError => e
         render_error(

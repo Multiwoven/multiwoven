@@ -76,4 +76,14 @@ class Connector < ApplicationRecord
         connector_type.to_s.camelize, connector_name.to_s.camelize
       )
   end
+
+  def connector_query_type
+    client = Multiwoven::Integrations::Service
+             .connector_class(
+               connector_type.to_s.camelize, connector_name.to_s.camelize
+             ).new
+    connector_spec = client.connector_spec
+
+    connector_spec&.connector_query_type || "raw_sql"
+  end
 end

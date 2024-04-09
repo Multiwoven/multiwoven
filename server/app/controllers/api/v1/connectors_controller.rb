@@ -114,7 +114,7 @@ module Api
       end
 
       def validate_query
-        Utils::QueryValidator.validate_query(@connector.query_type, params[:query])
+        Utils::QueryValidator.validate_query(@connector.connector_query_type, params[:query])
       rescue StandardError => e
         render_error(
           message: "Query validation failed: #{e.message}",

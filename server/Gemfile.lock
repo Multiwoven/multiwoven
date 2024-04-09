@@ -111,12 +111,12 @@ GEM
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
-    async-http (0.64.0)
+    async-http (0.64.1)
       async (>= 1.25)
       async-io (>= 1.28)
       async-pool (>= 0.2)
       protocol-http (~> 0.26.0)
-      protocol-http1 (~> 0.18.0)
+      protocol-http1 (~> 0.19.0)
       protocol-http2 (~> 0.16.0)
       traces (>= 0.10.0)
     async-io (1.42.0)
@@ -1859,7 +1859,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.0)
-    multiwoven-integrations (0.1.54)
+    multiwoven-integrations (0.1.55)
       activesupport
       async-websocket
       csv
@@ -1914,8 +1914,8 @@ GEM
     pg_query (5.0.0)
       google-protobuf (>= 3.22.3)
     protocol-hpack (1.4.3)
-    protocol-http (0.26.1)
-    protocol-http1 (0.18.0)
+    protocol-http (0.26.2)
+    protocol-http1 (0.19.0)
       protocol-http (~> 0.22)
     protocol-http2 (0.16.0)
       protocol-hpack (~> 1.4)
@@ -2119,7 +2119,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.54)
+  multiwoven-integrations (~> 0.1.55)
   newrelic_rpm
   parallel
   pg (~> 1.1)

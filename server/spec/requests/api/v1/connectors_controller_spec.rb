@@ -104,8 +104,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
           schema: "public"
         },
         name: "AWS Redshift",
-        connector_name: "Redshift",
-        query_type: "raw_sql"
+        connector_name: "Redshift"
       }
     }
 
