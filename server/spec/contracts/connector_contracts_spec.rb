@@ -51,15 +51,6 @@ describe ConnectorContracts::QuerySource do
       expect(contract.call(valid_inputs)).to be_success
     end
   end
-
-  context "when query contains invalid SQL syntax" do
-    let(:invalid_inputs) { { id: 1, query: "SELECT FROM table;" } }
-
-    it "fails validation" do
-      # result = contract.call(invalid_inputs)
-      # expect(result.errors[:query]).to include(a_string_matching("contains invalid SQL syntax"))
-    end
-  end
 end
 
 describe ConnectorContracts::Discover do

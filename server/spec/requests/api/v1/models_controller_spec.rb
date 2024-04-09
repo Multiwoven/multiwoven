@@ -175,4 +175,63 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       end
     end
   end
+
+  describe "#validate_query" do
+    before do
+      allow(Utils::QueryValidator).to receive(:validate_query).and_return(nil)
+    end
+    let(:request_body) do
+      {
+        model: {
+          connector_id: models.first.connector_id,
+          name: "Redshift Location",
+          query: "SELECT * FROM locations",
+          query_type: "raw_sql",
+          primary_key: "id"
+        }
+      }
+    end
+
+    context "when query is valid for create model" do
+      it "does not raise an error" do
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:created)
+      end
+    end
+
+    context "when query is invalid for create model" do
+      before do
+        allow(Utils::QueryValidator).to receive(:validate_query).and_raise(StandardError, "Invalid query")
+      end
+
+      it "renders an error message" do
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("Query validation failed: Invalid query")
+      end
+    end
+
+    context "when query is valid for update model" do
+      it "does not raise an error" do
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+        { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "when query is invalid for update model" do
+      before do
+        allow(Utils::QueryValidator).to receive(:validate_query).and_raise(StandardError, "Invalid query")
+      end
+
+      it "renders an error message" do
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+        { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("Query validation failed: Invalid query")
+      end
+    end
+  end
 end

@@ -8,6 +8,7 @@ module Api
 
       before_action :set_connector, only: %i[create]
       before_action :set_model, only: %i[show update destroy]
+      before_action :validate_query, only: %i[create update]
       after_action :event_logger
 
       def index
@@ -68,6 +69,16 @@ module Api
 
       def set_model
         @model = current_workspace.models.find(params[:id])
+      end
+
+      def validate_query
+        query_type = @model.present? ? @model.connector.connector_query_type : @connector.connector_query_type
+        Utils::QueryValidator.validate_query(query_type, params.dig(:model, :query))
+      rescue StandardError => e
+        render_error(
+          message: "Query validation failed: #{e.message}",
+          status: :unprocessable_entity
+        )
       end
 
       def model_params

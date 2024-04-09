@@ -135,4 +135,33 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "#connector_query_type" do
+    let(:workspace) { create(:workspace) }
+    context "when connector_spec returns nil" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "snowflake",
+               configuration: { user: "test", password: "password" })
+      end
+      it "returns 'raw_sql'" do
+        expect(connector.connector_query_type).to eq("raw_sql")
+      end
+    end
+
+    context "when connector_spec returns a value" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "SalesforceConsumerGoodsCloud",
+               configuration: { user: "test", password: "password" })
+      end
+      it "returns the connector_query_type value" do
+        expect(connector.connector_query_type).to eq("soql")
+      end
+    end
+  end
 end
