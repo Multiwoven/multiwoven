@@ -10,7 +10,8 @@ module Multiwoven
     SyncStatus = Types::String.enum("started", "running", "complete", "incomplete")
     DestinationSyncMode = Types::String.enum("insert", "upsert")
     ConnectorType = Types::String.enum("source", "destination")
-    ModelQueryType = Types::String.enum("raw_sql", "dbt")
+    ConnectorQueryType = Types::String.enum("raw_sql", "soql")
+    ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql")
     ConnectionStatusType = Types::String.enum("succeeded", "failed")
     StreamType = Types::String.enum("static", "dynamic")
     StreamAction = Types::String.enum("fetch", "create", "update", "delete")
@@ -56,6 +57,7 @@ module Multiwoven
       attribute :supports_dbt, Types::Bool.default(false)
       attribute :stream_type, StreamType
       attribute? :supported_destination_sync_modes, Types::Array.of(DestinationSyncMode).optional
+      attribute? :connector_query_type, ConnectorQueryType
 
       def to_multiwoven_message
         MultiwovenMessage.new(
