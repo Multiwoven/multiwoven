@@ -12,7 +12,6 @@ describe ConnectorContracts::Create do
           name: "Example Connector",
           connector_name: "Snowflake",
           connector_type: "source",
-          query_type: "raw_sql",
           configuration: { test: "test" }
         }
       }
@@ -38,25 +37,6 @@ describe ConnectorContracts::Create do
     it "fails validation" do
       result = contract.call(invalid_inputs)
       expect(result.errors[:connector][:connector_type]).to include("invalid connector type")
-    end
-  end
-
-  context "when invalid query_type is provided" do
-    let(:invalid_inputs) do
-      {
-        connector: {
-          name: "Example Connector",
-          connector_name: "Snowflake",
-          connector_type: "source",
-          query_type: "raw_sql_invalid",
-          configuration: { test: "test" }
-        }
-      }
-    end
-
-    it "fails validation" do
-      result = contract.call(invalid_inputs)
-      expect(result.errors[:connector][:query_type]).to include("invalid query_type")
     end
   end
 end
@@ -199,25 +179,6 @@ describe ConnectorContracts::Update do
       result = contract.call(inputs_with_invalid_name_for_type)
       expect(result).to_not be_success
       expect(result.errors[:connector][%i[connector_type connector_name]]).to include("invalid connector source name")
-    end
-  end
-
-  context "when invalid query_type is provided" do
-    let(:invalid_inputs) do
-      {
-        connector: {
-          name: "Example Connector",
-          connector_name: "Snowflake",
-          connector_type: "source",
-          query_type: "raw_sql_invalid",
-          configuration: { test: "test" }
-        }
-      }
-    end
-
-    it "fails validation" do
-      result = contract.call(invalid_inputs)
-      expect(result.errors[:connector][:query_type]).to include("invalid query_type")
     end
   end
 end

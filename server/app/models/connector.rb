@@ -25,7 +25,6 @@ class Connector < ApplicationRecord
   validates :connector_name, presence: true
 
   enum :connector_type, %i[source destination]
-  enum :query_type, %i[raw_sql soql]
 
   belongs_to :workspace
 
@@ -67,8 +66,7 @@ class Connector < ApplicationRecord
     Multiwoven::Integrations::Protocol::Connector.new(
       name: connector_name,
       type: connector_type,
-      connection_specification: configuration,
-      query_type:
+      connection_specification: configuration
     )
   end
 
