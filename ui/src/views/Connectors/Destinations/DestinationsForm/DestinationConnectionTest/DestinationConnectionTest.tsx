@@ -63,7 +63,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const isAnyFailed = connectionResponse?.connection_status.status !== 'succeeded';
+  const isAnyFailed = connectionResponse?.connection_status?.status !== 'succeeded';
 
   const handleOnContinueClick = () => {
     handleMoveForward(stepInfo?.formKey as string, processedDestinationConfig);
@@ -182,8 +182,8 @@ const DestinationConnectionTest = (): JSX.Element | null => {
                   letterSpacing='-0.14px'
                 >
                   {isAnyFailed
-                    ? connectionResponse?.connection_status.message
-                    : `All tests passed. Continue to finish setting up your ${selectedDestination} Source`}
+                    ? connectionResponse?.connection_status?.message
+                    : `All tests passed. Continue to finish setting up your ${selectedDestination} Destination`}
                 </AlertDescription>
               </Box>
             </Alert>

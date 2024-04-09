@@ -3,7 +3,7 @@ import { ModelEntity } from '@/views/Models/types';
 import { Box, Button, CloseButton, Text } from '@chakra-ui/react';
 import { getModelPreviewById } from '@/services/models';
 import { useQuery } from '@tanstack/react-query';
-import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
+import { FieldMap as FieldMapType, Stream } from '@/views/Activate/Syncs/types';
 import FieldMap from './FieldMap';
 import { useEffect, useState } from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
@@ -12,6 +12,7 @@ import { OPTION_TYPE } from './TemplateMapping/TemplateMapping';
 type MapCustomFieldsProps = {
   model: ModelEntity;
   destination: ConnectorItem;
+  stream: Stream | null;
   data?: FieldMapType[] | null;
   isEdit?: boolean;
   handleOnConfigChange: (args: FieldMapType[]) => void;
@@ -25,6 +26,7 @@ const MapCustomFields = ({
   isEdit,
   handleOnConfigChange,
   configuration,
+  stream,
 }: MapCustomFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([{ from: '', to: '', mapping_type: '' }]);
   const { data: previewModelData } = useQuery({
@@ -127,7 +129,7 @@ const MapCustomFields = ({
             options={modelColumns}
             disabledOptions={mappedColumns}
             onChange={handleOnChange}
-            isDisabled={false}
+            isDisabled={!stream}
             selectedConfigOptions={configuration}
           />
           <Box width='80px' padding='20px' position='relative' top='8px' color='gray.600'>
@@ -137,7 +139,7 @@ const MapCustomFields = ({
             id={index}
             icon={destination.attributes.icon}
             entityName={destination.attributes.connector_name}
-            isDisabled={false}
+            isDisabled={!stream}
             value={fields[index].to}
             onChange={handleOnChange}
             fieldType='custom'
@@ -165,7 +167,7 @@ const MapCustomFields = ({
           fontWeight={700}
           lineHeight='18px'
           letterSpacing='-0.12px'
-          isDisabled={fields.length === modelColumns.length}
+          isDisabled={!stream}
         >
           Add mapping
         </Button>

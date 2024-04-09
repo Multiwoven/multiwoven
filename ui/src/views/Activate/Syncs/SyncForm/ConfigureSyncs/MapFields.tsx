@@ -197,7 +197,7 @@ const MapFields = ({
           fontWeight={700}
           lineHeight='18px'
           letterSpacing='-0.12px'
-          isDisabled={fields.length === modelColumns.length || !stream}
+          isDisabled={!stream}
         >
           Add mapping
         </Button>

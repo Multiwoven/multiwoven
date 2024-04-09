@@ -96,6 +96,7 @@ const ConfigureSyncs = ({
               destination={selectedDestination}
               handleOnConfigChange={handleOnConfigChange}
               configuration={configuration}
+              stream={selectedStream}
             />
           ) : (
             <MapFields

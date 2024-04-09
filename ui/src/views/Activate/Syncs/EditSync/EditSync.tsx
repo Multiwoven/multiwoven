@@ -202,6 +202,7 @@ const EditSync = (): JSX.Element | null => {
                   data={configuration}
                   isEdit
                   configuration={configuration}
+                  stream={selectedStream}
                 />
               ) : (
                 <MapFields
