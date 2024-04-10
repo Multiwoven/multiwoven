@@ -1,6 +1,6 @@
 version: "3"
 services:
-  # Temporal services
+  # This section is for the Temporal services
   postgresql:
     container_name: temporal-postgresql
     environment:
@@ -46,7 +46,7 @@ services:
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     ports:
       - 8080:8080
-  # Multiwoven services
+  # This section is for the Multiwoven services Backend and Frontend
   db:
     image: postgres:latest
     environment:
@@ -61,7 +61,7 @@ services:
   multiwoven-server:
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       args:
         TARGETARCH: ${TARGETARCH:-amd64}
     ports:
@@ -74,23 +74,23 @@ services:
   multiwoven-ui:
     build:
       context: ./ui
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - multiwoven-server
-  # Multiwoven worker
+  # This section is for the Temporal Worker
   multiwoven-worker:
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     depends_on:
       - db
       - redis
       - temporal
     env_file: .env
     command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
-# Volumes
+# Volumes for the database and redis
 volumes:
   mw-pg-data:
   mw-redis-data:
