@@ -90,3 +90,4 @@ end
 # gem "image_processing", "~> 1.2"  # For image variants if you decide to use Active Storage
 
 # NOTE: Removed unused or commented-out gems for better readability.
+gem "premailer-rails"
