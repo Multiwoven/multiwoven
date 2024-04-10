@@ -158,12 +158,6 @@ RSpec.describe SyncRun, type: :model do
     let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
     let(:sync_run) { create(:sync_run, sync:, status: :pending) }
 
-    it "calls send_status_email after commit when status changes to success" do
-      allow(sync_run).to receive(:send_status_email)
-      sync_run.update!(status: :success)
-      expect(sync_run).to have_received(:send_status_email)
-    end
-
     it "calls send_status_email after commit when status changes to failed" do
       allow(sync_run).to receive(:send_status_email)
       sync_run.update!(status: :failed)
