@@ -10,7 +10,12 @@ import { columnOptions, catalogMappingMock } from '../mocks/Columns';
 describe('Columns component', () => {
   test('renders column options', () => {
     const { getByText } = render(
-      <Columns columnOptions={columnOptions} showFilter={false} showDescription={false} />,
+      <Columns
+        columnOptions={columnOptions}
+        showFilter={false}
+        showDescription={false}
+        fieldType='model'
+      />,
     );
 
     expect(getByText('Column 1')).toBeInTheDocument();
@@ -20,7 +25,12 @@ describe('Columns component', () => {
 
   test('renders filtered column options based on search term', () => {
     const { getByPlaceholderText, getByText } = render(
-      <Columns columnOptions={columnOptions} showFilter={true} showDescription={false} />,
+      <Columns
+        columnOptions={columnOptions}
+        showFilter={true}
+        showDescription={false}
+        fieldType='model'
+      />,
     );
 
     const input = getByPlaceholderText('Search Columns');
@@ -37,6 +47,7 @@ describe('Columns component', () => {
         catalogMapping={catalogMappingMock}
         showFilter={false}
         showDescription={true}
+        fieldType='model'
       />,
     );
 
@@ -47,7 +58,12 @@ describe('Columns component', () => {
 
   test('renders no results found message when no columns match search term', () => {
     const { getByPlaceholderText, getByText } = render(
-      <Columns columnOptions={columnOptions} showFilter={true} showDescription={false} />,
+      <Columns
+        columnOptions={columnOptions}
+        showFilter={true}
+        showDescription={false}
+        fieldType='model'
+      />,
     );
 
     const input = getByPlaceholderText('Search Columns');

@@ -147,6 +147,7 @@ const TemplateOptions = ({
               columnOptions={columnOptions}
               onSelect={(value: string) => handleSelection(value, OPTION_TYPE.COLUMNS)}
               height='125px'
+              fieldType='model'
             />
           )}
           {activeTab === OPTION_TYPE.VARIABLE && (
@@ -163,6 +164,7 @@ const TemplateOptions = ({
               catalogMapping={catalogMapping}
               onSelect={(value: string) => handleSelection(value, OPTION_TYPE.FILTER)}
               height='125px'
+              fieldType='model'
             />
           )}
         </Box>
