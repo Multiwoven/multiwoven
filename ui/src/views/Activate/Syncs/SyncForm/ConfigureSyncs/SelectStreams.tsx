@@ -130,6 +130,7 @@ const SelectStreams = ({
             borderWidth='1px'
             borderColor='gray.400'
             fontSize='14px'
+            isRequired
           >
             {refreshOptions?.map((refreshMode) => (
               <option value={refreshMode.value} key={refreshMode.value}>

@@ -29,6 +29,7 @@ type TemplateMappingProps = {
   entityName: string;
   isDisabled: boolean;
   columnOptions: string[];
+  fieldType: 'model' | 'destination';
   handleUpdateConfig: (
     id: number,
     type: 'model' | 'destination',
@@ -63,6 +64,7 @@ const TemplateMapping = ({
   handleUpdateConfig,
   mappingId,
   selectedConfig,
+  fieldType,
 }: TemplateMappingProps): JSX.Element => {
   const [activeTab, setActiveTab] = useState(OPTION_TYPE.STANDARD);
   const [selectedTemplate, setSelectedTemplate] = useState('');
@@ -88,7 +90,7 @@ const TemplateMapping = ({
     if (activeTab === OPTION_TYPE.TEMPLATE) {
       handleUpdateConfig(
         mappingId,
-        'model',
+        fieldType,
         selectedTemplate > '' ? selectedTemplate : 'current_timestamp',
         activeTab,
       );
@@ -96,7 +98,7 @@ const TemplateMapping = ({
     } else {
       handleUpdateConfig(
         mappingId,
-        'model',
+        fieldType,
         selectedStaticOptionValue > '' ? selectedStaticOptionValue.toString() : 'null',
         activeTab,
       );
@@ -143,44 +145,47 @@ const TemplateMapping = ({
           flex='1 1 0%'
         >
           <Stack gap='12px' height='100%'>
-            <Stack spacing='16'>
-              <Tabs
-                size='md'
-                variant='indicator'
-                background='gray.300'
-                padding={1}
-                borderRadius='8px'
-                borderStyle='solid'
-                borderWidth='1px'
-                borderColor='gray.400'
-                width='fit-content'
-              >
-                <TabList gap='8px'>
-                  <TabName
-                    title='Column'
-                    handleActiveTab={() => setActiveTab(OPTION_TYPE.STANDARD)}
-                  />
-                  <TabName
-                    title='Static Value'
-                    handleActiveTab={() => setActiveTab(OPTION_TYPE.STATIC)}
-                  />
-                  <TabName
-                    title='Template'
-                    handleActiveTab={() => setActiveTab(OPTION_TYPE.TEMPLATE)}
-                  />
-                </TabList>
-                <TabIndicator />
-              </Tabs>
-            </Stack>
+            {fieldType === 'model' && (
+              <Stack spacing='16'>
+                <Tabs
+                  size='md'
+                  variant='indicator'
+                  background='gray.300'
+                  padding={1}
+                  borderRadius='8px'
+                  borderStyle='solid'
+                  borderWidth='1px'
+                  borderColor='gray.400'
+                  width='fit-content'
+                >
+                  <TabList gap='8px'>
+                    <TabName
+                      title='Column'
+                      handleActiveTab={() => setActiveTab(OPTION_TYPE.STANDARD)}
+                    />
+                    <TabName
+                      title='Static Value'
+                      handleActiveTab={() => setActiveTab(OPTION_TYPE.STATIC)}
+                    />
+                    <TabName
+                      title='Template'
+                      handleActiveTab={() => setActiveTab(OPTION_TYPE.TEMPLATE)}
+                    />
+                  </TabList>
+                  <TabIndicator />
+                </Tabs>
+              </Stack>
+            )}
             <Box backgroundColor='gray.100' height='100%'>
               {activeTab === OPTION_TYPE.STANDARD && (
                 <Columns
                   columnOptions={columnOptions}
                   showFilter
                   onSelect={(value) => {
-                    handleUpdateConfig(mappingId, 'model', value, activeTab);
+                    handleUpdateConfig(mappingId, fieldType, value, activeTab);
                     setIsPopOverOpen(false);
                   }}
+                  fieldType={fieldType}
                 />
               )}
               {activeTab === OPTION_TYPE.STATIC && (

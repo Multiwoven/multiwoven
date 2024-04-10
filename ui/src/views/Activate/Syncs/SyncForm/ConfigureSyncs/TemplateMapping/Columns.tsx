@@ -15,6 +15,7 @@ import NoConnectorsFound from '@/assets/images/empty-state-illustration.svg';
 
 type ColumnsProps = {
   columnOptions: string[];
+  fieldType: 'model' | 'destination';
   catalogMapping?: SyncsConfigurationForTemplateMapping;
   showFilter?: boolean;
   showDescription?: boolean;
@@ -26,9 +27,10 @@ const Columns = ({
   columnOptions,
   catalogMapping,
   onSelect,
+  fieldType,
   showFilter = false,
   showDescription = false,
-  height = '170px',
+  height = fieldType === 'model' ? '170px' : '225px',
 }: ColumnsProps): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
