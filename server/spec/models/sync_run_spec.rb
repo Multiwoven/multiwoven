@@ -148,4 +148,32 @@ RSpec.describe SyncRun, type: :model do
       expect(sync_record.sync_run_id).to be_nil
     end
   end
+
+  describe "#send_status_email" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:sync_run) { create(:sync_run, sync:, status: :pending) }
+
+    it "calls send_status_email after commit when status changes to success" do
+      allow(sync_run).to receive(:send_status_email)
+      sync_run.update!(status: :success)
+      expect(sync_run).to have_received(:send_status_email)
+    end
+
+    it "calls send_status_email after commit when status changes to failed" do
+      allow(sync_run).to receive(:send_status_email)
+      sync_run.update!(status: :failed)
+      expect(sync_run).to have_received(:send_status_email)
+    end
+
+    it "does not call send_status_email if status does not change to success or failed" do
+      allow(sync_run).to receive(:send_status_email)
+      sync_run.update!(status: :in_progress)
+      expect(sync_run).not_to have_received(:send_status_email)
+    end
+  end
 end

@@ -1,0 +1,40 @@
+<!-- app/views/sync_run_mailer/status_email.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .email-body {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      text-align: center; /* Center text */
+    }
+    .button-container {
+      text-align: center; /* Center button container */
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 20px 0;
+      background-color: <%= @sync_status == "success" ? '#33C0A7' : '#F54C3D' %>;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .status {
+      color: <%= @sync_status == "success" ? '#33C0A7' : '#F54C3D' %>;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-body">
+    <p><%= @source_connector_name %> to <%= @destination_connector_name %> job was <span class="status"><%= @sync_status == "success" ? "successful" : "failure" %></span>. Please click the Sync Run link below to view more details.</p>
+    <div class="button-container">
+      <a href="<%= @sync_run_url %>" class="button">Sync Run</a>
+    </div>
+  </div>
+</body>
+</html>

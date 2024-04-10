@@ -47,19 +47,20 @@ module MultiwovenServer
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.middleware.insert_before Rails::Rack::Logger, MultiwovenServer::QuietLogger
-    # email setup
+
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
-    host = ENV.fetch('SMTP_HOST', 'multiwoven.com') # Replace 'multiwoven.com' with SMTP_HOST value if needed
+    config.action_mailer.perform_deliveries = true
+    host = ENV.fetch('SMTP_HOST', 'multiwoven.com')
     config.action_mailer.default_url_options = { host: host }
-    config.x.mail_from = %("Multiwoven" <noreply@multiwoven.com>)
-    ActionMailer::Base.smtp_settings = {
-      address: ENV['SMTP_ADDRESS'],
-      port: ENV.fetch('SMTP_PORT', '587'), # '587' is the default value if SMTP_PORT is not set
-      authentication: :plain,
+    config.x.mail_from = "#{ENV.fetch('BRAND_NAME', 'Multiwoven')} <#{ENV.fetch('SMTP_SENDER_EMAIL', 'noreply@multiwoven.com')}>"
+    config.action_mailer.smtp_settings = {
+      address:  ENV['SMTP_ADDRESS'],
+      port: ENV.fetch('SMTP_PORT', '587'),
+      authentication: :login,
       user_name: ENV['SMTP_USERNAME'],
       password: ENV['SMTP_PASSWORD'],
+      enable_starttls_auto: true
     }
-    config.action_mailer.default_url_options = { host: ENV['UI_HOST'] || 'localhost:8000' }
   end
 end

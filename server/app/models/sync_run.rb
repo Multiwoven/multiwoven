@@ -28,6 +28,7 @@ class SyncRun < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run
+  after_commit :send_status_email, if: :status_changed_to_success_or_failed?
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
@@ -88,5 +89,25 @@ class SyncRun < ApplicationRecord
   def update_success
     complete!
     sync.complete!
+  end
+
+  def send_status_email
+    return unless notification_email_enabled?
+
+    recipients.each do |recipient|
+      SyncRunMailer.with(sync_run: self, recipient:).status_email.deliver_now
+    end
+  end
+
+  def recipients
+    if ENV["RECIPIENT_EMAIL"].present?
+      [ENV["RECIPIENT_EMAIL"]]
+    else
+      sync.workspace.workspace_users.admins.map { |workspace_user| workspace_user.user.email }
+    end
+  end
+
+  def status_changed_to_success_or_failed?
+    saved_change_to_status? && (status == "success" || status == "failed")
   end
 end
