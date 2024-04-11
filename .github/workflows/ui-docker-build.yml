@@ -9,7 +9,7 @@ on:
 
 env:
   IMAGE_NAME: multiwoven/multiwoven-ui
-  IMAGE_TAG: latest-main
+  IMAGE_TAG: edge
 
 jobs:
   build_and_push:
