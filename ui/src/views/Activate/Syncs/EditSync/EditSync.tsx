@@ -228,6 +228,8 @@ const EditSync = (): JSX.Element | null => {
           isDocumentsSectionRequired
           isContinueCtaRequired
           isBackRequired
+          navigateToListScreen
+          listScreenUrl='/activate/syncs'
         />
       </Box>
     </form>
