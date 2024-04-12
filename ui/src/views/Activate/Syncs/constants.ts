@@ -35,10 +35,15 @@ export const SYNC_RUNS_COLUMNS: SyncRunsColumnEntity[] = [
   {
     key: 'rows_queried',
     name: 'Rows Queried',
+    hasHoverText: true,
+    hoverText: 'Number of rows your query returned from the Source.',
   },
   {
     key: 'results',
     name: 'Results',
+    hasHoverText: true,
+    hoverText:
+      'Number of successful or failed operations that occurred while processing your sync.',
   },
 ];
 

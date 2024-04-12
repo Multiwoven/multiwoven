@@ -158,6 +158,8 @@ export type SyncRunsColumnFields =
 export type SyncRunsColumnEntity = {
   key: SyncRunsColumnFields;
   name: string;
+  hasHoverText?: boolean;
+  hoverText?: string;
 };
 
 export type SyncRecordResponse = {
