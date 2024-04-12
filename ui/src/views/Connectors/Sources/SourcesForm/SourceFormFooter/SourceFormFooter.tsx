@@ -16,6 +16,8 @@ type SourceFormFooterProps = {
   isDocumentsSectionRequired?: boolean;
   isAlignToContentContainer?: boolean;
   extra?: JSX.Element;
+  navigateToListScreen?: boolean;
+  listScreenUrl?: string;
 };
 
 const SourceFormFooter = ({
@@ -25,11 +27,13 @@ const SourceFormFooter = ({
   onCtaClick,
   isBackRequired,
   extra,
+  listScreenUrl,
   isCtaLoading = false,
   isCtaDisabled = false,
   isContinueCtaRequired = false,
   isDocumentsSectionRequired = false,
   secondaryCtaText = 'Back',
+  navigateToListScreen = false,
 }: SourceFormFooterProps): JSX.Element => {
   const [leftOffset, setLeftOffet] = useState<number>(0);
   const { maxContentWidth } = useUiConfig();
@@ -93,7 +97,11 @@ const SourceFormFooter = ({
           {extra}
           {isBackRequired ? (
             <Button
-              onClick={() => navigate(-1)}
+              onClick={() =>
+                navigateToListScreen && listScreenUrl
+                  ? navigate(listScreenUrl, { replace: true })
+                  : navigate(-1)
+              }
               marginRight={isContinueCtaRequired ? '10px' : '0'}
               variant='ghost'
               minWidth={0}
