@@ -102,7 +102,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           sync_interval: 10,
           sync_interval_unit: "minutes",
           stream_name: "profile",
-          sync_mode: "full_refresh"
+          sync_mode: "full_refresh",
+          cursor_field: "created_date"
         }
       }
     end
@@ -127,6 +128,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :model_id)).to eq(request_body.dig(:sync, :model_id))
         expect(response_hash.dig(:data, :attributes, :schedule_type)).to eq(request_body.dig(:sync, :schedule_type))
         expect(response_hash.dig(:data, :attributes, :stream_name)).to eq(request_body.dig(:sync, :stream_name))
+        expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(request_body.dig(:sync, :cursor_field))
+        expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :sync_interval_unit))
           .to eq(request_body.dig(:sync, :sync_interval_unit))
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
@@ -166,7 +169,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           },
           sync_interval: 10,
           sync_interval_unit: "minutes",
-          stream_name: "profile"
+          stream_name: "profile",
+          cursor_field: "cursor_field"
         }
       }
     end
@@ -188,6 +192,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :id)).to eq(syncs.first.id.to_s)
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(30)
+        expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
       end
 
       it "returns an error response when wrong sync_id" do
