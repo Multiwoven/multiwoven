@@ -156,6 +156,7 @@ module Multiwoven
           expect(instance.batch_support).to eq(false)
           expect(instance.batch_size).to eq(1)
           expect(instance.supported_sync_modes).to eq(%w[full_refresh incremental])
+          expect(instance.source_defined_cursor).to eq(true)
 
           expect(instance.request_rate_limit).to be_nil
           expect(instance.request_rate_limit_unit).to eq("minute")
@@ -290,6 +291,7 @@ module Multiwoven
             "sync_mode": "full_refresh",
             "destination_sync_mode": "insert",
             "cursor_field": "example_cursor_field",
+            "current_cursor_field": "current",
             "offset": "100",
             "limit": "10"
           }.to_json
@@ -306,6 +308,7 @@ module Multiwoven
           expect(sync_config.sync_mode).to eq("full_refresh")
           expect(sync_config.destination_sync_mode).to eq("insert")
           expect(sync_config.cursor_field).to eq("example_cursor_field")
+          expect(sync_config.current_cursor_field).to eq("current")
           sync_config.limit = "10"
           sync_config.offset = "100"
           expect(sync_config.offset).to eq("100")
