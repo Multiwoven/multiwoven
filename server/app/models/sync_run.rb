@@ -28,7 +28,7 @@ class SyncRun < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run
-  after_commit :send_status_email, if: :status_changed_to_success_or_failed?
+  after_commit :send_status_email, if: :status_changed_to_failure?
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
@@ -107,7 +107,7 @@ class SyncRun < ApplicationRecord
     end
   end
 
-  def status_changed_to_success_or_failed?
-    saved_change_to_status? && (status == "success" || status == "failed")
+  def status_changed_to_failure?
+    saved_change_to_status? && (status == "failed")
   end
 end

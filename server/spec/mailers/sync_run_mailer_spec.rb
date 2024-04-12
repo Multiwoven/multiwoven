@@ -11,7 +11,7 @@ RSpec.describe SyncRunMailer, type: :mailer do
     let!(:catalog) { create(:catalog, connector: destination) }
     let(:sync) { create(:sync, source:, destination:) }
     let(:sync_run) do
-      create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "success")
+      create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "failed")
     end
     let(:sync_run_pending) do
       create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "pending")
@@ -20,13 +20,12 @@ RSpec.describe SyncRunMailer, type: :mailer do
     let(:mail) { SyncRunMailer.with(sync_run:, recipient:).status_email }
 
     it "renders the headers" do
-      expect(mail.subject).to eq("Sync run status update")
+      expect(mail.subject).to eq("Sync failure")
       expect(mail.to).to eq([recipient])
       expect(mail.from).to eq(["noreply@multiwoven.com"])
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(sync_run.status)
       expect(mail.body.encoded).to match(sync.source.name)
       expect(mail.body.encoded).to match(sync.destination.name)
       host = Rails.configuration.action_mailer.default_url_options[:host]
