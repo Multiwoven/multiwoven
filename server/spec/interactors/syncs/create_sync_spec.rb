@@ -18,7 +18,7 @@ RSpec.describe Syncs::CreateSync do
     it "creates a sync" do
       result = described_class.call(
         workspace:,
-        sync_params: sync.attributes.except("id", "created_at", "updated_at")
+        sync_params: sync.attributes.except("id", "created_at", "updated_at").with_indifferent_access
       )
       expect(result.success?).to eq(true)
       expect(result.sync.persisted?).to eql(true)
@@ -34,7 +34,7 @@ RSpec.describe Syncs::CreateSync do
     end
 
     it "fails to create sync" do
-      result = described_class.call(workspace:, sync_params:)
+      result = described_class.call(workspace:, sync_params: sync_params.with_indifferent_access)
       expect(result.failure?).to eq(true)
     end
   end
