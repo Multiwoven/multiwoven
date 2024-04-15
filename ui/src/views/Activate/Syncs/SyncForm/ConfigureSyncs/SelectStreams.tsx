@@ -4,6 +4,7 @@ import { ModelEntity } from '@/views/Models/types';
 import { useQuery } from '@tanstack/react-query';
 import { getCatalog } from '@/services/syncs';
 import { ConnectorItem } from '@/views/Connectors/types';
+import { getModelPreviewById } from '@/services/models';
 import { useEffect, SetStateAction, Dispatch } from 'react';
 
 type SelectStreamsProps = {
@@ -17,9 +18,12 @@ type SelectStreamsProps = {
   onStreamsLoad?: (catalog: DiscoverResponse) => void;
   selectedStream?: Stream | null;
   setSelectedSyncMode?: Dispatch<SetStateAction<string>>;
+  setCursorField?: Dispatch<SetStateAction<string>>;
+  selectedCursorField?: string;
 };
 
 const SelectStreams = ({
+  model,
   destination,
   selectedSyncMode,
   selectedStreamName,
@@ -29,6 +33,8 @@ const SelectStreams = ({
   onStreamsLoad,
   selectedStream,
   setSelectedSyncMode,
+  selectedCursorField,
+  setCursorField,
 }: SelectStreamsProps): JSX.Element | null => {
   const { data: catalogData } = useQuery({
     queryKey: ['syncs', 'catalog', destination.id],
@@ -37,6 +43,18 @@ const SelectStreams = ({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+
+  const { data: previewModelData } = useQuery({
+    queryKey: ['syncs', 'preview-model', model?.connector?.id],
+    queryFn: () => getModelPreviewById(model?.query, String(model?.connector?.id)),
+    enabled: !!model?.connector?.id,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const firstRow = Array.isArray(previewModelData) && previewModelData[0];
+
+  const modelColumns = Object.keys(firstRow ?? {});
 
   useEffect(() => {
     if (catalogData) {
@@ -83,7 +101,7 @@ const SelectStreams = ({
       <Text fontWeight='600' mb={6} color='black.500' size='md'>
         Configure sync to {destination.attributes.connector_name}.
       </Text>
-      <Box display='flex' alignItems='flex-end' gap='12px'>
+      <Box display='flex' alignItems='flex-end' gap='36px'>
         <Box width='100%'>
           <Text fontWeight='semibold' size='sm'>
             Stream Name
@@ -112,7 +130,6 @@ const SelectStreams = ({
             ))}
           </Select>
         </Box>
-        <Box width='80px' padding='20px' position='relative' top='8px' color='gray.600'></Box>
         <Box width='100%'>
           <Text fontWeight='semibold' size='sm'>
             Sync Mode
@@ -135,6 +152,33 @@ const SelectStreams = ({
             {refreshOptions?.map((refreshMode) => (
               <option value={refreshMode.value} key={refreshMode.value}>
                 {refreshMode.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+        <Box width='100%'>
+          <Text fontWeight='semibold' size='sm'>
+            Cursor Field
+          </Text>
+          <Text size='xs' marginBottom='12px' color='black.200'>
+            Select a cursor field.
+          </Text>
+          <Select
+            placeholder={isEdit ? placeholder : 'Select cursor field'}
+            backgroundColor={'gray.100'}
+            maxWidth='500px'
+            onChange={({ target: { value } }) => setCursorField?.(value)}
+            value={selectedCursorField}
+            borderStyle='solid'
+            borderWidth='1px'
+            borderColor='gray.400'
+            fontSize='14px'
+            isRequired
+            disabled={!selectedStream}
+          >
+            {modelColumns?.map((modelColumn) => (
+              <option value={modelColumn} key={modelColumn}>
+                {modelColumn}
               </option>
             ))}
           </Select>
