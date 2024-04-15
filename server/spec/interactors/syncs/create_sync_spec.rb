@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Syncs::CreateSync do
   let(:workspace) { create(:workspace) }
-  let(:source) { create(:connector, workspace:) }
+  let(:source) { create(:connector, workspace:, connector_type: "source") }
   let(:destination) { create(:connector, workspace:) }
   let(:model) { create(:model, workspace:, connector: source) }
   let(:sync) { build(:sync, workspace:, source:, destination:, model:) }
@@ -30,7 +30,7 @@ RSpec.describe Syncs::CreateSync do
 
   context "with invalid params" do
     let(:sync_params) do
-      { source_id: nil }
+      sync.attributes.except("id", "created_at", "destination_id")
     end
 
     it "fails to create sync" do

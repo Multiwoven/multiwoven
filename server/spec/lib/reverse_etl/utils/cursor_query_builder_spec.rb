@@ -19,10 +19,10 @@ module ReverseEtl
           let(:sync_config) { sync.to_protocol }
 
           it "updates the query with WHERE and ORDER BY clauses" do
-            response = described_class.update_model_query(sync_config)
+            query = described_class.update_model_query(sync_config, "2022-01-01")
 
-            expected_query = "(SELECT * FROM table) AS subquery WHERE timestamp >= '2022-01-01' ORDER BY timestamp ASC"
-            expect(response.model.query).to eq(expected_query)
+            expected_query = "SELECT * FROM table AS subquery WHERE timestamp >= 2022-01-01 ORDER BY timestamp ASC"
+            expect(query).to eq(expected_query)
           end
         end
 
@@ -33,10 +33,10 @@ module ReverseEtl
           let(:sync_config) { sync.to_protocol }
 
           it "updates the query with only ORDER BY clause" do
-            response = described_class.update_model_query(sync_config)
+            query = described_class.update_model_query(sync_config, nil)
 
-            expected_query = "(SELECT * FROM table) AS subquery ORDER BY timestamp ASC"
-            expect(response.model.query).to eq(expected_query)
+            expected_query = "SELECT * FROM table AS subquery ORDER BY timestamp ASC"
+            expect(query).to eq(expected_query)
           end
         end
 
@@ -46,9 +46,9 @@ module ReverseEtl
           end
           let(:sync_config) { sync.to_protocol }
           it "does not update the query" do
-            response = described_class.update_model_query(sync_config)
+            query = described_class.update_model_query(sync_config, nil)
 
-            expect(response.model.query).to eq("SELECT * FROM table")
+            expect(query).to eq("SELECT * FROM table")
           end
         end
       end

@@ -5,8 +5,9 @@ module Syncs
     include Interactor
 
     def call
-      source = context.workspace.connectors.find_by(id: context.sync_params[:source_id])
-      default_cursor_field = source&.catalog&.default_cursor_field(context.sync_params[:stream_name])
+      source = context.workspace.connectors.find_by(id: context.sync_params.with_indifferent_access[:source_id])
+
+      default_cursor_field = source.catalog&.default_cursor_field(context.sync_params[:stream_name])
       context.sync_params[:cursor_field] = default_cursor_field if default_cursor_field.present?
       sync = context
              .workspace.syncs
