@@ -118,8 +118,6 @@ module Multiwoven
               "json_schema": json_schema,
               "required": required,
               "supported_sync_modes": %w[incremental],
-              "source_defined_cursor": true,
-              "default_cursor_field": ["updated"],
               "source_defined_primary_key": [primary_key]
             }
           end
