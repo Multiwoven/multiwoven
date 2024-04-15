@@ -35,7 +35,7 @@ module ReverseEtl
       def self.extract_last_cursor_field_value(result, sync_config)
         return nil unless sync_config.cursor_field && !result.empty?
 
-        last_record = result.last.message.record.data
+        last_record = result.last.record.data
         last_record[sync_config.cursor_field]
       end
     end
