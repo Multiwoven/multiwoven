@@ -1,6 +1,7 @@
-import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, Tooltip } from '@chakra-ui/react';
 import { TableType } from './types';
 import EntityItem from '../EntityItem';
+import { FiInfo } from 'react-icons/fi';
 
 const GenerateTable = ({
   title,
@@ -35,7 +36,30 @@ const GenerateTable = ({
                 padding='16px'
                 letterSpacing='2.4px'
               >
-                {column.name}
+                <Box display='flex' flexDir='row' gap='6px' alignItems='center'>
+                  {column.name}
+                  {column.hasHoverText ? (
+                    <>
+                      <Tooltip
+                        hasArrow
+                        label={column.hoverText}
+                        fontSize='xs'
+                        placement='top'
+                        backgroundColor='black.500'
+                        color='gray.100'
+                        borderRadius='6px'
+                        padding='8px'
+                        width='auto'
+                      >
+                        <Text color='gray.600'>
+                          <FiInfo />
+                        </Text>
+                      </Tooltip>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </Box>
               </Th>
             ))}
           </Tr>
