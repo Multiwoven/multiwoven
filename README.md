@@ -18,9 +18,9 @@ Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgr
   <a href="https://github.com/Multiwoven/multiwoven/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Multiwoven/multiwoven/main?style=for-the-badge"></a>
   <a href="https://github.com/Multiwoven/multiwoven/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Multiwoven/multiwoven?style=for-the-badge" alt="License"></a>
   <br />
-  <a href="https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-server/ci.yml?style=for-the-badge&label=server-build" alt="server-ci"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-integrations/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-integrations/ci.yml?style=for-the-badge&label=integrations-build" alt="integrations-ci"></a>
-  <a href="https://github.com/Multiwoven/multiwoven-ui/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven-ui/ci.yml?style=for-the-badge&label=ui-build" alt="ui-ci"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/actions/workflows/server-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven/server-ci.yml?branch=main&style=for-the-badge&label=server-build" alt="server-ci"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/actions/workflows/integrations-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven/integrations-ci.yml?branch=main&style=for-the-badge&label=integrations-build" alt="integrations-ci"></a>
+  <a href="https://github.com/Multiwoven/multiwoven/actions/workflows/ui-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven/ui-ci.yml?branch=main&style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
 <p align="center">
@@ -53,25 +53,36 @@ Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and c
 
 ## Table of Contents
 
+- [Why Multiwoven?](#why-multiwoven)
+- [Table of Contents](#table-of-contents)
 - [Getting Started](#getting-started)
   - [Local Setup](#local-setup)
   - [Self-hosted Options](#self-hosted-options)
 - [Connectors](#connectors)
   - [Sources](#sources)
   - [Destinations](#destinations)
+    - [CRM](#crm)
+    - [Marketing Automation](#marketing-automation)
+    - [Customer Support](#customer-support)
+    - [Advertising](#advertising)
+    - [Collaboration](#collaboration)
+    - [Analytics](#analytics)
+    - [Others](#others)
 - [Contributing](#contributing)
 - [Need Help?](#need-help)
+  - [⚠️ Development Status: Under Active Development](#️-development-status-under-active-development)
 - [License](#license)
+- [Contributors](#contributors)
 
 ## Getting Started
 
 Multiwoven repo is a monorepo that contains the following services:
 
-- [multiwoven-server](https://github.com/Multiwoven/multiwoven-server) - The backend service that handles data extraction, modeling, and syncing.
+- [multiwoven-server](https://github.com/Multiwoven/multiwoven/tree/main/server) - The backend service that handles data extraction, modeling, and syncing.
 
-- [multiwoven-ui](https://github.com/Multiwoven/multiwoven-ui) - The frontend service that provides a user interface for managing data sources, models, and syncs.
+- [multiwoven-ui](https://github.com/Multiwoven/multiwoven/tree/main/ui) - The frontend service that provides a user interface for managing data sources, models, and syncs.
 
-- [multiwoven-integrations](https://github.com/Multiwoven/multiwoven-integrations) - The connector service that provides a list of connectors to various data sources and destinations.
+- [multiwoven-integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) - The connector service that provides a list of connectors to various data sources and destinations.
 
 ### Local Setup
 

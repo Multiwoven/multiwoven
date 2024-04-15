@@ -18,7 +18,7 @@ module Multiwoven
       def meta_data
         client_meta_data = read_json(META_DATA_PATH).deep_symbolize_keys
         icon_name = client_meta_data[:data][:icon]
-        icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{MAIN_BRANCH_SHA}#{relative_path}/#{icon_name}"
+        icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations#{relative_path}/#{icon_name}"
         client_meta_data[:data][:icon] = icon_url
         # returns hash
         @meta_data ||= client_meta_data

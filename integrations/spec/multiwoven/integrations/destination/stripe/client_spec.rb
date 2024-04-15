@@ -117,7 +117,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Stripe::Client do
 
   describe "#meta_data" do
     it "serves it github image url as icon" do
-      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven-integrations/#{client.class::MAIN_BRANCH_SHA}/lib/multiwoven/integrations/destination/stripe/icon.svg"
+      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations/lib/multiwoven/integrations/destination/stripe/icon.svg"
       expect(client.send(:meta_data)[:data][:icon]).to eq(image_url)
     end
   end
