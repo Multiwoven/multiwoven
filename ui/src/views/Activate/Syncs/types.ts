@@ -8,6 +8,7 @@ export type Stream = {
   json_schema: RJSFSchema;
   url: string;
   supported_sync_modes: string[];
+  source_defined_cursor: boolean;
 };
 
 export enum SchemaMode {

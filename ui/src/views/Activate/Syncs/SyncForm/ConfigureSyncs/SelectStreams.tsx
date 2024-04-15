@@ -92,6 +92,9 @@ const SelectStreams = ({
         })
       : [];
 
+  const sourceDefinedCursor =
+    selectedStreamIndex !== -1 ? streams?.[selectedStreamIndex]?.source_defined_cursor : false;
+
   return (
     <Box
       backgroundColor={isEdit ? 'gray.100' : 'gray.200'}
@@ -157,51 +160,53 @@ const SelectStreams = ({
             ))}
           </Select>
         </Box>
-        <Box width='100%'>
-          <Box display='flex' alignItems='center'>
-            <Text fontWeight='semibold' size='sm'>
-              Cursor Field
-            </Text>
-            <Tooltip
-              hasArrow
-              label='Cursor-based incremental refresh is utilized by sources to track new or updated records since the last sync, using the cursor field.'
-              fontSize='xs'
-              placement='top'
-              backgroundColor='black.500'
-              color='gray.100'
-              borderRadius='6px'
-              padding='8px'
-              width='auto'
-              marginLeft='8px'
-            >
-              <Text color='gray.600' marginLeft='8px'>
-                <FiInfo />
+        {!sourceDefinedCursor && selectedSyncMode === 'incremental' && (
+          <Box width='100%'>
+            <Box display='flex' alignItems='center'>
+              <Text fontWeight='semibold' size='sm'>
+                Cursor Field
               </Text>
-            </Tooltip>
+              <Tooltip
+                hasArrow
+                label='Cursor-based incremental refresh is utilized by sources to track new or updated records since the last sync, using the cursor field.'
+                fontSize='xs'
+                placement='top'
+                backgroundColor='black.500'
+                color='gray.100'
+                borderRadius='6px'
+                padding='8px'
+                width='auto'
+                marginLeft='8px'
+              >
+                <Text color='gray.600' marginLeft='8px'>
+                  <FiInfo />
+                </Text>
+              </Tooltip>
+            </Box>
+            <Text size='xs' marginBottom='12px' color='black.200'>
+              Select cursor field. Ignore if you are unsure about which field to select
+            </Text>
+            <Select
+              placeholder={isEdit ? placeholder : 'Select cursor field'}
+              backgroundColor={'gray.100'}
+              maxWidth='500px'
+              onChange={({ target: { value } }) => setCursorField?.(value)}
+              value={selectedCursorField}
+              borderStyle='solid'
+              borderWidth='1px'
+              borderColor='gray.400'
+              fontSize='14px'
+              isRequired
+              disabled={!selectedStream}
+            >
+              {modelColumns?.map((modelColumn) => (
+                <option value={modelColumn} key={modelColumn}>
+                  {modelColumn}
+                </option>
+              ))}
+            </Select>
           </Box>
-          <Text size='xs' marginBottom='12px' color='black.200'>
-            Select cursor field. Ignore if you are unsure about which field to select
-          </Text>
-          <Select
-            placeholder={isEdit ? placeholder : 'Select cursor field'}
-            backgroundColor={'gray.100'}
-            maxWidth='500px'
-            onChange={({ target: { value } }) => setCursorField?.(value)}
-            value={selectedCursorField}
-            borderStyle='solid'
-            borderWidth='1px'
-            borderColor='gray.400'
-            fontSize='14px'
-            isRequired
-            disabled={!selectedStream}
-          >
-            {modelColumns?.map((modelColumn) => (
-              <option value={modelColumn} key={modelColumn}>
-                {modelColumn}
-              </option>
-            ))}
-          </Select>
-        </Box>
+        )}
       </Box>
     </Box>
   );
