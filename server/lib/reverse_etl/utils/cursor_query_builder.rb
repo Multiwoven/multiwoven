@@ -3,7 +3,7 @@
 module ReverseEtl
   module Utils
     class CursorQueryBuilder
-      def self.update_query(sync_config)
+      def self.update_model_query(sync_config)
         existing_query = sync_config.model.query
 
         if sync_config.cursor_field && sync_config.current_cursor_field

@@ -13,7 +13,7 @@ module ReverseEtl
           params[:sync_config].limit = params[:batch_size]
           params[:sync_config].offset = current_offset
 
-          params[:sync_config] = CursorQueryBuilder.update_query(params[:sync_config])
+          params[:sync_config] = CursorQueryBuilder.update_model_query(params[:sync_config])
 
           # Execute the batch query
           result = params[:client].read(params[:sync_config])

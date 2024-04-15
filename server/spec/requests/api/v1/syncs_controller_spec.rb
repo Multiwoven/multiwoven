@@ -136,6 +136,27 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
       end
 
+      it "creates a new sync and returns success with cursor_field nil " do
+        request_body[:sync][:cursor_field] = nil
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:created)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :type)).to eq("syncs")
+        expect(response_hash.dig(:data, :attributes, :source_id)).to eq(request_body.dig(:sync, :source_id))
+        expect(response_hash.dig(:data, :attributes, :destination_id)).to eq(request_body.dig(:sync, :destination_id))
+        expect(response_hash.dig(:data, :attributes, :model_id)).to eq(request_body.dig(:sync, :model_id))
+        expect(response_hash.dig(:data, :attributes, :schedule_type)).to eq(request_body.dig(:sync, :schedule_type))
+        expect(response_hash.dig(:data, :attributes, :stream_name)).to eq(request_body.dig(:sync, :stream_name))
+        expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :sync_interval_unit))
+          .to eq(request_body.dig(:sync, :sync_interval_unit))
+        expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
+        expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+      end
+
       it "returns an error response when creation fails" do
         request_body[:sync][:source_id] = "connector_id_wrong"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }

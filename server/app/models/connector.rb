@@ -86,9 +86,4 @@ class Connector < ApplicationRecord
 
     connector_spec&.connector_query_type || "raw_sql"
   end
-
-  def default_cursor_field(stream_name)
-    stream = catalog.catalog["streams"].find { |s| s["name"] == stream_name }
-    stream["default_cursor_field"] if stream && catalog["source_defined_cursor"]
-  end
 end

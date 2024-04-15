@@ -50,4 +50,9 @@ class Catalog < ApplicationRecord
       request_rate_concurrency:
     )
   end
+
+  def default_cursor_field(stream_name)
+    stream = catalog["streams"].find { |s| s["name"] == stream_name }
+    stream["default_cursor_field"] if stream && catalog["source_defined_cursor"]
+  end
 end
