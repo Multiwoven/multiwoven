@@ -52,8 +52,25 @@ const DefineSQL = ({
   const navigate = useNavigate();
   const editorRef = useRef(null);
 
-  function handleEditorDidMount(editor: any) {
+  function handleEditorDidMount(editor: any, monaco: any) {
     editorRef.current = editor;
+
+    monaco.languages.registerCompletionItemProvider('mysql', {
+      provideCompletionItems: () => {
+        return {
+          suggestions: [
+            // Define your SQL autocomplete suggestions here
+            {
+              label: 'SELECT',
+              kind: monaco.languages.CompletionItemKind.Text,
+              insertText: 'SELECT',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'The SELECT statement is used to select data from a database.',
+            },
+          ],
+        };
+      },
+    });
   }
 
   function handleContinueClick(
