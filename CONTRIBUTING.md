@@ -13,13 +13,7 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 
 ## We Use [GitHub Flow](https://guides.github.com/introduction/flow/index.html), So All Code Changes Happen Through Pull Requests
 
-Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
-
-Based on your contribution, please create a pull request in the respective repository. For example, if you are contributing to the `multiwoven-integrations` repository, please create a pull request in the `multiwoven-integrations` repository.
-
-- Multiwoven Server: [pull requests](https://github.com/Multiwoven/multiwoven-server)
-- Multiwoven Integrations: [pull requests](https://github.com/Multiwoven/multiwoven-integrations)
-- Multiwoven UI: [pull requests](https://github.com/Multiwoven/multiwoven-ui)
+Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests.
 
 1. Fork the repo and create your branch from `main`.
 2. If you've added code that should be tested, add tests.
@@ -34,12 +28,6 @@ In short, when you submit code changes, your submissions are understood to be un
 
 ## Report bugs using GitHub's issues
 We use GitHub issues to track public bugs. Report a bug by opening a new issue it's that easy!
-
-Since we are a mono repo, we insist creating issues in respective repositories. For example, if you find a bug in the `multiwoven-integrations` repository, please create an issue in the `multiwoven-integrations` repository.
-
-- Multiwoven Server: [issues](https://github.com/Multiwoven/multiwoven-server)
-- Multiwoven Integrations: [issues](https://github.com/Multiwoven/multiwoven-integrations)
-- Multiwoven UI: [issues](https://github.com/Multiwoven/multiwoven-ui)
 
 ## Write bug reports with detail, background, and sample code
 
