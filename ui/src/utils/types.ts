@@ -11,4 +11,6 @@ export type ColumnMapType = {
   name: string;
   key: string;
   showIcon?: boolean;
+  hasHoverText?: boolean;
+  hoverText?: string;
 };
