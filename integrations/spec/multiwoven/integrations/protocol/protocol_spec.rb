@@ -371,6 +371,7 @@ module Multiwoven
           expect(connector).to be_a(described_class)
           expect(connector.name).to eq("example_connector")
           expect(connector.type).to eq("source")
+          expect(connector.query_type).to eq("raw_sql")
           expect(connector.connection_specification).to eq(key: "value")
         end
       end
