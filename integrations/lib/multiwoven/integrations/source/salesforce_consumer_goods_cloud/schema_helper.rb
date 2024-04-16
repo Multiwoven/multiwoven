@@ -62,12 +62,12 @@ module Multiwoven
             when "picklist", "multipicklist", "Picklist (Multi-select)"
               if sf_field[:picklistValues] && sf_field["nillable"]
                 enum_values = sf_field[:picklistValues].map { |val| val["value"] }
-                { "type": %w[array null], "items": { "type": "string" }, "enum": enum_values }
+                { "type": %w[string null], "items": { "type": "string" }, "enum": enum_values }
               elsif sf_field[:picklistValues]
                 enum_values = sf_field[:picklistValues].map { |val| val["value"] }
-                { "type": "array", "items": { "type": "string" }, "enum": enum_values }
+                { "type": "string", "items": { "type": "string" }, "enum": enum_values }
               else
-                { "type": "array", "items": { "type": "string" } }
+                { "type": "string", "items": { "type": "string" } }
               end
             when "reference", "Reference (Lookup & Master-Detail)"
               if sf_field["nillable"]
