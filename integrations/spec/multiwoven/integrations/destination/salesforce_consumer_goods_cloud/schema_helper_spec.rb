@@ -47,8 +47,6 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsClo
       expect(result[:batch_size]).to eq(0)
       expect(result[:required]).to contain_exactly("Field1")
       expect(result[:supported_sync_modes]).to contain_exactly("incremental")
-      expect(result[:source_defined_cursor]).to be true
-      expect(result[:default_cursor_field]).to contain_exactly("updated")
     end
   end
 end

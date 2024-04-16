@@ -18,20 +18,23 @@ type ConfigureSyncsProps = {
   selectedStream: Stream | null;
   configuration: FieldMapType[] | null;
   schemaMode: SchemaMode | null;
+  selectedSyncMode: string;
   setSelectedStream: Dispatch<SetStateAction<Stream | null>>;
   setConfiguration: Dispatch<SetStateAction<FieldMapType[] | null>>;
   setSchemaMode: Dispatch<SetStateAction<SchemaMode | null>>;
+  setSelectedSyncMode: Dispatch<SetStateAction<string>>;
 };
 
 const ConfigureSyncs = ({
   selectedStream,
   configuration,
+  selectedSyncMode,
   setSelectedStream,
   setConfiguration,
   setSchemaMode,
+  setSelectedSyncMode,
 }: ConfigureSyncsProps): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
-  const [selectedSyncMode, setSelectedSyncMode] = useState('');
   const [cursorField, setCursorField] = useState('');
 
   const { forms } = state;
@@ -66,9 +69,9 @@ const ConfigureSyncs = ({
   };
 
   const { data: catalogData } = useQuery({
-    queryKey: ['syncs', 'catalog', selectedDestination.id],
-    queryFn: () => getCatalog(selectedDestination.id),
-    enabled: !!selectedDestination.id,
+    queryKey: ['syncs', 'catalog', selectedDestination?.id],
+    queryFn: () => getCatalog(selectedDestination?.id),
+    enabled: !!selectedDestination?.id,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

@@ -31,6 +31,10 @@ const PageChangeButton = ({
     minWidth='0'
     padding={0}
     _hover={{ backgroundColor: 'gray.300' }}
+    _disabled={{
+      _hover: { cursor: 'not-allowed' },
+      backgroundColor: 'gray.400',
+    }}
     isDisabled={!isEnabled}
   >
     {type === PAGE_CHANGE_BUTTON_TYPE.PREVIOUS ? (

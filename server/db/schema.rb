@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_08_061904) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_12_183836) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,7 +33,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_08_061904) do
     t.datetime "updated_at", null: false
     t.string "connector_name"
     t.string "description"
-    t.integer "query_type", default: 0
   end
 
   create_table "models", force: :cascade do |t|
@@ -109,6 +108,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_08_061904) do
     t.string "stream_name"
     t.string "workflow_id"
     t.datetime "discarded_at"
+    t.string "cursor_field"
+    t.string "current_cursor_field"
     t.index ["discarded_at"], name: "index_syncs_on_discarded_at"
   end
 

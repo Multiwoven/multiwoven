@@ -93,6 +93,7 @@ module Api
                                       :sync_mode,
                                       :sync_interval_unit,
                                       :stream_name,
+                                      :cursor_field,
                                       configuration: %i[from
                                                         to
                                                         mapping_type
@@ -104,7 +105,7 @@ module Api
         if params.to_unsafe_h[:sync][:configuration].is_a?(Hash)
           strong_params.merge!(configuration: params.to_unsafe_h[:sync][:configuration])
         end
-
+        strong_params.delete(:cursor_field) if action_name == "update"
         strong_params
       end
     end

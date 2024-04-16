@@ -124,6 +124,7 @@ const TemplateMapping = ({
           _placeholder={{ color: isDisabled ? 'black.500' : 'gray.600' }}
           value={selectedConfig}
           onClick={() => setIsPopOverOpen((prevState) => !prevState)}
+          autoComplete='off'
         />
       </PopoverTrigger>
       <PopoverContent>
