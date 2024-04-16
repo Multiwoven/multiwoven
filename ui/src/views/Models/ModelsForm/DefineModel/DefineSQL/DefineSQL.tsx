@@ -19,6 +19,7 @@ import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormF
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
+import { autocompleteEntries } from './autocomplete';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -32,6 +33,10 @@ const DefineSQL = ({
   const [moveForward, canMoveForward] = useState(false);
   const [runQuery, canRunQuery] = useState(prefillValues ? true : false);
   const [userQuery, setUserQuery] = useState(prefillValues?.query || '');
+
+  const showToast = useCustomToast();
+  const navigate = useNavigate();
+  const editorRef = useRef(null);
 
   let connector_id: string = '';
   let connector_icon: JSX.Element = <></>;
@@ -48,26 +53,28 @@ const DefineSQL = ({
     connector_icon = prefillValues.connector_icon;
   }
 
-  const showToast = useCustomToast();
-  const navigate = useNavigate();
-  const editorRef = useRef(null);
-
   function handleEditorDidMount(editor: any, monaco: any) {
     editorRef.current = editor;
+
+    const entries = autocompleteEntries;
+
+    const entryKindMap = {
+      Keyword: monaco.languages.CompletionItemKind.Keyword,
+      Snippet: monaco.languages.CompletionItemKind.Snippet,
+      Function: monaco.languages.CompletionItemKind.Function,
+      Class: monaco.languages.CompletionItemKind.Class,
+    };
 
     monaco.languages.registerCompletionItemProvider('mysql', {
       provideCompletionItems: () => {
         return {
-          suggestions: [
-            // Define your SQL autocomplete suggestions here
-            {
-              label: 'SELECT',
-              kind: monaco.languages.CompletionItemKind.Text,
-              insertText: 'SELECT',
-              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-              documentation: 'The SELECT statement is used to select data from a database.',
-            },
-          ],
+          suggestions: entries.map((entry) => ({
+            label: entry.label,
+            kind: entryKindMap[entry.kind],
+            insertText: entry.insertText,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: entry.documentation,
+          })),
         };
       },
     });
