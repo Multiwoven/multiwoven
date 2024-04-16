@@ -45,6 +45,14 @@ const SelectStreams = ({
     refetchOnWindowFocus: false,
   });
 
+  const { data: modelDiscoverData } = useQuery({
+    queryKey: ['syncs', 'catalog', model.id],
+    queryFn: () => getCatalog(model.id),
+    enabled: !!model.id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
   const { data: previewModelData } = useQuery({
     queryKey: ['syncs', 'preview-model', model?.connector?.id],
     queryFn: () => getModelPreviewById(model?.query, String(model?.connector?.id)),
