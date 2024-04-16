@@ -1,0 +1,57 @@
+{
+  "request_rate_limit": 200,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "Customer",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "is_spammer": {
+            "type": "boolean"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "group_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "handles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": ["email", 
+                  "phone", "twitter", "facebook", "intercom", "front_chat", "custom"]
+                },
+                "handle": {
+                  "type": "string"
+                }
+              },
+              "required": ["source", "handle"]
+            },
+            "minItems": 1
+          }
+        },
+        "required": ["handles"]
+      },
+      "supported_sync_modes": ["incremental"]
+    }
+  ]
+}
