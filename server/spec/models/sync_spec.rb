@@ -59,11 +59,13 @@ RSpec.describe Sync, type: :model do
                        })
     end
 
-    let(:sync) { create(:sync, destination:) }
+    let(:sync) { create(:sync, destination:, cursor_field: "cursor_field", current_cursor_field: "2024-01-20") }
 
     it "returns sync config protocol" do
       protocol = sync.to_protocol
       expect(protocol).to be_a(Multiwoven::Integrations::Protocol::SyncConfig)
+      expect(protocol.cursor_field).to eq("cursor_field")
+      expect(protocol.current_cursor_field).to eq("2024-01-20")
     end
   end
 

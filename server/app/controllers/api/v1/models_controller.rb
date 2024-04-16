@@ -72,8 +72,11 @@ module Api
       end
 
       def validate_query
+        query = params.dig(:model, :query)
+        return if query.blank?
+
         query_type = @model.present? ? @model.connector.connector_query_type : @connector.connector_query_type
-        Utils::QueryValidator.validate_query(query_type, params.dig(:model, :query))
+        Utils::QueryValidator.validate_query(query_type, query)
       rescue StandardError => e
         render_error(
           message: "Query validation failed: #{e.message}",

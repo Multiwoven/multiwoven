@@ -13,6 +13,8 @@
 #  source_catalog_id :integer
 #  schedule_type     :string
 #  status            :integer
+#  cursor_field      :string
+#  current_cursor_field :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
@@ -82,7 +84,9 @@ class Sync < ApplicationRecord
         catalog.find_stream_by_name(stream_name)
       ),
       sync_mode: Multiwoven::Integrations::Protocol::SyncMode[sync_mode],
-      destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"]
+      destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"],
+      cursor_field:,
+      current_cursor_field:
     )
   end
 
