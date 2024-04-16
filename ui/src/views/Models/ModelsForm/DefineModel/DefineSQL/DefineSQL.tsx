@@ -3,8 +3,8 @@ import { Box, Button, Flex, HStack, Image, Spacer, Text, VStack } from '@chakra-
 import StarsImage from '@/assets/images/stars.svg';
 import EmptyQueryPreviewImage from '@/assets/images/EmptyQueryPreview.png';
 
-import Editor from '@monaco-editor/react';
-import { useContext, useRef, useState } from 'react';
+import Editor, { useMonaco } from '@monaco-editor/react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Field, getModelPreviewById, putModelById } from '@/services/models';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
@@ -36,7 +36,8 @@ const DefineSQL = ({
 
   const showToast = useCustomToast();
   const navigate = useNavigate();
-  const editorRef = useRef(null);
+  const editorRef = useRef<any>(null);
+  const monaco = useMonaco();
 
   let connector_id: string = '';
   let connector_icon: JSX.Element = <></>;
@@ -53,31 +54,8 @@ const DefineSQL = ({
     connector_icon = prefillValues.connector_icon;
   }
 
-  function handleEditorDidMount(editor: any, monaco: any) {
+  function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
-
-    const entries = autocompleteEntries;
-
-    const entryKindMap = {
-      Keyword: monaco.languages.CompletionItemKind.Keyword,
-      Snippet: monaco.languages.CompletionItemKind.Snippet,
-      Function: monaco.languages.CompletionItemKind.Function,
-      Class: monaco.languages.CompletionItemKind.Class,
-    };
-
-    monaco.languages.registerCompletionItemProvider('mysql', {
-      provideCompletionItems: () => {
-        return {
-          suggestions: entries.map((entry) => ({
-            label: entry.label,
-            kind: entryKindMap[entry.kind],
-            insertText: entry.insertText,
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-            documentation: entry.documentation,
-          })),
-        };
-      },
-    });
   }
 
   function handleContinueClick(
@@ -144,6 +122,44 @@ const DefineSQL = ({
       navigate('/define/models/' + prefillValues?.model_id || '');
     }
   }
+
+  useEffect(() => {
+    if (monaco) {
+      const entryKindMap = {
+        Keyword: monaco.languages.CompletionItemKind.Keyword,
+        Snippet: monaco.languages.CompletionItemKind.Snippet,
+        Function: monaco.languages.CompletionItemKind.Function,
+        Class: monaco.languages.CompletionItemKind.Class,
+      };
+
+      const providerHandle = monaco.languages.registerCompletionItemProvider('mysql', {
+        provideCompletionItems: (model, position) => {
+          const word = model.getWordUntilPosition(position);
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn,
+          };
+
+          return {
+            suggestions: autocompleteEntries.map((entry) => ({
+              label: entry.label,
+              kind: entryKindMap[entry.kind],
+              insertText: entry.insertText,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: entry.documentation,
+              range: range,
+            })),
+          };
+        },
+      });
+
+      return () => {
+        providerHandle.dispose();
+      };
+    }
+  }, [monaco, autocompleteEntries]);
 
   return (
     <Box justifyContent='center' display='flex'>
