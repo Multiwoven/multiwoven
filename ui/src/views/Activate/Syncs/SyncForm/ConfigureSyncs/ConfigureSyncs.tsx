@@ -19,22 +19,27 @@ type ConfigureSyncsProps = {
   configuration: FieldMapType[] | null;
   schemaMode: SchemaMode | null;
   selectedSyncMode: string;
+  cursorField: string;
   setSelectedStream: Dispatch<SetStateAction<Stream | null>>;
   setConfiguration: Dispatch<SetStateAction<FieldMapType[] | null>>;
   setSchemaMode: Dispatch<SetStateAction<SchemaMode | null>>;
   setSelectedSyncMode: Dispatch<SetStateAction<string>>;
+  setCursorField: Dispatch<SetStateAction<string>>;
 };
 
 const ConfigureSyncs = ({
   selectedStream,
   configuration,
   selectedSyncMode,
+  cursorField,
   setSelectedStream,
   setConfiguration,
   setSchemaMode,
   setSelectedSyncMode,
+  setCursorField,
 }: ConfigureSyncsProps): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+
   const { forms } = state;
 
   const modelInfo = forms.find((form) => form.stepKey === 'selectModel');
@@ -60,6 +65,7 @@ const ConfigureSyncs = ({
       stream_name: selectedStream?.name,
       configuration,
       sync_mode: selectedSyncMode,
+      cursor_field: cursorField,
     };
 
     handleMoveForward(stepInfo?.formKey as string, payload);
@@ -92,6 +98,8 @@ const ConfigureSyncs = ({
             selectedStream={selectedStream}
             setSelectedSyncMode={setSelectedSyncMode}
             selectedSyncMode={selectedSyncMode}
+            selectedCursorField={cursorField}
+            setCursorField={setCursorField}
           />
           {catalogData?.data?.attributes?.catalog?.schema_mode === SchemaMode.schemaless ? (
             <MapCustomFields
