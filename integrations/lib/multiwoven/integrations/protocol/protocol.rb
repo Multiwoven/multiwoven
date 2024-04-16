@@ -115,7 +115,7 @@ module Multiwoven
       attribute? :supported_sync_modes, Types::Array.of(SyncMode).optional.default(["incremental"])
 
       # Applicable for database streams
-      attribute? :source_defined_cursor, Types::Bool.default(false).optional
+      attribute :source_defined_cursor, Types::Bool.default(false)
       attribute? :default_cursor_field, Types::Array.of(Types::String).optional
       attribute? :source_defined_primary_key, Types::Array.of(Types::Array.of(Types::String)).optional
       attribute? :namespace, Types::String.optional

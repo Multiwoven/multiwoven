@@ -45,6 +45,8 @@ RSpec.describe Multiwoven::Integrations::Source::SalesforceConsumerGoodsCloud::S
       expect(result[:json_schema]).to be_a(Hash)
       expect(result[:required]).to contain_exactly("Field1")
       expect(result[:supported_sync_modes]).to contain_exactly("incremental")
+      expect(result[:source_defined_cursor]).to eq(false)
+      expect(result[:default_cursor_field]).to eq(nil)
     end
   end
 end
