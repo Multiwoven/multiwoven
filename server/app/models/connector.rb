@@ -66,7 +66,8 @@ class Connector < ApplicationRecord
     Multiwoven::Integrations::Protocol::Connector.new(
       name: connector_name,
       type: connector_type,
-      connection_specification: configuration
+      connection_specification: configuration,
+      query_type: connector_query_type
     )
   end
 
@@ -83,7 +84,6 @@ class Connector < ApplicationRecord
                connector_type.to_s.camelize, connector_name.to_s.camelize
              ).new
     connector_spec = client.connector_spec
-
     connector_spec&.connector_query_type || "raw_sql"
   end
 end

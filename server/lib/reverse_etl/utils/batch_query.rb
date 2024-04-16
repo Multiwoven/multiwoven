@@ -14,9 +14,9 @@ module ReverseEtl
           params[:sync_config].limit = params[:batch_size]
           params[:sync_config].offset = current_offset
 
-          query_with_cursor = CursorQueryBuilder.update_model_query(initial_sync_config, last_cursor_field_value)
-          if initial_sync_config.model.query != query_with_cursor
-            params[:sync_config] = build_sync_config(params[:sync_config], query_with_cursor)
+          if initial_sync_config.cursor_field
+            query_with_cursor = CursorQueryBuilder.build_cursor_query(initial_sync_config, last_cursor_field_value)
+            params[:sync_config] = build_cursor_sync_config(params[:sync_config], query_with_cursor)
           end
 
           # Execute the batch query
@@ -42,7 +42,7 @@ module ReverseEtl
         last_record[sync_config.cursor_field]
       end
 
-      def self.build_sync_config(sync_config, new_query)
+      def self.build_cursor_sync_config(sync_config, new_query)
         new_model = build_new_model(sync_config.model, new_query)
 
         modified_sync_config = Multiwoven::Integrations::Protocol::SyncConfig.new(
