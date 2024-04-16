@@ -71,6 +71,7 @@ module Multiwoven
       attribute :name, Types::String
       attribute :type, ConnectorType
       attribute :connection_specification, Types::Hash
+      attribute :query_type, Types::String.default("raw_sql").enum(*ConnectorQueryType.values)
     end
 
     class LogMessage < ProtocolModel
