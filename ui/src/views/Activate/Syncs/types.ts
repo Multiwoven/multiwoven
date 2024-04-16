@@ -29,6 +29,7 @@ export type DiscoverResponse = {
         catalog_hash: string;
         connector_id: number;
         workspace_id: number;
+        source_defined_cursor: boolean;
       };
     };
     id: string;
@@ -70,6 +71,7 @@ export interface SyncEntity extends ConfigSync {
   sync_mode: string;
   sync_interval: number;
   sync_interval_unit: string;
+  cursor_field?: string;
 }
 
 export type CreateSyncPayload = {
@@ -94,6 +96,7 @@ export type CreateSyncResponse = {
     sync_interval: number;
     sync_interval_unit: 'minutes';
     sync_mode: 'full_refresh';
+    cursor_field: string;
     source: {
       connector_name: string;
       icon: string;

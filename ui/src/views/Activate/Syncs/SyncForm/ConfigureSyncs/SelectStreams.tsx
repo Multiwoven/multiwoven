@@ -1,10 +1,12 @@
-import { Box, Text, Select } from '@chakra-ui/react';
+import { Box, Text, Select, Tooltip } from '@chakra-ui/react';
 import { DiscoverResponse, Stream } from '@/views/Activate/Syncs/types';
 import { ModelEntity } from '@/views/Models/types';
 import { useQuery } from '@tanstack/react-query';
 import { getCatalog } from '@/services/syncs';
 import { ConnectorItem } from '@/views/Connectors/types';
+import { getModelPreviewById } from '@/services/models';
 import { useEffect, SetStateAction, Dispatch } from 'react';
+import { FiInfo } from 'react-icons/fi';
 
 type SelectStreamsProps = {
   model: ModelEntity;
@@ -17,9 +19,12 @@ type SelectStreamsProps = {
   onStreamsLoad?: (catalog: DiscoverResponse) => void;
   selectedStream?: Stream | null;
   setSelectedSyncMode?: Dispatch<SetStateAction<string>>;
+  setCursorField?: Dispatch<SetStateAction<string>>;
+  selectedCursorField?: string;
 };
 
 const SelectStreams = ({
+  model,
   destination,
   selectedSyncMode,
   selectedStreamName,
@@ -29,6 +34,8 @@ const SelectStreams = ({
   onStreamsLoad,
   selectedStream,
   setSelectedSyncMode,
+  selectedCursorField,
+  setCursorField,
 }: SelectStreamsProps): JSX.Element | null => {
   const { data: catalogData } = useQuery({
     queryKey: ['syncs', 'catalog', destination.id],
@@ -37,6 +44,26 @@ const SelectStreams = ({
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+
+  const { data: modelDiscoverData } = useQuery({
+    queryKey: ['syncs', 'catalog', model.id],
+    queryFn: () => getCatalog(model.id),
+    enabled: !!model.id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: previewModelData } = useQuery({
+    queryKey: ['syncs', 'preview-model', model?.connector?.id],
+    queryFn: () => getModelPreviewById(model?.query, String(model?.connector?.id)),
+    enabled: !!model?.connector?.id,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const firstRow = Array.isArray(previewModelData) && previewModelData[0];
+
+  const modelColumns = Object.keys(firstRow ?? {});
 
   useEffect(() => {
     if (catalogData) {
@@ -73,6 +100,8 @@ const SelectStreams = ({
         })
       : [];
 
+  const sourceDefinedCursor = modelDiscoverData?.data?.attributes?.catalog?.source_defined_cursor;
+
   return (
     <Box
       backgroundColor={isEdit ? 'gray.100' : 'gray.200'}
@@ -83,7 +112,7 @@ const SelectStreams = ({
       <Text fontWeight='600' mb={6} color='black.500' size='md'>
         Configure sync to {destination.attributes.connector_name}.
       </Text>
-      <Box display='flex' alignItems='flex-end' gap='12px'>
+      <Box display='flex' alignItems='flex-end' gap='36px'>
         <Box width='100%'>
           <Text fontWeight='semibold' size='sm'>
             Stream Name
@@ -112,7 +141,6 @@ const SelectStreams = ({
             ))}
           </Select>
         </Box>
-        <Box width='80px' padding='20px' position='relative' top='8px' color='gray.600'></Box>
         <Box width='100%'>
           <Text fontWeight='semibold' size='sm'>
             Sync Mode
@@ -139,6 +167,53 @@ const SelectStreams = ({
             ))}
           </Select>
         </Box>
+        {!sourceDefinedCursor && selectedSyncMode === 'incremental' && (
+          <Box width='100%'>
+            <Box display='flex' alignItems='center'>
+              <Text fontWeight='semibold' size='sm'>
+                Cursor Field
+              </Text>
+              <Tooltip
+                hasArrow
+                label='Cursor-based incremental refresh is utilized by sources to track new or updated records since the last sync, using the cursor field.'
+                fontSize='xs'
+                placement='top'
+                backgroundColor='black.500'
+                color='gray.100'
+                borderRadius='6px'
+                padding='8px'
+                width='auto'
+                marginLeft='8px'
+              >
+                <Text color='gray.600' marginLeft='8px'>
+                  <FiInfo />
+                </Text>
+              </Tooltip>
+            </Box>
+            <Text size='xs' marginBottom='12px' color='black.200'>
+              Select cursor field. Ignore if you are unsure about which field to select
+            </Text>
+            <Select
+              placeholder={isEdit ? placeholder : 'Select cursor field'}
+              backgroundColor={'gray.100'}
+              maxWidth='500px'
+              onChange={({ target: { value } }) => setCursorField?.(value)}
+              value={selectedCursorField}
+              borderStyle='solid'
+              borderWidth='1px'
+              borderColor='gray.400'
+              fontSize='14px'
+              isRequired
+              disabled={isEdit}
+            >
+              {modelColumns?.map((modelColumn) => (
+                <option value={modelColumn} key={modelColumn}>
+                  {modelColumn}
+                </option>
+              ))}
+            </Select>
+          </Box>
+        )}
       </Box>
     </Box>
   );

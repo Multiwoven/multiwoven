@@ -16,6 +16,7 @@ const SyncForm = (): JSX.Element => {
   const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
   const [schemaMode, setSchemaMode] = useState<SchemaMode | null>(null);
   const [selectedSyncMode, setSelectedSyncMode] = useState('');
+  const [cursorField, setCursorField] = useState('');
 
   const navigate = useNavigate();
   const steps = [
@@ -44,11 +45,13 @@ const SyncForm = (): JSX.Element => {
           selectedStream={selectedStream}
           configuration={configuration}
           schemaMode={schemaMode}
+          cursorField={cursorField}
           selectedSyncMode={selectedSyncMode}
           setSelectedStream={setSelectedStream}
           setConfiguration={setConfiguration}
           setSchemaMode={setSchemaMode}
           setSelectedSyncMode={setSelectedSyncMode}
+          setCursorField={setCursorField}
         />
       ),
       isRequireContinueCta: false,
