@@ -63,9 +63,9 @@ const ConfigureSyncs = ({
   };
 
   const { data: catalogData } = useQuery({
-    queryKey: ['syncs', 'catalog', selectedDestination.id],
-    queryFn: () => getCatalog(selectedDestination.id),
-    enabled: !!selectedDestination.id,
+    queryKey: ['syncs', 'catalog', selectedDestination?.id],
+    queryFn: () => getCatalog(selectedDestination?.id),
+    enabled: !!selectedDestination?.id,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

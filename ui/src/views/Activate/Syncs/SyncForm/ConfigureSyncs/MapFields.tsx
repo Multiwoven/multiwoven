@@ -174,16 +174,20 @@ const MapFields = ({
             isDisabled={!stream || isRequired}
             selectedConfigOptions={configuration}
           />
-          {!isRequired && (
-            <Box py='20px' position='relative' top='12px' color='gray.600'>
-              <CloseButton
-                size='sm'
-                marginLeft='10px'
-                _hover={{ backgroundColor: 'none' }}
-                onClick={() => handleRemoveMap(index)}
-              />
-            </Box>
-          )}
+          <Box
+            py='20px'
+            position='relative'
+            top='12px'
+            color='gray.600'
+            visibility={isRequired ? 'hidden' : 'visible'}
+          >
+            <CloseButton
+              size='sm'
+              marginLeft='10px'
+              _hover={{ backgroundColor: 'none' }}
+              onClick={() => handleRemoveMap(index)}
+            />
+          </Box>
         </Box>
       ))}
       <Box>
