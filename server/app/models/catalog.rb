@@ -52,7 +52,7 @@ class Catalog < ApplicationRecord
   end
 
   def default_cursor_field(stream_name)
-    stream = catalog["streams"].find { |s| s["name"] == stream_name }
-    stream["default_cursor_field"] if stream && catalog["source_defined_cursor"]
+    current_stream = catalog["streams"].find { |stream| stream["name"] == stream_name }
+    current_stream["default_cursor_field"] if current_stream && catalog["source_defined_cursor"]
   end
 end
