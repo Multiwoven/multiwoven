@@ -24,6 +24,7 @@ module SyncContracts
         required(:sync_interval_unit).filled(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
+        optional(:cursor_field).maybe(:string)
 
         # update filled with validating array of hashes
         required(:configuration).filled

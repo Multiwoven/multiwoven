@@ -100,5 +100,31 @@ RSpec.describe Catalog, type: :model do
         end
       end
     end
+
+    describe "#default_cursor_field" do
+      let(:catalog) do
+        {
+          "streams" => [
+            { "name" => "stream1", "default_cursor_field" => "timestamp" },
+            { "name" => "stream2", "default_cursor_field" => "created_at" }
+          ],
+          "source_defined_cursor" => true
+        }
+      end
+
+      let(:workspace) { create(:workspace) }
+      let(:connector) { create(:connector) }
+      let(:catalog_instance) { create(:catalog, workspace:, connector:, catalog:) }
+
+      it "returns the default cursor field for the specified stream" do
+        stream_name = "stream1"
+        expect(catalog_instance.default_cursor_field(stream_name)).to eq("timestamp")
+      end
+
+      it "returns nil if the stream doesn't exist or if source_defined_cursor is false" do
+        stream_name = "stream3"
+        expect(catalog_instance.default_cursor_field(stream_name)).to be_nil
+      end
+    end
   end
 end

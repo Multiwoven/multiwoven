@@ -33,6 +33,18 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     let!(:sync_record_batch2) { create(:sync_record, sync: sync_batch, sync_run: sync_run_batch, primary_key: "key2") }
     let!(:sync_record_individual) { create(:sync_record, sync: sync_individual, sync_run: sync_run_individual) }
     let(:activity) { instance_double("LoaderActivity") }
+    let(:connector_spec) do
+      Multiwoven::Integrations::Protocol::ConnectorSpecification.new(
+        connector_query_type: "raw_sql",
+        stream_type: "dynamic",
+        connection_specification: {
+          :$schema => "http://json-schema.org/draft-07/schema#",
+          :title => "Snowflake",
+          :type => "object",
+          :stream => {}
+        }
+      )
+    end
 
     before do
       allow(activity).to receive(:heartbeat)
@@ -49,6 +61,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_batch.destination.connector_client) }
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
@@ -76,6 +91,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_batch.destination.connector_client) }
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
@@ -100,6 +118,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_individual.destination.connector_client) }
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "calls process_individual_records method" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
@@ -123,9 +144,12 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_individual.destination.connector_client) }
-
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "calls process_individual_records method" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
         expect(subject).to receive(:heartbeat).once.with(activity)
         expect(sync_run_individual).to have_state(:queued)
@@ -155,7 +179,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_individual.destination.connector_client) }
-
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "sync run started to in_progress" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
@@ -178,6 +204,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
       let(:multiwoven_message) { control.to_multiwoven_message }
       let(:client) { instance_double(sync_individual.destination.connector_client) }
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
 
       it "sync run started to in_progress" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
@@ -207,6 +236,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
       let(:multiwoven_message) { control.to_multiwoven_message }
       let(:client) { instance_double(sync_batch.destination.connector_client) }
+      before do
+        allow(client).to receive(:connector_spec).and_return(connector_spec)
+      end
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)

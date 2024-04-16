@@ -46,7 +46,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   before do
     sync.model.update(primary_key: "id")
     allow(client).to receive(:read).and_return(records)
-    allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1)
+    allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1, nil)
     allow(sync_run1.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
     allow(activity).to receive(:heartbeat)
     allow(activity).to receive(:cancel_requested).and_return(false)
@@ -83,7 +83,8 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
           emitted_at: DateTime.now.to_i
         ).to_multiwoven_message
 
-        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2], 1)
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2], 1,
+                                                                                       "2022-01-01")
 
         # Second sync run
         expect(sync_run2).to have_state(:started)
@@ -91,6 +92,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         subject.read(sync_run2.id, activity)
         sync_run2.reload
         expect(sync_run2).to have_state(:queued)
+        expect(sync_run2.sync.current_cursor_field).to eql("2022-01-01")
 
         updated_sync_record = sync_run2.sync_records.find_by(primary_key: record1.record.data["id"])
         expect(sync_run2.sync_records.count).to eq(1)
@@ -98,7 +100,8 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         expect(updated_sync_record.action).to eq("destination_update")
         expect(updated_sync_record.record).to eq(modified_record1.record.data)
 
-        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([record2, record3], 1)
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([record2, record3], 1,
+                                                                                       "2022-01-02")
 
         # Third sync run with same record
         expect(sync_run3).to have_state(:started)
@@ -107,6 +110,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         sync_run3.reload
         expect(sync_run3).to have_state(:queued)
         expect(sync_run3.sync_records.count).to eq(0)
+        expect(sync_run3.sync.current_cursor_field).to eql("2022-01-02")
       end
     end
 
