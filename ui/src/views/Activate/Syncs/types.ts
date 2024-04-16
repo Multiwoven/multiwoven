@@ -71,7 +71,7 @@ export interface SyncEntity extends ConfigSync {
   sync_mode: string;
   sync_interval: number;
   sync_interval_unit: string;
-  cursor_field: string;
+  cursor_field?: string;
 }
 
 export type CreateSyncPayload = {
