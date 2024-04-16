@@ -2,7 +2,7 @@ import ContentContainer from '@/components/ContentContainer';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { ModelEntity } from '@/views/Models/types';
 import { Box } from '@chakra-ui/react';
-import { FormEvent, useContext, Dispatch, SetStateAction, useState } from 'react';
+import { FormEvent, useContext, Dispatch, SetStateAction } from 'react';
 import SelectStreams from './SelectStreams';
 import { Stream, FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapFields from './MapFields';
@@ -19,23 +19,26 @@ type ConfigureSyncsProps = {
   configuration: FieldMapType[] | null;
   schemaMode: SchemaMode | null;
   selectedSyncMode: string;
+  cursorField: string;
   setSelectedStream: Dispatch<SetStateAction<Stream | null>>;
   setConfiguration: Dispatch<SetStateAction<FieldMapType[] | null>>;
   setSchemaMode: Dispatch<SetStateAction<SchemaMode | null>>;
   setSelectedSyncMode: Dispatch<SetStateAction<string>>;
+  setCursorField: Dispatch<SetStateAction<string>>;
 };
 
 const ConfigureSyncs = ({
   selectedStream,
   configuration,
   selectedSyncMode,
+  cursorField,
   setSelectedStream,
   setConfiguration,
   setSchemaMode,
   setSelectedSyncMode,
+  setCursorField,
 }: ConfigureSyncsProps): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
-  const [cursorField, setCursorField] = useState('');
 
   const { forms } = state;
 

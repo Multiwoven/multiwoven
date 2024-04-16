@@ -29,6 +29,7 @@ const EditSync = (): JSX.Element | null => {
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
   const [selectedSyncMode, setSelectedSyncMode] = useState('');
+  const [cursorField, setCursorField] = useState('');
 
   const { syncId } = useParams();
   const showToast = useCustomToast();
@@ -92,6 +93,7 @@ const EditSync = (): JSX.Element | null => {
               sync_interval: data.sync_interval,
               sync_interval_unit: data.sync_interval_unit,
               sync_mode: selectedSyncMode,
+              cursor_field: cursorField,
             },
           };
 
@@ -163,6 +165,7 @@ const EditSync = (): JSX.Element | null => {
         setConfiguration(transformedConfigs);
       }
       setSelectedSyncMode(syncData?.sync_mode ?? 'full_refresh');
+      setCursorField(syncData?.cursor_field || '');
     }
   }, [syncFetchResponse]);
 
@@ -193,6 +196,8 @@ const EditSync = (): JSX.Element | null => {
                 setSelectedSyncMode={setSelectedSyncMode}
                 selectedSyncMode={selectedSyncMode}
                 selectedStreamName={syncData?.stream_name}
+                selectedCursorField={cursorField}
+                setCursorField={setCursorField}
               />
               {catalogData?.data.attributes.catalog.schema_mode === SchemaMode.schemaless ? (
                 <MapCustomFields

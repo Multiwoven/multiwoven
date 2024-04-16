@@ -100,8 +100,7 @@ const SelectStreams = ({
         })
       : [];
 
-  const sourceDefinedCursor =
-    selectedStreamIndex !== -1 ? streams?.[selectedStreamIndex]?.source_defined_cursor : false;
+  const sourceDefinedCursor = modelDiscoverData?.data?.attributes?.catalog?.source_defined_cursor;
 
   return (
     <Box
@@ -205,7 +204,7 @@ const SelectStreams = ({
               borderColor='gray.400'
               fontSize='14px'
               isRequired
-              disabled={!selectedStream}
+              disabled={isEdit}
             >
               {modelColumns?.map((modelColumn) => (
                 <option value={modelColumn} key={modelColumn}>
