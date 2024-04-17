@@ -65,7 +65,7 @@ module ReverseEtl
         template = mapping[:from]
         Liquid::Template.register_filter(Liquid::CustomFilters)
         liquid_template = Liquid::Template.parse(template)
-        rendered_text = liquid_template.render(record)
+        rendered_text = liquid_template.render(record).gsub(/\n/, '')
         extract_destination_mapping(dest_keys, rendered_text)
       end
 
