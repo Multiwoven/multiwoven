@@ -22,8 +22,12 @@ module ReverseEtl
           # Execute the batch query
           result = params[:client].read(params[:sync_config])
           # Extract the value of the cursor_field column from the last record
-          last_cursor_field_value = extract_last_cursor_field_value(result, params[:sync_config])
-
+          current_cursor_field_value = extract_last_cursor_field_value(result, params[:sync_config])
+          if current_cursor_field_value && current_cursor_field_value == last_cursor_field_value
+            result = []
+          else
+            last_cursor_field_value = current_cursor_field_value
+          end
           # Increment the offset by the batch size for the next iteration
           current_offset += params[:batch_size]
 

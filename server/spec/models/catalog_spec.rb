@@ -102,28 +102,69 @@ RSpec.describe Catalog, type: :model do
     end
 
     describe "#default_cursor_field" do
-      let(:catalog) do
-        {
-          "streams" => [
-            { "name" => "stream1", "default_cursor_field" => "timestamp" },
-            { "name" => "stream2", "default_cursor_field" => "created_at" }
-          ],
-          "source_defined_cursor" => true
-        }
+      context "when source_defined_cursor is true and the default_cursor_field exists" do
+        let(:catalog) do
+          {
+            "streams" => [
+              { "name" => "stream1" },
+              { "name" => "stream2" }
+            ],
+            "source_defined_cursor" => true,
+            "default_cursor_field" => "timestamp"
+          }
+        end
+
+        let(:workspace) { create(:workspace) }
+        let(:connector) { create(:connector) }
+        let(:catalog_instance) { create(:catalog, workspace:, connector:, catalog:) }
+
+        it "returns the default cursor field" do
+          expect(catalog_instance.default_cursor_field).to eq("timestamp")
+        end
       end
 
-      let(:workspace) { create(:workspace) }
-      let(:connector) { create(:connector) }
-      let(:catalog_instance) { create(:catalog, workspace:, connector:, catalog:) }
+      context "when source_defined_cursor is not defined" do
+        let(:catalog_user_defined) do
+          {
+            "streams" => [
+              { "name" => "stream1" },
+              { "name" => "stream2" }
+            ]
+          }
+        end
 
-      it "returns the default cursor field for the specified stream" do
-        stream_name = "stream1"
-        expect(catalog_instance.default_cursor_field(stream_name)).to eq("timestamp")
+        let(:workspace) { create(:workspace) }
+        let(:connector) { create(:connector) }
+        let(:catalog_instance_user_defined) do
+          create(:catalog, workspace:, connector:, catalog: catalog_user_defined)
+        end
+
+        it "returns nil" do
+          expect(catalog_instance_user_defined.default_cursor_field).to be_nil
+        end
       end
 
-      it "returns nil if the stream doesn't exist or if source_defined_cursor is false" do
-        stream_name = "stream3"
-        expect(catalog_instance.default_cursor_field(stream_name)).to be_nil
+      context "when the source_defined_cursor is false" do
+        let(:catalog_stream_not_exist) do
+          {
+            "streams" => [
+              { "name" => "stream3" },
+              { "name" => "stream4" }
+            ],
+            "source_defined_cursor" => false,
+            "default_cursor_field" => "timestamp"
+          }
+        end
+
+        let(:workspace) { create(:workspace) }
+        let(:connector) { create(:connector) }
+        let(:catalog_instance_stream_not_exist) do
+          create(:catalog, workspace:, connector:, catalog: catalog_stream_not_exist)
+        end
+
+        it "returns nil" do
+          expect(catalog_instance_stream_not_exist.default_cursor_field).to be_nil
+        end
       end
     end
   end
