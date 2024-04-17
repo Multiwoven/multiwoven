@@ -314,4 +314,23 @@ RSpec.describe Sync, type: :model do
               hash_including(options: hash_including(workflow_id: a_string_starting_with("terminate-"))))
     end
   end
+
+  describe "validations" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+
+    it "validates that sync_interval is greater than 0" do
+      sync.sync_interval = 0
+      expect(sync).not_to be_valid
+      expect(sync.errors[:sync_interval]).to include("must be greater than 0")
+
+      sync.sync_interval = -1
+      expect(sync).not_to be_valid
+      expect(sync.errors[:sync_interval]).to include("must be greater than 0")
+    end
+  end
 end
