@@ -58,8 +58,14 @@ module ReverseEtl
                                                                           "timestamp" => "2022-01-01" },
                                                                   emitted_at: DateTime.now.to_i).to_multiwoven_message
           end
+          let(:record1) do
+            Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
+                                                                          "first_name" => "John", "Last Name" => "Doe",
+                                                                          "timestamp" => "2022-01-02" },
+                                                                  emitted_at: DateTime.now.to_i).to_multiwoven_message
+          end
 
-          it "executes batches and call CursorQueryBuilder" do
+          it "executes batches and call CursorQueryBuilder results empty" do
             params = {
               offset: 0,
               limit: 100,
@@ -70,12 +76,34 @@ module ReverseEtl
             allow(client).to receive(:read).and_return(*Array.new(1, [record]), [])
             expect(CursorQueryBuilder).to receive(:build_cursor_query).with(sync.to_protocol,
                                                                             "2022-01-01")
-                                                                      .and_call_original.twice
+                                                                      .and_call_original.once
+            results = []
+            BatchQuery.execute_in_batches(params) do |result, _current_offset, _last_cursor_field_value|
+              results << result
+            end
+            expect(results).to eq([])
+          end
+
+          it "executes batches and call CursorQueryBuilder" do
+            params = {
+              offset: 0,
+              limit: 100,
+              batch_size: 100,
+              sync_config: sync.to_protocol,
+              client:
+            }
+            allow(client).to receive(:read).and_return(*Array.new(1, [record1]), [])
+            expect(CursorQueryBuilder).to receive(:build_cursor_query).with(sync.to_protocol,
+                                                                            "2022-01-01")
+                                                                      .and_call_original.once
+            expect(CursorQueryBuilder).to receive(:build_cursor_query).with(sync.to_protocol,
+                                                                            "2022-01-02")
+                                                                      .and_call_original.once
             results = []
             BatchQuery.execute_in_batches(params) do |result, current_offset, last_cursor_field_value|
               expect(result.first).to be_an_instance_of(Multiwoven::Integrations::Protocol::MultiwovenMessage)
               expect(current_offset).to eq(100)
-              expect(last_cursor_field_value).to eq("2022-01-01")
+              expect(last_cursor_field_value).to eq("2022-01-02")
               results << result
             end
           end

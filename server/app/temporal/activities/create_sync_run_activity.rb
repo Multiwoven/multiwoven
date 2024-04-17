@@ -2,6 +2,11 @@
 
 module Activities
   class CreateSyncRunActivity < Temporal::Activity
+    retry_policy(
+      interval: 1,
+      backoff: 1,
+      max_attempts: 3
+    )
     def execute(sync_id)
       sync = Sync.find(sync_id)
       sync_run = SyncRun.find_or_initialize_by(sync_id:, status: :pending) do |run|
