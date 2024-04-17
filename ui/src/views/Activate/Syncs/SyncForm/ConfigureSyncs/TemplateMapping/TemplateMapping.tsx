@@ -96,12 +96,7 @@ const TemplateMapping = ({
       );
       setIsPopOverOpen(false);
     } else {
-      handleUpdateConfig(
-        mappingId,
-        fieldType,
-        selectedStaticOptionValue > '' ? selectedStaticOptionValue.toString() : 'null',
-        activeTab,
-      );
+      handleUpdateConfig(mappingId, fieldType, selectedStaticOptionValue.toString(), activeTab);
     }
     setIsPopOverOpen(false);
   };
@@ -209,7 +204,12 @@ const TemplateMapping = ({
           </Stack>
           {(activeTab === OPTION_TYPE.STATIC || activeTab === OPTION_TYPE.TEMPLATE) && (
             <Box display='flex' width='100%' justifyContent='flex-end'>
-              <Button onClick={applyConfigs} minWidth={0} width='auto'>
+              <Button
+                onClick={applyConfigs}
+                minWidth={0}
+                width='auto'
+                isDisabled={!(selectedStaticOptionValue > '')}
+              >
                 Apply
               </Button>
             </Box>
