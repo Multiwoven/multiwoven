@@ -2,6 +2,12 @@
 
 module Activities
   class ScheduleSyncActivity < Temporal::Activity
+    retry_policy(
+      interval: 1,
+      backoff: 1,
+      max_attempts: 3
+    )
+
     def execute(sync_id)
       sync = Sync.find_by(id: sync_id)
 
