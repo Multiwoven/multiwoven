@@ -109,23 +109,31 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
           { mapping_type: "template", to: "attributes.properties.cast_filter",
             from: "Transformed {{cr_reason_sk  | cast: 'number' }}" },
           { mapping_type: "template", to: "attributes.properties.regex_replace_field",
-            from: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" }
+            from: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" },
+          { mapping_type: "template", to: "attributes.properties.condition_output",
+            from: "{% if cr_reason_sk == '40' %}\nZA\n{% else %}\nPR\n{% endif %}" }
         ]
       end
-
+    
       it "transforms record according to v2 mappings" do
         results = extractor.transform(sync, sync_record)
         expected_result = {
           "attributes" => {
             "properties" => {
               "cast_filter" => "Transformed 40.0",
-              "regex_replace_field" => "Transformed Numbers"
+              "regex_replace_field" => "Transformed Numbers",
+              "condition_output" => "ZA" 
             }
           }
         }
-
+    
         expect(results).to eq(expected_result)
       end
-    end
+    
+      it "does not include newline characters in condition_output" do
+        results = extractor.transform(sync, sync_record)
+        expect(results["attributes"]["properties"]["condition_output"]).to eq("ZA")  # Expecting 'PR' without newline characters
+      end
+    end    
   end
 end
