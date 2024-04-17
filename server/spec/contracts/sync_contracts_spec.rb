@@ -65,6 +65,50 @@ RSpec.describe "SyncContracts" do
         expect(result.errors[:sync][:sync_mode]).to include("invalid sync mode")
       end
     end
+
+    context "with non-positive sync_interval" do
+      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(sync_interval: 0) } }
+
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:sync_interval]).to include("must be greater than 0")
+      end
+    end
+  end
+
+  describe SyncContracts::Update do
+    subject(:contract) { described_class.new }
+
+    let(:valid_inputs) do
+      {
+        id: 1,
+        sync: {
+          source_id: 1,
+          model_id: 2,
+          destination_id: 3,
+          schedule_type: "automated",
+          sync_interval: 15,
+          sync_interval_unit: "hours",
+          sync_mode: "incremental",
+          stream_name: "updated_stream"
+        }
+      }
+    end
+
+    context "with valid inputs" do
+      it "passes validation" do
+        expect(contract.call(valid_inputs)).to be_success
+      end
+    end
+
+    context "with non-positive sync_interval" do
+      let(:invalid_inputs) { { id: 1, sync: valid_inputs[:sync].merge(sync_interval: -1) } }
+
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:sync_interval]).to include("must be greater than 0")
+      end
+    end
   end
 
   describe SyncContracts::Destroy do
