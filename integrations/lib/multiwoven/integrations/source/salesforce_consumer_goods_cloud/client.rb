@@ -41,7 +41,7 @@ module Multiwoven
             connection_config = sync_config.source.connection_specification.with_indifferent_access
             initialize_client(connection_config)
             query = sync_config.model.query
-            query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
+            query = "#{query} LIMIT #{sync_config.limit}" unless sync_config.limit.nil?
             queried_data = @client.query(query)
             results = queried_data.map do |record|
               flatten_nested_hash(record)
