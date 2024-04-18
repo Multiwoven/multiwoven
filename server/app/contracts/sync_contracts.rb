@@ -42,6 +42,10 @@ module SyncContracts
     rule(sync: :sync_interval_unit) do
       key.failure("invalid connector type") unless Sync.sync_interval_units.keys.include?(value.downcase)
     end
+
+    rule("sync.sync_interval") do
+      key.failure("must be greater than 0") if value <= 0
+    end
   end
 
   class Update < Dry::Validation::Contract
@@ -72,6 +76,10 @@ module SyncContracts
 
     rule(sync: :sync_interval_unit) do
       key.failure("invalid connector type") if key? && !Sync.sync_interval_units.keys.include?(value.downcase)
+    end
+
+    rule("sync.sync_interval") do
+      key.failure("must be greater than 0") if value <= 0
     end
   end
 
