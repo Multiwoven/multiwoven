@@ -86,6 +86,10 @@ const TemplateMapping = ({
     data?.data?.configurations?.catalog_mapping_types?.template?.filter || {},
   );
 
+  const templateVariableOptions = Object.keys(
+    data?.data?.configurations?.catalog_mapping_types?.template?.variable || {},
+  );
+
   const applyConfigs = () => {
     if (activeTab === OPTION_TYPE.TEMPLATE) {
       handleUpdateConfig(
@@ -195,6 +199,7 @@ const TemplateMapping = ({
                 <TemplateOptions
                   columnOptions={columnOptions}
                   filterOptions={templateFilterOptions}
+                  variableOptions={templateVariableOptions}
                   catalogMapping={data}
                   selectedTemplate={selectedTemplate}
                   setSelectedTemplate={setSelectedTemplate}
@@ -204,12 +209,7 @@ const TemplateMapping = ({
           </Stack>
           {(activeTab === OPTION_TYPE.STATIC || activeTab === OPTION_TYPE.TEMPLATE) && (
             <Box display='flex' width='100%' justifyContent='flex-end'>
-              <Button
-                onClick={applyConfigs}
-                minWidth={0}
-                width='auto'
-                isDisabled={!(selectedStaticOptionValue > '')}
-              >
+              <Button onClick={applyConfigs} minWidth={0} width='auto'>
                 Apply
               </Button>
             </Box>
