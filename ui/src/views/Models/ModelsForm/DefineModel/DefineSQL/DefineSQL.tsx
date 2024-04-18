@@ -76,7 +76,7 @@ const DefineSQL = ({
 
   async function getPreview() {
     setLoading(true);
-    const query = (editorRef?.current as any)?.getValue() as string;
+    const query = editorRef.current?.getValue() as string;
     const response = await getModelPreviewById(query, connector_id?.toString());
     if ('data' in response && response.data.errors) {
       response.data.errors.forEach((error: { title: string; detail: string }) => {
@@ -98,7 +98,7 @@ const DefineSQL = ({
   }
 
   async function handleModelUpdate() {
-    const query = (editorRef?.current as any)?.getValue() as string;
+    const query = editorRef.current?.getValue() as string;
     const updatePayload: UpdateModelPayload = {
       model: {
         name: prefillValues?.model_name || '',
@@ -303,7 +303,7 @@ const DefineSQL = ({
           isContinueCtaRequired
           isCtaDisabled={!moveForward}
           onCtaClick={() => {
-            handleContinueClick((editorRef?.current as any).getValue(), connector_id, tableData);
+            handleContinueClick(editorRef.current.getValue(), connector_id, tableData);
           }}
         />
       )}
