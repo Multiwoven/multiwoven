@@ -7,6 +7,7 @@ import '@testing-library/jest-dom';
 describe('TemplateOptions component', () => {
   const columnOptions = ['Column1', 'Column2', 'Column3'];
   const filterOptions = ['Filter1', 'Filter2', 'Filter3'];
+  const variableOptions = ['Variable1', 'Variable2'];
   const catalogMapping = {
     data: {
       configurations: {
@@ -18,7 +19,9 @@ describe('TemplateOptions component', () => {
               Column2: { description: 'Description 2' },
               Column3: { description: 'Description 3' },
             },
-            variable: {},
+            variable: {
+              Column1: { description: 'Description 1' },
+            },
           },
         },
       },
@@ -29,6 +32,7 @@ describe('TemplateOptions component', () => {
     const { getByText, getByPlaceholderText } = render(
       <TemplateOptions
         columnOptions={columnOptions}
+        variableOptions={variableOptions}
         filterOptions={filterOptions}
         selectedTemplate=''
         setSelectedTemplate={() => {}}
@@ -55,6 +59,7 @@ describe('TemplateOptions component', () => {
     const { getByText } = render(
       <TemplateOptions
         columnOptions={columnOptions}
+        variableOptions={variableOptions}
         filterOptions={filterOptions}
         selectedTemplate=''
         setSelectedTemplate={setSelectedTemplate}
