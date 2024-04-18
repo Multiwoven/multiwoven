@@ -20,7 +20,8 @@ describe('TemplateOptions component', () => {
               Column3: { description: 'Description 3' },
             },
             variable: {
-              Column1: { description: 'Description 1' },
+              Variable1: { description: 'Description 1' },
+              Variable2: { description: 'Description 2' },
             },
           },
         },
@@ -71,6 +72,6 @@ describe('TemplateOptions component', () => {
     fireEvent.click(getByText('Variable'));
 
     // Variable tab should be active
-    expect(getByText('Current Timestamp')).toBeInTheDocument();
+    expect(getByText('Variable1')).toBeInTheDocument();
   });
 });
