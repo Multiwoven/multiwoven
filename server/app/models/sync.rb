@@ -99,7 +99,6 @@ class Sync < ApplicationRecord
   end
 
   def schedule_cron_expression
-    byebug
     return cron_expression if cron_expression?
 
     case sync_interval_unit.downcase
