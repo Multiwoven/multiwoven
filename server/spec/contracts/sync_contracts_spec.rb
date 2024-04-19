@@ -107,9 +107,17 @@ RSpec.describe "SyncContracts" do
       let(:valid_inputs_cron) do
         { sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 0 */2 * *") }
       end
+      let(:invalid_cron) do
+        { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 *") }
+      end
       it "success validation" do
         result = contract.call(valid_inputs_cron)
         expect(result.errors.messages).to eq([])
+      end
+
+      it "invalid validation" do
+        result = contract.call(invalid_cron)
+        expect(result.errors[:sync][:cron_expression]).to include("invalid cron expression format")
       end
     end
   end
@@ -170,9 +178,17 @@ RSpec.describe "SyncContracts" do
       let(:valid_inputs_cron) do
         { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 0 */2 * *") }
       end
+      let(:invalid_cron) do
+        { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 invalid") }
+      end
       it "success validation" do
         result = contract.call(valid_inputs_cron)
         expect(result.errors.messages).to eq([])
+      end
+
+      it "invalid validation" do
+        result = contract.call(invalid_cron)
+        expect(result.errors[:sync][:cron_expression]).to include("invalid cron expression format")
       end
     end
   end
