@@ -12,6 +12,9 @@
 #  configuration     :jsonb
 #  source_catalog_id :integer
 #  schedule_type     :string
+#  sync_interval     :integer
+#  sync_interval_unit:string
+#  cron_expression   :string
 #  status            :integer
 #  cursor_field      :string
 #  current_cursor_field :string
@@ -28,13 +31,14 @@ class Sync < ApplicationRecord
   validates :model_id, presence: true
   validates :configuration, presence: true
   validates :schedule_type, presence: true
-  validates :sync_interval, presence: true, numericality: { greater_than: 0 }
-  validates :sync_interval_unit, presence: true
+  validates :sync_interval, presence: true, numericality: { greater_than: 0 }, if: :interval?
+  validates :sync_interval_unit, presence: true, if: :interval?
+  validates :cron_expression, presence: true, if: :cron_expression?
   validates :stream_name, presence: true
   validates :status, presence: true
   validate :stream_name_exists?
 
-  enum :schedule_type, %i[manual automated]
+  enum :schedule_type, %i[manual interval cron_expression]
   enum :status, %i[disabled healthy pending failed aborted]
   enum :sync_mode, %i[full_refresh incremental]
   enum :sync_interval_unit, %i[minutes hours days]
@@ -95,6 +99,8 @@ class Sync < ApplicationRecord
   end
 
   def schedule_cron_expression
+    return cron_expression if cron_expression?
+
     case sync_interval_unit.downcase
     when "minutes"
       # Every X minutes: */X * * * *
@@ -111,7 +117,8 @@ class Sync < ApplicationRecord
   end
 
   def schedule_sync?
-    new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit?
+    new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit ||
+      saved_change_to_cron_expression?
   end
 
   def schedule_sync

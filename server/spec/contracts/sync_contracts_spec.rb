@@ -37,7 +37,7 @@ RSpec.describe "SyncContracts" do
           status: "active",
           model_id: 2,
           destination_id: 3,
-          schedule_type: "manual",
+          schedule_type: "interval",
           sync_interval: 24,
           sync_interval_unit: "hours",
           sync_mode: "full_refresh",
@@ -66,12 +66,58 @@ RSpec.describe "SyncContracts" do
       end
     end
 
-    context "with non-positive sync_interval" do
-      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(sync_interval: 0) } }
+    context "with invalide schedule_type" do
+      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(schedule_type: "automated") } }
 
       it "fails validation" do
         result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:schedule_type]).to include("invalid schedule type")
+      end
+    end
+
+    context "with non-positive sync_interval" do
+      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(sync_interval: 0) } }
+      let(:sync_interval_nil) { { sync: valid_inputs[:sync].merge(sync_interval: nil) } }
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
         expect(result.errors[:sync][:sync_interval]).to include("must be greater than 0")
+      end
+
+      it "fails validation with nil" do
+        result = contract.call(sync_interval_nil)
+        expect(result.errors[:sync][:sync_interval]).to include("must be present")
+      end
+    end
+
+    context "with invalid sync_interval_unit" do
+      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(sync_interval_unit: "min") } }
+      let(:sync_interval_unit_nil) { { sync: valid_inputs[:sync].merge(sync_interval_unit: nil) } }
+
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:sync_interval_unit]).to include("invalid sync interval unit")
+      end
+      it "fails validation sync_interval_unit with nil " do
+        result = contract.call(sync_interval_unit_nil)
+        expect(result.errors[:sync][:sync_interval_unit]).to include("must be present")
+      end
+    end
+
+    context "with valid cron expression" do
+      let(:valid_inputs_cron) do
+        { sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 0 */2 * *") }
+      end
+      let(:invalid_cron) do
+        { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 *") }
+      end
+      it "success validation" do
+        result = contract.call(valid_inputs_cron)
+        expect(result.errors.messages).to eq([])
+      end
+
+      it "invalid validation" do
+        result = contract.call(invalid_cron)
+        expect(result.errors[:sync][:cron_expression]).to include("invalid cron expression format")
       end
     end
   end
@@ -86,7 +132,7 @@ RSpec.describe "SyncContracts" do
           source_id: 1,
           model_id: 2,
           destination_id: 3,
-          schedule_type: "automated",
+          schedule_type: "interval",
           sync_interval: 15,
           sync_interval_unit: "hours",
           sync_mode: "incremental",
@@ -103,10 +149,46 @@ RSpec.describe "SyncContracts" do
 
     context "with non-positive sync_interval" do
       let(:invalid_inputs) { { id: 1, sync: valid_inputs[:sync].merge(sync_interval: -1) } }
+      let(:sync_interval_nil) { { id: 1, sync: valid_inputs[:sync].merge(sync_interval: nil) } }
 
       it "fails validation" do
         result = contract.call(invalid_inputs)
         expect(result.errors[:sync][:sync_interval]).to include("must be greater than 0")
+      end
+      it "fails validation" do
+        result = contract.call(sync_interval_nil)
+        expect(result.errors[:sync][:sync_interval]).to include("must be present")
+      end
+    end
+    context "with invalid sync_interval_unit" do
+      let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(sync_interval_unit: "min") } }
+      let(:sync_interval_unit_nil) { { sync: valid_inputs[:sync].merge(sync_interval_unit: nil) } }
+
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:sync_interval_unit]).to include("invalid sync interval unit")
+      end
+      it "fails validation sync_interval_unit with nil " do
+        result = contract.call(sync_interval_unit_nil)
+        expect(result.errors[:sync][:sync_interval_unit]).to include("must be present")
+      end
+    end
+
+    context "with valid cron expression" do
+      let(:valid_inputs_cron) do
+        { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 0 */2 * *") }
+      end
+      let(:invalid_cron) do
+        { id: 1, sync: valid_inputs[:sync].merge(schedule_type: "cron_expression", cron_expression: "0 invalid") }
+      end
+      it "success validation" do
+        result = contract.call(valid_inputs_cron)
+        expect(result.errors.messages).to eq([])
+      end
+
+      it "invalid validation" do
+        result = contract.call(invalid_cron)
+        expect(result.errors[:sync][:cron_expression]).to include("invalid cron expression format")
       end
     end
   end

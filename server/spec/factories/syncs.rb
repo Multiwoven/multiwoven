@@ -30,5 +30,6 @@ FactoryBot.define do
     sync_interval_unit { "hours" }
     status { "pending" }
     sync_mode { "incremental" }
+    cron_expression { "" }
   end
 end
