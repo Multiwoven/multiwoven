@@ -6,6 +6,7 @@ import Columns from '../Columns';
 import { expect } from '@jest/globals';
 
 import { columnOptions, catalogMappingMock } from '../mocks/Columns';
+import { OPTION_TYPE } from '../TemplateOptions';
 
 describe('Columns component', () => {
   test('renders column options', () => {
@@ -15,6 +16,7 @@ describe('Columns component', () => {
         showFilter={false}
         showDescription={false}
         fieldType='model'
+        templateColumnType={OPTION_TYPE.FILTER}
       />,
     );
 
@@ -30,6 +32,7 @@ describe('Columns component', () => {
         showFilter={true}
         showDescription={false}
         fieldType='model'
+        templateColumnType={OPTION_TYPE.FILTER}
       />,
     );
 
@@ -48,6 +51,7 @@ describe('Columns component', () => {
         showFilter={false}
         showDescription={true}
         fieldType='model'
+        templateColumnType={OPTION_TYPE.FILTER}
       />,
     );
 
@@ -63,6 +67,7 @@ describe('Columns component', () => {
         showFilter={true}
         showDescription={false}
         fieldType='model'
+        templateColumnType={OPTION_TYPE.FILTER}
       />,
     );
 

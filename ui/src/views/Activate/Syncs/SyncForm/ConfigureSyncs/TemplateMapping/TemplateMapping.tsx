@@ -37,6 +37,7 @@ type TemplateMappingProps = {
     mappingType?: OPTION_TYPE,
   ) => void;
   mappingId: number;
+  mappingType: OPTION_TYPE;
   selectedConfig?: string;
 };
 
@@ -63,13 +64,22 @@ const TemplateMapping = ({
   columnOptions,
   handleUpdateConfig,
   mappingId,
-  selectedConfig,
+  selectedConfig = '',
   fieldType,
+  mappingType,
 }: TemplateMappingProps): JSX.Element => {
   const [activeTab, setActiveTab] = useState(OPTION_TYPE.STANDARD);
-  const [selectedTemplate, setSelectedTemplate] = useState('');
+
+  // pre-defined value incase of edit
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    mappingType === OPTION_TYPE.TEMPLATE ? selectedConfig : '',
+  );
   const [isPopOverOpen, setIsPopOverOpen] = useState(false);
-  const [selectedStaticOptionValue, setSelectedStaticOptionValue] = useState<string | boolean>('');
+
+  // pre-defined value incase of edit
+  const [selectedStaticOptionValue, setSelectedStaticOptionValue] = useState<string | boolean>(
+    mappingType === OPTION_TYPE.STATIC ? selectedConfig : '',
+  );
 
   const { data } = useQuery({
     queryKey: ['syncsConfiguration'],
@@ -86,22 +96,16 @@ const TemplateMapping = ({
     data?.data?.configurations?.catalog_mapping_types?.template?.filter || {},
   );
 
+  const templateVariableOptions = Object.keys(
+    data?.data?.configurations?.catalog_mapping_types?.template?.variable || {},
+  );
+
   const applyConfigs = () => {
     if (activeTab === OPTION_TYPE.TEMPLATE) {
-      handleUpdateConfig(
-        mappingId,
-        fieldType,
-        selectedTemplate > '' ? selectedTemplate : 'current_timestamp',
-        activeTab,
-      );
+      handleUpdateConfig(mappingId, fieldType, selectedTemplate, activeTab);
       setIsPopOverOpen(false);
     } else {
-      handleUpdateConfig(
-        mappingId,
-        fieldType,
-        selectedStaticOptionValue > '' ? selectedStaticOptionValue.toString() : 'null',
-        activeTab,
-      );
+      handleUpdateConfig(mappingId, fieldType, selectedStaticOptionValue.toString(), activeTab);
     }
     setIsPopOverOpen(false);
   };
@@ -200,6 +204,7 @@ const TemplateMapping = ({
                 <TemplateOptions
                   columnOptions={columnOptions}
                   filterOptions={templateFilterOptions}
+                  variableOptions={templateVariableOptions}
                   catalogMapping={data}
                   selectedTemplate={selectedTemplate}
                   setSelectedTemplate={setSelectedTemplate}

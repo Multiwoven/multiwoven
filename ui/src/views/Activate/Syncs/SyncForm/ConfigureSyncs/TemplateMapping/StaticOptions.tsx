@@ -28,7 +28,11 @@ const StaticOptions = ({
       <RadioGroup
         onChange={(value) => {
           setSelectedStaticValue(value);
-          setSelectedStaticOptionValue('');
+          if (value === 'null') {
+            setSelectedStaticOptionValue('null');
+          } else {
+            setSelectedStaticOptionValue('');
+          }
         }}
         value={selectedStaticValue}
       >
