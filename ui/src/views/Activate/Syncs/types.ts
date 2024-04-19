@@ -51,7 +51,7 @@ export type SyncsConfigurationForTemplateMapping = {
         static: Record<string, string>;
         template: {
           filter: Record<string, { description: string }>;
-          variable: Record<string, string>;
+          variable: Record<string, { description: string }>;
         };
       };
     };

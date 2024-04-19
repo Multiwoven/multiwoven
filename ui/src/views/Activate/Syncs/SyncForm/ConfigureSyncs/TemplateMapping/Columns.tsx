@@ -12,6 +12,7 @@ import { FiSearch } from 'react-icons/fi';
 import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
 import { useState } from 'react';
 import NoConnectorsFound from '@/assets/images/empty-state-illustration.svg';
+import { OPTION_TYPE } from './TemplateOptions';
 
 type ColumnsProps = {
   columnOptions: string[];
@@ -21,6 +22,7 @@ type ColumnsProps = {
   showDescription?: boolean;
   onSelect?: (args: string) => void;
   height?: string;
+  templateColumnType?: OPTION_TYPE;
 };
 
 const Columns = ({
@@ -28,6 +30,7 @@ const Columns = ({
   catalogMapping,
   onSelect,
   fieldType,
+  templateColumnType,
   showFilter = false,
   showDescription = false,
   height = fieldType === 'model' ? '170px' : '225px',
@@ -74,9 +77,9 @@ const Columns = ({
             {showDescription && (
               <Text size='xs' color='gray.600' fontWeight={400}>
                 {
-                  catalogMapping?.data?.configurations?.catalog_mapping_types?.template?.filter[
-                    column
-                  ].description
+                  catalogMapping?.data?.configurations?.catalog_mapping_types?.template?.[
+                    templateColumnType === OPTION_TYPE.FILTER ? 'filter' : 'variable'
+                  ]?.[column].description
                 }
               </Text>
             )}

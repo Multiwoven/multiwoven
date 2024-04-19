@@ -2,6 +2,7 @@ import EntityItem from '@/components/EntityItem';
 import { Box, Input } from '@chakra-ui/react';
 import TemplateMapping from './TemplateMapping/TemplateMapping';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
+import { OPTION_TYPE } from './TemplateMapping/TemplateMapping';
 
 type FieldMapProps = {
   id: number;
@@ -54,6 +55,7 @@ const FieldMap = ({
                 : selectedConfigOptions?.[id]?.to
             }
             fieldType={fieldType}
+            mappingType={selectedConfigOptions?.[id]?.mapping_type as OPTION_TYPE}
           />
         )}
       </Box>

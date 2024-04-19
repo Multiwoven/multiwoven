@@ -7,12 +7,13 @@ import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/typ
 type TemplateOptionsProps = {
   columnOptions: string[];
   filterOptions: string[];
+  variableOptions: string[];
   selectedTemplate: string;
   setSelectedTemplate: Dispatch<SetStateAction<string>>;
   catalogMapping?: SyncsConfigurationForTemplateMapping;
 };
 
-enum OPTION_TYPE {
+export enum OPTION_TYPE {
   COLUMNS = 'columns',
   VARIABLE = 'variable',
   FILTER = 'filter',
@@ -56,6 +57,7 @@ const replaceLastOccurrence = (inputText: string, searchText: string, replacemen
 const TemplateOptions = ({
   columnOptions,
   filterOptions,
+  variableOptions,
   catalogMapping,
   selectedTemplate,
   setSelectedTemplate,
@@ -65,6 +67,9 @@ const TemplateOptions = ({
   // State to hold selected columns and filters
   const [selectedItems, setSelectedItems] = useState<Map<string, string>>(new Map());
   const [activeSelectedColumn, setActiveSelectedColumn] = useState('');
+
+  // storing this so that we can reset the template text when the active tab is not variable
+  const [isVariableTabActive, setIsVariableTabActive] = useState(false);
 
   const handleSelection = (value: string, optionType: OPTION_TYPE) => {
     const updatedItems = new Map(selectedItems);
@@ -87,6 +92,31 @@ const TemplateOptions = ({
       );
       setSelectedItems(updatedItems);
       setSelectedTemplate(updatedTemplateText);
+    }
+  };
+
+  const resetVariables = () => {
+    setSelectedTemplate('');
+    setSelectedItems(new Map());
+  };
+
+  const handleActiveTabChange = (tab: OPTION_TYPE) => {
+    switch (tab) {
+      case OPTION_TYPE.VARIABLE:
+        setActiveTab(OPTION_TYPE.VARIABLE);
+        setIsVariableTabActive(true);
+        resetVariables();
+        break;
+      case OPTION_TYPE.COLUMNS:
+      case OPTION_TYPE.FILTER:
+        setActiveTab(tab);
+        setIsVariableTabActive(false);
+        if (isVariableTabActive) {
+          resetVariables();
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -129,15 +159,18 @@ const TemplateOptions = ({
           width='fit-content'
         >
           <TabList gap='8px'>
-            <TabName title='Column' handleActiveTab={() => setActiveTab(OPTION_TYPE.COLUMNS)} />
+            <TabName
+              title='Column'
+              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.COLUMNS)}
+            />
             <TabName
               title='Variable'
-              handleActiveTab={() => {
-                setActiveTab(OPTION_TYPE.VARIABLE);
-                setSelectedTemplate('');
-              }}
+              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.VARIABLE)}
             />
-            <TabName title='Filter' handleActiveTab={() => setActiveTab(OPTION_TYPE.FILTER)} />
+            <TabName
+              title='Filter'
+              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.FILTER)}
+            />
           </TabList>
           <TabIndicator />
         </Tabs>
@@ -151,11 +184,15 @@ const TemplateOptions = ({
             />
           )}
           {activeTab === OPTION_TYPE.VARIABLE && (
-            <Box padding='8px 12px'>
-              <Text color='black.200' size='xs' fontWeight={500}>
-                Current Timestamp
-              </Text>
-            </Box>
+            <Columns
+              columnOptions={variableOptions}
+              catalogMapping={catalogMapping}
+              showDescription
+              onSelect={(value: string) => setSelectedTemplate(value)}
+              height='125px'
+              fieldType='model'
+              templateColumnType={activeTab}
+            />
           )}
           {activeTab === OPTION_TYPE.FILTER && (
             <Columns
@@ -165,6 +202,7 @@ const TemplateOptions = ({
               onSelect={(value: string) => handleSelection(value, OPTION_TYPE.FILTER)}
               height='125px'
               fieldType='model'
+              templateColumnType={activeTab}
             />
           )}
         </Box>
