@@ -39,7 +39,7 @@ RSpec.describe Sync, type: :model do
   it { should have_many(:sync_runs).dependent(:destroy) }
 
   context "when schedule_type is interval" do
-    before { allow(subject).to receive(:interval_schedule?).and_return(true) }
+    before { allow(subject).to receive(:interval?).and_return(true) }
 
     it { should validate_presence_of(:sync_interval) }
     it { should validate_presence_of(:sync_interval_unit) }
@@ -47,7 +47,7 @@ RSpec.describe Sync, type: :model do
   end
 
   context "when schedule_type is cron_expression" do
-    before { allow(subject).to receive(:cron_schedule?).and_return(true) }
+    before { allow(subject).to receive(:cron_expression?).and_return(true) }
 
     it { should validate_presence_of(:cron_expression) }
   end
