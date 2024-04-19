@@ -27,10 +27,8 @@ RSpec.describe Sync, type: :model do
   it { should validate_presence_of(:configuration) }
   it { should validate_presence_of(:schedule_type) }
   it { should validate_presence_of(:status) }
-  it { should validate_presence_of(:sync_interval) }
-  it { should validate_presence_of(:sync_interval_unit) }
 
-  it { should define_enum_for(:schedule_type).with_values(manual: 0, automated: 1) }
+  it { should define_enum_for(:schedule_type).with_values(manual: 0, automated: 1, cron_expression: 2) }
   it { should define_enum_for(:status).with_values(disabled: 0, healthy: 1, pending: 2, failed: 3, aborted: 4) }
   it { should define_enum_for(:sync_mode).with_values(full_refresh: 0, incremental: 1) }
 
@@ -39,6 +37,20 @@ RSpec.describe Sync, type: :model do
   it { should belong_to(:destination).class_name("Connector") }
   it { should belong_to(:model) }
   it { should have_many(:sync_runs).dependent(:destroy) }
+
+  context "when schedule_type is automated" do
+    before { allow(subject).to receive(:automated_schedule?).and_return(true) }
+
+    it { should validate_presence_of(:sync_interval) }
+    it { should validate_presence_of(:sync_interval_unit) }
+    it { should validate_numericality_of(:sync_interval).is_greater_than(0) }
+  end
+
+  context "when schedule_type is cron_expression" do
+    before { allow(subject).to receive(:cron_schedule?).and_return(true) }
+
+    it { should validate_presence_of(:cron_expression) }
+  end
 
   describe "#to_protocol" do
     let(:streams) do
@@ -71,6 +83,15 @@ RSpec.describe Sync, type: :model do
 
   describe "#schedule_cron_expression" do
     let(:sync) { build(:sync, sync_interval:, sync_interval_unit:) }
+
+    context "when schedule_type is cron_expression" do
+      let(:sync_cron) do
+        build(:sync, schedule_type: "cron_expression", cron_expression: "0 0 */2 * *")
+      end
+      it "returns the correct cron expression" do
+        expect(sync_cron.schedule_cron_expression).to eq("0 0 */2 * *")
+      end
+    end
 
     context "when interval unit is hours" do
       let(:sync_interval) { 3 }
