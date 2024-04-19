@@ -20,9 +20,9 @@ module SyncContracts
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
         required(:schedule_type).filled(:string)
-        optional(:sync_interval).filled(:integer)
-        optional(:sync_interval_unit).filled(:string)
-        optional(:cron_expression).filled(:string)
+        optional(:sync_interval).maybe(:integer)
+        optional(:sync_interval_unit).maybe(:string)
+        optional(:cron_expression).maybe(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
         optional(:cursor_field).maybe(:string)
@@ -41,19 +41,34 @@ module SyncContracts
     end
 
     rule(sync: :sync_interval) do
-      if values[:sync_interval] && values[:sync_interval] <= 0 && values[:schedule_type] == "interval"
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif value <= 0
         key.failure("must be greater than 0")
       end
     end
 
     rule(sync: :sync_interval_unit) do
-      key.failure("must be present") if values[:sync_interval_unit].nil? && values[:schedule_type] == "interval"
-      key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      else
+        key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      end
     end
 
     rule(sync: :cron_expression) do
-      key.failure("must be present") if values[:cron_expression].nil? && values[:schedule_type] == "cron_expression"
-      if values[:cron_expression] && !valid_cron_expression?(values[:cron_expression])
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "cron_expression"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif Fugit::Cron.new(value).nil?
         key.failure("invalid cron expression format")
       end
     end
@@ -67,9 +82,9 @@ module SyncContracts
         optional(:model_id).filled(:integer)
         optional(:destination_id).filled(:integer)
         optional(:schedule_type).filled(:string)
-        optional(:sync_interval).filled(:integer)
-        optional(:sync_interval_unit).filled(:string)
-        optional(:cron_expression).filled(:string)
+        optional(:sync_interval).maybe(:integer)
+        optional(:sync_interval_unit).maybe(:string)
+        optional(:cron_expression).maybe(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
 
@@ -87,25 +102,35 @@ module SyncContracts
     end
 
     rule(sync: :sync_interval) do
-      if key? && value && value <= 0 && values[:sync_interval_unit] && values[:schedule_type] == "interval"
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif value <= 0
         key.failure("must be greater than 0")
       end
     end
 
     rule(sync: :sync_interval_unit) do
-      if key? && values[:sync_interval_unit] && !Sync.sync_interval_units.keys.include?(value.downcase) &&
-         values[:schedule_type] == "interval"
-        key.failure("invalid sync interval unit")
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      else
+        key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
       end
     end
 
     rule(sync: :cron_expression) do
-      if key? && values[:cron_expression].nil? && values[:schedule_type] == "cron_expression"
-        key.failure("must be present")
-        if values[:cron_expression] && !valid_cron_expression?(values[:cron_expression])
-          key.failure("invalid cron expression format")
-        end
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "cron_expression"
 
+      if value.nil?
+        key.failure("must be present")
+      elsif Fugit::Cron.new(value).nil?
+        key.failure("invalid cron expression format")
       end
     end
   end

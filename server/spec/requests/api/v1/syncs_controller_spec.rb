@@ -251,7 +251,9 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :id)).to eq(syncs.first.id.to_s)
-        expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(30)
+        expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :sync_interval_unit)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
       end
@@ -273,8 +275,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns success" do
         error_message = ["invalid schedule type"]
         request_body[:sync][:schedule_type] = "autoamted"
-        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+        put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
+        { "Content-Type": "application/json" }.merge(auth_headers(user))
         result = JSON.parse(response.body)
         expect(result["errors"]["sync"]["schedule_type"]).to eq(error_message)
       end
@@ -282,9 +284,10 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
     context "when  schedule type is interval " do
       it "creates a new sync and returns success" do
         request_body[:sync][:schedule_type] = "interval"
-        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
-        expect(response).to have_http_status(:created)
+        put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:ok)
+
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
         expect(response_hash.dig(:data, :attributes,
@@ -296,9 +299,9 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           cron_expression = "0 0 */2 * *"
           request_body[:sync][:schedule_type] = "cron_expression"
           request_body[:sync][:cron_expression] = cron_expression
-          post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-            .merge(auth_headers(user))
-          expect(response).to have_http_status(:created)
+          put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
+            { "Content-Type": "application/json" }.merge(auth_headers(user))
+          expect(response).to have_http_status(:ok)
           response_hash = JSON.parse(response.body).with_indifferent_access
           expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(cron_expression)
           expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(nil)
