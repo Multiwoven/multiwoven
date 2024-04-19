@@ -20,8 +20,9 @@ module SyncContracts
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
         required(:schedule_type).filled(:string)
-        required(:sync_interval).filled(:integer)
-        required(:sync_interval_unit).filled(:string)
+        optional(:sync_interval).maybe(:integer)
+        optional(:sync_interval_unit).maybe(:string)
+        optional(:cron_expression).maybe(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
         optional(:cursor_field).maybe(:string)
@@ -36,15 +37,40 @@ module SyncContracts
     end
 
     rule(sync: :schedule_type) do
-      key.failure("invalid connector type") unless Sync.schedule_types.keys.include?(value.downcase)
+      key.failure("invalid schedule type") unless Sync.schedule_types.keys.include?(value.downcase)
+    end
+
+    rule(sync: :sync_interval) do
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif value <= 0
+        key.failure("must be greater than 0")
+      end
     end
 
     rule(sync: :sync_interval_unit) do
-      key.failure("invalid connector type") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      else
+        key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      end
     end
 
-    rule("sync.sync_interval") do
-      key.failure("must be greater than 0") if value <= 0
+    rule(sync: :cron_expression) do
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless schedule_type == "cron_expression"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif Fugit::Cron.new(value).nil?
+        key.failure("invalid cron expression format")
+      end
     end
   end
 
@@ -56,8 +82,9 @@ module SyncContracts
         optional(:model_id).filled(:integer)
         optional(:destination_id).filled(:integer)
         optional(:schedule_type).filled(:string)
-        optional(:sync_interval).filled(:integer)
-        optional(:sync_interval_unit).filled(:string)
+        optional(:sync_interval).maybe(:integer)
+        optional(:sync_interval_unit).maybe(:string)
+        optional(:cron_expression).maybe(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
 
@@ -71,15 +98,40 @@ module SyncContracts
     end
 
     rule(sync: :schedule_type) do
-      key.failure("invalid connector type") if key? && !Sync.schedule_types.keys.include?(value.downcase)
+      key.failure("invalid schedule type") if key? && !Sync.schedule_types.keys.include?(value.downcase)
+    end
+
+    rule(sync: :sync_interval) do
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif value <= 0
+        key.failure("must be greater than 0")
+      end
     end
 
     rule(sync: :sync_interval_unit) do
-      key.failure("invalid connector type") if key? && !Sync.sync_interval_units.keys.include?(value.downcase)
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "interval"
+
+      if value.nil?
+        key.failure("must be present")
+      else
+        key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      end
     end
 
-    rule("sync.sync_interval") do
-      key.failure("must be greater than 0") if value <= 0
+    rule(sync: :cron_expression) do
+      schedule_type = values.dig(:sync, :schedule_type)
+      next unless key? && schedule_type == "cron_expression"
+
+      if value.nil?
+        key.failure("must be present")
+      elsif Fugit::Cron.new(value).nil?
+        key.failure("invalid cron expression format")
+      end
     end
   end
 
