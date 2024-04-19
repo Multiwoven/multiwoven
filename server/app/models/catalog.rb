@@ -50,9 +50,4 @@ class Catalog < ApplicationRecord
       request_rate_concurrency:
     )
   end
-
-  def default_cursor_field
-    # TODO: default_cursor_field based on stream need to implement based on the use case
-    catalog["source_defined_cursor"] ? catalog["default_cursor_field"] : nil
-  end
 end
