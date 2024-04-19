@@ -31,9 +31,9 @@ class Sync < ApplicationRecord
   validates :model_id, presence: true
   validates :configuration, presence: true
   validates :schedule_type, presence: true
-  validates :sync_interval, presence: true, numericality: { greater_than: 0 }, if: :interval_schedule?
-  validates :sync_interval_unit, presence: true, if: :interval_schedule?
-  validates :cron_expression, presence: true, if: :cron_schedule?
+  validates :sync_interval, presence: true, numericality: { greater_than: 0 }, if: :interval?
+  validates :sync_interval_unit, presence: true, if: :interval?
+  validates :cron_expression, presence: true, if: :cron_expression?
   validates :stream_name, presence: true
   validates :status, presence: true
   validate :stream_name_exists?
@@ -98,16 +98,9 @@ class Sync < ApplicationRecord
     self.status ||= self.class.aasm.initial_state.to_s
   end
 
-  def interval_schedule?
-    schedule_type == "interval"
-  end
-
-  def cron_schedule?
-    schedule_type == "cron_expression"
-  end
-
   def schedule_cron_expression
-    return cron_expression if cron_schedule?
+    byebug
+    return cron_expression if cron_expression?
 
     case sync_interval_unit.downcase
     when "minutes"
