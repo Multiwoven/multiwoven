@@ -28,7 +28,7 @@ RSpec.describe Sync, type: :model do
   it { should validate_presence_of(:schedule_type) }
   it { should validate_presence_of(:status) }
 
-  it { should define_enum_for(:schedule_type).with_values(manual: 0, automated: 1, cron_expression: 2) }
+  it { should define_enum_for(:schedule_type).with_values(manual: 0, interval: 1, cron_expression: 2) }
   it { should define_enum_for(:status).with_values(disabled: 0, healthy: 1, pending: 2, failed: 3, aborted: 4) }
   it { should define_enum_for(:sync_mode).with_values(full_refresh: 0, incremental: 1) }
 
@@ -38,8 +38,8 @@ RSpec.describe Sync, type: :model do
   it { should belong_to(:model) }
   it { should have_many(:sync_runs).dependent(:destroy) }
 
-  context "when schedule_type is automated" do
-    before { allow(subject).to receive(:automated_schedule?).and_return(true) }
+  context "when schedule_type is interval" do
+    before { allow(subject).to receive(:interval_schedule?).and_return(true) }
 
     it { should validate_presence_of(:sync_interval) }
     it { should validate_presence_of(:sync_interval_unit) }

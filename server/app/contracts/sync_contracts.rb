@@ -20,8 +20,9 @@ module SyncContracts
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
         required(:schedule_type).filled(:string)
-        required(:sync_interval).filled(:integer)
-        required(:sync_interval_unit).filled(:string)
+        optional(:sync_interval).filled(:integer)
+        optional(:sync_interval_unit).filled(:string)
+        optional(:cron_expression).filled(:string)
         required(:sync_mode).filled(:string)
         required(:stream_name).filled(:string)
         optional(:cursor_field).maybe(:string)
@@ -36,15 +37,25 @@ module SyncContracts
     end
 
     rule(sync: :schedule_type) do
-      key.failure("invalid connector type") unless Sync.schedule_types.keys.include?(value.downcase)
+      key.failure("invalid schedule type") unless Sync.schedule_types.keys.include?(value.downcase)
+    end
+
+    rule(sync: :sync_interval) do
+      if values[:sync_interval] && values[:sync_interval] <= 0 && values[:schedule_type] == "interval"
+        key.failure("must be greater than 0")
+      end
     end
 
     rule(sync: :sync_interval_unit) do
-      key.failure("invalid connector type") unless Sync.sync_interval_units.keys.include?(value.downcase)
+      key.failure("must be present") if values[:sync_interval_unit].nil? && values[:schedule_type] == "interval"
+      key.failure("invalid sync interval unit") unless Sync.sync_interval_units.keys.include?(value.downcase)
     end
 
-    rule("sync.sync_interval") do
-      key.failure("must be greater than 0") if value <= 0
+    rule(sync: :cron_expression) do
+      key.failure("must be present") if values[:cron_expression].nil? && values[:schedule_type] == "cron_expression"
+      if values[:cron_expression] && !valid_cron_expression?(values[:cron_expression])
+        key.failure("invalid cron expression format")
+      end
     end
   end
 
@@ -58,6 +69,7 @@ module SyncContracts
         optional(:schedule_type).filled(:string)
         optional(:sync_interval).filled(:integer)
         optional(:sync_interval_unit).filled(:string)
+        optional(:cron_expression).filled(:string)
         optional(:sync_mode).filled(:string)
         optional(:stream_name).filled(:string)
 
@@ -71,15 +83,30 @@ module SyncContracts
     end
 
     rule(sync: :schedule_type) do
-      key.failure("invalid connector type") if key? && !Sync.schedule_types.keys.include?(value.downcase)
+      key.failure("invalid schedule type") if key? && !Sync.schedule_types.keys.include?(value.downcase)
+    end
+
+    rule(sync: :sync_interval) do
+      if key? && value && value <= 0 && values[:sync_interval_unit] && values[:schedule_type] == "interval"
+        key.failure("must be greater than 0")
+      end
     end
 
     rule(sync: :sync_interval_unit) do
-      key.failure("invalid connector type") if key? && !Sync.sync_interval_units.keys.include?(value.downcase)
+      if key? && values[:sync_interval_unit] && !Sync.sync_interval_units.keys.include?(value.downcase) &&
+         values[:schedule_type] == "interval"
+        key.failure("invalid sync interval unit")
+      end
     end
 
-    rule("sync.sync_interval") do
-      key.failure("must be greater than 0") if value <= 0
+    rule(sync: :cron_expression) do
+      if key? && values[:cron_expression].nil? && values[:schedule_type] == "cron_expression"
+        key.failure("must be present")
+        if values[:cron_expression] && !valid_cron_expression?(values[:cron_expression])
+          key.failure("invalid cron expression format")
+        end
+
+      end
     end
   end
 

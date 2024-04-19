@@ -31,14 +31,14 @@ class Sync < ApplicationRecord
   validates :model_id, presence: true
   validates :configuration, presence: true
   validates :schedule_type, presence: true
-  validates :sync_interval, presence: true, numericality: { greater_than: 0 }, if: :automated_schedule?
-  validates :sync_interval_unit, presence: true, if: :automated_schedule?
+  validates :sync_interval, presence: true, numericality: { greater_than: 0 }, if: :interval_schedule?
+  validates :sync_interval_unit, presence: true, if: :interval_schedule?
   validates :cron_expression, presence: true, if: :cron_schedule?
   validates :stream_name, presence: true
   validates :status, presence: true
   validate :stream_name_exists?
 
-  enum :schedule_type, %i[manual automated cron_expression]
+  enum :schedule_type, %i[manual interval cron_expression]
   enum :status, %i[disabled healthy pending failed aborted]
   enum :sync_mode, %i[full_refresh incremental]
   enum :sync_interval_unit, %i[minutes hours days]
@@ -98,8 +98,8 @@ class Sync < ApplicationRecord
     self.status ||= self.class.aasm.initial_state.to_s
   end
 
-  def automated_schedule?
-    schedule_type == "automated"
+  def interval_schedule?
+    schedule_type == "interval"
   end
 
   def cron_schedule?

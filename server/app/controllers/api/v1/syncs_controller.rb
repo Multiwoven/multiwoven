@@ -5,6 +5,8 @@ module Api
     class SyncsController < ApplicationController
       include Syncs
       before_action :set_sync, only: %i[show update destroy]
+      before_action :modify_sync_params, only: %i[create update]
+
       after_action :event_logger
 
       attr_reader :sync
@@ -83,6 +85,20 @@ module Api
         @sync = current_workspace.syncs.find(params[:id])
       end
 
+      def modify_sync_params
+        case params[:sync][:schedule_type]
+        when "cron_expression"
+          params[:sync][:sync_interval] = nil
+          params[:sync][:sync_interval_unit] = nil
+        when "interval"
+          params[:sync][:cron_expression] = nil
+        when "manual"
+          params[:sync][:sync_interval] = nil
+          params[:sync][:sync_interval_unit] = nil
+          params[:sync][:cron_expression] = nil
+        end
+      end
+
       def sync_params
         strong_params = params.require(:sync)
                               .permit(:source_id,
@@ -92,6 +108,7 @@ module Api
                                       :sync_interval,
                                       :sync_mode,
                                       :sync_interval_unit,
+                                      :cron_expression,
                                       :stream_name,
                                       :cursor_field,
                                       configuration: %i[from
