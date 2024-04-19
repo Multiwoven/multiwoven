@@ -46,7 +46,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 </Box>
               </Radio>
               <Radio
-                value='automated'
+                value='interval'
                 display='flex'
                 alignItems='flex-start'
                 backgroundColor='#fff'
@@ -65,7 +65,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
           </RadioGroup>
         </Box>
         <Box>
-          {formik.values.schedule_type === 'automated' ? (
+          {formik.values.schedule_type === 'interval' ? (
             <>
               <Text mb={4} fontWeight='semibold' size='sm'>
                 Schedule Configuration

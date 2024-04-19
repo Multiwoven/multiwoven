@@ -62,7 +62,7 @@ export type ConfigSync = {
   source_id: string;
   destination_id: string;
   model_id: string;
-  schedule_type: 'automated';
+  schedule_type: 'interval';
   configuration: FieldMapType[];
   stream_name: string;
 };
@@ -89,7 +89,7 @@ export type CreateSyncResponse = {
     configuration: Record<string, string>;
     destination_id: number;
     model_id: number;
-    schedule_type: 'automated';
+    schedule_type: 'interval';
     source_id: string;
     status: string;
     stream_name: string;
@@ -127,7 +127,7 @@ export type FinalizeSyncFormFields = {
   sync_mode: 'full_refresh';
   sync_interval: number;
   sync_interval_unit: 'minutes';
-  schedule_type: 'automated';
+  schedule_type: 'interval';
 };
 
 export type SyncRunsResponse = {

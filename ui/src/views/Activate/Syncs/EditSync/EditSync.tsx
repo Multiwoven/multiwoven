@@ -71,7 +71,7 @@ const EditSync = (): JSX.Element | null => {
       sync_mode: 'full_refresh',
       sync_interval: 0,
       sync_interval_unit: 'minutes',
-      schedule_type: 'automated',
+      schedule_type: 'interval',
     },
     onSubmit: async (data) => {
       setIsEditLoading(true);
@@ -147,7 +147,7 @@ const EditSync = (): JSX.Element | null => {
         sync_interval: syncData?.sync_interval ?? 0,
         sync_interval_unit: syncData?.sync_interval_unit ?? 'minutes',
         sync_mode: syncData?.sync_mode ?? 'full_refresh',
-        schedule_type: syncData?.schedule_type ?? 'automated',
+        schedule_type: syncData?.schedule_type ?? 'interval',
       });
 
       if (Array.isArray(syncFetchResponse.data.attributes.configuration)) {
