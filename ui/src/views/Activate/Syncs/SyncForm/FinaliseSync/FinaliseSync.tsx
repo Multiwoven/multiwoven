@@ -36,7 +36,7 @@ const FinaliseSync = (): JSX.Element => {
       sync_mode: 'full_refresh',
       sync_interval: 0,
       sync_interval_unit: 'minutes',
-      schedule_type: 'automated',
+      schedule_type: 'interval',
     },
     onSubmit: async (data) => {
       setIsLoading(true);
@@ -134,7 +134,7 @@ const FinaliseSync = (): JSX.Element => {
                       </Box>
                     </Radio>
                     <Radio
-                      value='automated'
+                      value='interval'
                       display='flex'
                       alignItems='flex-start'
                       backgroundColor='gray.100'
@@ -153,7 +153,7 @@ const FinaliseSync = (): JSX.Element => {
                 </RadioGroup>
               </Box>
               <Box>
-                {formik.values.schedule_type === 'automated' ? (
+                {formik.values.schedule_type === 'interval' ? (
                   <>
                     <Text mb={4} fontWeight='600' size='sm'>
                       Schedule Configuration
