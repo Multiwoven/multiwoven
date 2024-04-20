@@ -8,11 +8,12 @@ import {
   FiBookOpen,
   FiGrid,
   FiRefreshCcw,
-  FiUsers,
-  FiHome,
+  FiBarChart2,
+  FiTool,
 } from 'react-icons/fi';
 import { NavButton } from './navButton';
 import Profile from './Profile';
+import Workspace from './Workspace/Workspace';
 
 import mwTheme from '@/chakra.config';
 
@@ -32,11 +33,15 @@ type MenuArray = MenuSection[];
 
 const menus: MenuArray = [
   {
-    heading: null,
-    menu: [{ title: 'Dashboard', link: '/', Icon: FiHome }],
+    heading: 'DATA ACTIVATION',
+    menu: [
+      { title: 'Reports', link: '/', Icon: FiBarChart2 },
+      { title: 'Models', link: '/define/models', Icon: FiTable },
+      { title: 'Syncs', link: '/activate/syncs', Icon: FiRefreshCcw },
+    ],
   },
   {
-    heading: 'SETUP',
+    heading: 'DATA INTEGRATION',
     menu: [
       { title: 'Sources', link: '/setup/sources', Icon: FiDatabase },
       {
@@ -47,20 +52,8 @@ const menus: MenuArray = [
     ],
   },
   {
-    heading: 'DEFINE',
-    menu: [{ title: 'Models', link: '/define/models', Icon: FiTable }],
-  },
-  {
-    heading: 'ACTIVATE',
-    menu: [
-      { title: 'Syncs', link: '/activate/syncs', Icon: FiRefreshCcw },
-      {
-        title: 'Audiences',
-        link: '/audiences',
-        Icon: FiUsers,
-        disabled: true,
-      },
-    ],
+    heading: 'AI/ML INTEGRATION',
+    menu: [{ title: 'ML Ops', link: '/ml-ops', Icon: FiTool }],
   },
 ];
 
@@ -94,7 +87,9 @@ const SideBarFooter = () => (
   <Stack position='absolute' bottom='0' left='0px' right='0px' margin='24px 16px'>
     <Box />
     <Stack spacing='0'>
-      <NavButton label='Settings' icon={FiSettings} disabled={true} />
+      <NavLink to='/settings'>
+        <NavButton label='Settings' icon={FiSettings} />
+      </NavLink>
       <NavLink to='https://docs.multiwoven.com/get-started/introduction'>
         <NavButton label='Documentation' icon={FiBookOpen} />
       </NavLink>
@@ -114,6 +109,7 @@ const Sidebar = (): JSX.Element => {
       borderRightWidth='1px'
       borderRightStyle='solid'
       borderRightColor='gray.400'
+      minWidth='240px'
     >
       <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
         <Stack justify='space-between' spacing='1' width='full'>
@@ -124,6 +120,7 @@ const Sidebar = (): JSX.Element => {
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />
             </Box>
+            <Workspace />
             {menus.map(renderMenuSection)}
             <SideBarFooter />
           </Stack>

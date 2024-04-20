@@ -75,7 +75,7 @@ const Profile = () => {
             </Box>
           </Box>
         </PopoverTrigger>
-        <PopoverContent w='182px' border='1px' borderColor='gray.400'>
+        <PopoverContent w='207px' border='1px' borderColor='gray.400'>
           <PopoverBody margin={0} p={0}>
             <Button
               _hover={{ bgColor: 'gray.200' }}

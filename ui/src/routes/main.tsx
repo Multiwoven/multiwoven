@@ -6,6 +6,8 @@ const SignUp = lazy(() => import('@/views/Authentication/SignUp'));
 const AccountVerify = lazy(() => import('@/views/AccountVerify'));
 const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
+const Settings = lazy(() => import('@/views/Settings'));
+const MLOps = lazy(() => import('@/views/MLOps'));
 
 const SetupActivate = lazy(() => import('@/views/Activate/SetupActivate'));
 
@@ -65,6 +67,24 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute='/activate'>
         <SetupActivate />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Settings',
+    url: '/settings/*',
+    component: (
+      <SuspenseWithLoader redirectRoute='/settings'>
+        <Settings />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'ML Ops',
+    url: '/ml-ops/*',
+    component: (
+      <SuspenseWithLoader redirectRoute='/ml-ops'>
+        <MLOps />
       </SuspenseWithLoader>
     ),
   },
