@@ -5,9 +5,8 @@
 <h1 align="center">Open Source Reverse ETL & Customer Data Platform (CDP)</h1>
 
 <p align="center">
-Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgres) into a Customer Data Platform (CDP)
+Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and <b>RudderStack</b>. With Multiwoven, you can easily sync data from your data warehouse to any business tool, turning your data warehouse into a Customer Data Platform (CDP)
 </p>
-
 
 
 <p align="center">
@@ -41,7 +40,7 @@ Turns any data warehouse (like Snowflake, Redshift, BigQuery, DataBricks, Postgr
 
 ## Why Multiwoven?
 
-Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable CDP and Reverse ETL platform. It is built on top of open-source technologies and is designed to be easily integrated with your existing data warehouse and data lake, an open-source alternative to tools like **Hightouch**, **Census**, and **RudderStack**.
+Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment you can instantly start syncing data from your data warehouse to business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
@@ -76,17 +75,17 @@ Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and c
 
 ## Getting Started
 
-Multiwoven repo is a monorepo that contains the following services:
+Multiwoven is a monorepo that consists of three main services:
 
-- [multiwoven-server](https://github.com/Multiwoven/multiwoven/tree/main/server) - The backend service that handles data extraction, modeling, and syncing.
+- [server](https://github.com/Multiwoven/multiwoven/tree/main/server) - The backend service that acts as a control plane for managing data sources, models, and syncs.
 
-- [multiwoven-ui](https://github.com/Multiwoven/multiwoven/tree/main/ui) - The frontend service that provides a user interface for managing data sources, models, and syncs.
+- [ui](https://github.com/Multiwoven/multiwoven/tree/main/ui) - The frontend react application that provides a user interface to manage data sources, destinations, and confgure syncs.
 
-- [multiwoven-integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) - The connector service that provides a list of connectors to various data sources and destinations.
+- [integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) - A Ruby Gem that provides a framework to build connectors to support a wide range of data sources and destinations.
 
 ### Local Setup
 
-To get started with Multiwoven, you can deploy the entire stack locally using Docker Compose.
+To get started with Multiwoven, you can deploy the entire stack using Docker Compose.
 
 1. **Clone the repository:**
 
@@ -122,7 +121,7 @@ For more details, check out the local [deployment guide](https://docs.multiwoven
 
 ### Self-hosted Options
 
-Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Below is a guide to deploying Multiwoven on different platforms:
+Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Refer to the deployment guides below to deploy Multiwoven on your preferred cloud provider.
 
 | Provider                          | Documentation                                                               |
 | :-------------------------------- | :-------------------------------------------------------------------------- |
@@ -141,7 +140,7 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 ## Connectors
 
-Multiwoven is rapidly expanding its list of connectors to support a wide range of data sources and destinations. Head over to the [Multiwoven Integrations](https://github.com/Multiwoven/multiwoven-integrations) repository to contribute to the growing list of connectors.
+🔥 Multiwoven is rapidly expanding its list of connectors to support a wide range of data sources and destinations. Head over to the [Integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) directory to explore the available connectors. If you don't see the connector you need, please [open an issue](https://github.com/Multiwoven/multiwoven/issues) to request it.
 
 ### Sources
 
@@ -164,6 +163,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 - [x] [Klaviyo](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
+- [x] Klaviyo
 
 #### Customer Support
 
@@ -180,6 +180,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 
 - [x] [Slack](https://docs.multiwoven.com/destinations/team-collaboration/slack)
 - [x] [Google Sheets](https://docs.multiwoven.com/destinations/productivity-tools/google-sheets)
+- [x] [Airtable](https://docs.multiwoven.com/destinations/productivity-tools/airtable)
 
 #### Analytics
 
@@ -189,7 +190,7 @@ Multiwoven is rapidly expanding its list of connectors to support a wide range o
 
 #### Others
 
-🧵..Weaving in more connectors to support a wide range of destinations.
+🧵...Weaving in more connectors to support a wide range of destinations.
 
 ## Contributing
 
@@ -212,5 +213,5 @@ Multiwoven is licensed under the AGPLv3 License. See the [LICENSE](https://githu
 ## Contributors
 
 <a href="https://github.com/Multiwoven/multiwoven/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Multiwoven/multiwoven" />
+  <img src="https://contrib.rocks/image?repo=Multiwoven/multiwoven&max=400&columns=20" />
 </a>

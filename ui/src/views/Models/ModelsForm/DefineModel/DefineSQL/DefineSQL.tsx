@@ -3,8 +3,8 @@ import { Box, Button, Flex, HStack, Image, Spacer, Text, VStack } from '@chakra-
 import StarsImage from '@/assets/images/stars.svg';
 import EmptyQueryPreviewImage from '@/assets/images/EmptyQueryPreview.png';
 
-import Editor from '@monaco-editor/react';
-import { useContext, useRef, useState } from 'react';
+import Editor, { useMonaco } from '@monaco-editor/react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Field, getModelPreviewById, putModelById } from '@/services/models';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
@@ -19,6 +19,7 @@ import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormF
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
+import { autocompleteEntries } from './autocomplete';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -32,6 +33,11 @@ const DefineSQL = ({
   const [moveForward, canMoveForward] = useState(false);
   const [runQuery, canRunQuery] = useState(prefillValues ? true : false);
   const [userQuery, setUserQuery] = useState(prefillValues?.query || '');
+
+  const showToast = useCustomToast();
+  const navigate = useNavigate();
+  const editorRef = useRef<any>(null);
+  const monaco = useMonaco();
 
   let connector_id: string = '';
   let connector_icon: JSX.Element = <></>;
@@ -47,10 +53,6 @@ const DefineSQL = ({
     connector_id = prefillValues.connector_id.toString();
     connector_icon = prefillValues.connector_icon;
   }
-
-  const showToast = useCustomToast();
-  const navigate = useNavigate();
-  const editorRef = useRef(null);
 
   function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
@@ -74,7 +76,7 @@ const DefineSQL = ({
 
   async function getPreview() {
     setLoading(true);
-    const query = (editorRef?.current as any)?.getValue() as string;
+    const query = editorRef.current?.getValue() as string;
     const response = await getModelPreviewById(query, connector_id?.toString());
     if ('data' in response && response.data.errors) {
       response.data.errors.forEach((error: { title: string; detail: string }) => {
@@ -96,7 +98,7 @@ const DefineSQL = ({
   }
 
   async function handleModelUpdate() {
-    const query = (editorRef?.current as any)?.getValue() as string;
+    const query = editorRef.current?.getValue() as string;
     const updatePayload: UpdateModelPayload = {
       model: {
         name: prefillValues?.model_name || '',
@@ -120,6 +122,44 @@ const DefineSQL = ({
       navigate('/define/models/' + prefillValues?.model_id || '');
     }
   }
+
+  useEffect(() => {
+    if (monaco) {
+      const entryKindMap = {
+        Keyword: monaco.languages.CompletionItemKind.Keyword,
+        Snippet: monaco.languages.CompletionItemKind.Snippet,
+        Function: monaco.languages.CompletionItemKind.Function,
+        Class: monaco.languages.CompletionItemKind.Class,
+      };
+
+      const providerHandle = monaco.languages.registerCompletionItemProvider('mysql', {
+        provideCompletionItems: (model, position) => {
+          const word = model.getWordUntilPosition(position);
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn,
+          };
+
+          return {
+            suggestions: autocompleteEntries.map((entry) => ({
+              label: entry.label,
+              kind: entryKindMap[entry.kind],
+              insertText: entry.insertText,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: entry.documentation,
+              range: range,
+            })),
+          };
+        },
+      });
+
+      return () => {
+        providerHandle.dispose();
+      };
+    }
+  }, [monaco, autocompleteEntries]);
 
   return (
     <Box justifyContent='center' display='flex'>
@@ -263,7 +303,7 @@ const DefineSQL = ({
           isContinueCtaRequired
           isCtaDisabled={!moveForward}
           onCtaClick={() => {
-            handleContinueClick((editorRef?.current as any).getValue(), connector_id, tableData);
+            handleContinueClick(editorRef.current.getValue(), connector_id, tableData);
           }}
         />
       )}
