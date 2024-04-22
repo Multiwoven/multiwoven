@@ -40,7 +40,7 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 ## Why Multiwoven?
 
-Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment your can instantly start syncing data from your data warehouse to your business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
+Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment you can instantly start syncing data from your data warehouse to your business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
 
 
 
