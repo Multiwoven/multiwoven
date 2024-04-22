@@ -5,7 +5,7 @@
 <h1 align="center">Open Source Reverse ETL & Customer Data Platform (CDP)</h1>
 
 <p align="center">
-Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and <b>RudderStack</b>. With Multiwoven, you can easily sync data from your data warehouse to your business tools, turning your data warehouse into a Customer Data Platform (CDP).
+Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and <b>RudderStack</b>. With Multiwoven, you can easily sync data from your data warehouse to any business tool, turning your data warehouse into a Customer Data Platform (CDP)
 </p>
 
 
@@ -40,9 +40,7 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 ## Why Multiwoven?
 
-Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment you can instantly start syncing data from your data warehouse to your business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
-
-
+Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment you can instantly start syncing data from your data warehouse to business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
 
@@ -142,7 +140,7 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 ## Connectors
 
-Multiwoven is rapidly expanding its list of connectors to support a wide range of data sources and destinations. Head over to the [Integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) directory to explore the available connectors and contribute new connectors.
+🔥 Multiwoven is rapidly expanding its list of connectors to support a wide range of data sources and destinations. Head over to the [Integrations](https://github.com/Multiwoven/multiwoven/tree/main/integrations) directory to explore the available connectors. If you don't see the connector you need, please [open an issue](https://github.com/Multiwoven/multiwoven/issues) to request it.
 
 ### Sources
 
