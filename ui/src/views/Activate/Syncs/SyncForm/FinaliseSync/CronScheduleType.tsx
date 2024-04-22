@@ -11,7 +11,7 @@ dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 const CronScheduleType = ({ formik }: { formik: FormikContextType<any> }): JSX.Element => {
-  const [isValidCronExpression, setIsValidCronExpression] = useState(false);
+  const [isValidCronExpression, setIsValidCronExpression] = useState(true);
 
   const getNextCronRuns = (cronExpression: string, count: number) => {
     const options = {
@@ -54,7 +54,7 @@ const CronScheduleType = ({ formik }: { formik: FormikContextType<any> }): JSX.E
 
   let nextCronRuns: string[] = [];
 
-  if (isValidCronExpression) {
+  if (isValidCronExpression && formik.values.cron_expression > '') {
     nextCronRuns = getNextCronRuns(formik.values.cron_expression, 5);
   }
 
