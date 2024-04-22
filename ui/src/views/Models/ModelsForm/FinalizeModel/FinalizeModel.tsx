@@ -100,7 +100,7 @@ const FinalizeModel = (): JSX.Element => {
   return (
     <Box display='flex' width='100%' justifyContent='center'>
       <ContentContainer>
-        <Box bgColor='gray.200' px={6} py={4} marginTop={6} marginX='30px' borderRadius='8px'>
+        <Box bgColor='gray.200' px={6} py={4} marginTop={6} borderRadius='8px'>
           <Text mb={6} fontWeight='semibold' size='md'>
             Finalize settings for this Model
           </Text>
