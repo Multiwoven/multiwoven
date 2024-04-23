@@ -139,19 +139,41 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
 
     context "when the primary key is blank" do
       it "does not call update_or_create_sync_record" do
-        message = double("Message", record: double("Record", data: { "TestPrimaryKey" => nil }))
+        message = double("Record", data: { "TestPrimaryKey" => nil })
         expect(subject).not_to receive(:find_or_initialize_sync_record)
-        expect(subject).not_to receive(:update_or_create_sync_record)
         subject.send(:process_record, message, sync_run, model)
       end
     end
 
     context "when the primary key is not blank" do
       it "calls find_or_initialize_sync_record and update_or_create_sync_record" do
-        message = double("Message", record: double("Record", data: { "TestPrimaryKey" => 1 }))
+        message = double("Record", data: { "TestPrimaryKey" => 1 })
         expect(subject).to receive(:find_or_initialize_sync_record)
-        expect(subject).to receive(:update_or_create_sync_record)
+
         subject.send(:process_record, message, sync_run, model)
+      end
+    end
+  end
+
+  describe "#process_records" do
+    # record2 and record3 are duplicate
+    let(:records) { [record1, record2, record3] }
+
+    let(:records_without_dup) { [record1, record2] }
+
+    context "process_records records" do
+      it "process_records records with duplicates" do
+        skip_rows = subject.send(:process_records, records, sync_run1, sync_run1.model)
+
+        expect(skip_rows).to eq(1)
+      end
+    end
+
+    context "process_records records" do
+      it "process_records records without duplicate" do
+        skip_rows = subject.send(:process_records, records_without_dup, sync_run1, sync_run1.model)
+
+        expect(skip_rows).to eq(0)
       end
     end
   end
