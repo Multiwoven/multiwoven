@@ -145,6 +145,7 @@ export type SyncRunsResponse = {
     updated_at: string;
     duration: number | null;
     total_query_rows: number;
+    skipped_rows: number;
     total_rows: number;
     successful_rows: number;
     failed_rows: number;
@@ -159,6 +160,7 @@ export type SyncRunsColumnFields =
   | 'start_time'
   | 'duration'
   | 'rows_queried'
+  | 'skipped_rows'
   | 'results';
 
 export type SyncRunsColumnEntity = {

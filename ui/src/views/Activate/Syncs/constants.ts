@@ -39,6 +39,12 @@ export const SYNC_RUNS_COLUMNS: SyncRunsColumnEntity[] = [
     hoverText: 'Number of rows your query returned from the Source.',
   },
   {
+    key: 'skipped_rows',
+    name: 'Rows Skipped',
+    hasHoverText: true,
+    hoverText: 'Number of rows your query skipped while processing your sync.',
+  },
+  {
     key: 'results',
     name: 'Results',
     hasHoverText: true,

@@ -23,6 +23,9 @@ export const TableItem = ({ field, data }: TableItem): JSX.Element => {
     case 'duration':
       return <Text fontSize='sm'>{data.attributes.duration?.toPrecision(3)} seconds</Text>;
 
+    case 'skipped_rows':
+      return <Text fontSize='sm'>{data.attributes.skipped_rows} rows</Text>;
+
     case 'rows_queried':
       return <Text fontSize='sm'>{data.attributes.total_query_rows} rows</Text>;
 
