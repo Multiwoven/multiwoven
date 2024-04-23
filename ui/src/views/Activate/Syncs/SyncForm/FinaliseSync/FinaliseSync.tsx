@@ -19,6 +19,7 @@ import { ConfigSync } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
+import CronScheduleType from './CronScheduleType';
 
 const FinaliseSync = (): JSX.Element => {
   const { state } = useContext(SteppedFormContext);
@@ -37,6 +38,7 @@ const FinaliseSync = (): JSX.Element => {
       sync_interval: 0,
       sync_interval_unit: 'minutes',
       schedule_type: 'interval',
+      cron_expression: '',
     },
     onSubmit: async (data) => {
       setIsLoading(true);
@@ -149,10 +151,26 @@ const FinaliseSync = (): JSX.Element => {
                         </Text>
                       </Box>
                     </Radio>
+                    <Radio
+                      value='cron_expression'
+                      display='flex'
+                      alignItems='flex-start'
+                      backgroundColor='gray.100'
+                      marginBottom='10px'
+                    >
+                      <Box position='relative' top='-5px'>
+                        <Text fontWeight='500' size='sm'>
+                          Cron Expression{' '}
+                        </Text>
+                        <Text size='xs' color='black.200'>
+                          Schedule your sync using a cron expression
+                        </Text>
+                      </Box>
+                    </Radio>
                   </Stack>
                 </RadioGroup>
               </Box>
-              <Box>
+              <Box width='40%'>
                 {formik.values.schedule_type === 'interval' ? (
                   <>
                     <Text mb={4} fontWeight='600' size='sm'>
@@ -169,6 +187,7 @@ const FinaliseSync = (): JSX.Element => {
                       borderStyle='solid'
                       borderColor='gray.400'
                       height='40px'
+                      justifyContent='space-around'
                     >
                       <Box>
                         <Text size='sm' fontWeight={500}>
@@ -207,6 +226,9 @@ const FinaliseSync = (): JSX.Element => {
                       </Box>
                     </Box>
                   </>
+                ) : null}
+                {formik.values.schedule_type === 'cron_expression' ? (
+                  <CronScheduleType formik={formik} />
                 ) : null}
               </Box>
             </Box>
