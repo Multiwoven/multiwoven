@@ -6,7 +6,7 @@ module ReverseEtl
       # TODO: Make it as class method
       def read(sync_run_id, activity)
         total_query_rows = 0
-        skip_rows = 0
+        skipped_rows = 0
 
         sync_run = SyncRun.find(sync_run_id)
 
@@ -23,9 +23,9 @@ module ReverseEtl
           current_offset, last_cursor_field_value|
 
           total_query_rows += records.count
-          skip_rows += process_records(records, sync_run, model)
+          skipped_rows += process_records(records, sync_run, model)
           heartbeat(activity)
-          sync_run.update(current_offset:, total_query_rows:, skip_rows:)
+          sync_run.update(current_offset:, total_query_rows:, skipped_rows:)
           sync_run.sync.update(current_cursor_field: last_cursor_field_value)
         end
         # change state querying to queued
@@ -39,7 +39,7 @@ module ReverseEtl
           record = message.record
           fingerprint = generate_fingerprint(record.data)
           sync_record = process_record(record, sync_run, model)
-          update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
+          update_or_create_sync_record(sync_record, record, sync_run, fingerprint) ? 0 : 1
         end.sum
       end
 
@@ -74,7 +74,7 @@ module ReverseEtl
       end
 
       def update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
-        return 1 unless new_record?(sync_record, fingerprint)
+        return false unless new_record?(sync_record, fingerprint)
 
         sync_record.assign_attributes(
           sync_run_id: sync_run.id,
@@ -82,9 +82,9 @@ module ReverseEtl
           fingerprint:,
           record: record.data
         )
-
         sync_record.save!
-        0
+
+        true
       end
     end
   end
