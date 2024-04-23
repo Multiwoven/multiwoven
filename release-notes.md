@@ -1,7 +1,5 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
 ## [0.4.0] - 2024-04-22
 
 ### 🚀 Features
@@ -26,11 +24,6 @@ All notable changes to this project will be documented in this file.
 - Update apply button condition for template mapping (#62)
 - Remove default cursor field from catalog (#63)
 - Update scheduler type for manual interval (#67)
-
-### ⚙️ Miscellaneous Tasks
-
-- Upgrade integrations 0.1.59
-- Upgrade integration to 0.1.60
 
 ### Refactor
 
