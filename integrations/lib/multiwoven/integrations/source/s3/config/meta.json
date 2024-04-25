@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "S3",
+    "title": "AWS S3",
+    "connector_type": "source",
+    "category": "Cloud Storage",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "source-s3",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven", "storage", "aws"]
+  }
+}
