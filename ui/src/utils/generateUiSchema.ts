@@ -1,5 +1,5 @@
 export function generateUiSchema(
-  schemaProperties: Object,
+  schemaProperties: object,
   uiSchema: Record<string, any> = {},
   path: string[] = [],
 ): Record<string, string> {
