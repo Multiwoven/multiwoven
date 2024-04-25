@@ -11,6 +11,7 @@ module Multiwoven
       Postgresql
       Databricks
       SalesforceConsumerGoodsCloud
+      S3
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
