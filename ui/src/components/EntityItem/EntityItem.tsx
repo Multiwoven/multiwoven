@@ -23,7 +23,7 @@ const EntityItem = ({ icon, name }: EntityItem): JSX.Element => {
       >
         <Image src={icon} alt='icon' maxHeight='100%' height='24px' width='24px' />
       </Box>
-      <Text fontSize='sm' fontWeight='semibold'>
+      <Text fontSize='sm' fontWeight='semibold' color='black.500'>
         {name}
       </Text>
     </Box>
