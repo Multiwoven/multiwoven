@@ -3,7 +3,7 @@
 module Multiwoven
   module Integrations
     module Destination
-      module Airtable
+      module Http
         include Multiwoven::Integrations::Core
         class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
           prepend Multiwoven::Integrations::Core::RateLimiter
