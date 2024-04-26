@@ -8,7 +8,7 @@ RSpec.describe Multiwoven::Integrations::Source::AWSAthena::Client do # rubocop:
         "name": "AthenaSourceConnector",
         "type": "source",
         "connection_specification": {
-        "credentials": {
+          "credentials": {
             "auth_type": "access_key/secret_access_key",
             "access_key": "test_access_key",
             "secret_access_key": "test_secret_access_key"
