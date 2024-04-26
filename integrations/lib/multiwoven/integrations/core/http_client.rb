@@ -20,6 +20,7 @@ module Multiwoven
                           when Constants::HTTP_POST then Net::HTTP::Post
                           when Constants::HTTP_PUT then Net::HTTP::Put
                           when Constants::HTTP_DELETE then Net::HTTP::Delete
+                          when Constants::HTTP_OPTIONS then Net::HTTP::Options
                           else raise ArgumentError, "Unsupported HTTP method: #{method}"
                           end
 

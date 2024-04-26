@@ -1,0 +1,22 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/destination/http",
+  "stream_type": "dynamic",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Http",
+    "type": "object",
+    "required": ["destination_url", "api_key"],
+    "properties": {
+      "destination_url": {
+        "type": "string",
+        "title": "Destination url",
+        "order": 0
+      },
+      "api_key": {
+        "type": "string",
+        "title": "Api key",
+        "order": 0
+      }
+    }
+  }
+}
