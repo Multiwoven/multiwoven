@@ -5,7 +5,7 @@ source_connector = Multiwoven::Integrations::Protocol::Connector.new(
   type: Multiwoven::Integrations::Protocol::ConnectorType["source"],
   connection_specification: {
     "access_key": ENV["ATHENA_ACCESS"],
-    "secret_access_key":  ENV["ATHENA_SECRET"],
+    "secret_access_key": ENV["ATHENA_SECRET"],
     "region": "us-east-2",
     "workgroup": "test_workgroup",
     "catalog": "AwsDatacatalog",
