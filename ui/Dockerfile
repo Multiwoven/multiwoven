@@ -8,13 +8,6 @@ WORKDIR /app
 # Copy package.json and package-lock.json (or yarn.lock if using Yarn)
 COPY package*.json ./
 
-# Set npm configuration to handle timeouts and retries
-ENV NPM_CONFIG_LOGLEVEL=warn
-ENV NPM_CONFIG_FETCH_RETRIES=5
-ENV NPM_CONFIG_FETCH_RETRY_FACTOR=2
-ENV NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=20000
-ENV NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=120000
-
 # Install dependencies
 RUN npm ci
 

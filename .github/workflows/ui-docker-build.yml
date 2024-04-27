@@ -40,6 +40,6 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          platforms: linux/arm64
+          platforms: linux/amd64
           load: true
           no-cache: true
