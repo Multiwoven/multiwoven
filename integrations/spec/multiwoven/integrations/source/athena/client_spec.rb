@@ -27,7 +27,6 @@ destination_connector = Multiwoven::Integrations::Protocol::Connector.new(
   connection_specification: {}
 )
 
-
 stream = Multiwoven::Integrations::Protocol::Stream.new(
   name: "example_stream",
   action: "create",
