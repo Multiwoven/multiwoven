@@ -1,4 +1,4 @@
-name: frontend-docker-build (arm)
+name: frontend-docker-build (arm64)
 
 on:
   workflow_run:
