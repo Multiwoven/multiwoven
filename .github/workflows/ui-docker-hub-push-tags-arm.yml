@@ -8,7 +8,7 @@ on:
 
 jobs:
   docker-hub-push-on-merge:
-    runs-on: macos-latest
+    runs-on: [self-hosted, Linux, ARM64]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

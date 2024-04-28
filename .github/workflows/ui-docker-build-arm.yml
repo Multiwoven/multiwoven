@@ -13,7 +13,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: macos-latest
+    runs-on: [self-hosted, Linux, ARM64]
 
     steps:
       - name: Checkout Code
