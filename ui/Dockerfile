@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --timeout=3600000
 
 # Copy the rest of your application code
 COPY . .
