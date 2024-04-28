@@ -13,7 +13,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: [self-hosted, ARM]  # Specify that this job runs on a self-hosted runner with the ARM label
+    runs-on: [self-hosted, Linux, ARM64]  # Specify that this job runs on a self-hosted runner with the ARM label
 
     steps:
       - name: Checkout Code
