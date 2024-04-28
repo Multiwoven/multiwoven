@@ -2,7 +2,7 @@ name: frontend-docker-build (ARM64)
 
 on:
   workflow_run:
-    workflows: ["frontend-ci"]
+    workflows: ["frontend-ci-arm"]
     branches: [main]
     types:
       - completed
@@ -38,6 +38,6 @@ jobs:
           file: ./ui/Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-arm
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}-arm
           platforms: linux/arm64

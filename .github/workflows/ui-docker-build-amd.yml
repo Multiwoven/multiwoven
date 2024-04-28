@@ -2,7 +2,7 @@ name: frontend-docker-build (AMD)
 
 on:
   workflow_run:
-    workflows: ["frontend-ci"]
+    workflows: ["frontend-ci-amd"]
     branches: [main]
     types:
       - completed
@@ -38,6 +38,6 @@ jobs:
           file: ./ui/Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-amd
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}-amd
           platforms: linux/amd64
