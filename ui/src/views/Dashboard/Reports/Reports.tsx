@@ -47,7 +47,11 @@ const Reports = ({ syncRunTriggeredData, syncRunRowsData }: ReportsProps): JSX.E
 
   return (
     <>
-      <Box display={{ base: 'flex flex-col', lg: 'flex' }} gap={4}>
+      <Box
+        display={{ base: 'flex', lg: 'flex' }}
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap={4}
+      >
         <VStack gap={4}>
           <ChartCard
             data={syncRunsData}
