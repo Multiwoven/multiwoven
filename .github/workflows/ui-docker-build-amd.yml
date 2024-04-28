@@ -1,8 +1,8 @@
-name: frontend-docker-build
+name: frontend-docker-build-AMD
 
 on:
   workflow_run:
-    workflows: ["frontend-ci"]
+    workflows: ["frontend-ci-amd"]
     branches: [main]
     types:
       - completed

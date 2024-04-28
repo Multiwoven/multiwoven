@@ -2,7 +2,7 @@ name: frontend-docker-build-ARM
 
 on:
   workflow_run:
-    workflows: ["frontend-ci"]
+    workflows: ["frontend-ci-arm"]
     branches: [main]
     types:
       - completed
@@ -29,6 +29,9 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -t ${{ env.IMAGE_NAME }}:${{ github.sha }} -f ui/Dockerfile ./ui
-          docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          # Build the Docker image with an ARM-specific tag
+          docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-arm64 -t ${{ env.IMAGE_NAME }}:${{ github.sha }}-arm64 -f ui/Dockerfile ./ui
+          
+          # Push the ARM-specific images to Docker Hub
+          docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-arm64
+          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}-arm64
