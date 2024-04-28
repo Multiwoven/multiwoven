@@ -1,4 +1,4 @@
-name: frontend-docker-build (amd64)
+name: frontend-docker-build (arm)
 
 on:
   workflow_run:
@@ -13,7 +13,7 @@ env:
 
 jobs:
   build_and_push:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest-large
 
     steps:
       - name: Checkout Code
@@ -40,4 +40,4 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          platforms: linux/amd64
+          platforms: linux/arm64
