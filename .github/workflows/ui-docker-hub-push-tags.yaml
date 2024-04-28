@@ -1,4 +1,4 @@
-name: Build and push Multiwoven server docker image to Docker Hub
+name: Build and push Multiwoven UI docker image to Docker Hub
 
 on:
   workflow_dispatch:
@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -30,14 +27,13 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            multiwoven/multiwoven-server
+            multiwoven/multiwoven-ui
 
       - name: Build and push server Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./server
-          file: ./server/Dockerfile
+          context: ./ui
+          file: ./ui/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
