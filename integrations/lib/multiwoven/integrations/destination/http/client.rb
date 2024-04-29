@@ -14,7 +14,7 @@ module Multiwoven
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
               HTTP_OPTIONS,
-              headers: options_headers()
+              headers: options_headers
             )
             if success?(request)
               success_status
@@ -29,14 +29,12 @@ module Multiwoven
 
           def discover(_connection_config = nil)
             catalog_json = read_json(CATALOG_SPEC_PATH)
-    
             catalog = build_catalog(catalog_json)
-    
             catalog.to_multiwoven_message
-          rescue StandardError => e
+          rescue StandardError
             handle_exception(
               "HTTP:DISCOVER:EXCEPTION",
-              "error",
+              "error"
             )
           end
 

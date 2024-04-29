@@ -2,11 +2,11 @@
 
 RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:disable Metrics/BlockLength
     include WebMock::API
-  
+
     before(:each) do
       WebMock.disable_net_connect!(allow_localhost: true)
     end
-  
+
     let(:client) { described_class.new }
     let(:mock_http_session) { double("Net::Http::Session") }
     let(:mock_http_file) { double("Net::Http::Operations::File") }
@@ -38,14 +38,14 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
         sync_mode: "incremental",
         destination_sync_mode: "insert" }.with_indifferent_access
     end
-  
+
     let(:records) do
       [
         { "id" => 1, "name" => "Test Record" }
       ]
     end
     let(:csv_content) { "id,name\n1,Test Record\n" }
-  
+
     describe "#check_connection" do
       it "successfully checks connection" do
         expect(client).to receive(:with_http_client).and_yield(double)
@@ -53,7 +53,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
         response = client.check_connection(connection_config)
         expect(response.connection_status.status).to eq("succeeded")
       end
-  
+
       it "handles connection failure" do
         allow(client).to receive(:with_http_client).and_raise(StandardError.new("connection failed"))
         response = client.check_connection(connection_config)
@@ -61,7 +61,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
         expect(response.connection_status.message).to eq("connection failed")
       end
     end
-  
+
     describe "#discover" do
       it "returns a catalog" do
         message = client.discover(connection_config)
@@ -78,7 +78,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
         expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
       end
     end
-  
+
     describe "#write" do
     let(:success_response) { instance_double("Response", success?: true, body: "{\"data\": []}", code: 200) }
     let(:failure_response) { instance_double("Response", success?: false, body: "{\"error\": \"error_message\"}", code: 400) }
@@ -99,18 +99,17 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
       expect(message.tracking.failed).to eq(2)
     end
   end
-  
+
     # describe "#meta_data" do
     #   it "serves it github image url as icon" do
     #     image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations/lib/multiwoven/integrations/destination/sftp/icon.svg"
     #     expect(client.send(:meta_data)[:data][:icon]).to eq(image_url)
     #   end
     # end
-  
+
     def sync_config
       Multiwoven::Integrations::Protocol::SyncConfig.from_json(
         sync_config_json.to_json
       )
     end
   end
-  

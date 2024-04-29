@@ -37,6 +37,7 @@ module Multiwoven
       HTTP_POST = "POST"
       HTTP_PUT = "PUT"
       HTTP_DELETE = "DELETE"
+      HTTP_OPTIONS = "OPTIONS"
 
       # google sheets
       GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/drive"
