@@ -33,8 +33,8 @@ module Multiwoven
                         rescue StandardError => e
                             handle_exception("ZENDESK:WRITE:EXCEPTION", "error", e)
                             failure_status(e)
-            
                     end
+
                     private
 
                     def initialize_client(connection_config)
@@ -60,20 +60,45 @@ module Multiwoven
                     end
                     
                     def process_tickets(tickets, stream)
-                        write_success = 0
-                        write_failure = 0
-                        properties = stream.json_schema[:properties]
-                        tickets.each do |ticket_object|
-                        ticket = extract_data(ticket_object, properties)
-                        klass  = @client.const_get(stream.name)
-                        klass.send(@action, ticket)
-                        write_success += 1
-                        rescue StandardError => e
-                            handle_exception("ZENDESK:WRITE:EXCEPTION", "error", e)
-                            write_failure += 1
+                        success_count = 0
+                        failure_count = 0
+                      
+                        tickets.each do |ticket|
+                          begin
+                            # Prepare the data for the Zendesk API
+                            zendesk_ticket = {
+                              subject: ticket[:subject],
+                              comment: { body: ticket[:description] },
+                              priority: ticket[:priority],
+                              status: ticket[:status],
+                              requester_id: ticket[:requester_id],  
+                              assignee_id: ticket[:assignee_id],
+                              tags: ticket[:tags]
+                            }
+                      
+                            # Create or update the ticket based on the action specified
+                            response = if @action == 'create'
+                                         @client.tickets.create!(zendesk_ticket)
+                                       else
+                                         existing_ticket = @client.tickets.find(id: ticket[:id]) # Make sure ticket[:id] is provided for updates
+                                         existing_ticket.update!(zendesk_ticket)
+                                       end
+                      
+                            # Check if the request was successful
+                            if response.save
+                              success_count += 1
+                            else
+                              raise StandardError, "Failed to process ticket: #{response.errors.join(', ')}"
+                            end
+                          rescue ZendeskAPI::Error => e
+                            handle_exception("ZENDESK:WRITE_TICKET:EXCEPTION", "error", e)
+                            failure_count += 1
+                          end
                         end
-                        tracking_message(write_success, write_failure)
-                    end
+                      
+                        # return the success and failure counts
+                        { success: success_count, failures: failure_count }
+                    end                      
 
                     def success_status
                         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message

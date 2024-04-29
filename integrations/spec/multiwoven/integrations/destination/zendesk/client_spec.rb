@@ -11,20 +11,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do # rubo
     
     let(:connection_config) do
         {
-<<<<<<< HEAD
-            url: "https://yoursubdomain.zendesk.com/api/v2"
-            username: "test_user",
-            token: "test_token",
-        }
-    end
-
-    let(:json_schema) do
-        # ...  
-    end
-
-    describe "#check_connection" do
-        # ...
-=======
             username: "praneeth.chandu@squared.ai",
             password: "Welcome123"
         }
@@ -72,7 +58,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do # rubo
                 expect(response.connection_status.message).to eq("not_authed")
             end
         end
->>>>>>> d61c897 (feat: adding zendesk destination connector)
     end
 
     describe "#discover" do
@@ -86,13 +71,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do # rubo
     describe "#create_payload" do
         # ...
     end
-<<<<<<< HEAD
-=======
 
     private
 
     def build_ticket(subject, body)
         {"ticket": {"subject": subject, "comment": {"body": body}}}
     end
->>>>>>> d61c897 (feat: adding zendesk destination connector)
 end
