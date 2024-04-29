@@ -4,10 +4,27 @@ import MainLayout from './views/MainLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageNotFound from './views/PageNotFound';
 import Protected from './protected-route';
+import { useEffect } from 'react';
+import mwTheme from '@/chakra.config';
 
 const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
+  const { brandName, favIconUrl } = mwTheme;
+
+  useEffect(() => {
+    if (document) {
+      // Set document title using VITE_BRAND_NAME
+      document.title = brandName;
+
+      // Set the favicon
+      const favicon = document?.getElementById('favicon') as HTMLLinkElement;
+      if (favicon && favIconUrl > '') {
+        favicon.href = favIconUrl;
+      }
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>

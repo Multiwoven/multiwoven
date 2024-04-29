@@ -9,6 +9,7 @@
     "properties": {
       "api_key": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Personal access token",
         "order": 0
       },

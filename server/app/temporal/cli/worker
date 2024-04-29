@@ -23,4 +23,6 @@ worker.register_activity(Activities::TerminateWorkflowActivity)
 worker.add_workflow_task_middleware(Middlewares::LoggingMiddleware, "MULTIWOVEN")
 worker.add_activity_middleware(Middlewares::LoggingMiddleware, "MULTIWOVEN")
 
+Utils::HealthChecker.run
+
 worker.start

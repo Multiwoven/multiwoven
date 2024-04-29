@@ -1,4 +1,4 @@
-import { Box, Text, Select, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Select, Tooltip, Input } from '@chakra-ui/react';
 import { DiscoverResponse, Stream } from '@/views/Activate/Syncs/types';
 import { ModelEntity } from '@/views/Models/types';
 import { useQuery } from '@tanstack/react-query';
@@ -193,25 +193,36 @@ const SelectStreams = ({
             <Text size='xs' marginBottom='12px' color='black.200'>
               Select cursor field. Ignore if you are unsure about which field to select
             </Text>
-            <Select
-              placeholder={isEdit ? placeholder : 'Select cursor field'}
-              backgroundColor={'gray.100'}
-              maxWidth='500px'
-              onChange={({ target: { value } }) => setCursorField?.(value)}
-              value={selectedCursorField}
-              borderStyle='solid'
-              borderWidth='1px'
-              borderColor='gray.400'
-              fontSize='14px'
-              isRequired
-              disabled={isEdit}
-            >
-              {modelColumns?.map((modelColumn) => (
-                <option value={modelColumn} key={modelColumn}>
-                  {modelColumn}
-                </option>
-              ))}
-            </Select>
+            {isEdit ? (
+              <Input
+                backgroundColor={'gray.100'}
+                maxWidth='500px'
+                value={selectedCursorField}
+                borderStyle='solid'
+                borderWidth='1px'
+                borderColor='gray.400'
+                fontSize='14px'
+                disabled
+              />
+            ) : (
+              <Select
+                placeholder={'Select cursor field'}
+                backgroundColor={'gray.100'}
+                maxWidth='500px'
+                onChange={({ target: { value } }) => setCursorField?.(value)}
+                value={selectedCursorField}
+                borderStyle='solid'
+                borderWidth='1px'
+                borderColor='gray.400'
+                fontSize='14px'
+              >
+                {modelColumns?.map((modelColumn) => (
+                  <option value={modelColumn} key={modelColumn}>
+                    {modelColumn}
+                  </option>
+                ))}
+              </Select>
+            )}
           </Box>
         )}
       </Box>
