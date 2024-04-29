@@ -9,8 +9,7 @@ module Multiwoven
           # prepend Multiwoven::Integrations::Core::RateLimiter
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
-            connection_specification=connection_config[:connection_specification]
-            destination_url = connection_specification["destination_url"]
+            destination_url = connection_config[:destination_url]
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
               HTTP_OPTIONS,
@@ -29,7 +28,7 @@ module Multiwoven
           def write(sync_config, records, _action = "create")
             connection_config = sync_config.destination
             connection_specification=connection_config[:connection_specification]
-            url = connection_specification["destination_url"]
+            url = connection_specification[:destination_url]
             write_success = 0
             write_failure = 0
             records.each_slice(MAX_CHUNK_SIZE) do |chunk|

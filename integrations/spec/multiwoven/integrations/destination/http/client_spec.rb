@@ -54,16 +54,14 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
     end
 
     let(:records) do
-      [
-        {"name" => "Test Record" }
-      ]
+      [{name: "John Doe"}]
     end
     let(:csv_content) { "id,name\n1,Test Record\n" }
 
     describe "#check_connection" do
       context "when the connection is successful" do
         before do
-          stub_request(:post, "https://www.google.com")
+          stub_request(:options, "https://www.google.com")
           .to_return(status: 200, body: "", headers: {})
         end
 
@@ -76,7 +74,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
 
       context "when the connection fails" do
         before do
-          stub_request(:post, "https://www.google.com")
+          stub_request(:options, "https://www.google.com")
             .to_return(status: 404, body: "", headers: {})
         end
 
@@ -93,7 +91,11 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
 
     describe "#write" do
       context "when the write operation is successful" do
+
         before do
+          stub_request(:options, "https://www.google.com")
+            .to_return(status: 200, body: "", headers: {})
+
           stub_request(:post, "https://www.google.com")
             .to_return(status: 200, body: "", headers: {})
         end
@@ -103,7 +105,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
             sync_config_json.to_json
           )
           response = client.write(sync_config, records)
-
           expect(response.tracking.success).to eq(records.size)
           expect(response.tracking.failed).to eq(0)
         end
@@ -111,6 +112,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
 
       context "when the write operation fails" do
         before do
+          stub_request(:options, "https://www.google.com")
+            .to_return(status: 200, body: "", headers: {})
+
           stub_request(:post, "https://www.google.com")
             .to_return(status: 400, body: "", headers: {})
         end
