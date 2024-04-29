@@ -12,7 +12,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
     let(:mock_http_file) { double("Net::Http::Operations::File") }
     let(:connection_config) do
       {
-        destination_url: "test_url",
+        destination_url: "https://www.google.com",
         api_key: "test_key",
       }.with_indifferent_access
     end

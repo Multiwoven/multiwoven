@@ -6,19 +6,18 @@ module Multiwoven
       module Http
         include Multiwoven::Integrations::Core
         class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
-          prepend Multiwoven::Integrations::Core::RateLimiter
+          # prepend Multiwoven::Integrations::Core::RateLimiter
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
-            connection_config = connection_config.with_indifferent_access
-            destination_url = connection_config[:destination_url]
+            connection_specification=connection_config[:connection_specification]
+            destination_url = connection_specification["destination_url"]
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
               HTTP_OPTIONS,
-              headers: options_headers
             )
             if success?(request)
               success_status
-            else
+            else StandardError => e
               handle_exception("HTTP:CHECK_CONNECTION:EXCEPTION", "error", e)
               failure_status(nil)
             end
@@ -27,21 +26,10 @@ module Multiwoven
             failure_status(e)
           end
 
-          def discover(_connection_config = nil)
-            catalog_json = read_json(CATALOG_SPEC_PATH)
-            catalog = build_catalog(catalog_json)
-            catalog.to_multiwoven_message
-          rescue StandardError
-            handle_exception(
-              "HTTP:DISCOVER:EXCEPTION",
-              "error"
-            )
-          end
-
           def write(sync_config, records, _action = "create")
-            connection_config = sync_config.destination.connection_specification.with_indifferent_access
-            api_key = connection_config[:api_key]
-            url = sync_config.stream.url
+            connection_config = sync_config.destination
+            connection_specification=connection_config[:connection_specification]
+            url = connection_specification["destination_url"]
             write_success = 0
             write_failure = 0
             records.each_slice(MAX_CHUNK_SIZE) do |chunk|
@@ -50,7 +38,6 @@ module Multiwoven
                 url,
                 sync_config.stream.request_method,
                 payload: payload,
-                headers: auth_headers(api_key)
               )
               if success?(response)
                 write_success += chunk.size
@@ -88,12 +75,6 @@ module Multiwoven
               "Accept" => "application/json",
               "Authorization" => "Bearer #{access_token}",
               "Content-Type" => "application/json"
-            }
-          end
-
-          def options_headers()
-            {
-              "Access-Control-Allow-Methods": "POST"
             }
           end
 
