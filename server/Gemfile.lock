@@ -2158,6 +2158,7 @@ DEPENDENCIES
   temporal-ruby!
   timecop
   tzinfo-data
+  webrick
 
 RUBY VERSION
    ruby 3.2.0p0

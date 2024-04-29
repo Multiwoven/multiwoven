@@ -42,6 +42,7 @@ gem "pg_query"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"
+gem "webrick"
 
 # Debugging
 group :development, :test do
