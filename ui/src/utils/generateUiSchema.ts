@@ -1,8 +1,8 @@
-export function generateUiSchema(
+export const generateUiSchema = (
   schemaProperties: object,
   uiSchema: Record<string, any> = {},
   path: string[] = [],
-): Record<string, string> {
+): Record<string, string> => {
   Object.entries(schemaProperties).forEach(([key, value]) => {
     if (key === 'properties' && typeof value === 'object' && value !== null) {
       generateUiSchema(value, uiSchema, path);
@@ -11,16 +11,16 @@ export function generateUiSchema(
       generateUiSchema(value, uiSchema, nestedObject);
     } else if (key === 'multiwoven_secret' && value === true) {
       let current = uiSchema;
-      path.forEach((p, i) => {
-        if (i === path.length - 1) {
-          current[p] = { 'ui:widget': 'password' };
+      path.forEach((schemaPath, index) => {
+        if (index === path.length - 1) {
+          current[schemaPath] = { 'ui:widget': 'password' };
         } else {
-          current[p] = current[p] || {};
+          current[schemaPath] = current[schemaPath] || {};
         }
-        current = current[p];
+        current = current[schemaPath];
       });
     }
   });
 
   return uiSchema;
-}
+};

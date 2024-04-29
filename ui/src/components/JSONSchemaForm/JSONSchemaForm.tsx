@@ -45,7 +45,7 @@ const JSONSchemaForm = ({
       templates={templateOverrides}
       formData={formData}
       onSubmit={({ formData }) => onSubmit(formData)}
-      onChange={onChange ? ({ formData }) => onChange(formData) : () => {}}
+      onChange={({ formData }) => onChange?.(formData)}
     >
       {children}
     </Form>
