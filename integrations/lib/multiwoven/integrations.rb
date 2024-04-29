@@ -22,6 +22,7 @@ require "stripe"
 require "net/sftp"
 require "csv"
 require "securerandom"
+require 'aws-sdk-s3'
 
 # Service
 require_relative "integrations/config"
@@ -47,6 +48,7 @@ require_relative "integrations/source/bigquery/client"
 require_relative "integrations/source/postgresql/client"
 require_relative "integrations/source/databricks/client"
 require_relative "integrations/source/salesforce_consumer_goods_cloud/client"
+require_relative "integrations/source/amazons3/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

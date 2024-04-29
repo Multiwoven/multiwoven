@@ -51,6 +51,8 @@ gem "net-sftp"
 
 gem "csv"
 
+gem "aws-sdk-s3"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

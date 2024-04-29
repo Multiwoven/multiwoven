@@ -1,0 +1,43 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/amazons3",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AmazonS3",
+    "type": "object",
+    "required": ["region", "bucket", "access_id", "secret_access", "file_key"],
+    "properties": {
+      "region": {
+        "description": "AWS region",
+        "examples": ["us-east-2"],
+        "type": "string",
+        "title": "Region",
+        "order": 1
+      },
+      "bucket": {
+        "description": "Bucket Name",
+        "type": "string",
+        "title": "Bucket",
+        "order": 2
+      },
+      "access_id": {
+        "type": "string",
+        "title": "Access Id",
+        "order": 3
+      },
+      "secret_access": {
+        "type": "string",
+        "title": "Secret Access",
+        "order": 4
+      },
+      "file_key": {
+        "description": "File name",
+        "examples": ["my-csv-file.csv"],
+        "type": "string",
+        "title": "File Key",
+        "order": 5
+      }
+    }
+  }
+}
