@@ -1,0 +1,94 @@
+{
+    "request_rate_limit": 700,
+    "request_rate_limit_unit": "minute",
+    "request_rate_concurrency": 10,
+    "streams": [
+        {
+            "name": "Tickets",
+            "action": "create",
+            "json_schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "priority": {
+                        "type": "string"
+                    },
+                    "requester_id": {
+                        "type": "integer"
+                    },
+                    "assignee_id": {
+                        "type": "integer"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "supported_sync_modes": ["incremental"],
+            "source_defined_cursor": true,
+            "default_cursor_field": ["updated_at"],
+            "source_defined_primary_key": [["id"]]
+        },
+        {
+            "name": "Users",
+            "action": "create",
+            "json_schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "last_login_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "supported_sync_modes": ["incremental"],
+            "source_defined_cursor": true,
+            "default_cursor_field": ["updated_at"],
+            "source_defined_primary_key": [["id"]]
+        }
+    ]
+}
