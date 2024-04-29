@@ -26,6 +26,8 @@ module Multiwoven
         }
       }.freeze
 
+      ZENDESK_TICKETING_URL = "https://multiwoven-test.zendesk.com/api/v2/"
+
       FACEBOOK_AUDIENCE_GET_ALL_ACCOUNTS = "https://graph.facebook.com/v18.0/me/adaccounts?fields=id,name"
 
       AIRTABLE_URL_BASE = "https://api.airtable.com/v0/"

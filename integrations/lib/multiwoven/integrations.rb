@@ -22,6 +22,7 @@ require "stripe"
 require "net/sftp"
 require "csv"
 require "securerandom"
+require "zendesk_api"
 
 # Service
 require_relative "integrations/config"
@@ -60,7 +61,11 @@ require_relative "integrations/destination/stripe/client"
 require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/destination/sftp/client"
 require_relative "integrations/destination/postgresql/client"
+<<<<<<< HEAD
 # require_relative "integrations/destination/zendesk/client"
+=======
+require_relative "integrations/destination/zendesk/client"
+>>>>>>> d61c897 (feat: adding zendesk destination connector)
 
 module Multiwoven
   module Integrations
