@@ -5,20 +5,14 @@ import { getConnectorDefinition } from '@/services/connectors';
 import { useContext } from 'react';
 import { Box } from '@chakra-ui/react';
 
-import validator from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/chakra-ui';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 
 import Loader from '@/components/Loader';
 import { processFormData } from '@/views/Connectors/helpers';
 import ContentContainer from '@/components/ContentContainer';
-import ObjectFieldTemplate from '@/views/Connectors/Sources/rjsf/ObjectFieldTemplate';
-import TitleFieldTemplate from '@/views/Connectors/Sources/rjsf/TitleFieldTemplate';
-import FieldTemplate from '@/views/Connectors/Sources/rjsf/FieldTemplate';
-import { FormProps } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
-import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate';
-import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
+import { generateUiSchema } from '@/utils/generateUiSchema';
+import JSONSchemaForm from '@/components/JSONSchemaForm';
 
 /**
  * TODO: Discuss with backend team and move this to backend
@@ -78,26 +72,16 @@ const SourceConfigForm = (): JSX.Element | null => {
   const connectorSchema = data?.data?.connector_spec?.connection_specification;
   if (!connectorSchema) return null;
 
-  const templateOverrides: FormProps<any, RJSFSchema, any>['templates'] = {
-    ObjectFieldTemplate: ObjectFieldTemplate,
-    TitleFieldTemplate: TitleFieldTemplate,
-    FieldTemplate: FieldTemplate,
-    BaseInputTemplate: BaseInputTemplate,
-    DescriptionFieldTemplate: DescriptionFieldTemplate,
-  };
+  const generatedSchema = generateUiSchema(connectorSchema);
 
   return (
     <Box display='flex' justifyContent='center' marginBottom='80px'>
       <ContentContainer>
         <Box backgroundColor='gray.200' padding='24px' borderRadius='8px'>
-          <Form
-            uiSchema={
-              connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined
-            }
+          <JSONSchemaForm
             schema={connectorSchema}
-            validator={validator}
-            templates={templateOverrides}
-            onSubmit={({ formData }) => handleFormSubmit(formData)}
+            uiSchema={generatedSchema}
+            onSubmit={(formData: FormData) => handleFormSubmit(formData)}
           >
             <SourceFormFooter
               ctaName='Continue'
@@ -106,7 +90,7 @@ const SourceConfigForm = (): JSX.Element | null => {
               isDocumentsSectionRequired
               isBackRequired
             />
-          </Form>
+          </JSONSchemaForm>
         </Box>
       </ContentContainer>
     </Box>
