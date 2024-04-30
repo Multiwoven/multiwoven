@@ -105,6 +105,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
             sync_config_json.to_json
           )
           response = client.write(sync_config, records)
+          # byebug
           expect(response.tracking.success).to eq(records.size)
           expect(response.tracking.failed).to eq(0)
         end
@@ -124,7 +125,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
             sync_config_json.to_json
           )
           response = client.write(sync_config, records)
-
+          # byebug
           expect(response.tracking.failed).to eq(records.size)
           expect(response.tracking.success).to eq(0)
         end
