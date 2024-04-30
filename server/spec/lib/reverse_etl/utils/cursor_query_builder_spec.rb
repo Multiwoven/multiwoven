@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module ReverseEtl
-  module Utils
+  module Utils # rubocop:disable Metrics/ModuleLength
     RSpec.describe CursorQueryBuilder do
       let(:existing_query) { "SELECT * FROM table" }
       let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
@@ -38,7 +38,60 @@ module ReverseEtl
           it "updates the query for soql query type with WHERE and ORDER BY clauses" do
             query = described_class.build_cursor_query(sync_config_salesforce, "2022-01-01")
 
-            expected_query = "SELECT * FROM table AS subquery WHERE timestamp >= 2022-01-01 ORDER BY timestamp ASC"
+            expected_query = "SELECT * FROM table WHERE timestamp >= 2022-01-01 ORDER BY timestamp ASC"
+            expect(query).to eq(expected_query)
+          end
+        end
+
+        context "when both cursor_field and not current_cursor_field are present soql complex query" do
+          let(:sales_query) do
+            "SELECT Id, User.Username, RecordType.Name, Account.AccountNumber, " \
+            "Account.OnboardedAccountNumber__c, PlannedVisitStartTime, PlannedVisitEndTime FROM Visit " \
+            "WHERE RecordType.Name = 'Picture of Success Visit' " \
+            "AND ((Account.AccountNumber != null AND Account.AccountNumber != '') " \
+            "OR (Account.OnboardedAccountNumber__c != null AND Account.OnboardedAccountNumber__c != ''))"
+          end
+          let(:model_sales) { create(:model, connector: source, query: sales_query) }
+          let(:sync_salesforce) do
+            create(:sync, model: model_sales, source: source_salesforce, destination:, cursor_field: "timestamp")
+          end
+          let(:sync_config_salesforce) { sync_salesforce.to_protocol }
+          it "updates the query for soql query type with WHERE and ORDER BY clauses" do
+            query = described_class.build_cursor_query(sync_config_salesforce, nil)
+
+            expected_query = "SELECT Id, User.Username, RecordType.Name, Account.AccountNumber, " \
+            "Account.OnboardedAccountNumber__c, PlannedVisitStartTime, PlannedVisitEndTime FROM Visit " \
+            "WHERE RecordType.Name = 'Picture of Success Visit' " \
+            "AND ((Account.AccountNumber != null AND Account.AccountNumber != '') " \
+            "OR (Account.OnboardedAccountNumber__c != null AND Account.OnboardedAccountNumber__c != '')) " \
+                             "ORDER BY timestamp ASC"
+            expect(query).to eq(expected_query)
+          end
+        end
+
+        context "when both cursor_field and current_cursor_field are present soql complex query" do
+          let(:sales_query) do
+            "SELECT Id, User.Username, RecordType.Name, Account.AccountNumber, " \
+            "Account.OnboardedAccountNumber__c, PlannedVisitStartTime, PlannedVisitEndTime FROM Visit " \
+            "WHERE RecordType.Name = 'Picture of Success Visit' " \
+            "AND ((Account.AccountNumber != null AND Account.AccountNumber != '') " \
+            "OR (Account.OnboardedAccountNumber__c != null AND Account.OnboardedAccountNumber__c != ''))"
+          end
+          let(:model_sales) { create(:model, connector: source, query: sales_query) }
+          let(:sync_salesforce) do
+            create(:sync, model: model_sales, source: source_salesforce, destination:, cursor_field: "timestamp",
+                          current_cursor_field: "2022-01-01")
+          end
+          let(:sync_config_salesforce) { sync_salesforce.to_protocol }
+          it "updates the query for soql query type with WHERE and ORDER BY clauses" do
+            query = described_class.build_cursor_query(sync_config_salesforce, "2022-01-01")
+
+            expected_query = "SELECT Id, User.Username, RecordType.Name, Account.AccountNumber, " \
+            "Account.OnboardedAccountNumber__c, PlannedVisitStartTime, PlannedVisitEndTime FROM Visit " \
+            "WHERE RecordType.Name = 'Picture of Success Visit' " \
+            "AND ((Account.AccountNumber != null AND Account.AccountNumber != '') " \
+            "OR (Account.OnboardedAccountNumber__c != null AND Account.OnboardedAccountNumber__c != '')) "\
+            "AND timestamp >= 2022-01-01 ORDER BY timestamp ASC"
             expect(query).to eq(expected_query)
           end
         end
@@ -63,7 +116,7 @@ module ReverseEtl
           it "updates the query for soql query type with only ORDER BY clause" do
             query = described_class.build_cursor_query(sync_config_salesforce, nil)
 
-            expected_query = "SELECT * FROM table AS subquery ORDER BY timestamp ASC"
+            expected_query = "SELECT * FROM table ORDER BY timestamp ASC"
             expect(query).to eq(expected_query)
           end
         end
@@ -76,7 +129,7 @@ module ReverseEtl
           it "does not update the query" do
             query = described_class.build_cursor_query(sync_config, nil)
 
-            expect(query).to eq(nil)
+            expect(query).to eq("SELECT * FROM table AS subquery ORDER BY  ASC")
           end
         end
       end
