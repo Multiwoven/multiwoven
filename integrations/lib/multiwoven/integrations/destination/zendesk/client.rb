@@ -13,9 +13,10 @@ module Multiwoven
                         initialize_client(connection_config)
                         authenticate_client
                         success_status
-                      rescue StandardError => e
-                        handle_exception("ZENDESK:CHECK_CONNECTION:EXCEPTION", "error", e)
-                        failure_status(e)
+                        
+                        rescue StandardError => e
+                            handle_exception("ZENDESK:CHECK_CONNECTION:EXCEPTION", "error", e)
+                            failure_status(e)
                     end
 
                     def discover(_connection_config = nil)
@@ -77,10 +78,10 @@ module Multiwoven
                       
                             # Create or update the ticket based on the action specified
                             response = if @action == 'create'
-                                         @client.tickets.create!(zendesk_ticket)
+                                            @client.tickets.create!(zendesk_ticket)
                                        else
-                                         existing_ticket = @client.tickets.find(id: ticket[:id]) # Make sure ticket[:id] is provided for updates
-                                         existing_ticket.update!(zendesk_ticket)
+                                            existing_ticket = @client.tickets.find(id: ticket[:id]) # Make sure ticket[:id] is provided for updates
+                                            existing_ticket.update!(zendesk_ticket)
                                        end
                       
                             if response.save

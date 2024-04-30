@@ -12,8 +12,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
     
     let(:connection_config) do
         {
-            username: "praneeth.chandu@squared.ai",
-            password: "Welcome123"
+            username: "username",
+            password: "password"
         }
     end
 
@@ -22,6 +22,72 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
             {"ticket": {"subject": "test 1", "comment": {"body": "testing creating a ticket"}}},
             {"ticket": {"subject": "test 2", "comment": {"body": "testing creating a ticket"}}}
         ]
+    end
+
+    let(:source_connector) do
+        {
+            name: "Salesforce Consumer Goods Cloud",
+            type: Multiwoven::Integrations::Protocol::ConnectorType["source"],
+            connection_specification: {
+            "username": "username",
+            "password": "password",
+            "host": "test.salesforce.com",
+            "security_token": "security_token",
+            "client_id": "client_id",
+            "client_secret": "client_secret"
+            }
+        }
+    end
+
+    let(:destination_connector) do
+        {
+            name: 'Test Zendesk Connector',
+            type: Multiwoven::Integrations::Protocol::ConnectorType['destination'],
+            connection_specification: { 'username' => 'username', 'password' => 'password'}
+        }
+    end
+
+    let(:model) do
+        {
+            name: "Salesforce Account",
+            query: "select id, name from Account LIMIT 10",
+            query_type: Multiwoven::Integrations::Protocol::ModelQueryType["raw_sql"],
+            primary_key: "id"
+        }
+    end
+
+    let(:stream) do
+        {
+            name: "Tickets",
+            action: "create",
+            request_rate_limit: 500,
+            request_rate_limit_unit: "day",
+            request_rate_concurrency: 5,
+            json_schema: {
+                type: "object",
+                additionalProperties: true,
+                properties: {
+                    subject: {
+                        type: "string"
+                    },
+                    description: {
+                        type: "string"
+                    },
+                    priority: {
+                        type: "string",
+                        enum: ["urgent", "high", "normal", "low"]
+                    },
+                    status: {
+                        type: "string",
+                        enum: ["new", "open", "pending", "hold", "solved", "closed"]
+                    }
+                }
+            },
+            supported_sync_modes: ["incremental"],
+            source_defined_cursor: true,
+            default_cursor_field: ["updated_at"],
+            source_defined_primary_key: [["id"]]
+        }
     end
 
     let(:sync_config) do
@@ -37,14 +103,17 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
 
     
     describe "#check_connection" do
-        before do
-            allow(client).to receive(:initialize_client).and_return(true)
-            allow(client).to receive(:authenticate_client).and_return(true)
-        end
-
         context "when the connection is successful" do
+            before do
+                stub_request(:post, ZENDESK_TICKETING_URL)
+                  .to_return(status: 200, body: {"tickets": []}.to_json, headers: {})
+            end
+
             it "returns a successful connection status" do
+                allow(client).to receive(:authenticate_client).and_return(true)
+        
                 response = client.check_connection(connection_config)
+        
                 expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
                 expect(response.connection_status.status).to eq("succeeded")
             end
@@ -53,60 +122,57 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
         
         context "when the connection fails" do
             before do
-                allow(client).to receive(:initialize_client).and_raise(StandardError, "Connection failed")
+                stub_request(:post, ZENDESK_TICKETING_URL)
+                  .to_return(status: 401, body: "", headers: {})
             end
 
-            it "returns a failed connection status" do
+            it "returns a failed connection status with an error message" do
+                allow(client).to receive(:authenticate_client).and_raise(StandardError.new("connection failed"))
+        
                 response = client.check_connection(connection_config)
+        
                 expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
                 expect(response.connection_status.status).to eq("failed")
             end
         end
     end
 
-    # describe "#discover" do
-    #     before do
-    #         stub_request(:get, "#{ZENDESK_TICKETING_URL}/ticket_fields.json")
-    #         .to_return(status: 200, body: '{"ticket_fields": [{"id": 1, "title": "Subject"}]}', headers: {})
-    #     end
+    describe "#discover" do
+        it "returns a catalog" do
+            message = client.discover
+            catalog = message.catalog
+            expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+            catalog.streams.each do |stream|
+                expect(stream.supported_sync_modes).to eql(%w[incremental])
+            end
+        end
+    end
 
-    #     it "fetches and returns the schema for tickets" do
-    #         catalog = client.discover
-    #         expect(catalog.streams.first.json_schema['properties']).to include("subject")
-    #     end
-    # end
+    describe "#write" do
+        context "when the write operation is successful" do
+            before do
+                
+            end
 
-    # describe "#write" do
-    #     context "when tickets are successfully created" do
-    #         before do
-    #             tickets.each do |ticket|
-    #             stub_request(:post, "#{ZENDESK_TICKETING_URL}/tickets.json")
-    #                 .with(body: ticket.to_json)
-    #                 .to_return(status: 201, body: '{"ticket": {"id": 123, "subject": "Ticket created"}}', headers: {})
-    #             end
-    #         end
+            it "increments the success count" do
+                response = client.write(sync_config, records, "create")
 
-    #         it "increments the success count for each ticket" do
-    #             result = client.write(sync_config, tickets, "create")
-    #             expect(result[:success]).to eq(tickets.size)
-    #             expect(result[:failures]).to eq(0)
-    #         end
-    #     end
+                expect(response.tracking.success).to eq(records.size)
+                expect(response.tracking.failed).to eq(0)
+            end
+        end
 
-    #     context "when ticket creation fails" do
-    #         before do
-    #             tickets.each do |ticket|
-    #             stub_request(:post, "#{ZENDESK_TICKETING_URL}/tickets.json")
-    #                 .with(body: ticket.to_json)
-    #                 .to_return(status: 400, body: '{"error": "Bad Request"}', headers: {})
-    #             end
-    #         end
+        # context "when the write operation fails" do
+        #     before do
+        #         allow(Stripe::Customer).to receive(:create).and_raise(StandardError.new("connection failed"))
+        #     end
 
-    #         it "increments the failure count for each ticket" do
-    #             result = client.write(sync_config, tickets, "create")
-    #             expect(result[:success]).to eq(0)
-    #             expect(result[:failures]).to eq(tickets.size)
-    #         end
-    #     end
-    # end
+        #     it "increments the failure count" do
+        #         response = client.write(sync_config, records)
+
+        #         expect(response.tracking.failed).to eq(records.size)
+        #         expect(response.tracking.success).to eq(0)
+        #     end
+        # end
+  end
 end
