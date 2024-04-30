@@ -100,7 +100,6 @@ module Multiwoven
             if(auth_key)
               headers["Authorization"] = "Basic #{auth_key}"
             end
-            byebug
             headers
           end
 
