@@ -20,7 +20,7 @@
       "Password": {
         "type": "string",
         "title": "Authentication Password",
-        "order": 1
+        "order": 2
       }
     }
   }
