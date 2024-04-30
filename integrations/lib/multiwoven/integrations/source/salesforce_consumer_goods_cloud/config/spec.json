@@ -22,6 +22,7 @@
       },
       "password": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Password",
         "order": 1
       },
@@ -37,11 +38,13 @@
       },
       "client_secret": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Client Secret",
         "order": 4
       },
       "security_token": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Security Token",
         "order": 5
       }
