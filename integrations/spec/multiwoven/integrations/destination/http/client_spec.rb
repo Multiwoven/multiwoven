@@ -11,7 +11,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do
   let(:mock_http_session) { double("Net::Http::Session") }
   let(:connection_config) do
     {
-      destination_url: "https://www.google.com"
+      destination_url: "https://www.google.com",
+      username: "test",
+      password: "test"
     }.with_indifferent_access
   end
 
@@ -82,6 +84,17 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do
         expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
         expect(response.connection_status.status).to eq("failed")
       end
+    end
+  end
+
+  describe "#discover" do
+    it "returns a catalog" do
+      message = subject.discover
+      catalog = message.catalog
+      expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit_unit).to eql("minute")
+      expect(catalog.schema_mode).to eql("schemaless")
     end
   end
 

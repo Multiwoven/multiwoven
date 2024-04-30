@@ -11,6 +11,16 @@
         "type": "string",
         "title": "Destination url",
         "order": 0
+      },
+      "Username": {
+        "type": "string",
+        "title": "Authentication Username",
+        "order": 1
+      },
+      "Password": {
+        "type": "string",
+        "title": "Authentication Password",
+        "order": 1
       }
     }
   }
