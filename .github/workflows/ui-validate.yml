@@ -24,17 +24,14 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Use Yarn
-        run: npm install -g yarn@latest
-
       - name: Install dependencies
-        run: yarn install
+        run: npm install
         working-directory: ./ui
 
       - name: Build Source Code
-        run: yarn run build
+        run: npm run build
         working-directory: ./ui
 
       - name: Lint Source Code
-        run: yarn run lint
+        run: npm run lint
         working-directory: ./ui
