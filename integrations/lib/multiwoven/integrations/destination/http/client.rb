@@ -106,7 +106,8 @@ module Multiwoven
 
           def convert_to_auth_key(username, password)
             full_string = username + ":" + password
-            Base64.encode64(full_string)
+            #need to remove line break after encoding or else request fails
+            Base64.encode64(full_string).gsub(/\n/, '')
           end
 
           def extract_body(response)
