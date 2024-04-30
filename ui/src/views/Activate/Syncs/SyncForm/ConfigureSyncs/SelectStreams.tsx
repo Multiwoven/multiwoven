@@ -203,7 +203,6 @@ const SelectStreams = ({
               borderWidth='1px'
               borderColor='gray.400'
               fontSize='14px'
-              isRequired
               disabled={isEdit}
             >
               {modelColumns?.map((modelColumn) => (
