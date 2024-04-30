@@ -45,11 +45,10 @@ module Multiwoven
                             config.password = connection_config[:password]
                         end
                     end
-
+                    
                     def authenticate_client
                         response = @client.tickets.page(1).per_page(1).fetch
                         
-                        # response should return an array of Ticket objs
                         if response.is_a?(Array) && !response.empty?
                             true
                         else
@@ -84,7 +83,6 @@ module Multiwoven
                                          existing_ticket.update!(zendesk_ticket)
                                        end
                       
-                            # Check if the request was successful
                             if response.save
                               success_count += 1
                             else
@@ -96,7 +94,6 @@ module Multiwoven
                           end
                         end
                       
-                        # return the success and failure counts
                         { success: success_count, failures: failure_count }
                     end                      
 
