@@ -20,6 +20,9 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
+import { editor, Position } from 'monaco-editor';
+
+type ITextModel = editor.ITextModel;
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -133,7 +136,7 @@ const DefineSQL = ({
       };
 
       const providerHandle = monaco.languages.registerCompletionItemProvider('mysql', {
-        provideCompletionItems: (model, position) => {
+        provideCompletionItems: (model: ITextModel, position: Position) => {
           const word = model.getWordUntilPosition(position);
           const range = {
             startLineNumber: position.lineNumber,
@@ -236,7 +239,7 @@ const DefineSQL = ({
                     formatOnType: true,
                     formatOnPaste: true,
                     autoIndent: 'full',
-                    wordBasedSuggestions: true,
+                    wordBasedSuggestions: 'currentDocument',
                     quickSuggestions: true,
                     tabCompletion: 'on',
                     contextmenu: true,
