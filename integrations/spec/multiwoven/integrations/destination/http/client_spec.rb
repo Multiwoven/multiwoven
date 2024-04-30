@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Http::Client do 
     include WebMock::API
 
     before(:each) do
@@ -14,7 +14,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
         destination_url: "https://www.google.com"
       }.with_indifferent_access
     end
-    
+
     let(:sync_config_json) do
       { source: {
           name: "DestinationConnectorName",
@@ -44,17 +44,15 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
             type: "object",
             properties: {
               name: {
-                type: ["string", "null"]
+                type: %w["string", "null"]
               }
             }
           }
-        }
-      
-      }.with_indifferent_access
+        }}.with_indifferent_access
     end
 
     let(:records) do
-      [{name: "John Doe"}]
+      [{ name: "John Doe" }]
     end
     let(:csv_content) { "id,name\n1,Test Record\n" }
 
@@ -62,7 +60,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
       context "when the connection is successful" do
         before do
           stub_request(:options, "https://www.google.com")
-          .to_return(status: 200, body: "", headers: {})
+            .to_return(status: 200, body: "", headers: {})
         end
 
         it "returns a successful connection status" do
@@ -87,15 +85,13 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
       end
     end
 
-
-
     describe "#write" do
       context "when the write operation is successful" do
 
         before do
           stub_request(:options, "https://www.google.com")
             .to_return(status: 200, body: "", headers: {})
-
+            
           stub_request(:post, "https://www.google.com")
             .to_return(status: 200, body: "", headers: {})
         end
