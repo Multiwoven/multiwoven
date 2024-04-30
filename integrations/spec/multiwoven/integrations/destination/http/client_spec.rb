@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Http::Client do
+RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
 
   before(:each) do
