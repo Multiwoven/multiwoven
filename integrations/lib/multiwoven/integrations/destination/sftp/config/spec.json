@@ -31,6 +31,7 @@
         "title": "Password",
         "description": "Password associated with the username.",
         "type": "string",
+        "multiwoven_secret": true,
         "order": 3
       },
       "destination_path": {
