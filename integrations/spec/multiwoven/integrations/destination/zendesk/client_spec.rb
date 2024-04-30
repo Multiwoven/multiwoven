@@ -170,7 +170,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
         allow(resource_double).to receive(:create!).and_raise(StandardError.new("connection failed"))
 
         result = client.write(sync_config, records)
-
         expect(result.tracking.success).to eq(0)
         expect(result.tracking.failed).to eq(records.size)
       end
