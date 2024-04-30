@@ -5,19 +5,18 @@ module Multiwoven
     module Destination
       module Http
         include Multiwoven::Integrations::Core
-        class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
-          # prepend Multiwoven::Integrations::Core::RateLimiter
+        class Client < DestinationConnector 
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
             destination_url = connection_config[:destination_url]
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
-              HTTP_OPTIONS,
+              HTTP_OPTIONS
             )
             if success?(request)
               success_status
-            else 
+            else
               failure_status(nil)
             end
           rescue StandardError => e
@@ -36,7 +35,7 @@ module Multiwoven
               response = Multiwoven::Integrations::Core::HttpClient.request(
                 url,
                 sync_config.stream.request_method,
-                payload: payload,
+                payload: payload
               )
               if success?(response)
                 write_success += chunk.size
