@@ -7,8 +7,6 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import validator from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/chakra-ui';
 import { Box, Button, Divider, Text } from '@chakra-ui/react';
 import SourceFormFooter from '../SourcesForm/SourceFormFooter';
 import TopBar from '@/components/TopBar';
@@ -20,16 +18,12 @@ import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
 import EntityItem from '@/components/EntityItem';
 import moment from 'moment';
-import ObjectFieldTemplate from '@/views/Connectors/Sources/rjsf/ObjectFieldTemplate';
-import TitleFieldTemplate from '@/views/Connectors/Sources/rjsf/TitleFieldTemplate';
-import FieldTemplate from '@/views/Connectors/Sources/rjsf/FieldTemplate';
-import { FormProps } from '@rjsf/core';
-import BaseInputTemplate from '@/views/Connectors/Sources/rjsf/BaseInputTemplate';
-import DescriptionFieldTemplate from '@/views/Connectors/Sources/rjsf/DescriptionFieldTemplate';
-import { uiSchemas } from '../SourcesForm/SourceConfigForm/SourceConfigForm';
+
 import SourceActions from './SourceActions';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
+import JSONSchemaForm from '../../../../components/JSONSchemaForm';
+import { generateUiSchema } from '@/utils/generateUiSchema';
 
 const EditSource = (): JSX.Element => {
   const { sourceId } = useParams();
@@ -44,7 +38,7 @@ const EditSource = (): JSX.Element => {
     queryKey: ['connectorInfo', sourceId],
     queryFn: () => getConnectorInfo(sourceId as string),
     refetchOnMount: true,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     enabled: !!sourceId,
   });
 
@@ -163,13 +157,7 @@ const EditSource = (): JSX.Element => {
     },
   ];
 
-  const templateOverrides: FormProps<any, RJSFSchema, any>['templates'] = {
-    ObjectFieldTemplate: ObjectFieldTemplate,
-    TitleFieldTemplate: TitleFieldTemplate,
-    FieldTemplate: FieldTemplate,
-    BaseInputTemplate: BaseInputTemplate,
-    DescriptionFieldTemplate: DescriptionFieldTemplate,
-  };
+  const generatedSchema = generateUiSchema(connectorSchema?.connection_specification as RJSFSchema);
 
   return (
     <Box width='100%' display='flex' justifyContent='center'>
@@ -212,18 +200,12 @@ const EditSource = (): JSX.Element => {
           border='1px'
           borderColor='gray.400'
         >
-          <Form
-            uiSchema={
-              connectorSchema?.connection_specification?.title
-                ? uiSchemas[connectorSchema?.connection_specification?.title.toLowerCase()]
-                : undefined
-            }
+          <JSONSchemaForm
             schema={connectorSchema?.connection_specification as RJSFSchema}
-            validator={validator}
+            uiSchema={generatedSchema}
             formData={formData}
-            onSubmit={({ formData }) => handleOnTestClick(formData)}
-            onChange={({ formData }) => setFormData(formData)}
-            templates={templateOverrides}
+            onSubmit={(formData: FormData) => handleOnTestClick(formData)}
+            onChange={(formData: FormData) => setFormData(formData)}
           >
             <SourceFormFooter
               ctaName='Save Changes'
@@ -248,7 +230,7 @@ const EditSource = (): JSX.Element => {
                 </Button>
               }
             />
-          </Form>
+          </JSONSchemaForm>
         </Box>
       </ContentContainer>
     </Box>

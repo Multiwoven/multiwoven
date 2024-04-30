@@ -26,7 +26,8 @@
             "type": "string"
           },
           "private_key": {
-            "type": "string"
+            "type": "string",
+            "multiwoven_secret": true
           },
           "client_email": {
             "type": "string",

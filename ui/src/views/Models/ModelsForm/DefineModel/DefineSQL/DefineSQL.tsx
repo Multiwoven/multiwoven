@@ -236,7 +236,7 @@ const DefineSQL = ({
                     formatOnType: true,
                     formatOnPaste: true,
                     autoIndent: 'full',
-                    wordBasedSuggestions: true,
+                    wordBasedSuggestions: 'currentDocument',
                     quickSuggestions: true,
                     tabCompletion: 'on',
                     contextmenu: true,
