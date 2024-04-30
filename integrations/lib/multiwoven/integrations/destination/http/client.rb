@@ -17,8 +17,7 @@ module Multiwoven
             )
             if success?(request)
               success_status
-            else StandardError => e
-              handle_exception("HTTP:CHECK_CONNECTION:EXCEPTION", "error", e)
+            else 
               failure_status(nil)
             end
           rescue StandardError => e
@@ -53,7 +52,6 @@ module Multiwoven
               success: write_success,
               failed: write_failure
             )
-            byebug
             tracker.to_multiwoven_message
           rescue StandardError => e
             handle_exception("HTTP:WRITE:EXCEPTION", "error", e)
