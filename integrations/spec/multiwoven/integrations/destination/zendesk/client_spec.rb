@@ -151,27 +151,25 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
     describe "#write" do
         context "when the write operation is successful" do
             before do
-                
+                stub_request(:any, %r[#{ZENDESK_TICKETING_URL}.*] )
+                .to_return(status: 200, body: 'We tried our best.')
             end
-
+            
             it "increments the success count" do
-                response = client.write(sync_config, records, "create")
-
-                expect(response.tracking.success).to eq(records.size)
-                expect(response.tracking.failed).to eq(0)
+                expect(client.write(sync_config, records)).to include(success: records.size)
+                expect(client.write(sync_config, records)).to include(failures: 0)
             end
         end
 
         # context "when the write operation fails" do
-        #     before do
-        #         allow(Stripe::Customer).to receive(:create).and_raise(StandardError.new("connection failed"))
-        #     end
-
         #     it "increments the failure count" do
-        #         response = client.write(sync_config, records)
-
-        #         expect(response.tracking.failed).to eq(records.size)
-        #         expect(response.tracking.success).to eq(0)
+        #         allow(client).to receive_message_chain(:tickets, :create!).and_raise(StandardError.new('Failed to create ticket'))
+        
+        #         result = client.write(sync_config, records, "create")
+        #         expect(result[:success]).to eq(0)
+        #         expect(result[:failures]).to eq(records.size)  # Assuming each ticket fails
+        #         # expect(client.write(sync_config, records)).to include(success: 0)
+        #         # expect(client.write(sync_config, records)).to include(failures: records.size)
         #     end
         # end
   end

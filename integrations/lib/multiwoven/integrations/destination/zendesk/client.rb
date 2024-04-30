@@ -27,10 +27,10 @@ module Multiwoven
                             failure_status(e)
                     end
 
-                    def write(sync_config, tickets, action = "create")
+                    def write(sync_config, records, action = "create")
                         @action = sync_config.stream.action || action
                         initialize_client(sync_config.destination.connection_specification)
-                        process_tickets(tickets, sync_config.stream)
+                        process_records(records, sync_config.stream)
                         rescue StandardError => e
                             handle_exception("ZENDESK:WRITE:EXCEPTION", "error", e)
                             failure_status(e)
@@ -59,44 +59,71 @@ module Multiwoven
                         raise StandardError, "Authentication failed: #{e.message}"
                     end
                     
-                    def process_tickets(tickets, stream)
+                    def process_records(records, stream)
                         success_count = 0
                         failure_count = 0
                       
-                        tickets.each do |ticket|
+                        records.each do |record|
                           begin
                             # Prepare the data for the Zendesk API
-                            zendesk_ticket = {
-                              subject: ticket[:subject],
-                              comment: { body: ticket[:description] },
-                              priority: ticket[:priority],
-                              status: ticket[:status],
-                              requester_id: ticket[:requester_id],  
-                              assignee_id: ticket[:assignee_id],
-                              tags: ticket[:tags]
-                            }
-                      
+                            zendesk_data = prepare_record_data(record, stream.name)
+                            plural_stream_name = pluralize_stream_name(stream.name.downcase)
+
                             # Create or update the ticket based on the action specified
                             response = if @action == 'create'
-                                            @client.tickets.create!(zendesk_ticket)
-                                       else
-                                            existing_ticket = @client.tickets.find(id: ticket[:id]) # Make sure ticket[:id] is provided for updates
-                                            existing_ticket.update!(zendesk_ticket)
-                                       end
-                      
+                                @client.send(plural_stream_name).create!(zendesk_data)
+                            else
+                                existing_record = @client.send(plural_stream_name).find(id: record[:id])
+                                existing_record.update!(zendesk_data)
+                            end
+                            
                             if response.save
                               success_count += 1
                             else
-                              raise StandardError, "Failed to process ticket: #{response.errors.join(', ')}"
+                              raise StandardError, "Failed to process record: #{response.errors.join(', ')}"
                             end
                           rescue ZendeskAPI::Error => e
-                            handle_exception("ZENDESK:WRITE_TICKET:EXCEPTION", "error", e)
+                            handle_exception("ZENDESK:WRITE_RECORD:EXCEPTION", "error", e)
                             failure_count += 1
                           end
                         end
                       
                         { success: success_count, failures: failure_count }
-                    end                      
+                    end
+
+                    def pluralize_stream_name(name)
+                        case name
+                            when 'ticket'
+                                'tickets'
+                            when 'user'
+                                'users'
+                            else
+                                name
+                        end
+                    end
+
+                    def prepare_record_data(record, type)
+                        case type
+                        when "Tickets"
+                            {
+                                subject: record[:subject],
+                                comment: { body: record[:description] },
+                                priority: record[:priority],
+                                status: record[:status],
+                                requester_id: record[:requester_id],
+                                assignee_id: record[:assignee_id],
+                                tags: record[:tags]
+                            }
+                        when "Users"
+                            {
+                                name: record[:name],
+                                email: record[:email],
+                                role: record[:role]
+                            }
+                        else
+                            raise StandardError, "Unsupported record type: #{type}"
+                        end
+                    end
 
                     def success_status
                         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
