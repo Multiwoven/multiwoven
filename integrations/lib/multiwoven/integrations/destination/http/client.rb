@@ -5,7 +5,7 @@ module Multiwoven
     module Destination
       module Http
         include Multiwoven::Integrations::Core
-        class Client < DestinationConnector 
+        class Client < DestinationConnector
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
