@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+ZENDESK_TICKETING_URL = "https://multiwoven-test.zendesk.com/api/v2"
+
 RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
-  ZENDESK_TICKETING_URL = "https://multiwoven-test.zendesk.com/api/v2"
 
   before(:each) do
     WebMock.disable_net_connect!(allow_localhost: true)
