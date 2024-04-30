@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require "base64"
 
+require "base64"
 module Multiwoven
   module Integrations
     module Destination
@@ -39,15 +39,12 @@ module Multiwoven
 
           def write(sync_config, records, _action = "create")
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
-            connection_config = connection_config.with_indifferent_access
 
             url = connection_config[:destination_url]
             username = connection_config[:username]
             password = connection_config[:password]
 
-            if (username && password)
-              auth_key = convert_to_auth_key(username, password)
-            end
+            auth_key = convert_to_auth_key(username, password) if username && password
 
             write_success = 0
             write_failure = 0
@@ -91,22 +88,19 @@ module Multiwoven
           end
 
           def auth_headers(auth_key = nil)
-
             headers = {
               "Accept" => "application/json",
               "Content-Type" => "application/json"
             }
 
-            if(auth_key)
-              headers["Authorization"] = "Basic #{auth_key}"
-            end
+            headers["Authorization"] = "Basic #{auth_key}" if auth_key
             headers
           end
 
           def convert_to_auth_key(username, password)
-            full_string = username + ":" + password
-            #need to remove line break after encoding or else request fails
-            Base64.encode64(full_string).gsub(/\n/, '')
+            full_string = "#{username}:#{password}"
+            # need to remove line break after encoding or else request fails
+            Base64.encode64(full_string).gsub(/\n/, "")
           end
 
           def extract_body(response)
