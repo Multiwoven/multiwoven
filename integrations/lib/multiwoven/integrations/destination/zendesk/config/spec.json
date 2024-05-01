@@ -18,7 +18,8 @@
       "password": {
         "type": "string",
         "title": "Password",
-        "order": 1
+        "order": 1,
+        "multiwoven_secret": true
       }
     }
   }
