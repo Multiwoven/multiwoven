@@ -8,7 +8,8 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        create_connection(connection_config)
+        athena_client = create_connection(connection_config)
+        athena_client.list_work_groups
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
@@ -17,19 +18,17 @@ module Multiwoven::Integrations::Source
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
         query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = '#{connection_config[:schema]}' ORDER BY table_name, ordinal_position;"
-
         db = create_connection(connection_config)
         response = db.start_query_execution(
           query_string: query,
+          query_execution_context: { database: connection_config[:schema] },
           result_configuration: { output_location: connection_config[:output_location] }
         )
         query_execution_id = response[:query_execution_id]
-        # Polling for query execution completion
-        db.get_query_execution(query_execution_id: query_execution_id)
+        wait_for_query_completion(db, query_execution_id)
 
-        results = db.get_query_results(query_execution_id: query_execution_id)
-        records = transform_records(results)
-        catalog = Catalog.new(streams: create_streams(records))
+        results = transform_results(db.get_query_results(query_execution_id: query_execution_id))
+        catalog = Catalog.new(streams: create_streams(results))
         catalog.to_multiwoven_message
       rescue StandardError => e
         handle_exception(
@@ -48,13 +47,13 @@ module Multiwoven::Integrations::Source
         db = create_connection(connection_config)
         response = db.start_query_execution(
           query_string: query,
+          query_execution_context: { database: sync_config[:source][:connection_specification][:schema] },
           result_configuration: { output_location: sync_config[:source][:connection_specification][:output_location] }
         )
         query_execution_id = response[:query_execution_id]
-        db.get_query_execution({ query_execution_id: query_execution_id })
-
-        results = db.get_query_results({ query_execution_id: query_execution_id })
-        query(results[:ResultSet])
+        wait_for_query_completion(db, query_execution_id)
+        results = transform_results(db.get_query_results(query_execution_id: query_execution_id))
+        query(results)
       rescue StandardError => e
         handle_exception(
           "AWS:ATHENA:READ:EXCEPTION",
@@ -66,7 +65,7 @@ module Multiwoven::Integrations::Source
       private
 
       def create_connection(connection_config)
-        Aws.config.update({ credentials: Aws::Credentials.new(connection_config[:access_key], connection_config[:secret_access_key]), region: "us-east-2" })
+        Aws.config.update({ credentials: Aws::Credentials.new(connection_config[:access_key], connection_config[:secret_access_key]), region: connection_config[:region] })
         Aws::Athena::Client.new
       end
 
@@ -76,17 +75,22 @@ module Multiwoven::Integrations::Source
         end
       end
 
-      def transform_records(records)
-        result = records[:ResultSet].map do |row|
-          data = row[:Data].map { |item| item[:VarCharValue] }
-          {
-            table_name: data[0],
-            column_name: data[1],
-            data_type: data[2],
-            is_nullable: data[3] == "YES"
-          }
+      def wait_for_query_completion(db, query_execution_id)
+        loop do
+          response = db.get_query_execution(query_execution_id: query_execution_id)
+          status = response.query_execution.status.state
+          break if %w[SUCCEEDED FAILED CANCELLED].include?(status)
+
+          sleep 1
         end
-        { ResultSet: result }
+      end
+
+      def transform_results(results)
+        columns = results.result_set.result_set_metadata.column_info.map(&:name)
+        rows = results.result_set.rows.map do |row|
+          row.data.map(&:var_char_value)
+        end
+        rows.map { |row| columns.zip(row).to_h }
       end
 
       def query(queries)
@@ -99,12 +103,12 @@ module Multiwoven::Integrations::Source
 
       def group_by_table(records)
         result = {}
-        records[:ResultSet].each_with_index do |entry, index|
-          table_name = entry[:table_name]
+        records.each_with_index do |entry, index|
+          table_name = entry["table_name"]
           column_data = {
-            column_name: entry[:column_name],
-            data_type: entry[:data_type],
-            is_nullable: entry[:is_nullable]
+            column_name: entry["column_name"],
+            data_type: entry["data_type"],
+            is_nullable: entry["is_nullable"] == "YES"
           }
           result[index] ||= {}
           result[index][:tablename] = table_name
