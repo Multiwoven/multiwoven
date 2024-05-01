@@ -39,7 +39,7 @@ module Multiwoven
           def initialize_client(connection_config)
             connection_config = connection_config.with_indifferent_access
             @client = ZendeskAPI::Client.new do |config|
-              config.url = ZENDESK_TICKETING_URL
+              config.url = "#{connection_config[:subdomain]}.#{ZENDESK_URL_SUFFIX}"
               config.username = connection_config[:username]
               config.password = connection_config[:password]
             end

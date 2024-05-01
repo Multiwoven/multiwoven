@@ -17,7 +17,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
     }
   end
 
-  let(:zendesk_api_url) { "https://#{connection_config[:subdomain]}.zendesk.com/api/v2" }
+  let(:zendesk_api_url) { "#{connection_config[:subdomain]}.zendesk.com/api/v2" }
 
   let(:records) do
     [
@@ -175,7 +175,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
   # end
 
   describe "#meta_data" do
-    # change this to rollout validation for all connector rolling out
     it "client class_name and meta name is same" do
       meta_name = client.class.to_s.split("::")[-2]
       expect(client.send(:meta_data)[:data][:name]).to eq(meta_name)
