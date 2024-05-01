@@ -7,7 +7,8 @@
     "type": "object",
     "required": [
       "username",
-      "password"
+      "password",
+      "subdomain"
     ],
     "properties": {
       "username": {
@@ -20,6 +21,11 @@
         "title": "Password",
         "order": 1,
         "multiwoven_secret": true
+      },
+      "subdomain": {
+        "type": "string",
+        "title": "Zendesk Subdomain (include https://)",
+        "order": 2
       }
     }
   }
