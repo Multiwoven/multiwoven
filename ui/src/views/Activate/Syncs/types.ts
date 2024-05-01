@@ -62,7 +62,8 @@ export type ConfigSync = {
   source_id: string;
   destination_id: string;
   model_id: string;
-  schedule_type: 'interval';
+  schedule_type: string;
+  cron_expression: string;
   configuration: FieldMapType[];
   stream_name: string;
 };
@@ -89,7 +90,8 @@ export type CreateSyncResponse = {
     configuration: Record<string, string>;
     destination_id: number;
     model_id: number;
-    schedule_type: 'interval';
+    schedule_type: string;
+    cron_expression: '';
     source_id: string;
     status: string;
     stream_name: string;
@@ -127,7 +129,8 @@ export type FinalizeSyncFormFields = {
   sync_mode: 'full_refresh';
   sync_interval: number;
   sync_interval_unit: 'minutes';
-  schedule_type: 'interval';
+  schedule_type: string;
+  cron_expression: '';
 };
 
 export type SyncRunsResponse = {
@@ -142,6 +145,7 @@ export type SyncRunsResponse = {
     updated_at: string;
     duration: number | null;
     total_query_rows: number;
+    skipped_rows: number;
     total_rows: number;
     successful_rows: number;
     failed_rows: number;
@@ -156,6 +160,7 @@ export type SyncRunsColumnFields =
   | 'start_time'
   | 'duration'
   | 'rows_queried'
+  | 'skipped_rows'
   | 'results';
 
 export type SyncRunsColumnEntity = {

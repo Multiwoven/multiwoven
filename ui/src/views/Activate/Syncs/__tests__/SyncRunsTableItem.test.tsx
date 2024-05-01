@@ -19,6 +19,7 @@ const mockSyncRunsData: SyncRunsResponse[] = [
       updated_at: '2024-01-01T00:00:00.000Z',
       duration: 1.0,
       total_query_rows: 500,
+      skipped_rows: 0,
       total_rows: 500,
       successful_rows: 500,
       failed_rows: 0,
@@ -39,6 +40,7 @@ const mockSyncRunsData: SyncRunsResponse[] = [
       updated_at: '2024-03-15T07:26:07.378Z',
       duration: 1.0,
       total_query_rows: 500,
+      skipped_rows: 0,
       total_rows: 500,
       successful_rows: 450,
       failed_rows: 50,
@@ -61,6 +63,11 @@ describe('TableItem', () => {
   it('should render rows queried correctly', () => {
     render(<TableItem field='rows_queried' data={mockSyncRunsData[0]} />);
     expect(screen.getByText('500 rows')).toBeTruthy();
+  });
+
+  it('should render rows skipped correctly', () => {
+    render(<TableItem field='skipped_rows' data={mockSyncRunsData[0]} />);
+    expect(screen.getByText('0 rows')).toBeTruthy();
   });
 
   it('should render status correctly for success', () => {

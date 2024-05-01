@@ -12,7 +12,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.1.62"
+gem "multiwoven-integrations", "~> 0.1.63"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -42,6 +42,7 @@ gem "pg_query"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"
+gem "webrick"
 
 # Debugging
 group :development, :test do

@@ -1,0 +1,36 @@
+name: frontend-docker-build (arm64)
+
+on:
+  workflow_run:
+    workflows: ["frontend-ci"]
+    branches: [main]
+    types:
+      - completed
+
+env:
+  IMAGE_NAME: multiwoven/multiwoven-ui
+  IMAGE_TAG: edge-arm
+
+jobs:
+  build_and_push:
+    runs-on: [self-hosted, Linux, ARM64]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ui
+          file: ./ui/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}

@@ -6,6 +6,8 @@ module ReverseEtl
       # TODO: Make it as class method
       def read(sync_run_id, activity)
         total_query_rows = 0
+        skipped_rows = 0
+
         sync_run = SyncRun.find(sync_run_id)
 
         return log_sync_run_error(sync_run) unless sync_run.may_query?
@@ -21,9 +23,9 @@ module ReverseEtl
           current_offset, last_cursor_field_value|
 
           total_query_rows += records.count
-          process_records(records, sync_run, model)
+          skipped_rows += process_records(records, sync_run, model)
           heartbeat(activity)
-          sync_run.update(current_offset:, total_query_rows:)
+          sync_run.update(current_offset:, total_query_rows:, skipped_rows:)
           sync_run.sync.update(current_cursor_field: last_cursor_field_value)
         end
         # change state querying to queued
@@ -33,20 +35,19 @@ module ReverseEtl
       private
 
       def process_records(records, sync_run, model)
-        Parallel.each(records, in_threads: THREAD_COUNT) do |message|
-          process_record(message, sync_run, model)
-        end
+        Parallel.map(records, in_threads: THREAD_COUNT) do |message|
+          record = message.record
+          fingerprint = generate_fingerprint(record.data)
+          sync_record = process_record(record, sync_run, model)
+          update_or_create_sync_record(sync_record, record, sync_run, fingerprint) ? 0 : 1
+        end.sum
       end
 
-      def process_record(message, sync_run, model)
-        record = message.record
-        fingerprint = generate_fingerprint(record.data)
+      def process_record(record, sync_run, model)
         primary_key = record.data.with_indifferent_access[model.primary_key]
-
         raise StandardError, "Primary key cannot be blank" if primary_key.blank?
 
-        sync_record = find_or_initialize_sync_record(sync_run, primary_key)
-        update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
+        find_or_initialize_sync_record(sync_run, primary_key)
       rescue StandardError => e
         Temporal.logger.error(error_message: e.message,
                               sync_run_id: sync_run.id,
@@ -73,7 +74,7 @@ module ReverseEtl
       end
 
       def update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
-        return unless new_record?(sync_record, fingerprint)
+        return false unless new_record?(sync_record, fingerprint)
 
         sync_record.assign_attributes(
           sync_run_id: sync_run.id,
@@ -82,6 +83,8 @@ module ReverseEtl
           record: record.data
         )
         sync_record.save!
+
+        true
       end
     end
   end

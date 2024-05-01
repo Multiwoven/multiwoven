@@ -72,6 +72,7 @@ const EditSync = (): JSX.Element | null => {
       sync_interval: 0,
       sync_interval_unit: 'minutes',
       schedule_type: 'interval',
+      cron_expression: '',
     },
     onSubmit: async (data) => {
       setIsEditLoading(true);
@@ -94,6 +95,7 @@ const EditSync = (): JSX.Element | null => {
               sync_interval_unit: data.sync_interval_unit,
               sync_mode: selectedSyncMode,
               cursor_field: cursorField,
+              cron_expression: data?.cron_expression,
             },
           };
 
@@ -148,6 +150,7 @@ const EditSync = (): JSX.Element | null => {
         sync_interval_unit: syncData?.sync_interval_unit ?? 'minutes',
         sync_mode: syncData?.sync_mode ?? 'full_refresh',
         schedule_type: syncData?.schedule_type ?? 'interval',
+        cron_expression: syncData?.cron_expression ?? '',
       });
 
       if (Array.isArray(syncFetchResponse.data.attributes.configuration)) {

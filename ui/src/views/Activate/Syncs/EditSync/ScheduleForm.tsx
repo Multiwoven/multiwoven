@@ -1,6 +1,7 @@
 import { Box, Divider, Input, Radio, RadioGroup, Select, Stack, Text } from '@chakra-ui/react';
 import { FormikProps } from 'formik';
 import { FinalizeSyncFormFields } from '../types';
+import CronScheduleType from '../SyncForm/FinaliseSync/CronScheduleType';
 
 type ScheduleFormProps = {
   formik: FormikProps<FinalizeSyncFormFields>;
@@ -61,10 +62,26 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                   </Text>
                 </Box>
               </Radio>
+              <Radio
+                value='cron_expression'
+                display='flex'
+                alignItems='flex-start'
+                backgroundColor='gray.100'
+                marginBottom='10px'
+              >
+                <Box position='relative' top='-5px'>
+                  <Text fontWeight='500' size='sm'>
+                    Cron Expression{' '}
+                  </Text>
+                  <Text size='xs' color='black.200'>
+                    Schedule your sync using a cron expression
+                  </Text>
+                </Box>
+              </Radio>
             </Stack>
           </RadioGroup>
         </Box>
-        <Box>
+        <Box width='40%'>
           {formik.values.schedule_type === 'interval' ? (
             <>
               <Text mb={4} fontWeight='semibold' size='sm'>
@@ -81,6 +98,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 borderStyle='solid'
                 borderColor='gray.400'
                 height='40px'
+                justifyContent='space-around'
               >
                 <Box>
                   <Text>Every</Text>
@@ -116,6 +134,9 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 </Box>
               </Box>
             </>
+          ) : null}
+          {formik.values.schedule_type === 'cron_expression' ? (
+            <CronScheduleType formik={formik} />
           ) : null}
         </Box>
       </Box>

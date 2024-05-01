@@ -95,7 +95,7 @@ export const ChartCard = ({
       borderColor='gray.400'
     >
       <HStack>
-        <Text size='sm' fontWeight='semibold'>
+        <Text size='sm' fontWeight='semibold' color='black.500'>
           {cardTitle}
         </Text>
         <Spacer />
