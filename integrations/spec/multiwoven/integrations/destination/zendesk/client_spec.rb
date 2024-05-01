@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-ZENDESK_TICKETING_URL = "https://multiwoven-test.zendesk.com/api/v2"
-
 RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # rubocop:disable Metrics/BlockLength
   include WebMock::API
 
@@ -13,10 +11,13 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
 
   let(:connection_config) do
     {
+      subdomain: "https://your-subdomain",
       username: "username",
       password: "password"
     }
   end
+
+  let(:zendesk_api_url) { "https://#{connection_config[:subdomain]}.zendesk.com/api/v2" }
 
   let(:records) do
     [
@@ -105,7 +106,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
   describe "#check_connection" do
     context "when the connection is successful" do
       before do
-        stub_request(:post, ZENDESK_TICKETING_URL)
+        stub_request(:post, zendesk_api_url)
           .to_return(status: 200, body: { "tickets": [] }.to_json, headers: {})
       end
 
@@ -121,7 +122,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
 
     context "when the connection fails" do
       before do
-        stub_request(:post, ZENDESK_TICKETING_URL)
+        stub_request(:post, zendesk_api_url)
           .to_return(status: 401, body: "", headers: {})
       end
 
@@ -150,7 +151,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
   # describe "#write" do
   #   context "when the write operation is successful" do
   #     before do
-  #       stub_request(:any, /#{ZENDESK_TICKETING_URL}.*/)
+  #       stub_request(:any, /#{zendesk_api_url}.*/)
   #         .to_return(status: 200, body: "We tried our best.")
   #     end
 
