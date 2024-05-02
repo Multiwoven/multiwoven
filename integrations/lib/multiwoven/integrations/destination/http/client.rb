@@ -41,11 +41,7 @@ module Multiwoven
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
 
             url = connection_config[:destination_url]
-            username = connection_config[:username]
-            password = connection_config[:password]
-
-            auth_key = convert_to_auth_key(username, password) if username && password
-
+            headers = connection_config[:headers]
             write_success = 0
             write_failure = 0
             records.each_slice(MAX_CHUNK_SIZE) do |chunk|
@@ -54,7 +50,7 @@ module Multiwoven
                 url,
                 sync_config.stream.request_method,
                 payload: payload,
-                headers: auth_headers(auth_key)
+                headers: headers
               )
               if success?(response)
                 write_success += chunk.size
@@ -85,16 +81,6 @@ module Multiwoven
                 }
               end
             }
-          end
-
-          def auth_headers(auth_key = nil)
-            headers = {
-              "Accept" => "application/json",
-              "Content-Type" => "application/json"
-            }
-
-            headers["Authorization"] = "Basic #{auth_key}" if auth_key
-            headers
           end
 
           def convert_to_auth_key(username, password)

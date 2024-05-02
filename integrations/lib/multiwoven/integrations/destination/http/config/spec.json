@@ -12,15 +12,10 @@
         "title": "Destination url",
         "order": 0
       },
-      "Username": {
-        "type": "string",
-        "title": "Authentication Username",
+      "headers": {
+        "type": "object",
+        "title": "Http Headers",
         "order": 1
-      },
-      "Password": {
-        "type": "string",
-        "title": "Authentication Password",
-        "order": 2
       }
     }
   }
