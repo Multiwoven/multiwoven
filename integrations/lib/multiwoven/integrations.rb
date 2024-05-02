@@ -22,6 +22,7 @@ require "stripe"
 require "net/sftp"
 require "csv"
 require "securerandom"
+require "aws-sdk-athena"
 
 # Service
 require_relative "integrations/config"
