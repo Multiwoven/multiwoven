@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const DOMAIN =
-  window?.VITE_API_HOST !== '__VITE_API_HOST__'
+  window?.VITE_API_HOST !== '__VITE_API_HOST__' && window?.VITE_API_HOST !== 'undefined'
     ? `${window?.VITE_API_HOST}/api/v1/`
     : import.meta.env.VITE_API_HOST
       ? `${import.meta.env.VITE_API_HOST}/api/v1/`
