@@ -5,4 +5,5 @@ interface Window {
   VITE_BRAND_NAME?: string;
   VITE_BRAND_COLOR?: string;
   VITE_BRAND_HOVER_COLOR?: string;
+  VITE_FAV_ICON_URL?: string;
 }

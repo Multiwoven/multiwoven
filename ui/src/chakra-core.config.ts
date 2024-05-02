@@ -6,8 +6,8 @@ export const defaultExtension = {
     brand: {
       100: '#FFE7E6',
       200: '#FAC5C3',
-      300: '#F5837F',
-      400: '#F54C3D',
+      300: 'rgb(0 29 125/1)',
+      400: 'rgb(0 36 156/1)',
       500: '#CC1C16',
       600: '#720D09',
     },
@@ -272,6 +272,7 @@ export const defaultExtension = {
   fontWeights: {
     semiBold: 600,
   },
-  brandName: 'Multiwoven',
-  logoUrl: '',
+  brandName: 'AI Squared',
+  logoUrl: 'https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png',
+  favIconUrl: 'https://squared.ai/wp-content/uploads/2024/03/apple-touch-icon.png',
 };

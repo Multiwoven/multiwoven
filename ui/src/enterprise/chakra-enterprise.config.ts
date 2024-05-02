@@ -22,6 +22,11 @@ export const enterpriseExtension = () => {
       window?.VITE_BRAND_HOVER_COLOR !== 'undefined'
         ? window?.VITE_BRAND_HOVER_COLOR
         : import.meta.env.VITE_BRAND_HOVER_COLOR || undefined,
+    VITE_FAV_ICON_URL:
+      window?.VITE_FAV_ICON_URL !== '__VITE_FAV_ICON_URL__' &&
+      window?.VITE_FAV_ICON_URL !== 'undefined'
+        ? window?.VITE_FAV_ICON_URL
+        : import.meta.env.VITE_FAV_ICON_URL || undefined,
   };
 
   // Update the logo URL if environment variable exists
@@ -34,10 +39,15 @@ export const enterpriseExtension = () => {
     extension.brandName = env.VITE_BRAND_NAME;
   }
 
+  // Update the fav icon if environment variable exists
+  if (env.VITE_FAV_ICON_URL) {
+    extension.favIconUrl = env.VITE_FAV_ICON_URL;
+  }
+
   // Update the brand color if environment variable exists
   if (env.VITE_BRAND_COLOR) {
     extension.colors.brand[400] = env.VITE_BRAND_COLOR;
-    extension.components.Button.variants.solid._hover = { bgColor: env.VITE_BRAND_HOVER_COLOR };
+    extension.colors.brand[300] = env.VITE_BRAND_HOVER_COLOR;
   }
 
   return extension;
