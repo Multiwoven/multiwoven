@@ -105,8 +105,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
       before do
         stub_request(:options, "https://www.google.com")
           .to_return(status: 200, body: "", headers: {})
-            stub_request(:post, "https://www.google.com")
-              .to_return(status: 200, body: "", headers: {})
+        stub_request(:post, "https://www.google.com")
+          .to_return(status: 200, body: "", headers: {})
       end
 
       it "increments the success count" do
