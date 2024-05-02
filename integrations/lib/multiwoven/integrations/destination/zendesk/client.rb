@@ -46,9 +46,7 @@ module Multiwoven
           end
 
           def authenticate_client
-            response = @client.tickets.page(1).per_page(1).fetch
-
-            raise StandardError, "Failed to authenticate with Zendesk: #{response.errors.join(", ")}" unless response.is_a?(Array) && !response.empty?
+            @client.tickets.page(1).per_page(1).fetch
           rescue ZendeskAPI::Error => e
             raise StandardError, "Authentication failed: #{e.message}"
           end

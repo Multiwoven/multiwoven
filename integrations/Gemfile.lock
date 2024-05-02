@@ -27,6 +27,7 @@ PATH
       sequel
       slack-ruby-client
       stripe
+      zendesk_api
 
 GEM
   remote: https://rubygems.org/

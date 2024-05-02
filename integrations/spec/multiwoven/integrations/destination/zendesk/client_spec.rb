@@ -45,7 +45,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
     {
       name: "Test Zendesk Connector",
       type: Multiwoven::Integrations::Protocol::ConnectorType["destination"],
-      connection_specification: { "username" => "username", "password" => "password" }
+      connection_specification: connection_config
     }
   end
 
@@ -148,31 +148,41 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
     end
   end
 
-  # describe "#write" do
-  #   context "when the write operation is successful" do
-  #     before do
-  #       stub_request(:any, /#{zendesk_api_url}.*/)
-  #         .to_return(status: 200, body: "We tried our best.")
-  #     end
+  describe "#write" do
+    context "when the write operation is successful" do
+      before do
+        stub_request(:post, "https://your-subdomain.zendesk.com/api/v2/tickets")
+          .with(
+            body: { "ticket": { "subject": "null", "comment": { "body": "null" }, "priority": "null", "status": "null", "requester_id": "null", "assignee_id": "null", "tags": "null" }.to_json },
+            headers: {
+              "Accept" => "application/json",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Authorization" => "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+              "Content-Type" => "application/json",
+              "User-Agent" => "ZendeskAPI Ruby 3.0.5"
+            }
+          )
+          .to_return(status: 200, body: "", headers: {})
+      end
 
-  #     it "increments the success count" do
-  #       expect(client.write(sync_config, records)).to include(success: records.size)
-  #       expect(client.write(sync_config, records)).to include(failures: 0)
-  #     end
-  #   end
+      it "increments the success count" do
+        expect(client.write(sync_config, records)).to include(success: records.size)
+        expect(client.write(sync_config, records)).to include(failures: 0)
+      end
+    end
 
-  #   context "when the write operation fails" do
-  #     it "increments the failure count" do
-  #       allow(client).to receive_message_chain(:tickets, :create!).and_raise(StandardError.new("Failed to create ticket"))
+    context "when the write operation fails" do
+      it "increments the failure count" do
+        allow(client).to receive_message_chain(:tickets, :create!).and_raise(StandardError.new("Failed to create ticket"))
 
-  #       result = client.write(sync_config, records, "create")
-  #       expect(result[:success]).to eq(0)
-  #       expect(result[:failures]).to eq(records.size) # Assuming each ticket fails
-  #       # expect(client.write(sync_config, records)).to include(success: 0)
-  #       # expect(client.write(sync_config, records)).to include(failures: records.size)
-  #     end
-  #   end
-  # end
+        result = client.write(sync_config, records, "create")
+        expect(result[:success]).to eq(0)
+        expect(result[:failures]).to eq(records.size) # Assuming each ticket fails
+        # expect(client.write(sync_config, records)).to include(success: 0)
+        # expect(client.write(sync_config, records)).to include(failures: records.size)
+      end
+    end
+  end
 
   describe "#meta_data" do
     it "client class_name and meta name is same" do
