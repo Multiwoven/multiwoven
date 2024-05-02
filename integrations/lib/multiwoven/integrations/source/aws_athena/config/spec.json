@@ -10,15 +10,16 @@
     "properties": {
       "access_key": {
         "description": "The AWS Access Key ID to use for authentication.",
-        "examples": ["AWSATHENAEXAMPLE"],
+        "examples": ["AWSATHENAACCESS"],
         "type": "string",
         "title": "Personal Access Key",
         "order": 0
       },
       "secret_access_key": {
         "description": "The AWS Secret Access Key to use for authentication.",
-        "examples": ["AWS/ATHENA/EXAMPLEKEY"],
+        "examples": ["AWSATHENASECRET"],
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Secret Access Key",
         "order": 1
       },
