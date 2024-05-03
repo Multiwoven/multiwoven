@@ -53,12 +53,14 @@ module ReverseEtl
           end
           let(:record) do
             Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
-                                                                          "first_name" => "John", "Last Name" => "Doe" },
+                                                                          "first_name" => "John",
+                                                                          "Last Name" => "Doe" },
                                                                   emitted_at: DateTime.now.to_i).to_multiwoven_message
           end
           let(:record1) do
             Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
-                                                                          "first_name" => "John", "Last Name" => "Doe" },
+                                                                          "first_name" => "John",
+                                                                          "Last Name" => "Doe" },
                                                                   emitted_at: DateTime.now.to_i).to_multiwoven_message
           end
 
