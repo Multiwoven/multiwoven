@@ -10,6 +10,7 @@ PATH
     multiwoven-integrations (0.1.63)
       activesupport
       async-websocket
+      aws-sdk-s3
       csv
       dry-schema
       dry-struct
