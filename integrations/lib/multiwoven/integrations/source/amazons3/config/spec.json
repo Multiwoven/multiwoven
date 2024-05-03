@@ -37,6 +37,14 @@
         "type": "string",
         "title": "File Key",
         "order": 5
+      },
+      "file_type": {
+        "description": "File type",
+        "examples": ["parquet", "csv"],
+        "type": "string",
+        "enum": ["parquet", "csv"],
+        "title": "File Type",
+        "order": 5
       }
     }
   }
