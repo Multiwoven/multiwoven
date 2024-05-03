@@ -17,7 +17,11 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       port: 22,
       password: "test_password",
       destination_path: "/multiwoven",
-      file_name: "test"
+      file_name: "test",
+      format: {
+        format_type: "csv",
+        compression_type: "un_compressed"
+      }
     }.with_indifferent_access
   end
   let(:sync_config_json) do

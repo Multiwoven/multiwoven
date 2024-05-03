@@ -56,37 +56,15 @@
           "format_type": {
             "title": "Format Type",
             "type": "string",
-            "enum": ["CSV"],
-            "default": "CSV"
+            "enum": ["csv"],
+            "default": "csv"
           },
-          "compression": {
-            "title": "Compression",
-            "type": "object",
-            "description": "Whether the output files should be compressed. If compression is selected, the output filename will have an extra extension ZIP.",
-            "oneOf": [
-              {
-                "title": "No Compression",
-                "requires": "compression_type",
-                "properties": {
-                  "compression_type": {
-                    "type": "string",
-                    "enum": ["No Compression"],
-                    "default": "No Compression"
-                  }
-                }
-              },
-              {
-                "title": "ZIP",
-                "requires": "compression_type",
-                "properties": {
-                  "compression_type": {
-                    "type": "string",
-                    "enum": ["ZIP"],
-                    "default": "ZIP"
-                  }
-                }
-              }
-            ]
+          "compression_type": {
+            "title": "Compression Type",
+            "description": "Whether the output files should be compressed.",
+            "type": "string",
+            "enum": ["un_compressed", "zip"],
+            "default": "un_compressed"
           }
         }
       }
