@@ -4,7 +4,7 @@
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "SFTP",
-    "required": ["host", "username", "password", "destination_path"],
+    "required": ["host", "username", "password", "destination_path", "format" ],
     "properties": {
       "host": {
         "title": "Host",
@@ -45,6 +45,50 @@
         "type": "string",
         "description": "Name of the file to be written.",
         "order": 5
+      },
+      "format": {
+        "title": "Output Format",
+        "type": "object",
+        "description": "Format of the data output.",
+        "order": 6,
+        "required": ["format_type"],
+        "properties": {
+          "format_type": {
+            "title": "Format Type",
+            "type": "string",
+            "enum": ["CSV"],
+            "default": "CSV"
+          },
+          "compression": {
+            "title": "Compression",
+            "type": "object",
+            "description": "Whether the output files should be compressed. If compression is selected, the output filename will have an extra extension ZIP.",
+            "oneOf": [
+              {
+                "title": "No Compression",
+                "requires": "compression_type",
+                "properties": {
+                  "compression_type": {
+                    "type": "string",
+                    "enum": ["No Compression"],
+                    "default": "No Compression"
+                  }
+                }
+              },
+              {
+                "title": "ZIP",
+                "requires": "compression_type",
+                "properties": {
+                  "compression_type": {
+                    "type": "string",
+                    "enum": ["ZIP"],
+                    "default": "ZIP"
+                  }
+                }
+              }
+            ]
+          }
+        }
       }
     }
   }
