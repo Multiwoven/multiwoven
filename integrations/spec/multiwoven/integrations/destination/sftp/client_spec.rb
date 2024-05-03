@@ -126,12 +126,21 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do # rubocop:
       expect(response.tracking.failed).to eq(0)
     end
 
-    it "handles the failure and increments the failure count" do
+    it "handles the failure with un_compressed " do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
       allow(mock_sftp_session).to receive(:upload!).and_raise(StandardError, "SFTP upload failed")
       response = client.write(sync_config, records, "insert")
 
       # Account for handling failure outside the inner rescue block
+      expect(response.tracking.failed).to eq(records.size)
+      expect(response.tracking.success).to eq(0)
+    end
+
+    it "handles the failure with compressed " do
+      allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
+      allow(mock_sftp_session).to receive(:upload!).and_raise(StandardError, "SFTP upload failed")
+      response = client.write(sync_config_compressed_zip, records, "insert")
+
       expect(response.tracking.failed).to eq(records.size)
       expect(response.tracking.success).to eq(0)
     end

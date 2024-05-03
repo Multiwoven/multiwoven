@@ -54,7 +54,7 @@
         "required": ["format_type"],
         "properties": {
           "format_type": {
-            "title": "Format Type",
+            "title": "File Format Type",
             "type": "string",
             "enum": ["csv"],
             "default": "csv"
