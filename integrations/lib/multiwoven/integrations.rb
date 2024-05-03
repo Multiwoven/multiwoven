@@ -22,6 +22,7 @@ require "stripe"
 require "net/sftp"
 require "csv"
 require "securerandom"
+require "zip"
 require "zendesk_api"
 require "zip"
 

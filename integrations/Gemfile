@@ -51,6 +51,8 @@ gem "net-sftp"
 
 gem "csv"
 
+gem "rubyzip"
+
 gem "zendesk_api"
 
 gem "rubyzip"
