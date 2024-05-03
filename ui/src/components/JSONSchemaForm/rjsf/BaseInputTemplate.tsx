@@ -124,9 +124,7 @@ export default function BaseInputTemplate<
             list={schema.examples ? examplesId<T>(id) : undefined}
             aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
           />
-          {inputProps.type === 'text' ? (
-            <></>
-          ) : (
+          {inputProps.type !== 'text' ? (
             <InputRightElement>
               <IconButton
                 variant='text'
@@ -135,7 +133,7 @@ export default function BaseInputTemplate<
                 onClick={onClickReveal}
               />
             </InputRightElement>
-          )}
+          ) : null}
         </InputGroup>
         {Array.isArray(schema.examples) ? (
           <datalist id={examplesId<T>(id)}>
