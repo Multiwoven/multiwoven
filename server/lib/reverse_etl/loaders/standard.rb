@@ -23,7 +23,7 @@ module ReverseEtl
 
       private
 
-      def process_individual_records(sync_run, sync, sync_config, _activity)
+      def process_individual_records(sync_run, sync, sync_config, activity)
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
 
@@ -48,13 +48,13 @@ module ReverseEtl
           rescue StandardError => e
             Rails.logger(e)
           end
-          # heartbeat(activity)
+          heartbeat(activity)
 
           update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         end
       end
 
-      def process_batch_records(sync_run, sync, sync_config, _activity)
+      def process_batch_records(sync_run, sync, sync_config, activity)
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
         batch_size = sync_config.stream.batch_size
@@ -67,7 +67,7 @@ module ReverseEtl
                       in_threads: THREAD_COUNT) do |sync_records|
           transformed_records = sync_records.map { |sync_record| transformer.transform(sync, sync_record) }
           report = handle_response(client.write(sync_config, transformed_records), sync_run)
-          # heartbeat(activity)
+          heartbeat(activity)
           if report.tracking.success.zero?
             failed_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           else
@@ -84,7 +84,6 @@ module ReverseEtl
       end
 
       def handle_response(report, sync_run)
-        byebug
         is_multiwoven_tracking_message = report.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage) &&
                                          report.type == "tracking" &&
                                          report.tracking.is_a?(Multiwoven::Integrations::Protocol::TrackingMessage)
