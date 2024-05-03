@@ -1,5 +1,12 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -12,6 +19,9 @@ import {
   getTemplate,
 } from '@rjsf/utils';
 import { ChakraUiSchema, getChakra } from '@rjsf/chakra-ui/lib/utils';
+
+import { useDisclosure } from '@chakra-ui/react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function BaseInputTemplate<
   T = unknown,
@@ -54,6 +64,12 @@ export default function BaseInputTemplate<
     registry.globalUiOptions,
   );
 
+  const { isOpen, onToggle } = useDisclosure();
+
+  const onClickReveal = () => {
+    onToggle();
+  };
+
   return (
     <FormControl
       mb={1}
@@ -93,20 +109,34 @@ export default function BaseInputTemplate<
       </div>
 
       <div>
-        <Input
-          id={id}
-          name={id}
-          value={value || value === 0 ? value : ''}
-          onChange={onChangeOverride || _onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          autoFocus={autofocus}
-          placeholder={placeholder}
-          {...inputProps}
-          list={schema.examples ? examplesId<T>(id) : undefined}
-          aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
-          mt={1}
-        />
+        <InputGroup>
+          <Input
+            id={id}
+            name={id}
+            value={value || value === 0 ? value : ''}
+            onChange={onChangeOverride || _onChange}
+            onBlur={_onBlur}
+            onFocus={_onFocus}
+            autoFocus={autofocus}
+            placeholder={placeholder}
+            {...inputProps}
+            type={inputProps.type === 'text' ? 'text' : isOpen ? 'text' : 'password'}
+            list={schema.examples ? examplesId<T>(id) : undefined}
+            aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+          />
+          {inputProps.type === 'text' ? (
+            <></>
+          ) : (
+            <InputRightElement>
+              <IconButton
+                variant='text'
+                aria-label={isOpen ? 'Mask password' : 'Reveal password'}
+                icon={isOpen ? <FiEyeOff /> : <FiEye />}
+                onClick={onClickReveal}
+              />
+            </InputRightElement>
+          )}
+        </InputGroup>
         {Array.isArray(schema.examples) ? (
           <datalist id={examplesId<T>(id)}>
             {(schema.examples as string[])
