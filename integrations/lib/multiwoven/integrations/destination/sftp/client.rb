@@ -41,10 +41,11 @@ module Multiwoven::Integrations::Destination
         csv_content = generate_csv_content(records)
         write_success = 0
         write_failure = 0
-
-        Tempfile.create([local_file_name, ".csv"]) do |tempfile|
-          tempfile.write(csv_content)
-          tempfile.close
+        Tempfile.create([local_file_name, ".zip"]) do |tempfile|
+          Zip::File.open(tempfile.path, Zip::File::CREATE) do |zipfile|
+            zipfile.get_output_stream("#{local_file_name}.csv") { |f| f.write(csv_content) }
+          end
+          byebug
           with_sftp_client(connection_config) do |sftp|
             sftp.upload!(tempfile.path, file_path)
             write_success += records.size
@@ -82,7 +83,7 @@ module Multiwoven::Integrations::Destination
       def generate_file_path(sync_config)
         connection_specification = sync_config.destination.connection_specification.with_indifferent_access
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
-        file_name = "#{connection_specification[:file_name]}_#{timestamp}.csv"
+        file_name = "#{connection_specification[:file_name]}_#{timestamp}.zip"
         File.join(connection_specification[:destination_path], file_name)
       end
 
