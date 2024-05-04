@@ -82,7 +82,7 @@ const Dashboard = (): JSX.Element | null => {
     <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
-          name={'Dashboard'}
+          name={'Reports'}
           ctaName=''
           ctaButtonVariant='solid'
           onCtaClicked={() => {}}

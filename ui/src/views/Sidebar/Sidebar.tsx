@@ -8,8 +8,8 @@ import {
   FiBookOpen,
   FiGrid,
   FiRefreshCcw,
-  FiUsers,
-  FiHome,
+  FiBarChart2,
+  FiTool,
 } from 'react-icons/fi';
 import { NavButton } from './navButton';
 import Profile from './Profile';
@@ -32,11 +32,15 @@ type MenuArray = MenuSection[];
 
 const menus: MenuArray = [
   {
-    heading: null,
-    menu: [{ title: 'Dashboard', link: '/', Icon: FiHome }],
+    heading: 'DATA ACTIVATION',
+    menu: [
+      { title: 'Reports', link: '/', Icon: FiBarChart2 },
+      { title: 'Models', link: '/define/models', Icon: FiTable },
+      { title: 'Syncs', link: '/activate/syncs', Icon: FiRefreshCcw },
+    ],
   },
   {
-    heading: 'SETUP',
+    heading: 'DATA INTEGRATION',
     menu: [
       { title: 'Sources', link: '/setup/sources', Icon: FiDatabase },
       {
@@ -47,20 +51,8 @@ const menus: MenuArray = [
     ],
   },
   {
-    heading: 'DEFINE',
-    menu: [{ title: 'Models', link: '/define/models', Icon: FiTable }],
-  },
-  {
-    heading: 'ACTIVATE',
-    menu: [
-      { title: 'Syncs', link: '/activate/syncs', Icon: FiRefreshCcw },
-      {
-        title: 'Audiences',
-        link: '/audiences',
-        Icon: FiUsers,
-        disabled: true,
-      },
-    ],
+    heading: 'AI/ML INTEGRATION',
+    menu: [{ title: 'ML Ops', link: '/define/models', Icon: FiTool, disabled: true }],
   },
 ];
 
