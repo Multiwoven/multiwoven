@@ -7,8 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.65)
-      main
+    multiwoven-integrations (0.1.64)
       activesupport
       async-websocket
       csv
@@ -311,7 +310,6 @@ DEPENDENCIES
   slack-ruby-client
   stripe
   webmock (~> 3.0)
-  zendesk_api
 
 BUNDLED WITH
    2.4.21

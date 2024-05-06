@@ -53,10 +53,6 @@ gem "csv"
 
 gem "rubyzip"
 
-gem "rubyzip"
-
-gem "rubyzip"
-
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
