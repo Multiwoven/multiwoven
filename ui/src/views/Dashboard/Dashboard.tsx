@@ -99,7 +99,7 @@ const Dashboard = (): JSX.Element | null => {
             />
           </Box>
           <Box>
-            <Stack gap='12px'>
+            <Stack gap='32px'>
               <Stack spacing='16'>
                 <Tabs
                   size='md'

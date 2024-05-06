@@ -186,7 +186,7 @@ const ViewModel = (): JSX.Element => {
                   formatOnType: true,
                   formatOnPaste: true,
                   autoIndent: 'full',
-                  wordBasedSuggestions: true,
+                  wordBasedSuggestions: 'currentDocument',
                   scrollBeyondLastLine: false,
                   quickSuggestions: true,
                   tabCompletion: 'on',

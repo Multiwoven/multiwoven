@@ -9,11 +9,13 @@
     "properties": {
       "public_api_key": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Public API Key",
         "order": 0
       },
       "private_api_key": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Private API Key",
         "order": 1
       }

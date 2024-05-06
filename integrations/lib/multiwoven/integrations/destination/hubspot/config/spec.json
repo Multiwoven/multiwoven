@@ -9,6 +9,7 @@
     "properties": {
       "access_token": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "Access Token",
         "order": 0
       }

@@ -53,6 +53,8 @@ gem "csv"
 
 gem "zendesk_api"
 
+gem "rubyzip"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

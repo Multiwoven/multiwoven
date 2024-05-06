@@ -23,6 +23,7 @@ require "net/sftp"
 require "csv"
 require "securerandom"
 require "zendesk_api"
+require "zip"
 
 # Service
 require_relative "integrations/config"
