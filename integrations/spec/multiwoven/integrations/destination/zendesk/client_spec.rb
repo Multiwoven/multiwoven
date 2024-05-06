@@ -62,8 +62,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
     {
       name: "Tickets",
       action: "create",
-      request_rate_limit: 500,
-      request_rate_limit_unit: "day",
+      request_rate_limit: 700,
+      rate_limit_unit_seconds: 1,
       request_rate_concurrency: 5,
       json_schema: {
         type: "object",
