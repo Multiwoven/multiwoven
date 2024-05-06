@@ -3,5 +3,13 @@
   "request_rate_limit_unit": "minute",
   "request_rate_concurrency": 10,
   "schema_mode": "schemaless",
-  "streams": []
+  "streams": [
+    {
+      "name": "http",
+      "batch_support": false,
+      "action": "create",
+      "json_schema": {},
+      "supported_sync_modes": ["incremental"]
+    }
+  ]
 }

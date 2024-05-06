@@ -13,9 +13,11 @@
         "order": 0
       },
       "headers": {
-        "type": "object",
         "title": "Http Headers",
-        "order": 1
+        "order": 1,
+        "additionalProperties": {
+          "type": "string"
+        }
       }
     }
   }
