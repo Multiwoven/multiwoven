@@ -59,12 +59,12 @@ module Multiwoven
               zendesk_data = prepare_record_data(record, stream.name)
               plural_stream_name = pluralize_stream_name(stream.name.downcase)
 
-              response = if @action == "create"
-                           @client.send(plural_stream_name).create!(zendesk_data)
-                         else
-                           existing_record = @client.send(plural_stream_name).find(id: record[:id])
-                           existing_record.update!(zendesk_data)
-                         end
+              if @action == "create"
+                @client.send(plural_stream_name).create!(zendesk_data)
+              else
+                existing_record = @client.send(plural_stream_name).find(id: record[:id])
+                existing_record.update!(zendesk_data)
+              end
 
               success_count += 1
             rescue ZendeskAPI::Error => e
