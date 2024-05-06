@@ -92,6 +92,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
     }
   end
 
+  let(:zendesk_client_double) { instance_double(ZendeskAPI::Client) }
+  let(:resource_double) { double("resource") }
+
   let(:sync_config) do
     Multiwoven::Integrations::Protocol::SyncConfig.new(
       source: source_connector,
@@ -150,36 +153,25 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
 
   describe "#write" do
     context "when the write operation is successful" do
-      before do
-        stub_request(:post, "https://your-subdomain.zendesk.com/api/v2/tickets")
-          .with(
-            body: { "ticket": { "subject": "null", "comment": { "body": "null" }, "priority": "null", "status": "null", "requester_id": "null", "assignee_id": "null", "tags": "null" }.to_json },
-            headers: {
-              "Accept" => "application/json",
-              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-              "Authorization" => "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
-              "Content-Type" => "application/json",
-              "User-Agent" => "ZendeskAPI Ruby 3.0.5"
-            }
-          )
-          .to_return(status: 200, body: "", headers: {})
-      end
-
       it "increments the success count" do
-        expect(client.write(sync_config, records)).to include(success: records.size)
-        expect(client.write(sync_config, records)).to include(failures: 0)
+        expect(ZendeskAPI::Client).to receive(:new).and_return(zendesk_client_double)
+        allow(zendesk_client_double).to receive(:method_missing).with(:tickets).and_return(resource_double)
+        allow(resource_double).to receive(:create!).and_return(true)
+        result = client.write(sync_config, records)
+        expect(result[:success]).to eq(records.size)
+        expect(result[:failures]).to eq(0)
       end
     end
-
     context "when the write operation fails" do
-      it "increments the failure count" do
-        allow(client).to receive_message_chain(:tickets, :create!).and_raise(StandardError.new("Failed to create ticket"))
+      it "returns a failure status message" do
+        expect(ZendeskAPI::Client).to receive(:new).and_return(zendesk_client_double)
+        allow(zendesk_client_double).to receive(:method_missing).with(:tickets).and_return(resource_double)
+        allow(resource_double).to receive(:create!).and_raise(StandardError.new("Failed to create ticket"))
 
-        result = client.write(sync_config, records, "create")
-        expect(result[:success]).to eq(0)
-        expect(result[:failures]).to eq(records.size) # Assuming each ticket fails
-        # expect(client.write(sync_config, records)).to include(success: 0)
-        # expect(client.write(sync_config, records)).to include(failures: records.size)
+        result = client.write(sync_config, records)
+        expect(result.type).to eq("connection_status")
+        expect(result.connection_status.status).to eq("failed")
+        expect(result.connection_status.message).to include("Failed to create ticket")
       end
     end
   end

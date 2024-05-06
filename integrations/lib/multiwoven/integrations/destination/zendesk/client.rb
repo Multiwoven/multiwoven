@@ -66,8 +66,6 @@ module Multiwoven
                            existing_record.update!(zendesk_data)
                          end
 
-              raise StandardError, "Failed to process record: #{response.errors.join(", ")}" unless response.save
-
               success_count += 1
             rescue ZendeskAPI::Error => e
               handle_exception("ZENDESK:WRITE_RECORD:EXCEPTION", "error", e)
