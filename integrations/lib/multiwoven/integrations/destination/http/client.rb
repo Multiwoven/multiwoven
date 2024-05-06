@@ -8,7 +8,7 @@ module Multiwoven
         class Client < DestinationConnector
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
-            connection_config = connection_config.with_indifferent_access
+            connection_config = connection_config[:connection_specification].with_indifferent_access
             destination_url = connection_config[:destination_url]
             headers = connection_config[:headers]
             request = Multiwoven::Integrations::Core::HttpClient.request(
