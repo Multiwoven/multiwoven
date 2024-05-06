@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::AWSAthena::Client do # rubocop:disable Metrics/BlockLength
-  let(:client) { Multiwoven::Integrations::Source::AWSAthena::Client.new }
+RSpec.describe Multiwoven::Integrations::Source::AwsAthena::Client do # rubocop:disable Metrics/BlockLength
+  let(:client) { Multiwoven::Integrations::Source::AwsAthena::Client.new }
   let(:sync_config) do
     {
       "source": {
@@ -53,7 +53,7 @@ RSpec.describe Multiwoven::Integrations::Source::AWSAthena::Client do # rubocop:
   describe "#check_connection" do
     context "when the connection is successful" do
       it "returns a succeeded connection status" do
-        allow_any_instance_of(Multiwoven::Integrations::Source::AWSAthena::Client).to receive(:create_connection).and_return(athena_client)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AwsAthena::Client).to receive(:create_connection).and_return(athena_client)
         expect(athena_client).to receive(:list_work_groups)
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
@@ -64,7 +64,7 @@ RSpec.describe Multiwoven::Integrations::Source::AWSAthena::Client do # rubocop:
 
     context "when the connection fails" do
       it "returns a failed connection status with an error message" do
-        allow_any_instance_of(Multiwoven::Integrations::Source::AWSAthena::Client).to receive(:create_connection).and_raise(StandardError, "Connection failed")
+        allow_any_instance_of(Multiwoven::Integrations::Source::AwsAthena::Client).to receive(:create_connection).and_raise(StandardError, "Connection failed")
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("failed")

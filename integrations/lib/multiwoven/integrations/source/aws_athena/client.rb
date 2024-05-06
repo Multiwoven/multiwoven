@@ -3,7 +3,7 @@
 require "aws-sdk-athena"
 
 module Multiwoven::Integrations::Source
-  module AWSAthena
+  module AwsAthena
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
@@ -18,16 +18,7 @@ module Multiwoven::Integrations::Source
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
         query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = '#{connection_config[:schema]}' ORDER BY table_name, ordinal_position;"
-        db = create_connection(connection_config)
-        response = db.start_query_execution(
-          query_string: query,
-          query_execution_context: { database: connection_config[:schema] },
-          result_configuration: { output_location: connection_config[:output_location] }
-        )
-        query_execution_id = response[:query_execution_id]
-        wait_for_query_completion(db, query_execution_id)
-
-        results = transform_results(db.get_query_results(query_execution_id: query_execution_id))
+        results = query_execution(connection_config, query)
         catalog = Catalog.new(streams: create_streams(results))
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -43,16 +34,7 @@ module Multiwoven::Integrations::Source
         connection_config = connection_config.with_indifferent_access
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
-
-        db = create_connection(connection_config)
-        response = db.start_query_execution(
-          query_string: query,
-          query_execution_context: { database: sync_config[:source][:connection_specification][:schema] },
-          result_configuration: { output_location: sync_config[:source][:connection_specification][:output_location] }
-        )
-        query_execution_id = response[:query_execution_id]
-        wait_for_query_completion(db, query_execution_id)
-        results = transform_results(db.get_query_results(query_execution_id: query_execution_id))
+        results = query_execution(connection_config, query)
         query(results)
       rescue StandardError => e
         handle_exception(
@@ -67,6 +49,22 @@ module Multiwoven::Integrations::Source
       def create_connection(connection_config)
         Aws.config.update({ credentials: Aws::Credentials.new(connection_config[:access_key], connection_config[:secret_access_key]), region: connection_config[:region] })
         Aws::Athena::Client.new
+      end
+
+      def query_execution(connection_config, query)
+        db = create_connection(connection_config)
+        response = db.start_query_execution(
+          query_string: query,
+          query_execution_context: { database: connection_config[:schema] },
+          result_configuration: { output_location: connection_config[:output_location] }
+        )
+        query_execution_id = response[:query_execution_id]
+        loop do
+          response = db.get_query_execution(query_execution_id: query_execution_id)
+          status = response.query_execution.status.state
+          break if %w[SUCCEEDED FAILED CANCELLED].include?(status)
+        end
+        transform_results(db.get_query_results(query_execution_id: query_execution_id))
       end
 
       def create_streams(records)

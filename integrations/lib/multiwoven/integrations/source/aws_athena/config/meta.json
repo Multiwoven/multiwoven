@@ -1,6 +1,6 @@
 {
   "data": {
-    "name": "AWSAthena",
+    "name": "AwsAthena",
     "title": "AWS Athena",
     "connector_type": "source",
     "category": "Data Warehouse",

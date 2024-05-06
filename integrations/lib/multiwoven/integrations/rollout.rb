@@ -11,7 +11,7 @@ module Multiwoven
       Postgresql
       Databricks
       SalesforceConsumerGoodsCloud
-      AWSAthena
+      AwsAthena
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
