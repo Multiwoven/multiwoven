@@ -158,20 +158,21 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do # ruboc
         allow(zendesk_client_double).to receive(:method_missing).with(:tickets).and_return(resource_double)
         allow(resource_double).to receive(:create!).and_return(true)
         result = client.write(sync_config, records)
-        expect(result[:success]).to eq(records.size)
-        expect(result[:failures]).to eq(0)
+        expect(result.tracking.success).to eq(records.size)
+        expect(result.tracking.failed).to eq(0)
       end
     end
+
     context "when the write operation fails" do
       it "returns a failure status message" do
         expect(ZendeskAPI::Client).to receive(:new).and_return(zendesk_client_double)
         allow(zendesk_client_double).to receive(:method_missing).with(:tickets).and_return(resource_double)
-        allow(resource_double).to receive(:create!).and_raise(StandardError.new("Failed to create ticket"))
+        allow(resource_double).to receive(:create!).and_raise(StandardError.new("connection failed"))
 
         result = client.write(sync_config, records)
-        expect(result.type).to eq("connection_status")
-        expect(result.connection_status.status).to eq("failed")
-        expect(result.connection_status.message).to include("Failed to create ticket")
+        expect(result.type).to eq("tracking") # Adjust based on your response handling
+        expect(result.tracking.success).to eq(0)
+        expect(result.tracking.failed).to eq(records.size)
       end
     end
   end

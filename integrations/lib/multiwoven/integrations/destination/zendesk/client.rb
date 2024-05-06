@@ -52,8 +52,8 @@ module Multiwoven
           end
 
           def process_records(records, stream)
-            success_count = 0
-            failure_count = 0
+            write_success = 0
+            write_failure = 0
 
             records.each do |record|
               zendesk_data = prepare_record_data(record, stream.name)
@@ -66,13 +66,13 @@ module Multiwoven
                 existing_record.update!(zendesk_data)
               end
 
-              success_count += 1
-            rescue ZendeskAPI::Error => e
+              write_success += 1
+            rescue StandardError => e
               handle_exception("ZENDESK:WRITE_RECORD:EXCEPTION", "error", e)
-              failure_count += 1
+              write_failure += 1
             end
 
-            { success: success_count, failures: failure_count }
+            tracking_message(write_success, write_failure)
           end
 
           def pluralize_stream_name(name)
@@ -112,6 +112,12 @@ module Multiwoven
 
           def load_catalog
             read_json(CATALOG_SPEC_PATH)
+          end
+
+          def tracking_message(success, failure)
+            Multiwoven::Integrations::Protocol::TrackingMessage.new(
+              success: success, failed: failure
+            ).to_multiwoven_message
           end
         end
       end
