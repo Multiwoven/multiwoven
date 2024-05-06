@@ -102,14 +102,6 @@ module Multiwoven
             end
           end
 
-          def success_status
-            ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
-          end
-
-          def failure_status(error)
-            ConnectionStatus.new(status: ConnectionStatusType["failed"], message: error.message).to_multiwoven_message
-          end
-
           def load_catalog
             read_json(CATALOG_SPEC_PATH)
           end
