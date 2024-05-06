@@ -39,13 +39,6 @@ module Multiwoven
           end
         end
 
-        context "when making an OPTIONS request" do
-          it "creates an OPTIONS request" do
-            described_class.request(url, "OPTIONS", headers: headers)
-            expect(a_request(:options, url).with(headers: headers)).to have_been_made.once
-          end
-        end
-
         context "with an unsupported HTTP method" do
           it "raises an ArgumentError" do
             expect { described_class.request(url, "INVALID", headers: headers) }.to raise_error(ArgumentError)

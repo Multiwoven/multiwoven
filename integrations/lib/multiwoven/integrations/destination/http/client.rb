@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "base64"
 module Multiwoven
   module Integrations
     module Destination
@@ -11,9 +10,12 @@ module Multiwoven
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
             destination_url = connection_config[:destination_url]
+            headers = connection_config[:headers]
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
-              HTTP_OPTIONS
+              HTTP_POST,
+              payload: {},
+              headers: headers
             )
             if success?(request)
               success_status
