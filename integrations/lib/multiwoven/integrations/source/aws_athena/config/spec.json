@@ -6,7 +6,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "AWS Athena",
     "type": "object",
-    "required": ["access_key", "secret_access_key","region", "workgroup", "catalog", "database", "output_location"],
+    "required": ["access_key", "secret_access_key", "region", "workgroup", "catalog", "output_location"],
     "properties": {
       "access_key": {
         "description": "The AWS Access Key ID to use for authentication.",
