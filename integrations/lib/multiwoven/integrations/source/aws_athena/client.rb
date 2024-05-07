@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "aws-sdk-athena"
-
 module Multiwoven::Integrations::Source
   module AwsAthena
     include Multiwoven::Integrations::Core
@@ -70,16 +68,6 @@ module Multiwoven::Integrations::Source
       def create_streams(records)
         group_by_table(records).map do |_, r|
           Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], action: StreamAction["fetch"], json_schema: convert_to_json_schema(r[:columns]))
-        end
-      end
-
-      def wait_for_query_completion(db, query_execution_id)
-        loop do
-          response = db.get_query_execution(query_execution_id: query_execution_id)
-          status = response.query_execution.status.state
-          break if %w[SUCCEEDED FAILED CANCELLED].include?(status)
-
-          sleep 1
         end
       end
 
