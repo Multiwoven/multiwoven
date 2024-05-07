@@ -1,5 +1,5 @@
 import { ModelMethodType } from './types';
-import SQLImage from '@/assets/images/SQLSelector.png';
+import SQLImage from '@/assets/images/SQLSelector.svg';
 import TableImage from '@/assets/images/TableSelector.png';
 import DBTImage from '@/assets/images/DBTSelector.png';
 
