@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.63)
+    multiwoven-integrations (0.1.64)
       activesupport
       async-websocket
       csv
@@ -24,6 +24,7 @@ PATH
       restforce
       ruby-limiter
       ruby-odbc
+      rubyzip
       sequel
       slack-ruby-client
       stripe
@@ -229,6 +230,7 @@ GEM
     ruby-limiter (2.3.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
     sequel (5.75.0)
       bigdecimal
     signet (0.18.0)
@@ -292,6 +294,7 @@ DEPENDENCIES
   rubocop (~> 1.21)
   ruby-limiter
   ruby-odbc!
+  rubyzip
   sequel
   simplecov
   simplecov_json_formatter
