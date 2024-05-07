@@ -4,7 +4,7 @@
     "request_rate_concurrency": 10,
     "streams": [
         {
-            "name": "Tickets",
+            "name": "tickets",
             "action": "create",
             "json_schema": {
                 "type": "object",
@@ -61,7 +61,7 @@
             ]
         },
         {
-            "name": "Users",
+            "name": "users",
             "action": "create",
             "json_schema": {
                 "type": "object",
