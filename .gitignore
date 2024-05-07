@@ -1,3 +1,4 @@
 # Ignore dotenv file
 .env
 /.history
+.DS_Store
