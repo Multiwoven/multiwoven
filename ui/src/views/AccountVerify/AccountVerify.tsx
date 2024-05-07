@@ -12,7 +12,7 @@ import {
   HStack,
   FormLabel,
 } from '@chakra-ui/react';
-import MultiwovenIcon from '@/assets/images/icon.png';
+import MultiwovenIcon from '@/assets/images/icon.svg';
 import { useState } from 'react';
 import { accountVerify } from '@/services/common';
 
