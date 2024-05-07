@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.62"
+    VERSION = "0.1.63"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -24,7 +24,8 @@ module Multiwoven
       Stripe
       SalesforceConsumerGoodsCloud
       Sftp
-      Postgresql
+      Postgresql,
+      Http
     ].freeze
   end
 end
