@@ -10,11 +10,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Http::Client do # rubocop:
   let(:client) { described_class.new }
   let(:mock_http_session) { double("Net::Http::Session") }
   let(:connection_config) do
-    {
+    { 
       destination_url: "https://www.google.com",
       headers: {
         test: "test",
         test1: "test1"
+      
       }
     }.with_indifferent_access
   end
