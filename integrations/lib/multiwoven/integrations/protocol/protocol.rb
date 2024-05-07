@@ -26,6 +26,8 @@ module Multiwoven
     LogLevel = Types::String.enum("fatal", "error", "warn", "info", "debug", "trace")
     RequestRateLimitingUnit = Types::String.default("minute").enum("minute", "hour", "day")
     SchemaMode = Types::String.enum("schema", "schemaless")
+    FileFormatType = Types::String.enum("csv")
+    CompressionType = Types::String.enum("un_compressed", "zip")
 
     class ProtocolModel < Dry::Struct
       extend Multiwoven::Integrations::Core::Utils
