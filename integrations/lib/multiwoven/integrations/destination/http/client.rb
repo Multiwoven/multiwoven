@@ -17,7 +17,6 @@ module Multiwoven
               payload: {},
               headers: headers
             )
-            
             if success?(request)
               success_status
             else
