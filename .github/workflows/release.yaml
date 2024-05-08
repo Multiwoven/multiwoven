@@ -42,11 +42,8 @@ jobs:
             PATCH=0
           elif [ "${{ github.event.inputs.versionType }}" == "patch" ]; then
             let PATCH+=1
-            MINOR=0
-            MAJOR=0
           else
             let MINOR+=1
-            MAJOR=0
             PATCH=0
           fi
 

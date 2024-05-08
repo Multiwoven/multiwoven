@@ -9,6 +9,7 @@
     "properties": {
       "api_token": {
         "type": "string",
+        "multiwoven_secret": true,
         "title": "API Token",
         "order": 0
       },

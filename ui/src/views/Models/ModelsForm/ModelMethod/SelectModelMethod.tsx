@@ -19,7 +19,7 @@ const ModelMethod = (): JSX.Element => {
   return (
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
-        <SimpleGrid columns={3} spacing={8}>
+        <SimpleGrid columns={3} spacing={'24px'} maxWidth={'fit-content'}>
           {modelMethods.map((method, index) => (
             <Card
               maxW='sm'
@@ -32,10 +32,12 @@ const ModelMethod = (): JSX.Element => {
               borderWidth='1px'
               borderStyle='solid'
               borderColor='gray.400'
+              borderRadius='8px'
+              shadow={'none'}
             >
-              <CardBody>
+              <CardBody p={0}>
                 <Image src={method.image} alt={method.type} borderRadius='lg' w='full' />
-                <Stack mt='6' spacing='3'>
+                <Stack spacing='3' px='24px' py='20px'>
                   <HStack>
                     <Text size='lg' fontWeight='semibold'>
                       {method.name}

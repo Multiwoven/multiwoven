@@ -1,4 +1,4 @@
-name: frontend-docker-build
+name: frontend-docker-build (arm64)
 
 on:
   workflow_run:
@@ -9,21 +9,15 @@ on:
 
 env:
   IMAGE_NAME: multiwoven/multiwoven-ui
-  IMAGE_TAG: edge
+  IMAGE_TAG: edge-arm
 
 jobs:
   build_and_push:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, ARM64]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
       
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -40,4 +34,3 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          platforms: linux/amd64,linux/arm64

@@ -98,88 +98,93 @@ const ListConnectors = ({
 
   return (
     <Stack gap='12px'>
-      <Stack spacing='16'>
-        <Tabs
-          size='md'
-          variant='indicator'
-          background='gray.300'
-          padding={1}
+      <Stack gap='32px'>
+        <Stack spacing='16'>
+          <Tabs
+            size='md'
+            variant='indicator'
+            background='gray.300'
+            padding={1}
+            borderRadius='8px'
+            borderStyle='solid'
+            borderWidth='1px'
+            borderColor='gray.400'
+            width='352px'
+          >
+            <TabList gap='8px'>
+              <TabName
+                title='All Connectors'
+                filterConnectors={() => filterConnectors(CONNECTOR_TYPE.ALL)}
+              />
+              <TabName
+                title='By Destination'
+                filterConnectors={() => filterConnectors(CONNECTOR_TYPE.DESTINATION)}
+              />
+              <TabName
+                title='By Source'
+                filterConnectors={() => filterConnectors(CONNECTOR_TYPE.SOURCE)}
+              />
+            </TabList>
+            <TabIndicator />
+          </Tabs>
+        </Stack>
+        <Box
+          height='460px'
+          backgroundColor='gray.100'
+          width='352px'
           borderRadius='8px'
           borderStyle='solid'
           borderWidth='1px'
           borderColor='gray.400'
-          width='352px'
         >
-          <TabList gap='8px'>
-            <TabName
-              title='All Connectors'
-              filterConnectors={() => filterConnectors(CONNECTOR_TYPE.ALL)}
-            />
-            <TabName
-              title='By Destination'
-              filterConnectors={() => filterConnectors(CONNECTOR_TYPE.DESTINATION)}
-            />
-            <TabName
-              title='By Source'
-              filterConnectors={() => filterConnectors(CONNECTOR_TYPE.SOURCE)}
-            />
-          </TabList>
-          <TabIndicator />
-        </Tabs>
-      </Stack>
-      <Box
-        height='460px'
-        backgroundColor='gray.100'
-        width='352px'
-        borderRadius='8px'
-        borderStyle='solid'
-        borderWidth='1px'
-        borderColor='gray.400'
-      >
-        <Stack gap='12px' height='100%'>
-          {currentPageConnectorsList?.length === 0 && (
-            <VStack justify='center' height='100%'>
-              <img src={NoConnectorsFound} alt='no-connectors-found' />
-              <Text color='gray.600' size='xs' fontWeight='semibold'>
-                No connectors found
-              </Text>
-            </VStack>
-          )}
-          {currentPageConnectorsList?.map((connector, index) => (
-            <Box
-              key={index}
-              paddingY='10px'
-              paddingX='16px'
-              display='flex'
-              gap='12px'
-              _hover={{
-                backgroundColor: 'gray.200',
-              }}
-            >
-              <Checkbox
-                isChecked={
-                  checkedConnectorIds?.findIndex((connectorId) => connectorId === +connector.id) !==
-                  -1
-                }
-                size='lg'
-                borderColor='gray.300'
-                _checked={{
-                  '& .chakra-checkbox__control': {
-                    background: 'brand.400',
-                    borderColor: 'brand.400',
-                  },
-                  '& .chakra-checkbox__control:hover': {
-                    background: 'brand.400',
-                    borderColor: 'brand.400',
-                  },
+          <Stack gap='12px' height='100%'>
+            {currentPageConnectorsList?.length === 0 && (
+              <VStack justify='center' height='100%'>
+                <img src={NoConnectorsFound} alt='no-connectors-found' />
+                <Text color='gray.600' size='xs' fontWeight='semibold'>
+                  No connectors found
+                </Text>
+              </VStack>
+            )}
+            {currentPageConnectorsList?.map((connector, index) => (
+              <Box
+                key={index}
+                paddingY='10px'
+                paddingX='16px'
+                display='flex'
+                gap='12px'
+                _hover={{
+                  backgroundColor: 'gray.200',
                 }}
-                onChange={({ target: { checked } }) => handleCheckboxChange(checked, connector.id)}
-              />
-              <EntityItem icon={connector?.attributes?.icon} name={connector?.attributes?.name} />
-            </Box>
-          ))}
-        </Stack>
-      </Box>
+              >
+                <Checkbox
+                  isChecked={
+                    checkedConnectorIds?.findIndex(
+                      (connectorId) => connectorId === +connector.id,
+                    ) !== -1
+                  }
+                  size='lg'
+                  borderColor='gray.300'
+                  _checked={{
+                    '& .chakra-checkbox__control': {
+                      background: 'brand.400',
+                      borderColor: 'brand.400',
+                    },
+                    '& .chakra-checkbox__control:hover': {
+                      background: 'brand.400',
+                      borderColor: 'brand.400',
+                    },
+                  }}
+                  onChange={({ target: { checked } }) =>
+                    handleCheckboxChange(checked, connector.id)
+                  }
+                />
+                <EntityItem icon={connector?.attributes?.icon} name={connector?.attributes?.name} />
+              </Box>
+            ))}
+          </Stack>
+        </Box>
+      </Stack>
       <Pagination
         currentPage={currentPage}
         isNextPageEnabled={currentPage < totalPages}

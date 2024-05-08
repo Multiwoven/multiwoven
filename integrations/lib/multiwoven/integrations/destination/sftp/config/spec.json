@@ -1,10 +1,10 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/destination/klaviyo",
+  "documentation_url": "https://docs.multiwoven.com/destinations/file-storage/sftp",
   "stream_type": "static",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "SFTP",
-    "required": ["host", "username", "password", "destination_path"],
+    "required": ["host", "username", "password", "destination_path", "format" ],
     "properties": {
       "host": {
         "title": "Host",
@@ -31,6 +31,7 @@
         "title": "Password",
         "description": "Password associated with the username.",
         "type": "string",
+        "multiwoven_secret": true,
         "order": 3
       },
       "destination_path": {
@@ -44,6 +45,28 @@
         "type": "string",
         "description": "Name of the file to be written.",
         "order": 5
+      },
+      "format": {
+        "title": "Output Format",
+        "type": "object",
+        "description": "Format of the data output.",
+        "order": 6,
+        "required": ["format_type"],
+        "properties": {
+          "format_type": {
+            "title": "File Format Type",
+            "type": "string",
+            "enum": ["csv"],
+            "default": "csv"
+          },
+          "compression_type": {
+            "title": "Compression Type",
+            "description": "Whether the output files should be compressed.",
+            "type": "string",
+            "enum": ["un_compressed", "zip"],
+            "default": "un_compressed"
+          }
+        }
       }
     }
   }
