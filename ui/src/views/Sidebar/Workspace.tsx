@@ -1,0 +1,125 @@
+import { getWorkspaces } from '@/services/settings';
+import {
+  Box,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { FiChevronDown, FiCheck } from 'react-icons/fi';
+import { useStore } from '@/stores';
+import { useEffect } from 'react';
+
+const Workspace = () => {
+  const { data } = useQuery({
+    queryKey: ['workspace'],
+    queryFn: () => getWorkspaces(),
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const workspaceData = data?.data;
+
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+  const setActiveWorkspaceId = useStore((state) => state.setActiveWorkspaceId);
+
+  useEffect(() => {
+    if (workspaceData && workspaceData.length > 0) {
+      setActiveWorkspaceId(workspaceData[0]?.id);
+    }
+  }, [workspaceData]);
+
+  return (
+    <>
+      <Popover closeOnEsc>
+        <PopoverTrigger>
+          <Box cursor='pointer'>
+            <Box
+              bgColor='gray.300'
+              px={2}
+              py={2}
+              rounded='lg'
+              _hover={{ bgColor: 'gray.300' }}
+              borderWidth='1px'
+              borderColor='gray.400'
+              borderStyle='solid'
+            >
+              <Box display='flex' justifyContent='space-between' alignItems='center'>
+                <VStack spacing={0} align='start'>
+                  <Box w='128px' maxW='128px'>
+                    <Text size='xs' fontWeight={400} noOfLines={1} color='black.200'>
+                      {workspaceData?.[0]?.attributes?.organization_name}
+                    </Text>
+                    <Text color='black.500' size='sm' fontWeight='semibold' noOfLines={1}>
+                      {workspaceData?.[0]?.attributes?.name}
+                    </Text>
+                  </Box>
+                </VStack>
+                <Box color='gray.600'>
+                  <FiChevronDown />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </PopoverTrigger>
+        <PopoverContent width='207px' border='1px' borderColor='gray.400'>
+          <PopoverBody margin={0} p={1}>
+            {/* TODO: Will raise this in separate PR */}
+            {/* <Box
+              _hover={{ bgColor: 'gray.300' }}
+              w='100%'
+              py='8px'
+              px='12px'
+              display='flex'
+              flexDir='row'
+              alignItems='center'
+              color='gray.600'
+              onClick={() => {}}
+              justifyContent='start'
+              border={0}
+              cursor='pointer'
+              gap={2}
+            >
+              <FiSettings />
+              <Text size='sm' fontWeight={400} color='black.500'>
+                Manage Workspaces
+              </Text>
+            </Box> */}
+            {workspaceData?.map((workspace) => (
+              <Box
+                _hover={{ bgColor: 'gray.300' }}
+                w='100%'
+                py='8px'
+                px='12px'
+                display='flex'
+                flexDir='row'
+                alignItems='center'
+                bgColor={activeWorkspaceId === workspace?.id ? 'gray.300' : 'gray.600'}
+                onClick={() => setActiveWorkspaceId(workspace?.id)}
+                justifyContent='space-between'
+                border={0}
+                cursor='pointer'
+                key={workspace?.id}
+                borderRadius='4px'
+              >
+                <Text size='sm' fontWeight={400} color='black.500'>
+                  {workspace?.attributes?.name}
+                </Text>
+                {activeWorkspaceId === workspace?.id && (
+                  <Box color='brand.400'>
+                    <FiCheck />
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    </>
+  );
+};
+
+export default Workspace;
