@@ -52,7 +52,7 @@ const menus: MenuArray = [
   },
   {
     heading: 'AI/ML INTEGRATION',
-    menu: [{ title: 'ML Ops', link: '/define/models', Icon: FiTool, disabled: true }],
+    menu: [{ title: 'ML Ops', link: '/ml-ops', Icon: FiTool }],
   },
 ];
 
