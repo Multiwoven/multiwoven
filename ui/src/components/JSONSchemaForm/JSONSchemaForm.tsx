@@ -35,10 +35,6 @@ const JSONSchemaForm = ({
   };
   return (
     <Form
-      //  TODO: Removed Hardcoded UI Schema
-      // uiSchema={
-      //   connectorSchema.title ? uiSchemas[connectorSchema.title.toLowerCase()] : undefined
-      // }
       uiSchema={uiSchema}
       schema={schema}
       validator={validator}
