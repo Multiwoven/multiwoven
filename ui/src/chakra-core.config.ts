@@ -4,12 +4,12 @@ export const defaultExtension = {
   colors: {
     mw_orange: '#E63D2D',
     brand: {
-      100: '#FFE7E6',
-      200: '#FAC5C3',
-      300: '#F5837F',
-      400: '#F54C3D',
-      500: '#CC1C16',
-      600: '#720D09',
+      100: '#CED3E0',
+      200: '#A1ADD1',
+      300: '#3652AE',
+      400: '#00249C',
+      500: '#001D7D',
+      600: '#001560',
     },
     gray: {
       100: '#FFFFFF',
