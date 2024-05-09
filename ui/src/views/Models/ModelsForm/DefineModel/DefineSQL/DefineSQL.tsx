@@ -81,7 +81,7 @@ const DefineSQL = ({
     if ('data' in response && response.data.errors) {
       response.data.errors.forEach((error: { title: string; detail: string }) => {
         showToast({
-          title: 'An Error Occurred',
+          title: error.detail,
           description: error.detail || 'Please check your query and try again',
           status: CustomToastStatus.Error,
           duration: 9000,
@@ -89,6 +89,16 @@ const DefineSQL = ({
           position: 'bottom-right',
         });
       });
+      setTableData(null);
+    } else if ('data' in response && !response.data?.errors) {
+      showToast({
+        title: 'No data found',
+        status: CustomToastStatus.Error,
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+      setTableData(null);
     } else {
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
       canMoveForward(true);
