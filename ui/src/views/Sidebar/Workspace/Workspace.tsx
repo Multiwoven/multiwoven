@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FiChevronDown, FiCheck } from 'react-icons/fi';
 import { useStore } from '@/stores';
 import { useEffect } from 'react';
+import ManageWorkspaceModal from './ManageWorkspaceModal';
 
 const Workspace = () => {
   const { data } = useQuery({
@@ -67,27 +68,7 @@ const Workspace = () => {
         </PopoverTrigger>
         <PopoverContent width='207px' border='1px' borderColor='gray.400'>
           <PopoverBody margin={0} p={1}>
-            {/* TODO: Will raise this in separate PR */}
-            {/* <Box
-              _hover={{ bgColor: 'gray.300' }}
-              w='100%'
-              py='8px'
-              px='12px'
-              display='flex'
-              flexDir='row'
-              alignItems='center'
-              color='gray.600'
-              onClick={() => {}}
-              justifyContent='start'
-              border={0}
-              cursor='pointer'
-              gap={2}
-            >
-              <FiSettings />
-              <Text size='sm' fontWeight={400} color='black.500'>
-                Manage Workspaces
-              </Text>
-            </Box> */}
+            <ManageWorkspaceModal />
             {workspaceData?.map((workspace) => (
               <Box
                 _hover={{ bgColor: 'gray.300' }}

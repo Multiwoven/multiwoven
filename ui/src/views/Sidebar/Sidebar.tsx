@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fi';
 import { NavButton } from './navButton';
 import Profile from './Profile';
-import Workspace from './Workspace';
+import Workspace from './Workspace/Workspace';
 
 import mwTheme from '@/chakra.config';
 
