@@ -8,6 +8,7 @@
       "name": "http",
       "batch_support": false,
       "action": "create",
+      "method": "POST",
       "json_schema": {},
       "supported_sync_modes": ["incremental"]
     }
