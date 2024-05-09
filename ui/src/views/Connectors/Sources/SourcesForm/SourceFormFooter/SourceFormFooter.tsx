@@ -71,7 +71,7 @@ const SourceFormFooter = ({
         <Box display='flex' paddingX='16px' paddingY='10px'>
           {isDocumentsSectionRequired ? (
             <>
-              <Link to='https://docs.multiwoven.com'>
+              <Link to='https://docs.squared.ai/guides/core-concepts'>
                 <Box display='flex' alignItems='center' marginRight='20px'>
                   <Icon as={FiBookOpen} color='gray.600' />
                   <Text ml={2} size='sm'>

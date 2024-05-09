@@ -252,7 +252,7 @@ const SignUp = (): JSX.Element => {
                           <Text color='black.200' size='xs' fontWeight='regular'>
                             By creating an account, I agree to the{' '}
                           </Text>
-                          <Link to='https://multiwoven.com/terms' target='_blank'>
+                          <Link to='https://squared.ai/terms-of-service/' target='_blank'>
                             <Text color='brand.400' size='xs' fontWeight='medium'>
                               Terms
                             </Text>
@@ -260,7 +260,7 @@ const SignUp = (): JSX.Element => {
                           <Text color='black.200' size='xs' fontWeight='regular'>
                             and
                           </Text>
-                          <Link to='https://multiwoven.com/privacy' target='_blank'>
+                          <Link to='https://squared.ai/privacy-policy/' target='_blank'>
                             <Text color='brand.400' size='xs' fontWeight='medium'>
                               Privacy Policy
                             </Text>

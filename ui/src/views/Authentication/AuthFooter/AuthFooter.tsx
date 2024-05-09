@@ -19,7 +19,7 @@ const AuthFooter = (): JSX.Element => {
         <Text color='black.100' fontWeight='medium' size='xs'>
           {`© ${brandName} Inc. All rights reserved.`}
         </Text>
-        <Link to='https://multiwoven.com/terms' target='_blank'>
+        <Link to='https://squared.ai/terms-of-service/' target='_blank'>
           <Text color='black.500' size='xs' fontWeight='semibold'>
             Terms of use
           </Text>
@@ -27,7 +27,7 @@ const AuthFooter = (): JSX.Element => {
         <Text size='xs' color='black.100'>
           •
         </Text>
-        <Link to='https://multiwoven.com/privacy' target='_blank'>
+        <Link to='https://squared.ai/privacy-policy/' target='_blank'>
           <Text color='black.500' size='xs' fontWeight='semibold'>
             Privacy Policy
           </Text>

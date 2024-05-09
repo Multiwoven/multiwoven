@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, Text, Divider } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text, Divider, useMediaQuery } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import IconImage from '../../assets/images/multiwoven-logo.png';
 import {
@@ -83,14 +83,20 @@ const renderMenuSection = (section: MenuSection, index: number) => (
   </Stack>
 );
 
-const SideBarFooter = () => (
-  <Stack position='absolute' bottom='0' left='0px' right='0px' margin='24px 16px'>
+const SideBarFooter = ({ isSticky }: { isSticky: boolean }) => (
+  <Stack
+    position={isSticky ? 'relative' : 'absolute'}
+    bottom='0'
+    left='0px'
+    right='0px'
+    margin={isSticky ? '24px 0px' : '24px 16px'}
+  >
     <Box />
     <Stack spacing='0'>
       <NavLink to='/settings'>
         <NavButton label='Settings' icon={FiSettings} />
       </NavLink>
-      <NavLink to='https://docs.multiwoven.com/get-started/introduction'>
+      <NavLink to='https://docs.squared.ai/guides/core-concepts'>
         <NavButton label='Documentation' icon={FiBookOpen} />
       </NavLink>
     </Stack>
@@ -100,6 +106,7 @@ const SideBarFooter = () => (
 
 const Sidebar = (): JSX.Element => {
   const { logoUrl } = mwTheme;
+  const [isSmallerScreenResolution] = useMediaQuery('(max-height: 748px)');
   return (
     <Flex
       position='relative'
@@ -110,6 +117,16 @@ const Sidebar = (): JSX.Element => {
       borderRightStyle='solid'
       borderRightColor='gray.400'
       minWidth='240px'
+      overflowY='auto'
+      overflowX='hidden'
+      sx={{
+        '&::-webkit-scrollbar': {
+          width: '2px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'gray.400',
+        },
+      }}
     >
       <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
         <Stack justify='space-between' spacing='1' width='full'>
@@ -122,7 +139,7 @@ const Sidebar = (): JSX.Element => {
             </Box>
             <Workspace />
             {menus.map(renderMenuSection)}
-            <SideBarFooter />
+            <SideBarFooter isSticky={isSmallerScreenResolution} />
           </Stack>
         </Stack>
       </Flex>
