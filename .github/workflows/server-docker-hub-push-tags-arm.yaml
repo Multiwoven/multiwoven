@@ -24,7 +24,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            multiwoven/multiwoven-server
+            multiwoven/multiwoven-server-ee
 
       - name: Build and push server Docker image
         uses: docker/build-push-action@v5

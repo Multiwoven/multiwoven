@@ -8,7 +8,7 @@ on:
       - completed
 
 env:
-  IMAGE_NAME: multiwoven/multiwoven-ui
+  IMAGE_NAME: multiwoven/multiwoven-ui-ee
   IMAGE_TAG: edge-arm
 
 jobs:

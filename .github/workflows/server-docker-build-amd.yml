@@ -8,7 +8,7 @@ on:
       - completed
 
 env:
-  IMAGE_NAME: multiwoven/multiwoven-server
+  IMAGE_NAME: multiwoven/multiwoven-server-ee
   IMAGE_TAG: edge
 
 jobs:
