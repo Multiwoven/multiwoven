@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.63"
+    VERSION = "0.1.65"
 
     ENABLED_SOURCES = %w[
       Snowflake
