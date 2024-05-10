@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "ui/**"
+      - "server/**"
 
 jobs:
   deploy:
@@ -14,23 +15,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Azure CLI Action
+      - name: Set Kubernetes Context
         uses: Azure/cli@v2.0.0
+        env:
+          AZ_AKS_CLUSTER: ${{ secrets.AZ_AKS_CLUSTER }}
+          AZ_RESOURCE_GROUP: $${ secrets.AZ_RESOURCE_GROUP }
+          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION }}
+        with:
+          azcliversion: latest
+          inlineScript: /
+            az account set --subscription $AZ_SUBSCRIPTION
+            az aks get-credentials --resource_group $AZ_RESOURCE_GROUP --name $AZ_AKS_CLUSTER
             
       - name: Install Helm
         uses: azure/setup-helm@v4.2.0
         with:
           version: 'latest'
         id: install
-
-      - name: Set Kubernetes Context
-        env:
-          AZ_AKS_CLUSTER: ${{ secrets.AZ_AKS_CLUSTER }}
-          AZ_RESOURCE_GROUP: $${ secrets.AZ_RESOURCE_GROUP }
-          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION }}
-        run: /
-          az account set --subscription $AZ_SUBSCRIPTION
-          az aks get-credentials --resource_group $AZ_RESOURCE_GROUP --name $AZ_AKS_CLUSTER
 
       - name: Deploy main to staging
         env:
