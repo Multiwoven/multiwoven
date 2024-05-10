@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "ui/**"
-      - "server/**"
 
 jobs:
   deploy:
@@ -15,21 +14,60 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up SSH key
-        env:
-          SSH_KEY_BASE64: ${{ secrets.SSH_KEY_BASE64 }}
-        run: |
-          echo "$SSH_KEY_BASE64" | base64 --decode > ${HOME}/multiwoven-deployments.pem
-          chmod 600 ${HOME}/multiwoven-deployments.pem
+      - name: Azure CLI Action
+        uses: Azure/cli@v2.0.0
+            
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: 'latest'
+        id: install
 
-      - name: Deploy main
+      - name: Set Kubernetes Context
         env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
+          AZ_AKS_CLUSTER: ${{ secrets.AZ_AKS_CLUSTER }}
+          AZ_RESOURCE_GROUP: $${ secrets.AZ_RESOURCE_GROUP }
+          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION }}
+        run: /
+          az account set --subscription $AZ_SUBSCRIPTION
+          az aks get-credentials --resource_group $AZ_RESOURCE_GROUP --name $AZ_AKS_CLUSTER
+
+      - name: Deploy main to staging
+        env:
+          API_HOST: ${{ secrets.API_HOST }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          TEMPORAL_HOST: ${{ secrets.TEMPORAL_HOST }}
+          TEMPORAL_NAMESPACE: ${{ secrets.TEMPORAL_NAMESPACE }}
+          TLS_ADMIN_EMAIL: ${{ secrets.TLS_ADMIN_EMAIL }}
+          UI_HOST: ${{ secrets.UI_HOST }}
+          VITE_API_HOST: ${{ secrets.VITE_API_HOST }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${HOME}/multiwoven-deployments.pem $SSH_USER@$SSH_HOST << 'EOF'
-            cd multiwoven
-            git pull origin main
-            docker-compose down
-            docker-compose up -d --build
-          EOF
+          helm upgrade -i multiwoven ../helm-charts/charts/multiwoven \
+            --set multiwovenConfig.apiHost=$API_HOST \
+            --set multiwovenConfig.dbHost=$DB_HOST \
+            --set multiwovenConfig.dbUsername=$DB_USERNAME \
+            --set multiwovenConfig.dbPassword=$DB_PASSWORD \
+            --set multiwovenConfig.privateRepo=true \
+            --set multiwovenConfig.registrySecretName=myregistrykey \
+            --set multiwovenConfig.temporalHost=$TEMPORAL_HOST \
+            --set multiwovenConfig.temporalNamespace=$TEMPORAL_NAMESPACE \
+            --set multiwovenConfig.tlsAdminEmail=$TLS_ADMIN_EMAIL \
+            --set multiwovenConfig.tlsCertIssuer="letsencrypt-prod" \
+            --set multiwovenConfig.uiHost=$UI_HOST \
+            --set multiwovenConfig.viteApiHost=$VITE_API_HOST \
+            --set multiwovenConfig.viteBrandName="AI Squared" \
+            --set multiwovenConfig.BrandColor="rgb(0 36 156/1)" \
+            --set multiwovenConfig.BrandHoverColor="rgb(0 29 125/1)" \
+            --set multiwovenConfig.viteLogoUrl="https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png" \
+            --set multiwovenPostgresql.enabled=false \
+            --set multiwovenServer.multiwovenServer.image.repository="multiwoven/multiwoven-server-ee" \
+            --set multiwovenServer.multiwovenServer.image.tag="main" \
+            --set multiwovenUI.multiwovenUI.image.repository="multiwoven/multiwoven-ui-ee" \
+            --set multiwovenUI.multiwovenUI.image.tag="main" \
+            --set multiwovenWorker.multiwovenWorker.args="{./app/temporal/cli/worker}" \
+            --set multiwovenWorker.multiwovenWorker.image.repository="multiwoven/multiwoven-server-ee" \
+            --set multiwovenWorker.multiwovenWorker.image.tag="main" \
+            --set temporal.enabled=false
+          
