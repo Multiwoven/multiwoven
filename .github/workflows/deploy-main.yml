@@ -16,12 +16,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Azure Login
+        uses: Azure/login@v2.1.0
+        with:
+          client-id: ${{ secrets.AZ_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZ_TENANT_ID }}
+          subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+
       - name: Set Kubernetes Context
         uses: Azure/cli@v2.0.0
         env:
           AZ_AKS_CLUSTER: ${{ secrets.AZ_AKS_CLUSTER }}
           AZ_RESOURCE_GROUP: $${ secrets.AZ_RESOURCE_GROUP }
-          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION }}
+          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION_ID }}
         with:
           azcliversion: latest
           inlineScript: |
