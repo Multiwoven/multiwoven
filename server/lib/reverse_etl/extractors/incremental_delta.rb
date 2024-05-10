@@ -34,6 +34,7 @@ module ReverseEtl
 
       private
 
+      # TODO: refactor this method
       def process_records(records, sync_run, model)
         Parallel.map(records, in_threads: THREAD_COUNT) do |message|
           record = message.record
