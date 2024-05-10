@@ -5,7 +5,8 @@ module Api
     class ConnectorsController < ApplicationController
       include Connectors
       before_action :set_connector, only: %i[show update destroy discover query_source]
-      before_action :validate_query, only: %i[query_source]
+      # TODO: Enable this once we have query validation implemented for all the connectors
+      # before_action :validate_query, only: %i[query_source]
       after_action :event_logger
 
       def index
