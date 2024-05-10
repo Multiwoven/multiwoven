@@ -24,7 +24,7 @@ jobs:
           AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION }}
         with:
           azcliversion: latest
-          inlineScript: /
+          inlineScript: |
             az account set --subscription $AZ_SUBSCRIPTION
             az aks get-credentials --resource_group $AZ_RESOURCE_GROUP --name $AZ_AKS_CLUSTER
             
