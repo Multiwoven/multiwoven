@@ -146,7 +146,6 @@ class Sync < ApplicationRecord
 
   def stream_name_exists?
     return if destination.blank?
-    byebug
     if destination.catalog.blank?
         errors.add(:catalog,"Catalog is missing")
     else
