@@ -1,62 +1,71 @@
 name: Deploy main
 
 on:
+  # IMPORTANT: Temporary, will delete after workflow successfuly completes.
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "ui/**"
-      - "server/**"
+  # Automatically run after either `frontend-docker-build (amd64)`
+  # or `server-docker-build (amd64)` successfuly completes.
+  workflow_run:
+    workflows: ["frontend-docker-build (amd64)", "server-docker-build (AMD)"]
+    branches: ["main"]
+    types:
+      - completed
+
 permissions:
   id-token: write
   contents: read
+
+env:
+  IMAGE_NAME_UI: multiwoven/multiwoven-ui-ee
+  IMAGE_NAME_SERVER: multiwoven/multiwoven-server-ee
+  IMAGE_TAG: edge
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          name: https://github.com/Multiwoven/helm-charts.git
+          ref: refs/heads/main
 
       - name: Azure Login
         uses: Azure/login@v2.1.0
         with:
-          auth-type: IDENTITY
-          client-id: ${{ secrets.AZ_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZ_TENANT_ID }}
-          subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set Kubernetes Context
-        uses: Azure/cli@v2.0.0
-        env:
-          AZ_AKS_CLUSTER: ${{ secrets.AZ_AKS_CLUSTER }}
-          AZ_RESOURCE_GROUP: $${ secrets.AZ_RESOURCE_GROUP }
-          AZ_SUBSCRIPTION: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+      - name: Gets K8s context
+        uses: azure/aks-set-context@94ccc775c1997a3fcfbfbce3c459fec87e0ab188
         with:
-          azcliversion: latest
-          inlineScript: |
-            az account set --subscription $AZ_SUBSCRIPTION
-            az aks get-credentials --resource_group $AZ_RESOURCE_GROUP --name $AZ_AKS_CLUSTER
-            
-      - name: Install Helm
-        uses: azure/setup-helm@v4.2.0
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+            resource-group: ${{ vars.RESOURCE_GROUP }}
+            cluster-name: ${{ vars.CLUSTER_NAME }}
+        id: login
+
+      - uses: azure/setup-helm@v4.2.0
         with:
           version: 'latest'
         id: install
 
       - name: Deploy main to staging
         env:
-          API_HOST: ${{ secrets.API_HOST }}
+          API_HOST: ${{ vars.API_HOST }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           TEMPORAL_HOST: ${{ secrets.TEMPORAL_HOST }}
           TEMPORAL_NAMESPACE: ${{ secrets.TEMPORAL_NAMESPACE }}
           TLS_ADMIN_EMAIL: ${{ secrets.TLS_ADMIN_EMAIL }}
-          UI_HOST: ${{ secrets.UI_HOST }}
-          VITE_API_HOST: ${{ secrets.VITE_API_HOST }}
+          UI_HOST: ${{ vars.UI_HOST }}
+          VITE_API_HOST: ${{ vars.VITE_API_HOST }}
+          VITE_BRAND_COLOR: ${{ vars.VITE_BRAND_COLOR }}
+          VITE_BRAND_HOVER_COLOR: ${{ vars.VITE_BRAND_HOVER_COLOR }}
+          VITE_BRAND_NAME: ${{ vars.VITE_BRAND_NAME }}
+          VITE_LOGO_URL: ${{ vars.VITE_LOGO_URL }}
+        working-directory: ./charts/multiwoven
         run: |
-          helm upgrade -i multiwoven ../helm-charts/charts/multiwoven \
+          helm upgrade -i multiwoven . \
             --set multiwovenConfig.apiHost=$API_HOST \
             --set multiwovenConfig.dbHost=$DB_HOST \
             --set multiwovenConfig.dbUsername=$DB_USERNAME \
@@ -69,17 +78,17 @@ jobs:
             --set multiwovenConfig.tlsCertIssuer="letsencrypt-prod" \
             --set multiwovenConfig.uiHost=$UI_HOST \
             --set multiwovenConfig.viteApiHost=$VITE_API_HOST \
-            --set multiwovenConfig.viteBrandName="AI Squared" \
-            --set multiwovenConfig.BrandColor="rgb(0 36 156/1)" \
-            --set multiwovenConfig.BrandHoverColor="rgb(0 29 125/1)" \
-            --set multiwovenConfig.viteLogoUrl="https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png" \
+            --set multiwovenConfig.viteBrandName=$VITE_BRAND_NAME \
+            --set multiwovenConfig.BrandColor=$VITE_BRAND_COLOR \
+            --set multiwovenConfig.BrandHoverColor=$VITE_BRAND_HOVER_COLOR \
+            --set multiwovenConfig.viteLogoUrl=$VITE_LOGO_URL \
             --set multiwovenPostgresql.enabled=false \
-            --set multiwovenServer.multiwovenServer.image.repository="multiwoven/multiwoven-server-ee" \
-            --set multiwovenServer.multiwovenServer.image.tag="main" \
-            --set multiwovenUI.multiwovenUI.image.repository="multiwoven/multiwoven-ui-ee" \
-            --set multiwovenUI.multiwovenUI.image.tag="main" \
+            --set multiwovenServer.multiwovenServer.image.repository=$IMAGE_NAME_SERVER \
+            --set multiwovenServer.multiwovenServer.image.tag=$IMAGE_TAG \
+            --set multiwovenUI.multiwovenUI.image.repository=$IMAGE_NAME_UI \
+            --set multiwovenUI.multiwovenUI.image.tag=$IMAGE_TAG \
             --set multiwovenWorker.multiwovenWorker.args="{./app/temporal/cli/worker}" \
-            --set multiwovenWorker.multiwovenWorker.image.repository="multiwoven/multiwoven-server-ee" \
-            --set multiwovenWorker.multiwovenWorker.image.tag="main" \
+            --set multiwovenWorker.multiwovenWorker.image.repository=$IMAGE_NAME_SERVER \
+            --set multiwovenWorker.multiwovenWorker.image.tag=$IMAGE_TAG \
             --set temporal.enabled=false
           
