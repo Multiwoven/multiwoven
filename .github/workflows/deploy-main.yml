@@ -26,10 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          name: https://github.com/Multiwoven/helm-charts.git
-          ref: refs/heads/main
+          name: multiwoven/helm-charts
 
       - name: Azure Login
         uses: Azure/login@v2.1.0
@@ -62,7 +61,7 @@ jobs:
           VITE_BRAND_HOVER_COLOR: ${{ vars.VITE_BRAND_HOVER_COLOR }}
           VITE_BRAND_NAME: ${{ vars.VITE_BRAND_NAME }}
           VITE_LOGO_URL: ${{ vars.VITE_LOGO_URL }}
-        working-directory: ./charts/multiwoven
+        working-directory: charts/multiwoven
         run: |
           helm upgrade -i multiwoven . \
             --set multiwovenConfig.apiHost=$API_HOST \
