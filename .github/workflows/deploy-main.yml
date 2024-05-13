@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          name: multiwoven/helm-charts
+          repository: multiwoven/helm-charts
 
       - name: Azure Login
         uses: Azure/login@v2.1.0
