@@ -34,6 +34,7 @@ module ReverseEtl
 
       private
 
+      # TODO: refactor this method
       def process_records(records, sync_run, model)
         Parallel.map(records, in_threads: THREAD_COUNT) do |message|
           record = message.record
@@ -52,6 +53,7 @@ module ReverseEtl
         Temporal.logger.error(error_message: e.message,
                               sync_run_id: sync_run.id,
                               stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+        nil
       end
 
       def find_or_initialize_sync_record(sync_run, primary_key)
@@ -74,7 +76,7 @@ module ReverseEtl
       end
 
       def update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
-        return false unless new_record?(sync_record, fingerprint)
+        return false unless sync_record && new_record?(sync_record, fingerprint)
 
         sync_record.assign_attributes(
           sync_run_id: sync_run.id,
@@ -83,8 +85,6 @@ module ReverseEtl
           record: record.data
         )
         sync_record.save!
-
-        true
       end
     end
   end
