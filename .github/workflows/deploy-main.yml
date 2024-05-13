@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
   # Automatically run after either `frontend-docker-build (amd64)`
   # or `server-docker-build (amd64)` successfuly completes.
+  # SIDE EFFECT: It will run twice, if both builds were triggered.
   workflow_run:
     workflows: ["frontend-docker-build (amd64)", "server-docker-build (AMD)"]
     branches: ["main"]
@@ -36,12 +37,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Gets K8s context
-        uses: azure/aks-set-context@94ccc775c1997a3fcfbfbce3c459fec87e0ab188
+        uses: azure/aks-set-context@v3
         with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
             resource-group: ${{ vars.RESOURCE_GROUP }}
             cluster-name: ${{ vars.CLUSTER_NAME }}
-        id: login
 
       - uses: azure/setup-helm@v4.2.0
         with:
