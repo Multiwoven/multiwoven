@@ -16,7 +16,7 @@ import {
   Image,
 } from '@chakra-ui/react';
 import MultiwovenIcon from '@/assets/images/icon-white.svg';
-import { signUp } from '@/services/authentication';
+import { SignUpPayload, signUp } from '@/services/authentication';
 import Cookies from 'js-cookie';
 import titleCase from '@/utils/TitleCase';
 import AuthFooter from '../AuthFooter';
@@ -24,6 +24,7 @@ import HiddenInput from '@/components/HiddenInput';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import mwTheme from '@/chakra.config';
+import { useMutation } from '@tanstack/react-query';
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required('Company name is required'),
@@ -116,40 +117,57 @@ const SignUp = (): JSX.Element => {
   const navigate = useNavigate();
   const showToast = useCustomToast();
 
+  const { mutateAsync } = useMutation({
+    mutationFn: (values: SignUpPayload) => signUp(values),
+    mutationKey: ['signIn'],
+  });
+
   const handleSubmit = async (values: any) => {
     setSubmitting(true);
-    const result = await signUp(values);
+    try {
+      const result = await mutateAsync(values);
 
-    if (result.data?.attributes) {
-      const token = result.data.attributes.token;
-      Cookies.set('authToken', token, {
-        secure: true,
-        sameSite: 'Lax',
-      });
-      result.data.attributes.token;
-      setSubmitting(false);
-      showToast({
-        title: 'Account created.',
-        status: CustomToastStatus.Success,
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
-      navigate('/');
-    } else {
-      setSubmitting(false);
-      result.data?.errors?.map((error: SignUpErrors) => {
-        Object.keys(error.source).map((error_key) => {
-          showToast({
-            title: titleCase(error_key) + ' ' + error.source[error_key],
-            status: CustomToastStatus.Warning,
-            duration: 5000,
-            isClosable: true,
-            position: 'bottom-right',
-            colorScheme: 'red',
+      if (result.data?.attributes) {
+        const token = result.data.attributes.token;
+        Cookies.set('authToken', token, {
+          secure: true,
+          sameSite: 'Lax',
+        });
+
+        showToast({
+          title: 'Account created.',
+          status: CustomToastStatus.Success,
+          duration: 3000,
+          isClosable: true,
+          position: 'bottom-right',
+        });
+
+        navigate('/');
+      } else {
+        result.data?.errors?.map((error: SignUpErrors) => {
+          Object.keys(error.source).map((error_key) => {
+            showToast({
+              title: titleCase(error_key) + ' ' + error.source[error_key],
+              status: CustomToastStatus.Warning,
+              duration: 5000,
+              isClosable: true,
+              position: 'bottom-right',
+              colorScheme: 'red',
+            });
           });
         });
+      }
+    } catch (error) {
+      showToast({
+        title: 'An error occured. Please try again later.',
+        status: CustomToastStatus.Error,
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom-right',
+        colorScheme: 'red',
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
