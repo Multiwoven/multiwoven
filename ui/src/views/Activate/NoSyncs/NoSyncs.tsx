@@ -1,10 +1,14 @@
 import { Box, Button, Center, Flex, Heading, Image, Text, VStack } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
-import NoSyncsImage from '@/assets/images/NoSyncs.png';
+import NoSyncsImage from '@/assets/images/NoSyncs.svg';
 import { useNavigate } from 'react-router-dom';
 
+export enum ActivationType {
+  Sync = 'Sync',
+}
+
 type NoActivationsProps = {
-  activationType: string;
+  activationType: ActivationType;
 };
 
 const NoActivations = ({ activationType }: NoActivationsProps): JSX.Element => {
@@ -15,7 +19,7 @@ const NoActivations = ({ activationType }: NoActivationsProps): JSX.Element => {
       ? 'Add a Sync to declare how you want query results from a Model to appear in your destination'
       : '';
 
-  const image = activationType === 'sync' ? NoSyncsImage : '';
+  const image = activationType === ActivationType.Sync ? NoSyncsImage : '';
 
   return (
     <Flex width='100%' height='100vh' alignContent='center' justifyContent='center'>
