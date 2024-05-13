@@ -35,11 +35,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.1.3'
+
       - name: Gets K8s context
         uses: azure/aks-set-context@v3
         with:
             resource-group: ${{ vars.RESOURCE_GROUP }}
             cluster-name: ${{ vars.CLUSTER_NAME }}
+            admin: 'false'
+            use-kubelogin: 'true'
 
       - uses: azure/setup-helm@v4.2.0
         with:
