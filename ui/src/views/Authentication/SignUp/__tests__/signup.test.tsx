@@ -16,6 +16,13 @@ jest.mock('@/chakra.config.ts', () => ({
   },
 }));
 
+// Mock mixpanel module
+jest.mock('@/mixpanel', () => ({
+  init: jest.fn(),
+  track: jest.fn(),
+  identify: jest.fn(),
+}));
+
 jest.mock('@/services/authentication', () => ({
   signUp: jest.fn().mockResolvedValue({
     data: {

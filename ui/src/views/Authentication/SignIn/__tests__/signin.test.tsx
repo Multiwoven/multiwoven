@@ -23,6 +23,13 @@ jest.mock('@/services/common', () => ({
   }),
 }));
 
+// Mock mixpanel module
+jest.mock('@/mixpanel', () => ({
+  init: jest.fn(),
+  track: jest.fn(),
+  identify: jest.fn(),
+}));
+
 describe('Login Component', () => {
   it('renders login form and handles submit', async () => {
     const { getByText, getByPlaceholderText } = render(

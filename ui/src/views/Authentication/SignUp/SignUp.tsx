@@ -24,6 +24,8 @@ import HiddenInput from '@/components/HiddenInput';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import mwTheme from '@/chakra.config';
+import { Mixpanel } from '@/mixpanel';
+import { EVENTS } from '@/events-constants';
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required('Company name is required'),
@@ -134,6 +136,11 @@ const SignUp = (): JSX.Element => {
         duration: 3000,
         isClosable: true,
         position: 'bottom-right',
+      });
+      Mixpanel.track(EVENTS.SIGNUP_SUCCESS, {
+        company_name: values.company_name,
+        name: values.name,
+        email: values.email,
       });
       navigate('/');
     } else {

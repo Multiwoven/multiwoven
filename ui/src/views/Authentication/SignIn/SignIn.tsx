@@ -25,6 +25,8 @@ import HiddenInput from '@/components/HiddenInput';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import mwTheme from '@/chakra.config';
+import { Mixpanel } from '@/mixpanel';
+import { EVENTS } from '@/events-constants';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Please enter a valid email address').required('Email is required'),
@@ -124,6 +126,9 @@ const SignIn = (): JSX.Element => {
         position: 'bottom-right',
         title: 'Signed In',
         status: CustomToastStatus.Success,
+      });
+      Mixpanel.track(EVENTS.LOGIN_SUCCESS, {
+        email: values.email,
       });
       navigate('/', { replace: true });
     } else {
