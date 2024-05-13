@@ -77,8 +77,8 @@ jobs:
             --set multiwovenConfig.uiHost=$UI_HOST \
             --set multiwovenConfig.viteApiHost=$VITE_API_HOST \
             --set multiwovenConfig.viteBrandName="$VITE_BRAND_NAME" \
-            --set multiwovenConfig.BrandColor=$VITE_BRAND_COLOR \
-            --set multiwovenConfig.BrandHoverColor=$VITE_BRAND_HOVER_COLOR \
+            --set multiwovenConfig.BrandColor="$VITE_BRAND_COLOR" \
+            --set multiwovenConfig.BrandHoverColor="$VITE_BRAND_HOVER_COLOR" \
             --set multiwovenConfig.viteLogoUrl=$VITE_LOGO_URL \
             --set multiwovenPostgresql.enabled=false \
             --set multiwovenServer.multiwovenServer.image.repository=$IMAGE_NAME_SERVER \
