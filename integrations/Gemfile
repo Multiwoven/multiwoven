@@ -52,6 +52,7 @@ gem "net-sftp"
 gem "csv"
 
 gem "aws-sdk-athena"
+
 gem "rubyzip"
 
 group :development, :test do
