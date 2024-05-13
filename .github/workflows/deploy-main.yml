@@ -76,7 +76,7 @@ jobs:
             --set multiwovenConfig.tlsCertIssuer="letsencrypt-prod" \
             --set multiwovenConfig.uiHost=$UI_HOST \
             --set multiwovenConfig.viteApiHost=$VITE_API_HOST \
-            --set multiwovenConfig.viteBrandName=$VITE_BRAND_NAME \
+            --set multiwovenConfig.viteBrandName="$VITE_BRAND_NAME" \
             --set multiwovenConfig.BrandColor=$VITE_BRAND_COLOR \
             --set multiwovenConfig.BrandHoverColor=$VITE_BRAND_HOVER_COLOR \
             --set multiwovenConfig.viteLogoUrl=$VITE_LOGO_URL \
@@ -89,4 +89,3 @@ jobs:
             --set multiwovenWorker.multiwovenWorker.image.repository=$IMAGE_NAME_SERVER \
             --set multiwovenWorker.multiwovenWorker.image.tag=$IMAGE_TAG \
             --set temporal.enabled=false
-          
