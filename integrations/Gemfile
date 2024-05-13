@@ -41,7 +41,7 @@ gem "async-websocket", "~> 0.8.0"
 
 gem "git"
 
-gem "hubspot-api-client", "~> 17.2.0"
+gem "hubspot-api-client"
 
 gem "ruby-limiter"
 
