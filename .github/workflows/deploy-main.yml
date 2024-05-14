@@ -50,7 +50,7 @@ jobs:
         with:
             resource-group: ${{ vars.RESOURCE_GROUP }}
             cluster-name: ${{ vars.CLUSTER_NAME }}
-            admin: 'false'
+            admin: 'true'
             use-kubelogin: 'true'
 
       - name: Deploy main to staging
