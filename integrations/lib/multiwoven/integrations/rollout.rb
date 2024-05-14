@@ -26,6 +26,7 @@ module Multiwoven
       SalesforceConsumerGoodsCloud
       Sftp
       Postgresql
+      Zendesk
       Http
     ].freeze
   end
