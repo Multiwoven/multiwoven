@@ -81,16 +81,16 @@ const SourceFinalizeForm = (): JSX.Element | null => {
           <form onSubmit={formik.handleSubmit}>
             <Box padding='24px' backgroundColor='gray.300' borderRadius='8px' marginBottom='16px'>
               <Text size='md' fontWeight='semibold' marginBottom='24px'>
-                Finalize settings for this Destination
+                Finalize settings for this Source
               </Text>
               <Box>
                 <Text marginBottom='8px' fontWeight='semibold' size='sm'>
-                  Destination Name
+                  Source Name
                 </Text>
                 <Input
                   name='connector_name'
                   type='text'
-                  placeholder='Enter Destination name'
+                  placeholder='Enter Source name'
                   background='gray.100'
                   marginBottom='24px'
                   onChange={formik.handleChange}
