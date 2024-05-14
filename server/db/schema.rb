@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_04_054131) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_06_111803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_04_054131) do
     t.string "description"
   end
 
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
   create_table "models", force: :cascade do |t|
     t.string "name"
     t.integer "workspace_id"
@@ -52,6 +55,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_04_054131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_organizations_on_name", unique: true
+  end
+
+  create_table "resources", force: :cascade do |t|
+    t.string "resources_name"
+    t.text "permissions", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "role_name"
+    t.string "role_desc"
+    t.jsonb "policies", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sync_records", force: :cascade do |t|
