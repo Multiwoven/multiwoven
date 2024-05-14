@@ -6,6 +6,17 @@ const app = express();
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.get('/env', (req, res) => {
+  res.json({
+    VITE_API_HOST: process.env.VITE_API_HOST,
+    VITE_BRAND_COLOR: process.env.VITE_BRAND_COLOR,
+    VITE_BRAND_HOVER_COLOR: process.env.VITE_BRAND_HOVER_COLOR,
+    VITE_BRAND_NAME: process.env.VITE_BRAND_NAME,
+    VITE_LOGO_URL: process.env.VITE_LOGO_URL,
+    VITE_FAV_ICON_URL: process.env.VITE_FAV_ICON_URL,
+  });
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');

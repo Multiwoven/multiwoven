@@ -13,6 +13,12 @@ const App = (): JSX.Element => {
   const { brandName, favIconUrl } = mwTheme;
 
   useEffect(() => {
+    // This is temporary to test the env loading or not on stage
+    fetch('/env')
+      .then((response) => response.json())
+      .then(() => {
+        // Access environment variable
+      });
     if (document) {
       // Set document title using VITE_BRAND_NAME
       document.title = brandName;
