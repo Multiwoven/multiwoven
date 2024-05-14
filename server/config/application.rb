@@ -34,7 +34,7 @@ module MultiwovenServer
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
-    # 
+    #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     # Autoload paths
@@ -42,6 +42,11 @@ module MultiwovenServer
     config.autoload_paths << Rails.root.join('app', 'temporal')
     config.autoload_paths << Rails.root.join('app', 'middleware')
     config.autoload_paths << Rails.root.join('app', 'contracts')
+
+    # Autoload paths for enterprise
+    config.autoload_paths << Rails.root.join('enterprise/lib')
+    config.autoload_paths += Dir["#{Rails.root}/enterprise/app/**"]
+
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.

@@ -1665,6 +1665,9 @@ GEM
     css_parser (1.17.1)
       addressable
     csv (3.3.0)
+    data_migrate (9.4.0)
+      activerecord (>= 6.1)
+      railties (>= 6.1)
     date (3.3.4)
     declarative (0.0.20)
     devise (4.9.3)
@@ -2128,6 +2131,7 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
+  data_migrate
   devise
   devise-jwt
   discard

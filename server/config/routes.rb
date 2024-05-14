@@ -51,6 +51,16 @@ Rails.application.routes.draw do
       end
     end
   end
+  if MultiwovenApp.enterprise?
+    namespace :enterprise, defaults: { format: 'json' } do
+      namespace :api do
+        namespace :v1 do
+          resources :roles, only: [:index]
+          resources :resources, only: [:index]
+        end
+      end
+    end
+  end
 
   # Uncomment below if you have a root path
   root "rails/health#show"
