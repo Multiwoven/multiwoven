@@ -25,6 +25,7 @@ import HiddenInput from '@/components/HiddenInput';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import mwTheme from '@/chakra.config';
+import { useMutation } from '@tanstack/react-query';
 import { Mixpanel } from '@/mixpanel';
 import { EVENTS } from '@/events-constants';
 
@@ -108,41 +109,54 @@ const SignIn = (): JSX.Element => {
   const navigate = useNavigate();
   const showToast = useCustomToast();
 
+  const { mutateAsync } = useMutation({
+    mutationFn: (values: SignInPayload) => signIn(values),
+    mutationKey: ['signIn'],
+  });
+
   const handleSubmit = async (values: SignInPayload) => {
     setSubmitting(true);
-    const result = await signIn(values);
+    try {
+      const result = await mutateAsync(values);
 
-    if (result.data?.attributes) {
-      const token = result.data.attributes.token;
-      Cookies.set('authToken', token, {
-        secure: true,
-        sameSite: 'Lax',
-      });
-      result.data.attributes.token;
-      setSubmitting(false);
+      if (result.data?.attributes) {
+        const token = result.data.attributes.token;
+        Cookies.set('authToken', token, { secure: true, sameSite: 'Lax' });
+
+        showToast({
+          duration: 3000,
+          isClosable: true,
+          position: 'bottom-right',
+          title: 'Signed In',
+          status: CustomToastStatus.Success,
+        });
+        navigate('/', { replace: true });
+      } else {
+        result.data?.errors?.forEach((error: SignInErrorResponse) => {
+          showToast({
+            duration: 5000,
+            isClosable: true,
+            position: 'bottom-right',
+            colorScheme: 'red',
+            status: CustomToastStatus.Warning,
+            title: titleCase(error.detail),
+          });
+        });
+      }
+    } catch (error) {
       showToast({
         duration: 3000,
         isClosable: true,
         position: 'bottom-right',
-        title: 'Signed In',
-        status: CustomToastStatus.Success,
+        title: 'There was an error connecting to the server. Please try again later.',
+        status: CustomToastStatus.Error,
       });
+    } finally {
       Mixpanel.track(EVENTS.LOGIN_SUCCESS, {
         email: values.email,
       });
       navigate('/', { replace: true });
-    } else {
       setSubmitting(false);
-      result.data?.errors?.map((error: SignInErrorResponse) => {
-        showToast({
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
-        });
-      });
     }
   };
 

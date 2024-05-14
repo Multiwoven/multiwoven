@@ -20,6 +20,9 @@ import { ConnectorItem } from '../Connectors/types';
 import Reports from './Reports';
 import Loader from '@/components/Loader';
 import ReportsSkeleton from './Reports/Skeleton/Reports';
+import ServerError from '../ServerError';
+import useCustomToast from '@/hooks/useCustomToast';
+import { CustomToastStatus } from '@/components/Toast';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -44,8 +47,9 @@ const Dashboard = (): JSX.Element | null => {
   const [reportTime, setReportTime] = useState<ReportTimePeriod>('one_day');
   const [report, setReport] = useState<Report>();
   const [checkedConnectorIds, setCheckedConnectorIds] = useState<number[]>([]);
+  const toast = useCustomToast();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['connectors', 'dashboard'],
     queryFn: () => getAllConnectors(),
     refetchOnMount: true,
@@ -56,7 +60,11 @@ const Dashboard = (): JSX.Element | null => {
     setFilteredConnectorsList(data?.data);
   }, [data]);
 
-  const { data: reportData, isLoading: reportsDataLoading } = useQuery({
+  const {
+    data: reportData,
+    isLoading: reportsDataLoading,
+    error: reportsError,
+  } = useQuery({
     queryKey: ['dashboard', 'syncs', reportTime, checkedConnectorIds],
     queryFn: () => getReport({ time_period: reportTime, connector_ids: [...checkedConnectorIds] }),
     refetchOnMount: true,
@@ -78,11 +86,21 @@ const Dashboard = (): JSX.Element | null => {
     return <Loader />;
   }
 
+  if (error || reportsError) {
+    toast({
+      title: 'Error: There was a connection error to the server. Please try again later.',
+      status: CustomToastStatus.Error,
+      isClosable: true,
+      position: 'bottom-right',
+    });
+    return <ServerError />;
+  }
+
   return (
     <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
-          name={'Reports'}
+          name={'Dashboard'}
           ctaName=''
           ctaButtonVariant='solid'
           onCtaClicked={() => {}}
