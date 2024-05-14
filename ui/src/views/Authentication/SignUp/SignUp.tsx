@@ -143,6 +143,11 @@ const SignUp = (): JSX.Element => {
           isClosable: true,
           position: 'bottom-right',
         });
+        Mixpanel.track(EVENTS.SIGNUP_SUCCESS, {
+          company_name: values.company_name,
+          name: values.name,
+          email: values.email,
+        });
 
         navigate('/');
       } else {
@@ -169,12 +174,6 @@ const SignUp = (): JSX.Element => {
         colorScheme: 'red',
       });
     } finally {
-      Mixpanel.track(EVENTS.SIGNUP_SUCCESS, {
-        company_name: values.company_name,
-        name: values.name,
-        email: values.email,
-      });
-      navigate('/');
       setSubmitting(false);
     }
   };

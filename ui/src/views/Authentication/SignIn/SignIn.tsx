@@ -130,6 +130,9 @@ const SignIn = (): JSX.Element => {
           title: 'Signed In',
           status: CustomToastStatus.Success,
         });
+        Mixpanel.track(EVENTS.LOGIN_SUCCESS, {
+          email: values.email,
+        });
         navigate('/', { replace: true });
       } else {
         result.data?.errors?.forEach((error: SignInErrorResponse) => {
@@ -152,10 +155,6 @@ const SignIn = (): JSX.Element => {
         status: CustomToastStatus.Error,
       });
     } finally {
-      Mixpanel.track(EVENTS.LOGIN_SUCCESS, {
-        email: values.email,
-      });
-      navigate('/', { replace: true });
       setSubmitting(false);
     }
   };
