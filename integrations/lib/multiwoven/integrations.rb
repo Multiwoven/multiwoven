@@ -23,6 +23,7 @@ require "net/sftp"
 require "csv"
 require "securerandom"
 require "zip"
+require "zendesk_api"
 
 # Service
 require_relative "integrations/config"
@@ -61,6 +62,7 @@ require_relative "integrations/destination/stripe/client"
 require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/destination/sftp/client"
 require_relative "integrations/destination/postgresql/client"
+require_relative "integrations/destination/zendesk/client"
 require_relative "integrations/destination/http/client"
 
 module Multiwoven

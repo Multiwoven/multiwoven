@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.65)
+    multiwoven-integrations (0.1.66)
       activesupport
       async-websocket
       csv
@@ -28,6 +28,7 @@ PATH
       sequel
       slack-ruby-client
       stripe
+      zendesk_api
 
 GEM
   remote: https://rubygems.org/
@@ -164,6 +165,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    inflection (1.0.0)
     io-event (1.4.2)
     json (2.6.3)
     jwt (2.7.1)
@@ -268,6 +270,13 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.12)
+    zendesk_api (3.0.5)
+      faraday (> 2.0.0)
+      faraday-multipart
+      hashie (>= 3.5.2, < 6.0.0)
+      inflection
+      mini_mime
+      multipart-post (~> 2.0)
 
 PLATFORMS
   ruby
