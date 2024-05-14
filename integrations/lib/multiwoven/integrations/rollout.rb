@@ -26,6 +26,7 @@ module Multiwoven
       SalesforceConsumerGoodsCloud
       Sftp
       Postgresql
+      Http
     ].freeze
   end
 end

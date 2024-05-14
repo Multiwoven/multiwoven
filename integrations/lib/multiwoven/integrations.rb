@@ -63,6 +63,7 @@ require_relative "integrations/destination/stripe/client"
 require_relative "integrations/destination/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/destination/sftp/client"
 require_relative "integrations/destination/postgresql/client"
+require_relative "integrations/destination/http/client"
 
 module Multiwoven
   module Integrations

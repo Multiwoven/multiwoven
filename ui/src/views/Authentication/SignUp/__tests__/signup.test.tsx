@@ -2,7 +2,8 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import { expect } from '@jest/globals';
 
 import { MemoryRouter } from 'react-router-dom';
-import SignUp from '../SignUp'; // Update the path based on your project structure
+import SignUp from '../SignUp';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 jest.mock('@/chakra.config.ts', () => ({
   default: {
@@ -26,12 +27,16 @@ jest.mock('@/services/authentication', () => ({
   }),
 }));
 
+const queryClient = new QueryClient();
+
 describe('SignUp Component', () => {
   it('renders signup form and handles submit', async () => {
     const { getByPlaceholderText, getByText } = render(
-      <MemoryRouter>
-        <SignUp />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SignUp />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     // dummy form values

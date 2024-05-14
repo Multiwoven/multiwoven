@@ -16,6 +16,7 @@ gem "multiwoven-integrations", "~> 0.1.64"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
+gem "data_migrate"
 gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
