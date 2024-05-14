@@ -6,12 +6,23 @@ module Api
     class WorkspacesController < ApplicationController
       include Workspaces
 
-      skip_before_action :validate_contract
-
       def index
         result = ListAll.call(user: current_user)
         @workspaces = result.workspaces
         render json: @workspaces, status: :ok
+      end
+
+      def show
+        result = Find.call(id: params[:id], user: current_user)
+        if result.workspace
+          @workspace = result.workspace
+          render json: @workspace, status: :ok
+        else
+          render_error(
+            message: "Workspace not found",
+            status: :not_found
+          )
+        end
       end
 
       def create
@@ -59,7 +70,7 @@ module Api
       private
 
       def workspace_params
-        params.require(:workspace).permit(:name, :organization_id)
+        params.require(:workspace).permit(:name, :organization_id, :description, :region)
       end
     end
   end

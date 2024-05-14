@@ -26,6 +26,7 @@ module Multiwoven
       Sftp
       Postgresql
       Zendesk
+      Http
     ].freeze
   end
 end

@@ -177,4 +177,17 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       end
     end
   end
+
+  describe "#process_record" do
+    let(:records) { [record1, record2, record3] }
+
+    context "process_record with error" do
+      it "process_record with error" do
+        sync_run1.model.primary_key = nil
+        sync_record = subject.send(:process_record, records, sync_run1, sync_run1.model)
+
+        expect(sync_record).to eq(nil)
+      end
+    end
+  end
 end

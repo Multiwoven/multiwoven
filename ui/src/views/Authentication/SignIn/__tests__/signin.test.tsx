@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { expect } from '@jest/globals';
 import Cookies from 'js-cookie';
 import SignIn from '../SignIn';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 jest.mock('@/chakra.config.ts', () => ({
   default: {
@@ -23,12 +24,16 @@ jest.mock('@/services/common', () => ({
   }),
 }));
 
+const queryClient = new QueryClient();
+
 describe('Login Component', () => {
   it('renders login form and handles submit', async () => {
     const { getByText, getByPlaceholderText } = render(
-      <MemoryRouter>
-        <SignIn />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SignIn />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     // form fileds on change
