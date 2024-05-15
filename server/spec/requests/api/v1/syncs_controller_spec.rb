@@ -13,7 +13,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
   end
 
   let(:model) do
-     create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
+    create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
 
   describe "POST /api/v1/syncs - Create sync" do
