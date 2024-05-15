@@ -17,39 +17,39 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
   end
 
   describe "POST /api/v1/syncs - Create sync" do
-      let(:request_body) do
-        {
-          sync: {
-            source_id: connectors.second.id,
-            destination_id: connectors.first.id,
-            model_id: "",
-            schedule_type: "manual",
-            configuration: {
-              "test": "test"
-            },
-            sync_interval: 10,
-            sync_interval_unit: "minutes",
-            stream_name: "profile",
-            sync_mode: "full_refresh",
-            cursor_field: "created_date"
-          }
+    let(:request_body) do
+      {
+        sync: {
+          source_id: connectors.second.id,
+          destination_id: connectors.first.id,
+          model_id: "",
+          schedule_type: "manual",
+          configuration: {
+            "test": "test"
+          },
+          sync_interval: 10,
+          sync_interval_unit: "minutes",
+          stream_name: "profile",
+          sync_mode: "full_refresh",
+          cursor_field: "created_date"
         }
-      end
-
-      context "when stream name is not present" do
-        it "creates a new sync and returns failure" do
-          error_message = "Catalog is missing"
-          post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-            .merge(auth_headers(user))
-          result = JSON.parse(response.body)
-          expect(result["errors"][0]["source"]["catalog"]).to eq(error_message)
-        end
-      end
+      }
     end
 
+    context "when stream name is not present" do
+      it "creates a new sync and returns failure" do
+        error_message = "Catalog is missing"
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        result = JSON.parse(response.body)
+        expect(result["errors"][0]["source"]["catalog"]).to eq(error_message)
+      end
+    end
+  end
+
   before do
-      create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
-      create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
+    create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
+    create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
   end
 
   let!(:syncs) do
