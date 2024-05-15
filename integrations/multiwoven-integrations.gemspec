@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport"
   spec.add_runtime_dependency "async-websocket"
+  spec.add_runtime_dependency "aws-sdk-athena"
   spec.add_runtime_dependency "csv"
   spec.add_runtime_dependency "dry-schema"
   spec.add_runtime_dependency "dry-struct"

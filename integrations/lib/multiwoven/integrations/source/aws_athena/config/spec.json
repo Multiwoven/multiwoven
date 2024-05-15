@@ -1,0 +1,63 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/athena",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AWS Athena",
+    "type": "object",
+    "required": ["access_key", "secret_access_key", "region", "workgroup", "catalog", "output_location"],
+    "properties": {
+      "access_key": {
+        "description": "The AWS Access Key ID to use for authentication.",
+        "examples": ["AWSATHENAACCESS"],
+        "type": "string",
+        "title": "Personal Access Key",
+        "order": 0
+      },
+      "secret_access_key": {
+        "description": "The AWS Secret Access Key to use for authentication.",
+        "examples": ["AWSATHENASECRET"],
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Secret Access Key",
+        "order": 1
+      },
+      "region": {
+        "description": "AWS region where Athena is located.",
+        "examples": ["ATHENA_REGION"],
+        "type": "string",
+        "title": "Secret Access Key",
+        "order": 2
+      },
+      "workgroup": {
+        "description": "The Athena workgroup you previously set up in AWS.",
+        "examples": ["ATHENA_WORKGROUP"],
+        "type": "string",
+        "title": "Workgroup",
+        "order": 3
+      },
+      "catalog": {
+        "description": "The Data catalog name within Athena.",
+        "examples": ["ATHENA_CATALOG"],
+        "type": "string",
+        "title": "Catalog",
+        "order": 4
+      },
+      "schema": {
+        "description": "The specific Athena database/schema to connect to.",
+        "examples": ["ATHENA_DB"],
+        "type": "string",
+        "title": "Database",
+        "order": 5
+      },
+      "output_location": {
+        "description": "S3 path for query output.",
+        "examples": ["s3://example-bucket-name/query-results/"],
+        "type": "string",
+        "title": "Query",
+        "order": 6
+      }
+    }
+  }
+}
