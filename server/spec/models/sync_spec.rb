@@ -14,6 +14,7 @@
 #  schedule_type     :integer
 #  schedule_data     :jsonb
 #  status            :integer
+#  name              :string           not null, default: ""
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
@@ -27,6 +28,8 @@ RSpec.describe Sync, type: :model do
   it { should validate_presence_of(:configuration) }
   it { should validate_presence_of(:schedule_type) }
   it { should validate_presence_of(:status) }
+  it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name).scoped_to(%i[workspace_id source_id destination_id model_id]) }
 
   it { should define_enum_for(:schedule_type).with_values(manual: 0, interval: 1, cron_expression: 2) }
   it { should define_enum_for(:status).with_values(disabled: 0, healthy: 1, pending: 2, failed: 3, aborted: 4) }
@@ -71,7 +74,10 @@ RSpec.describe Sync, type: :model do
                        })
     end
 
-    let(:sync) { create(:sync, destination:, cursor_field: "cursor_field", current_cursor_field: "2024-01-20") }
+    let(:sync) do
+      create(:sync, destination:, cursor_field: "cursor_field", current_cursor_field: "2024-01-20",
+                    name: "Example Sync")
+    end
 
     it "returns sync config protocol" do
       protocol = sync.to_protocol
@@ -82,11 +88,11 @@ RSpec.describe Sync, type: :model do
   end
 
   describe "#schedule_cron_expression" do
-    let(:sync) { build(:sync, sync_interval:, sync_interval_unit:) }
+    let(:sync) { build(:sync, sync_interval:, sync_interval_unit:, name: "Example Sync") }
 
     context "when schedule_type is cron_expression" do
       let(:sync_cron) do
-        build(:sync, schedule_type: "cron_expression", cron_expression: "0 0 */2 * *")
+        build(:sync, schedule_type: "cron_expression", cron_expression: "0 0 */2 * *", name: "Example Sync")
       end
       it "returns the correct cron expression" do
         expect(sync_cron.schedule_cron_expression).to eq("0 0 */2 * *")
@@ -129,7 +135,9 @@ RSpec.describe Sync, type: :model do
     end
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let(:sync) { build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:sync) do
+      build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
 
     before do
       allow(Temporal).to receive(:start_workflow).and_return(true)
@@ -169,20 +177,22 @@ RSpec.describe Sync, type: :model do
     end
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let(:sync) { create_list(:sync, 4, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:syncs) do
+      create_list(:sync, 4, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
 
-    context "when a multiple syncs are created" do
+    context "when multiple syncs are created" do
       it "returns the syncs in descending order of updated_at" do
-        expect(Sync.all).to eq(sync.sort_by(&:updated_at).reverse)
+        expect(Sync.all).to eq(syncs.sort_by(&:updated_at).reverse)
       end
     end
 
     context "when a sync is updated" do
       it "returns the syncs in descending order of updated_at" do
-        sync.first.update(updated_at: DateTime.current + 1.week)
-        sync.last.update(updated_at: DateTime.current - 1.week)
+        syncs.first.update(updated_at: DateTime.current + 1.week)
+        syncs.last.update(updated_at: DateTime.current - 1.week)
 
-        expect(Sync.all).to eq(sync.sort_by(&:updated_at).reverse)
+        expect(Sync.all).to eq(syncs.sort_by(&:updated_at).reverse)
       end
     end
   end
@@ -193,7 +203,9 @@ RSpec.describe Sync, type: :model do
     end
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:sync) do
+      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
 
     it "starts in pending state" do
       expect(sync).to have_state(:pending)
@@ -221,72 +233,57 @@ RSpec.describe Sync, type: :model do
       expect(sync).to transition_from(:disabled).to(:pending).on_event(:enable)
     end
 
-    describe "#set_defaults" do
-      let(:new_sync) { Sync.new }
+    context "when transition is allowed" do
+      it "starts in pending state" do
+        expect(sync).to have_state(:pending)
+      end
 
-      it "sets default values" do
-        expect(new_sync.status).to eq("pending")
+      it "transitions from pending to healthy" do
+        expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
+        expect(sync).to have_state(:healthy)
+      end
+
+      it "transitions from pending to failed" do
+        expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
+        expect(sync).to have_state(:failed)
+      end
+
+      it "transitions from healthy to failed" do
+        expect(sync).to transition_from(:healthy).to(:failed).on_event(:fail)
+        expect(sync).to have_state(:failed)
+      end
+
+      it "transitions from any healthy to disabled" do
+        expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
+        expect(sync).to have_state(:disabled)
+      end
+
+      it "transitions from any state to disabled" do
+        sync.complete
+        expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+        expect(sync).to have_state(:disabled)
       end
     end
 
-    describe "AASM states" do
-      let(:source) do
-        create(:connector, connector_type: "source", connector_name: "Snowflake")
-      end
-      let(:destination) { create(:connector, connector_type: "destination") }
-      let!(:catalog) { create(:catalog, connector: destination) }
-      let(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
-      context "when transition is allowed" do
-        it "starts in pending state" do
-          expect(sync).to have_state(:pending)
-        end
-
-        it "transitions from pending to healthy" do
-          expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
-          expect(sync).to have_state(:healthy)
-        end
-
-        it "transitions from pending to failed" do
-          expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
-          expect(sync).to have_state(:failed)
-        end
-
-        it "transitions from healthy to failed" do
-          expect(sync).to transition_from(:healthy).to(:failed).on_event(:fail)
-          expect(sync).to have_state(:failed)
-        end
-
-        it "transitions from any healthy to disabled" do
-          expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
-          expect(sync).to have_state(:disabled)
-        end
-
-        it "transitions from any state to disabled" do
+    context "when transition is not allowed" do
+      it "does not transition from disable to healthy directly" do
+        sync.complete
+        expect(sync).to have_state(:healthy)
+        expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+        expect(sync).to have_state(:disabled)
+        expect do
           sync.complete
-          expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
-          expect(sync).to have_state(:disabled)
-        end
+        end.to raise_error(AASM::InvalidTransition)
+        expect(sync).to have_state(:disabled)
       end
 
-      context "when transition is not allowed" do
-        it "does not transition from disable to healthy directly" do
-          sync.complete
-          expect(sync).to have_state(:healthy)
-          expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
-          expect(sync).to have_state(:disabled)
-          expect do
-            sync.complete
-          end.to raise_error(AASM::InvalidTransition)
-          expect(sync).to have_state(:disabled)
-        end
-        it "does not transition from healthy to pending directly" do
-          sync.complete
-          expect(sync).to have_state(:healthy)
-          expect do
-            sync.enable
-          end.to raise_error(AASM::InvalidTransition)
-          expect(sync).to have_state(:healthy)
-        end
+      it "does not transition from healthy to pending directly" do
+        sync.complete
+        expect(sync).to have_state(:healthy)
+        expect do
+          sync.enable
+        end.to raise_error(AASM::InvalidTransition)
+        expect(sync).to have_state(:healthy)
       end
     end
   end
@@ -297,8 +294,12 @@ RSpec.describe Sync, type: :model do
     end
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let!(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
-    let!(:sync_discard) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let!(:sync) do
+      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
+    let!(:sync_discard) do
+      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
     let!(:sync_run) { create(:sync_run, sync: sync_discard) }
 
     before do
@@ -342,7 +343,9 @@ RSpec.describe Sync, type: :model do
     end
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let(:sync) { build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:sync) do
+      build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, name: "Example Sync")
+    end
 
     it "validates that sync_interval is greater than 0" do
       sync.sync_interval = 0

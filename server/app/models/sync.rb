@@ -4,22 +4,23 @@
 #
 # Table name: syncs
 #
-#  id                :bigint           not null, primary key
-#  workspace_id      :integer
-#  source_id         :integer
-#  model_id          :integer
-#  destination_id    :integer
-#  configuration     :jsonb
-#  source_catalog_id :integer
-#  schedule_type     :string
-#  sync_interval     :integer
-#  sync_interval_unit:string
-#  cron_expression   :string
-#  status            :integer
-#  cursor_field      :string
-#  current_cursor_field :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                    :bigint           not null, primary key
+#  workspace_id          :integer
+#  source_id             :integer
+#  model_id              :integer
+#  destination_id        :integer
+#  configuration         :jsonb
+#  source_catalog_id     :integer
+#  schedule_type         :string
+#  sync_interval         :integer
+#  sync_interval_unit    :string
+#  cron_expression       :string
+#  status                :integer
+#  cursor_field          :string
+#  current_cursor_field  :string
+#  name                  :string           not null, default: ""
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 class Sync < ApplicationRecord
   include AASM
@@ -36,6 +37,7 @@ class Sync < ApplicationRecord
   validates :cron_expression, presence: true, if: :cron_expression?
   validates :stream_name, presence: true
   validates :status, presence: true
+  validates :name, presence: true, uniqueness: { scope: %i[workspace_id source_id destination_id model_id] }
   validate :stream_name_exists?
 
   enum :schedule_type, %i[manual interval cron_expression]
@@ -109,7 +111,7 @@ class Sync < ApplicationRecord
       # Every X hours: 0 */X * * *
       "0 */#{sync_interval} * * *"
     when "days"
-      # Every X days: 0 0 */X * *
+      # Every X days: 0 0 */#{sync_interval} * *
       "0 0 */#{sync_interval} * *"
     else
       raise ArgumentError, "Invalid sync_interval_unit: #{sync_interval_unit}"
