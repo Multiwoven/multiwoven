@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_06_111803) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_15_072318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -159,9 +159,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_111803) do
   create_table "workspace_users", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "workspace_id"
-    t.string "role", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "role_id", default: 4, null: false
+    t.index ["role_id"], name: "index_workspace_users_on_role_id"
     t.index ["user_id"], name: "index_workspace_users_on_user_id"
     t.index ["workspace_id"], name: "index_workspace_users_on_workspace_id"
   end
@@ -179,6 +180,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_111803) do
     t.index ["organization_id"], name: "index_workspaces_on_organization_id"
   end
 
+  add_foreign_key "workspace_users", "roles"
   add_foreign_key "workspace_users", "users"
   add_foreign_key "workspace_users", "workspaces", on_delete: :nullify
   add_foreign_key "workspaces", "organizations"

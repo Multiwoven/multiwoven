@@ -78,7 +78,7 @@ module Authentication
       WorkspaceUser.create(
         user:,
         workspace:,
-        role: WorkspaceUser::ADMIN
+        role: Role.find_by(role_name: "Admin")
       )
     end
 

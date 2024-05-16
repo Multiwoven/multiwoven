@@ -21,7 +21,7 @@ module Workspaces
       WorkspaceUser.create!(
         workspace:,
         user:,
-        role: "admin"
+        role: Role.find_by(role_name: "Admin")
       )
     end
   end

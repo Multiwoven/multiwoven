@@ -16,9 +16,7 @@ Rails.application.routes.draw do
       post 'resend_verification', to: 'auth#resend_verification'
 
       # Workspace Routes
-      resources :workspaces do
-        resources :workspace_users, only: [:create, :index, :update, :destroy]
-      end
+      resources :workspaces
       resources :connectors do
         member do
           get :discover

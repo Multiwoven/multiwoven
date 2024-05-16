@@ -9,7 +9,7 @@ RSpec.describe Workspaces::Delete, type: :interactor do
   describe ".call" do
     before do
       # Link the user and the workspace
-      create(:workspace_user, workspace:, user:, role: "admin")
+      create(:workspace_user, workspace:, user:)
     end
 
     context "when the delete is successful" do
