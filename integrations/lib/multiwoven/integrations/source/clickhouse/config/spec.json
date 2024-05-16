@@ -1,0 +1,49 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/clickhouse",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "ClickHouse",
+    "type": "object",
+    "required": ["host", "port", "database", "username", "password"],
+    "properties": {
+      "host": {
+        "description": "The ClickHouse host url to connect.",
+        "examples": ["tu61szglca.us-west-2.aws.clickhouse.cloud"],
+        "type": "string",
+        "title": "Personal Access Key",
+        "order": 0
+      },
+      "port": {
+        "description": "The ClickHouse port, the port is 9440 when using TLS, or 9000 when not using TLS .",
+        "examples": ["9440"],
+        "type": "string",
+        "title": "Secret Access Key",
+        "order": 1
+      },
+      "database": {
+        "description": "The name of the database that you want to connect to in ClickHouse.",
+        "examples": ["Default"],
+        "type": "string",
+        "title": "Secret Access Key",
+        "order": 2
+      },
+      "username": {
+        "description": "The username for ClickHouse.",
+        "examples": ["Default"],
+        "type": "string",
+        "title": "Username",
+        "order": 3
+      },
+      "password": {
+        "description": "The password for ClickHouse.",
+        "examples": ["Default"],
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Password",
+        "order": 4
+      }
+    }
+  }
+}
