@@ -7,7 +7,7 @@
 #  id           :bigint           not null, primary key
 #  user_id      :bigint           not null
 #  workspace_id :bigint
-#  role         :string           not null
+#  role_id      :bigint           # Changed from role to role_id
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
@@ -16,17 +16,11 @@
 class WorkspaceUser < ApplicationRecord
   belongs_to :user
   belongs_to :workspace
+  belongs_to :role
 
-  ADMIN = "admin"
-  MEMBER = "member"
-  VIEWER = "viewer"
-
-  # TODO: use enum here
-  validates :role, inclusion: { in: [ADMIN, MEMBER, VIEWER] }
-
-  scope :admins, -> { where(role: ADMIN) }
+  scope :admins, -> { joins(:role).where("roles.role_name = ?", "Admin") }
 
   def admin?
-    role == ADMIN
+    role.role_name == "Admin"
   end
 end
