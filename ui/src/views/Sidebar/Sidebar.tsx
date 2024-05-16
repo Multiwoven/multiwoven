@@ -14,7 +14,7 @@ import {
 import { NavButton } from './navButton';
 import Profile from './Profile';
 
-import mwTheme from '@/chakra.config';
+import { useConfigStore } from '@/stores/useConfigStore';
 
 type MenuItem = {
   title: string;
@@ -104,7 +104,7 @@ const SideBarFooter = () => (
 );
 
 const Sidebar = (): JSX.Element => {
-  const { logoUrl } = mwTheme;
+  const { logoUrl } = useConfigStore.getState().configs;
   return (
     <Flex
       position='relative'
