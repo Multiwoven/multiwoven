@@ -51,6 +51,7 @@ RSpec.describe User, type: :model do
   describe "associations" do
     it { should have_many(:workspace_users).dependent(:nullify) }
     it { should have_many(:workspaces).through(:workspace_users) }
+    it { should have_many(:roles).through(:workspace_users) }
     # Add other association tests here
   end
 
