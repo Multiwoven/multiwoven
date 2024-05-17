@@ -12,13 +12,13 @@ COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 echo "Commit message: '$COMMIT_MSG'"
 
 # Regular expression for the commit message format
-commit_regex="^\[(CE|EE)\] (feat|fix|docs|style|refactor|test|chore): .+"
+commit_regex="^\[(CE)\] (feat|fix|docs|style|refactor|test|chore): .+"
 
 # Validate the commit message
 if ! echo "$COMMIT_MSG" | grep -Eq "$commit_regex"; then
   echo "Error: Invalid commit message format."
   echo
-  echo "Format: [CE|EE] <type>: <subject>"
+  echo "Format: [CE] <type>: <subject>"
   echo
   echo "Type must be one of: feat, fix, docs, style, refactor, test, chore."
   echo "Example: [CE] feat: add source/snowflake connector"
