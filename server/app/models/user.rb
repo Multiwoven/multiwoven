@@ -36,6 +36,7 @@ class User < ApplicationRecord
 
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
+  has_many :roles, through: :workspace_users
 
   # This method checks whether the JWT token is revoked
   def self.jwt_revoked?(payload, user)
