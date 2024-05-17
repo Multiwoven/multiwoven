@@ -147,10 +147,12 @@ class Sync < ApplicationRecord
   def stream_name_exists?
     return if destination.blank?
 
-    stream = destination.catalog.find_stream_by_name(stream_name)
-    return if stream.present?
-
-    errors.add(:stream_name,
-               "Add a valid stream_name associated with destination connector")
+    catalog = destination&.catalog
+    if catalog.blank?
+      errors.add(:catalog, "Catalog is missing")
+    elsif catalog.find_stream_by_name(stream_name).blank?
+      errors.add(:stream_name,
+                 "Add a valid stream_name associated with destination connector")
+    end
   end
 end
