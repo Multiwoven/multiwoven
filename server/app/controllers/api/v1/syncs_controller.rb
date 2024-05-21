@@ -22,6 +22,7 @@ module Api
       end
 
       def create
+        authorize current_workspace, policy_class: SyncPolicy
         result = CreateSync.call(
           workspace: current_workspace,
           sync_params:

@@ -23,4 +23,12 @@ class WorkspaceUser < ApplicationRecord
   def admin?
     role.role_name == "Admin"
   end
+
+  def member?
+    role.role_name == "Member"
+  end
+
+  def viewer?
+    role.role_name == "Viewer"
+  end
 end
