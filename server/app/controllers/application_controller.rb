@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
   include ExceptionHandler
   include ScriptVault::Tracker
+  include Pundit::Authorization
   before_action :authenticate_user!
   before_action :validate_contract
   around_action :handle_with_exception
