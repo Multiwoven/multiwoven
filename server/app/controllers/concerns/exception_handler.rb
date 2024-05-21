@@ -6,15 +6,14 @@ module ExceptionHandler
   def handle_with_exception
     yield
   rescue ActiveRecord::RecordNotFound => e
-    # TODO: Add logs
     render_not_found_error(e.message)
   rescue ActionController::ParameterMissing => e
-    # TODO: Add logs
     render_could_not_create_error(e.message)
   rescue JSON::ParserError, ActionDispatch::Http::Parameters::ParseError => e
-    # TODO: Add logs
+    Utils::ExceptionReporter.report(e)
     render_bad_request_error(e.message)
   rescue StandardError => e
+    Utils::ExceptionReporter.report(e)
     render_bad_request_error(e.message)
   end
 

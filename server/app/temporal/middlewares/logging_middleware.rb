@@ -15,6 +15,7 @@ module Middlewares
 
       Temporal.logger.info("[#{app_name}]: Finished #{entity_name} #{entity_type}", metadata: metadata.to_h)
     rescue StandardError => e
+      Utils::ExceptionReporter.report(e)
       error_tracking = "Error: #{e.message}, Stack trace: #{e.backtrace.join("\n")}"
       Temporal.logger.error(
         "[#{app_name}]: Error #{entity_name} #{entity_type} #{error_tracking}",
