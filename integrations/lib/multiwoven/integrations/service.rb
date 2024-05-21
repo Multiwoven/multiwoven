@@ -28,6 +28,10 @@ module Multiwoven
           config.logger || default_logger
         end
 
+        def exception_reporter
+          config.exception_reporter
+        end
+
         def config
           @config ||= Config.new
         end
