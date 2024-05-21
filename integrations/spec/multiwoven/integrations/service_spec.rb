@@ -48,4 +48,27 @@ RSpec.describe Multiwoven::Integrations::Service do
       expect(source_connector_keys).to include(*expected_keys)
     end
   end
+
+  describe ".exception_reporter" do
+    let(:config) { instance_double("Multiwoven::Integrations::Config") }
+    let(:exception_reporter) { double("ExceptionReporter") }
+
+    context "when config has an exception_reporter" do
+      it "returns the exception_reporter from config" do
+        allow(described_class).to receive(:config).and_return(config)
+        allow(config).to receive(:exception_reporter).and_return(exception_reporter)
+        expect(described_class.exception_reporter).to eq(exception_reporter)
+      end
+    end
+
+    context "when config does not have an exception_reporter" do
+      before do
+        allow(config).to receive(:exception_reporter).and_return(nil)
+      end
+
+      it "returns nil" do
+        expect(described_class.exception_reporter).to be_nil
+      end
+    end
+  end
 end
