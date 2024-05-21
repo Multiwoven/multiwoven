@@ -21,7 +21,7 @@ gem "data_migrate"
 gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
-gem "rails", "~> 7.1.1"  # Core Rails gem
+gem "rails", "~> 7.1.3"  # Core Rails gem
 
 # API Support
 gem "active_model_serializers", "~> 0.10.0"
