@@ -105,6 +105,8 @@ GEM
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
+    appsignal (3.7.5)
+      rack
     ast (2.4.2)
     async (2.11.0)
       console (~> 1.25, >= 1.25.2)
@@ -2140,6 +2142,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   activerecord_json_validator (~> 2.1.0)
   annotate
+  appsignal
   aws-sdk
   bootsnap
   bullet

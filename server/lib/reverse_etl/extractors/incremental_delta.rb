@@ -50,6 +50,7 @@ module ReverseEtl
 
         find_or_initialize_sync_record(sync_run, primary_key)
       rescue StandardError => e
+        ::Utils::ExceptionReporter.report(e)
         Temporal.logger.error(error_message: e.message,
                               sync_run_id: sync_run.id,
                               stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))

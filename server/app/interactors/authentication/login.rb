@@ -10,6 +10,7 @@ module Authentication
         user = User.find_by(email: context.params[:email])
       rescue StandardError => e
         Rails.logger.error("Login Interactor Exception: #{e.message}")
+        Utils::ExceptionReporter.report(e)
         context.fail!(error: "An error occurred while finding the user.")
         return
       end
