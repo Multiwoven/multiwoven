@@ -32,4 +32,20 @@ RSpec.describe Multiwoven::Integrations::Config do
       expect(config.logger).to eq(new_logger)
     end
   end
+
+  describe "#exception_reporter" do
+    let(:logger) { double("Logger") }
+    let(:exception_reporter) { double("ExceptionReporter") }
+    let(:params) { { logger: logger, exception_reporter: exception_reporter } }
+    subject { described_class.new(params) }
+    it "can be read" do
+      expect(subject.exception_reporter).to eq(exception_reporter)
+    end
+
+    it "can be written" do
+      new_exception_reporter = double("NewExceptionReporter")
+      subject.exception_reporter = new_exception_reporter
+      expect(subject.exception_reporter).to eq(new_exception_reporter)
+    end
+  end
 end

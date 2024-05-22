@@ -8,6 +8,7 @@ module Connectors
       result = context.connector.execute_query(context.query, limit: context.limit)
       context.records = result
     rescue StandardError => e
+      Utils::ExceptionReporter.report(e)
       context.fail!(error: e.message)
     end
   end

@@ -161,7 +161,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_072318) do
     t.bigint "workspace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "role_id", default: 4, null: false
+    t.bigint "role_id"
     t.index ["role_id"], name: "index_workspace_users_on_role_id"
     t.index ["user_id"], name: "index_workspace_users_on_user_id"
     t.index ["workspace_id"], name: "index_workspace_users_on_workspace_id"

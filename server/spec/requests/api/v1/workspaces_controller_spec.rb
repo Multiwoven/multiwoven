@@ -43,6 +43,8 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :slug)).to eq(workspace.slug)
         expect(response_hash.dig(:data, :attributes, :organization_id)).to eq(workspace.organization.id)
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
+        expect(response_hash.dig(:data, :attributes, :members_count))
+          .to eq(workspace.users.count)
       end
     end
   end
@@ -81,6 +83,8 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west")
         expect(response_hash.dig(:data, :attributes, :organization_id))
           .to eq(request_body.dig(:workspace, :organization_id))
+        expect(response_hash.dig(:data, :attributes, :members_count))
+          .to eq(workspace.users.count)
       end
 
       it "returns an error response when creation fails" do

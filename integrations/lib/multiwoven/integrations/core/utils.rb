@@ -48,6 +48,11 @@ module Multiwoven
         Integrations::Service.logger
       end
 
+      def report_exception(exception)
+        reporter = Integrations::Service.exception_reporter
+        reporter&.report(exception)
+      end
+
       def create_log_message(context, type, exception)
         Integrations::Protocol::LogMessage.new(
           name: context,
@@ -60,7 +65,7 @@ module Multiwoven
         logger.error(
           "#{context}: #{exception.message}"
         )
-
+        report_exception(exception)
         create_log_message(context, type, exception)
       end
 

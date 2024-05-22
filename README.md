@@ -105,7 +105,13 @@ cd multiwoven
 mv .env.example .env
 ```
 
-4. **Start the services:**
+4. **Setup git hooks:**
+
+```bash
+./git-hooks/setup-hooks.sh 
+```
+
+5. **Start the services:**
 
 ```bash
 docker-compose build && docker-compose up

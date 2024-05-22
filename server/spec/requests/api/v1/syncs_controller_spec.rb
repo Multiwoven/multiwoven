@@ -5,20 +5,23 @@ require "rails_helper"
 RSpec.describe "Api::V1::SyncsController", type: :request do
   let(:workspace) { create(:workspace) }
   let(:user) { workspace.workspace_users.first.user }
+  let(:new_role) { create(:role, role_name: "Viewer") }
   let(:connectors) do
     [
       create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo"),
-      create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
+      create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift"),
+      create(:connector, workspace:, connector_type: "destination", name: "klavio2", connector_name: "Klaviyo"),
+      create(:connector, workspace:, connector_type: "source", name: "redshift2", connector_name: "Redshift")
     ]
+  end
+
+  let(:model) do
+    create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
 
   before do
     create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
     create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
-  end
-
-  let(:model) do
-    create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
 
   let!(:syncs) do
@@ -155,6 +158,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+      end
+
+      it "creates a new sync and returns unauthorized for viewer role" do
+        user.workspace_users.first.update(role: new_role)
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        expect(response).to have_http_status(:unauthorized)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:errors, 0, :detail)).to eq("You are not authorized to do this action")
       end
 
       it "returns an error response when creation fails" do
@@ -308,6 +320,37 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           expect(response_hash.dig(:data, :attributes,
                                    :sync_interval_unit)).to eq(nil)
         end
+      end
+    end
+  end
+
+  describe "POST /api/v1/syncs - Create sync" do
+    let(:request_body) do
+      {
+        sync: {
+          source_id: connectors.fourth.id,
+          destination_id: connectors.third.id,
+          model_id: model.id,
+          schedule_type: "manual",
+          configuration: {
+            "test": "test"
+          },
+          sync_interval: 10,
+          sync_interval_unit: "minutes",
+          stream_name: "profile",
+          sync_mode: "full_refresh",
+          cursor_field: "created_date"
+        }
+      }
+    end
+
+    context "when catalog is not present" do
+      it "creates a new sync and returns failure" do
+        error_message = "Catalog is missing"
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+        result = JSON.parse(response.body)
+        expect(result["errors"][0]["source"]["catalog"]).to eq(error_message)
       end
     end
   end

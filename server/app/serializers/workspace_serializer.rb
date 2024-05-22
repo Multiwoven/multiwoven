@@ -15,7 +15,7 @@
 # app/serializers/workspace_serializer.rb
 class WorkspaceSerializer < ActiveModel::Serializer
   attributes :id, :name, :slug, :status, :api_key, :created_at, :updated_at, :description, :region, :organization_id,
-             :organization_name
+             :organization_name, :members_count
 
   def organization_id
     object.organization.id
@@ -23,5 +23,9 @@ class WorkspaceSerializer < ActiveModel::Serializer
 
   def organization_name
     object.organization.name
+  end
+
+  def members_count
+    object.users.count
   end
 end

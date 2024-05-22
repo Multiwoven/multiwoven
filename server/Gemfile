@@ -6,6 +6,7 @@ ruby "3.2.0"
 
 # Core
 gem "aasm"
+gem "appsignal"
 gem "aws-sdk"
 gem "groupdate"
 gem "interactor", "~> 3.0"
@@ -35,6 +36,7 @@ gem "rack-cors"
 # AuthN & AuthZ
 gem "devise"
 gem "devise-jwt"
+gem "pundit"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
