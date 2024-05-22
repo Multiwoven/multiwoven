@@ -5,6 +5,7 @@
 require "rails_helper"
 
 RSpec.describe Workspaces::Create, type: :interactor do
+  let!(:role) { create(:role, role_name: "Admin") }
   let(:organization) { create(:organization) }
   let(:user) { create(:user) }
   let(:valid_attributes) do

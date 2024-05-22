@@ -106,15 +106,15 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    async (2.10.2)
-      console (~> 1.10)
+    async (2.11.0)
+      console (~> 1.25, >= 1.25.2)
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
-    async-http (0.66.2)
+    async-http (0.66.3)
       async (>= 2.10.2)
       async-pool (>= 0.6.1)
-      io-endpoint (~> 0.10)
+      io-endpoint (~> 0.10, >= 0.10.3)
       io-stream (~> 0.4)
       protocol-http (~> 0.26.0)
       protocol-http1 (~> 0.19.0)
@@ -1657,7 +1657,7 @@ GEM
       activesupport
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
-    console (1.25.1)
+    console (1.25.2)
       fiber-annotation
       fiber-local (~> 1.1)
       json
@@ -1759,15 +1759,17 @@ GEM
     fugit (1.10.1)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
-    git (1.19.1)
+    git (2.0.0)
+      activesupport (>= 5.0)
       addressable (~> 2.8)
+      process_executer (~> 1.1)
       rchardet (~> 1.8)
     gli (2.21.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.68.0)
+    google-apis-bigquery_v2 (0.69.0)
       google-apis-core (>= 0.14.0, < 2.a)
-    google-apis-core (0.14.1)
+    google-apis-core (0.15.0)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 1.9)
       httpclient (>= 2.8.1, < 3.a)
@@ -1775,7 +1777,7 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-apis-sheets_v4 (0.30.0)
+    google-apis-sheets_v4 (0.31.0)
       google-apis-core (>= 0.14.0, < 2.a)
     google-cloud-bigquery (1.49.0)
       concurrent-ruby (~> 1.0)
@@ -1823,9 +1825,10 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    inflection (1.0.0)
     interactor (3.1.2)
     io-console (0.7.1)
-    io-endpoint (0.10.2)
+    io-endpoint (0.10.3)
     io-event (1.5.1)
     io-stream (0.4.0)
     irb (1.11.1)
@@ -1871,10 +1874,11 @@ GEM
     minitest (5.21.2)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multipart-post (2.4.0)
-    multiwoven-integrations (0.1.64)
+    multipart-post (2.4.1)
+    multiwoven-integrations (0.1.67)
       activesupport
       async-websocket
+      aws-sdk-athena
       csv
       dry-schema
       dry-struct
@@ -1893,6 +1897,7 @@ GEM
       sequel
       slack-ruby-client
       stripe
+      zendesk_api
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -1935,8 +1940,9 @@ GEM
       actionmailer (>= 3)
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
+    process_executer (1.1.0)
     protocol-hpack (1.4.3)
-    protocol-http (0.26.4)
+    protocol-http (0.26.5)
     protocol-http1 (0.19.1)
       protocol-http (~> 0.22)
     protocol-http2 (0.17.0)
@@ -2084,7 +2090,7 @@ GEM
       gli
       hashie
     stringio (3.1.0)
-    stripe (11.3.0)
+    stripe (11.4.0)
     thor (1.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
@@ -2115,6 +2121,13 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.12)
+    zendesk_api (3.0.5)
+      faraday (> 2.0.0)
+      faraday-multipart
+      hashie (>= 3.5.2, < 6.0.0)
+      inflection
+      mini_mime
+      multipart-post (~> 2.0)
 
 PLATFORMS
   aarch64-linux
@@ -2145,7 +2158,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.64)
+  multiwoven-integrations (~> 0.1.67)
   newrelic_rpm
   parallel
   pg (~> 1.1)

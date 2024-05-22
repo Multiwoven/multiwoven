@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require "clickhouse"
-require "faraday"
-
 module Multiwoven::Integrations::Source
-  module ClickHouse
+  module Clickhouse
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
@@ -13,7 +10,7 @@ module Multiwoven::Integrations::Source
         ConnectionStatus.new(
           status: ConnectionStatusType["succeeded"]
         ).to_multiwoven_message
-      rescue PG::Error => e
+      rescue StandardError => e
         ConnectionStatus.new(
           status: ConnectionStatusType["failed"], message: e.message
         ).to_multiwoven_message
@@ -21,17 +18,9 @@ module Multiwoven::Integrations::Source
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
-        query = "SELECT table_name, column_name, data_type, is_nullable
-                 FROM information_schema.columns
-                 WHERE table_schema = '#{connection_config[:schema]}' AND table_catalog = '#{connection_config[:database]}'
-                 ORDER BY table_name, ordinal_position;"
-
+        query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = '#{connection_config[:database]}' ORDER BY table_name, ordinal_position;"
         db = create_connection(connection_config)
-        records = db.exec(query) do |result|
-          result.map do |row|
-            row
-          end
-        end
+        records = query_execution(db, query)
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -47,7 +36,6 @@ module Multiwoven::Integrations::Source
         connection_config = connection_config.with_indifferent_access
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
-
         db = create_connection(connection_config)
         query(db, query)
       rescue StandardError => e
@@ -61,63 +49,53 @@ module Multiwoven::Integrations::Source
       private
 
       def query(connection, query)
-        byebug
-        response = connection.post('/query') do |req|
-            req.body = { query: query }.to_json
-        end
-        w = connection.query(query)
-        byebug
-        connection.get(query) do |result|
-          byebug
-          result.map do |row|
-            RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
-          end
+        query_execution(connection, query).map do |row|
+          RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
         end
       end
 
       def create_connection(connection_config)
-        #raise "Unsupported Auth type" unless connection_config[:credentials][:auth_type] == "username/password"
-        #connection = Faraday.new(url: connection_config[:host]) do |faraday|
-          #faraday.request :authorization, :basic, connection_config[:username], connection_config[:password]
-          #faraday.adapter :net_http
-        #end
-        byebug
+        @auth_token = Base64.strict_encode64("#{connection_config[:username]}:#{connection_config[:password]}")
+        Faraday.new(connection_config[:host]) do |faraday|
+          faraday.request :url_encoded
+          faraday.adapter Faraday.default_adapter
+        end
+      end
 
-        #conn = Faraday.new(url: connection_config[:host], headers: {'Content-Type' => 'application/json'}) do |faraday|
-          #faraday.request :url_encoded
-          #faraday.adapter Faraday.default_adapter
-        #end
-
-        #response = conn.get "/"
-
-        # Create a connection
-        client = Clickhouse::Client.new(
-          url: 'http://localhost:8123', # URL of your ClickHouse server
-          username: 'your_username',    # Username for authentication
-          password: 'your_password'     # Password for authentication
-        )
-        client
+      def query_execution(connection, query)
+        response = connection.post do |req|
+          req.url "/"
+          req.headers["Authorization"] = "Basic #{@auth_token}"
+          req.headers["Content-Type"] = "text/plain"
+          req.body = query
+        end
+        column_names = query[/SELECT (.*?) FROM/i, 1].split(",").map(&:strip)
+        response.body.strip.split("\n").map do |row|
+          columns = row.split("\t")
+          column_names.zip(columns).to_h
+        end
       end
 
       def create_streams(records)
-        group_by_table(records).map do |r|
+        group_by_table(records).map do |_, r|
           Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], action: StreamAction["fetch"], json_schema: convert_to_json_schema(r[:columns]))
         end
       end
 
       def group_by_table(records)
-        records.group_by { |entry| entry["table_name"] }.map do |table_name, columns|
-          {
-            tablename: table_name,
-            columns: columns.map do |column|
-              {
-                column_name: column["column_name"],
-                type: column["data_type"],
-                optional: column["is_nullable"] == "YES"
-              }
-            end
+        result = {}
+        records.each_with_index do |entry, index|
+          table_name = entry["table_name"]
+          column_data = {
+            column_name: entry["column_name"],
+            data_type: entry["data_type"].gsub(/Nullable\((\w+)\)/, '\1').downcase.gsub!(/\d+/, ""),
+            is_nullable: entry["is_nullable"] == "1"
           }
+          result[index] ||= {}
+          result[index][:tablename] = table_name
+          result[index][:columns] = [column_data]
         end
+        result
       end
     end
   end

@@ -6,35 +6,21 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "ClickHouse",
     "type": "object",
-    "required": ["host", "port", "database", "username", "password"],
+    "required": ["url", "username", "password", "database"],
     "properties": {
-      "host": {
+      "url": {
         "description": "The ClickHouse host url to connect.",
         "examples": ["tu61szglca.us-west-2.aws.clickhouse.cloud"],
         "type": "string",
-        "title": "Personal Access Key",
+        "title": "Personal URL",
         "order": 0
-      },
-      "port": {
-        "description": "The ClickHouse port, the port is 9440 when using TLS, or 9000 when not using TLS .",
-        "examples": ["9440"],
-        "type": "string",
-        "title": "Secret Access Key",
-        "order": 1
-      },
-      "database": {
-        "description": "The name of the database that you want to connect to in ClickHouse.",
-        "examples": ["Default"],
-        "type": "string",
-        "title": "Secret Access Key",
-        "order": 2
       },
       "username": {
         "description": "The username for ClickHouse.",
         "examples": ["Default"],
         "type": "string",
         "title": "Username",
-        "order": 3
+        "order": 1
       },
       "password": {
         "description": "The password for ClickHouse.",
@@ -42,7 +28,14 @@
         "type": "string",
         "multiwoven_secret": true,
         "title": "Password",
-        "order": 4
+        "order": 2
+      },
+      "database": {
+        "description": "The ClickHouse database.",
+        "examples": ["default"],
+        "type": "string",
+        "title": "Database",
+        "order": 3
       }
     }
   }

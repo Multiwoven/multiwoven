@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:disable Metrics/BlockLength
-  let(:client) { Multiwoven::Integrations::Source::Redshift::Client.new }
+RSpec.describe Multiwoven::Integrations::Source::Clickhouse::Client do # rubocop:disable Metrics/BlockLength
+  let(:client) { Multiwoven::Integrations::Source::Clickhouse::Client.new }
   let(:sync_config) do
     {
       "source": {
         "name": "ClickHouseConnector",
         "type": "source",
         "connection_specification": {
-          "username": "default",
-          "password": "zQMOLuq1Zl1m_"
-          "host": "https://v8u38bthg0.us-east-2.aws.clickhouse.cloud",
-          "port": "9440",
+          "url": "https://v8u38bthg0.us-east-2.aws.clickhouse.cloud:8443",
+          "username": ENV["CLICKHOUSE_USERNAME"],
+          "password": ENV["CLICKHOUSE_PASSWORD"],
+          "database": "default"
         }
       },
       "destination": {
@@ -22,10 +22,10 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
         }
       },
       "model": {
-        "name": "ExampleRedshiftModel",
-        "query": "SELECT * FROM contacts;",
-        "query_type": "raw_sql",
-        "primary_key": "id"
+        name: "test_table",
+        query: "SELECT col1, col2, col3 FROM test_table",
+        query_type: "raw_sql",
+        primary_key: "id"
       },
       "stream": {
         "name": "example_stream", "action": "create",
@@ -44,17 +44,17 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
     }
   end
 
-  let(:pg_connection) { instance_double(PG::Connection) }
-  let(:pg_result) { instance_double(PG::Result) }
+  let(:auth_token) { Base64.strict_encode64("#{sync_config[:source][:connection_specification][:username]}:#{sync_config[:source][:connection_specification][:password]}") }
+  let(:faraday_connection) { instance_double(Faraday::Connection) }
 
   describe "#check_connection" do
     context "when the connection is successful" do
       it "returns a succeeded connection status" do
-        allow(Sequel).to receive(:postgres).and_return(true)
-        allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(Base64).to receive(:strict_encode64).with("#{sync_config[:source][:connection_specification][:username]}:#{sync_config[:source][:connection_specification][:password]}").and_return(auth_token)
+        allow(Faraday).to receive(:new).with(sync_config[:source][:connection_specification][:url]).and_return(faraday_connection)
+        allow(client).to receive(:create_connection).with(sync_config[:source][:connection_specification]).and_return(faraday_connection)
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
-
         expect(result.status).to eq("succeeded")
         expect(result.message).to be_nil
       end
@@ -62,8 +62,7 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
 
     context "when the connection fails" do
       it "returns a failed connection status with an error message" do
-        allow(PG).to receive(:connect).and_raise(PG::Error.new("Connection failed"))
-
+        allow(client).to receive(:create_connection).and_raise(StandardError, "Connection failed")
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("failed")
@@ -72,98 +71,84 @@ RSpec.describe Multiwoven::Integrations::Source::Redshift::Client do # rubocop:d
     end
   end
 
-  # read and #discover tests for Redshift
+  # read and #discover tests for AWS Athena
   describe "#read" do
-    context "when reading records from a real Redshift database" do
-      it "reads records successfully" do
-        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
-        allow(PG).to receive(:connect).and_return(pg_connection)
+    it "reads records successfully" do
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      allow(Base64).to receive(:strict_encode64).with("#{sync_config[:source][:connection_specification][:username]}:#{sync_config[:source][:connection_specification][:password]}").and_return(auth_token)
+      allow(Faraday).to receive(:new).with(sync_config[:source][:connection_specification][:url]).and_return(faraday_connection)
+      allow(client).to receive(:create_connection).with(sync_config[:source][:connection_specification]).and_return(faraday_connection)
+      allow(client).to receive(:query_execution).with(faraday_connection, sync_config[:model][:query]).and_return(
+        [
+          { "col1" => "value1", "col2" => "value2", "col3" => "value3" },
+          { "col1" => "value4", "col2" => "value5", "col3" => "value6" }
+        ]
+      )
+      records = client.read(s_config)
+      expect(records).to be_an(Array)
+      expect(records).not_to be_empty
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+    end
 
-        allow(pg_connection).to receive(:exec).with(s_config.model.query).and_return(
-          [
-            Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: { column1: "column1" }, emitted_at: Time.now.to_i
-            ).to_multiwoven_message,
-            Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: { column2: "column2" }, emitted_at: Time.now.to_i
-            ).to_multiwoven_message
-          ]
-        )
-        allow(pg_connection).to receive(:close).and_return(true)
-        records = client.read(s_config)
-        expect(records).to be_an(Array)
-        expect(records).not_to be_empty
-        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-      end
+    it "reads records successfully with limit" do
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      s_config.limit = 100
+      s_config.offset = 1
+      allow(Base64).to receive(:strict_encode64).with("#{sync_config[:source][:connection_specification][:username]}:#{sync_config[:source][:connection_specification][:password]}").and_return(auth_token)
+      allow(Faraday).to receive(:new).with(sync_config[:source][:connection_specification][:url]).and_return(faraday_connection)
+      expected_query = "#{sync_config[:model][:query]} LIMIT 100 OFFSET 1"
+      allow(client).to receive(:create_connection).with(sync_config[:source][:connection_specification]).and_return(faraday_connection)
+      allow(client).to receive(:query_execution).with(faraday_connection, expected_query).and_return(
+        [
+          { "col1" => "value1", "col2" => "value2", "col3" => "value3" },
+          { "col1" => "value4", "col2" => "value5", "col3" => "value6" }
+        ]
+      )
+      records = client.read(s_config)
+      expect(records).to be_an(Array)
+      expect(records).not_to be_empty
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+    end
 
-      it "reads records successfully for batched_query" do
-        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
-        s_config.limit = 100
-        s_config.offset = 1
-        allow(PG).to receive(:connect).and_return(pg_connection)
-
-        batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
-
-        allow(pg_connection).to receive(:exec).with(batched_query).and_return(
-          [
-            Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: { column1: "column1" }, emitted_at: Time.now.to_i
-            ).to_multiwoven_message,
-            Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: { column2: "column2" }, emitted_at: Time.now.to_i
-            ).to_multiwoven_message
-          ]
-        )
-        allow(pg_connection).to receive(:close).and_return(true)
-        records = client.read(s_config)
-        expect(records).to be_an(Array)
-        expect(records).not_to be_empty
-        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-      end
-
-      it "read records failure" do
-        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
-        allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
-        expect(client).to receive(:handle_exception).with(
-          "REDSHIFT:READ:EXCEPTION",
-          "error",
-          an_instance_of(StandardError)
-        )
-        client.read(s_config)
-      end
+    it "read records failure" do
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      allow(client).to receive(:create_connection).and_raise(StandardError, "test error")
+      expect(client).to receive(:handle_exception).with(
+        "CLICKHOUSE:READ:EXCEPTION",
+        "error",
+        an_instance_of(StandardError)
+      )
+      client.read(s_config)
     end
   end
 
   describe "#discover" do
     it "discovers schema successfully" do
-      allow(PG).to receive(:connect).and_return(pg_connection)
-      discovery_query = "SELECT table_name, column_name, data_type, is_nullable\n" \
-                      "                 FROM information_schema.columns\n" \
-                      "                 WHERE table_schema = 'test_schema' AND table_catalog = 'test_database'\n" \
-                      "                 ORDER BY table_name, ordinal_position;"
-      allow(pg_connection).to receive(:exec).with(discovery_query).and_return(
+      allow(Base64).to receive(:strict_encode64).with("#{sync_config[:source][:connection_specification][:username]}:#{sync_config[:source][:connection_specification][:password]}").and_return(auth_token)
+      allow(Faraday).to receive(:new).with(sync_config[:source][:connection_specification][:url]).and_return(faraday_connection)
+      discovery_query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = '#{sync_config[:source][:connection_specification][:database]}' ORDER BY table_name, ordinal_position;"
+      allow(client).to receive(:create_connection).with(sync_config[:source][:connection_specification]).and_return(faraday_connection)
+      allow(client).to receive(:query_execution).with(faraday_connection, discovery_query).and_return(
         [
-          {
-            "table_name" => "combined_users", "column_name" => "city", "data_type" => "varchar", "is_nullable" => "YES"
-          }
+          { "table_name" => "test_table", "column_name" => "col1", "data_type" => "Nullable(Int32)", "is_nullable" => "1" },
+          { "table_name" => "test_table", "column_name" => "col2", "data_type" => "Nullable(String)", "is_nullable" => "1" },
+          { "table_name" => "test_table", "column_name" => "col3", "data_type" => "Nullable(Float32)", "is_nullable" => "1" }
         ]
       )
-      allow(pg_connection).to receive(:close).and_return(true)
       message = client.discover(sync_config[:source][:connection_specification])
-
       expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
       first_stream = message.catalog.streams.first
       expect(first_stream).to be_a(Multiwoven::Integrations::Protocol::Stream)
-      expect(first_stream.name).to eq("combined_users")
+      expect(first_stream.name).to eq("test_table")
       expect(first_stream.json_schema).to be_an(Hash)
       expect(first_stream.json_schema["type"]).to eq("object")
-      expect(first_stream.json_schema["properties"]).to eq({ "city" => { "type" => %w[string null] } })
+      expect(first_stream.json_schema["properties"]).to eq({ "col1" => { "type" => "string" } })
     end
 
     it "discover schema failure" do
-      allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
+      allow(client).to receive(:create_connection).and_raise(StandardError, "test error")
       expect(client).to receive(:handle_exception).with(
-        "REDSHIFT:DISCOVER:EXCEPTION",
+        "CLICKHOUSE:DISCOVER:EXCEPTION",
         "error",
         an_instance_of(StandardError)
       )

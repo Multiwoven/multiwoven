@@ -17,6 +17,6 @@ FactoryBot.define do
   factory :workspace_user do
     association :user
     association :workspace
-    role { %w[admin member].sample }
+    association :role
   end
 end

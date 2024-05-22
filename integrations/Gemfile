@@ -55,8 +55,6 @@ gem "aws-sdk-athena"
 
 gem "rubyzip"
 
-gem "clickhouse"
-
 gem "faraday"
 
 group :development, :test do
