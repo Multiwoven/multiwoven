@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1706696350/Multiwoven/Logo_hrkaxj.png" alt="Multiwoven" width="228" />
+  <img src="https://res.cloudinary.com/dspflukeu/image/upload/v1714997618/AIS/multiwoven_-_logo_-_light_eewnz3.svg" alt="Multiwoven" width="228" />
 </p>
 
 <h1 align="center">Open Source Reverse ETL & Customer Data Platform (CDP)</h1>
@@ -24,14 +24,14 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 <p align="center">
     <br />
-    <a href="https://docs.multiwoven.com" rel=""><strong>Explore the docs »</strong></a>
+    <a href="https://docs.squared.ai/open-source/introduction" rel=""><strong>Explore the docs »</strong></a>
     <br />
   <br/>
   <a href="https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g">Slack</a>
    •
-    <a href="https://multiwoven.com">Website</a>
+    <a href="https://squared.ai/multiwoven-reverse-etl">Website</a>
     •
-    <a href="https://blog.multiwoven.com">Blog</a>
+    <a href="https://blog.squared.ai">Blog</a>
    •
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
@@ -42,11 +42,11 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 Multiwoven makes it easy to self-host and deploy a fully secure, scalable, and customizable Reverse ETL platform on your own cloud infrastructure like AWS, Azure, GCP and more. With one click deployment you can instantly start syncing data from your data warehouse to business tools. Multiwoven also makes it easy to extend the platform with new connectors to support a wide range of data sources and destinations. 
 
-![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907478/Multiwoven/Github/image_4_lkzspc.png "Example Title")
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1716464797/AIS/Sources_ttijzv.png "Sources")
 
-![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907527/Multiwoven/Github/image_6_nqkvlu.png "Example Title")
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1716464797/AIS/Models_ee7as8.png "Example Title")
 
-![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1707907791/Multiwoven/Github/image_7_ozahsr.png "Example Title")
+![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1716464797/AIS/Destinations_ebpt0n.png "Example Title")
 
 ⭐ *Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.*
 
@@ -123,7 +123,7 @@ UI can be accessed at the PORT 8000 :
 http://localhost:8000
 ```
 
-For more details, check out the local [deployment guide](https://docs.multiwoven.com/guides/setup/docker-compose-dev) in the documentation.
+For more details, check out the local [deployment guide](https://docs.squared.ai/open-source/guides/setup/docker-compose-dev) in the documentation.
 
 ### Self-hosted Options
 
@@ -131,18 +131,18 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 | Provider                          | Documentation                                                               |
 | :-------------------------------- | :-------------------------------------------------------------------------- |
-| **Docker**                        | [Deployment Guide](https://docs.multiwoven.com/guides/setup/docker-compose) |
-| **AWS EC2**                       | [Deployment Guide](https://docs.multiwoven.com/guides/setup/ec2)            |
+| **Docker**                        | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/docker-compose) |
+| **AWS EC2**                       | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/ec2)            |
 | **AWS ECS**                       | [Deployment Guide](#)                                                       |
 | **AWS EKS (Kubernetes)**          | [Deployment Guide](#)                                                       |
 | **Azure VMs**                     | Deployment Guide                                                            |
-| **Azure AKS (Kubernetes)**        | Deployment Guide                                                            |
+| **Azure AKS (Kubernetes)**        | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/aks)            |
 | **Google Cloud GKE (Kubernetes)** | Deployment Guide                                                            |
-| **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.multiwoven.com/guides/setup/gce)            |
+| **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/gce)            |
 | **Digital Ocean Droplets**        | [Deployment Guide](#)                                                       |
 | **Digital Ocean Kubernetes**      | Deployment Guide                                                            |
 | **OpenShift**                     | Deployment Guide                                                            |
-| **Helm Charts**                   | [Deployment Guide](https://docs.multiwoven.com/guides/setup/helm)           |
+| **Helm Charts**                   | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/helm)           |
 
 ## Connectors
 
@@ -150,43 +150,42 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 ### Sources
 
-- [x] [Amazon Redshift](https://docs.multiwoven.com/sources/redshift)
-- [x] [Google BigQuery](https://docs.multiwoven.com/sources/bquery)
-- [x] [Snowflake](https://docs.multiwoven.com/sources/snowflake)
-- [x] [Databricks](https://docs.multiwoven.com/sources/databricks)
-- [x] [PostgreSQL](https://docs.multiwoven.com/sources/postgresql)
+- [x] [Amazon Redshift](https://docs.squared.ai/guides/data-integration/sources/redshift)
+- [x] [Google BigQuery](https://docs.squared.ai/guides/data-integration/sources/bquery)
+- [x] [Snowflake](https://docs.squared.ai/guides/data-integration/sources/snowflake)
+- [x] [Databricks](https://docs.squared.ai/guides/data-integration/sources/databricks)
+- [x] [PostgreSQL](https://docs.squared.ai/guides/data-integration/sources/postgresql)
 
 ### Destinations
 
 #### CRM
 
-- [x] [Salesforce](https://docs.multiwoven.com/destinations/crm/salesforce)
+- [x] [Salesforce](https://docs.squared.ai/guides/data-integration/destinations/crm/salesforce)
 - [ ] Zoho CRM
-- [x] [HubSpot](https://docs.multiwoven.com/destinations/crm/hubspot)
+- [x] [HubSpot](https://docs.squared.ai/guides/data-integration/destinations/crm/hubspot)
 
 #### Marketing Automation
 
-- [x] [Klaviyo](https://docs.multiwoven.com/destinations/marketing-automation/klaviyo)
+- [x] [Klaviyo](https://docs.squared.ai/guides/data-integration/destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
-- [x] Klaviyo
 
 #### Customer Support
 
-- [ ] Zendesk
+- [x] [Zendesk](https://docs.squared.ai/guides/data-integration/destinations/customer-support/zendesk)
 - [ ] Freshdesk
 - [ ] Intercom
 
 #### Advertising
 
 - [ ] Google Ads
-- [x] [Facebook Ads](https://docs.multiwoven.com/destinations/adtech/facebook-ads)
+- [x] [Facebook Ads](https://docs.squared.ai/guides/data-integration/destinations/adtech/facebook-ads)
 
 #### Collaboration
 
-- [x] [Slack](https://docs.multiwoven.com/destinations/team-collaboration/slack)
-- [x] [Google Sheets](https://docs.multiwoven.com/destinations/productivity-tools/google-sheets)
-- [x] [Airtable](https://docs.multiwoven.com/destinations/productivity-tools/airtable)
+- [x] [Slack](https://docs.squared.ai/guides/data-integration/destinations/team-collaboration/slack)
+- [x] [Google Sheets](https://docs.squared.ai/guides/data-integration/destinations/productivity-tools/google-sheets)
+- [x] [Airtable](https://docs.squared.ai/guides/data-integration/destinations/productivity-tools/airtable)
 
 #### Analytics
 
