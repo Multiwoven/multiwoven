@@ -27,5 +27,5 @@ Temporal.configure do |config|
 end
 
 Multiwoven::Integrations::Service.new do |config|
-  config.logger = Temporal.logger
+  config.logger = Rails.logger
 end
