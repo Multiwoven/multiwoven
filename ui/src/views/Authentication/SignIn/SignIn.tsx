@@ -243,9 +243,9 @@ const SignIn = (): JSX.Element => {
                               Stay signed in
                             </Text>
                           </Checkbox>
-                          <Text size='xs' color='brand.400' fontWeight='semibold'>
+                          {/* <Text size='xs' color='brand.400' fontWeight='semibold'>
                             Forgot Password?
-                          </Text>
+                          </Text> */}
                         </HStack>
                       </Stack>
                       <Stack spacing='6'>
