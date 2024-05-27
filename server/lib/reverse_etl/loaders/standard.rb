@@ -46,7 +46,10 @@ module ReverseEtl
           rescue Activities::LoaderActivity::FullRefreshFailed
             raise
           rescue StandardError => e
-            Utils::ExceptionReporter.report(e)
+            Utils::ExceptionReporter.report(e, {
+                                              sync_run_id: sync_run.id,
+                                              sync_id: sync.id
+                                            })
             Rails.logger(e)
           end
           heartbeat(activity)
@@ -77,7 +80,9 @@ module ReverseEtl
         rescue Activities::LoaderActivity::FullRefreshFailed
           raise
         rescue StandardError => e
-          Utils::ExceptionReporter.report(e)
+          Utils::ExceptionReporter.report(e, {
+                                            sync_run_id: sync_run.id
+                                          })
           Temporal.logger.error(error_message: e.message,
                                 sync_run_id: sync_run.id,
                                 stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
