@@ -122,25 +122,6 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
       end
 
-      context "name is missing" do
-        let(:params) do
-          {
-            name: "",
-            email: "user@example.com",
-            password: "Password@123",
-            password_confirmation: "Password@123"
-          }
-        end
-
-        it "fails" do
-          expect(context).to be_failure
-        end
-
-        it "provides error messages" do
-          expect(context.user.errors[:name]).to include("can't be blank")
-        end
-      end
-
       context "when provided with an existing company name" do
         let!(:existing_organization) { create(:organization, name: "Existing Company") }
         let(:params) do

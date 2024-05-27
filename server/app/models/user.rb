@@ -20,7 +20,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :lockable, :timeoutable, :jwt_authenticatable, jwt_revocation_strategy: self
 
@@ -28,11 +28,13 @@ class User < ApplicationRecord
 
   attr_accessor :company_name
 
-  validates :name, :email, presence: true
+  validates :email, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
   validates :email, format: { with: VALID_EMAIL_REGEX }
   validate :password_complexity
+
+  enum :status, %i[active invited expired]
 
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users

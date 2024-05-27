@@ -32,7 +32,6 @@ RSpec.describe User, type: :model do
 
   # Test for validations
   describe "validations" do
-    it { should validate_presence_of(:name) }
     it { should validate_presence_of(:email) }
     it { should allow_value("user@example.com").for(:email) }
     it { should_not allow_value("user@example").for(:email) }
@@ -124,6 +123,26 @@ RSpec.describe User, type: :model do
       end
 
       expect(@user.access_locked?).to be_truthy
+    end
+  end
+  context "status enum" do
+    it "defines the status enum with the correct values" do
+      expect(User.statuses).to eq("active" => 0, "invited" => 1, "expired" => 2)
+    end
+
+    it "sets the default status to 'active'" do
+      user = User.new
+      expect(user).to be_active
+    end
+
+    it "allows setting status to 'invited'" do
+      user = User.new(status: :invited)
+      expect(user).to be_invited
+    end
+
+    it "allows setting status to 'expired'" do
+      user = User.new(status: :expired)
+      expect(user).to be_expired
     end
   end
 end
