@@ -8,6 +8,7 @@ import FieldTemplate from '@/components/JSONSchemaForm/rjsf/FieldTemplate';
 import BaseInputTemplate from '@/components/JSONSchemaForm/rjsf/BaseInputTemplate';
 import DescriptionFieldTemplate from '@/components/JSONSchemaForm/rjsf/DescriptionFieldTemplate';
 import { FormProps } from '@rjsf/core';
+import WrapIfAdditionalTemplate from './rjsf/WrapIfAdditionalTemplate';
 
 type JSONSchemaFormProps = {
   schema: RJSFSchema;
@@ -32,6 +33,7 @@ const JSONSchemaForm = ({
     FieldTemplate: FieldTemplate,
     BaseInputTemplate: BaseInputTemplate,
     DescriptionFieldTemplate: DescriptionFieldTemplate,
+    WrapIfAdditionalTemplate: WrapIfAdditionalTemplate,
   };
   return (
     <Form
