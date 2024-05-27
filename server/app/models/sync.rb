@@ -127,7 +127,9 @@ class Sync < ApplicationRecord
       id
     )
   rescue StandardError => e
-    Utils::ExceptionReporter.report(e)
+    Utils::ExceptionReporter.report(e, {
+                                      sync_id: id
+                                    })
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
   end
 
@@ -142,7 +144,9 @@ class Sync < ApplicationRecord
       }
     )
   rescue StandardError => e
-    Utils::ExceptionReporter.report(e)
+    Utils::ExceptionReporter.report(e, {
+                                      sync_id: id
+                                    })
     Rails.logger.error "Failed to Run post delete sync. Error: #{e.message}"
   end
 

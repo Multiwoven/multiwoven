@@ -14,7 +14,9 @@ module Activities
       begin
         Temporal.terminate_workflow(sync.workflow_id) if sync.workflow_id.present?
       rescue StandardError => e
-        Utils::ExceptionReporter.report(e)
+        Utils::ExceptionReporter.report(e, {
+                                          sync_id:
+                                        })
         Rails.logger.error(e)
       end
 

@@ -10,7 +10,9 @@ module Authentication
       User.revoke_jwt(nil, current_user)
       context.message = "Successfully logged out"
     rescue StandardError => e
-      Utils::ExceptionReporter.report(e)
+      Utils::ExceptionReporter.report(e, {
+                                        user_id: current_user.id
+                                      })
       context.fail!(errors: e.message)
     end
   end

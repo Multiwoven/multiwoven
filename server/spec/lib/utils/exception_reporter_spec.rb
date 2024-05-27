@@ -19,6 +19,14 @@ RSpec.describe Utils::ExceptionReporter do
       Utils::ExceptionReporter.report(exception)
       expect(Appsignal).to have_received(:send_error).with(exception)
     end
+
+    it "sends error to Appsignal with meta tags" do
+      meta = { key: "value" }
+      transaction = instance_double("Appsignal::Transaction")
+      allow(Appsignal).to receive(:send_error).and_yield(transaction)
+      expect(transaction).to receive(:set_tags).with(meta)
+      described_class.report(exception, meta)
+    end
   end
 
   context "when NEW_RELIC_KEY is set" do

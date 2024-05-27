@@ -18,7 +18,10 @@ module ReverseEtl
 
         @destination_data
       rescue StandardError => e
-        Utils::ExceptionReporter.report(e)
+        Utils::ExceptionReporter.report(e, {
+                                          sync_id: sync.id,
+                                          sync_record_id: sync_record.id
+                                        })
         Temporal.logger.error(error_message: e.message,
                               sync_run_id: sync_run.id,
                               stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
