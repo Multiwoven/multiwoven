@@ -35,6 +35,7 @@ gem "rack-cors"
 
 # AuthN & AuthZ
 gem "devise"
+gem "devise_invitable"
 gem "devise-jwt"
 gem "pundit"
 # Utilities

@@ -19,11 +19,17 @@
 #
 # app/serializers/user_serializer.rb
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :created_at, :role
+  attributes :id, :name, :email, :created_at, :role, :status, :invitation_created_at, :invitation_due_at
 
   def role
     workspace_id = instance_options[:workspace_id]
     workspace_user = object.workspace_users.find_by(workspace_id:)
     workspace_user&.role&.role_name
+  end
+
+  def invitation_due_at
+    return object.invitation_due_at if object.status == "invited"
+
+    nil
   end
 end
