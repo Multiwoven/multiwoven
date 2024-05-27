@@ -11,7 +11,7 @@ import EntityItem from '@/components/EntityItem';
 import Table from '@/components/Table';
 import Loader from '@/components/Loader';
 import moment from 'moment';
-import NoActivations from '../../NoSyncs/NoSyncs';
+import NoActivations, { ActivationType } from '../../NoSyncs/NoSyncs';
 import StatusTag from '@/components/StatusTag';
 import { ErrorResponse, CreateSyncResponse, SyncColumnFields } from '@/views/Activate/Syncs/types';
 
@@ -90,7 +90,8 @@ const SyncsList = (): JSX.Element => {
 
   if (isLoading) return <Loader />;
 
-  if (!isLoading && tableData.data?.length === 0) return <NoActivations activationType='Sync' />;
+  if (!isLoading && tableData.data?.length === 0)
+    return <NoActivations activationType={ActivationType.Sync} />;
 
   return (
     <Box
