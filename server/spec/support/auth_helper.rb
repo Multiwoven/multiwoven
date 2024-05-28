@@ -2,7 +2,7 @@
 
 # spec/support/auth_helper.rb
 module AuthHelper
-  def auth_headers(user, workspace_id = nil)
+  def auth_headers(user, workspace_id)
     # Directly generate the token without going through login process
     token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
     user.update!(jti: payload["jti"])
