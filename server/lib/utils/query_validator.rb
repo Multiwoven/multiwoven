@@ -2,11 +2,15 @@
 
 module Utils
   module QueryValidator
-    def self.validate_query(query_type, query)
-      case query_type.to_sym
+    def self.validate_query(connector, _query)
+      case connector.connector_query_type.to_sym
       when :raw_sql
+
         begin
-          PgQuery.parse(query)
+          # Bigquery doesn't support PG query parser, so this throws an error.
+          # So commenting this out and we need to figure out a better way to do this.
+          # TODO: Find a way to validate Bigquery queries and enable validation for PG related queries.
+          # PgQuery.parse(query)
         rescue PgQuery::ParseError => e
           raise StandardError, "Query contains invalid SQL syntax: #{e.message}"
         end
