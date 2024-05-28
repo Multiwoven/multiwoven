@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::SyncsController", type: :request do
   let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
   let(:new_role) { create(:role, role_name: "Viewer") }
   let(:connectors) do
@@ -40,7 +41,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and get all syncs " do
-        get "/api/v1/syncs", headers: auth_headers(user)
+        get "/api/v1/syncs", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
 
@@ -66,7 +67,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
-        get "/api/v1/syncs/#{syncs.first.id}", headers: auth_headers(user)
+        get "/api/v1/syncs/#{syncs.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -85,7 +86,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       end
 
       it "returns an error response while fetch sync" do
-        get "/api/v1/syncs/999", headers: auth_headers(user)
+        get "/api/v1/syncs/999", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -121,7 +122,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
     context "when it is an authenticated user and create model" do
       it "creates a new sync and returns success" do
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -145,7 +146,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns success with cursor_field nil " do
         request_body[:sync][:cursor_field] = nil
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -163,7 +164,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns unauthorized for viewer role" do
         user.workspace_users.first.update(role: new_role)
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:unauthorized)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, 0, :detail)).to eq("You are not authorized to do this action")
@@ -172,7 +173,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "returns an error response when creation fails" do
         request_body[:sync][:source_id] = "connector_id_wrong"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -182,7 +183,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         error_message = "Add a valid stream_name associated with destination connector"
         request_body[:sync][:stream_name] = "random"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         result = JSON.parse(response.body)
         expect(result["errors"][0]["source"]["stream_name"]).to eq(error_message)
       end
@@ -193,7 +194,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         error_message = ["invalid schedule type"]
         request_body[:sync][:schedule_type] = "autoamted"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         result = JSON.parse(response.body)
         expect(result["errors"]["sync"]["schedule_type"]).to eq(error_message)
       end
@@ -202,7 +203,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns success" do
         request_body[:sync][:schedule_type] = "interval"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
@@ -216,7 +217,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           request_body[:sync][:schedule_type] = "cron_expression"
           request_body[:sync][:cron_expression] = cron_expression
           post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-            .merge(auth_headers(user))
+            .merge(auth_headers(user, workspace_id))
           expect(response).to have_http_status(:created)
           response_hash = JSON.parse(response.body).with_indifferent_access
           expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(cron_expression)
@@ -258,7 +259,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "updates the sync and returns success" do
         request_body[:sync][:sync_interval] = 30
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -272,14 +273,14 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
       it "returns an error response when wrong sync_id" do
         put "/api/v1/syncs/99", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:not_found)
       end
 
       it "returns an error response when update fails" do
         request_body[:sync][:source_id] = "connector_id_wrong"
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -288,7 +289,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         error_message = ["invalid schedule type"]
         request_body[:sync][:schedule_type] = "autoamted"
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
-        { "Content-Type": "application/json" }.merge(auth_headers(user))
+        { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         result = JSON.parse(response.body)
         expect(result["errors"]["sync"]["schedule_type"]).to eq(error_message)
       end
@@ -297,7 +298,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns success" do
         request_body[:sync][:schedule_type] = "interval"
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
 
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -312,7 +313,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           request_body[:sync][:schedule_type] = "cron_expression"
           request_body[:sync][:cron_expression] = cron_expression
           put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
-            { "Content-Type": "application/json" }.merge(auth_headers(user))
+            { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
           expect(response).to have_http_status(:ok)
           response_hash = JSON.parse(response.body).with_indifferent_access
           expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(cron_expression)
@@ -348,7 +349,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "creates a new sync and returns failure" do
         error_message = "Catalog is missing"
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         result = JSON.parse(response.body)
         expect(result["errors"][0]["source"]["catalog"]).to eq(error_message)
       end
@@ -365,12 +366,12 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and delete sync" do
-        delete "/api/v1/syncs/#{syncs.first.id}", headers: auth_headers(user)
+        delete "/api/v1/syncs/#{syncs.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
       end
 
       it "returns an error response while delete wrong sync" do
-        delete "/api/v1/syncs/999", headers: auth_headers(user)
+        delete "/api/v1/syncs/999", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -378,7 +379,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
   describe "#configurations" do
     it "returns the configurations" do
-      get "/api/v1/syncs/configurations", headers: auth_headers(user)
+      get "/api/v1/syncs/configurations", headers: auth_headers(user, workspace_id)
 
       result = JSON.parse(response.body).with_indifferent_access
       expect(result[:data].keys.last).to eq("configurations")

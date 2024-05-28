@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::WorkspacesController", type: :request do
   let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
 
   describe "GET /api/v1/workspaces" do
@@ -16,7 +17,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and get workspaces " do
-        get "/api/v1/workspaces", headers: auth_headers(user)
+        get "/api/v1/workspaces", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(1)
@@ -35,7 +36,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and get workspace by id " do
-        get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user)
+        get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :type)).to eq("workspaces")
@@ -71,7 +72,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
     context "when it is an authenticated user and create workspace" do
       it "creates a new workspace and returns success" do
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -90,7 +91,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "returns an error response when creation fails" do
         request_body[:workspace][:organization_id] = "organization_id_wrong"
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -119,7 +120,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "updates the workspace and returns success" do
         request_body[:workspace][:name] = "test"
         put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -131,14 +132,14 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
 
       it "returns an error response when wrong workspace_id" do
         put "/api/v1/workspaces/test", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
 
       it "returns an error response when update fails" do
         request_body[:workspace][:organization_id] = "organization_id_wrong"
         put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -154,12 +155,12 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and delete workspace" do
-        delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user)
+        delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
       end
 
       it "returns an error response while delete wrong workspace" do
-        delete "/api/v1/workspaces/test", headers: auth_headers(user)
+        delete "/api/v1/workspaces/test", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
       end
     end

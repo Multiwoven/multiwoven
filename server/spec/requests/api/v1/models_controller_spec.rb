@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::ModelsController", type: :request do
   let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
   let(:connector) do
     create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
@@ -25,7 +26,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and all model " do
-        get "/api/v1/models", headers: auth_headers(user)
+        get "/api/v1/models", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(models.count)
@@ -45,7 +46,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch model " do
-        get "/api/v1/models/#{models.first.id}", headers: auth_headers(user)
+        get "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -58,7 +59,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       end
 
       it "returns an error response while fetch model" do
-        get "/api/v1/models/test", headers: auth_headers(user)
+        get "/api/v1/models/test", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -87,7 +88,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     context "when it is an authenticated user and create model" do
       it "creates a new model and returns success" do
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -100,7 +101,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       it "returns an error response when creation fails" do
         request_body[:model][:connector_id] = "connector_id_wrong"
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -129,7 +130,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     context "when it is an authenticated user and update model" do
       it "updates the model and returns success" do
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -142,14 +143,14 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
       it "returns an error response when wrong model_id" do
         put "/api/v1/models/test", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
 
       it "returns an error response when update fails" do
         request_body[:model][:connector_id] = "connector_id_wrong"
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -165,12 +166,12 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and delete model " do
-        delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user)
+        delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
       end
 
       it "returns an error response while delete wrong model" do
-        delete "/api/v1/models/99", headers: auth_headers(user)
+        delete "/api/v1/models/99", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -195,7 +196,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     context "when query is valid for create model" do
       it "does not raise an error" do
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
       end
     end
@@ -217,7 +218,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     context "when query is valid for update model" do
       it "does not raise an error" do
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
-        { "Content-Type": "application/json" }.merge(auth_headers(user))
+        { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
       end
     end

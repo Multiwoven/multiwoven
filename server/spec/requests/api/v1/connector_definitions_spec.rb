@@ -3,7 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
-  let(:user) { create(:user) }
+  let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
+  let(:user) { workspace.workspace_users.first.user }
   let(:service) { Multiwoven::Integrations::Service }
   let(:connection_status) { Multiwoven::Integrations::Protocol::ConnectionStatus }
 
@@ -17,7 +19,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success" do
-        get "/api/v1/connector_definitions", headers: auth_headers(user)
+        get "/api/v1/connector_definitions", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
 
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -30,7 +32,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
   describe "GET /api/v1/connector_definitions/:id" do
     it "returns a connector when found" do
       get api_v1_connector_definition_path(id: "Snowflake", type: "source"),
-          headers: auth_headers(user)
+          headers: auth_headers(user, workspace_id)
       expect(response).to have_http_status(:ok)
       response_hash = JSON.parse(response.body).with_indifferent_access
 
@@ -40,7 +42,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
     it "returns empty array not found" do
       get api_v1_connector_definition_path(id: "Unknown", type: "source"),
-          headers: auth_headers(user)
+          headers: auth_headers(user, workspace_id)
       expect(response).to have_http_status(:ok)
       response_hash = JSON.parse(response.body)
 
@@ -65,7 +67,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
       post check_connection_api_v1_connector_definitions_path,
            params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
-           headers: auth_headers(user)
+           headers: auth_headers(user, workspace_id)
 
       expect(response).to have_http_status(:ok)
 
@@ -79,7 +81,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
       post check_connection_api_v1_connector_definitions_path,
            params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
-           headers: auth_headers(user)
+           headers: auth_headers(user, workspace_id)
 
       expect(response).to have_http_status(:ok)
 

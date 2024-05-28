@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::ConnectorsController", type: :request do
   let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
   let!(:connectors) do
     [
@@ -22,7 +23,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and all connectors " do
-        get "/api/v1/connectors", headers: auth_headers(user)
+        get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(connectors.count)
@@ -31,7 +32,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
 
       it "returns success and all source connectors" do
-        get "/api/v1/connectors?type=source", headers: auth_headers(user)
+        get "/api/v1/connectors?type=source", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(1)
@@ -41,7 +42,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
 
       it "returns success and destination connectors" do
-        get "/api/v1/connectors?type=destination", headers: auth_headers(user)
+        get "/api/v1/connectors?type=destination", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(1)
@@ -51,7 +52,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
 
       it "returns an error response for connectors" do
-        get "/api/v1/connectors?type=destination1", headers: auth_headers(user)
+        get "/api/v1/connectors?type=destination1", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -67,7 +68,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch connector " do
-        get "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user)
+        get "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -80,7 +81,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
 
       it "returns an error response while fetch connector" do
-        get "/api/v1/connectors/test", headers: auth_headers(user)
+        get "/api/v1/connectors/test", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, :id)).to eq(["must be an integer"])
@@ -118,7 +119,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     context "when it is an authenticated user and create connector" do
       it "creates a new connector and returns success" do
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -132,7 +133,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns an error response when creation fails" do
         request_body[:connector][:connector_type] = "connector_type_wrong"
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
-          .merge(auth_headers(user))
+          .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -168,7 +169,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     context "when it is an authenticated user and update connector" do
       it "updates the connector and returns success" do
         put "/api/v1/connectors/#{connectors.second.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -180,7 +181,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns an error response when update fails" do
         request_body[:connector][:connector_type] = "connector_type_wrong"
         put "/api/v1/connectors/#{connectors.second.id}", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -196,7 +197,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and discover object " do
-        get "/api/v1/connectors/#{connectors.first.id}/discover", headers: auth_headers(user)
+        get "/api/v1/connectors/#{connectors.first.id}/discover", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -208,7 +209,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
 
       it "returns an error response while get discover object" do
-        get "/api/v1/connectors/test/discover", headers: auth_headers(user)
+        get "/api/v1/connectors/test/discover", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, :id)).to eq(["must be an integer"])
@@ -226,12 +227,12 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and delete connector" do
-        delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user)
+        delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
       end
 
       it "returns an error response while delete wrong connector" do
-        delete "/api/v1/connectors/test", headers: auth_headers(user)
+        delete "/api/v1/connectors/test", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -268,7 +269,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body)
         expect(response_hash).to eq([record1.record.data, record2.record.data])
@@ -278,7 +279,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         allow(Connectors::QuerySource).to receive(:call).and_raise(StandardError, "query failed")
 
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:bad_request)
       end
@@ -286,7 +287,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns failure status for a invalid query" do
         request_body[:query] = "invalid"
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
-          { "Content-Type": "application/json" }.merge(auth_headers(user))
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -307,7 +308,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "does not raise an error" do
         expect do
           post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
-            { "Content-Type": "application/json" }.merge(auth_headers(user))
+            { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         end.not_to raise_error
       end
     end
