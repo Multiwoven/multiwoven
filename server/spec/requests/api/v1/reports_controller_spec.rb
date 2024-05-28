@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::ReportsController", type: :request do
   let!(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let!(:user) { workspace.workspace_users.first.user }
   let!(:connectors) do
     [
@@ -49,7 +50,7 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
     context "when it is an authenticated user" do
       it "returns success and time slices " do
         get "/api/v1/reports?type=workspace_activity&connector_ids[]=#{connectors.first.id}",
-            headers: auth_headers(user)
+            headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access[:data]
         expect(response_hash).to include(

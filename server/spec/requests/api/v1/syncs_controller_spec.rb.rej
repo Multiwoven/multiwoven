@@ -1,0 +1,19 @@
+diff a/server/spec/requests/api/v1/syncs_controller_spec.rb b/server/spec/requests/api/v1/syncs_controller_spec.rb	(rejected hunks)
+@@ -193,7 +194,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
+         error_message = "invalid schedule type"
+         request_body[:sync][:schedule_type] = "autoamted"
+         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+-          .merge(auth_headers(user))
++          .merge(auth_headers(user, workspace_id))
+         result = JSON.parse(response.body)
+         expect(result["errors"][0]["detail"]).to eq(error_message)
+       end
+@@ -288,7 +289,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
+         error_message = "invalid schedule type"
+         request_body[:sync][:schedule_type] = "autoamted"
+         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
+-        { "Content-Type": "application/json" }.merge(auth_headers(user))
++        { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+         result = JSON.parse(response.body)
+         expect(result["errors"][0]["detail"]).to eq(error_message)
+       end

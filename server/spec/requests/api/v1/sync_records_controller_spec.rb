@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::SyncRunsController", type: :request do
   let(:workspace) { create(:workspace) }
+  let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
   let(:source) do
     create(:connector, workspace:, connector_type: "source", connector_name: "Snowflake")
@@ -33,7 +34,7 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
-        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user)
+        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].size).to eq(2)
@@ -55,28 +56,29 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
       context "when it is an authenticated user and passing invalid parameters" do
         it "returns an error and does not fetch sync records for invalid status" do
           get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?status=invalid",
-              headers: auth_headers(user)
+              headers: auth_headers(user, workspace_id)
 
           expect(response).to have_http_status(:bad_request)
           expect(response.body).to include("must be a valid status")
         end
 
         it "returns an error and does not fetch sync records for invalid page" do
-          get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=oi", headers: auth_headers(user)
+          get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=oi",
+              headers: auth_headers(user, workspace_id)
 
           expect(response).to have_http_status(:bad_request)
           expect(response.body).to include("must be an integer")
         end
 
         it "returns an error and does not fetch sync records for invalid sync id" do
-          get "/api/v1/syncs/1979697/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user)
+          get "/api/v1/syncs/1979697/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
 
           expect(response).to have_http_status(:not_found)
           expect(response.body).to include("Sync not found")
         end
 
         it "returns an error and does not fetch sync records for invalid sync run id" do
-          get "/api/v1/syncs//#{sync.id}/sync_runs/9798787/sync_records", headers: auth_headers(user)
+          get "/api/v1/syncs//#{sync.id}/sync_runs/9798787/sync_records", headers: auth_headers(user, workspace_id)
 
           expect(response).to have_http_status(:not_found)
           expect(response.body).to include("SyncRun not found")

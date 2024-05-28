@@ -20,7 +20,9 @@ class ApplicationController < ActionController::API
   end
 
   def current_workspace
-    @current_workspace ||= current_user.workspaces.first
+    workspace_id = request.headers["Workspace-Id"]
+    @current_workspace = current_user.workspaces.find_by(id: workspace_id)
+    @current_workspace || raise(StandardError, "Workspace not found")
   end
 
   def current_organization
