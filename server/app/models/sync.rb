@@ -62,7 +62,7 @@ class Sync < ApplicationRecord
     state :disabled
 
     event :complete do
-      transitions from: :pending, to: :healthy
+      transitions from: %i[pending healthy], to: :healthy
     end
 
     event :fail do
