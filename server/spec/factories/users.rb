@@ -30,5 +30,14 @@ FactoryBot.define do
     trait :verified do
       confirmed_at { Time.current }
     end
+    trait :invited do
+      raw_token = Devise.friendly_token
+      after(:build) do |user|
+        user.invitation_token = Devise.token_generator.digest(User, :invitation_token, raw_token)
+        user.invitation_created_at = Time.current
+        user.status = :invited
+        user.instance_variable_set(:@raw_invitation_token, raw_token)
+      end
+    end
   end
 end
