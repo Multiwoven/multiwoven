@@ -1,11 +1,11 @@
-<% query_params = { invited: true, workspace_id: @workspace.id, workspace_name: @workspace.name, invited_by: @resource.invited_by.name } %>
+<% query_params = { invited: true, invitation_token: @token, workspace_id: @workspace.id, workspace_name: @workspace.name, invited_by: @resource.invited_by.email } %>
 
 <% custom_url = "#{ENV["UI_HOST"]}?#{query_params.to_query}" %>
 
 <p><%= "Join #{@workspace.name} on AI Squared" %></p>
 
 <p>
-  <%= "#{@resource.invited_by.name} invited you to join the workspace #{@workspace.name} on AI Squared" %>
+  <%= "#{@resource.invited_by.email} invited you to join the workspace #{@workspace.name} on AI Squared" %>
 </p>
 
 <p>

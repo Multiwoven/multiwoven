@@ -27,6 +27,7 @@ FactoryBot.define do
     password {  "testPassword@123" }
     password_confirmation { "testPassword@123" }
     company_name { Faker::Company.name }
+    invited_by { nil }
     trait :verified do
       confirmed_at { Time.current }
     end
