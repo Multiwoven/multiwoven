@@ -89,7 +89,7 @@ module ReverseEtl
             primary_key:,
             sync_id: sync_run.sync_id,
             sync_run_id: sync_run.id,
-            sync_record_id: sync_record.id
+            sync_record_id: sync_record&.id
           }.to_s)
 
           return false
