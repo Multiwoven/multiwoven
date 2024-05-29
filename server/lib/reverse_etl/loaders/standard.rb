@@ -26,7 +26,6 @@ module ReverseEtl
       private
 
       def process_individual_records(sync_run, sync, sync_config, activity)
-        transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
 
         sync_run.sync_records.pending.find_in_batches do |sync_records|
@@ -38,8 +37,9 @@ module ReverseEtl
           concurrency = sync_config.stream.request_rate_concurrency || THREAD_COUNT
 
           Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
+            transformer = Transformers::UserMapping.new
             record = transformer.transform(sync, sync_record)
-            Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{sync_record.to_json}"
+            Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{record}"
             report = handle_response(client.write(sync_config, [record]), sync_run)
             if report.tracking.success.zero?
               failed_sync_records << sync_record.id
