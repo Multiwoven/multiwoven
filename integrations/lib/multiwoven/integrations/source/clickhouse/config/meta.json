@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Clickhouse",
+    "title": "ClickHouse",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "documentation_url": "https://docs.multiwoven.com/integrations/sources/clickhouse",
+    "github_issue_label": "source-clickhouse",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
