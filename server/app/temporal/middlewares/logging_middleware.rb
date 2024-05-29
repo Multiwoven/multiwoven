@@ -9,15 +9,15 @@ module Middlewares
     def call(metadata)
       entity_name = name_from(metadata)
       entity_type = type_from(metadata)
-      Temporal.logger.info("[#{app_name}]: Started #{entity_name} #{entity_type}", metadata: metadata.to_h)
+      Rails.logger.info("[#{app_name}]: Started #{entity_name} #{entity_type}", metadata: metadata.to_h)
 
       yield
 
-      Temporal.logger.info("[#{app_name}]: Finished #{entity_name} #{entity_type}", metadata: metadata.to_h)
+      Rails.logger.info("[#{app_name}]: Finished #{entity_name} #{entity_type}", metadata: metadata.to_h)
     rescue StandardError => e
       Utils::ExceptionReporter.report(e)
       error_tracking = "Error: #{e.message}, Stack trace: #{e.backtrace.join("\n")}"
-      Temporal.logger.error(
+      Rails.logger.error(
         "[#{app_name}]: Error #{entity_name} #{entity_type} #{error_tracking}",
         metadata: metadata.to_h
       )

@@ -33,7 +33,7 @@ module Activities
     end
 
     def log_error(sync_run)
-      Temporal.logger.error(
+      Rails.logger.error(
         error_message: "SyncRun cannot complete from its current state: #{sync_run.status}",
         sync_run_id: sync_run.id,
         stack_trace: nil

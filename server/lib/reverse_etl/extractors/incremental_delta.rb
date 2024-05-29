@@ -53,9 +53,10 @@ module ReverseEtl
         ::Utils::ExceptionReporter.report(e, {
                                             sync_run_id: sync_run.id
                                           })
-        Temporal.logger.error(error_message: e.message,
-                              sync_run_id: sync_run.id,
-                              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+        Rails.logger.error(error_message: e.message,
+                           sync_run_id: sync_run.id,
+                           sync_id: sync_run.sync_id,
+                           stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
         nil
       end
 
@@ -79,8 +80,18 @@ module ReverseEtl
       end
 
       def update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
-        return false unless sync_record && new_record?(sync_record, fingerprint)
+        unless sync_record && new_record?(sync_record, fingerprint)
+          primary_key = record.data.with_indifferent_access[sync_run.sync.model.primary_key]
+          Rails.logger.info(
+            message: "Skipping sync record",
+            primary_key:,
+            sync_id: sync_run.sync_id,
+            sync_run_id: sync_run.id,
+            sync_record_id: sync_record.id
+          )
 
+          return false
+        end
         sync_record.assign_attributes(
           sync_run_id: sync_run.id,
           action: action(sync_record),

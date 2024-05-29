@@ -85,9 +85,9 @@ module ReverseEtl
           Utils::ExceptionReporter.report(e, {
                                             sync_run_id: sync_run.id
                                           })
-          Temporal.logger.error(error_message: e.message,
-                                sync_run_id: sync_run.id,
-                                stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+          Rails.logger.error(error_message: e.message,
+                             sync_run_id: sync_run.id,
+                             stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
       end
@@ -102,7 +102,7 @@ module ReverseEtl
 
       def raise_non_retryable_error(report, sync_run)
         sync_run.failed!
-        Temporal.logger.error(
+        Rails.logger.error(
           error_message: "Full refresh failed type:#{report.control.type} status: #{report.control.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
@@ -121,7 +121,7 @@ module ReverseEtl
       end
 
       def log_error(sync_run)
-        Temporal.logger.error(
+        Rails.logger.error(
           error_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
