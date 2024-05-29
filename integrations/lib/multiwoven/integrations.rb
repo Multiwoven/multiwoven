@@ -25,6 +25,8 @@ require "securerandom"
 require "aws-sdk-athena"
 require "zip"
 require "zendesk_api"
+require "faraday"
+require "base64"
 
 # Service
 require_relative "integrations/config"
@@ -51,6 +53,7 @@ require_relative "integrations/source/postgresql/client"
 require_relative "integrations/source/databricks/client"
 require_relative "integrations/source/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/source/aws_athena/client"
+require_relative "integrations/source/clickhouse/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
