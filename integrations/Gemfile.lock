@@ -302,7 +302,7 @@ GEM
       multipart-post (~> 2.0)
 
 PLATFORMS
-  arm64-darwin-23
+  x64-mingw-ucrt
 
 DEPENDENCIES
   activesupport
@@ -313,6 +313,7 @@ DEPENDENCIES
   dry-schema
   dry-struct
   dry-types
+  faraday
   git
   google-apis-sheets_v4
   google-cloud-bigquery
