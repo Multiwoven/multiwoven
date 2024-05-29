@@ -52,6 +52,7 @@ module Multiwoven::Integrations::Destination
 
         records.each do |record|
           query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record)
+          logger.debug("POSTGRESQL:WRITE:QUERY query = #{query} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
             db.exec(query)
             write_success += 1

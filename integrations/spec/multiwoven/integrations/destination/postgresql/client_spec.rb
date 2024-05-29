@@ -47,7 +47,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       },
       "sync_mode": "full_refresh",
       "cursor_field": "timestamp",
-      "destination_sync_mode": "upsert"
+      "destination_sync_mode": "upsert",
+      "sync_id": "1"
     }
   end
 
@@ -106,6 +107,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
     context "success" do
       it "write records successfully" do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.sync_run_id = "33"
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         allow(pg_connection).to receive(:exec).and_return(true)
@@ -118,6 +120,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
     context "failure" do
       it "handle record write failures" do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.sync_run_id = "34"
+
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         allow(pg_connection).to receive(:exec).and_raise(StandardError.new("test error"))
