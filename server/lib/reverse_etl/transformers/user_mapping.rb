@@ -22,9 +22,11 @@ module ReverseEtl
                                           sync_id: sync.id,
                                           sync_record_id: sync_record.id
                                         })
-        Rails.logger.error(error_message: e.message,
-                           sync_run_id: sync_run.id,
-                           stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+        Rails.logger.error({
+          error_message: e.message,
+          sync_run_id: sync_run.id,
+          stack_trace: Rails.backtrace_cleaner.clean(e.backtrace)
+        }.to_s)
       end
 
       private

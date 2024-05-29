@@ -40,11 +40,11 @@ module ReverseEtl
       end
 
       def log_sync_run_error(sync_run)
-        Rails.logger.error(
+        Rails.logger.error({
           error_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
-        )
+        }.to_s)
       end
     end
   end
