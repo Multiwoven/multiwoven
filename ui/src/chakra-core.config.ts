@@ -249,6 +249,25 @@ export const defaultExtension = {
         },
       },
     },
+    Select: {
+      variants: {
+        outline: {
+          field: {
+            bgColor: 'gray.100',
+            width: '100%',
+            height: '32px',
+            border: '1px',
+            borderColor: 'gray.400',
+            borderRadius: '6px',
+            _disabled: {
+              bgColor: 'gray.300',
+              _hover: { bgColor: 'gray.300', color: 'black', cursor: 'not-allowed' },
+            },
+            _hover: { cursor: 'pointer' },
+          },
+        },
+      },
+    },
   },
 
   fonts: {
