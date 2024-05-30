@@ -203,6 +203,10 @@ RSpec.describe Sync, type: :model do
       expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
     end
 
+    it "transitions from healthy to healthy" do
+      expect(sync).to transition_from(:healthy).to(:healthy).on_event(:complete)
+    end
+
     it "transitions from pending to failed" do
       expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
     end
