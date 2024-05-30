@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.68)
+    multiwoven-integrations (0.1.70)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -133,6 +133,7 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.0.2)
     ffi (1.16.3)
+    ffi (1.16.3-x64-mingw-ucrt)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -205,6 +206,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.6)
+    pg (1.5.6-x64-mingw-ucrt)
     process_executer (1.1.0)
     public_suffix (5.0.5)
     racc (1.8.0)
@@ -303,6 +305,7 @@ GEM
 
 PLATFORMS
   x64-mingw-ucrt
+  x86_64-darwin-23
 
 DEPENDENCIES
   activesupport
