@@ -34,11 +34,10 @@ module Multiwoven::Integrations::Destination
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(
-          "POSTGRESQL:DISCOVER:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "POSTGRESQL:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
       ensure
         db&.close
       end
@@ -53,21 +52,28 @@ module Multiwoven::Integrations::Destination
 
         records.each do |record|
           query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record)
+          logger.debug("POSTGRESQL:WRITE:QUERY query = #{query} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
             db.exec(query)
             write_success += 1
           rescue StandardError => e
-            handle_exception("POSTGRESQL:RECORD:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
             write_failure += 1
           end
         end
         tracking_message(write_success, write_failure)
       rescue StandardError => e
-        handle_exception(
-          "POSTGRESQL:WRITE:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
+                           type: "error",
+                           sync_id: sync_config.sync_id,
+                           sync_run_id: sync_config.sync_run_id
+                         })
       end
 
       private

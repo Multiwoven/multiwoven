@@ -23,7 +23,10 @@ module Multiwoven
               failure_status(nil)
             end
           rescue StandardError => e
-            handle_exception("HTTP:CHECK_CONNECTION:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "HTTP:CHECK_CONNECTION:EXCEPTION",
+                               type: "error"
+                             })
             failure_status(e)
           end
 
@@ -32,11 +35,10 @@ module Multiwoven
             catalog = build_catalog(catalog_json)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception(
-              "HTTP:DISCOVER:EXCEPTION",
-              "error",
-              e
-            )
+            handle_exception(e, {
+                               context: "HTTP:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, _action = "create")
@@ -59,7 +61,12 @@ module Multiwoven
                 write_failure += chunk.size
               end
             rescue StandardError => e
-              handle_exception("HTTP:RECORD:WRITE:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "HTTP:RECORD:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: sync_config.sync_id,
+                                 sync_run_id: sync_config.sync_run_id
+                               })
               write_failure += chunk.size
             end
 
@@ -69,7 +76,12 @@ module Multiwoven
             )
             tracker.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("HTTP:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "HTTP:RECORD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
           end
 
           private

@@ -295,7 +295,8 @@ module Multiwoven
             "cursor_field": "example_cursor_field",
             "current_cursor_field": "current",
             "offset": "100",
-            "limit": "10"
+            "limit": "10",
+            "sync_id": "sync_id"
           }.to_json
 
           sync_config = described_class.from_json(json_data)
@@ -311,6 +312,9 @@ module Multiwoven
           expect(sync_config.destination_sync_mode).to eq("insert")
           expect(sync_config.cursor_field).to eq("example_cursor_field")
           expect(sync_config.current_cursor_field).to eq("current")
+          expect(sync_config.sync_id).to eq("sync_id")
+          sync_config.sync_run_id = "sync_run_id"
+          expect(sync_config.sync_run_id).to eq("sync_run_id")
           sync_config.limit = "10"
           sync_config.offset = "100"
           expect(sync_config.offset).to eq("100")

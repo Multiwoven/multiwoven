@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
   let(:client) { Multiwoven::Integrations::Destination::Postgresql::Client.new }
   let(:sync_config) do
     {
@@ -47,7 +47,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # ru
       },
       "sync_mode": "full_refresh",
       "cursor_field": "timestamp",
-      "destination_sync_mode": "upsert"
+      "destination_sync_mode": "upsert",
+      "sync_id": "1"
     }
   end
 
@@ -106,6 +107,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # ru
     context "success" do
       it "write records successfully" do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.sync_run_id = "33"
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         allow(pg_connection).to receive(:exec).and_return(true)
@@ -118,6 +120,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # ru
     context "failure" do
       it "handle record write failures" do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.sync_run_id = "34"
+
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         allow(pg_connection).to receive(:exec).and_raise(StandardError.new("test error"))
@@ -157,9 +161,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # ru
     it "discover schema failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "POSTGRESQL:DISCOVER:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "POSTGRESQL:DISCOVER:EXCEPTION",
+          type: "error"
+        }
       )
       client.discover(sync_config[:source][:connection_specification])
     end

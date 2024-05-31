@@ -165,7 +165,7 @@ module Multiwoven
     end
 
     class SyncConfig < ProtocolModel
-      attr_accessor :offset, :limit
+      attr_accessor :offset, :limit, :sync_run_id
 
       attribute :source, Connector
       attribute :destination, Connector
@@ -175,6 +175,8 @@ module Multiwoven
       attribute? :cursor_field, Types::String.optional
       attribute? :current_cursor_field, Types::String.optional
       attribute :destination_sync_mode, DestinationSyncMode
+      # reference ids
+      attribute :sync_id, Types::String.default("unknown")
     end
 
     class ControlMessage < ProtocolModel

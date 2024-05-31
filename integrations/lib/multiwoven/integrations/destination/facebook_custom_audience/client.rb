@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module FacebookCustomAudience
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+    class Client < DestinationConnector
       prepend Multiwoven::Integrations::Core::RateLimiter
       MAX_CHUNK_SIZE = 10_000
       def check_connection(connection_config)
@@ -29,11 +29,10 @@ module Multiwoven::Integrations::Destination
         catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(
-          "FACEBOOK AUDIENCE:DISCOVER:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "FACEBOOK AUDIENCE:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
       end
 
       def write(sync_config, records, _action = "insert")
@@ -56,7 +55,12 @@ module Multiwoven::Integrations::Destination
             write_failure += chunk.size
           end
         rescue StandardError => e
-          handle_exception("FACEBOOK:RECORD:WRITE:EXCEPTION", "error", e)
+          handle_exception(e, {
+                             context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
+                             type: "error",
+                             sync_id: sync_config.sync_id,
+                             sync_run_id: sync_config.sync_run_id
+                           })
           write_failure += chunk.size
         end
 
@@ -66,7 +70,12 @@ module Multiwoven::Integrations::Destination
         )
         tracker.to_multiwoven_message
       rescue StandardError => e
-        handle_exception("FACEBOOK:WRITE:EXCEPTION", "error", e)
+        handle_exception(e, {
+                           context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
+                           type: "error",
+                           sync_id: sync_config.sync_id,
+                           sync_run_id: sync_config.sync_run_id
+                         })
       end
 
       private

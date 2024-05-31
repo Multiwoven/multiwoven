@@ -3,7 +3,7 @@
 module Multiwoven::Integrations::Destination
   module Sftp
     include Multiwoven::Integrations::Core
-    class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+    class Client < DestinationConnector
       prepend Multiwoven::Integrations::Core::Fullrefresher
       prepend Multiwoven::Integrations::Core::RateLimiter
 
@@ -16,7 +16,10 @@ module Multiwoven::Integrations::Destination
           return success_status
         end
       rescue StandardError => e
-        handle_exception("SFTP:CHECK_CONNECTION:EXCEPTION", "error", e)
+        handle_exception(e, {
+                           context: "SFTP:CHECK_CONNECTION:EXCEPTION",
+                           type: "error"
+                         })
         failure_status(e)
       end
 
@@ -27,14 +30,14 @@ module Multiwoven::Integrations::Destination
 
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(
-          "SFTP:DISCOVER:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "SFTP:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
       end
 
       def write(sync_config, records, _action = "insert")
+        @sync_config = sync_config
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         file_path = generate_file_path(sync_config)
         local_file_name = generate_local_file_name(sync_config)
@@ -53,11 +56,12 @@ module Multiwoven::Integrations::Destination
         write_failure = records.size - write_success
         tracking_message(write_success, write_failure)
       rescue StandardError => e
-        handle_exception(
-          "SFTP:WRITE:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "SFTP:WRITE:EXCEPTION",
+                           type: "error",
+                           sync_id: @sync_config.sync_id,
+                           sync_run_id: @sync_config.sync_run_id
+                         })
       end
 
       def write_compressed_data(connection_config, file_path, local_file_name, csv_content, records_size)
@@ -70,7 +74,13 @@ module Multiwoven::Integrations::Destination
             sftp.upload!(tempfile.path, file_path)
             write_success = records_size
           rescue StandardError => e
-            handle_exception("SFTP:RECORD:WRITE:EXCEPTION", "error", e)
+            # TODO: add sync_id and sync_run_id to the log
+            handle_exception(e, {
+                               context: "SFTP:RECORD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
             write_success = 0
           end
         end
@@ -86,7 +96,13 @@ module Multiwoven::Integrations::Destination
             sftp.upload!(tempfile.path, file_path)
             write_success = records_size
           rescue StandardError => e
-            handle_exception("SFTP:RECORD:WRITE:EXCEPTION", "error", e)
+            # TODO: add sync_id and sync_run_id to the log
+            handle_exception(e, {
+                               context: "SFTP:RECORD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
             write_success = 0
           end
         end

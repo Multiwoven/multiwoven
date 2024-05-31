@@ -24,11 +24,10 @@ module Multiwoven::Integrations::Source
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(
-          "CLICKHOUSE:DISCOVER:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "CLICKHOUSE:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
       end
 
       def read(sync_config)
@@ -39,11 +38,12 @@ module Multiwoven::Integrations::Source
         db = create_connection(connection_config)
         query(db, query)
       rescue StandardError => e
-        handle_exception(
-          "CLICKHOUSE:READ:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "CLICKHOUSE:READ:EXCEPTION",
+                           type: "error",
+                           sync_id: sync_config.sync_id,
+                           sync_run_id: sync_config.sync_run_id
+                         })
       end
 
       private

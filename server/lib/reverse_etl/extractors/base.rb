@@ -28,21 +28,23 @@ module ReverseEtl
       end
 
       def batch_params(client, sync_run)
+        sync_config = sync_run.sync.to_protocol
+        sync_config.sync_run_id = sync_run.id.to_s
         {
           offset: sync_run.current_offset || DEFAULT_OFFSET,
           limit: DEFAULT_LIMT,
           batch_size: DEFAULT_BATCH_SIZE,
-          sync_config: sync_run.sync.to_protocol,
+          sync_config:,
           client:
         }
       end
 
       def log_sync_run_error(sync_run)
-        Temporal.logger.error(
+        Rails.logger.error({
           error_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
-        )
+        }.to_s)
       end
     end
   end

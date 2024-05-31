@@ -12,6 +12,7 @@ module ReverseEtl
           let!(:catalog) { create(:catalog, connector: destination) }
 
           let(:sync) { create(:sync, destination:) }
+          let(:sync_run) { create(:sync_run, sync:) }
 
           before do
             call_count = 0
@@ -205,6 +206,7 @@ module ReverseEtl
         let(:sync_config) { sync.to_protocol }
 
         it "builds a new SyncConfig with modified query and other attributes" do
+          sync_config.sync_run_id = "sync_run_id"
           modified_sync_config = described_class.build_cursor_sync_config(sync_config, new_query)
 
           expect(modified_sync_config).to be_a(Multiwoven::Integrations::Protocol::SyncConfig)
@@ -221,6 +223,7 @@ module ReverseEtl
           expect(modified_sync_config.current_cursor_field).to eq(sync_config.current_cursor_field)
           expect(modified_sync_config.limit).to eq(sync_config.limit)
           expect(modified_sync_config.offset).to eq(0)
+          expect(modified_sync_config.sync_run_id).to eq("sync_run_id")
         end
       end
 

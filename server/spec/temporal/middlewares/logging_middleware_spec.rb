@@ -21,10 +21,10 @@ RSpec.describe Middlewares::LoggingMiddleware do
     end
 
     it "logs the start and end of the activity" do
-      expect(Temporal.logger).to receive(:info).with("[TestApp]: Started TestActivity activity",
-                                                     metadata: { key: "value" }).ordered
-      expect(Temporal.logger).to receive(:info).with("[TestApp]: Finished TestActivity activity",
-                                                     metadata: { key: "value" }).ordered
+      expect(Rails.logger).to receive(:info).with({ message: "[TestApp]: Started TestActivity activity",
+                                                    metadata: { key: "value" } }.to_s).ordered
+      expect(Rails.logger).to receive(:info).with({ message: "[TestApp]: Finished TestActivity activity",
+                                                    metadata: { key: "value" } }.to_s).ordered
 
       middleware.call(metadata) {}
     end
@@ -37,10 +37,10 @@ RSpec.describe Middlewares::LoggingMiddleware do
     end
 
     it "logs the start and end of the task" do
-      expect(Temporal.logger).to receive(:info).with("[TestApp]: Started TestTask task",
-                                                     metadata: { key: "value" }).ordered
-      expect(Temporal.logger).to receive(:info).with("[TestApp]: Finished TestTask task",
-                                                     metadata: { key: "value" }).ordered
+      expect(Rails.logger).to receive(:info).with({ message: "[TestApp]: Started TestTask task",
+                                                    metadata: { key: "value" } }.to_s).ordered
+      expect(Rails.logger).to receive(:info).with({ message: "[TestApp]: Finished TestTask task",
+                                                    metadata: { key: "value" } }.to_s).ordered
 
       middleware.call(metadata) {}
     end

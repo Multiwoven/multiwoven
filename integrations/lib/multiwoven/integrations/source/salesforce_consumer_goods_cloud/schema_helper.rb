@@ -9,7 +9,7 @@ module Multiwoven
 
           module_function
 
-          def salesforce_field_to_json_schema_type(sf_field) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+          def salesforce_field_to_json_schema_type(sf_field) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
             case sf_field["type"]
             when "string", "Email", "Phone", "Text", "TextArea", "TextEncrypted", "URL", "Picklist (Single)"
               if sf_field["nillable"]

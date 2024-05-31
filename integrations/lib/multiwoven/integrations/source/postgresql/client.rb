@@ -34,11 +34,10 @@ module Multiwoven::Integrations::Source
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(
-          "POSTGRESQL:DISCOVER:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "POSTGRESQL:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
       ensure
         db&.close
       end
@@ -53,11 +52,12 @@ module Multiwoven::Integrations::Source
 
         query(db, query)
       rescue StandardError => e
-        handle_exception(
-          "POSTGRESQL:READ:EXCEPTION",
-          "error",
-          e
-        )
+        handle_exception(e, {
+                           context: "POSTGRESQL:READ:EXCEPTION",
+                           type: "error",
+                           sync_id: sync_config.sync_id,
+                           sync_run_id: sync_config.sync_run_id
+                         })
       ensure
         db&.close
       end

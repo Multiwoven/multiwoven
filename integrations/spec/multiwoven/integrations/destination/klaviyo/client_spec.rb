@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do
   include WebMock::API
 
   before(:each) do
@@ -130,7 +130,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
         },
         "sync_mode": "full_refresh",
         "cursor_field": "timestamp",
-        "destination_sync_mode": "upsert"
+        "destination_sync_mode": "upsert",
+        "sync_id": "1"
       }.with_indifferent_access
     end
 
@@ -213,16 +214,19 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do # ruboc
         sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(
           sync_config_json.to_json
         )
+        sync_config.sync_run_id = "2"
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(sync_config.stream.url, sync_config.stream.request_method, payload: records.first, headers: headers)
           .and_raise(StandardError.new("test error"))
 
         expect(subject).to receive(:handle_exception).with(
-          "KLAVIYO:WRITE:EXCEPTION",
-          "error",
-          an_instance_of(NoMethodError)
+          an_instance_of(StandardError), {
+            context: "KLAVIYO:RECORD:WRITE:FAILURE",
+            type: "error",
+            sync_id: "1",
+            sync_run_id: "2"
+          }
         )
-        subject.write(sync_config, nil)
+        subject.write(sync_config, [records.first.data.transform_keys(&:to_s)])
       end
     end
   end

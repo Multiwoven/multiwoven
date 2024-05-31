@@ -98,9 +98,9 @@ module ReverseEtl
       end
 
       def log_error(error_message)
-        Temporal.logger.error(
+        Rails.logger.error({
           error_message:
-        )
+        }.to_s)
       end
     end
   end

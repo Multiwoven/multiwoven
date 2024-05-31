@@ -25,15 +25,24 @@ module Multiwoven
             catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("SALESFORCE:CRM:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CRM:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, action = "create")
             @action = sync_config.stream.action || action
+            @sync_config = sync_config
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("SALESFORCE:CRM:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CRM:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
           end
 
           private
@@ -58,7 +67,13 @@ module Multiwoven
               process_record(stream, record)
               write_success += 1
             rescue StandardError => e
-              handle_exception("SALESFORCE:CRM:WRITE:EXCEPTION", "error", e)
+              # TODO: add sync_id and sync_run_id to the logs
+              handle_exception(e, {
+                                 context: "SALESFORCE:CRM:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: @sync_config.sync_id,
+                                 sync_run_id: @sync_config.sync_run_id
+                               })
               write_failure += 1
             end
             tracking_message(write_success, write_failure)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Airtable::SchemaHelper do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Airtable::SchemaHelper do
   let(:sample_table) do
     {
       "id": "tblNewID",
