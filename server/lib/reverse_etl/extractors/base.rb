@@ -28,11 +28,13 @@ module ReverseEtl
       end
 
       def batch_params(client, sync_run)
+        sync_config = sync_run.sync.to_protocol
+        sync_config.sync_run_id = sync_run.id.to_s
         {
           offset: sync_run.current_offset || DEFAULT_OFFSET,
           limit: DEFAULT_LIMT,
           batch_size: DEFAULT_BATCH_SIZE,
-          sync_config: sync_run.sync.to_protocol,
+          sync_config:,
           client:
         }
       end

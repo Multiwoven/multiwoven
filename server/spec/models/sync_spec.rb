@@ -78,6 +78,7 @@ RSpec.describe Sync, type: :model do
       expect(protocol).to be_a(Multiwoven::Integrations::Protocol::SyncConfig)
       expect(protocol.cursor_field).to eq("cursor_field")
       expect(protocol.current_cursor_field).to eq("2024-01-20")
+      expect(protocol.sync_id).to eq(sync.id.to_s)
     end
   end
 

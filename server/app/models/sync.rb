@@ -90,7 +90,8 @@ class Sync < ApplicationRecord
       sync_mode: Multiwoven::Integrations::Protocol::SyncMode[sync_mode],
       destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"],
       cursor_field:,
-      current_cursor_field:
+      current_cursor_field:,
+      sync_id: id.to_s
     )
   end
 

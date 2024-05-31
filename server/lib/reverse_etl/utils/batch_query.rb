@@ -57,10 +57,12 @@ module ReverseEtl
           sync_mode: sync_config.sync_mode,
           destination_sync_mode: sync_config.destination_sync_mode,
           cursor_field: sync_config.cursor_field,
-          current_cursor_field: sync_config.current_cursor_field
+          current_cursor_field: sync_config.current_cursor_field,
+          sync_id: sync_config.sync_id
         )
         modified_sync_config.offset = 0
         modified_sync_config.limit = sync_config.limit
+        modified_sync_config.sync_run_id = sync_config.sync_run_id
         modified_sync_config
       end
 

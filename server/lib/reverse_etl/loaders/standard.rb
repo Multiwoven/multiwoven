@@ -14,6 +14,8 @@ module ReverseEtl
 
         sync = sync_run.sync
         sync_config = sync.to_protocol
+        sync_config.sync_run_id = sync_run.id.to_s
+
         if sync_config.stream.batch_support
           process_batch_records(sync_run, sync, sync_config, activity)
         else
