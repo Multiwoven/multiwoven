@@ -14,6 +14,16 @@ module Multiwoven
 
         class Client < DestinationConnector
           prepend Multiwoven::Integrations::Core::RateLimiter
+
+          def initialize
+            super
+            @logger = Integrations::Service.logger
+            Restforce.configure do |config|
+              config.logger = @logger
+            end
+            Restforce.log = true
+          end
+
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
             initialize_client(connection_config)
@@ -34,15 +44,24 @@ module Multiwoven
             end
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("SALESFORCE:CONSUMER:GOODS:ClOUD:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CONSUMER:GOODS:ClOUD:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, action = "create")
             @action = sync_config.stream.action || action
+            @sync_config = sync_config
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
           end
 
           private
@@ -66,7 +85,13 @@ module Multiwoven
               process_record(stream, record)
               write_success += 1
             rescue StandardError => e
-              handle_exception("SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION", "error", e)
+              # TODO: add sync_id and sync run id to the logs
+              handle_exception(e, {
+                                 context: "SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: @sync_config.sync_id,
+                                 sync_run_id: @sync_config.sync_run_id
+                               })
               write_failure += 1
             end
             tracking_message(write_success, write_failure)
@@ -79,6 +104,7 @@ module Multiwoven
           def send_data_to_salesforce(stream_name, record = {})
             method_name = "upsert!"
             args = [stream_name, "Id", record]
+            @logger.debug("sync_id: #{@sync_config.sync_id}, sync_run_id: #{@sync_config.sync_run_id}, record: #{record}")
             @client.send(method_name, *args)
           end
 

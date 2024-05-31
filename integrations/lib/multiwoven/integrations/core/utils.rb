@@ -48,9 +48,9 @@ module Multiwoven
         Integrations::Service.logger
       end
 
-      def report_exception(exception)
+      def report_exception(exception, meta = {})
         reporter = Integrations::Service.exception_reporter
-        reporter&.report(exception)
+        reporter&.report(exception, meta)
       end
 
       def create_log_message(context, type, exception)
@@ -61,12 +61,16 @@ module Multiwoven
         ).to_multiwoven_message
       end
 
-      def handle_exception(context, type, exception)
+      def handle_exception(exception, meta = {})
         logger.error(
-          "#{context}: #{exception.message}"
+          "#{hash_to_string(meta)}: #{exception.message}"
         )
-        report_exception(exception)
-        create_log_message(context, type, exception)
+        report_exception(exception, meta)
+        create_log_message(meta[:context], meta[:type], exception)
+      end
+
+      def hash_to_string(hash)
+        hash.map { |key, value| "#{key} = #{value}" }.join(", ")
       end
 
       def extract_data(record_object, properties)

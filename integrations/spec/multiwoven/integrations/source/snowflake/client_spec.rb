@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do
   let(:client) { Multiwoven::Integrations::Source::Snowflake::Client.new }
   # TODO: Move to test helpers
   let(:sync_config) do
@@ -48,7 +48,8 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
       },
       "sync_mode": "full_refresh",
       "cursor_field": "timestamp",
-      "destination_sync_mode": "upsert"
+      "destination_sync_mode": "upsert",
+      "sync_id": "1"
     }
   end
   describe "#check_connection" do
@@ -123,11 +124,16 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
     it "read failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "SNOWFLAKE:READ:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "SNOWFLAKE:READ:EXCEPTION",
+          type: "error",
+          sync_id: "1",
+          sync_run_id: "2"
+        }
       )
-      client.read(Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json))
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      s_config.sync_run_id = "2"
+      client.read(s_config)
     end
   end
 
@@ -155,9 +161,10 @@ RSpec.describe Multiwoven::Integrations::Source::Snowflake::Client do # rubocop:
     it "discover schema failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "SNOWFLAKE:DISCOVER:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "SNOWFLAKE:DISCOVER:EXCEPTION",
+          type: "error"
+        }
       )
       client.discover(sync_config[:source][:connection_specification])
     end

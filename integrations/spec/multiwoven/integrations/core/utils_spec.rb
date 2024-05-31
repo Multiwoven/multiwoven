@@ -17,7 +17,7 @@ module Multiwoven
         describe "#report_exception" do
           context "when reporter is present and has report method" do
             it "calls the report method on the reporter" do
-              expect(exception_reporter).to receive(:report).with(exception)
+              expect(exception_reporter).to receive(:report).with(exception, {})
               dummy_class.report_exception(exception)
             end
           end
@@ -30,6 +30,24 @@ module Multiwoven
             it "does not call the report method" do
               expect { dummy_class.report_exception(exception) }.not_to raise_error
             end
+          end
+        end
+        describe "#hash_to_string" do
+          it "returns a string representation of a hash with one key-value pair" do
+            hash = { key1: "value1" }
+            expect(dummy_class.hash_to_string(hash)).to eq("key1 = value1")
+          end
+          it "returns a string representation of a hash with multiple key-value pairs" do
+            hash = { key1: "value1", key2: "value2", key3: "value3" }
+            expect(dummy_class.hash_to_string(hash)).to eq("key1 = value1, key2 = value2, key3 = value3")
+          end
+          it "returns an empty string for an empty hash" do
+            hash = {}
+            expect(dummy_class.hash_to_string(hash)).to eq("")
+          end
+          it "handle hash with different types of values" do
+            hash = { key1: 1, key2: 2.5, key3: true, key4: nil }
+            expect(dummy_class.hash_to_string(hash)).to eq("key1 = 1, key2 = 2.5, key3 = true, key4 = ")
           end
         end
       end

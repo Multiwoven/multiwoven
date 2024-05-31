@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsCloud::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::SalesforceConsumerGoodsCloud::Client do
   include WebMock::API
 
   before(:each) do

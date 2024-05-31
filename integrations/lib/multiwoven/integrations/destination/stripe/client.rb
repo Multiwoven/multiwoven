@@ -23,15 +23,24 @@ module Multiwoven
             catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("STRIPE:CRM:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "STRIPE:CRM:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, action = "create")
+            @sync_config = sync_config
             @action = sync_config.stream.action || action
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("STRIPE:CRM:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "STRIPE:CRM:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
           end
 
           private
@@ -52,7 +61,12 @@ module Multiwoven
               klass.send(@action, record)
               write_success += 1
             rescue StandardError => e
-              handle_exception("STRIPE:CRM:WRITE:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "STRIPE:CRM:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: @sync_config.sync_id,
+                                 sync_run_id: @sync_config.sync_run_id
+                               })
               write_failure += 1
             end
             tracking_message(write_success, write_failure)

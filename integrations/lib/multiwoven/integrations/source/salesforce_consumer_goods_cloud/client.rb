@@ -34,7 +34,10 @@ module Multiwoven
             end
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("SALESFORCE:CONSUMER:GOODS:ClOUD:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CONSUMER:GOODS:ClOUD:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def read(sync_config)
@@ -50,7 +53,12 @@ module Multiwoven
               RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
             end
           rescue StandardError => e
-            handle_exception("SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SALESFORCE:CONSUMER:GOODS:ClOUD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
           end
 
           private

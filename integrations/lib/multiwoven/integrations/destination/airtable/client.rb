@@ -6,7 +6,7 @@ module Multiwoven
     module Destination
       module Airtable
         include Multiwoven::Integrations::Core
-        class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+        class Client < DestinationConnector
           prepend Multiwoven::Integrations::Core::RateLimiter
           MAX_CHUNK_SIZE = 10
           def check_connection(connection_config)
@@ -49,7 +49,10 @@ module Multiwoven
             catalog = build_catalog_from_schema(extract_body(schema), base_id, base_name)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("AIRTABLE:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "AIRTABLE:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, _action = "create")
@@ -72,7 +75,12 @@ module Multiwoven
                 write_failure += chunk.size
               end
             rescue StandardError => e
-              handle_exception("AIRTABLE:RECORD:WRITE:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "AIRTABLE:RECORD:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: sync_config.sync_id,
+                                 sync_run_id: sync_config.sync_run_id
+                               })
               write_failure += chunk.size
             end
 
@@ -82,7 +90,12 @@ module Multiwoven
             )
             tracker.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("AIRTABLE:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "AIRTABLE:RECORD:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
           end
 
           private

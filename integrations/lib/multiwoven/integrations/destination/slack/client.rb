@@ -23,13 +23,16 @@ module Multiwoven
             catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("SLACK:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SLACK:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, action = "create")
             # Currently as we only create a message for each record in slack, we are not using actions.
             # This will be changed in future.
-
+            @sync_config = sync_config
             @action = sync_config.stream.action || action
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
             configure_slack(connection_config[:api_token])
@@ -37,7 +40,12 @@ module Multiwoven
             @channel_id = connection_config[:channel_id]
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("SLACK:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "SLACK:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
           end
 
           private
@@ -56,7 +64,12 @@ module Multiwoven
               write_success += 1
             rescue StandardError => e
               write_failure += 1
-              handle_exception("SLACK:CRM:WRITE:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "SLACK:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: @sync_config.sync_id,
+                                 sync_run_id: @sync_config.sync_run_id
+                               })
             end
             tracking_message(write_success, write_failure)
           end

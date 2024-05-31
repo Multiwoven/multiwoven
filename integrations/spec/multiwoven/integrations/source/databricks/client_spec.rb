@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::Databricks::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Source::Databricks::Client do
   let(:client) { Multiwoven::Integrations::Source::Databricks::Client.new }
 
   let(:sync_config_json) do
@@ -43,7 +43,8 @@ RSpec.describe Multiwoven::Integrations::Source::Databricks::Client do # rubocop
       },
       "sync_mode": "full_refresh",
       "cursor_field": "timestamp",
-      "destination_sync_mode": "upsert"
+      "destination_sync_mode": "upsert",
+      "sync_id": "1"
     }
   end
 
@@ -108,9 +109,10 @@ RSpec.describe Multiwoven::Integrations::Source::Databricks::Client do # rubocop
     it "discover schema failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "DATABRICKS:DISCOVER:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "DATABRICKS:DISCOVER:EXCEPTION",
+          type: "error"
+        }
       )
       client.discover(sync_config[:source][:connection_specification])
     end
@@ -157,11 +159,15 @@ RSpec.describe Multiwoven::Integrations::Source::Databricks::Client do # rubocop
     end
 
     it "read failure" do
+      sync_config.sync_run_id = "2"
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "DATABRICKS:READ:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "DATABRICKS:READ:EXCEPTION",
+          type: "error",
+          sync_id: "1",
+          sync_run_id: "2"
+        }
       )
       client.read(sync_config)
     end

@@ -6,7 +6,7 @@ module Multiwoven
       module GoogleSheets
         include Multiwoven::Integrations::Core
 
-        class Client < DestinationConnector # rubocop:disable Metrics/ClassLength
+        class Client < DestinationConnector
           prepend Multiwoven::Integrations::Core::Fullrefresher
           prepend Multiwoven::Integrations::Core::RateLimiter
           MAX_CHUNK_SIZE = 10_000
@@ -17,7 +17,6 @@ module Multiwoven
             fetch_google_spread_sheets(connection_config)
             success_status
           rescue StandardError => e
-            handle_exception("GOOGLE_SHEETS:CRM:DISCOVER:EXCEPTION", "error", e)
             failure_status(e)
           end
 
@@ -28,14 +27,22 @@ module Multiwoven
             catalog = build_catalog_from_spreadsheets(spreadsheets, connection_config)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("GOOGLE_SHEETS:CRM:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "GOOGLE_SHEETS:CRM:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
           end
 
           def write(sync_config, records, action = "create")
             setup_write_environment(sync_config, action)
             process_record_chunks(records, sync_config)
           rescue StandardError => e
-            handle_exception("GOOGLE_SHEETS:CRM:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "GOOGLE_SHEETS:CRM:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
           end
 
           def clear_all_records(sync_config)
@@ -154,7 +161,12 @@ module Multiwoven
               update_sheet_values(values, sync_config.stream.name)
               write_success += values.size
             rescue StandardError => e
-              handle_exception("GOOGLE_SHEETS:RECORD:WRITE:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "GOOGLE_SHEETS:RECORD:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: sync_config.sync_id,
+                                 sync_run_id: sync_config.sync_run_id
+                               })
               write_failure += chunk.size
             end
 

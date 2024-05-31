@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::GoogleSheets::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::GoogleSheets::Client do
   include WebMock::API
 
   before(:each) do

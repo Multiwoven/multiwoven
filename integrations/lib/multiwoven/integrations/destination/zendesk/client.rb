@@ -13,7 +13,10 @@ module Multiwoven
             authenticate_client
             success_status
           rescue StandardError => e
-            handle_exception("ZENDESK:CHECK_CONNECTION:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "ZENDESK:CHECK_CONNECTION:EXCEPTION",
+                               type: "error"
+                             })
             failure_status(e)
           end
 
@@ -21,16 +24,25 @@ module Multiwoven
             catalog = build_catalog(load_catalog)
             catalog.to_multiwoven_message
           rescue StandardError => e
-            handle_exception("ZENDESK:DISCOVER:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "ZENDESK:DISCOVER:EXCEPTION",
+                               type: "error"
+                             })
             failure_status(e)
           end
 
           def write(sync_config, records, action = "create")
+            @sync_config = sync_config
             @action = sync_config.stream.action || action
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e
-            handle_exception("ZENDESK:WRITE:EXCEPTION", "error", e)
+            handle_exception(e, {
+                               context: "ZENDESK:WRITE:EXCEPTION",
+                               type: "error",
+                               sync_id: @sync_config.sync_id,
+                               sync_run_id: @sync_config.sync_run_id
+                             })
             failure_status(e)
           end
 
@@ -68,7 +80,12 @@ module Multiwoven
 
               write_success += 1
             rescue StandardError => e
-              handle_exception("ZENDESK:WRITE_RECORD:EXCEPTION", "error", e)
+              handle_exception(e, {
+                                 context: "ZENDESK:WRITE:EXCEPTION",
+                                 type: "error",
+                                 sync_id: @sync_config.sync_id,
+                                 sync_run_id: @sync_config.sync_run_id
+                               })
               write_failure += 1
             end
 

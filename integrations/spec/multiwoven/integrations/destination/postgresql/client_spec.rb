@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # rubocop:disable Metrics/BlockLength
+RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
   let(:client) { Multiwoven::Integrations::Destination::Postgresql::Client.new }
   let(:sync_config) do
     {
@@ -157,9 +157,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do # ru
     it "discover schema failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
-        "POSTGRESQL:DISCOVER:EXCEPTION",
-        "error",
-        an_instance_of(StandardError)
+        an_instance_of(StandardError), {
+          context: "POSTGRESQL:DISCOVER:EXCEPTION",
+          type: "error"
+        }
       )
       client.discover(sync_config[:source][:connection_specification])
     end
