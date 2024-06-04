@@ -5,7 +5,7 @@ RSpec.describe Multiwoven::Integrations::Core::QueryBuilder do
     let(:table) { "users" }
 
     context "when action is insert" do
-      let(:action) { "insert" }
+      let(:action) { "destination_insert" }
       let(:params) { { "email" => "user@example.com", "name" => "John Doe" } }
       let(:primary_key) { "" } # Not used in creation
 
@@ -16,7 +16,7 @@ RSpec.describe Multiwoven::Integrations::Core::QueryBuilder do
     end
 
     context "when action is update" do
-      let(:action) { "update" }
+      let(:action) { "destination_update" }
 
       context "with valid primary key" do
         let(:primary_key) { "user_id" }
