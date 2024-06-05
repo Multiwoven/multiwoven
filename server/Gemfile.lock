@@ -2107,6 +2107,8 @@ GEM
       hashie
     stringio (3.1.0)
     stripe (11.6.0)
+    strong_migrations (1.8.0)
+      activerecord (>= 5.2)
     thor (1.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
@@ -2195,6 +2197,7 @@ DEPENDENCIES
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter
+  strong_migrations
   temporal-ruby!
   timecop
   tzinfo-data
