@@ -45,13 +45,14 @@ module Multiwoven::Integrations::Destination
       def write(sync_config, records, action = "destination_insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         table_name = sync_config.stream.name
+        primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
 
         write_success = 0
         write_failure = 0
 
         records.each do |record|
-          query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record)
+          query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record, primary_key)
           logger.debug("POSTGRESQL:WRITE:QUERY query = #{query} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
             db.exec(query)
