@@ -40,7 +40,7 @@ module ReverseEtl
             transformer = Transformers::UserMapping.new
             record = transformer.transform(sync, sync_record)
             Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{record}"
-            report = handle_response(client.write(sync_config, [record]), sync_run)
+            report = handle_response(client.write(sync_config, [record], sync_record.action), sync_run)
             if report.tracking.success.zero?
               failed_sync_records << sync_record.id
             else
