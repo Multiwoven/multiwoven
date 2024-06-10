@@ -27,6 +27,11 @@ module ModelContracts
     rule(model: :query_type) do
       key.failure("invalid query type") unless Multiwoven::Integrations::Protocol::ModelQueryType.include?(value)
     end
+
+    rule(model: :query) do
+      regex = /\b(?:LIMIT|OFFSET)\b\s*\d*\s*;?\s*$/i
+      key.failure("Query validation failed: Query cannot contain LIMIT or OFFSET") if value.match?(regex)
+    end
   end
 
   class Update < Dry::Validation::Contract
@@ -45,6 +50,11 @@ module ModelContracts
       unless !key? || Multiwoven::Integrations::Protocol::ModelQueryType.include?(value)
         key.failure("invalid query type")
       end
+    end
+
+    rule(model: :query) do
+      regex = /\b(?:LIMIT|OFFSET)\b\s*\d*\s*;?\s*$/i
+      key.failure("Query validation failed: Query cannot contain LIMIT or OFFSET") if value.match?(regex)
     end
   end
 
