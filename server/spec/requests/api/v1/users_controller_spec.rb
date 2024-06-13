@@ -22,7 +22,8 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response_hash.dig(:data, :attributes, :email)).to eq(user.email)
         expect(response_hash.dig(:data, :type)).to eq("users")
         expect(response_hash.dig(:data, :attributes, :created_at)).not_to be_nil
-        expect(response_hash.dig(:data, :attributes, :role)).to eq(nil)
+        expect(response_hash.dig(:data, :attributes, :role)).to eq("Admin")
+        expect(response_hash.dig(:data, :attributes, :status)).to eq("active")
       end
     end
   end
