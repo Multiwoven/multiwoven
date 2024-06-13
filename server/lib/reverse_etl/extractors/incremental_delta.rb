@@ -98,7 +98,8 @@ module ReverseEtl
           sync_run_id: sync_run.id,
           action: action(sync_record),
           fingerprint:,
-          record: record.data
+          record: record.data,
+          status: "pending"
         )
         sync_record.save!
       end

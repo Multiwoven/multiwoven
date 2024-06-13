@@ -189,5 +189,68 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         expect(sync_record).to eq(nil)
       end
     end
+
+    describe "#update_or_create_sync_record" do
+      let(:record) do
+        Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
+                                                                      "first_name" => "John", "Last Name" => "Doe" },
+                                                              emitted_at:
+                                                              DateTime.now.to_i).to_multiwoven_message
+      end
+      let(:record_dup) do
+        Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
+                                                                      "first_name" => "John", "Last Name" => "Doe" },
+                                                              emitted_at:
+                                                              DateTime.now.to_i).to_multiwoven_message
+      end
+      let(:record_update) do
+        Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1, "email" => "test1@mail.com",
+                                                                      "first_name" => "John", "Last Name" => "Doe1" },
+                                                              emitted_at:
+                                                              DateTime.now.to_i).to_multiwoven_message
+      end
+
+      context "when there is existing sync record update the record" do
+        it "updates the sync record with new status pending" do
+          sync_record = subject.send(:process_record, record.record, sync_run1, sync_run1.model)
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record.record.data)
+          sync_record.update!(status: "success", fingerprint:, action: "destination_insert",
+                              record: record.record.data)
+
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record_update.record.data)
+          sync_record_update = subject.send(:process_record, record_update.record, sync_run2, sync_run2.model)
+          subject.send(:update_or_create_sync_record, sync_record_update, record_update.record,
+                       sync_run1, fingerprint)
+
+          updated_sync_record = SyncRecord.find(sync_record_update.id)
+          expect(updated_sync_record).not_to be_nil
+          expect(updated_sync_record.sync_run_id).to eq(sync_run1.id)
+          expect(updated_sync_record.action).to eq("destination_update")
+          expect(updated_sync_record.fingerprint).to eq(fingerprint)
+          expect(updated_sync_record.status).to eq("pending")
+        end
+      end
+
+      context "when there is existing sync record skip the record" do
+        it "skip the record" do
+          sync_record = subject.send(:process_record, record.record, sync_run1, sync_run1.model)
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record.record.data)
+          sync_record.update!(status: "success", fingerprint:, action: "destination_insert",
+                              record: record.record.data)
+
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record_dup.record.data)
+          sync_record_dup = subject.send(:process_record, record_dup.record, sync_run2, sync_run2.model)
+          subject.send(:update_or_create_sync_record, sync_record_dup, record_dup.record,
+                       sync_run1, fingerprint)
+
+          updated_sync_record = SyncRecord.find(sync_record_dup.id)
+          expect(updated_sync_record).not_to be_nil
+          expect(updated_sync_record.sync_run_id).to eq(sync_run1.id)
+          expect(updated_sync_record.action).to eq("destination_insert")
+          expect(updated_sync_record.fingerprint).to eq(fingerprint)
+          expect(updated_sync_record.status).to eq("success")
+        end
+      end
+    end
   end
 end
