@@ -1799,6 +1799,7 @@ GEM
     google-cloud-errors (1.4.0)
     google-protobuf (3.25.2-aarch64-linux)
     google-protobuf (3.25.2-arm64-darwin)
+    google-protobuf (3.25.2-x86_64-darwin)
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.11.0)
       google-protobuf (~> 3.18)
@@ -1815,6 +1816,9 @@ GEM
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
     grpc (1.60.0-arm64-darwin)
+      google-protobuf (~> 3.25)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.60.0-x86_64-darwin)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
     grpc (1.60.0-x86_64-linux)
@@ -1880,7 +1884,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.1.72)
+    multiwoven-integrations (0.1.73)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -1923,6 +1927,8 @@ GEM
     nokogiri (1.16.0-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.16.0-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.0-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
@@ -2140,6 +2146,7 @@ PLATFORMS
   aarch64-linux
   arm64-darwin-22
   arm64-darwin-23
+  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -2167,7 +2174,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.72)
+  multiwoven-integrations (~> 0.1.73)
   newrelic_rpm
   parallel
   pg (~> 1.1)
