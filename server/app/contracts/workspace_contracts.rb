@@ -17,8 +17,8 @@ module WorkspaceContracts
       required(:workspace).schema do
         required(:name).filled(:string)
         required(:organization_id).filled(:integer)
-        optional(:description).filled(:string)
-        optional(:region).filled(:string)
+        optional(:description).maybe(:string)
+        optional(:region).maybe(:string)
       end
     end
   end
@@ -27,10 +27,9 @@ module WorkspaceContracts
     params do
       required(:id).filled(:integer)
       required(:workspace).schema do
-        optional(:name).filled(:string)
+        optional(:name).maybe(:string)
         optional(:organization_id).filled(:integer)
-        optional(:description).filled(:string)
-        optional(:region).filled(:string)
+        optional(:region).maybe(:string)
       end
     end
   end

@@ -56,7 +56,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         workspace: {
           name: "workspace_test",
           organization_id: workspace.organization.id,
-          description: "workspace description",
+          description: "",
           region: "us-west"
         }
       }
@@ -80,7 +80,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:workspace, :name))
         expect(response_hash.dig(:data, :attributes, :slug)).to eq("workspace_test")
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
-        expect(response_hash.dig(:data, :attributes, :description)).to eq("workspace description")
+        expect(response_hash.dig(:data, :attributes, :description)).to eq("")
         expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west")
         expect(response_hash.dig(:data, :attributes, :organization_id))
           .to eq(request_body.dig(:workspace, :organization_id))
