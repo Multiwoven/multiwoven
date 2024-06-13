@@ -1,6 +1,6 @@
-<% query_params = { invited: true, invitation_token: @token, workspace_id: @workspace.id, workspace_name: @workspace.name, invited_by: @resource.invited_by.email } %>
+<% query_params = { invited: true, invited_user:@resource.email, invitation_token: @token, workspace_id: @workspace.id, workspace_name: @workspace.name, invited_by: @resource.invited_by.email } %>
 
-<% custom_url = "#{ENV["UI_HOST"]}?#{query_params.to_query}" %>
+<% custom_url = "#{ENV["UI_HOST"]}/sign-up?#{query_params.to_query}" %>
 
 <p><%= "Join #{@workspace.name} on AI Squared" %></p>
 
