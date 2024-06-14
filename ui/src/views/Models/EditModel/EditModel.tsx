@@ -65,7 +65,7 @@ const EditModel = (): JSX.Element => {
   ];
 
   return (
-    <Box width='100%' display='flex' justifyContent='center'>
+    <Box width='100%' display='flex' justifyContent='center' minH='fit-content' mb='40px'>
       <ContentContainer containerRef={containerRef}>
         <TopBar name='' breadcrumbSteps={EDIT_QUERY_FORM_STEPS} />
         <DefineSQL
