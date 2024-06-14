@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :user, :workspace
+  attr_reader :context, :user, :workspace, :record
 
-  def initialize(user, workspace)
-    @user = user
-    @workspace = workspace
+  def initialize(context, record)
+    @user = context.user
+    @workspace = context.workspace
+    @record = record
   end
 
   def index?
@@ -46,17 +47,8 @@ class ApplicationPolicy
     workspace_user&.member? || false
   end
 
-  class Scope
-    attr_reader :user, :worksapce, :scope
-
-    def initialize(user, scope)
-      @user = user
-      @worksapce = worksapce
-      @scope = scope
-    end
-
-    def resolve
-      raise NoMethodError, "You must define #resolve in #{self.class}"
-    end
+  def viewer?
+    workspace_user = workspace.workspace_users.find_by(user:)
+    workspace_user&.viewer? || false
   end
 end

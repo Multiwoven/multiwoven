@@ -8,6 +8,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
   let(:user) { workspace.workspace_users.first.user }
   let(:service) { Multiwoven::Integrations::Service }
   let(:connection_status) { Multiwoven::Integrations::Protocol::ConnectionStatus }
+  let(:viewer_role) { create(:role, role_name: "Viewer") }
+  let(:member_role) { create(:role, role_name: "Member") }
 
   describe "GET /api/v1/connector_definitions" do
     context "when it is an unauthenticated user" do
@@ -26,11 +28,53 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(response_hash[:source].count).to eql(service.connectors[:source].count)
         expect(response_hash[:destination].count).to eql(service.connectors[:destination].count)
       end
+
+      it "returns success viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/connector_definitions", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:source].count).to eql(service.connectors[:source].count)
+        expect(response_hash[:destination].count).to eql(service.connectors[:destination].count)
+      end
+
+      it "returns success member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        get "/api/v1/connector_definitions", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:source].count).to eql(service.connectors[:source].count)
+        expect(response_hash[:destination].count).to eql(service.connectors[:destination].count)
+      end
     end
   end
 
   describe "GET /api/v1/connector_definitions/:id" do
     it "returns a connector when found" do
+      get api_v1_connector_definition_path(id: "Snowflake", type: "source"),
+          headers: auth_headers(user, workspace_id)
+      expect(response).to have_http_status(:ok)
+      response_hash = JSON.parse(response.body).with_indifferent_access
+
+      expect(response_hash[:name]).to eql("Snowflake")
+      expect(response_hash[:connector_type]).to eql("source")
+    end
+
+    it "returns a connector when found for member role" do
+      workspace.workspace_users.first.update(role: member_role)
+      get api_v1_connector_definition_path(id: "Snowflake", type: "source"),
+          headers: auth_headers(user, workspace_id)
+      expect(response).to have_http_status(:ok)
+      response_hash = JSON.parse(response.body).with_indifferent_access
+
+      expect(response_hash[:name]).to eql("Snowflake")
+      expect(response_hash[:connector_type]).to eql("source")
+    end
+
+    it "returns a connector when found for viewer role" do
+      workspace.workspace_users.first.update(role: member_role)
       get api_v1_connector_definition_path(id: "Snowflake", type: "source"),
           headers: auth_headers(user, workspace_id)
       expect(response).to have_http_status(:ok)
@@ -73,6 +117,33 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
       response_hash = JSON.parse(response.body).with_indifferent_access
       expect(response_hash[:connection_status][:status]).to eql("succeeded")
+    end
+
+    it "returns success status for a valid connection fro member role" do
+      workspace.workspace_users.first.update(role: member_role)
+      allow(mock_connector_instance).to receive(:check_connection)
+        .and_return(connection_status.new(status: "succeeded").to_multiwoven_message)
+
+      post check_connection_api_v1_connector_definitions_path,
+           params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
+           headers: auth_headers(user, workspace_id)
+
+      expect(response).to have_http_status(:ok)
+
+      response_hash = JSON.parse(response.body).with_indifferent_access
+      expect(response_hash[:connection_status][:status]).to eql("succeeded")
+    end
+
+    it "returns authorization failure for a view role user" do
+      workspace.workspace_users.first.update(role: viewer_role)
+      allow(mock_connector_instance).to receive(:check_connection)
+        .and_return(connection_status.new(status: "succeeded").to_multiwoven_message)
+
+      post check_connection_api_v1_connector_definitions_path,
+           params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
+           headers: auth_headers(user, workspace_id)
+
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "returns failure status for a valid connection" do

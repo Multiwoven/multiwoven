@@ -15,6 +15,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       create(:model, connector:, workspace:, name: "model2", query: "SELECT * FROM locations")
     ]
   end
+  let(:viewer_role) { create(:role, role_name: "Viewer") }
+  let(:member_role) { create(:role, role_name: "Member") }
 
   describe "GET /api/v1/models" do
     context "when it is an unauthenticated user" do
@@ -26,6 +28,26 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and all model " do
+        get "/api/v1/models", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash.dig(:data, 0, :type)).to eq("models")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+      end
+
+      it "returns success and all mode for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/models", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash.dig(:data, 0, :type)).to eq("models")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+      end
+
+      it "returns success and all model for member role" do
+        workspace.workspace_users.first.update(role: member_role)
         get "/api/v1/models", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -46,6 +68,34 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch model " do
+        get "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(models.first.id.to_s)
+        expect(response_hash.dig(:data, :type)).to eq("models")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(models.first.name)
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(models.first.query)
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(models.first.query_type)
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(models.first.primary_key)
+      end
+
+      it "returns success and fetch model for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(models.first.id.to_s)
+        expect(response_hash.dig(:data, :type)).to eq("models")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(models.first.name)
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(models.first.query)
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(models.first.query_type)
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(models.first.primary_key)
+      end
+
+      it "returns success and fetch model for member role" do
+        workspace.workspace_users.first.update(role: member_role)
         get "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -98,6 +148,26 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
+      it "creates a new model and returns success" do
+        workspace.workspace_users.first.update(role: member_role)
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:created)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      it "returns fail viwer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "returns an error response when creation fails" do
         request_body[:model][:connector_id] = "connector_id_wrong"
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
@@ -141,6 +211,27 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
+      it "updates the model and returns success for member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(models.second.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+        expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
+        expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
+        expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      it "returns fail for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "returns an error response when wrong model_id" do
         put "/api/v1/models/test", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
@@ -168,6 +259,18 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       it "returns success and delete model " do
         delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns success and delete model for member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns for viwer role " do
+        workspace.workspace_users.first.update(role: viewer_role)
+        delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unauthorized)
       end
 
       it "returns an error response while delete wrong model" do

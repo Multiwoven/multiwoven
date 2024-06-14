@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SyncPolicy < ApplicationPolicy
+class WorkspacePolicy < ApplicationPolicy
   def index?
     admin? || member? || viewer?
   end
@@ -10,18 +10,14 @@ class SyncPolicy < ApplicationPolicy
   end
 
   def create?
-    admin? || member?
+    admin?
   end
 
   def update?
-    admin? || member?
+    admin?
   end
 
   def destroy?
-    admin? || member?
-  end
-
-  def configurations?
-    admin? || member?
+    admin?
   end
 end

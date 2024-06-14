@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SyncPolicy < ApplicationPolicy
+class ConnectorPolicy < ApplicationPolicy
   def index?
     admin? || member? || viewer?
   end
@@ -21,7 +21,11 @@ class SyncPolicy < ApplicationPolicy
     admin? || member?
   end
 
-  def configurations?
-    admin? || member?
+  def discover?
+    admin? || member? || viewer?
+  end
+
+  def query_source?
+    admin? || member? || viewer?
   end
 end

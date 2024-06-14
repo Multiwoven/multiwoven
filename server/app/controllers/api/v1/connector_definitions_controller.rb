@@ -7,10 +7,12 @@ module Api
       before_action :set_connector_client, only: %i[check_connection]
 
       def index
+        authorize @connectors, policy_class: ConnectorDefinitionPolicy
         render json: @connectors
       end
 
       def show
+        authorize @connectors, policy_class: ConnectorDefinitionPolicy
         @connector = @connectors.find do |hash|
           hash[:name].downcase == params[:id].downcase
         end
@@ -19,12 +21,12 @@ module Api
 
       def check_connection
         connection_spec = params[:connection_spec]
+        authorize connection_spec, policy_class: ConnectorDefinitionPolicy
         connection_spec = connection_spec.to_unsafe_h if connection_spec.respond_to?(:to_unsafe_h)
         connection_status = @connector_client
                             .check_connection(
                               connection_spec
                             )
-
         render json: connection_status
       end
 

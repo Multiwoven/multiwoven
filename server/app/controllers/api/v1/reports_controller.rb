@@ -7,6 +7,7 @@ module Api
       attr_reader :report
 
       def index
+        authorize current_workspace, policy_class: ReportPolicy
         result = ActivityReport.call(report_params)
 
         if result.success?

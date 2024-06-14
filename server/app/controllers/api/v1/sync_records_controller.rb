@@ -9,6 +9,7 @@ module Api
 
       def index
         sync_records = @sync_run.sync_records
+        authorize sync_records
         sync_records = sync_records.where(status: params[:status]) if params[:status].present?
         sync_records = sync_records.page(params[:page] || 1)
         render json: sync_records, status: :ok

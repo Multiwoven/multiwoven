@@ -23,6 +23,8 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
       create(:sync_record, sync:, sync_run:, status: "failed", primary_key: "key2")
     ]
   end
+  let(:viewer_role) { create(:role, role_name: "Viewer") }
+  let(:member_role) { create(:role, role_name: "Member") }
 
   describe "GET /api/v1/syncs/sync_id/sync_runs/sync_run_id/sync_records" do
     context "when it is an unauthenticated user" do
@@ -34,6 +36,48 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
+        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].size).to eq(2)
+
+        response_hash[:data].each_with_index do |row, _index|
+          sync_record = sync_records.find { |sr| sr.id == row[:id].to_i }
+
+          expect(row[:id]).to eq(sync_record.id.to_s)
+          expect(row[:type]).to eq("sync_records")
+          expect(row.dig(:attributes, :sync_id)).to eq(sync_record.sync_id)
+          expect(row.dig(:attributes, :sync_run_id)).to eq(sync_record.sync_run_id)
+          expect(row.dig(:attributes, :record)).to eq(sync_record.record)
+          expect(row.dig(:attributes, :action)).to eq(sync_record.action)
+          expect(row.dig(:attributes, :status)).to eq(sync_record.status)
+          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
+        end
+      end
+
+      it "returns success and fetch sync for member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].size).to eq(2)
+
+        response_hash[:data].each_with_index do |row, _index|
+          sync_record = sync_records.find { |sr| sr.id == row[:id].to_i }
+
+          expect(row[:id]).to eq(sync_record.id.to_s)
+          expect(row[:type]).to eq("sync_records")
+          expect(row.dig(:attributes, :sync_id)).to eq(sync_record.sync_id)
+          expect(row.dig(:attributes, :sync_run_id)).to eq(sync_record.sync_run_id)
+          expect(row.dig(:attributes, :record)).to eq(sync_record.record)
+          expect(row.dig(:attributes, :action)).to eq(sync_record.action)
+          expect(row.dig(:attributes, :status)).to eq(sync_record.status)
+          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
+        end
+      end
+
+      it "returns success and fetch sync for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
