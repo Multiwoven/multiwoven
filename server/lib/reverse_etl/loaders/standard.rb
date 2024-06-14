@@ -55,9 +55,10 @@ module ReverseEtl
                                             })
             Rails.logger(e)
           end
-          heartbeat(activity)
 
           update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
+
+          heartbeat(activity)
         end
       end
 
