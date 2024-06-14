@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SyncPolicy < ApplicationPolicy
+class ModelPolicy < ApplicationPolicy
   def index?
     admin? || member? || viewer?
   end

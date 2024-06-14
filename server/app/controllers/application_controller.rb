@@ -8,8 +8,13 @@ class ApplicationController < ActionController::API
   before_action :authenticate_user!
   before_action :validate_contract
   around_action :handle_with_exception
+  after_action :verify_authorized
 
   private
+
+  def pundit_user
+    CurrentContext.new(current_user, current_workspace)
+  end
 
   # Override Devise's method to handle authentication
   def authenticate_user!

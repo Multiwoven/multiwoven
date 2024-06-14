@@ -11,21 +11,23 @@ module Api
 
       def index
         @connectors = current_workspace.connectors
+        authorize @connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
       end
 
       def show
+        authorize @connector
         render json: @connector, status: :ok
       end
 
       def create
+        authorize current_workspace, policy_class: ConnectorPolicy
         result = CreateConnector.call(
           workspace: current_workspace,
           connector_params:
         )
-
         if result.success?
           @connector = result.connector
           render json: @connector, status: :created
@@ -39,6 +41,7 @@ module Api
       end
 
       def update
+        authorize @connector
         result = UpdateConnector.call(
           connector: @connector,
           connector_params:
@@ -57,11 +60,13 @@ module Api
       end
 
       def destroy
+        authorize @connector
         @connector.destroy!
         head :no_content
       end
 
       def discover
+        authorize @connector
         result = DiscoverConnector.call(
           connector: @connector
         )
@@ -79,6 +84,7 @@ module Api
       end
 
       def query_source
+        authorize @connector
         if @connector.source?
           result = QuerySource.call(
             connector: @connector,

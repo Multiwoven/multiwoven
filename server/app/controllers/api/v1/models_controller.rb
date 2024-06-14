@@ -15,14 +15,17 @@ module Api
       def index
         @models = current_workspace
                   .models.all.page(params[:page] || 1)
+        authorize @models
         render json: @models, status: :ok
       end
 
       def show
+        authorize @model
         render json: @model, status: :ok
       end
 
       def create
+        authorize current_workspace, policy_class: ModelPolicy
         result = CreateModel.call(
           connector:,
           model_params:
@@ -40,6 +43,7 @@ module Api
       end
 
       def update
+        authorize model
         result = UpdateModel.call(
           model:,
           model_params:
@@ -58,6 +62,7 @@ module Api
       end
 
       def destroy
+        authorize model
         model.destroy!
         head :no_content
       end

@@ -12,6 +12,8 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
+  let(:viewer_role) { create(:role, role_name: "Viewer") }
+  let(:member_role) { create(:role, role_name: "Member") }
 
   before do
     create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
@@ -48,7 +50,57 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
     end
 
     context "when it is an authenticated user" do
-      it "returns success and time slices " do
+      it "returns success and time slices for admin role" do
+        get "/api/v1/reports?type=workspace_activity&connector_ids[]=#{connectors.first.id}",
+            headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access[:data]
+        expect(response_hash).to include(
+          sync_run_triggered: a_kind_of(Array),
+          total_sync_run_rows: a_kind_of(Array)
+        )
+        sync_run_triggered = response_hash.with_indifferent_access[:sync_run_triggered]
+        expect(sync_run_triggered.count).to eq(slice_size)
+        expect(sync_run_triggered[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(sync_run_triggered[slice_size - 1]["total_count"]).to eq(3)
+        expect(sync_run_triggered[slice_size - 1]["success_count"]).to eq(2)
+        expect(sync_run_triggered[slice_size - 1]["failed_count"]).to eq(1)
+
+        total_sync_run_rows = response_hash.with_indifferent_access[:total_sync_run_rows]
+        expect(total_sync_run_rows.count).to eq(slice_size)
+        expect(total_sync_run_rows[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(6)
+        expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
+        expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(3)
+      end
+
+      it "returns success and time slices for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/reports?type=workspace_activity&connector_ids[]=#{connectors.first.id}",
+            headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access[:data]
+        expect(response_hash).to include(
+          sync_run_triggered: a_kind_of(Array),
+          total_sync_run_rows: a_kind_of(Array)
+        )
+        sync_run_triggered = response_hash.with_indifferent_access[:sync_run_triggered]
+        expect(sync_run_triggered.count).to eq(slice_size)
+        expect(sync_run_triggered[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(sync_run_triggered[slice_size - 1]["total_count"]).to eq(3)
+        expect(sync_run_triggered[slice_size - 1]["success_count"]).to eq(2)
+        expect(sync_run_triggered[slice_size - 1]["failed_count"]).to eq(1)
+
+        total_sync_run_rows = response_hash.with_indifferent_access[:total_sync_run_rows]
+        expect(total_sync_run_rows.count).to eq(slice_size)
+        expect(total_sync_run_rows[slice_size - 1]["time_slice"]).not_to be_nil
+        expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(6)
+        expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
+        expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(3)
+      end
+
+      it "returns success and time slices for member role" do
+        workspace.workspace_users.first.update(role: member_role)
         get "/api/v1/reports?type=workspace_activity&connector_ids[]=#{connectors.first.id}",
             headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)

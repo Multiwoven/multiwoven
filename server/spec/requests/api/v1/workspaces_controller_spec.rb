@@ -6,6 +6,8 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
   let(:workspace) { create(:workspace) }
   let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
+  let(:viewer_role) { create(:role, role_name: "Viewer") }
+  let(:member_role) { create(:role, role_name: "Member") }
 
   describe "GET /api/v1/workspaces" do
     context "when it is an unauthenticated user" do
@@ -23,6 +25,24 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash[:data].count).to eql(1)
         expect(response_hash.dig(:data, 0, :type)).to eq("workspaces")
       end
+
+      it "returns success and get workspaces for member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        get "/api/v1/workspaces", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(1)
+        expect(response_hash.dig(:data, 0, :type)).to eq("workspaces")
+      end
+
+      it "returns success and get workspaces for viewer role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/workspaces", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(1)
+        expect(response_hash.dig(:data, 0, :type)).to eq("workspaces")
+      end
     end
   end
 
@@ -34,7 +54,35 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       end
     end
 
-    context "when it is an authenticated user" do
+    context "when it is an authenticated user fo" do
+      it "returns success and get workspace by id for viewer_role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :type)).to eq("workspaces")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(workspace.name)
+        expect(response_hash.dig(:data, :attributes, :slug)).to eq(workspace.slug)
+        expect(response_hash.dig(:data, :attributes, :organization_id)).to eq(workspace.organization.id)
+        expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
+        expect(response_hash.dig(:data, :attributes, :members_count))
+          .to eq(workspace.users.count)
+      end
+
+      it "returns success and get workspace by id for member role" do
+        workspace.workspace_users.first.update(role: member_role)
+        get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :type)).to eq("workspaces")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(workspace.name)
+        expect(response_hash.dig(:data, :attributes, :slug)).to eq(workspace.slug)
+        expect(response_hash.dig(:data, :attributes, :organization_id)).to eq(workspace.organization.id)
+        expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
+        expect(response_hash.dig(:data, :attributes, :members_count))
+          .to eq(workspace.users.count)
+      end
+
       it "returns success and get workspace by id " do
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
@@ -88,6 +136,20 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
           .to eq(workspace.users.count)
       end
 
+      it "creates a new workspace and returns success for member_role" do
+        workspace.workspace_users.first.update(role: member_role)
+        post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "creates a new workspace and returns success for viewer_role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "returns an error response when creation fails" do
         request_body[:workspace][:organization_id] = "organization_id_wrong"
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
@@ -130,6 +192,22 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west2")
       end
 
+      it "updates the workspace and returns success for viewer_role" do
+        request_body[:workspace][:name] = "test"
+        workspace.workspace_users.first.update(role: viewer_role)
+        put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "updates the workspace and returns success for member_role" do
+        request_body[:workspace][:name] = "test"
+        workspace.workspace_users.first.update(role: member_role)
+        put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "returns an error response when wrong workspace_id" do
         put "/api/v1/workspaces/test", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
@@ -157,6 +235,18 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "returns success and delete workspace" do
         delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns success and delete workspace for viewer_role" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "returns success and delete workspace for member_role" do
+        workspace.workspace_users.first.update(role: member_role)
+        delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unauthorized)
       end
 
       it "returns an error response while delete wrong workspace" do
