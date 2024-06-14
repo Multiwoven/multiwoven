@@ -2,11 +2,11 @@
 
 class WorkspacePolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    true
   end
 
   def show?
-    admin? || member? || viewer?
+    true
   end
 
   def create?

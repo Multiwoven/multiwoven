@@ -9,7 +9,6 @@ module Api
       def index
         result = ListAll.call(user: current_user)
         @workspaces = result.workspaces
-        authorize @workspaces
         render json: @workspaces, status: :ok
       end
 
@@ -17,7 +16,6 @@ module Api
         result = Find.call(id: params[:id], user: current_user)
         if result.workspace
           @workspace = result.workspace
-          authorize @workspace
           render json: @workspace, status: :ok
         else
           render_error(
