@@ -46,6 +46,13 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       )
     end
 
+    let!(:sync_update) { create(:sync, stream_name: "individual", source:, destination:) }
+    let!(:sync_run_dest_update) do
+      create(:sync_run, sync: sync_update, source:, destination:, status: "queued")
+    end
+    let!(:sync_record_update) do
+      create(:sync_record, sync: sync_update, sync_run: sync_run_dest_update, action: "destination_update")
+    end
     before do
       allow(activity).to receive(:heartbeat)
       allow(activity).to receive(:cancel_requested).and_return(false)
@@ -129,7 +136,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         sync_config = sync_individual.to_protocol
         sync_config.sync_run_id = sync_run_individual.id.to_s
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).with(sync_config, [transform]).and_return(multiwoven_message)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_insert").and_return(multiwoven_message)
         expect(subject).to receive(:heartbeat).once.with(activity)
         expect(sync_run_individual).to have_state(:queued)
         subject.write(sync_run_individual.id, activity)
@@ -153,12 +161,14 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       before do
         allow(client).to receive(:connector_spec).and_return(connector_spec)
       end
+
       it "calls process_individual_records method" do
         sync_config = sync_individual.to_protocol
         sync_config.sync_run_id = sync_run_individual.id.to_s
 
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).with(sync_config, [transform]).and_return(multiwoven_message)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_insert").and_return(multiwoven_message)
         expect(subject).to receive(:heartbeat).once.with(activity)
         expect(sync_run_individual).to have_state(:queued)
         subject.write(sync_run_individual.id, activity)
@@ -166,6 +176,24 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         expect(sync_run_individual).to have_state(:in_progress)
         expect(sync_run_individual.sync_records.count).to eq(1)
         sync_run_individual.sync_records.reload.each do |sync_record|
+          expect(sync_record.status).to eq("failed")
+        end
+      end
+
+      it "calls process_individual_records method for destination update" do
+        sync_config = sync_update.to_protocol
+        sync_config.sync_run_id = sync_run_dest_update.id.to_s
+
+        allow(sync_update.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_update").and_return(multiwoven_message)
+        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(sync_run_dest_update).to have_state(:queued)
+        subject.write(sync_run_dest_update.id, activity)
+        sync_run_dest_update.reload
+        expect(sync_run_dest_update).to have_state(:in_progress)
+        expect(sync_run_dest_update.sync_records.count).to eq(1)
+        sync_run_dest_update.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
         end
       end
@@ -225,7 +253,8 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         sync_config = sync_individual.to_protocol
         sync_config.sync_run_id = sync_run_individual.id.to_s
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).with(sync_config, [transform]).and_return(multiwoven_message)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_insert").and_return(multiwoven_message)
         expect(subject).not_to receive(:heartbeat)
         expect(sync_run_individual).to have_state(:queued)
         expect do

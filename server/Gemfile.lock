@@ -1744,7 +1744,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
-    faraday (2.9.0)
+    faraday (2.9.1)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
@@ -1784,9 +1784,10 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-apis-sheets_v4 (0.31.0)
-      google-apis-core (>= 0.14.0, < 2.a)
-    google-cloud-bigquery (1.49.0)
+    google-apis-sheets_v4 (0.32.0)
+      google-apis-core (>= 0.15.0, < 2.a)
+    google-cloud-bigquery (1.49.1)
+      bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.62)
       google-apis-core (~> 0.13)
@@ -1886,7 +1887,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.1.74)
+    multiwoven-integrations (0.1.75)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -2175,7 +2176,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.1.74)
+  multiwoven-integrations (~> 0.1.75)
   newrelic_rpm
   parallel
   pg (~> 1.1)
