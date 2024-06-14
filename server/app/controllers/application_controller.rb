@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
   before_action :authenticate_user!
   before_action :validate_contract
   around_action :handle_with_exception
-  # after_action :verify_authorized
+  after_action :verify_authorized
 
   private
 
