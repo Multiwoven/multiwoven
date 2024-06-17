@@ -115,6 +115,17 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         tracking = subject.write(s_config, [records.first.data.transform_keys(&:to_s)]).tracking
         expect(tracking.success).to eql(1)
       end
+
+      it "write records successfully on update record action destination_update" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.sync_run_id = "33"
+        allow(PG).to receive(:connect).and_return(pg_connection)
+
+        allow(pg_connection).to receive(:exec).and_return(true)
+
+        tracking = subject.write(s_config, [records.first.data.transform_keys(&:to_s)], "destination_update").tracking
+        expect(tracking.success).to eql(1)
+      end
     end
 
     context "failure" do
