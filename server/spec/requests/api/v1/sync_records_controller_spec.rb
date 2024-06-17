@@ -20,7 +20,7 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
   let!(:sync_records) do
     [
       create(:sync_record, sync:, sync_run:, status: "success", primary_key: "key1"),
-      create(:sync_record, sync:, sync_run:, status: "failed", primary_key: "key2")
+      create(:sync_record, sync:, sync_run:, status: "failed", primary_key: "key2", error: { message: "test" })
     ]
   end
   let(:viewer_role) { create(:role, role_name: "Viewer") }
@@ -51,6 +51,10 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           expect(row.dig(:attributes, :record)).to eq(sync_record.record)
           expect(row.dig(:attributes, :action)).to eq(sync_record.action)
           expect(row.dig(:attributes, :status)).to eq(sync_record.status)
+          if sync_record.status == "failed"
+            expect(row.dig(:attributes, :error)).to eq(sync_record.error)
+            expect { JSON.parse(row.dig(:attributes, :error).to_json) }.not_to raise_error
+          end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
       end
@@ -72,6 +76,10 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           expect(row.dig(:attributes, :record)).to eq(sync_record.record)
           expect(row.dig(:attributes, :action)).to eq(sync_record.action)
           expect(row.dig(:attributes, :status)).to eq(sync_record.status)
+          if sync_record.status == "failed"
+            expect(row.dig(:attributes, :error)).to eq(sync_record.error)
+            expect { JSON.parse(row.dig(:attributes, :error).to_json) }.not_to raise_error
+          end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
       end
@@ -93,6 +101,10 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           expect(row.dig(:attributes, :record)).to eq(sync_record.record)
           expect(row.dig(:attributes, :action)).to eq(sync_record.action)
           expect(row.dig(:attributes, :status)).to eq(sync_record.status)
+          if sync_record.status == "failed"
+            expect(row.dig(:attributes, :error)).to eq(sync_record.error)
+            expect { JSON.parse(row.dig(:attributes, :error).to_json) }.not_to raise_error
+          end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
       end
