@@ -35,7 +35,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "insert")
+      def write(sync_config, records, _action = "destination_insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         access_token = connection_config[:access_token]
         url = generate_url(sync_config, connection_config)

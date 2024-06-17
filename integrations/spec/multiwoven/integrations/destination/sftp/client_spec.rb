@@ -112,7 +112,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
       allow(client).to receive(:generate_csv_content).and_return(csv_content)
       allow(mock_sftp_session).to receive(:upload!).and_return(true)
-      response = client.write(sync_config, records, "insert")
+      response = client.write(sync_config, records, "destination_insert")
       expect(response.tracking.success).to eq(records.size)
       expect(response.tracking.failed).to eq(0)
     end
@@ -121,7 +121,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
       allow(client).to receive(:generate_csv_content).and_return(csv_content)
       allow(mock_sftp_session).to receive(:upload!).and_return(true)
-      response = client.write(sync_config_compressed_zip, records, "insert")
+      response = client.write(sync_config_compressed_zip, records, "destination_insert")
       expect(response.tracking.success).to eq(records.size)
       expect(response.tracking.failed).to eq(0)
     end
@@ -129,7 +129,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do
     it "handles the failure with un_compressed " do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
       allow(mock_sftp_session).to receive(:upload!).and_raise(StandardError, "SFTP upload failed")
-      response = client.write(sync_config, records, "insert")
+      response = client.write(sync_config, records, "destination_insert")
 
       # Account for handling failure outside the inner rescue block
       expect(response.tracking.failed).to eq(records.size)
@@ -139,7 +139,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do
     it "handles the failure with compressed " do
       allow(client).to receive(:with_sftp_client).and_yield(mock_sftp_session)
       allow(mock_sftp_session).to receive(:upload!).and_raise(StandardError, "SFTP upload failed")
-      response = client.write(sync_config_compressed_zip, records, "insert")
+      response = client.write(sync_config_compressed_zip, records, "destination_insert")
 
       expect(response.tracking.failed).to eq(records.size)
       expect(response.tracking.success).to eq(0)
@@ -147,7 +147,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Sftp::Client do
 
     it "handles write failure with_sftp_client" do
       allow(client).to receive(:with_sftp_client).and_raise(StandardError.new("write failed"))
-      response = client.write(sync_config, records, "insert")
+      response = client.write(sync_config, records, "destination_insert")
       expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
       expect(response.log).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
       expect(response.log.level).to eq("error")

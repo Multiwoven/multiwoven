@@ -14,7 +14,7 @@ RSpec.describe Multiwoven::Integrations::Core::RateLimiter do
     Class.new do
       prepend Multiwoven::Integrations::Core::RateLimiter
 
-      define_method(:write) do |sync_config, _records, _action = "insert"|
+      define_method(:write) do |sync_config, _records, _action = "destination_insert"|
         Multiwoven::Integrations::Service.logger.info("write called: stream_name: #{sync_config.stream.name}")
       end
     end.new

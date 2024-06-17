@@ -42,7 +42,7 @@ module Multiwoven::Integrations::Destination
         db&.close
       end
 
-      def write(sync_config, records, action = "insert")
+      def write(sync_config, records, action = "destination_insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         table_name = sync_config.stream.name
         db = create_connection(connection_config)
