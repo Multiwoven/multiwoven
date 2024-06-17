@@ -26,6 +26,14 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, 0, :type)).to eq("workspaces")
       end
 
+      it "returns success and get workspaces for workspace header 0" do
+        get "/api/v1/workspaces", headers: auth_headers(user, 0)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(1)
+        expect(response_hash.dig(:data, 0, :type)).to eq("workspaces")
+      end
+
       it "returns success and get workspaces for member role" do
         workspace.workspace_users.first.update(role: member_role)
         get "/api/v1/workspaces", headers: auth_headers(user, workspace_id)
@@ -58,6 +66,20 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "returns success and get workspace by id for viewer_role" do
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :type)).to eq("workspaces")
+        expect(response_hash.dig(:data, :attributes, :name)).to eq(workspace.name)
+        expect(response_hash.dig(:data, :attributes, :slug)).to eq(workspace.slug)
+        expect(response_hash.dig(:data, :attributes, :organization_id)).to eq(workspace.organization.id)
+        expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
+        expect(response_hash.dig(:data, :attributes, :members_count))
+          .to eq(workspace.users.count)
+      end
+
+      it "returns success and get workspace by id for workspace header 0" do
+        workspace.workspace_users.first.update(role: viewer_role)
+        get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, 0)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :type)).to eq("workspaces")

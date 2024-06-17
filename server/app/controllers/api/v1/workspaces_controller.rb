@@ -5,11 +5,11 @@ module Api
   module V1
     class WorkspacesController < ApplicationController
       include Workspaces
+      skip_after_action :verify_authorized, only: %i[index show]
 
       def index
         result = ListAll.call(user: current_user)
         @workspaces = result.workspaces
-        authorize @workspaces
         render json: @workspaces, status: :ok
       end
 
@@ -17,7 +17,6 @@ module Api
         result = Find.call(id: params[:id], user: current_user)
         if result.workspace
           @workspace = result.workspace
-          authorize @workspace
           render json: @workspace, status: :ok
         else
           render_error(
@@ -28,10 +27,10 @@ module Api
       end
 
       def create
+        authorize current_workspace, policy_class: WorkspacePolicy
         result = Create.call(user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-          authorize @workspace
           render json: result.workspace, status: :created
         else
           render_error(
@@ -43,10 +42,10 @@ module Api
       end
 
       def update
+        authorize current_workspace, policy_class: WorkspacePolicy
         result = Update.call(id: params[:id], user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-          authorize @workspace
           render json: @workspace, status: :ok
         else
           render_error(
