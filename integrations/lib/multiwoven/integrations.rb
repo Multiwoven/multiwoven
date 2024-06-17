@@ -27,6 +27,7 @@ require "zip"
 require "zendesk_api"
 require "faraday"
 require "base64"
+require "iterable-api-client"
 
 # Service
 require_relative "integrations/config"
