@@ -99,6 +99,11 @@ module SyncContracts
       end
     end
 
+    # TODO: Enable this once we have implemented frontend for adding names to syncs
+    # rule(sync: :name) do
+    #   key.failure("sync name must be present") if value.to_s.strip.empty?
+    # end
+
     rule(sync: :sync_mode) do
       key.failure("invalid sync mode") if key? && !Sync.sync_modes.keys.include?(value.downcase)
     end
