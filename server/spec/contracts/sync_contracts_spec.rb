@@ -47,8 +47,15 @@ RSpec.describe "SyncContracts" do
       }
     end
 
-    context "with valid inputs" do
+    context "with valid inputs without name" do
       it "passes validation" do
+        expect(contract.call(valid_inputs)).to be_success
+      end
+    end
+
+    context "with valid inputs with name" do
+      it "passes validation" do
+        valid_inputs[:sync][:name] = "sync name"
         expect(contract.call(valid_inputs)).to be_success
       end
     end

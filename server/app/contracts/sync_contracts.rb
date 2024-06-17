@@ -16,6 +16,7 @@ module SyncContracts
   class Create < Dry::Validation::Contract
     params do
       required(:sync).hash do
+        optional(:name).filled(:string)
         optional(:source_id).filled(:integer)
         required(:model_id).filled(:integer)
         required(:destination_id).filled(:integer)
@@ -31,6 +32,11 @@ module SyncContracts
         required(:configuration).filled
       end
     end
+
+    # TODO: Enable this once we have implemented frontend for adding names to syncs
+    # rule(sync: :name) do
+    #   key.failure("sync name must be present") if value.to_s.strip.empty?
+    # end
 
     rule(sync: :sync_mode) do
       key.failure("invalid sync mode") unless Sync.sync_modes.keys.include?(value.downcase)
