@@ -44,6 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "google-apis-sheets_v4"
   spec.add_runtime_dependency "google-cloud-bigquery"
   spec.add_runtime_dependency "hubspot-api-client"
+  spec.add_runtime_dependency "iterable-api-client"
   spec.add_runtime_dependency "net-sftp"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"

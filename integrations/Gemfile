@@ -57,6 +57,8 @@ gem "rubyzip"
 
 gem "faraday"
 
+gem "iterable-api-client"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
