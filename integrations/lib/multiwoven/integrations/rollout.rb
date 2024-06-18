@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.1.76"
+    VERSION = "0.2.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -13,6 +13,7 @@ module Multiwoven
       SalesforceConsumerGoodsCloud
       AwsAthena
       Clickhouse
+      AmazonS3
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

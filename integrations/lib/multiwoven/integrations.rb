@@ -27,6 +27,8 @@ require "zip"
 require "zendesk_api"
 require "faraday"
 require "base64"
+require "aws-sdk-s3"
+require "duckdb"
 require "iterable-api-client"
 
 # Service
@@ -55,6 +57,7 @@ require_relative "integrations/source/databricks/client"
 require_relative "integrations/source/salesforce_consumer_goods_cloud/client"
 require_relative "integrations/source/aws_athena/client"
 require_relative "integrations/source/clickhouse/client"
+require_relative "integrations/source/amazon_s3/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

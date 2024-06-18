@@ -7,14 +7,16 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.1.76)
+    multiwoven-integrations (0.2.0)
       activesupport
       async-websocket
       aws-sdk-athena
+      aws-sdk-s3
       csv
       dry-schema
       dry-struct
       dry-types
+      duckdb
       git
       google-apis-sheets_v4
       google-cloud-bigquery
@@ -68,6 +70,13 @@ GEM
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.8)
       jmespath (~> 1, >= 1.6.1)
+    aws-sdk-kms (1.82.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.151.0)
+      aws-sdk-core (~> 3, >= 3.194.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.8)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
@@ -119,6 +128,8 @@ GEM
       dry-inflector (~> 1.0)
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
+    duckdb (0.10.3.0)
+      bigdecimal (>= 3.1.4)
     ethon (0.16.0)
       ffi (>= 1.15.0)
     faraday (2.8.1)
@@ -133,6 +144,7 @@ GEM
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
     faraday-net_http (3.0.2)
+    ffi (1.16.3)
     ffi (1.16.3-x64-mingw-ucrt)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
@@ -208,6 +220,7 @@ GEM
     parser (3.3.1.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.6)
     pg (1.5.6-x64-mingw-ucrt)
     process_executer (1.1.0)
     public_suffix (5.0.5)
@@ -307,6 +320,7 @@ GEM
       multipart-post (~> 2.0)
 
 PLATFORMS
+  arm64-darwin-22
   x64-mingw-ucrt
   x86_64-darwin-23
 
@@ -314,11 +328,13 @@ DEPENDENCIES
   activesupport
   async-websocket (~> 0.8.0)
   aws-sdk-athena
+  aws-sdk-s3
   byebug
   csv
   dry-schema
   dry-struct
   dry-types
+  duckdb
   faraday
   git
   google-apis-sheets_v4
