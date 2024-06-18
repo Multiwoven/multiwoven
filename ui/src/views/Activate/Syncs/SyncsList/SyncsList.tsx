@@ -14,6 +14,7 @@ import moment from 'moment';
 import NoActivations, { ActivationType } from '../../NoSyncs/NoSyncs';
 import StatusTag from '@/components/StatusTag';
 import { ErrorResponse, CreateSyncResponse, SyncColumnFields } from '@/views/Activate/Syncs/types';
+import { useStore } from '@/stores';
 
 type TableItem = {
   field: SyncColumnFields;
@@ -22,6 +23,12 @@ type TableItem = {
 
 const TableItem = ({ field, data }: TableItem): JSX.Element => {
   switch (field) {
+    case 'name':
+      return (
+        <Text size='sm' fontWeight={600} color='black.500'>
+          {data.attributes.name}
+        </Text>
+      );
     case 'model':
       return (
         <EntityItem
@@ -47,12 +54,15 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
 };
 
 const SyncsList = (): JSX.Element => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
-    queryKey: SYNCS_LIST_QUERY_KEY,
+    queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId],
     queryFn: () => fetchSyncs(),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
+    enabled: activeWorkspaceId > 0,
   });
 
   const syncList = data?.data;

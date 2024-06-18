@@ -13,11 +13,12 @@ import {
   Button,
 } from '@chakra-ui/react';
 import Columns from './Columns';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getSyncsConfiguration } from '@/services/syncs';
 import StaticOptions from './StaticOptions';
 import TemplateOptions from './TemplateOptions';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
 
 export enum OPTION_TYPE {
   STANDARD = 'standard',
@@ -81,12 +82,14 @@ const TemplateMapping = ({
     mappingType === OPTION_TYPE.STATIC ? selectedConfig : '',
   );
 
-  const { data } = useQuery({
-    queryKey: ['syncsConfiguration'],
-    queryFn: () => getSyncsConfiguration(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+  const { data } = useQueryWrapper<SyncsConfigurationForTemplateMapping, Error>(
+    ['syncsConfiguration'],
+    () => getSyncsConfiguration(),
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const staticValueOptions = Object.keys(
     data?.data?.configurations?.catalog_mapping_types?.static || {},

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { Box, Image, Tabs, Text } from '@chakra-ui/react';
 
 import { getSyncRecords } from '@/services/syncs';
@@ -18,6 +17,9 @@ import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
 import { SyncRecordStatus } from '../types';
 import { FilterTabs } from './FilterTabs';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { ApiResponse } from '@/services/common';
+import { SyncRecordResponse } from '@/views/Activate/Syncs/types';
 
 const SyncRecords = (): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,15 +35,17 @@ const SyncRecords = (): JSX.Element => {
     data: syncRunRecords,
     isLoading: isSyncRecordsLoading,
     isError: isSyncRecordsError,
-  } = useQuery({
-    queryKey: ['activate', 'sync-records', syncRunId, currentPage],
-    queryFn: () => getSyncRecords(syncId as string, syncRunId as string, currentPage.toString()),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+  } = useQueryWrapper<ApiResponse<Array<SyncRecordResponse>>, Error>(
+    ['activate', 'sync-records', syncRunId, currentPage],
+    () => getSyncRecords(syncId as string, syncRunId as string, currentPage.toString()),
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const filteredRecords = useMemo(
-    () => syncRunRecords?.data.filter((record) => record.attributes.status === currentFilter),
+    () => syncRunRecords?.data?.filter?.((record) => record.attributes.status === currentFilter),
     [syncRunRecords, currentFilter],
   );
 
@@ -73,7 +77,6 @@ const SyncRecords = (): JSX.Element => {
         (acc, { key }) => ({
           ...acc,
           [key]: <TableItem field={key} data={data} />,
-          id: data.id,
         }),
         {},
       );

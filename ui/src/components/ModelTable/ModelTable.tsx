@@ -1,21 +1,26 @@
 import GenerateTable from '@/components/Table/Table';
-import { getAllModels } from '@/services/models';
+import { getAllModels, APIData } from '@/services/models';
 import { addIconDataToArray, ConvertToTableData } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
 import NoModels from '@/views/Models/NoModels';
 import Loader from '@/components/Loader';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { useStore } from '@/stores';
 
 type ModelTableProps = {
   handleOnRowClick: (args: unknown) => void;
 };
 
 const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
-  const { data } = useQuery({
-    queryKey: ['models'],
-    queryFn: () => getAllModels(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
+  const { data } = useQueryWrapper<APIData, Error>(
+    ['models', activeWorkspaceId],
+    () => getAllModels(),
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const models = data?.data;
 

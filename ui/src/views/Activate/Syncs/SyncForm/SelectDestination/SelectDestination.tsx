@@ -6,10 +6,11 @@ import DestinationsTable from '@/views/Connectors/Destinations/DestinationsList/
 import NoConnectors from '@/views/Connectors/NoConnectors';
 import { DESTINATIONS_LIST_QUERY_KEY } from '@/views/Connectors/constant';
 import { Box } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
 import { useContext, Dispatch, SetStateAction } from 'react';
 import { Stream, FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { ConnectorListResponse } from '@/views/Connectors/types';
 
 const SelectDestination = ({
   setSelectedStream,
@@ -28,12 +29,14 @@ const SelectDestination = ({
     handleMoveForward(stepInfo?.formKey as string, data?.connector);
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: DESTINATIONS_LIST_QUERY_KEY,
-    queryFn: () => getUserConnectors('destination'),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading } = useQueryWrapper<ConnectorListResponse, Error>(
+    DESTINATIONS_LIST_QUERY_KEY,
+    () => getUserConnectors('destination'),
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   if (isLoading && !data) return <Loader />;
 

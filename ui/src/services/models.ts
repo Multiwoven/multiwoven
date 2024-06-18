@@ -11,7 +11,7 @@ export type APIData = {
   links?: Record<string, string>;
 };
 
-type ModelAPIResponse<T> = {
+export type ModelAPIResponse<T> = {
   success: boolean;
   data?: T;
 };

@@ -7,6 +7,7 @@ import { ConnectorItem } from '@/views/Connectors/types';
 import { getModelPreviewById } from '@/services/models';
 import { useEffect, SetStateAction, Dispatch } from 'react';
 import { FiInfo } from 'react-icons/fi';
+import { useStore } from '@/stores';
 
 type SelectStreamsProps = {
   model: ModelEntity;
@@ -37,26 +38,28 @@ const SelectStreams = ({
   selectedCursorField,
   setCursorField,
 }: SelectStreamsProps): JSX.Element | null => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { data: catalogData } = useQuery({
-    queryKey: ['syncs', 'catalog', destination.id],
+    queryKey: ['syncs', 'catalog', destination.id, activeWorkspaceId],
     queryFn: () => getCatalog(destination.id),
-    enabled: !!destination.id,
+    enabled: !!destination.id && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
   const { data: modelDiscoverData } = useQuery({
-    queryKey: ['syncs', 'catalog', model.id],
+    queryKey: ['syncs', 'catalog', model.id, activeWorkspaceId],
     queryFn: () => getCatalog(model.id),
-    enabled: !!model.id,
+    enabled: !!model.id && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
   const { data: previewModelData } = useQuery({
-    queryKey: ['syncs', 'preview-model', model?.connector?.id],
+    queryKey: ['syncs', 'preview-model', model?.connector?.id, activeWorkspaceId],
     queryFn: () => getModelPreviewById(model?.query, String(model?.connector?.id)),
-    enabled: !!model?.connector?.id,
+    enabled: !!model?.connector?.id && activeWorkspaceId > 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

@@ -10,7 +10,7 @@ import {
 import { apiRequest, multiwovenFetch } from './common';
 import { RJSFSchema } from '@rjsf/utils';
 
-type ConnectorsDefinationApiResponse = {
+export type ConnectorsDefinationApiResponse = {
   success: boolean;
   data?: Connector[];
 };

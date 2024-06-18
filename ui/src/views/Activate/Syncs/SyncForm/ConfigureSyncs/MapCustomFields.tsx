@@ -8,6 +8,7 @@ import FieldMap from './FieldMap';
 import { useEffect, useState } from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { OPTION_TYPE } from './TemplateMapping/TemplateMapping';
+import { useStore } from '@/stores';
 
 type MapCustomFieldsProps = {
   model: ModelEntity;
@@ -29,10 +30,13 @@ const MapCustomFields = ({
   stream,
 }: MapCustomFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([{ from: '', to: '', mapping_type: '' }]);
+
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { data: previewModelData } = useQuery({
-    queryKey: ['syncs', 'preview-model', model?.connector?.id],
+    queryKey: ['syncs', 'preview-model', model?.connector?.id, activeWorkspaceId],
     queryFn: () => getModelPreviewById(model?.query, String(model?.connector?.id)),
-    enabled: !!model?.connector?.id,
+    enabled: !!model?.connector?.id && activeWorkspaceId > 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

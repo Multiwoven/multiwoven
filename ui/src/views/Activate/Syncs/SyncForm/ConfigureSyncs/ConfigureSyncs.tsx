@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCatalog } from '@/services/syncs';
 import { SchemaMode } from '@/views/Activate/Syncs/types';
 import Loader from '@/components/Loader';
+import { useStore } from '@/stores';
 
 type ConfigureSyncsProps = {
   selectedStream: Stream | null;
@@ -48,6 +49,8 @@ const ConfigureSyncs = ({
   const destinationInfo = forms.find((form) => form.stepKey === 'selectDestination');
   const selectedDestination = destinationInfo?.data?.selectDestination as ConnectorItem;
 
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const handleOnStreamChange = (stream: Stream) => {
     setSelectedStream(stream);
   };
@@ -72,9 +75,9 @@ const ConfigureSyncs = ({
   };
 
   const { data: catalogData } = useQuery({
-    queryKey: ['syncs', 'catalog', selectedDestination?.id],
+    queryKey: ['syncs', 'catalog', selectedDestination?.id, activeWorkspaceId],
     queryFn: () => getCatalog(selectedDestination?.id),
-    enabled: !!selectedDestination?.id,
+    enabled: !!selectedDestination?.id && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
