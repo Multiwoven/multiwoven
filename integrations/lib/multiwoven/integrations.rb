@@ -27,6 +27,7 @@ require "zip"
 require "zendesk_api"
 require "faraday"
 require "base64"
+require "iterable-api-client"
 
 # Service
 require_relative "integrations/config"
@@ -69,6 +70,7 @@ require_relative "integrations/destination/sftp/client"
 require_relative "integrations/destination/postgresql/client"
 require_relative "integrations/destination/zendesk/client"
 require_relative "integrations/destination/http/client"
+require_relative "integrations/destination/iterable/client"
 
 module Multiwoven
   module Integrations

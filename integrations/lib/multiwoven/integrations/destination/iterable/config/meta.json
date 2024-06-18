@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Iterable",
+    "title": "Iterable",
+    "connector_type": "destination",
+    "category": "Marketing Automation",
+    "documentation_url": "https://docs.multiwoven.com/destinations/iterable",
+    "github_issue_label": "destination-iterable",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

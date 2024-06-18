@@ -1,0 +1,47 @@
+{
+  "request_rate_limit": 6000,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "Catalogs",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "catalog": {
+            "type": "string"
+          }
+        }
+      },
+      "response_type": "application/json",
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true
+    },
+    {
+      "name": "CatalogItems",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "required": ["catalog_name", "item_id", "item_attribute"],
+        "properties": {
+          "catalog_name": {
+            "type": "string"
+          },
+          "item_id": {
+            "type": "string"
+          },
+          "item_attribute": {
+            "type": "string",
+            "description": "String must be in json format"
+          }
+        }
+      },
+      "response_type": "application/json",
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["updated"],
+      "source_defined_primary_key": [["catalog_name"]]
+    }
+  ]
+}
