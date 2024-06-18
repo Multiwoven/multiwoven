@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useConfigStore } from '@/stores/useConfigStore';
+import { useStore } from '@/stores';
 
 export interface ApiResponse {
   success: boolean;
@@ -11,12 +12,13 @@ export interface ApiResponse {
 // Function to create axios instance with the current apiHost
 function createAxiosInstance(apiHost: string) {
   const instance = axios.create({
-    baseURL: `${apiHost}/api/v1/`,
+    baseURL: `${apiHost}`,
   });
 
   instance.interceptors.request.use(function requestSuccess(config) {
     const token = Cookies.get('authToken');
     config.headers['Content-Type'] = 'application/json';
+    config.headers['Workspace-Id'] = useStore.getState().workspaceId;
     config.headers['Authorization'] = `Bearer ${token}`;
     config.headers['Accept'] = '*/*';
     return config;
@@ -33,6 +35,7 @@ function createAxiosInstance(apiHost: string) {
             if (window.location.pathname !== '/sign-in') {
               window.location.href = '/sign-in';
               Cookies.remove('authToken');
+              useStore.getState().clearState();
             }
             break;
           case 403:
@@ -45,18 +48,18 @@ function createAxiosInstance(apiHost: string) {
             break;
         }
       }
-      return Promise.reject(error);
+      return error.response;
     },
   );
 
   return instance;
 }
 
-let axiosInstance = createAxiosInstance(useConfigStore.getState().configs.apiHost);
+let axiosInstance = createAxiosInstance(useConfigStore.getState().configs.apiHost + '/api/v1/');
 
 // Subscribe to changes in the Zustand store and recreate axios instance when apiHost changes
 useConfigStore.subscribe((state) => {
-  axiosInstance = createAxiosInstance(state.configs.apiHost);
+  axiosInstance = createAxiosInstance(state.configs.apiHost + '/api/v1/');
 });
 
 export const apiRequest = async (url: string, values: any): Promise<ApiResponse> => {
@@ -116,7 +119,7 @@ export const getConnectorData = async (connectorID: string): Promise<ApiResponse
 
 type MultiwovenFetchProps<PayloadType> = {
   url: string;
-  method: 'get' | 'post' | 'put' | 'delete';
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
   data?: PayloadType;
 };
 
@@ -125,26 +128,13 @@ export const multiwovenFetch = async <PayloadType, ResponseType>({
   method,
   data,
 }: MultiwovenFetchProps<PayloadType>): Promise<ResponseType> => {
-  if (method === 'post')
-    return axiosInstance
-      .post(url, data)
-      .then((res) => res?.data)
-      .catch((err) => err?.response);
+  if (method === 'post') return axiosInstance.post(url, data).then((res) => res?.data);
 
-  if (method === 'put')
-    return axiosInstance
-      .put(url, data)
-      .then((res) => res?.data)
-      .catch((err) => err?.response);
+  if (method === 'put') return axiosInstance.put(url, data).then((res) => res?.data);
 
-  if (method === 'delete')
-    return axiosInstance
-      .delete(url)
-      .then((res) => res?.data)
-      .catch((err) => err?.response);
+  if (method === 'delete') return axiosInstance.delete(url).then((res) => res?.data);
 
-  return axiosInstance
-    .get(url)
-    .then((res) => res?.data)
-    .catch((err) => err?.response);
+  if (method === 'patch') return axiosInstance.patch(url, data).then((res) => res?.data);
+
+  return axiosInstance.get(url).then((res) => res?.data);
 };

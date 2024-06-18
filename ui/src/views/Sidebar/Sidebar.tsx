@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fi';
 import { NavButton } from './navButton';
 import Profile from './Profile';
+import Workspace from './Workspace/Workspace';
 
 import { useConfigStore } from '@/stores/useConfigStore';
 
@@ -94,7 +95,9 @@ const SideBarFooter = () => (
   <Stack position='absolute' bottom='0' left='0px' right='0px' margin='24px 16px'>
     <Box />
     <Stack spacing='0'>
-      <NavButton label='Settings' icon={FiSettings} disabled={true} />
+      <NavLink to='/settings'>
+        <NavButton label='Settings' icon={FiSettings} />
+      </NavLink>
       <NavLink to='https://docs.multiwoven.com/get-started/introduction'>
         <NavButton label='Documentation' icon={FiBookOpen} />
       </NavLink>
@@ -124,6 +127,7 @@ const Sidebar = (): JSX.Element => {
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />
             </Box>
+            <Workspace />
             {menus.map(renderMenuSection)}
             <SideBarFooter />
           </Stack>

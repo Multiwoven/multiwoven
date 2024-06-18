@@ -1,4 +1,4 @@
-import { getUserProfile, logout } from '@/services/user';
+import { getUserProfile, logout, ProfileAPIResponse } from '@/services/user';
 import {
   Avatar,
   Box,
@@ -13,24 +13,30 @@ import {
 } from '@chakra-ui/react';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
-import { useQuery } from '@tanstack/react-query';
 import { FiLogOut, FiMoreVertical } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import Cookies from 'js-cookie';
+import { useStore } from '@/stores';
 
 const Profile = () => {
-  const { data } = useQuery({
-    queryKey: ['users', 'profile', 'me'],
-    queryFn: () => getUserProfile(),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+  const { data } = useQueryWrapper<ProfileAPIResponse, Error>(
+    ['users', 'profile', 'me'],
+    () => getUserProfile(),
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const showToast = useCustomToast();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const logoutResponse = await logout();
+
     if (logoutResponse.data) {
+      window.location.href = '/sign-in';
+      Cookies.remove('authToken');
+      useStore.getState().clearState();
       showToast({
         title: 'Signed out successfully',
         isClosable: true,
@@ -38,7 +44,6 @@ const Profile = () => {
         status: CustomToastStatus.Success,
         position: 'bottom-right',
       });
-      navigate('/sign-in');
     }
   };
 

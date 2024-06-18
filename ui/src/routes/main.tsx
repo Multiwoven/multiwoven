@@ -8,6 +8,7 @@ const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
 
 const SetupActivate = lazy(() => import('@/views/Activate/SetupActivate'));
+const Settings = lazy(() => import('@/views/Settings'));
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -65,6 +66,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute='/activate'>
         <SetupActivate />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Settings',
+    url: '/settings/*',
+    component: (
+      <SuspenseWithLoader redirectRoute='/settings'>
+        <Settings />
       </SuspenseWithLoader>
     ),
   },
