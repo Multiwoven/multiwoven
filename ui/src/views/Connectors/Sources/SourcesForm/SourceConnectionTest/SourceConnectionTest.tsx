@@ -18,6 +18,7 @@ import SourceFormFooter from '../SourceFormFooter';
 import { CONNECTION_STATUS } from '@/views/Connectors/constant';
 import { FiAlertOctagon, FiCheck } from 'react-icons/fi';
 import ContentContainer from '@/components/ContentContainer';
+import { useStore } from '@/stores';
 
 const CONNECT_TO_SOURCES_KEY = 'connectToSources';
 
@@ -34,6 +35,8 @@ const STATUS_TEXT_COLOR = {
 };
 
 const SourceConnectionTest = (): JSX.Element | null => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
 
@@ -53,9 +56,9 @@ const SourceConnectionTest = (): JSX.Element | null => {
     refetch: retrySourceConnection,
     isFetching,
   } = useQuery({
-    queryKey: ['connector_definition', 'test-connection', 'source'],
+    queryKey: ['connector_definition', 'test-connection', 'source', activeWorkspaceId],
     queryFn: () => getConnectionStatus(processedSourceConfig as TestConnectionPayload),
-    enabled: !!processedSourceConfig,
+    enabled: !!processedSourceConfig && activeWorkspaceId > 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

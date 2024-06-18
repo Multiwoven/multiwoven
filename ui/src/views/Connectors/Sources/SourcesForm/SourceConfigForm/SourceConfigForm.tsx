@@ -12,19 +12,21 @@ import { processFormData } from '@/views/Connectors/helpers';
 import ContentContainer from '@/components/ContentContainer';
 import { generateUiSchema } from '@/utils/generateUiSchema';
 import JSONSchemaForm from '@/components/JSONSchemaForm';
+import { useStore } from '@/stores';
 
 const SourceConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
   const selectedDataSource = forms.find(({ stepKey }) => stepKey === 'datasource');
   const datasource = selectedDataSource?.data?.datasource as string;
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   if (!datasource) return null;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['connector_definition', datasource],
+    queryKey: ['connector_definition', datasource, activeWorkspaceId],
     queryFn: () => getConnectorDefinition('source', datasource),
-    enabled: !!datasource,
+    enabled: !!datasource && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

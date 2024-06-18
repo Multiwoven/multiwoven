@@ -19,6 +19,7 @@ import { FiAlertOctagon, FiCheck } from 'react-icons/fi';
 import { useUiConfig } from '@/utils/hooks';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import ContentContainer from '@/components/ContentContainer';
+import { useStore } from '@/stores';
 
 const CONNECT_TO_DESTINATION_KEY = 'destinationConfig';
 
@@ -39,7 +40,7 @@ const DestinationConnectionTest = (): JSX.Element | null => {
   const { forms } = state;
   const { maxContentWidth } = useUiConfig();
 
-  const selectedDestination = forms.find(({ stepKey }) => stepKey === 'destination')?.data
+  let selectedDestination = forms.find(({ stepKey }) => stepKey === 'destination')?.data
     ?.destination as string;
 
   const destinationConfigForm = forms.find(({ stepKey }) => stepKey === CONNECT_TO_DESTINATION_KEY);
@@ -51,14 +52,20 @@ const DestinationConnectionTest = (): JSX.Element | null => {
     [forms],
   );
 
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
+  if (+activeWorkspaceId === 18 && selectedDestination.toLowerCase() === 'postgresql') {
+    selectedDestination = 'AIS Datastore';
+  }
+
   const {
     data: connectionResponse,
     refetch: retryDestinationConnection,
     isFetching,
   } = useQuery({
-    queryKey: ['connector_definition', 'test-connection', 'destination'],
+    queryKey: ['connector_definition', 'test-connection', 'destination', activeWorkspaceId],
     queryFn: () => getConnectionStatus(processedDestinationConfig as TestConnectionPayload),
-    enabled: !!processedDestinationConfig,
+    enabled: !!processedDestinationConfig && activeWorkspaceId > 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

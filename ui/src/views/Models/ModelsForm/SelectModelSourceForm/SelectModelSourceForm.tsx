@@ -8,10 +8,11 @@ import NoConnectors from '@/views/Connectors/NoConnectors';
 import { CONNECTOR_LIST_COLUMNS } from '@/views/Connectors/constant';
 import { ConnectorAttributes, ConnectorTableColumnFields } from '@/views/Connectors/types';
 import { Box, Text } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useContext, useMemo } from 'react';
 import StatusTag from '@/components/StatusTag';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { ConnectorListResponse } from '@/views/Connectors/types';
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -41,12 +42,14 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 const SelectModelSourceForm = (): JSX.Element | null => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['models', 'data-source'],
-    queryFn: () => getUserConnectors('Source'),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading } = useQueryWrapper<ConnectorListResponse, Error>(
+    ['models', 'data-source'],
+    () => getUserConnectors('Source'),
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const connectors = data?.data;
 

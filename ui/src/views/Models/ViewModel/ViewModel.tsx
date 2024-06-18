@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import TopBar from '@/components/TopBar/TopBar';
-import { getModelById, putModelById } from '@/services/models';
+import { getModelById, putModelById, ModelAPIResponse } from '@/services/models';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Step } from '@/components/Breadcrumbs/types';
 
@@ -28,17 +27,23 @@ import moment from 'moment';
 import ModelActions from './ModelActions';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { GetModelByIdResponse } from '@/views/Models/types';
+import { useStore } from '@/stores';
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
   const showToast = useCustomToast();
   const navigate = useNavigate();
 
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const model_id = params.id || '';
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['modelByID'],
-    queryFn: () => getModelById(model_id || ''),
+  const { data, isLoading, isError } = useQueryWrapper<
+    ModelAPIResponse<GetModelByIdResponse>,
+    Error
+  >(['modelByID', activeWorkspaceId, model_id], () => getModelById(model_id || ''), {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     retryOnMount: true,

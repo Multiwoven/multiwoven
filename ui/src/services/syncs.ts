@@ -7,8 +7,7 @@ import {
   SyncsConfigurationForTemplateMapping,
   SyncRunsResponse,
 } from '@/views/Activate/Syncs/types';
-import { multiwovenFetch } from './common';
-import { ApiResponse } from '@/views/Connectors/types';
+import { multiwovenFetch, ApiResponse } from './common';
 
 export const getCatalog = (connectorId: string): Promise<DiscoverResponse> =>
   multiwovenFetch<null, DiscoverResponse>({

@@ -23,6 +23,8 @@ import { FormikProps, useFormik } from 'formik';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
+import { useStore } from '@/stores';
+import titleCase from '@/utils/TitleCase';
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
@@ -30,6 +32,7 @@ const EditSync = (): JSX.Element | null => {
   const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
   const [selectedSyncMode, setSelectedSyncMode] = useState('');
   const [cursorField, setCursorField] = useState('');
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   const { syncId } = useParams();
   const showToast = useCustomToast();
@@ -41,27 +44,27 @@ const EditSync = (): JSX.Element | null => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['sync', syncId],
+    queryKey: ['sync', syncId, activeWorkspaceId],
     queryFn: () => getSyncById(syncId as string),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    enabled: !!syncId,
+    enabled: !!syncId && activeWorkspaceId > 0,
   });
 
-  const syncData = syncFetchResponse?.data.attributes;
+  const syncData = syncFetchResponse?.data?.attributes;
 
   const { data: destinationFetchResponse, isLoading: isConnectorInfoLoading } = useQuery({
-    queryKey: ['sync', 'destination', syncData?.destination.id],
+    queryKey: ['sync', 'destination', syncData?.destination.id, activeWorkspaceId],
     queryFn: () => getConnectorInfo(syncData?.destination.id as string),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    enabled: !!syncData?.destination.id,
+    enabled: !!syncData?.destination.id && activeWorkspaceId > 0,
   });
 
   const { data: catalogData } = useQuery({
-    queryKey: ['syncs', 'catalog', syncData?.destination.id],
+    queryKey: ['syncs', 'catalog', syncData?.destination.id, activeWorkspaceId],
     queryFn: () => getCatalog(syncData?.destination?.id as string),
-    enabled: !!syncData?.destination.id,
+    enabled: !!syncData?.destination.id && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -100,7 +103,7 @@ const EditSync = (): JSX.Element | null => {
           };
 
           const editSyncResponse = await editSync(payload, syncId as string);
-          if (editSyncResponse.data.attributes) {
+          if (editSyncResponse?.data?.attributes) {
             showToast({
               title: 'Sync updated successfully',
               status: CustomToastStatus.Success,
@@ -115,6 +118,17 @@ const EditSync = (): JSX.Element | null => {
 
             navigate('/activate/syncs');
             return;
+          } else {
+            editSyncResponse.errors?.forEach((error) => {
+              showToast({
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom-right',
+                colorScheme: 'red',
+                status: CustomToastStatus.Warning,
+                title: titleCase(error.detail),
+              });
+            });
           }
         }
       } catch {
@@ -153,11 +167,11 @@ const EditSync = (): JSX.Element | null => {
         cron_expression: syncData?.cron_expression ?? '',
       });
 
-      if (Array.isArray(syncFetchResponse.data.attributes.configuration)) {
+      if (Array.isArray(syncFetchResponse?.data?.attributes?.configuration)) {
         setConfiguration(syncFetchResponse.data.attributes.configuration);
       } else {
         const transformedConfigs = Object.entries(
-          syncFetchResponse.data.attributes.configuration,
+          syncFetchResponse?.data?.attributes?.configuration || {},
         ).map(([model, destination]) => {
           return {
             from: model,

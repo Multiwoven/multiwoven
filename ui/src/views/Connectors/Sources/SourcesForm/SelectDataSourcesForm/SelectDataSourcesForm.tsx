@@ -1,21 +1,23 @@
 import { useContext } from 'react';
 import { Box, Image, Text } from '@chakra-ui/react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
-import { getConnectorsDefintions } from '@/services/connectors';
-import { useQuery } from '@tanstack/react-query';
+import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
 import { DatasourceType } from '@/views/Connectors/types';
 import ContentContainer from '@/components/ContentContainer';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
 
 const SelectDataSourcesForm = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-  const { data } = useQuery({
-    queryKey: ['datasources', 'source'],
-    queryFn: () => getConnectorsDefintions('source'),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    gcTime: Infinity,
-  });
+  const { data } = useQueryWrapper<ConnectorsDefinationApiResponse, Error>(
+    ['datasources', 'source'],
+    () => getConnectorsDefintions('source'),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      gcTime: Infinity,
+    },
+  );
 
   const datasources = data?.data ?? [];
 

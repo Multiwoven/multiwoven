@@ -23,10 +23,13 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { generateUiSchema } from '@/utils/generateUiSchema';
 import JSONSchemaForm from '../../../../components/JSONSchemaForm';
+import { useStore } from '@/stores';
 
 const EditDestination = (): JSX.Element => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { destinationId } = useParams();
-  const CONNECTOR_INFO_KEY = ['connectorInfo', 'destination', destinationId];
+  const CONNECTOR_INFO_KEY = ['connectorInfo', 'destination', destinationId, activeWorkspaceId];
   const queryClient = useQueryClient();
 
   const showToast = useCustomToast();
@@ -41,25 +44,25 @@ const EditDestination = (): JSX.Element => {
     queryFn: () => getConnectorInfo(destinationId as string),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    enabled: !!destinationId,
+    enabled: !!destinationId && activeWorkspaceId > 0,
   });
 
   const connectorInfo = connectorInfoResponse?.data;
   const connectorName = connectorInfo?.attributes?.connector_name;
 
   const { data: connectorDefinitionResponse, isLoading: isConnectorDefinitionLoading } = useQuery({
-    queryKey: ['connector_definition', connectorName],
+    queryKey: ['connector_definition', connectorName, activeWorkspaceId],
     queryFn: () => getConnectorDefinition('destination', connectorName as string),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!connectorName,
+    enabled: !!connectorName && activeWorkspaceId > 0,
   });
 
   const connectorSchema = connectorDefinitionResponse?.data?.connector_spec;
 
   useEffect(() => {
     setFormData(connectorInfo?.attributes?.configuration);
-  }, [connectorDefinitionResponse]);
+  }, [connectorDefinitionResponse, connectorInfoResponse]);
 
   const handleOnSaveChanges = async () => {
     if (!connectorInfo?.attributes) return;

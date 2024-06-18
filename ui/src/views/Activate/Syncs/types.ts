@@ -85,6 +85,7 @@ export type ErrorResponse = {
 
 export type CreateSyncResponse = {
   attributes: {
+    name: string;
     created_at: Date;
     updated_at: Date;
     configuration: Record<string, string>;
@@ -117,7 +118,7 @@ export type CreateSyncResponse = {
   type: 'syncs';
 };
 
-export type SyncColumnFields = 'model' | 'destination' | 'lastUpdated' | 'status';
+export type SyncColumnFields = 'name' | 'model' | 'destination' | 'lastUpdated' | 'status';
 
 export type SyncColumnEntity = {
   key: SyncColumnFields;

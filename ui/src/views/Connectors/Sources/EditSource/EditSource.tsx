@@ -24,8 +24,11 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import JSONSchemaForm from '../../../../components/JSONSchemaForm';
 import { generateUiSchema } from '@/utils/generateUiSchema';
+import { useStore } from '@/stores';
 
 const EditSource = (): JSX.Element => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { sourceId } = useParams();
   const showToast = useCustomToast();
   const navigate = useNavigate();
@@ -35,29 +38,29 @@ const EditSource = (): JSX.Element => {
   const [testedFormData, setTestedFormData] = useState<unknown>(null);
 
   const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } = useQuery({
-    queryKey: ['connectorInfo', sourceId],
+    queryKey: ['connectorInfo', sourceId, activeWorkspaceId],
     queryFn: () => getConnectorInfo(sourceId as string),
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    enabled: !!sourceId,
+    enabled: !!sourceId && activeWorkspaceId > 0,
   });
 
   const connectorInfo = connectorInfoResponse?.data;
   const connectorName = connectorInfo?.attributes?.connector_name;
 
   const { data: connectorDefinitionResponse, isLoading: isConnectorDefinitionLoading } = useQuery({
-    queryKey: ['connector_definition', connectorName],
+    queryKey: ['connector_definition', connectorName, activeWorkspaceId],
     queryFn: () => getConnectorDefinition('source', connectorName as string),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!connectorName,
+    enabled: !!connectorName && activeWorkspaceId > 0,
   });
 
   const connectorSchema = connectorDefinitionResponse?.data?.connector_spec;
 
   useEffect(() => {
     setFormData(connectorInfo?.attributes?.configuration);
-  }, [connectorDefinitionResponse]);
+  }, [connectorDefinitionResponse, connectorInfoResponse]);
 
   const handleOnSaveChanges = async () => {
     if (!connectorInfo?.attributes) return;

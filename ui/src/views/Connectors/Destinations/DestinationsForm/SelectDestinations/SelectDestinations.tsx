@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-import { getConnectorsDefintions } from '@/services/connectors';
+import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
 import { getDestinationCategories } from '@/views/Connectors/helpers';
 import { useContext, useState } from 'react';
 import { Box, Grid, Image, Text, Wrap } from '@chakra-ui/react';
@@ -7,17 +6,21 @@ import ContentContainer from '@/components/ContentContainer';
 import { ALL_DESTINATIONS_CATEGORY } from '@/views/Connectors/constant';
 import { Connector } from '@/views/Connectors/types';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
 
 const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL_DESTINATIONS_CATEGORY);
-  const { data } = useQuery({
-    queryKey: ['datasources', 'destination'],
-    queryFn: () => getConnectorsDefintions('destination'),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    gcTime: Infinity,
-  });
+
+  const { data } = useQueryWrapper<ConnectorsDefinationApiResponse, Error>(
+    ['datasources', 'destination'],
+    () => getConnectorsDefintions('destination'),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      gcTime: Infinity,
+    },
+  );
 
   const connectors = data?.data ?? [];
   const destinationCategories = getDestinationCategories(connectors);
