@@ -15,6 +15,7 @@ import SyncRuns from '../SyncRuns';
 import { Step } from '@/components/Breadcrumbs/types';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
+import { useStore } from '@/stores';
 
 enum SyncTabs {
   Tab1 = 'runs',
@@ -22,6 +23,8 @@ enum SyncTabs {
 }
 
 const ViewSync = (): JSX.Element => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const [syncTab, setSyncTab] = useState<SyncTabs>(SyncTabs.Tab1);
   const { syncId } = useParams();
   const toast = useCustomToast();
@@ -31,14 +34,14 @@ const ViewSync = (): JSX.Element => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['sync', syncId],
+    queryKey: ['sync', syncId, activeWorkspaceId],
     queryFn: () => getSyncById(syncId as string),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!syncId,
+    enabled: !!syncId && activeWorkspaceId > 0,
   });
 
-  const syncData = syncFetchResponse?.data.attributes;
+  const syncData = syncFetchResponse?.data?.attributes;
 
   const EDIT_SYNC_FORM_STEPS: Step[] = [
     {
@@ -46,7 +49,7 @@ const ViewSync = (): JSX.Element => {
       url: '/activate/syncs',
     },
     {
-      name: 'Sync ' + syncId,
+      name: syncData?.name || '',
       url: '',
     },
   ];

@@ -8,8 +8,11 @@ import { Box, Divider, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useEffect } from 'react';
+import { useStore } from '@/stores';
 
 export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncRunId: string }) => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const toast = useCustomToast();
 
   const { data: syncRunData, isError: isSyncRunDataError } = useQuery({
@@ -17,6 +20,7 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
     queryFn: () => getSyncRunById(syncId || '', syncRunId || ''),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: activeWorkspaceId > 0,
   });
 
   const VIEW_SYNC_RUN_RECORDS_STEPS: Step[] = [
@@ -34,7 +38,7 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
     },
   ];
 
-  const variant = syncRunData?.data.attributes.status as StatusTagVariants;
+  const variant = syncRunData?.data?.attributes?.status as StatusTagVariants;
   const tagText = StatusTagText[variant];
 
   useEffect(() => {
@@ -80,7 +84,7 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
             Start Time :{' '}
           </Text>
           <Text size='sm' fontWeight='semibold'>
-            {moment(syncRunData?.data.attributes.started_at).format('DD/MM/YYYY HH:mm a')}
+            {moment(syncRunData?.data?.attributes?.started_at).format('DD/MM/YYYY HH:mm a')}
           </Text>
           <Divider
             orientation='vertical'
@@ -93,7 +97,7 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
             Duration :{' '}
           </Text>
           <Text size='sm' fontWeight='semibold'>
-            {syncRunData?.data.attributes.duration
+            {syncRunData?.data?.attributes?.duration
               ? syncRunData?.data.attributes.duration?.toPrecision(3) + ' seconds '
               : 'No Duration Available'}
           </Text>
