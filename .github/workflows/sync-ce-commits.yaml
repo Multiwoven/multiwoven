@@ -1,4 +1,4 @@
-name: Cherry-pick CE commits from Enterprise to OSS
+name: Cherry-pick CE commit PR from Enterprise to OSS
 
 on:
   schedule:
@@ -18,12 +18,12 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'ai-squared'
+          git config --global user.email 'developers@squared.ai'
 
       - name: Add enterprise remote
         run: |
-          git remote add enterprise https://github.com/Multiwoven/multiwoven-ee.git
+          git remote add enterprise https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com:Multiwoven/multiwoven-ee.git
           git fetch enterprise
 
       - name: Get previous day date
