@@ -23,7 +23,7 @@ jobs:
 
       - name: Add enterprise remote
         run: |
-          git remote add enterprise https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com:Multiwoven/multiwoven-ee.git
+          git remote add enterprise https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Multiwoven/multiwoven-ee.git
           git fetch enterprise
 
       - name: Get previous day date
