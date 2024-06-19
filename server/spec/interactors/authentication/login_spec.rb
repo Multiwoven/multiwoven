@@ -58,6 +58,42 @@ RSpec.describe Authentication::Login, type: :interactor do
       it "provides an error message" do
         expect(context.error).to eq("Invalid email or password")
       end
+
+      it "increments the failed_attempts count" do
+        expect { context }.to change { user.reload.failed_attempts }.by(1)
+      end
+    end
+
+    context "when user exceeds max attempts" do
+      let(:params) { { email: user.email, password: "wrong_password" } }
+
+      before do
+        user.update(failed_attempts: Devise.maximum_attempts - 1)
+      end
+
+      it "locks the user account" do
+        context
+        expect(context).to be_failure
+        expect(context.error).to eq("Account is locked due to multiple login attempts. Please retry after sometime")
+        expect(user.reload.access_locked?).to be(true)
+      end
+    end
+
+    context "when user is locked and unlock period has passed" do
+      let(:params) { { email: user.email, password: "Password@123" } }
+
+      before do
+        user.update(failed_attempts: Devise.maximum_attempts, locked_at: Time.current, confirmed_at: Time.current)
+      end
+
+      it "unlocks the user account after the unlock period" do
+        travel_to 2.hours.from_now do
+          context
+          expect(context).to be_success
+          expect(user.reload.access_locked?).to be(false)
+          expect(context.token).to be_present
+        end
+      end
     end
 
     context "handling exceptions" do

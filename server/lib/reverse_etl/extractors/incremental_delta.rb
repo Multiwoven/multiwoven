@@ -50,9 +50,9 @@ module ReverseEtl
 
         find_or_initialize_sync_record(sync_run, primary_key)
       rescue StandardError => e
-        ::Utils::ExceptionReporter.report(e, {
-                                            sync_run_id: sync_run.id
-                                          })
+        # ::Utils::ExceptionReporter.report(e, {
+        #                                     sync_run_id: sync_run.id
+        #                                   })
         Rails.logger.error({
           error_message: e.message,
           sync_run_id: sync_run.id,
