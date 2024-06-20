@@ -16,6 +16,11 @@ jobs:
           repository: Multiwoven/multiwoven
           ref: main
 
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Configure Git
         run: |
           git config --global user.name 'ai-squared'
@@ -23,7 +28,7 @@ jobs:
 
       - name: Add enterprise remote
         run: |
-          git remote add enterprise https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/Multiwoven/multiwoven-ee.git
+          git remote add enterprise git@github.com:Multiwoven/multiwoven-ee.git
           git fetch enterprise
 
       - name: Get previous day date
