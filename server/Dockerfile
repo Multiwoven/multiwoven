@@ -18,7 +18,17 @@ FROM base as build
 
 # Install packages needed for building, including Libtool
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev
+    apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip
+
+COPY getduckdb.sh .
+# Make the script executable
+RUN chmod +x getduckdb.sh
+RUN ./getduckdb.sh
+
+RUN unzip duckdb.zip -d libduckdb
+RUN mv libduckdb/duckdb.* /usr/local/include
+RUN mv libduckdb/libduckdb.so /usr/local/lib
+RUN ldconfig /usr/local/lib
 
 # # Navigate to the directory of the component you want to build
 WORKDIR /
