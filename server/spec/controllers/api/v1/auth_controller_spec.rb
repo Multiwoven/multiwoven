@@ -157,4 +157,21 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #logout" do
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        delete :logout
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success and logout user" do
+        request.headers.merge!(auth_headers(user, 0))
+        delete :logout
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end

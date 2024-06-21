@@ -5,7 +5,7 @@ module Api
     class AuthController < ApplicationController
       include Authentication
       before_action :authenticate_user!, only: [:logout]
-      skip_after_action :verify_authorized, except: [:logout]
+      skip_after_action :verify_authorized
 
       def login
         result = Login.call(params:)
