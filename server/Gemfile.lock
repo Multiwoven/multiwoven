@@ -112,14 +112,14 @@ GEM
       console (~> 1.25, >= 1.25.2)
       fiber-annotation
       io-event (~> 1.6)
-    async-http (0.66.3)
+    async-http (0.67.1)
       async (>= 2.10.2)
       async-pool (>= 0.6.1)
       io-endpoint (~> 0.10, >= 0.10.3)
       io-stream (~> 0.4)
       protocol-http (~> 0.26.0)
       protocol-http1 (~> 0.19.0)
-      protocol-http2 (~> 0.17.0)
+      protocol-http2 (~> 0.18.0)
       traces (>= 0.10.0)
     async-pool (0.6.1)
       async (>= 1.25)
@@ -1776,8 +1776,8 @@ GEM
     gli (2.21.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.69.0)
-      google-apis-core (>= 0.14.0, < 2.a)
+    google-apis-bigquery_v2 (0.71.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (0.15.0)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 1.9)
@@ -1843,11 +1843,14 @@ GEM
     interactor (3.1.2)
     io-console (0.7.1)
     io-endpoint (0.10.3)
-    io-event (1.6.0)
+    io-event (1.6.4)
     io-stream (0.4.0)
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
+    iterable-api-client (0.6.2)
+      multi_json (~> 1.15.0)
+      sorbet-runtime
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -1903,6 +1906,7 @@ GEM
       google-apis-sheets_v4
       google-cloud-bigquery
       hubspot-api-client
+      iterable-api-client
       net-sftp
       pg
       rake
@@ -1963,7 +1967,7 @@ GEM
     protocol-http (0.26.5)
     protocol-http1 (0.19.1)
       protocol-http (~> 0.22)
-    protocol-http2 (0.17.0)
+    protocol-http2 (0.18.0)
       protocol-hpack (~> 1.4)
       protocol-http (~> 0.18)
     protocol-rack (0.6.0)
