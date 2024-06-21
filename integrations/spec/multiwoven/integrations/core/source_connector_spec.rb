@@ -3,7 +3,7 @@
 module Multiwoven
   module Integrations::Core
     RSpec.describe SourceConnector do
-      describe "#check_connection" do
+      describe "#read" do
         it "raises an error for not being implemented" do
           connector = described_class.new
           expect { connector.read({}) }.to raise_error("Not implemented")

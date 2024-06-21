@@ -15,6 +15,12 @@ module Multiwoven
 
       # This needs to be implemented as private method
       # In every source connector. This will be used for model preview
+      def create_connection(connector_config)
+        # return a connection to the client's source
+      end
+
+      # This needs to be implemented as private method
+      # In every source connector. This will be used for model preview
       def query(connection, query)
         # return list of RecordMessage
       end

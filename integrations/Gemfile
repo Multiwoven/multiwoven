@@ -57,6 +57,10 @@ gem "rubyzip"
 
 gem "faraday"
 
+gem "aws-sdk-s3"
+
+gem "duckdb"
+
 gem "iterable-api-client"
 
 group :development, :test do

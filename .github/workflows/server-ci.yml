@@ -39,6 +39,17 @@ jobs:
         with:
           ruby-version: 3.2.0
 
+      - name: Update package list
+        run: sudo apt update
+
+      - name: Download and Extract DuckDB ODBC driver
+        run: |
+            wget -O duckdb.zip https://github.com/duckdb/duckdb/releases/download/v1.0.0/libduckdb-linux-amd64.zip
+            unzip duckdb.zip -d libduckdb
+            sudo mv libduckdb/duckdb.* /usr/local/include
+            sudo mv libduckdb/libduckdb.so /usr/local/lib
+            sudo ldconfig /usr/local/lib
+
       - name: Bundle Install
         run: bundle install
         working-directory: ./server
