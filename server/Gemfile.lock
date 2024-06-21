@@ -1892,7 +1892,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.2.0)
+    multiwoven-integrations (0.3.0)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -1919,6 +1919,7 @@ GEM
       stripe
       zendesk_api
     mutex_m (0.2.0)
+    mysql2 (0.5.6)
     net-http (0.4.1)
       uri
     net-imap (0.4.9.1)
@@ -2113,7 +2114,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    sorbet-runtime (0.5.11435)
+    sorbet-runtime (0.5.11439)
     stringio (3.1.0)
     stripe (11.7.0)
     strong_migrations (1.8.0)
@@ -2187,7 +2188,8 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.2.0)
+  multiwoven-integrations (~> 0.3.0)
+  mysql2
   newrelic_rpm
   parallel
   pg (~> 1.1)
