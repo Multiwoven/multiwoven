@@ -37,19 +37,6 @@ jobs:
           PREV_DATE=$(date -d "yesterday" +'%Y-%m-%d')
           echo "::set-output name=date::$PREV_DATE"
 
-      - name: Fetch CE commits
-        id: fetch-ce-commits
-        run: |
-          PREV_DATE=${{ steps.prev-date.outputs.date }}
-          CE_COMMITS=$(git log enterprise/main --since="$PREV_DATE 00:00" --until="$PREV_DATE 23:59" --grep="(CE)" --pretty=format:"%H" --no-merges)
-          echo "::set-output name=ce_commits::$CE_COMMITS"
-
-      - name: Create new branch for cherry-picked commits
-        run: |
-          BRANCH_NAME="cherry-pick-ce-commits-${{ steps.prev-date.outputs.date }}"
-          git checkout -b $BRANCH_NAME
-          echo "::set-output name=branch_name::$BRANCH_NAME"
-
       - name: Authenticate GitHub CLI
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
@@ -58,17 +45,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          IFS=' ' read -r -a commits <<< "${{ steps.fetch-ce-commits.outputs.ce_commits }}"
-          for commit in "${commits[@]}"; do
-            AUTHOR_NAME=$(git log -1 --pretty=format:'%an' $commit)
-            AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae' $commit)
-            COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' $commit)
-            BRANCH_NAME="cherry-pick-ce-commit-${commit}-$(date +%s)"
+          PREV_DATE=${{ steps.prev-date.outputs.date }}
+          git log enterprise/main  --since="$PREV_DATE 00:00" --until="$PREV_DATE 23:59" --grep="(CE)" --format="%H" --no-merges | while read sha; do
+            AUTHOR_NAME=$(git log -1 --pretty=format:'%an' $sha)
+            AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae' $sha)
+            COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' $sha)
+            BRANCH_NAME="cherry-pick-ce-commit-${sha}"
             git checkout -b $BRANCH_NAME
-            git cherry-pick $commit || {
-              echo "Conflict in commit $commit, resolving manually."
+            git cherry-pick $sha || {
+              echo "Conflict in commit $sha, resolving manually."
               git add .
-              git commit -am "Resolve conflict in cherry-pick of $commit and change the commit message"
+              git commit -am "Resolve conflict in cherry-pick of $sha and change the commit message"
             }
             git push --force --set-upstream origin $BRANCH_NAME
             PR_TITLE="${COMMIT_MESSAGE}"
