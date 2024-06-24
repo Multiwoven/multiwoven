@@ -43,7 +43,7 @@ const Workspace = () => {
   };
 
   useEffect(() => {
-    if (workspaceData && workspaceData.length > 0) {
+    if (workspaceData && workspaceData.length > 0 && +activeWorkspaceId === 0) {
       setActiveWorkspaceId(workspaceData[0]?.id);
     }
   }, [workspaceData]);

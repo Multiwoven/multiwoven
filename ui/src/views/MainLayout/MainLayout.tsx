@@ -13,6 +13,7 @@ const MainLayout = (): JSX.Element => {
   const { contentContainerId } = useUiConfig();
 
   const setActiveWorkspaceId = useStore((state) => state.setActiveWorkspaceId);
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   const { data } = useQuery({
     queryKey: ['workspace'],
@@ -24,10 +25,10 @@ const MainLayout = (): JSX.Element => {
   const workspaceData = data?.data;
 
   useEffect(() => {
-    if (workspaceData && workspaceData.length > 0) {
+    if (workspaceData && workspaceData.length > 0 && +activeWorkspaceId === 0) {
       setActiveWorkspaceId(workspaceData[0]?.id);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }, [workspaceData]);
 
   if (isLoading) {
