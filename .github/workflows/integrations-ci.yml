@@ -49,7 +49,7 @@ jobs:
 
       - name: Push coverage data to Code Climate
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID_INTEGRATIONS }}
         run: |
           ./cc-test-reporter before-build
           ./cc-test-reporter after-build --exit-code $?

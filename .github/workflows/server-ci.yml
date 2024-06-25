@@ -76,7 +76,7 @@ jobs:
       - name: Upload Coverage to Code Climate
         if: github.event_name == 'push'
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID_SERVER }}
         run: |
           ./cc-test-reporter before-build
           ./cc-test-reporter after-build --exit-code $?
