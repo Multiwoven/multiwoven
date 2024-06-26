@@ -6,8 +6,8 @@ RSpec.describe "Api::V1::Users", type: :request do
   let(:workspace) { create(:workspace) }
   let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
-  let(:viewer_role) { create(:role, role_name: "Viewer") }
-  let(:member_role) { create(:role, role_name: "Member") }
+  let(:viewer_role) { create(:role, :viewer) }
+  let(:member_role) { create(:role, :member) }
 
   describe "GET /api/v1/users/me" do
     context "when it is an unauthenticated user" do

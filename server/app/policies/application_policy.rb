@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :context, :user, :workspace, :record
+  attr_reader :context, :user, :workspace, :record, :permissions
 
   def initialize(context, record)
     @user = context.user
     @workspace = context.workspace
     @record = record
+    @permissions = role_permissions
   end
 
   def index?
@@ -35,6 +36,20 @@ class ApplicationPolicy
 
   def destroy?
     false
+  end
+
+  private
+
+  def role_permissions
+    workspace_user = workspace.workspace_users.find_by(user:)
+    role = workspace_user&.role
+
+    role ? role.policies["permissions"] : {}
+  end
+
+  def permitted?(action, resource)
+    permissions = role_permissions
+    permissions.dig(resource.to_s, action.to_s) || false
   end
 
   def admin?

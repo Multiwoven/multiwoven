@@ -2,6 +2,6 @@
 
 class ReportPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :report)
   end
 end

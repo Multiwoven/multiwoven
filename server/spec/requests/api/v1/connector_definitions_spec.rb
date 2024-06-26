@@ -8,8 +8,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
   let(:user) { workspace.workspace_users.first.user }
   let(:service) { Multiwoven::Integrations::Service }
   let(:connection_status) { Multiwoven::Integrations::Protocol::ConnectionStatus }
-  let(:viewer_role) { create(:role, role_name: "Viewer") }
-  let(:member_role) { create(:role, role_name: "Member") }
+  let(:viewer_role) { create(:role, :viewer) }
+  let(:member_role) { create(:role, :member) }
 
   describe "GET /api/v1/connector_definitions" do
     context "when it is an unauthenticated user" do

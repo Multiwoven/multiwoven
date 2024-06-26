@@ -2,6 +2,6 @@
 
 class SyncRecordPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :sync_record)
   end
 end

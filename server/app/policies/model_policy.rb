@@ -2,26 +2,26 @@
 
 class ModelPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :model)
   end
 
   def show?
-    admin? || member? || viewer?
+    permitted?(:read, :model)
   end
 
   def create?
-    admin? || member?
+    permitted?(:create, :model)
   end
 
   def update?
-    admin? || member?
+    permitted?(:update, :model)
   end
 
   def destroy?
-    admin? || member?
+    permitted?(:delete, :model)
   end
 
   def configurations?
-    admin? || member?
+    permitted?(:read, :model)
   end
 end

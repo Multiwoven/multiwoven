@@ -2,14 +2,14 @@
 
 class ConnectorDefinitionPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :connector_definition)
   end
 
   def show?
-    admin? || member? || viewer?
+    permitted?(:read, :connector_definition)
   end
 
   def check_connection?
-    admin? || member?
+    permitted?(:create, :connector_definition)
   end
 end
