@@ -18,7 +18,9 @@ module Authentication
     end
 
     def authenticate(user)
-      if user&.valid_password?(context.params[:password])
+      if user&.access_locked?
+        context.fail!(error: "Account is locked due to multiple login attempts. Please retry after sometime")
+      elsif user&.valid_password?(context.params[:password])
         if user.verified?
           token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
           user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
@@ -26,6 +28,22 @@ module Authentication
           context.token = token
         else
           context.fail!(error: "Account not verified. Please verify your account.")
+        end
+      else
+        handle_failed_attempt(user)
+      end
+    end
+
+    private
+
+    def handle_failed_attempt(user)
+      if user
+        user.increment_failed_attempts
+        if user.failed_attempts >= Devise.maximum_attempts
+          user.lock_access!
+          context.fail!(error: "Account is locked due to multiple login attempts. Please retry after sometime")
+        else
+          context.fail!(error: "Invalid email or password")
         end
       else
         context.fail!(error: "Invalid email or password")
