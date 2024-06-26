@@ -18,7 +18,7 @@ FROM base as build
 
 # Install packages needed for building, including Libtool
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip
+    apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
 COPY getduckdb.sh .
 # Make the script executable
