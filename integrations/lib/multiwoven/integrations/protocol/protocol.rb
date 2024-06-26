@@ -11,7 +11,7 @@ module Multiwoven
     DestinationSyncMode = Types::String.enum("insert", "upsert")
     ConnectorType = Types::String.enum("source", "destination")
     ConnectorQueryType = Types::String.enum("raw_sql", "soql")
-    ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql")
+    ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql", "table_selector")
     ConnectionStatusType = Types::String.enum("succeeded", "failed")
     StreamType = Types::String.enum("static", "dynamic")
     StreamAction = Types::String.enum("fetch", "create", "update", "delete")
