@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "MariaDB",
+    "title": "Maria DB",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "documentation_url": "https://docs.squared.ai/guides/data-integration/sources/mariadb",
+    "github_issue_label": "source-maria-db",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

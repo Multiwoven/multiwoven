@@ -1,0 +1,48 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/data-integration/sources/mariadb",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Maria DB",
+    "type": "object",
+    "required": ["host", "port", "username", "password", "database"],
+    "properties": {
+      "host": {
+        "description": "The hostname or IP address of the server where the MariaDB database is hosted.",
+        "examples": ["localhost"],
+        "type": "string",
+        "title": "Host",
+        "order": 0
+      },
+      "port": {
+        "description": "The port number on which the MariaDB server is listening for connections.",
+        "examples": ["3306"],
+        "type": "string",
+        "title": "Port",
+        "order": 1
+      },
+      "username": {
+        "description": "The username used to authenticate and connect to the MariaDB database.",
+        "examples": ["root"],
+        "type": "string",
+        "title": "Username",
+        "order": 2
+      },
+      "password": {
+        "description": "The password corresponding to the username used for authentication.",
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Password",
+        "order": 3
+      },
+      "database": {
+        "description": "The name of the specific database within the MariaDB server to connect to.",
+        "examples": ["mydatabase"],
+        "type": "string",
+        "title": "Database",
+        "order": 4
+      }
+    }
+  }
+}
