@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.2.0"
+    VERSION = "0.3.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -14,6 +14,7 @@ module Multiwoven
       AwsAthena
       Clickhouse
       AmazonS3
+      MariaDB
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

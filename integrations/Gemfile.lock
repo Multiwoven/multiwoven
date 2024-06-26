@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.2.0)
+    multiwoven-integrations (0.3.0)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -212,6 +212,7 @@ GEM
     multi_json (1.15.0)
     multipart-post (2.4.1)
     mutex_m (0.2.0)
+    mysql2 (0.5.6)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.2.3)
@@ -342,6 +343,7 @@ DEPENDENCIES
   hubspot-api-client (~> 17.2.0)
   iterable-api-client
   multiwoven-integrations!
+  mysql2
   net-sftp
   pg
   rake (~> 13.0)
