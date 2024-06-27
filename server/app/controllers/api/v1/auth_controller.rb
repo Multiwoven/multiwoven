@@ -38,8 +38,8 @@ module Api
             }
           }, status: :created
         else
-          render_error(message: "Signup failed", status: :unprocessable_entity,
-                       details: format_errors(result.user))
+          render_error(message: result.errors, status: :unprocessable_entity,
+                       details: nil)
         end
       end
 

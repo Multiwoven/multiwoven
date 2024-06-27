@@ -37,6 +37,16 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_empty
       end
+
+      it "does not create a user and returns an error" do
+        post :signup,
+             params: { name: "test", company_name: "test", email: "test@gmail.com", password: "pass@1235",
+                       password_confirmation: "pass@1235" }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_errors[0]["detail"]).not_to be_empty
+        expect(response_errors[0]["detail"]).to include("Signup failed: Password Length should be 8-128 characters")
+      end
     end
   end
 

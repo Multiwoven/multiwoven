@@ -69,8 +69,8 @@ module Authentication
         context.user = user
         context.message = "Signup successful!"
       else
-        user.errors.add(:company_name, organization.errors[:name].first)
-        context.fail!(user:)
+        user.errors.add(:company_name, organization.errors[:name].first) if organization.errors[:name].present?
+        context.fail!(errors: "Signup failed: #{user.errors.full_messages.join(', ')}")
       end
     end
 
