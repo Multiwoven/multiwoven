@@ -20,7 +20,7 @@ export const FilterTabs = ({ setFilter, syncRunRecords }: FilterTabsType) => {
           .length.toString()}
       />
       <TabItem
-        text='Failed'
+        text='Rejected'
         action={() => setFilter(SyncRecordStatus.failed)}
         isBadgeVisible
         badgeText={syncRunRecords?.data

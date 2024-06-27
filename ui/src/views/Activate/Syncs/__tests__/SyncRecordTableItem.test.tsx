@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { TableItem } from '../SyncRecords/SyncRecordsTableItem';
 import { SyncRecordResponse, SyncRecordStatus } from '../types';
 import { expect } from '@jest/globals';
+import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 
 describe('TableItem', () => {
@@ -18,7 +19,10 @@ describe('TableItem', () => {
         },
         status: SyncRecordStatus.success,
         action: 'destination_insert',
-        error: null,
+        error: {
+          message: '',
+          code: '',
+        },
         created_at: '',
         updated_at: 'string',
       },
@@ -35,7 +39,10 @@ describe('TableItem', () => {
         },
         status: SyncRecordStatus.failed,
         action: 'destination_insert',
-        error: null,
+        error: {
+          message: 'Invalid input type',
+          code: '',
+        },
         created_at: '',
         updated_at: 'string',
       },
@@ -49,6 +56,21 @@ describe('TableItem', () => {
   it('should render status tag with failed variant when status is not success', () => {
     render(<TableItem field='status' data={data[1]} />);
     expect(screen.getByText('Failed')).toBeTruthy();
+  });
+
+  it('should render error text in the column if status is failed and error message is valid', () => {
+    render(<TableItem field='error' data={data[1]} />);
+    expect(screen.getByText('Error')).toBeTruthy();
+  });
+
+  it('should open a modal and display the error message when error text is clicked', () => {
+    render(<TableItem field='error' data={data[1]} />);
+    const errorElement = screen.getByText('Error');
+
+    // Simulate click event
+    fireEvent.click(errorElement);
+
+    expect(screen.getByText('Invalid input type')).toBeInTheDocument();
   });
 
   it('should render the records with the correct tag', () => {

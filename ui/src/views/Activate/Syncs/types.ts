@@ -180,7 +180,10 @@ export type SyncRecordResponse = {
     record: Record<string, string | null>;
     status: SyncRecordStatus;
     action: 'destination_insert' | 'destination_update' | 'destination_delete';
-    error: null;
+    error: {
+      message: string;
+      code: string;
+    };
     created_at: string;
     updated_at: string;
   };
