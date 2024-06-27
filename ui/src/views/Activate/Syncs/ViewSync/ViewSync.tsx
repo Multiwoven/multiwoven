@@ -16,6 +16,7 @@ import { Step } from '@/components/Breadcrumbs/types';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
 import { useStore } from '@/stores';
+import { useSyncStore } from '@/stores/useSyncStore';
 
 enum SyncTabs {
   Tab1 = 'runs',
@@ -24,6 +25,7 @@ enum SyncTabs {
 
 const ViewSync = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
+  const setSelectedSync = useSyncStore((state) => state.setSelectedSync);
 
   const [syncTab, setSyncTab] = useState<SyncTabs>(SyncTabs.Tab1);
   const { syncId } = useParams();
@@ -49,7 +51,7 @@ const ViewSync = (): JSX.Element => {
       url: '/activate/syncs',
     },
     {
-      name: syncData?.name || '',
+      name: syncData?.name || 'Sync ' + syncId,
       url: '',
     },
   ];
@@ -65,6 +67,16 @@ const ViewSync = (): JSX.Element => {
       });
     }
   }, [isError]);
+
+  useEffect(() => {
+    setSelectedSync({
+      syncName: syncData?.name,
+      sourceName: syncData?.model.connector.name,
+      sourceIcon: syncData?.model.connector.icon,
+      destinationName: syncData?.destination.name,
+      destinationIcon: syncData?.destination.icon,
+    });
+  }, [syncData]);
 
   return (
     <ContentContainer>

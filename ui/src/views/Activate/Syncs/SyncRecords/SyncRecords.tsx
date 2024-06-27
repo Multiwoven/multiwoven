@@ -63,12 +63,13 @@ const SyncRecords = (): JSX.Element => {
         key: 'status',
         name: 'Status',
       },
+      ...(currentFilter === SyncRecordStatus.failed ? [{ key: 'error', name: 'Error' }] : []),
       ...syncRunRecordColumns.map((column) => ({
         key: column,
         name: column,
       })),
     ],
-    [syncRunRecordColumns],
+    [currentFilter, syncRunRecordColumns],
   );
 
   const tableData = useMemo(() => {

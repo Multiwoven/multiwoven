@@ -9,9 +9,11 @@ import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useStore } from '@/stores';
+import { useSyncStore } from '@/stores/useSyncStore';
 
 export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncRunId: string }) => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
+  const selectedSync = useSyncStore((state) => state.selectedSync);
 
   const toast = useCustomToast();
 
@@ -29,7 +31,7 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
       url: '/activate/syncs',
     },
     {
-      name: 'Sync ' + syncId,
+      name: selectedSync.syncName || 'Sync ' + syncId,
       url: '/activate/syncs/' + syncId,
     },
     {
