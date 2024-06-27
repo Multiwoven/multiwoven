@@ -74,7 +74,7 @@ RSpec.describe Model, type: :model do
 
   describe "query_type" do
     it "defines query_type enum with specified values" do
-      expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2 })
+      expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2, "table_selector" => 3 })
     end
   end
 end
