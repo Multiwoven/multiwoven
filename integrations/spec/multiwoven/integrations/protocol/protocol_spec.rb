@@ -361,6 +361,11 @@ module Multiwoven
           model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "dbt", primary_key: "id")
           expect(ModelQueryType.values).to include(model.query_type)
         end
+
+        it "has a query_type 'dbt'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "table_selector", primary_key: "id")
+          expect(ModelQueryType.values).to include(model.query_type)
+        end
       end
     end
 
