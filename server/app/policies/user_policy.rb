@@ -2,6 +2,6 @@
 
 class UserPolicy < ApplicationPolicy
   def me?
-    admin? || member? || viewer?
+    true
   end
 end

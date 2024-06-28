@@ -2,22 +2,22 @@
 
 class WorkspacePolicy < ApplicationPolicy
   def index?
-    true
+    permitted?(:read, :workspace)
   end
 
   def show?
-    true
+    permitted?(:read, :workspace)
   end
 
   def create?
-    admin?
+    permitted?(:create, :workspace)
   end
 
   def update?
-    admin?
+    permitted?(:update, :workspace)
   end
 
   def destroy?
-    admin?
+    permitted?(:delete, :workspace)
   end
 end

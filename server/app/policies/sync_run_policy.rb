@@ -2,10 +2,10 @@
 
 class SyncRunPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :sync_run)
   end
 
   def show?
-    admin? || member? || viewer?
+    permitted?(:read, :sync_run)
   end
 end

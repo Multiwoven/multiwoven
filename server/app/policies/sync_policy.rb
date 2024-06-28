@@ -2,26 +2,26 @@
 
 class SyncPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :sync)
   end
 
   def show?
-    admin? || member? || viewer?
+    permitted?(:read, :sync)
   end
 
   def create?
-    admin? || member?
+    permitted?(:create, :sync)
   end
 
   def update?
-    admin? || member?
+    permitted?(:update, :sync)
   end
 
   def destroy?
-    admin? || member?
+    permitted?(:delete, :sync)
   end
 
   def configurations?
-    admin? || member?
+    permitted?(:read, :sync)
   end
 end

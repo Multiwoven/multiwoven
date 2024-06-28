@@ -2,30 +2,30 @@
 
 class ConnectorPolicy < ApplicationPolicy
   def index?
-    admin? || member? || viewer?
+    permitted?(:read, :connector)
   end
 
   def show?
-    admin? || member? || viewer?
+    permitted?(:read, :connector)
   end
 
   def create?
-    admin? || member?
+    permitted?(:create, :connector)
   end
 
   def update?
-    admin? || member?
+    permitted?(:update, :connector)
   end
 
   def destroy?
-    admin? || member?
+    permitted?(:delete, :connector)
   end
 
   def discover?
-    admin? || member? || viewer?
+    permitted?(:read, :connector)
   end
 
   def query_source?
-    admin? || member? || viewer?
+    permitted?(:read, :connector)
   end
 end

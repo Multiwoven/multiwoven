@@ -12,8 +12,8 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
-  let(:viewer_role) { create(:role, role_name: "Viewer") }
-  let(:member_role) { create(:role, role_name: "Member") }
+  let(:viewer_role) { create(:role, :viewer) }
+  let(:member_role) { create(:role, :member) }
 
   before do
     create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)

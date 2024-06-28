@@ -21,8 +21,8 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
                         destination:, status: "success")
     ]
   end
-  let(:viewer_role) { create(:role, role_name: "Viewer") }
-  let(:member_role) { create(:role, role_name: "Member") }
+  let(:viewer_role) { create(:role, :viewer) }
+  let(:member_role) { create(:role, :member) }
 
   describe "GET /api/v1/syncs/sync_id/sync_runs" do
     context "when it is an unauthenticated user" do

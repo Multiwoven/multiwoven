@@ -6,7 +6,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
   let(:workspace) { create(:workspace) }
   let!(:workspace_id) { workspace.id }
   let(:user) { workspace.workspace_users.first.user }
-  let(:new_role) { create(:role, role_name: "Viewer") }
+  let(:new_role) { create(:role, :viewer) }
   let(:connectors) do
     [
       create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo"),
@@ -31,8 +31,8 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
     ]
   end
 
-  let(:viewer_role) { create(:role, role_name: "Viewer") }
-  let(:member_role) { create(:role, role_name: "Member") }
+  let(:viewer_role) { create(:role, :viewer) }
+  let(:member_role) { create(:role, :member) }
 
   describe "GET /api/v1/syncs" do
     context "when it is an unauthenticated user" do
@@ -526,7 +526,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
     it "returns the configurations for viewer_role" do
       user.workspace_users.first.update(role: viewer_role)
       get "/api/v1/syncs/configurations", headers: auth_headers(user, workspace_id)
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:ok)
     end
   end
 end
