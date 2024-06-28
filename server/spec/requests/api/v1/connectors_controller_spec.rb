@@ -322,6 +322,30 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :catalog, :streams)).to be_present
       end
 
+      it "returns success and should not refresh the catalog when refresh flag is absent" do
+        workspace.workspace_users.first.update(role: member_role)
+        connector = connectors.first
+        catalog = create(:catalog, connector:)
+        get "/api/v1/connectors/#{connector.id}/discover", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :type)).to eq("catalogs")
+        expect(response_hash.dig(:data, :attributes, :catalog)).to eq(catalog.catalog)
+      end
+
+      it "returns success and refresh the catalog when refresh is true" do
+        workspace.workspace_users.first.update(role: member_role)
+        connector = connectors.first
+        catalog = create(:catalog, connector:)
+        get "/api/v1/connectors/#{connector.id}/discover?refresh=true", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :type)).to eq("catalogs")
+        expect(response_hash.dig(:data, :attributes, :catalog)).not_to eq(catalog.catalog)
+      end
+
       it "returns success and discover object for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/connectors/#{connectors.first.id}/discover", headers: auth_headers(user, workspace_id)

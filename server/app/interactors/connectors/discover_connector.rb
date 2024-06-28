@@ -6,7 +6,8 @@ module Connectors
 
     def call
       context.catalog = context.connector.catalog
-      return if context.catalog.present?
+      # refresh catalog when the refresh flag is true
+      return if context.catalog.present? && !context.refresh
 
       catalog = context.connector.build_catalog(
         workspace_id: context.connector.workspace_id
