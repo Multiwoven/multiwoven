@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.3.1"
+=======
+    VERSION = "0.3.3"
+>>>>>>> 677e38a2 (fix(CE): handle S3 credentials (#246))
 
     ENABLED_SOURCES = %w[
       Snowflake
