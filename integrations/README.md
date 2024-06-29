@@ -43,6 +43,23 @@ Multiwoven integrations is the collection of connectors built on top of [Multiwo
 Multiwoven protocol is an open source standard for moving data between data sources to any third-part destinations.
 Anyone can build a connetor with basic ruby knowledge using the protocol.
 
+## Prerequisites
+
+Before you begin the installation, ensure you have the following dependencies installed:
+
+- **MySQL Client**
+  - Command: `brew install mysql-client`
+  - Description: Required for database interactions.
+
+- **Zstandard (zstd)**
+  - Command: `brew install zstd`
+  - Description: Needed for data compression and decompression.
+
+- **OpenSSL 3**
+  - Command: `brew install openssl@3`
+  - Description: Essential for secure communication.
+
+
 ### Installation
 
 Install the gem and add to the application's Gemfile by executing:
