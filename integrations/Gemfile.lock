@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.3.1)
+=======
+    multiwoven-integrations (0.3.5)
+>>>>>>> 32aaa10b (feat(CE): integration changes for sync record log (#250))
       activesupport
       async-websocket
       aws-sdk-athena

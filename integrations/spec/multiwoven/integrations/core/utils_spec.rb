@@ -50,6 +50,24 @@ module Multiwoven
             expect(dummy_class.hash_to_string(hash)).to eq("key1 = 1, key2 = 2.5, key3 = true, key4 = ")
           end
         end
+
+        describe "#log_request_response" do
+          let(:level) { "info" }
+          let(:request) { { user_id: 1, action: "create" } }
+          let(:response) { { status: "success" } }
+
+          it "creates a LogMessage object with correct attributes" do
+            log_message = dummy_class.log_request_response(level, request, response)
+
+            expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+            expect(log_message.level).to eq(level)
+
+            parsed_message = JSON.parse(log_message.message)
+            expect(parsed_message["request"]).to eq(request.to_s)
+            expect(parsed_message["response"]).to eq(response.to_s)
+            expect(parsed_message["level"]).to eq(level)
+          end
+        end
       end
     end
   end

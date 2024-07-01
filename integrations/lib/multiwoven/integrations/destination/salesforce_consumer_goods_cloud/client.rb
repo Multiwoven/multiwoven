@@ -80,10 +80,14 @@ module Multiwoven
             write_success = 0
             write_failure = 0
             properties = stream.json_schema[:properties]
+            log_message_array = []
+
             records.each do |record_object|
               record = extract_data(record_object, properties)
-              process_record(stream, record)
+              args = [stream.name, "Id", record]
+              response = send_data_to_salesforce(args)
               write_success += 1
+              log_message_array << log_request_response("info", args, response)
             rescue StandardError => e
               # TODO: add sync_id and sync run id to the logs
               handle_exception(e, {
@@ -93,18 +97,14 @@ module Multiwoven
                                  sync_run_id: @sync_config.sync_run_id
                                })
               write_failure += 1
+              log_message_array << log_request_response("error", args, e.message)
             end
-            tracking_message(write_success, write_failure)
+            tracking_message(write_success, write_failure, log_message_array)
           end
 
-          def process_record(stream, record)
-            send_data_to_salesforce(stream.name, record)
-          end
-
-          def send_data_to_salesforce(stream_name, record = {})
+          def send_data_to_salesforce(args)
             method_name = "upsert!"
-            args = [stream_name, "Id", record]
-            @logger.debug("sync_id: #{@sync_config.sync_id}, sync_run_id: #{@sync_config.sync_run_id}, record: #{record}")
+            @logger.debug("sync_id: #{@sync_config.sync_id}, sync_run_id: #{@sync_config.sync_run_id}, args: #{args}")
             @client.send(method_name, *args)
           end
 
@@ -122,12 +122,6 @@ module Multiwoven
 
           def load_catalog
             read_json(CATALOG_SPEC_PATH)
-          end
-
-          def tracking_message(success, failure)
-            Multiwoven::Integrations::Protocol::TrackingMessage.new(
-              success: success, failed: failure
-            ).to_multiwoven_message
           end
 
           def log_debug(message)
