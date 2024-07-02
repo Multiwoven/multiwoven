@@ -30,6 +30,7 @@ require "base64"
 require "aws-sdk-s3"
 require "duckdb"
 require "iterable-api-client"
+require "aws-sdk-sts"
 
 # Service
 require_relative "integrations/config"

@@ -2,17 +2,37 @@
 
 RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   let(:client) { Multiwoven::Integrations::Source::AmazonS3::Client.new }
+  let(:user_auth_data) do
+    Aws::Credentials.new("AKIAEXAMPLE", "secretAccessKeyExample")
+  end
+  let(:role_auth_data) do
+    Aws::STS::Types::AssumeRoleResponse.new(
+      credentials: Aws::STS::Types::Credentials.new(
+        access_key_id: "AKIAEXAMPLE",
+        secret_access_key: "secretAccessKeyExample",
+        session_token: "sessionTokenExample",
+        expiration: Time.now + 3600
+      ),
+      assumed_role_user: Aws::STS::Types::AssumedRoleUser.new(
+        arn: "arn:aws:sts::123456789012:assumed-role/demo/my-session",
+        assumed_role_id: "AROEXAMPLE123EXAMPLE"
+      ),
+      packed_policy_size: 6
+    )
+  end
   let(:sync_config) do
     {
       "source": {
         "name": "AmazonS3",
         "type": "source",
         "connection_specification": {
+          "auth_type": "user",
           "region": "us-east-1",
           "bucket": "ai2-model-staging",
           "access_id": "accessid",
           "secret_access": "secretaccess",
-          "file_type": "type"
+          "file_type": "type",
+          "arn": ""
         }
       },
       "destination": {
@@ -48,13 +68,31 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   end
 
   let(:s3_client) { instance_double(Aws::S3::Client) }
+  let(:sts_client) { instance_double(Aws::STS::Client) }
   let(:conn) { instance_double(DuckDB::Connection) }
 
   describe "#check_connection" do
-    context "when the connection is successful" do
+    context "when the connection is successful for 'user' auth_type" do
       it "returns a succeeded connection status" do
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(user_auth_data)
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_return(s3_client)
-        expect(s3_client).to receive(:get_bucket_policy_status)
+        expect(s3_client).to receive(:get_bucket_location)
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
+      end
+    end
+
+    context "when the connection is successful for 'role' auth_type" do
+      it "returns a succeeded connection status" do
+        sync_config[:source][:connection_specification][:auth_type] = "role"
+        sync_config[:source][:connection_specification][:acess_id] = ""
+        sync_config[:source][:connection_specification][:secret_access] = ""
+        sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(role_auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_return(s3_client)
+        expect(s3_client).to receive(:get_bucket_location)
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("succeeded")
@@ -74,7 +112,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   end
   # read and discover tests for AWS Athena
   describe "#read" do
-    it "reads records successfully" do
+    it "reads records successfully with 'user' auth_type" do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
@@ -84,10 +122,47 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
     end
 
-    it "reads records successfully for batched_query" do
+    it "reads records successfully for batched_query with 'user' auth_type" do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       s_config.limit = 100
       s_config.offset = 1
+      allow(client).to receive(:get_auth_data).and_return(user_auth_data)
+      allow(client).to receive(:create_connection).and_return(conn)
+      allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+      batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
+      allow(client).to receive(batched_query).and_return("SELECT * FROM S3Object LIMIT 100 OFFSET 1")
+      records = client.read(s_config)
+      expect(records).to be_an(Array)
+      expect(records).not_to be_empty
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+    end
+
+    it "reads records successfully with 'role' auth_type" do
+      sync_config[:source][:connection_specification][:auth_type] = "role"
+      sync_config[:source][:connection_specification][:acess_id] = ""
+      sync_config[:source][:connection_specification][:secret_access] = ""
+      sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
+      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
+      allow(client).to receive(:create_connection).and_return(conn)
+      allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+      records = client.read(s_config)
+      expect(records).to be_an(Array)
+      expect(records).not_to be_empty
+      expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+    end
+
+    it "reads records successfully for batched_query with 'role' auth_type" do
+      sync_config[:source][:connection_specification][:auth_type] = "role"
+      sync_config[:source][:connection_specification][:acess_id] = ""
+      sync_config[:source][:connection_specification][:secret_access] = ""
+      sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      s_config.limit = 100
+      s_config.offset = 1
+      stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
+      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
@@ -115,9 +190,31 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   end
 
   describe "#discover" do
-    it "discovers schema successfully" do
+    it "discovers schema successfully with 'user' auth_type" do
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
+      allow(client).to receive(:get_auth_data).and_return(user_auth_data)
+      allow(client).to receive(:create_connection).and_return(conn)
+      allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+      allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])
+      message = client.discover(connection_config)
+      expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
+      first_stream = message.catalog.streams.first
+      expect(first_stream).to be_a(Multiwoven::Integrations::Protocol::Stream)
+      expect(first_stream.name).to eq(full_path)
+      expect(first_stream.json_schema).to be_an(Hash)
+      expect(first_stream.json_schema["type"]).to eq("object")
+      expect(first_stream.json_schema["properties"]).to eq({ "Id" => { "type" => "string" } })
+    end
+
+    it "discovers schema successfully with 'role' auth_type" do
+      sync_config[:source][:connection_specification][:auth_type] = "role"
+      sync_config[:source][:connection_specification][:acess_id] = ""
+      sync_config[:source][:connection_specification][:secret_access] = ""
+      sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      connection_config = sync_config[:source][:connection_specification]
+      full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
+      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])

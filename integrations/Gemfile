@@ -65,6 +65,8 @@ gem "iterable-api-client"
 
 gem "mysql2"
 
+gem "aws-sdk-sts"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
