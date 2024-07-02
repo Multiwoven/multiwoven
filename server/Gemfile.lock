@@ -1760,10 +1760,7 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.1.0)
       net-http
-    ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1895,7 +1892,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.3.4)
+    multiwoven-integrations (0.3.5)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -2095,7 +2092,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sequel (5.81.0)
+    sequel (5.82.0)
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -2192,7 +2189,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.3.4)
+  multiwoven-integrations (~> 0.3.5)
   mysql2
   newrelic_rpm
   parallel
