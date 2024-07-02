@@ -9,6 +9,12 @@ module Multiwoven
         raise "Not implemented"
         # return Protocol::TrackingMessage
       end
+
+      def tracking_message(success, failure, log_message_array)
+        Multiwoven::Integrations::Protocol::TrackingMessage.new(
+          success: success, failed: failure, logs: log_message_array
+        ).to_multiwoven_message
+      end
     end
   end
 end

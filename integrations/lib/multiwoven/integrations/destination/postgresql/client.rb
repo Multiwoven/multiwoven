@@ -46,6 +46,7 @@ module Multiwoven::Integrations::Destination
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         table_name = sync_config.stream.name
         primary_key = sync_config.model.primary_key
+        log_message_array = []
         db = create_connection(connection_config)
 
         write_success = 0
@@ -55,8 +56,9 @@ module Multiwoven::Integrations::Destination
           query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record, primary_key)
           logger.debug("POSTGRESQL:WRITE:QUERY query = #{query} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
-            db.exec(query)
+            response = db.exec(query)
             write_success += 1
+            log_message_array << log_request_response("info", query, response)
           rescue StandardError => e
             handle_exception(e, {
                                context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
@@ -65,9 +67,10 @@ module Multiwoven::Integrations::Destination
                                sync_run_id: sync_config.sync_run_id
                              })
             write_failure += 1
+            log_message_array << log_request_response("error", query, e.message)
           end
         end
-        tracking_message(write_success, write_failure)
+        tracking_message(write_success, write_failure, log_message_array)
       rescue StandardError => e
         handle_exception(e, {
                            context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
@@ -118,12 +121,6 @@ module Multiwoven::Integrations::Destination
             end
           }
         end
-      end
-
-      def tracking_message(success, failure)
-        Multiwoven::Integrations::Protocol::TrackingMessage.new(
-          success: success, failed: failure
-        ).to_multiwoven_message
       end
     end
   end

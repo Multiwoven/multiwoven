@@ -53,6 +53,14 @@ module Multiwoven
         reporter&.report(exception, meta)
       end
 
+      def log_request_response(level, request, response)
+        Integrations::Protocol::LogMessage.new(
+          name: self.class.name,
+          level: level,
+          message: { request: request.to_s, response: response.to_s, level: level }.to_json
+        )
+      end
+
       def create_log_message(context, type, exception)
         Integrations::Protocol::LogMessage.new(
           name: context,

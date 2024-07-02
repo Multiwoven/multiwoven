@@ -197,6 +197,7 @@ module Multiwoven
       attribute :success, Types::Integer.default(0)
       attribute :failed, Types::Integer.default(0)
       attribute? :meta, Types::Hash
+      attribute? :logs, Types::Array.of(LogMessage)
 
       def to_multiwoven_message
         MultiwovenMessage.new(
