@@ -2,23 +2,8 @@
 
 RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   let(:client) { Multiwoven::Integrations::Source::AmazonS3::Client.new }
-  let(:user_auth_data) do
+  let(:auth_data) do
     Aws::Credentials.new("AKIAEXAMPLE", "secretAccessKeyExample")
-  end
-  let(:role_auth_data) do
-    Aws::STS::Types::AssumeRoleResponse.new(
-      credentials: Aws::STS::Types::Credentials.new(
-        access_key_id: "AKIAEXAMPLE",
-        secret_access_key: "secretAccessKeyExample",
-        session_token: "sessionTokenExample",
-        expiration: Time.now + 3600
-      ),
-      assumed_role_user: Aws::STS::Types::AssumedRoleUser.new(
-        arn: "arn:aws:sts::123456789012:assumed-role/demo/my-session",
-        assumed_role_id: "AROEXAMPLE123EXAMPLE"
-      ),
-      packed_policy_size: 6
-    )
   end
   let(:sync_config) do
     {
@@ -67,16 +52,17 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
     }
   end
 
-  let(:s3_client) { instance_double(Aws::S3::Client) }
   let(:sts_client) { instance_double(Aws::STS::Client) }
   let(:conn) { instance_double(DuckDB::Connection) }
 
   describe "#check_connection" do
+    before do
+      stub_request(:get, "https://ai2-model-staging.s3.amazonaws.com/?location").to_return(status: 200, body: "", headers: {})
+    end
     context "when the connection is successful for 'user' auth_type" do
       it "returns a succeeded connection status" do
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(user_auth_data)
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_return(s3_client)
-        expect(s3_client).to receive(:get_bucket_location)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("succeeded")
@@ -90,9 +76,8 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         sync_config[:source][:connection_specification][:acess_id] = ""
         sync_config[:source][:connection_specification][:secret_access] = ""
         sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(role_auth_data)
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_return(s3_client)
-        expect(s3_client).to receive(:get_bucket_location)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("succeeded")
@@ -102,7 +87,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
 
     context "when the connection fails" do
       it "returns a failed connection status with an error message" do
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_raise(StandardError, "Connection failed")
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_raise(StandardError, "Connection failed")
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("failed")
@@ -126,7 +111,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       s_config.limit = 100
       s_config.offset = 1
-      allow(client).to receive(:get_auth_data).and_return(user_auth_data)
+      allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
@@ -144,7 +129,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
-      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
+      allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       records = client.read(s_config)
@@ -162,7 +147,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       s_config.limit = 100
       s_config.offset = 1
       stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
-      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
+      allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
@@ -193,7 +178,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
     it "discovers schema successfully with 'user' auth_type" do
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
-      allow(client).to receive(:get_auth_data).and_return(user_auth_data)
+      allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])
@@ -214,7 +199,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
-      allow(client).to receive(:get_auth_data).and_return(role_auth_data)
+      allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])
