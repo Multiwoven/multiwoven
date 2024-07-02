@@ -80,6 +80,15 @@
         "title": "Region",
         "order": 5
       },
+      "region": {
+        "description": "AWS region",
+        "examples": [
+          "us-east-2"
+        ],
+        "type": "string",
+        "title": "Region",
+        "order": 4
+      },
       "bucket": {
         "description": "Bucket Name",
         "type": "string",
