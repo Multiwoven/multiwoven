@@ -1,7 +1,7 @@
 import { SyncRecordResponse, SyncRecordStatus } from '../types';
 import StatusTag from '@/components/StatusTag';
 import { StatusTagVariants } from '@/components/StatusTag/StatusTag';
-// import ErrorLogsModal from './ErrorLogsModal';
+import ErrorLogsModal from './ErrorLogsModal';
 import { CellContext, ColumnDef } from '@tanstack/react-table';
 import { Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
@@ -32,16 +32,23 @@ export const SyncRecordsColumns: ColumnDef<SyncRecordResponse>[] = [
         <StatusTag variant={StatusTagVariants.failed} status='Failed' />
       ),
   },
-  // {
-  //   accessorKey: 'attributes.error',
-  //   header: () => <h1>RECORD</h1>,
-  //   cell: ({ row }) => {
-  //     const error = row.getValue('attributes.error') as { message: string; code: string } | null;
-  //     if (error) {
-  //       return <ErrorLogsModal errorMessage={error.message.toString()} />;
-  //     } else {
-  //       return null;
-  //     }
-  //   },
-  // },
+  {
+    accessorKey: 'attributes',
+    header: () => <h1>LOGS</h1>,
+    cell: (info) => {
+      const syncRecord = info.getValue() as SyncRecordResponse['attributes'];
+      if (syncRecord?.logs?.request) {
+        return (
+          <ErrorLogsModal
+            request={syncRecord?.logs?.request}
+            response={syncRecord?.logs?.response}
+            level={syncRecord?.logs?.level}
+            status={syncRecord?.status}
+          />
+        );
+      } else {
+        return <></>;
+      }
+    },
+  },
 ];
