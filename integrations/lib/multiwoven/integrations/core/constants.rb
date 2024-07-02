@@ -34,6 +34,9 @@ module Multiwoven
       AIRTABLE_BASES_ENDPOINT = "https://api.airtable.com/v0/meta/bases"
       AIRTABLE_GET_BASE_SCHEMA_ENDPOINT = "https://api.airtable.com/v0/meta/bases/{baseId}/tables"
 
+      AWS_ACCESS_KEY_ID = ENV["AWS_ACCESS_KEY_ID"]
+      AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
+
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"

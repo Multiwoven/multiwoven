@@ -50,15 +50,17 @@ module Multiwoven::Integrations::Source
       private
 
       def get_auth_data(connection_config)
-        session = @session_name
+        session = @session_name.gsub(/\s+/, "-")
         @session_name = ""
         if connection_config[:auth_type] == "user"
           Aws::Credentials.new(connection_config[:access_id], connection_config[:secret_access])
         elsif connection_config[:auth_type] == "role"
-          sts_client = Aws::STS::Client.new(region: connection_config[:region])
+          credentials = Aws::Credentials.new(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+          sts_client = Aws::STS::Client.new(region: connection_config[:region], credentials: credentials)
           resp = sts_client.assume_role({
                                           role_arn: connection_config[:arn],
-                                          role_session_name: session
+                                          role_session_name: session,
+                                          external_id: connection_config[:external_id]
                                         })
           Aws::Credentials.new(
             resp.credentials.access_key_id,

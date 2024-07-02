@@ -29,6 +29,7 @@
         "region",
         "bucket",
         "arn",
+        "external_id",
         "file_type"
       ]
     },
@@ -53,16 +54,22 @@
         "title": "IAM Role ARN",
         "order": 1
       },
+      "external_id": {
+        "type": "string",
+        "title": "External Id",
+        "description": "Unique ID that allows handshake between AWS accounts.",
+        "order": 2
+      },
       "access_id": {
         "type": "string",
         "title": "Access Id",
-        "order": 2
+        "order": 3
       },
       "secret_access": {
         "type": "string",
         "title": "Secret Access",
         "multiwoven_secret": true,
-        "order": 3
+        "order": 4
       },
       "region": {
         "description": "AWS region",
@@ -71,13 +78,13 @@
         ],
         "type": "string",
         "title": "Region",
-        "order": 4
+        "order": 5
       },
       "bucket": {
         "description": "Bucket Name",
         "type": "string",
         "title": "Bucket",
-        "order": 5
+        "order": 6
       },
       "path": {
         "description": "Path to csv or parquet files",
@@ -86,7 +93,7 @@
         ],
         "type": "string",
         "title": "Path",
-        "order": 6
+        "order": 7
       },
       "file_type": {
         "description": "The type of file to read",
@@ -96,7 +103,7 @@
           "csv",
           "parquet"
         ],
-        "order": 7
+        "order": 8
       }
     }
   }

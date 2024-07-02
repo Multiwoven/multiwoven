@@ -17,7 +17,8 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
           "access_id": "accessid",
           "secret_access": "secretaccess",
           "file_type": "type",
-          "arn": ""
+          "arn": "",
+          "external_id": ""
         }
       },
       "destination": {
@@ -76,6 +77,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         sync_config[:source][:connection_specification][:acess_id] = ""
         sync_config[:source][:connection_specification][:secret_access] = ""
         sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+        sync_config[:source][:connection_specification][:external_id] = "aws-external-id-trust-relationship"
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
         message = client.check_connection(sync_config[:source][:connection_specification])
@@ -127,6 +129,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       sync_config[:source][:connection_specification][:acess_id] = ""
       sync_config[:source][:connection_specification][:secret_access] = ""
       sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      sync_config[:source][:connection_specification][:external_id] = "aws-external-id-trust-relationship"
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
       allow(client).to receive(:get_auth_data).and_return(auth_data)
@@ -143,6 +146,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       sync_config[:source][:connection_specification][:acess_id] = ""
       sync_config[:source][:connection_specification][:secret_access] = ""
       sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      sync_config[:source][:connection_specification][:external_id] = "aws-external-id-trust-relationship"
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       s_config.limit = 100
       s_config.offset = 1
@@ -197,6 +201,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       sync_config[:source][:connection_specification][:acess_id] = ""
       sync_config[:source][:connection_specification][:secret_access] = ""
       sync_config[:source][:connection_specification][:arn] = "aimrole/arn"
+      sync_config[:source][:connection_specification][:external_id] = "aws-external-id-trust-relationship"
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
       allow(client).to receive(:get_auth_data).and_return(auth_data)
