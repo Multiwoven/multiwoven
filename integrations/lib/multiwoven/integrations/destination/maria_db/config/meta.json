@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "MariaDB",
+    "title": "Maria DB",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/mariadb",
+    "github_issue_label": "destination-maria-db",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

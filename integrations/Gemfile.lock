@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.3.1)
+=======
+    multiwoven-integrations (0.4.0)
+>>>>>>> ad5401d3 (feat(CE): Add mariaDB destination connector)
       activesupport
       async-websocket
       aws-sdk-athena
