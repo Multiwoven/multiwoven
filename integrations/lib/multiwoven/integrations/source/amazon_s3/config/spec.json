@@ -6,7 +6,37 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "AmazonS3",
     "type": "object",
+<<<<<<< HEAD
     "required": ["region", "bucket", "access_id", "secret_access", "file_type"],
+=======
+    "if": {
+      "properties": {
+        "auth_type": {
+          "enum": ["user"]
+        }
+      }
+    },
+    "then": {
+      "required": [
+        "auth_type",
+        "region",
+        "bucket",
+        "access_id",
+        "secret_access",
+        "file_type"
+      ]
+    },
+    "else": {
+      "required": [
+        "auth_type",
+        "region",
+        "bucket",
+        "arn",
+        "external_id",
+        "file_type"
+      ]
+    },
+>>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
     "properties": {
       "region": {
         "description": "AWS region",
@@ -15,36 +45,70 @@
         "title": "Region",
         "order": 1
       },
+      "external_id": {
+        "type": "string",
+        "title": "External Id",
+        "description": "Unique ID that allows handshake between AWS accounts.",
+        "order": 2
+      },
       "access_id": {
         "type": "string",
         "title": "Access Id",
-        "order": 2
+        "order": 3
       },
       "secret_access": {
         "type": "string",
         "title": "Secret Access",
         "multiwoven_secret": true,
-        "order": 3
+        "order": 4
       },
+<<<<<<< HEAD
+=======
+      "region": {
+        "description": "AWS region",
+        "examples": [
+          "us-east-2"
+        ],
+        "type": "string",
+        "title": "Region",
+        "order": 5
+      },
+>>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       "bucket": {
         "description": "Bucket Name",
         "type": "string",
         "title": "Bucket",
+<<<<<<< HEAD
         "order": 4
+=======
+        "order": 6
+>>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       },
       "path": {
         "description": "Path to csv or parquet files",
         "examples": ["/path/to/files"],
         "type": "string",
         "title": "Path",
+<<<<<<< HEAD
         "order": 5
+=======
+        "order": 7
+>>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       },
       "file_type": {
         "description": "The type of file to read",
         "type": "string",
         "title": "File Type",
+<<<<<<< HEAD
         "enum": ["csv", "parquet"],
         "order": 6
+=======
+        "enum": [
+          "csv",
+          "parquet"
+        ],
+        "order": 8
+>>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       }
     }
   }
