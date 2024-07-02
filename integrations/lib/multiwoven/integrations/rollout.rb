@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.3.1"
-=======
     VERSION = "0.3.4"
->>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
 
     ENABLED_SOURCES = %w[
       Snowflake

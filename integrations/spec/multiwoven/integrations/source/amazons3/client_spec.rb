@@ -2,23 +2,23 @@
 
 RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   let(:client) { Multiwoven::Integrations::Source::AmazonS3::Client.new }
+  let(:auth_data) do
+    Aws::Credentials.new("AKIAEXAMPLE", "secretAccessKeyExample")
+  end
   let(:sync_config) do
     {
       "source": {
         "name": "AmazonS3",
         "type": "source",
         "connection_specification": {
+          "auth_type": "user",
           "region": "us-east-1",
           "bucket": "ai2-model-staging",
           "access_id": "accessid",
           "secret_access": "secretaccess",
-<<<<<<< HEAD
-          "file_type": "type"
-=======
           "file_type": "type",
           "arn": "",
           "external_id": ""
->>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
         }
       },
       "destination": {
@@ -53,16 +53,15 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
     }
   end
 
-  let(:s3_client) { instance_double(Aws::S3::Client) }
+  let(:sts_client) { instance_double(Aws::STS::Client) }
   let(:conn) { instance_double(DuckDB::Connection) }
 
   describe "#check_connection" do
-    context "when the connection is successful" do
+    before do
+      stub_request(:get, "https://ai2-model-staging.s3.amazonaws.com/?location").to_return(status: 200, body: "", headers: {})
+    end
+    context "when the connection is successful for 'user' auth_type" do
       it "returns a succeeded connection status" do
-<<<<<<< HEAD
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_return(s3_client)
-        expect(s3_client).to receive(:get_bucket_policy_status)
-=======
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
         message = client.check_connection(sync_config[:source][:connection_specification])
@@ -81,7 +80,6 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         sync_config[:source][:connection_specification][:external_id] = "aws-external-id-trust-relationship"
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
->>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("succeeded")
@@ -91,7 +89,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
 
     context "when the connection fails" do
       it "returns a failed connection status with an error message" do
-        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:config_aws).and_raise(StandardError, "Connection failed")
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_raise(StandardError, "Connection failed")
         message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("failed")
@@ -101,7 +99,7 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   end
   # read and discover tests for AWS Athena
   describe "#read" do
-    it "reads records successfully" do
+    it "reads records successfully with 'user' auth_type" do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
@@ -111,12 +109,10 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
     end
 
-    it "reads records successfully for batched_query" do
+    it "reads records successfully for batched_query with 'user' auth_type" do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       s_config.limit = 100
       s_config.offset = 1
-<<<<<<< HEAD
-=======
       allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
@@ -156,7 +152,6 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       s_config.offset = 1
       stub_request(:post, "https://sts.us-east-1.amazonaws.com/").to_return(status: 200, body: "", headers: {})
       allow(client).to receive(:get_auth_data).and_return(auth_data)
->>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
@@ -184,11 +179,9 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   end
 
   describe "#discover" do
-    it "discovers schema successfully" do
+    it "discovers schema successfully with 'user' auth_type" do
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
-<<<<<<< HEAD
-=======
       allow(client).to receive(:get_auth_data).and_return(auth_data)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
@@ -212,7 +205,6 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       connection_config = sync_config[:source][:connection_specification]
       full_path = "s3://#{connection_config[:bucket]}/#{connection_config[:path]}*.#{connection_config[:file_type]}"
       allow(client).to receive(:get_auth_data).and_return(auth_data)
->>>>>>> 73e127ee (fix(CE): Add STS credentials for AWS S3 source connector)
       allow(client).to receive(:create_connection).and_return(conn)
       allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
       allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])
