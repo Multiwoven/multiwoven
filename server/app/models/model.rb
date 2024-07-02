@@ -20,7 +20,7 @@ class Model < ApplicationRecord
   validates :name, presence: true
   validates :query, presence: true
   validates :primary_key, presence: true
-  enum :query_type, %i[raw_sql dbt soql]
+  enum :query_type, %i[raw_sql dbt soql table_selector]
 
   belongs_to :workspace
   belongs_to :connector

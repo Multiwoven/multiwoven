@@ -68,7 +68,8 @@ module Api
       def discover
         authorize @connector
         result = DiscoverConnector.call(
-          connector: @connector
+          connector: @connector,
+          refresh: params[:refresh]
         )
 
         if result.success?

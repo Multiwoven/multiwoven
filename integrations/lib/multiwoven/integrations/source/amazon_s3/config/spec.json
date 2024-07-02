@@ -6,13 +6,51 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "AmazonS3",
     "type": "object",
-    "required": ["region", "bucket", "access_id", "secret_access", "file_type"],
+    "if": {
+      "properties": {
+        "auth_type": {
+          "enum": ["user"]
+        }
+      }
+    },
+    "then": {
+      "required": [
+        "auth_type",
+        "region",
+        "bucket",
+        "access_id",
+        "secret_access",
+        "file_type"
+      ]
+    },
+    "else": {
+      "required": [
+        "auth_type",
+        "region",
+        "bucket",
+        "arn",
+        "file_type"
+      ]
+    },
     "properties": {
-      "region": {
-        "description": "AWS region",
-        "examples": ["us-east-2"],
+      "auth_type": {
+        "title": "Authentication type",
         "type": "string",
-        "title": "Region",
+        "default": "user",
+        "description": "Authenticate either by using an IAM User (Access Key ID & Secret Access Key) or an IAM Role (ARN)",
+        "enum": [
+          "user",
+          "role"
+        ],
+        "enumNames": [
+          "IAM User",
+          "IAM Role"
+        ],
+        "order": 0
+      },
+      "arn": {
+        "type": "string",
+        "title": "IAM Role ARN",
         "order": 1
       },
       "access_id": {
@@ -26,25 +64,39 @@
         "multiwoven_secret": true,
         "order": 3
       },
+      "region": {
+        "description": "AWS region",
+        "examples": [
+          "us-east-2"
+        ],
+        "type": "string",
+        "title": "Region",
+        "order": 4
+      },
       "bucket": {
         "description": "Bucket Name",
         "type": "string",
         "title": "Bucket",
-        "order": 4
+        "order": 5
       },
       "path": {
         "description": "Path to csv or parquet files",
-        "examples": ["/path/to/files"],
+        "examples": [
+          "/path/to/files"
+        ],
         "type": "string",
         "title": "Path",
-        "order": 5
+        "order": 6
       },
       "file_type": {
         "description": "The type of file to read",
         "type": "string",
         "title": "File Type",
-        "enum": ["csv", "parquet"],
-        "order": 6
+        "enum": [
+          "csv",
+          "parquet"
+        ],
+        "order": 7
       }
     }
   }

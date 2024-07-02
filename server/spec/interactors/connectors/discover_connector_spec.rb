@@ -16,6 +16,15 @@ RSpec.describe Connectors::DiscoverConnector, type: :interactor do
       end
     end
 
+    context "refresh catalog even when catalog is present" do
+      it "returns refreshed catalog" do
+        catalog = create(:catalog, connector:)
+        allow_any_instance_of(described_class).to receive(:streams).and_return(streams)
+        result = described_class.call(connector:, refresh: true)
+        expect(result.catalog).not_to eq(catalog)
+      end
+    end
+
     context "when catalog is not present" do
       it "create catalog" do
         expect(connector.catalog).to eq(nil)

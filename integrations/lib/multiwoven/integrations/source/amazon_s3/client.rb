@@ -7,8 +7,9 @@ module Multiwoven::Integrations::Source
       @session_name = ""
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        client = config_aws(connection_config)
-        client.get_bucket_policy_status({ bucket: connection_config[:bucket] })
+        auth_data = get_auth_data(connection_config)
+        client = config_aws(auth_data, connection_config[:region])
+        client.get_bucket_location({ bucket: connection_config[:bucket] })
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
@@ -16,6 +17,10 @@ module Multiwoven::Integrations::Source
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
+        auth_data = get_auth_data(connection_config)
+        connection_config[:access_id] = auth_data.credentials.access_key_id
+        connection_config[:secret_access] = auth_data.credentials.secret_access_key
+        connection_config[:session_token] = auth_data.credentials.session_token
         conn = create_connection(connection_config)
         # If pulling from multiple files, all files must have the same schema
         path = build_path(connection_config)
@@ -30,6 +35,10 @@ module Multiwoven::Integrations::Source
 
       def read(sync_config)
         connection_config = sync_config.source.connection_specification.with_indifferent_access
+        auth_data = get_auth_data(connection_config)
+        connection_config[:access_id] = auth_data.credentials.access_key_id
+        connection_config[:secret_access] = auth_data.credentials.secret_access_key
+        connection_config[:session_token] = auth_data.credentials.session_token
         conn = create_connection(connection_config)
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
@@ -45,6 +54,19 @@ module Multiwoven::Integrations::Source
 
       private
 
+      def get_auth_data(connection_config)
+        if connection_config[:auth_type] == "user"
+          Aws::Credentials.new(connection_config[:access_id], connection_config[:secret_access])
+        elsif connection_config[:auth_type] == "role"
+          sts_client = Aws::STS::Client.new(region: connection_config[:region])
+          session_name = "s3-check-connection"
+          sts_client.assume_role({
+                                   role_arn: connection_config[:arn],
+                                   role_session_name: session_name
+                                 })
+        end
+      end
+
       # DuckDB
       def create_connection(connection_config)
         # In the case when previewing a query
@@ -57,7 +79,8 @@ module Multiwoven::Integrations::Source
               TYPE S3,
               KEY_ID '#{connection_config[:access_id]}',
               SECRET '#{connection_config[:secret_access]}',
-              REGION '#{connection_config[:region]}'
+              REGION '#{connection_config[:region]}',
+              SESSION_TOKEN '#{connection_config[:session_token]}'
           );
         "
         get_results(conn, secret_query)
@@ -113,13 +136,11 @@ module Multiwoven::Integrations::Source
       end
 
       # AWS SDK
-      def config_aws(config)
-        config = config.with_indifferent_access
+      def config_aws(config, region)
         Aws.config.update({
-                            region: config[:region],
-                            credentials: Aws::Credentials.new(config[:access_id], config[:secret_access])
+                            region: region,
+                            credentials: config
                           })
-        config.with_indifferent_access
         Aws::S3::Client.new
       end
 
