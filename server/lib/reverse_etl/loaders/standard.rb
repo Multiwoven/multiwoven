@@ -29,10 +29,6 @@ module ReverseEtl
         client = sync.destination.connector_client.new
 
         sync_run.sync_records.pending.find_in_batches do |sync_records|
-          # track sync record status
-          successfull_sync_records = []
-          failed_sync_records = []
-
           # concurrent request rate limit
           concurrency = sync_config.stream.request_rate_concurrency || THREAD_COUNT
 
@@ -41,11 +37,7 @@ module ReverseEtl
             record = transformer.transform(sync, sync_record)
             Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{record}"
             report = handle_response(client.write(sync_config, [record], sync_record.action), sync_run)
-            if report.tracking.success.zero?
-              failed_sync_records << sync_record.id
-            else
-              successfull_sync_records << sync_record.id
-            end
+            update_sync_record_logs_and_status(report, sync_record)
           rescue Activities::LoaderActivity::FullRefreshFailed
             raise
           rescue StandardError => e
@@ -55,8 +47,6 @@ module ReverseEtl
                                             })
             Rails.logger(e)
           end
-
-          update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
 
           heartbeat(activity)
         end
@@ -75,7 +65,6 @@ module ReverseEtl
                       in_threads: THREAD_COUNT) do |sync_records|
           transformed_records = sync_records.map { |sync_record| transformer.transform(sync, sync_record) }
           report = handle_response(client.write(sync_config, transformed_records), sync_run)
-          heartbeat(activity)
           if report.tracking.success.zero?
             failed_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           else
@@ -94,6 +83,7 @@ module ReverseEtl
           }.to_s)
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
+        heartbeat(activity)
       end
 
       def handle_response(report, sync_run)
@@ -112,6 +102,17 @@ module ReverseEtl
           stack_trace: nil
         }.to_s)
         raise Activities::LoaderActivity::FullRefreshFailed, "Full refresh failed (non-retryable)"
+      end
+
+      def update_sync_record_logs_and_status(report, sync_record)
+        status = report.tracking.success.zero? ? "failed" : "success"
+        sync_record.update(logs: get_sync_records_logs(report), status:)
+      end
+
+      def get_sync_records_logs(report)
+        return unless report.tracking.respond_to?(:logs) && report.tracking.logs&.first&.message.present?
+
+        JSON.parse(report.tracking.logs.first.message)
       end
 
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)

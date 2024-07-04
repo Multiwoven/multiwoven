@@ -123,7 +123,14 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     context "when batch support is disabled" do
       tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
         success: 1,
-        failed: 0
+        failed: 0,
+        logs: [
+          Multiwoven::Integrations::Protocol::LogMessage.new(
+            name: self.class.name,
+            level: "info",
+            message: { request: "Sample req", response: "Sample req", level: "info" }.to_json
+          )
+        ]
       )
       let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
       let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
@@ -138,6 +145,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_config, [transform],
                                               "destination_insert").and_return(multiwoven_message)
+        expect(subject).to receive(:update_sync_record_logs_and_status)
+          .once.with(multiwoven_message, sync_run_individual.sync_records.first)
+          .and_call_original
         expect(subject).to receive(:heartbeat).once.with(activity)
         expect(sync_run_individual).to have_state(:queued)
         subject.write(sync_run_individual.id, activity)
@@ -296,6 +306,56 @@ RSpec.describe ReverseEtl::Loaders::Standard do
 
         sync_run_batch.reload
         expect(sync_run_batch).to have_state(:failed)
+      end
+    end
+
+    context "when the report has tracking logs with a message" do
+      let(:log_message) { '{"request":"Sample log message"}' }
+      let(:report) do
+        double("Report", tracking: double("Tracking", logs: [double("Log", message: log_message)]))
+      end
+
+      it "returns the log message" do
+        expected_result = { "request" => "Sample log message" }
+        expect(subject.send(:get_sync_records_logs, report)).to eq(expected_result)
+      end
+    end
+
+    context "when the report has tracking logs without a message" do
+      let(:report) do
+        double("Report", tracking: double("Tracking", logs: [double("Log", message: nil)]))
+      end
+
+      it "returns nil" do
+        expect(subject.send(:get_sync_records_logs, report)).to be_nil
+      end
+    end
+
+    context "when the report has tracking logs but no logs present" do
+      let(:report) do
+        double("Report", tracking: double("Tracking", logs: []))
+      end
+
+      it "returns nil" do
+        expect(subject.send(:get_sync_records_logs, report)).to be_nil
+      end
+    end
+
+    context "when the report does not respond to logs" do
+      let(:report) { double("Report", tracking: double("Tracking")) }
+
+      it "returns nil" do
+        expect(subject.send(:get_sync_records_logs, report)).to be_nil
+      end
+    end
+
+    context "when the report has no tracking" do
+      let(:report) do
+        double("Report", tracking: double("Tracking", logs: nil))
+      end
+
+      it "returns nil" do
+        expect(subject.send(:get_sync_records_logs, report)).to be_nil
       end
     end
   end
