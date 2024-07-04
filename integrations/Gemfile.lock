@@ -16,6 +16,7 @@ PATH
       async-websocket
       aws-sdk-athena
       aws-sdk-s3
+      aws-sdk-sts
       csv
       dry-schema
       dry-struct
@@ -81,6 +82,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.194.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.8)
+    aws-sdk-sts (1.11.0)
+      aws-sdk-core (~> 3, >= 3.110.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
@@ -334,6 +338,7 @@ DEPENDENCIES
   async-websocket (~> 0.8.0)
   aws-sdk-athena
   aws-sdk-s3
+  aws-sdk-sts
   byebug
   csv
   dry-schema
