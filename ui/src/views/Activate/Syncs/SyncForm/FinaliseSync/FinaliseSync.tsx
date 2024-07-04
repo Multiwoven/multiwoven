@@ -106,10 +106,13 @@ const FinaliseSync = (): JSX.Element => {
               borderStyle='solid'
               borderColor='gray.400'
             />
-
-            <Box display='flex' justifyContent='space-between'>
-              <Box mr={4}>
-                <Text mb='4' fontWeight='600' size='sm'>
+            <Box
+              display='flex'
+              flexDir={{ base: 'column', md: 'row' }}
+              justifyContent='space-between'
+            >
+              <Box>
+                <Text mb='4' fontWeight='semibold' size='sm'>
                   Schedule type
                 </Text>
                 <RadioGroup
@@ -123,11 +126,10 @@ const FinaliseSync = (): JSX.Element => {
                       display='flex'
                       alignItems='flex-start'
                       marginBottom='10px'
-                      backgroundColor='gray.100'
                       isDisabled
                     >
                       <Box position='relative' top='-5px'>
-                        <Text fontWeight='500' size='sm'>
+                        <Text fontWeight='medium' size='sm'>
                           Manual{' '}
                         </Text>
                         <Text size='xs' color='black.200'>
@@ -143,7 +145,7 @@ const FinaliseSync = (): JSX.Element => {
                       marginBottom='10px'
                     >
                       <Box position='relative' top='-5px'>
-                        <Text fontWeight='500' size='sm'>
+                        <Text fontWeight='medium' size='sm'>
                           Interval{' '}
                         </Text>
                         <Text size='xs' color='black.200'>
@@ -170,15 +172,14 @@ const FinaliseSync = (): JSX.Element => {
                   </Stack>
                 </RadioGroup>
               </Box>
-              <Box width='40%'>
+              <Box width={{ base: '100%', lg: '40%' }}>
                 {formik.values.schedule_type === 'interval' ? (
                   <>
-                    <Text mb={4} fontWeight='600' size='sm'>
+                    <Text mb={4} fontWeight='semibold' size='sm'>
                       Schedule Configuration
                     </Text>
                     <Box
                       border='thin'
-                      padding='5px 10px 5px 20px'
                       display='flex'
                       backgroundColor='gray.100'
                       borderRadius='8px'
@@ -187,26 +188,29 @@ const FinaliseSync = (): JSX.Element => {
                       borderStyle='solid'
                       borderColor='gray.400'
                       height='40px'
-                      justifyContent='space-around'
+                      gap='12px'
+                      maxW='450px'
+                      w='fit-content'
+                      px='12px'
                     >
                       <Box>
-                        <Text size='sm' fontWeight={500}>
+                        <Text size='sm' fontWeight='medium'>
                           Every
                         </Text>
                       </Box>
                       <Box>
                         <Input
                           name='sync_interval'
-                          pr='4.5rem'
                           type='number'
                           placeholder='Enter a value'
                           border='none'
-                          _focusVisible={{ border: '#fff' }}
+                          _focusVisible={{ border: 'gray.100' }}
                           value={formik.values.sync_interval}
                           onChange={formik.handleChange}
                           isRequired
-                          color='gray.600'
                           height='35px'
+                          minW='60px'
+                          maxW='280px'
                         />
                       </Box>
                       <Divider orientation='vertical' height='24px' color='gray.400' />
@@ -214,9 +218,14 @@ const FinaliseSync = (): JSX.Element => {
                         <Select
                           name='sync_interval_unit'
                           border='none'
-                          _focusVisible={{ border: '#fff' }}
+                          _focusVisible={{ border: 'gray.100' }}
                           value={formik.values.sync_interval_unit}
                           onChange={formik.handleChange}
+                          height='35px'
+                          minW='120px'
+                          w='full'
+                          fontWeight='medium'
+                          size='sm'
                         >
                           <option value='minutes'>Minute(s)</option>
                           <option value='hours'>Hour(s)</option>
