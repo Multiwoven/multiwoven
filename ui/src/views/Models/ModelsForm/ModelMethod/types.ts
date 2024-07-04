@@ -1,6 +1,8 @@
+import { ModelMethodName } from './methods';
+
 export type ModelMethodType = {
   image: string;
-  name: string;
+  name: ModelMethodName;
   description: string;
   type: string;
   enabled: boolean;

@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useMemo } from 'react';
 import { MODEL_TABLE_COLUMNS } from '../constants';
 import Table from '@/components/Table';
+import { ModelMethodName } from '../ModelsForm/ModelMethod/methods';
 
 type TableItem = {
   field: ModelColumnFields;
@@ -22,7 +23,13 @@ const TableItem = ({ field, data }: TableItem): JSX.Element | null | undefined =
         case 'raw_sql':
           return (
             <Text size='sm' fontWeight='semibold'>
-              SQL Query
+              {ModelMethodName.SQLQuery}
+            </Text>
+          );
+        case 'table_selector':
+          return (
+            <Text size='sm' fontWeight='semibold'>
+              {ModelMethodName.TableSelector}
             </Text>
           );
       }

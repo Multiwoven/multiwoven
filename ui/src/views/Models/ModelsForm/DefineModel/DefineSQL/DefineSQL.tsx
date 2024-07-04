@@ -1,7 +1,6 @@
-import { Box, Button, Flex, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image, Spacer, VStack } from '@chakra-ui/react';
 
 import StarsImage from '@/assets/images/stars.svg';
-import EmptyQueryPreviewImage from '@/assets/images/EmptyQueryPreview.png';
 
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -20,6 +19,11 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
+<<<<<<< HEAD
+=======
+import titleCase from '@/utils/TitleCase';
+import ModelQueryResults from '../ModelQueryResults';
+>>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -268,28 +272,7 @@ const DefineSQL = ({
                 />
               </Box>
             ) : (
-              <Box
-                border='1px'
-                borderColor='gray.400'
-                w='full'
-                minW='4xl'
-                minH='100%'
-                h='2xs'
-                rounded='xl'
-                p={1}
-                alignItems='center'
-                justifyContent='center'
-              >
-                <VStack mx='auto' mt={12}>
-                  <Image src={EmptyQueryPreviewImage} h='20' />
-                  <Text size='md' fontWeight='semibold'>
-                    Ready to test your query?
-                  </Text>
-                  <Text size='sm' color='black.200' fontWeight='regular'>
-                    Run your query to preview the rows
-                  </Text>
-                </VStack>
-              </Box>
+              <ModelQueryResults />
             )}
           </VStack>
         </Box>

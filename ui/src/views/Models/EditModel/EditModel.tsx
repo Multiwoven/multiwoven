@@ -10,6 +10,14 @@ import ContentContainer from '@/components/ContentContainer';
 import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
+<<<<<<< HEAD
+=======
+import { useStore } from '@/stores';
+import useQueryWrapper from '@/hooks/useQueryWrapper';
+import { useRef } from 'react';
+import { GetModelByIdResponse, QueryType } from '../types';
+import TableSelector from '../ModelsForm/DefineModel/TableSelector';
+>>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
 
 const EditModel = (): JSX.Element => {
   const params = useParams();
@@ -37,7 +45,7 @@ const EditModel = (): JSX.Element => {
     model_description: data?.data?.attributes.description || '',
     primary_key: data?.data?.attributes.primary_key || '',
     query: data?.data?.attributes.query || '',
-    query_type: data?.data?.attributes.query_type || '',
+    query_type: data?.data?.attributes.query_type || QueryType.RawSql,
     model_id: model_id,
   };
 
@@ -68,13 +76,21 @@ const EditModel = (): JSX.Element => {
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer containerRef={containerRef}>
         <TopBar name='' breadcrumbSteps={EDIT_QUERY_FORM_STEPS} />
-        <DefineSQL
-          isFooterVisible={false}
-          hasPrefilledValues={true}
-          prefillValues={prefillValues}
-          isUpdateButtonVisible={true}
-          isAlignToContentContainer={true}
-        />
+        {prefillValues.query_type === QueryType.TableSelector ? (
+          <TableSelector
+            hasPrefilledValues={true}
+            prefillValues={prefillValues}
+            isUpdateButtonVisible={true}
+          />
+        ) : (
+          <DefineSQL
+            isFooterVisible={false}
+            hasPrefilledValues={true}
+            prefillValues={prefillValues}
+            isUpdateButtonVisible={true}
+            isAlignToContentContainer={true}
+          />
+        )}
       </ContentContainer>
     </Box>
   );
