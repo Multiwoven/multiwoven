@@ -114,6 +114,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
 
         tracking = subject.write(s_config, [records.first.data.transform_keys(&:to_s)]).tracking
         expect(tracking.success).to eql(1)
+        log_message = tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
 
       it "write records successfully on update record action destination_update" do
@@ -125,6 +131,13 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
 
         tracking = subject.write(s_config, [records.first.data.transform_keys(&:to_s)], "destination_update").tracking
         expect(tracking.success).to eql(1)
+        expect(tracking.logs.count).to eql(1)
+        log_message = tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
@@ -139,6 +152,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
 
         tracking = subject.write(s_config, [records.first.data.transform_keys(&:to_s)]).tracking
         expect(tracking.failed).to eql(1)
+        expect(tracking.logs.count).to eql(1)
+        log_message = tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("error")
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("\"response\":\"test error\"")
       end
     end
   end
