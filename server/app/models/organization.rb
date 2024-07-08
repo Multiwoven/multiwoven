@@ -13,4 +13,6 @@ class Organization < ApplicationRecord
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 
   has_many :workspaces, dependent: :destroy
+  has_many :workspace_users, through: :workspaces
+  has_many :users, through: :workspace_users
 end
