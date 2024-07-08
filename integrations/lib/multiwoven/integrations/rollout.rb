@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.3.4"
-=======
     VERSION = "0.4.1"
->>>>>>> 76afbbf8 (refactor(CE): remove credential param from STS client init (#264))
 
     ENABLED_SOURCES = %w[
       Snowflake
