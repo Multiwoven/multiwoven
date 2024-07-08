@@ -457,16 +457,26 @@ module Multiwoven
 
   RSpec.describe Multiwoven::Integrations::Protocol::TrackingMessage do
     describe "#to_multiwoven_message" do
+      let(:log_message_data) do
+        Multiwoven::Integrations::Protocol::LogMessage.new(
+          name: self.class.name,
+          level: "info",
+          message: { request: "Sample req", response: "Sample req", level: "info" }.to_json
+        )
+      end
       let(:tracking_message) do
-        Multiwoven::Integrations::Protocol::TrackingMessage.new(success: 3, failed: 1)
+        Multiwoven::Integrations::Protocol::TrackingMessage.new(success: 3, failed: 1, logs: [log_message_data])
       end
 
       it "converts to a MultiwovenMessage" do
         multiwoven_message = tracking_message.to_multiwoven_message
-
         expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
         expect(multiwoven_message.type).to eq("tracking")
         expect(multiwoven_message.tracking).to eq(tracking_message)
+        expect(multiwoven_message.tracking.logs.first).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(multiwoven_message.tracking.logs.first.level).to eq("info")
+        expect(multiwoven_message.tracking.logs.first.message)
+          .to eq("{\"request\":\"Sample req\",\"response\":\"Sample req\",\"level\":\"info\"}")
       end
     end
   end

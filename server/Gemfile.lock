@@ -1554,6 +1554,9 @@ GEM
     aws-sdk-storagegateway (1.80.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-sts (1.11.0)
+      aws-sdk-core (~> 3, >= 3.110.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-supplychain (1.0.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
@@ -1757,10 +1760,7 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.1.0)
       net-http
-    ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1776,7 +1776,7 @@ GEM
     gli (2.21.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.71.0)
+    google-apis-bigquery_v2 (0.72.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (0.15.0)
       addressable (~> 2.5, >= 2.5.1)
@@ -1788,10 +1788,10 @@ GEM
       rexml
     google-apis-sheets_v4 (0.32.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-cloud-bigquery (1.49.1)
+    google-cloud-bigquery (1.50.0)
       bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
-      google-apis-bigquery_v2 (~> 0.62)
+      google-apis-bigquery_v2 (~> 0.71)
       google-apis-core (~> 0.13)
       google-cloud-core (~> 1.6)
       googleauth (~> 1.9)
@@ -1892,11 +1892,12 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.3.1)
+    multiwoven-integrations (0.3.5)
       activesupport
       async-websocket
       aws-sdk-athena
       aws-sdk-s3
+      aws-sdk-sts
       csv
       dry-schema
       dry-struct
@@ -2091,7 +2092,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sequel (5.81.0)
+    sequel (5.82.0)
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -2114,7 +2115,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    sorbet-runtime (0.5.11447)
+    sorbet-runtime (0.5.11463)
     stringio (3.1.0)
     stripe (12.0.0)
     strong_migrations (1.8.0)
@@ -2148,7 +2149,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.12)
-    zendesk_api (3.0.5)
+    zendesk_api (3.1.0)
       faraday (> 2.0.0)
       faraday-multipart
       hashie (>= 3.5.2, < 6.0.0)
@@ -2188,7 +2189,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.3.1)
+  multiwoven-integrations (~> 0.3.5)
   mysql2
   newrelic_rpm
   parallel

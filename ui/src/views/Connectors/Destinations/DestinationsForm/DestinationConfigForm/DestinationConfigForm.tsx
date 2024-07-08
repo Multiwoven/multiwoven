@@ -10,6 +10,7 @@ import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormF
 import JSONSchemaForm from '@/components/JSONSchemaForm';
 import { generateUiSchema } from '@/utils/generateUiSchema';
 import { useStore } from '@/stores';
+import { processFormData } from '@/views/Connectors/helpers';
 
 const DestinationConfigForm = (): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -34,7 +35,8 @@ const DestinationConfigForm = (): JSX.Element | null => {
   if (!connectorSchema) return null;
 
   const handleFormSubmit = async (formData: FormData) => {
-    handleMoveForward(stepInfo?.formKey as string, formData);
+    const processedFormData = processFormData(formData);
+    handleMoveForward(stepInfo?.formKey as string, processedFormData);
   };
 
   const generatedSchema = generateUiSchema(connectorSchema);
