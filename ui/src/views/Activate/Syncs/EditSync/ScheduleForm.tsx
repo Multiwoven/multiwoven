@@ -19,7 +19,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
       <Text fontWeight='semibold' mb='6' size='md'>
         Finalise setting for this sync
       </Text>
-      <Box display='flex' justifyContent='space-between'>
+      <Box display='flex' flexDir={{ base: 'column', md: 'row' }} justifyContent='space-between'>
         <Box>
           <Text mb='4' fontWeight='semibold' size='sm'>
             Schedule type
@@ -50,7 +50,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 value='interval'
                 display='flex'
                 alignItems='flex-start'
-                backgroundColor='#fff'
+                backgroundColor='gray.100'
                 marginBottom='10px'
               >
                 <Box position='relative' top='-5px'>
@@ -81,7 +81,7 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
             </Stack>
           </RadioGroup>
         </Box>
-        <Box width='40%'>
+        <Box width={{ base: '100%', lg: '40%' }}>
           {formik.values.schedule_type === 'interval' ? (
             <>
               <Text mb={4} fontWeight='semibold' size='sm'>
@@ -89,7 +89,6 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
               </Text>
               <Box
                 border='thin'
-                padding='5px 10px 5px 20px'
                 display='flex'
                 backgroundColor='gray.100'
                 borderRadius='8px'
@@ -98,23 +97,29 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                 borderStyle='solid'
                 borderColor='gray.400'
                 height='40px'
-                justifyContent='space-around'
+                gap='12px'
+                maxW='450px'
+                w='fit-content'
+                px='12px'
               >
                 <Box>
-                  <Text>Every</Text>
+                  <Text size='sm' fontWeight='medium'>
+                    Every
+                  </Text>
                 </Box>
                 <Box>
                   <Input
                     name='sync_interval'
-                    pr='4.5rem'
                     type='number'
                     placeholder='Enter a value'
                     border='none'
-                    _focusVisible={{ border: '#fff' }}
+                    _focusVisible={{ border: 'gray.100' }}
                     value={formik.values.sync_interval}
                     onChange={formik.handleChange}
                     isRequired
                     height='35px'
+                    minW='60px'
+                    maxW='280px'
                   />
                 </Box>
                 <Divider orientation='vertical' height='24px' color='gray.400' />
@@ -122,9 +127,14 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                   <Select
                     name='sync_interval_unit'
                     border='none'
-                    _focusVisible={{ border: '#fff' }}
+                    _focusVisible={{ border: 'gray.100' }}
                     value={formik.values.sync_interval_unit}
                     onChange={formik.handleChange}
+                    height='35px'
+                    minW='120px'
+                    w='full'
+                    fontWeight='medium'
+                    size='sm'
                   >
                     <option value='minutes'>Minute(s)</option>
                     <option value='hours'>Hour(s)</option>

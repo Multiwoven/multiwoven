@@ -1,5 +1,6 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { flexRender, getCoreRowModel, useReactTable, ColumnDef } from '@tanstack/react-table';
+import { useState } from 'react';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -7,10 +8,16 @@ type DataTableProps<TData, TValue> = {
 };
 
 const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValue>) => {
+  const [rowSelection, setRowSelection] = useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
+    state: {
+      rowSelection,
+    },
   });
 
   return (
