@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.3.1"
-=======
     VERSION = "0.4.0"
->>>>>>> ad5401d3 (feat(CE): Add mariaDB destination connector)
 
     ENABLED_SOURCES = %w[
       Snowflake

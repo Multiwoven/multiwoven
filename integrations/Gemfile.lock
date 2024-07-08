@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.3.1)
-=======
     multiwoven-integrations (0.4.0)
->>>>>>> ad5401d3 (feat(CE): Add mariaDB destination connector)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -326,6 +322,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-23
   x64-mingw-ucrt
   x86_64-darwin-23
 
