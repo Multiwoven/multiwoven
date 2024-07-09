@@ -3,6 +3,8 @@
 
 require_relative "setup"
 
+TemporalService.setup
+
 worker = Temporal::Worker.new
 
 worker.register_workflow(Workflows::SyncWorkflow)

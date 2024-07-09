@@ -15,6 +15,10 @@ threads min_threads_count, max_threads_count
 if ENV["RAILS_ENV"] == "production"
   require "concurrent-ruby"
   worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
+  on_worker_boot do
+    Rails.logger.info("Initializing temporal client")
+    TemporalService.setup
+  end
   workers worker_count if worker_count > 1
 end
 
