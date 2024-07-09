@@ -32,6 +32,7 @@ module Multiwoven
       Zendesk
       Http
       Iterable
+      MariaDB
     ].freeze
   end
 end
