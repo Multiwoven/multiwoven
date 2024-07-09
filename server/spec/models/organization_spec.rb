@@ -20,6 +20,28 @@ RSpec.describe Organization, type: :model do
   # Test associations
   describe "associations" do
     it { should have_many(:workspaces).dependent(:destroy) }
-    # Add other associations here
+    it { should have_many(:workspace_users).through(:workspaces) }
+    it { should have_many(:users).through(:workspace_users) }
+  end
+
+  describe "association functionality" do
+    let(:organization) { create(:organization) }
+    let(:workspace) { create(:workspace, organization:) }
+    let(:user) { create(:user) }
+    let(:workspace_user) { create(:workspace_user, workspace:, user:) }
+
+    before do
+      workspace
+      user
+      workspace_user
+    end
+
+    it "includes the correct workspace_users through workspaces" do
+      expect(organization.workspace_users).to include(workspace_user)
+    end
+
+    it "includes the correct users through workspace_users" do
+      expect(organization.users).to include(user)
+    end
   end
 end
