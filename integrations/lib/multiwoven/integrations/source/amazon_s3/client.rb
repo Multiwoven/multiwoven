@@ -55,8 +55,7 @@ module Multiwoven::Integrations::Source
         if connection_config[:auth_type] == "user"
           Aws::Credentials.new(connection_config[:access_id], connection_config[:secret_access])
         elsif connection_config[:auth_type] == "role"
-          credentials = Aws::Credentials.new(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-          sts_client = Aws::STS::Client.new(region: connection_config[:region], credentials: credentials)
+          sts_client = Aws::STS::Client.new(region: connection_config[:region])
           resp = sts_client.assume_role({
                                           role_arn: connection_config[:arn],
                                           role_session_name: session,
