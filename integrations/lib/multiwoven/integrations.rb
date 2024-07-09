@@ -30,6 +30,7 @@ require "base64"
 require "aws-sdk-s3"
 require "duckdb"
 require "iterable-api-client"
+require "aws-sdk-sts"
 
 # Service
 require_relative "integrations/config"
@@ -75,6 +76,7 @@ require_relative "integrations/destination/postgresql/client"
 require_relative "integrations/destination/zendesk/client"
 require_relative "integrations/destination/http/client"
 require_relative "integrations/destination/iterable/client"
+require_relative "integrations/destination/maria_db/client"
 
 module Multiwoven
   module Integrations

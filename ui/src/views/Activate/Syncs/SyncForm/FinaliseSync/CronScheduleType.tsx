@@ -80,7 +80,7 @@ const CronScheduleType = ({ formik }: { formik: FormikContextType<any> }): JSX.E
           type='text'
           placeholder='Enter cron expression'
           border='none'
-          _focusVisible={{ border: '#fff' }}
+          _focusVisible={{ border: 'gray.100' }}
           value={formik.values.cron_expression}
           onChange={handleCronExpressionChange}
           isRequired
