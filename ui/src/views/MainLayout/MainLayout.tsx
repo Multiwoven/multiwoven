@@ -31,7 +31,26 @@ const MainLayout = (): JSX.Element => {
     setIsLoading(false);
   }, [workspaceData]);
 
+<<<<<<< HEAD
   if (isLoading) {
+=======
+  useEffect(() => {
+    if (isError || (!data && isFetched)) {
+      showToast({
+        title: 'Error: Failed to fetch workspace details.',
+        description: 'Failed to fetch workspace details.',
+        status: CustomToastStatus.Error,
+        position: 'bottom-right',
+      });
+    }
+  }, [isError, data, isFetched, showToast]);
+
+  if (isError || (!data && isFetched)) {
+    return <ServerError />;
+  }
+
+  if (workspaceDataIsLoading || isLoading) {
+>>>>>>> 51adddf3 (fix(CE): show server error if data is fetched and no data)
     return <Loader />;
   }
 
