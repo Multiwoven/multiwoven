@@ -7,13 +7,9 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getWorkspaces } from '@/services/settings';
 import { useStore } from '@/stores';
-<<<<<<< HEAD
-=======
-import Prefetcher from '@/enterprise/views/Prefetcher';
 import ServerError from '../ServerError';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
->>>>>>> 1821a622 (refactor(CE): added main layout error screen if not data or error)
 
 const MainLayout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
