@@ -15,6 +15,7 @@ require "action_cable/engine"
 # require "rails/test_unit/railtie"
 # config/application.rb
 require_relative '../app/middleware/multiwoven_server/quiet_logger'
+require_relative '../app/middleware/multiwoven_server/request_response_logger'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -47,6 +48,7 @@ module MultiwovenServer
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.middleware.insert_before Rails::Rack::Logger, MultiwovenServer::QuietLogger
+    config.middleware.use MultiwovenServer::RequestResponseLogger
 
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
