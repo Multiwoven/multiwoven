@@ -51,5 +51,33 @@ RSpec.describe MultiwovenServer::RequestResponseLogger do
 
       subject.call(env)
     end
+
+    it "logs response details with empty array" do
+      allow(app).to receive(:call).with(env).and_return([201, { "Content-Type" => "application/json" }, []])
+
+      allow_any_instance_of(described_class).to receive(:log_request).and_return(nil)
+      expect(Rails.logger).to receive(:info) do |arg|
+        log_data = eval(arg) # rubocop:disable Security/Eval
+        expect(log_data[:response_status]).to eq(201)
+        expect(log_data[:response_body]).to eq([])
+        expect(log_data[:response_headers]).to include("application/json")
+      end.once
+
+      subject.call(env)
+    end
+
+    it "logs response details with empty nil" do
+      allow(app).to receive(:call).with(env).and_return([201, { "Content-Type" => "application/json" }, nil])
+
+      allow_any_instance_of(described_class).to receive(:log_request).and_return(nil)
+      expect(Rails.logger).to receive(:info) do |arg|
+        log_data = eval(arg) # rubocop:disable Security/Eval
+        expect(log_data[:response_status]).to eq(201)
+        expect(log_data[:response_body]).to eq([])
+        expect(log_data[:response_headers]).to include("application/json")
+      end.once
+
+      subject.call(env)
+    end
   end
 end

@@ -36,7 +36,7 @@ module MultiwovenServer
       Rails.logger.info({
         response_status: status,
         response_headers: headers.to_json,
-        response_body: response.body
+        response_body: response.respond_to?(:body) ? response.body : []
       }.to_s)
     end
   end
