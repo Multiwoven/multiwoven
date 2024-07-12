@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 import { Formik, Form, ErrorMessage, FormikTouched, FormikErrors, FieldInputProps } from 'formik';
 import * as Yup from 'yup';
@@ -23,8 +24,22 @@ import AuthFooter from '../AuthFooter';
 import HiddenInput from '@/components/HiddenInput';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
+=======
+import { useNavigate } from 'react-router-dom';
+import { Stack, Heading } from '@chakra-ui/react';
+>>>>>>> 9f11d025 (refactor(CE): moved common elements of sign up and sign in to separate views)
 import mwTheme from '@/chakra.config';
+import AuthFooter from '../AuthFooter';
+import { SignUpAuthView } from '@/views/Authentication/AuthViews/SignUpAuthView';
+import AuthCard from '../AuthCard';
+import { CustomToastStatus } from '@/components/Toast';
+import titleCase from '@/utils/TitleCase';
+import { AuthErrorResponse, SignUpPayload, signUp } from '@/services/authentication';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
+import useCustomToast from '@/hooks/useCustomToast';
 import { useMutation } from '@tanstack/react-query';
+<<<<<<< HEAD
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required('Company name is required'),
@@ -112,6 +127,10 @@ type SignUpErrors = {
   };
 };
 
+=======
+// import isValidEmailDomain from '@/utils/isValidEmailDomain';
+
+>>>>>>> 9f11d025 (refactor(CE): moved common elements of sign up and sign in to separate views)
 const SignUp = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -175,15 +194,25 @@ const SignUp = (): JSX.Element => {
 
   return (
     <>
-      <Flex justify='center' w='100%' minHeight='90vh' alignItems='center' overflowY='auto'>
-        <Formik
+      <AuthCard logoUrl={logoUrl} brandName={brandName}>
+        <Stack spacing='8px' textAlign='center' mb='32px'>
+          <Heading size='xs' fontWeight='semibold'>
+            Get started with {brandName}
+          </Heading>
+        </Stack>
+        <SignUpAuthView
+          logoUrl={logoUrl}
+          brandName={brandName}
+          handleSubmit={handleSubmit}
+          submitting={submitting}
           initialValues={{
             company_name: '',
-            name: '',
             email: '',
+            name: '',
             password: '',
             password_confirmation: '',
           }}
+<<<<<<< HEAD
           onSubmit={(values) => handleSubmit(values)}
           validationSchema={SignUpSchema}
         >
@@ -314,6 +343,10 @@ const SignUp = (): JSX.Element => {
           )}
         </Formik>
       </Flex>
+=======
+        />
+      </AuthCard>
+>>>>>>> 9f11d025 (refactor(CE): moved common elements of sign up and sign in to separate views)
       <AuthFooter />
     </>
   );

@@ -17,6 +17,14 @@ const HiddenInput = (props: InputProps): JSX.Element => {
 
   return (
     <InputGroup>
+      <Input
+        id={props.id}
+        name='password'
+        autoComplete='current-password'
+        required
+        {...props}
+        type={isOpen ? 'text' : 'password'}
+      />
       <InputRightElement>
         <IconButton
           variant='text'
@@ -25,14 +33,6 @@ const HiddenInput = (props: InputProps): JSX.Element => {
           onClick={onClickReveal}
         />
       </InputRightElement>
-      <Input
-        id='password'
-        name='password'
-        autoComplete='current-password'
-        required
-        {...props}
-        type={isOpen ? 'text' : 'password'}
-      />
     </InputGroup>
   );
 };
