@@ -32,13 +32,8 @@ import useCustomToast from '@/hooks/useCustomToast';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { GetModelByIdResponse } from '@/views/Models/types';
 import { useStore } from '@/stores';
-<<<<<<< HEAD
-=======
-import RoleAccess from '@/enterprise/components/RoleAccess';
 import { FiLayout } from 'react-icons/fi';
-import { UserActions } from '@/enterprise/types';
 import { QueryType } from '@/views/Models/types';
->>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
@@ -174,7 +169,6 @@ const ViewModel = (): JSX.Element => {
                 icon={data.data?.attributes.connector.icon || ''}
               />
               <Spacer />
-<<<<<<< HEAD
               <Button
                 variant='shell'
                 onClick={() => navigate('edit')}
@@ -186,23 +180,6 @@ const ViewModel = (): JSX.Element => {
               >
                 Edit
               </Button>
-=======
-              {prefillValues?.query_type !== QueryType.TableSelector && (
-                <RoleAccess location='model' type='item' action={UserActions.Update}>
-                  <Button
-                    variant='shell'
-                    onClick={() => navigate('edit')}
-                    minWidth='0'
-                    width='auto'
-                    height='32px'
-                    fontSize='12px'
-                    paddingX={3}
-                  >
-                    Edit
-                  </Button>
-                </RoleAccess>
-              )}
->>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
             </Flex>
             <Box borderX='1px' borderBottom='1px' roundedBottom='lg' py={2} borderColor='gray.400'>
               {prefillValues?.query_type === QueryType.TableSelector ? (

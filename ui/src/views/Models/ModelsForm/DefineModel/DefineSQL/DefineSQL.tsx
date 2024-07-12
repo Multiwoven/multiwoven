@@ -19,11 +19,7 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
-<<<<<<< HEAD
-=======
-import titleCase from '@/utils/TitleCase';
 import ModelQueryResults from '../ModelQueryResults';
->>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
 
 const DefineSQL = ({
   hasPrefilledValues = false,

@@ -5,19 +5,13 @@ import { Box } from '@chakra-ui/react';
 import { getModelById } from '@/services/models';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import TopBar from '@/components/TopBar';
-import { useRef } from 'react';
 import ContentContainer from '@/components/ContentContainer';
 import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
-<<<<<<< HEAD
-=======
-import { useStore } from '@/stores';
-import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { useRef } from 'react';
-import { GetModelByIdResponse, QueryType } from '../types';
+import { QueryType } from '../types';
 import TableSelector from '../ModelsForm/DefineModel/TableSelector';
->>>>>>> a162c864 (feat(CE): enable table selector and layout (#247))
 
 const EditModel = (): JSX.Element => {
   const params = useParams();
