@@ -1,3 +1,5 @@
+import { QueryType } from '@/views/Models/types';
+
 export type StepData = {
   step: number;
   data: any;
@@ -18,7 +20,7 @@ export type PrefillValue = {
   model_description: string;
   model_id: string;
   query: string;
-  query_type: string;
+  query_type: QueryType;
   primary_key: string;
 };
 

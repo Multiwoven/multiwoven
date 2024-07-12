@@ -1,3 +1,8 @@
+export enum QueryType {
+  TableSelector = 'table_selector',
+  RawSql = 'raw_sql',
+}
+
 export type CreateModelPayload = {
   model: {
     connector_id: number;
@@ -26,7 +31,7 @@ export type GetModelByIdResponse = {
     name: string;
     primary_key: string;
     query: string;
-    query_type: string;
+    query_type: QueryType;
     updated_at: string;
     connector: {
       [key: string]: string | null;

@@ -3,7 +3,7 @@ import {
   CreateModelResponse,
   GetModelByIdResponse,
 } from '@/views/Models/types';
-import { apiRequest, multiwovenFetch } from './common';
+import { apiRequest, multiwovenFetch, ApiResponse, ErrorResponse } from './common';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
 
 export type APIData = {
@@ -25,16 +25,14 @@ export type Field = {
 };
 
 export type ModelPreviewResponse =
+  | { errors?: ErrorResponse[] }
   | Field[]
   | {
-      data: {
+      errors?: {
+        detail: string;
         status: number;
-        errors?: {
-          detail: string;
-          status: number;
-          title: string;
-        }[];
-      };
+        title: string;
+      }[];
     };
 
 export type ModelAttributes = {
@@ -74,10 +72,7 @@ export const getAllModels = async (): Promise<APIData> =>
     url: '/models',
   });
 
-export const getModelPreviewById = async (
-  query: string,
-  id: string,
-): Promise<ModelPreviewResponse> =>
+export const getModelPreviewById = async (query: string, id: string) =>
   multiwovenFetch<ModelPreviewPayload, ModelPreviewResponse>({
     method: 'post',
     url: '/connectors/' + id + '/query_source',
@@ -100,8 +95,8 @@ export const getModelById = async (id: string): Promise<ModelAPIResponse<GetMode
 export const putModelById = async (
   id: string,
   payload: UpdateModelPayload,
-): Promise<ModelAPIResponse<GetModelByIdResponse>> =>
-  multiwovenFetch<UpdateModelPayload, ModelAPIResponse<GetModelByIdResponse>>({
+): Promise<ApiResponse<GetModelByIdResponse>> =>
+  multiwovenFetch<UpdateModelPayload, ApiResponse<GetModelByIdResponse>>({
     method: 'put',
     url: '/models/' + id,
     data: payload,
