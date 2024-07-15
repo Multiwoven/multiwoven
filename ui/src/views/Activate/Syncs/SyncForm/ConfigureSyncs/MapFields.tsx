@@ -15,6 +15,7 @@ type MapFieldsProps = {
   model: ModelEntity;
   destination: ConnectorItem;
   stream: Stream | null;
+  handleRefreshCatalog: () => void;
   data?: FieldMapType[] | null;
   isEdit?: boolean;
   handleOnConfigChange: (args: FieldMapType[]) => void;
@@ -29,6 +30,7 @@ const MapFields = ({
   isEdit,
   handleOnConfigChange,
   configuration,
+  handleRefreshCatalog,
 }: MapFieldsProps): JSX.Element | null => {
   const [fields, setFields] = useState<FieldMapType[]>([{ from: '', to: '', mapping_type: '' }]);
 
@@ -177,6 +179,7 @@ const MapFields = ({
             onChange={handleOnChange}
             isDisabled={!stream || isRequired}
             selectedConfigOptions={configuration}
+            handleRefreshCatalog={handleRefreshCatalog}
           />
           <Box
             py='20px'
