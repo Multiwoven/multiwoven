@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.4.1)
+=======
+    multiwoven-integrations (0.5.2)
+>>>>>>> 1f2f12dd (fix(CE): fix gem (#304))
       activesupport
       async-websocket
       aws-sdk-athena

@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.4.1"
+=======
+    VERSION = "0.5.2"
+>>>>>>> 1f2f12dd (fix(CE): fix gem (#304))
 
     ENABLED_SOURCES = %w[
       Snowflake
