@@ -29,7 +29,8 @@ RSpec.describe DeviseMailer, type: :mailer do
 
     it "contains the inviter's name and workspace name in the body" do
       expect(mail.body.encoded)
-        .to match("#{inviter.name} invited you to join the workspace #{workspace.name} on AI Squared")
+        .to match("#{inviter.name} has invited you to use AI Squared with them, " \
+          "in a workspace called #{workspace.name}")
     end
 
     it "contains the correct sign-up link" do
@@ -64,6 +65,7 @@ RSpec.describe DeviseMailer, type: :mailer do
 
     before do
       allow(ENV).to receive(:[]).with("UI_HOST").and_return("https://example.com")
+      user.update(reset_password_sent_at: Time.current)
     end
 
     it "renders the headers" do
@@ -76,7 +78,7 @@ RSpec.describe DeviseMailer, type: :mailer do
       expect(mail.body.encoded).to match("A password change has been requested for your account.")
       doc = Nokogiri::HTML(mail.body.encoded)
       link = doc.at_css("a")["href"]
-      reset_url = "https://example.com/reset_password?reset_password_token=testtoken"
+      reset_url = "https://example.com/reset-password?reset_password_token=testtoken"
       expect(link).to eq(reset_url)
     end
   end
