@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.4.1)
+=======
+    multiwoven-integrations (0.5.1)
+>>>>>>> 8e7e2d5d (fix(CE): DuckDB httpfs extension requirement (#298))
       activesupport
       async-websocket
       aws-sdk-athena

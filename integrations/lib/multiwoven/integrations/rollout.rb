@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.4.1"
+=======
+    VERSION = "0.5.1"
+>>>>>>> 8e7e2d5d (fix(CE): DuckDB httpfs extension requirement (#298))
 
     ENABLED_SOURCES = %w[
       Snowflake
