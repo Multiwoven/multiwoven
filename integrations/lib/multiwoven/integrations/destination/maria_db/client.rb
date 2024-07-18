@@ -102,7 +102,9 @@ module Multiwoven::Integrations::Destination
           result[index][:tablename] = table_name
           result[index][:columns] = [column_data]
         end
-        result
+        result.values.group_by { |entry| entry[:tablename] }.transform_values do |entries|
+          { tablename: entries.first[:tablename], columns: entries.flat_map { |entry| entry[:columns] } }
+        end
       end
 
       def tracking_message(success, failure)
