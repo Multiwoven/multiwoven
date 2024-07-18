@@ -33,6 +33,7 @@ module Multiwoven
       Http
       Iterable
       MariaDB
+      DatabricksLakehouse
     ].freeze
   end
 end

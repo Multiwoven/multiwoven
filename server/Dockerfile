@@ -21,14 +21,29 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
 COPY getduckdb.sh .
-# Make the script executable
-RUN chmod +x getduckdb.sh
-RUN ./getduckdb.sh
+COPY getduckdbcli.sh .
 
+# Make the scripts executable
+RUN chmod +x getduckdb.sh getduckdbcli.sh 
+
+# Run the scripts
+RUN ./getduckdb.sh
+RUN ./getduckdbcli.sh
+
+# Unzip and move DuckDB files
 RUN unzip duckdb.zip -d libduckdb
 RUN mv libduckdb/duckdb.* /usr/local/include
 RUN mv libduckdb/libduckdb.so /usr/local/lib
 RUN ldconfig /usr/local/lib
+
+# Download and install the DuckDB CLI
+RUN unzip duckdb_cli.zip -d duckdb_cli
+RUN mv duckdb_cli/duckdb /usr/local/bin/
+RUN chmod +x /usr/local/bin/duckdb
+
+RUN ldconfig /usr/local/lib
+# Load the httpfs extension into DuckDB
+RUN echo "INSTALL httpfs; LOAD httpfs;" | duckdb
 
 # # Navigate to the directory of the component you want to build
 WORKDIR /
