@@ -21,12 +21,6 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
 COPY getduckdb.sh .
-<<<<<<< HEAD
-# Make the script executable
-RUN chmod +x getduckdb.sh
-RUN ./getduckdb.sh
-
-=======
 COPY gethttpfsextension.sh .
 
 # Make the scripts executable
@@ -34,19 +28,15 @@ RUN chmod +x getduckdb.sh gethttpfsextension.sh
 
 # Unzip and move DuckDB files
 RUN ./getduckdb.sh
->>>>>>> 95c7852c (fix(CE): httpfs extension server install (#301))
 RUN unzip duckdb.zip -d libduckdb
 RUN rm -rf duckdb.zip
 RUN mv libduckdb/duckdb.* /usr/local/include
 RUN mv libduckdb/libduckdb.so /usr/local/lib
 
-<<<<<<< HEAD
-=======
 # Unzip and Install DuckDB HTTPFS Extension 
 RUN ./gethttpfsextension.sh
 
 RUN ldconfig /usr/local/lib
->>>>>>> 95c7852c (fix(CE): httpfs extension server install (#301))
 # # Navigate to the directory of the component you want to build
 WORKDIR /
 
