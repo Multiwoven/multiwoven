@@ -10,27 +10,23 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
 COPY getduckdb.sh .
-COPY getduckdbcli.sh .
+COPY gethttpfsextension.sh .
 
-# Make the script executable
-RUN chmod +x getduckdb.sh getduckdbcli.sh
-
-RUN ./getduckdb.sh
-RUN ./getduckdbcli.sh
+# Make the scripts executable
+RUN chmod +x getduckdb.sh gethttpfsextension.sh
 
 # Unzip and move DuckDB files
+RUN ./getduckdb.sh
 RUN unzip duckdb.zip -d libduckdb
 RUN mv libduckdb/duckdb.* /usr/local/include
 RUN mv libduckdb/libduckdb.so /usr/local/lib
 
-# Download and install the DuckDB CLI
-RUN unzip duckdb_cli.zip -d duckdb_cli
-RUN mv duckdb_cli/duckdb /usr/local/bin/
-RUN chmod +x /usr/local/bin/duckdb
+# Unzip and Install DuckDB HTTPFS Extension 
+RUN ./gethttpfsextension.sh && \
+    gunzip httpfs.duckdb_extension.gz && \
+    mv httpfs.duckdb_extension /home/rails/.duckdb/extensions/v1.0.0/linux_arm64/
 
 RUN ldconfig /usr/local/lib
-# Load the httpfs extension into DuckDB
-RUN echo "INSTALL httpfs; LOAD httpfs;" | duckdb
 
 WORKDIR /rails
 
