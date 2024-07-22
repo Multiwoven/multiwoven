@@ -20,7 +20,7 @@ module Api
 
       def destroy
         authorize @sync
-        result = CancelSync.call(sync: @sync, workflow_id: params[:schedule_sync][:workflow_id])
+        result = CancelSync.call(sync: @sync)
 
         if result.success?
           render json: { message: "Sync cancelled successfully" }, status: :ok
@@ -32,7 +32,7 @@ module Api
       private
 
       def set_sync
-        @sync = current_workspace.syncs.find_by(id: params[:schedule_sync][:sync_id])
+        @sync = current_workspace.syncs.find_by(id: params.dig(:schedule_sync, :sync_id) || params[:sync_id])
         render_error(message: "Sync not found", status: :not_found) unless @sync
       end
 
