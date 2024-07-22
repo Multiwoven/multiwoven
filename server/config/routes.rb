@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users
   # Health Check
@@ -7,13 +9,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Authentication Routes
-      post 'signup', to: 'auth#signup'
-      post 'verify_code', to: 'auth#verify_code'
-      post 'login', to: 'auth#login'
-      delete 'logout', to: 'auth#logout'
-      post 'forgot_password', to: 'auth#forgot_password'
-      post 'reset_password', to: 'auth#reset_password'
-      post 'resend_verification', to: 'auth#resend_verification'
+      post "signup", to: "auth#signup"
+      post "verify_code", to: "auth#verify_code"
+      post "login", to: "auth#login"
+      delete "logout", to: "auth#logout"
+      post "forgot_password", to: "auth#forgot_password"
+      post "reset_password", to: "auth#reset_password"
+      post "resend_verification", to: "auth#resend_verification"
 
       # Workspace Routes
       resources :workspaces
@@ -28,11 +30,11 @@ Rails.application.routes.draw do
         collection do
           get :configurations
         end
-        resources :sync_runs, only: [:index, :show] do
+        resources :sync_runs, only: %i[index show] do
           resources :sync_records, only: [:index]
         end
       end
-      resources :connector_definitions, only: [:index, :show] do
+      resources :connector_definitions, only: %i[index show] do
         collection do
           post :check_connection
         end
@@ -47,6 +49,9 @@ Rails.application.routes.draw do
           get :workspace_activity
         end
       end
+
+      post "schedule_syncs", to: "schedule_syncs#create"
+      delete "schedule_syncs", to: "schedule_syncs#destroy"
     end
   end
 
