@@ -51,7 +51,7 @@ Rails.application.routes.draw do
       end
 
       post "schedule_syncs", to: "schedule_syncs#create"
-      delete "schedule_syncs", to: "schedule_syncs#destroy"
+      delete "schedule_syncs/:sync_id", to: "schedule_syncs#destroy"
     end
   end
 

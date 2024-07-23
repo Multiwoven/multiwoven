@@ -11,9 +11,7 @@ module ScheduleSyncContracts
 
   class Destroy < Dry::Validation::Contract
     params do
-      required(:schedule_sync).hash do
-        required(:sync_id).filled(:integer)
-      end
+      required(:sync_id)
     end
   end
 end

@@ -41,7 +41,7 @@ RSpec.describe ScheduleSyncContracts do
 
         it "has the correct error message" do
           result = contract.call(params)
-          expect(result.errors.to_h).to eq({ schedule_sync: { sync_id: ["is missing"] } })
+          expect(result.errors.to_h).to eq({ "schedule_sync": { "sync_id": ["is missing"] } })
         end
       end
 
@@ -54,7 +54,7 @@ RSpec.describe ScheduleSyncContracts do
 
         it "has the correct error message" do
           result = contract.call(params)
-          expect(result.errors.to_h).to eq({ schedule_sync: { sync_id: ["must be an integer"] } })
+          expect(result.errors.to_h).to eq({ "schedule_sync": { "sync_id": ["must be an integer"] } })
         end
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe ScheduleSyncContracts do
 
     context "when params are valid" do
       let(:params) do
-        { schedule_sync: { sync_id: 1 } }
+        { sync_id: 1 }
       end
 
       it "is valid" do
@@ -74,7 +74,7 @@ RSpec.describe ScheduleSyncContracts do
     end
 
     context "when params are invalid" do
-      context "when schedule_sync is missing" do
+      context "when sync_id is missing" do
         let(:params) { {} }
 
         it "is not valid" do
@@ -83,33 +83,7 @@ RSpec.describe ScheduleSyncContracts do
 
         it "has the correct error message" do
           result = contract.call(params)
-          expect(result.errors.to_h).to eq({ schedule_sync: ["is missing"] })
-        end
-      end
-
-      context "when sync_id is missing" do
-        let(:params) { { schedule_sync: {} } }
-
-        it "is not valid" do
-          expect(contract.call(params)).to be_failure
-        end
-
-        it "has the correct error message" do
-          result = contract.call(params)
-          expect(result.errors.to_h).to eq({ schedule_sync: { sync_id: ["is missing"] } })
-        end
-      end
-
-      context "when sync_id is not an integer" do
-        let(:params) { { schedule_sync: { sync_id: "not an integer" } } }
-
-        it "is not valid" do
-          expect(contract.call(params)).to be_failure
-        end
-
-        it "has the correct error message" do
-          result = contract.call(params)
-          expect(result.errors.to_h).to eq({ schedule_sync: { sync_id: ["must be an integer"] } })
+          expect(result.errors.to_h).to eq({ sync_id: ["is missing"] })
         end
       end
     end

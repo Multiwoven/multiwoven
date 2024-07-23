@@ -112,7 +112,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
     context "when we pass valid sync id and workflow id" do
       it "returns success and delete sync runs" do
         sync.update(workflow_id: "redshift-klaviyo-syncid-#{sync.id}")
-        delete "/api/v1/schedule_syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+        delete "/api/v1/schedule_syncs/#{sync.id}", headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
 
         expect(Temporal).to have_received(:start_workflow).with(
@@ -130,8 +130,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
     context "when we pass invalid sync id" do
       it "returns failure" do
         error_message = "Sync not found"
-        request_body[:schedule_sync][:sync_id] = 1_232_131
-        delete "/api/v1/schedule_syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+        delete "/api/v1/schedule_syncs/1_232_131", headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
 
         result = JSON.parse(response.body)
