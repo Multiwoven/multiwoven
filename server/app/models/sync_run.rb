@@ -16,7 +16,9 @@ class SyncRun < ApplicationRecord
   validates :source_id, presence: true
   validates :destination_id, presence: true
   validates :model_id, presence: true
+  validates :sync_run_type, presence: true
 
+  enum :sync_run_type, %i[general test]
   enum :status, %i[pending started querying queued in_progress success paused failed canceled]
 
   belongs_to :sync

@@ -13,6 +13,7 @@ RSpec.describe SyncRun, type: :model do
   it { should validate_presence_of(:source_id) }
   it { should validate_presence_of(:destination_id) }
   it { should validate_presence_of(:model_id) }
+  it { should validate_presence_of(:sync_run_type) }
 
   it { should belong_to(:sync) }
   it { should have_many(:sync_records) }
@@ -203,6 +204,12 @@ RSpec.describe SyncRun, type: :model do
         expect(active_runs).to include(pending_run, started_run, querying_run, queued_run, in_progress_run)
         expect(active_runs).not_to include(success_run, paused_run, failed_run, canceled_run)
       end
+    end
+  end
+
+  describe "sync_run_type" do
+    it "defines sync_run_type enum with specified values" do
+      expect(SyncRun.sync_run_types).to eq({ "general" => 0, "test" => 1 })
     end
   end
 end
