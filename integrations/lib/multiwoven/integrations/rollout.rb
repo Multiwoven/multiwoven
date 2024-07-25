@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.4.1"
+    VERSION = "0.5.1"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -33,6 +33,7 @@ module Multiwoven
       Http
       Iterable
       MariaDB
+      DatabricksLakehouse
     ].freeze
   end
 end

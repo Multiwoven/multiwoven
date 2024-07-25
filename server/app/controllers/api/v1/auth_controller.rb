@@ -69,8 +69,9 @@ module Api
 
       def reset_password
         user = User.with_reset_password_token(params[:reset_password_token])
-
-        if user&.reset_password(params[:password], params[:password_confirmation])
+        if user && !user.reset_password_period_valid?
+          render_error(message: "Token has expired.", status: :unprocessable_entity)
+        elsif user&.reset_password(params[:password], params[:password_confirmation])
           render json: { data: { type: "message",
                                  id: user.id,
                                  attributes: { message: "Password successfully reset." } } },

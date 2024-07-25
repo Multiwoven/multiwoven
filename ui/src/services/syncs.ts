@@ -9,10 +9,13 @@ import {
 } from '@/views/Activate/Syncs/types';
 import { multiwovenFetch, ApiResponse } from './common';
 
-export const getCatalog = (connectorId: string): Promise<DiscoverResponse> =>
+export const getCatalog = (
+  connectorId: string,
+  refresh: boolean = false,
+): Promise<DiscoverResponse> =>
   multiwovenFetch<null, DiscoverResponse>({
     method: 'get',
-    url: `/connectors/${connectorId}/discover`,
+    url: `/connectors/${connectorId}/discover?refresh=${refresh}`,
   });
 
 export const createSync = (payload: CreateSyncPayload): Promise<ApiResponse<CreateSyncResponse>> =>
