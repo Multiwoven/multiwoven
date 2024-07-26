@@ -21,8 +21,8 @@ module ReverseEtl
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           total_query_rows += records.count
           process_records(records, sync_run, model)
-          heartbeat(activity)
           sync_run.update(current_offset:, total_query_rows:)
+          heartbeat(activity, sync_run, nil)
         end
 
         # change state querying to queued
