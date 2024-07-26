@@ -5,11 +5,13 @@ import { Box } from '@chakra-ui/react';
 import { getModelById } from '@/services/models';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import TopBar from '@/components/TopBar';
-import { useRef } from 'react';
 import ContentContainer from '@/components/ContentContainer';
 import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
+import { useRef } from 'react';
+import { QueryType } from '../types';
+import TableSelector from '../ModelsForm/DefineModel/TableSelector';
 
 const EditModel = (): JSX.Element => {
   const params = useParams();
@@ -37,7 +39,7 @@ const EditModel = (): JSX.Element => {
     model_description: data?.data?.attributes.description || '',
     primary_key: data?.data?.attributes.primary_key || '',
     query: data?.data?.attributes.query || '',
-    query_type: data?.data?.attributes.query_type || '',
+    query_type: data?.data?.attributes.query_type || QueryType.RawSql,
     model_id: model_id,
   };
 
@@ -68,13 +70,21 @@ const EditModel = (): JSX.Element => {
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer containerRef={containerRef}>
         <TopBar name='' breadcrumbSteps={EDIT_QUERY_FORM_STEPS} />
-        <DefineSQL
-          isFooterVisible={false}
-          hasPrefilledValues={true}
-          prefillValues={prefillValues}
-          isUpdateButtonVisible={true}
-          isAlignToContentContainer={true}
-        />
+        {prefillValues.query_type === QueryType.TableSelector ? (
+          <TableSelector
+            hasPrefilledValues={true}
+            prefillValues={prefillValues}
+            isUpdateButtonVisible={true}
+          />
+        ) : (
+          <DefineSQL
+            isFooterVisible={false}
+            hasPrefilledValues={true}
+            prefillValues={prefillValues}
+            isUpdateButtonVisible={true}
+            isAlignToContentContainer={true}
+          />
+        )}
       </ContentContainer>
     </Box>
   );

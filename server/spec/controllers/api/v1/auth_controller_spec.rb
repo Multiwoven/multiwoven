@@ -103,6 +103,23 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       end
     end
 
+    context "with reset password token and its expired" do
+      it "fail the reset password and returns a token has expired" do
+        Timecop.freeze(Time.zone.now)
+        token = user.send_reset_password_instructions
+        user.update(reset_password_sent_at: 6.hours.ago - 1.minute)
+
+        post :reset_password,
+             params: { reset_password_token: token, password: "newPassword@123",
+                       password_confirmation: "newPassword@123" }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        response_json = JSON.parse(response.body)
+        expect(response_json["errors"].first["detail"]).to eq("Token has expired.")
+        Timecop.return
+      end
+    end
+
     context "with invalid reset password token" do
       it "does not reset the password and returns an error" do
         post :reset_password,

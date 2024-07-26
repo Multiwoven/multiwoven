@@ -2,6 +2,8 @@ import { useContext } from 'react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import DefineSQL from './DefineSQL';
 import { DefineSQLProps } from './DefineSQL/types';
+import { ModelMethodName } from '../ModelMethod/methods';
+import TableSelector from './TableSelector';
 
 const DefineModel = (props: DefineSQLProps): JSX.Element | null => {
   let selectedModelType;
@@ -12,14 +14,15 @@ const DefineModel = (props: DefineSQLProps): JSX.Element | null => {
     const dataMethod = state.forms.find((data) => data.data?.selectModelType);
     selectedModelType = dataMethod?.data?.selectModelType;
   }
-  if (selectedModelType === 'SQL Query') {
-    return (
-      <>
-        <DefineSQL {...props} />
-      </>
-    );
+
+  switch (selectedModelType) {
+    case ModelMethodName.SQLQuery:
+      return <DefineSQL {...props} />;
+    case ModelMethodName.TableSelector:
+      return <TableSelector {...props} />;
+    default:
+      return <></>;
   }
-  return null;
 };
 
 export default DefineModel;
