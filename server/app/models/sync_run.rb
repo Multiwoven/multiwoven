@@ -16,8 +16,10 @@ class SyncRun < ApplicationRecord
   validates :source_id, presence: true
   validates :destination_id, presence: true
   validates :model_id, presence: true
+  validates :sync_run_type, presence: true
 
-  enum :status, %i[pending started querying queued in_progress success paused failed]
+  enum :sync_run_type, %i[general test]
+  enum :status, %i[pending started querying queued in_progress success paused failed canceled]
 
   belongs_to :sync
   belongs_to :workspace
@@ -30,6 +32,8 @@ class SyncRun < ApplicationRecord
   after_discard :perform_post_discard_sync_run
   after_commit :send_status_email, if: :status_changed_to_failure?
 
+  scope :active, -> { where(status: %i[pending started querying queued in_progress]) }
+
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
     state :started
@@ -39,6 +43,7 @@ class SyncRun < ApplicationRecord
     state :success
     state :paused
     state :failed
+    state :canceled
 
     # Most states, including "started," allow for a retry by transitioning back to the same state
     # example:
@@ -71,6 +76,10 @@ class SyncRun < ApplicationRecord
 
     event :abort do
       transitions from: %i[pending started querying queued in_progress paused failed], to: :failed
+    end
+
+    event :cancel do
+      transitions from: %i[pending started querying queued in_progress paused], to: :canceled
     end
   end
 

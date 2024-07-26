@@ -14,9 +14,20 @@ module ReverseEtl
 
       private
 
-      def heartbeat(activity)
-        activity.heartbeat
-        raise StandardError, "Cancel activity request received" if activity.cancel_requested
+      def heartbeat(activity, sync_run, initial_cursor_field_value)
+        response = activity.heartbeat
+        return unless response.cancel_requested
+
+        sync_run.failed!
+        sync_run.sync.update(current_cursor_field: initial_cursor_field_value)
+        sync_run.sync_records.delete_all
+        Rails.logger.error({
+          error_message: "Cancel activity request received",
+          sync_run_id: sync_run.id,
+          sync_id: sync_run.sync_id,
+          stack_trace: nil
+        }.to_s)
+        raise StandardError, "Cancel activity request received"
       end
 
       def setup_source_client(sync)

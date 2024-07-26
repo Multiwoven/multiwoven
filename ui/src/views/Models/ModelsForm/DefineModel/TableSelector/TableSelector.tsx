@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Spacer } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import ContentContainer from '@/components/ContentContainer';
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import ModelQueryResults from '../ModelQueryResults';
@@ -22,6 +22,7 @@ import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
 import { useNavigate } from 'react-router-dom';
 import { QueryType } from '@/views/Models/types';
 import ViewSQLModal from './ViewSQLModal';
+import SearchBar from '@/components/SearchBar/SearchBar';
 
 const generateQuery = (table: string) => `SELECT * FROM ${table}`;
 
@@ -39,6 +40,8 @@ const TableSelector = ({
   const [loadingPreviewData, setLoadingPreviewData] = useState(false);
   const [userQuery, setUserQuery] = useState('');
   const [tableData, setTableData] = useState<null | TableDataType>();
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   const navigate = useNavigate();
 
@@ -70,6 +73,11 @@ const TableSelector = ({
   });
 
   const streams = modelDiscoverData?.data?.attributes?.catalog?.streams;
+
+  // Filtered streams based on search term
+  const filteredStreams = streams?.filter((stream) =>
+    stream?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   const handleTableNameSelection = (tableName: string) => {
     const sql = generateQuery(tableName);
@@ -132,7 +140,6 @@ const TableSelector = ({
       setLoadingPreviewData(false);
     } else {
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
-      // canMoveForward(true);
       setLoadingPreviewData(false);
     }
   };
@@ -180,11 +187,17 @@ const TableSelector = ({
             marginBottom='24px'
           >
             <Flex bgColor='gray.300' padding='12px 20px' roundedTop='xl'>
-              <Flex w='full' alignItems='center'>
+              <Flex flex={1} alignItems='center'>
                 {connector_icon}
               </Flex>
-              <Spacer />
-              <HStack spacing={3}>
+              <Box flex={1}>
+                <SearchBar
+                  setSearchTerm={setSearchTerm}
+                  placeholder='Search for tables'
+                  borderColor='white'
+                />
+              </Box>
+              <HStack spacing={3} flex={1} justifyContent='flex-end'>
                 <Button
                   variant='shell'
                   onClick={getPreview}
@@ -206,7 +219,7 @@ const TableSelector = ({
             </Flex>
             <Box p={3} w='100%' bgColor='gray.100'>
               <ListTables
-                streams={streams}
+                streams={filteredStreams}
                 selectedTableName={selectedTableName}
                 handleTableNameSelection={handleTableNameSelection}
               />

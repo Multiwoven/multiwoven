@@ -52,7 +52,7 @@ const MainLayout = (): JSX.Element => {
     }
   }, [isError, data, isFetched, showToast]);
 
-  if (isError || !data) {
+  if (isError || (!data && isFetched)) {
     return <ServerError />;
   }
 
