@@ -9,6 +9,10 @@ RSpec.describe "Api::V1::Users", type: :request do
   let(:viewer_role) { create(:role, :viewer) }
   let(:member_role) { create(:role, :member) }
 
+  before do
+    user.confirm
+  end
+
   describe "GET /api/v1/users/me" do
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do

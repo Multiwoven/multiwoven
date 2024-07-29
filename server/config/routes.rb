@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       # Authentication Routes
       post "signup", to: "auth#signup"
-      post "verify_code", to: "auth#verify_code"
+      get "verify_user", to: "auth#verify_user"
       post "login", to: "auth#login"
       delete "logout", to: "auth#logout"
       post "forgot_password", to: "auth#forgot_password"
