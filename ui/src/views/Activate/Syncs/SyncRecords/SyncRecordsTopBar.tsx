@@ -10,10 +10,12 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { useStore } from '@/stores';
 import { useSyncStore } from '@/stores/useSyncStore';
+import { useAPIErrorsToast } from '@/hooks/useErrorToast';
 
 export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncRunId: string }) => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
   const selectedSync = useSyncStore((state) => state.selectedSync);
+  const apiErrorToast = useAPIErrorsToast();
 
   const toast = useCustomToast();
 
@@ -24,6 +26,10 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
   });
+
+  if (syncRunData?.errors && syncRunData?.errors.length > 0) {
+    apiErrorToast(syncRunData.errors);
+  }
 
   const VIEW_SYNC_RUN_RECORDS_STEPS: Step[] = [
     {
