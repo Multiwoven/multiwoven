@@ -92,7 +92,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
 );
 
 const SideBarFooter = () => (
-  <Stack position='absolute' bottom='0' left='0px' right='0px' margin='24px 16px'>
+  <Stack>
     <Box />
     <Stack spacing='0'>
       <NavLink to='/settings'>
@@ -117,6 +117,7 @@ const Sidebar = (): JSX.Element => {
       borderRightWidth='1px'
       borderRightStyle='solid'
       borderRightColor='gray.400'
+      overflowY='auto'
     >
       <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
         <Stack justify='space-between' spacing='1' width='full'>
@@ -129,8 +130,8 @@ const Sidebar = (): JSX.Element => {
             </Box>
             <Workspace />
             {menus.map(renderMenuSection)}
-            <SideBarFooter />
           </Stack>
+          <SideBarFooter />
         </Stack>
       </Flex>
     </Flex>
