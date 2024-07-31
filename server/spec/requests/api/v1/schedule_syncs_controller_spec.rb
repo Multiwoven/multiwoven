@@ -17,6 +17,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
   end
 
   before do
+    user.confirm
     create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
     create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
   end
