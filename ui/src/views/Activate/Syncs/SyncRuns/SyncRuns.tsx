@@ -5,16 +5,9 @@ import { useMemo, useState, useEffect } from 'react';
 import { Box, Image, Text } from '@chakra-ui/react';
 import Loader from '@/components/Loader';
 import Pagination from '@/components/Pagination';
-<<<<<<< HEAD
-=======
-import { useStore } from '@/stores';
-import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
-import { UserActions } from '@/enterprise/types';
-import useSyncRuns from '@/hooks/syncs/useSyncRuns';
 import { SyncRunsColumns } from './SyncRunsColumns';
 import DataTable from '@/components/DataTable';
 import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
->>>>>>> 8b6bcbbd (feat(CE): Add sync run type column)
 
 const SyncRuns = () => {
   const { syncId } = useParams();

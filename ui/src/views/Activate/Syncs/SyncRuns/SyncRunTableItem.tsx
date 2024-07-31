@@ -90,17 +90,7 @@ export const TableItem = ({ field, data }: TableItemProps): JSX.Element => {
 
   switch (field) {
     case 'start_time':
-<<<<<<< HEAD
-      return (
-        <Text fontSize='sm'>
-          {moment(data.attributes.started_at).format('DD/MM/YYYY')} at{' '}
-          {moment(data.attributes.started_at).format('HH:mm a')}
-        </Text>
-      );
-
-=======
       return <StartTime started_at={started_at} />;
->>>>>>> 8b6bcbbd (feat(CE): Add sync run type column)
     case 'duration':
       return <Duration duration={duration} />;
     case 'sync_run_type':
