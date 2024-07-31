@@ -15,6 +15,10 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     ]
   end
 
+  before do
+    user.confirm
+  end
+
   describe "GET /api/v1/connectors" do
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do

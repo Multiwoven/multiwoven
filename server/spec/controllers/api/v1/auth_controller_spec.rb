@@ -17,7 +17,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   let(:user_attributes) { attributes_for(:user) }
-  let(:user) { create(:user, :verified) }
+  let(:user) { create(:user) }
 
   describe "POST #signup" do
     context "with valid parameters" do
@@ -25,8 +25,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :signup, params: user_attributes
 
         expect(response).to have_http_status(:created)
-        expect(response_data["type"]).to eq("token")
-        expect(response_data["attributes"]["token"]).not_to be_nil
+        expect(response_data["type"]).to eq("users")
+        expect(response_data["attributes"]["name"]).not_to be_nil
       end
     end
 
@@ -53,6 +53,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   describe "POST #login" do
     context "with valid parameters" do
       it "logs in a user and returns a token" do
+        user.confirm
         post :login, params: { email: user.email, password: user.password }
 
         expect(response).to have_http_status(:ok)
@@ -132,12 +133,12 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     end
   end
 
-  describe "POST #verify_code" do
-    let(:user_with_code) { create(:user, confirmation_code: "123456") }
+  describe "GET #verify_user" do
+    context "with valid confirmation token" do
+      let(:confirmation_token) { user.confirmation_token }
 
-    context "with valid confirmation code" do
       it "verifies the user and returns a success message" do
-        post :verify_code, params: { email: user_with_code.email, confirmation_code: user_with_code.confirmation_code }
+        get :verify_user, params: { confirmation_token: }
 
         expect(response).to have_http_status(:ok)
         expect(response_data["attributes"]["message"]).to eq("Account verified successfully!")
@@ -146,7 +147,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
     context "with invalid confirmation code" do
       it "does not verify the user and returns an error" do
-        post :verify_code, params: { email: user_with_code.email, confirmation_code: "wrong" }
+        get :verify_user, params: { confirmation_token: "wrong123" }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty
@@ -155,7 +156,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
     context "with no parameters" do
       it "returns a bad request status with an error message" do
-        post :verify_code
+        get :verify_user
 
         expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_empty
@@ -166,12 +167,18 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   describe "POST #resend_verification" do
     let(:unverified_user) { create(:user) } # Assuming this creates an unverified user
 
-    context "resending verification code" do
-      it "sends a new verification code" do
+    context "resending verification email" do
+      it "sends a new verification email" do
         post :resend_verification, params: { email: unverified_user.email }
-
         expect(response).to have_http_status(:ok)
-        expect(response_data["attributes"]["message"]).to eq("Verification code resent successfully.")
+        expect(response_data["attributes"]["message"]).to eq("Email verification link sent successfully!")
+      end
+
+      it "returns an error already confirmed" do
+        unverified_user.confirm
+        post :resend_verification, params: { email: unverified_user.email }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_errors[0]["detail"]).to include("Account already confirmed")
       end
     end
 
@@ -181,6 +188,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty
+        expect(response_errors[0]["detail"]).to include("User not found")
       end
     end
   end
@@ -195,6 +203,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
     context "when it is an authenticated user" do
       it "returns success and logout user" do
+        user.confirm
         request.headers.merge!(auth_headers(user, 0))
         delete :logout
         expect(response).to have_http_status(:ok)
