@@ -8,6 +8,18 @@ import Loader from '@/components/Loader';
 import Table from '@/components/Table';
 import { TableItem } from '@/views/Activate/Syncs/SyncRuns/SyncRunTableItem';
 import Pagination from '@/components/Pagination';
+<<<<<<< HEAD
+=======
+import { useStore } from '@/stores';
+import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
+import { UserActions } from '@/enterprise/types';
+import useSyncRuns from '@/hooks/syncs/useSyncRuns';
+import { SyncRunsColumns } from './SyncRunsColumns';
+import DataTable from '@/components/DataTable';
+import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
+import { Row } from '@tanstack/react-table';
+import { SyncRunsResponse } from '../types';
+>>>>>>> 966eb997 (fix(CE): fixed sync runs on click function)
 
 const SyncRuns = () => {
   const { syncId } = useParams();
@@ -28,8 +40,13 @@ const SyncRuns = () => {
     refetchOnWindowFocus: false,
   });
 
+<<<<<<< HEAD
   const handleOnSyncClick = (row: Record<'id', string>) => {
     navigate(`run/${row.id}`);
+=======
+  const handleOnSyncClick = (row: Row<SyncRunsResponse>) => {
+    navigate({ to: `run/${row.original.id}`, location: 'sync_record', action: UserActions.Read });
+>>>>>>> 966eb997 (fix(CE): fixed sync runs on click function)
   };
 
   const syncList = data?.data;
