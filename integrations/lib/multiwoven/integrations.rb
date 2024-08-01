@@ -60,6 +60,7 @@ require_relative "integrations/source/aws_athena/client"
 require_relative "integrations/source/clickhouse/client"
 require_relative "integrations/source/amazon_s3/client"
 require_relative "integrations/source/maria_db/client"
+require_relative "integrations/source/oracle_db/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
