@@ -16,7 +16,7 @@ module ReverseEtl
         sync_config = sync.to_protocol
         sync_config.sync_run_id = sync_run.id.to_s
 
-        if sync_config.stream.batch_support
+        if sync_config.stream.batch_support && !sync_run.test?
           process_batch_records(sync_run, sync, sync_config, activity)
         else
           process_individual_records(sync_run, sync, sync_config, activity)
