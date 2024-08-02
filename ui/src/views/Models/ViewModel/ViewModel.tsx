@@ -14,6 +14,8 @@ import {
   Spacer,
   Text,
   VStack,
+  Tag,
+  Icon,
   Divider,
 } from '@chakra-ui/react';
 import { Editor } from '@monaco-editor/react';
@@ -30,6 +32,8 @@ import useCustomToast from '@/hooks/useCustomToast';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { GetModelByIdResponse } from '@/views/Models/types';
 import { useStore } from '@/stores';
+import { FiLayout } from 'react-icons/fi';
+import { QueryType } from '@/views/Models/types';
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
@@ -77,7 +81,7 @@ const ViewModel = (): JSX.Element => {
     model_description: data?.data?.attributes.description || '',
     primary_key: data?.data?.attributes.primary_key || '',
     query: data?.data?.attributes.query || '',
-    query_type: data?.data?.attributes.query_type || '',
+    query_type: data?.data?.attributes.query_type || QueryType.RawSql,
     model_id: model_id,
   };
 
@@ -114,6 +118,9 @@ const ViewModel = (): JSX.Element => {
       url: '',
     },
   ];
+
+  // extracting table name from the query for table_selector method
+  const tableName = prefillValues?.query?.split('FROM')?.[1]?.trim();
 
   return (
     <Box width='100%' display='flex' justifyContent='center'>
@@ -153,7 +160,7 @@ const ViewModel = (): JSX.Element => {
               roundedTop='xl'
               alignItems='center'
               bgColor='gray.300'
-              p={2}
+              padding='12px 20px'
               border='1px'
               borderColor='gray.400'
             >
@@ -175,38 +182,62 @@ const ViewModel = (): JSX.Element => {
               </Button>
             </Flex>
             <Box borderX='1px' borderBottom='1px' roundedBottom='lg' py={2} borderColor='gray.400'>
-              <Editor
-                width='100%'
-                height='280px'
-                language='mysql'
-                defaultLanguage='mysql'
-                defaultValue='Enter your query...'
-                value={prefillValues.query}
-                saveViewState={true}
-                theme='light'
-                options={{
-                  minimap: {
-                    enabled: false,
-                  },
-                  formatOnType: true,
-                  formatOnPaste: true,
-                  autoIndent: 'full',
-                  wordBasedSuggestions: 'currentDocument',
-                  scrollBeyondLastLine: false,
-                  quickSuggestions: true,
-                  tabCompletion: 'on',
-                  contextmenu: true,
-                  readOnly: true,
-                }}
-              />
+              {prefillValues?.query_type === QueryType.TableSelector ? (
+                <Box padding='12px 20px' display='flex' gap='8px'>
+                  <Text color='black.200' size='sm' fontWeight='semibold'>
+                    Fetching all rows from the table
+                  </Text>
+                  <Tag
+                    colorScheme='teal'
+                    size='xs'
+                    bgColor='gray.200'
+                    padding='2px 8px'
+                    fontWeight={600}
+                    borderColor='gray.500'
+                    borderWidth='1px'
+                    borderStyle='solid'
+                    height='22px'
+                    borderRadius='4px'
+                  >
+                    <Icon as={FiLayout} color='black.200' height='12px' width='12px' />
+                    <Text size='xs' fontWeight='semibold' color='black.300' marginLeft='4px'>
+                      {tableName}
+                    </Text>
+                  </Tag>
+                </Box>
+              ) : (
+                <Editor
+                  width='100%'
+                  height='280px'
+                  language='mysql'
+                  defaultLanguage='mysql'
+                  defaultValue='Enter your query...'
+                  value={prefillValues.query}
+                  saveViewState={true}
+                  theme='light'
+                  options={{
+                    minimap: {
+                      enabled: false,
+                    },
+                    formatOnType: true,
+                    formatOnPaste: true,
+                    autoIndent: 'full',
+                    wordBasedSuggestions: 'currentDocument',
+                    scrollBeyondLastLine: false,
+                    quickSuggestions: true,
+                    tabCompletion: 'on',
+                    contextmenu: true,
+                    readOnly: true,
+                  }}
+                />
+              )}
             </Box>
           </Box>
           <Box
             w='full'
             mx='auto'
             bgColor='gray.100'
-            px={8}
-            py={6}
+            padding='24px'
             rounded='xl'
             border='1px'
             borderColor='gray.400'

@@ -136,28 +136,23 @@ RSpec.describe "AuthContracts" do
     end
   end
 
-  describe AuthContracts::VerifyCode do
+  describe AuthContracts::VerifyUser do
     subject(:contract) { described_class.new }
 
     context "when valid inputs are provided" do
-      let(:valid_inputs) do
-        {
-          email: "user@example.com",
-          confirmation_code: "code123"
-        }
-      end
+      let(:valid_inputs) { { confirmation_token: "code12345" } }
 
       it "passes validation" do
         expect(contract.call(valid_inputs)).to be_success
       end
     end
 
-    context "when invalid email format is provided" do
-      let(:invalid_inputs) { { email: "not_an_email", confirmation_code: "code123" } }
+    context "when confirmation_token is empty" do
+      let(:invalid_inputs) { { confirmation_token: "" } }
 
       it "fails validation" do
         result = contract.call(invalid_inputs)
-        expect(result.errors[:email]).to include("has invalid email format")
+        expect(result.errors[:confirmation_token]).to include("must be filled")
       end
     end
   end

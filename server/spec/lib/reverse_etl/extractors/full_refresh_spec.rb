@@ -45,7 +45,7 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
     allow(client).to receive(:read).and_return(records)
     allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1)
     allow(sync_run1.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
-    allow(activity).to receive(:heartbeat)
+    allow(activity).to receive(:heartbeat).and_return(activity)
     allow(activity).to receive(:cancel_requested).and_return(false)
   end
 
@@ -53,7 +53,6 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
     context "performs a full refresh" do
       it "performs a full refresh and updates the sync run" do
         expect(sync_run1).to have_state(:started)
-        expect(subject).to receive(:heartbeat).once.with(activity)
         # expect(subject).to receive(:flush_records)
         expect(subject).not_to receive(:log_mismatch_error)
         subject.read(sync_run1.id, activity)
@@ -73,7 +72,7 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
         expect(SyncRecord.where(sync_id: sync_run1.sync_id).count).to eq(0)
         allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([record2, record3], 1)
         expect(sync_run2).to have_state(:started)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run2, nil)
         expect(subject).to receive(:log_mismatch_error)
         subject.read(sync_run2.id, activity)
         sync_run2.reload
@@ -81,6 +80,18 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
         expect(sync_records.first.record["first_name"]).to eq("Mark")
         expect(sync_records.count).to eq(1)
         expect(sync_run2).to have_state(:queued)
+      end
+
+      it "handles heartbeat timeout and updates sync run state" do
+        expect(sync_run1).to have_state(:started)
+        allow(activity).to receive(:cancel_requested).and_return(true)
+        expect(subject).not_to receive(:log_mismatch_error)
+        expect { subject.read(sync_run1.id, activity) }
+          .to raise_error(StandardError, "Cancel activity request received")
+        sync_run1.reload
+        expect(sync_run1.sync_records.count).to eq(0)
+        expect(sync_run1.sync.current_cursor_field).to eq(nil)
+        expect(sync_run1).to have_state(:failed)
       end
     end
 

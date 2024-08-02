@@ -118,8 +118,8 @@ class Sync < ApplicationRecord
   end
 
   def schedule_sync?
-    new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit ||
-      saved_change_to_cron_expression?
+    (new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit ||
+      saved_change_to_cron_expression?) && !manual?
   end
 
   def schedule_sync

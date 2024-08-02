@@ -132,7 +132,7 @@ Devise.setup do |config|
   # config.send_email_changed_notification = false
 
   # Send a notification email when the user's password is changed.
-  # config.send_password_change_notification = false
+  config.send_password_change_notification = true
 
   # ==> Configuration for :invitable
   # The period the generated invitation token is valid.
@@ -316,6 +316,7 @@ Devise.setup do |config|
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
+  config.reconfirmable = false
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting

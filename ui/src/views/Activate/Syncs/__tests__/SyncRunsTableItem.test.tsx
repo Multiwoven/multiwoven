@@ -24,6 +24,7 @@ const mockSyncRunsData: SyncRunsResponse[] = [
       successful_rows: 500,
       failed_rows: 0,
       error: null,
+      sync_run_type: 'general',
     },
   },
   {
@@ -45,6 +46,7 @@ const mockSyncRunsData: SyncRunsResponse[] = [
       successful_rows: 450,
       failed_rows: 50,
       error: null,
+      sync_run_type: 'general',
     },
   },
 ];

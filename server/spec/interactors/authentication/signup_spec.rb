@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# spec/interactors/authentication/signup_spec.rb
-
 require "rails_helper"
 
 RSpec.describe Authentication::Signup, type: :interactor do
@@ -23,19 +21,11 @@ RSpec.describe Authentication::Signup, type: :interactor do
         expect(context).to be_success
       end
 
-      it "confirms the user" do
-        expect(User.find_by(email: params[:email])).to be_nil
-
-        # Execute the interactor
-        context
-
+      it "creates and does not confirm the user" do
+        expect { context }.to change(User, :count).by(1)
         user = User.find_by(email: params[:email])
         expect(user).not_to be_nil
-        expect(user.confirmed_at).not_to be_nil
-      end
-
-      it "provides a JWT token" do
-        expect(context.token).not_to be_nil
+        expect(user.confirmed_at).to be_nil
       end
 
       it "creates a new user" do
@@ -48,6 +38,10 @@ RSpec.describe Authentication::Signup, type: :interactor do
 
       it "creates a new workspace" do
         expect { context }.to change(Workspace, :count).by(1)
+      end
+
+      it "returns a success message" do
+        expect(context.message).to eq("Signup successful! Please check your email to confirm your account.")
       end
     end
 

@@ -16,7 +16,7 @@ module ReverseEtl
         sync_config = sync.to_protocol
         sync_config.sync_run_id = sync_run.id.to_s
 
-        if sync_config.stream.batch_support
+        if sync_config.stream.batch_support && !sync_run.test?
           process_batch_records(sync_run, sync, sync_config, activity)
         else
           process_individual_records(sync_run, sync, sync_config, activity)
@@ -48,7 +48,7 @@ module ReverseEtl
             Rails.logger(e)
           end
 
-          heartbeat(activity)
+          heartbeat(activity, sync_run)
         end
       end
 
@@ -83,7 +83,7 @@ module ReverseEtl
           }.to_s)
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
-        heartbeat(activity)
+        heartbeat(activity, sync_run)
       end
 
       def handle_response(report, sync_run)
@@ -120,9 +120,18 @@ module ReverseEtl
         sync_run.sync_records.where(id: failed_sync_records).update_all(status: "failed") # rubocop:disable Rails/SkipsModelValidations
       end
 
-      def heartbeat(activity)
-        activity.heartbeat
-        raise StandardError, "Cancel activity request received" if activity.cancel_requested
+      def heartbeat(activity, sync_run)
+        response = activity.heartbeat
+        return unless response.cancel_requested
+
+        sync_run.failed!
+        Rails.logger.error({
+          error_message: "Cancel activity request received",
+          sync_run_id: sync_run.id,
+          sync_id: sync_run.sync_id,
+          stack_trace: nil
+        }.to_s)
+        raise StandardError, "Cancel activity request received"
       end
 
       def log_error(sync_run)
