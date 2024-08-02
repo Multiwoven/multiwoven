@@ -2,7 +2,6 @@
 
 module Multiwoven
   module Integrations
-
     VERSION = "0.7.0"
 
     ENABLED_SOURCES = %w[
