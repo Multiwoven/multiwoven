@@ -31,6 +31,7 @@ require "aws-sdk-s3"
 require "duckdb"
 require "iterable-api-client"
 require "aws-sdk-sts"
+require "ruby-oci8"
 
 # Service
 require_relative "integrations/config"
@@ -60,6 +61,7 @@ require_relative "integrations/source/aws_athena/client"
 require_relative "integrations/source/clickhouse/client"
 require_relative "integrations/source/amazon_s3/client"
 require_relative "integrations/source/maria_db/client"
+require_relative "integrations/source/oracle_db/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
@@ -78,6 +80,7 @@ require_relative "integrations/destination/http/client"
 require_relative "integrations/destination/iterable/client"
 require_relative "integrations/destination/maria_db/client"
 require_relative "integrations/destination/databricks_lakehouse/client"
+require_relative "integrations/destination/oracle_db/client"
 
 module Multiwoven
   module Integrations
