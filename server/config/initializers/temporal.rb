@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-require 'temporal'
-require 'temporal/metrics_adapters/log'
-=======
 # frozen_string_literal: tr
->>>>>>> be23d2c6 (fix(CE): lazy init temporal after puma worker boot (#273))
 
 require Rails.root.join("lib/utils/exception_reporter")
 
 Multiwoven::Integrations::Service.new do |config|
   config.logger = Rails.logger
-<<<<<<< HEAD
-=======
   config.exception_reporter = Utils::ExceptionReporter
 end
 
@@ -42,5 +35,4 @@ module TemporalService
       end
     end
   end
->>>>>>> be23d2c6 (fix(CE): lazy init temporal after puma worker boot (#273))
 end
