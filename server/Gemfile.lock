@@ -1774,7 +1774,7 @@ GEM
       addressable (~> 2.8)
       process_executer (~> 1.1)
       rchardet (~> 1.8)
-    gli (2.21.1)
+    gli (2.21.3)
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-apis-bigquery_v2 (0.72.0)
@@ -1894,7 +1894,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.5.1)
+    multiwoven-integrations (0.5.2)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -2191,7 +2191,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.5.1)
+  multiwoven-integrations (~> 0.5.2)
   mysql2
   newrelic_rpm
   parallel

@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.5.2)
-=======
     multiwoven-integrations (0.7.0)
->>>>>>> 4872fcdf (feat(CE): add oracle db source connector (#333))
       activesupport
       async-websocket
       aws-sdk-athena
@@ -32,6 +28,7 @@ PATH
       rake
       restforce
       ruby-limiter
+      ruby-oci8
       ruby-odbc
       rubyzip
       sequel
@@ -279,6 +276,8 @@ GEM
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
     ruby-limiter (2.3.0)
+    ruby-oci8 (2.2.12)
+    ruby-oci8 (2.2.12-x64-mingw-ucrt)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -361,6 +360,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   ruby-limiter
+  ruby-oci8
   ruby-odbc!
   rubyzip
   sequel

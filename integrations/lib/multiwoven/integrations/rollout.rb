@@ -2,11 +2,8 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.5.2"
-=======
+
     VERSION = "0.7.0"
->>>>>>> 4872fcdf (feat(CE): add oracle db source connector (#333))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -39,6 +36,7 @@ module Multiwoven
       Iterable
       MariaDB
       DatabricksLakehouse
+      Oracle
     ].freeze
   end
 end
