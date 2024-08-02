@@ -1787,9 +1787,7 @@ GEM
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 1.9)
       httpclient (>= 2.8.3, < 3.a)
-      httpclient (>= 2.8.3, < 3.a)
       mini_mime (~> 1.0)
-      mutex_m
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
