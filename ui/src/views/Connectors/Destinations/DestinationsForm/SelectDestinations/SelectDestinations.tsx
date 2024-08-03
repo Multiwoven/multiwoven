@@ -1,12 +1,17 @@
 import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
 import { getDestinationCategories } from '@/views/Connectors/helpers';
 import { useContext, useState } from 'react';
-import { Box, Grid, Image, Text, Wrap } from '@chakra-ui/react';
+import { Box, Grid, Text, Wrap } from '@chakra-ui/react';
 import ContentContainer from '@/components/ContentContainer';
 import { ALL_DESTINATIONS_CATEGORY } from '@/views/Connectors/constant';
 import { Connector } from '@/views/Connectors/types';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
+<<<<<<< HEAD
+=======
+import { useStore } from '@/stores';
+import EntityItem from '@/components/EntityItem';
+>>>>>>> 13854b6d (feat(CE): connector placeholder image)
 
 const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -84,6 +89,7 @@ const SelectDestinations = (): JSX.Element => {
                   height='56px'
                   onClick={() => onDestinationSelect(connector)}
                 >
+<<<<<<< HEAD
                   <Box
                     height='40px'
                     width='40px'
@@ -107,6 +113,20 @@ const SelectDestinations = (): JSX.Element => {
                   <Text fontWeight='semibold' size='sm'>
                     {connector.title}
                   </Text>
+=======
+                  <EntityItem
+                    name={
+                      +activeWorkspaceId === 18 && connector.title?.toLowerCase() === 'postgresql'
+                        ? 'AIS Datastore'
+                        : connector.title
+                    }
+                    icon={
+                      +activeWorkspaceId === 18 && connector.title?.toLowerCase() === 'postgresql'
+                        ? 'https://squared.ai/wp-content/uploads/2024/03/apple-touch-icon.png'
+                        : connector.icon
+                    }
+                  />
+>>>>>>> 13854b6d (feat(CE): connector placeholder image)
                 </Box>
               ) : null,
             )}
