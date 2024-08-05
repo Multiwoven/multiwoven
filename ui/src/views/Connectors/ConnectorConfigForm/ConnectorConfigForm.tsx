@@ -5,7 +5,7 @@ import { getConnectorDefinition } from '@/services/connectors';
 import { useContext } from 'react';
 import { Box } from '@chakra-ui/react';
 
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 
 import Loader from '@/components/Loader';
 import { processFormData } from '@/views/Connectors/helpers';
@@ -14,19 +14,27 @@ import { generateUiSchema } from '@/utils/generateUiSchema';
 import JSONSchemaForm from '@/components/JSONSchemaForm';
 import { useStore } from '@/stores';
 
+<<<<<<< HEAD:ui/src/views/Connectors/Sources/SourcesForm/SourceConfigForm/SourceConfigForm.tsx
 const SourceConfigForm = (): JSX.Element | null => {
+=======
+const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.Element | null => {
+>>>>>>> 4dc44c9c (refactor(CE): Connector creation process):ui/src/views/Connectors/ConnectorConfigForm/ConnectorConfigForm.tsx
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
-  const selectedDataSource = forms.find(({ stepKey }) => stepKey === 'datasource');
-  const datasource = selectedDataSource?.data?.datasource as string;
+  const selectedConnector = forms.find(
+    ({ stepKey }) => stepKey === (connectorType === 'source' ? 'datasource' : connectorType),
+  );
+  const connector = selectedConnector?.data?.[
+    connectorType === 'source' ? 'datasource' : connectorType
+  ] as string;
   const activeWorkspaceId = useStore((state) => state.workspaceId);
 
-  if (!datasource) return null;
+  if (!connector) return null;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['connector_definition', datasource, activeWorkspaceId],
-    queryFn: () => getConnectorDefinition('source', datasource),
-    enabled: !!datasource && activeWorkspaceId > 0,
+    queryKey: ['connector_definition', connector, activeWorkspaceId],
+    queryFn: () => getConnectorDefinition(connectorType, connector),
+    enabled: !!connector && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -52,7 +60,7 @@ const SourceConfigForm = (): JSX.Element | null => {
             uiSchema={generatedSchema}
             onSubmit={(formData: FormData) => handleFormSubmit(formData)}
           >
-            <SourceFormFooter
+            <FormFooter
               ctaName='Continue'
               ctaType='submit'
               isContinueCtaRequired
@@ -66,4 +74,4 @@ const SourceConfigForm = (): JSX.Element | null => {
   );
 };
 
-export default SourceConfigForm;
+export default ConnectorConfigForm;
