@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+=======
+import { useNavigate } from 'react-router-dom';
+import { Stack, Heading } from '@chakra-ui/react';
+import mwTheme from '@/chakra.config';
+import AuthFooter from '../AuthFooter';
+import { SignUpAuthView } from '@/views/Authentication/AuthViews/SignUpAuthView';
+import AuthCard from '../AuthCard';
+import { CustomToastStatus } from '@/components/Toast';
+import { SignUpPayload, signUp } from '@/services/authentication';
+>>>>>>> b566af53 (feat(CE): verify user after signup)
 import { useState } from 'react';
 import { Formik, Form, ErrorMessage, FormikTouched, FormikErrors, FieldInputProps } from 'formik';
 import * as Yup from 'yup';
@@ -25,6 +36,7 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import mwTheme from '@/chakra.config';
 import { useMutation } from '@tanstack/react-query';
+<<<<<<< HEAD
 
 const SignUpSchema = Yup.object().shape({
   company_name: Yup.string().required('Company name is required'),
@@ -111,15 +123,20 @@ type SignUpErrors = {
     [key: string]: string;
   };
 };
+=======
+import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
+// import isValidEmailDomain from '@/utils/isValidEmailDomain';
+>>>>>>> b566af53 (feat(CE): verify user after signup)
 
 const SignUp = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const showToast = useCustomToast();
+  const errorToast = useAPIErrorsToast();
 
   const { mutateAsync } = useMutation({
     mutationFn: (values: SignUpPayload) => signUp(values),
-    mutationKey: ['signIn'],
+    mutationKey: ['signUp'],
   });
 
   const handleSubmit = async (values: any) => {
@@ -128,12 +145,6 @@ const SignUp = (): JSX.Element => {
       const result = await mutateAsync(values);
 
       if (result.data?.attributes) {
-        const token = result.data.attributes.token;
-        Cookies.set('authToken', token, {
-          secure: true,
-          sameSite: 'Lax',
-        });
-
         showToast({
           title: 'Account created.',
           status: CustomToastStatus.Success,
@@ -142,8 +153,9 @@ const SignUp = (): JSX.Element => {
           position: 'bottom-right',
         });
 
-        navigate('/');
+        navigate(`/sign-up/success?email=${values.email}`);
       } else {
+<<<<<<< HEAD
         result.data?.errors?.map((error: SignUpErrors) => {
           Object.keys(error.source).map((error_key) => {
             showToast({
@@ -156,16 +168,12 @@ const SignUp = (): JSX.Element => {
             });
           });
         });
+=======
+        errorToast(result.errors || []);
+>>>>>>> b566af53 (feat(CE): verify user after signup)
       }
     } catch (error) {
-      showToast({
-        title: 'An error occured. Please try again later.',
-        status: CustomToastStatus.Error,
-        duration: 5000,
-        isClosable: true,
-        position: 'bottom-right',
-        colorScheme: 'red',
-      });
+      useErrorToast(true, error, true, 'An error occured. Please try again later.');
     } finally {
       setSubmitting(false);
     }
