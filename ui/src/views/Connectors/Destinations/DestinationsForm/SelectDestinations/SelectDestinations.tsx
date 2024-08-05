@@ -7,11 +7,7 @@ import { ALL_DESTINATIONS_CATEGORY } from '@/views/Connectors/constant';
 import { Connector } from '@/views/Connectors/types';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
-<<<<<<< HEAD
-=======
-import { useStore } from '@/stores';
 import EntityItem from '@/components/EntityItem';
->>>>>>> 13854b6d (feat(CE): connector placeholder image)
 
 const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -89,44 +85,7 @@ const SelectDestinations = (): JSX.Element => {
                   height='56px'
                   onClick={() => onDestinationSelect(connector)}
                 >
-<<<<<<< HEAD
-                  <Box
-                    height='40px'
-                    width='40px'
-                    marginRight='10px'
-                    borderWidth='thin'
-                    padding='5px'
-                    borderRadius='8px'
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                    backgroundColor='gray.100'
-                  >
-                    <Image
-                      src={connector.icon}
-                      alt='source icon'
-                      maxHeight='100%'
-                      height='24px'
-                      width='24px'
-                    />
-                  </Box>
-                  <Text fontWeight='semibold' size='sm'>
-                    {connector.title}
-                  </Text>
-=======
-                  <EntityItem
-                    name={
-                      +activeWorkspaceId === 18 && connector.title?.toLowerCase() === 'postgresql'
-                        ? 'AIS Datastore'
-                        : connector.title
-                    }
-                    icon={
-                      +activeWorkspaceId === 18 && connector.title?.toLowerCase() === 'postgresql'
-                        ? 'https://squared.ai/wp-content/uploads/2024/03/apple-touch-icon.png'
-                        : connector.icon
-                    }
-                  />
->>>>>>> 13854b6d (feat(CE): connector placeholder image)
+                  <EntityItem name={connector.title} icon={connector.icon} />
                 </Box>
               ) : null,
             )}
