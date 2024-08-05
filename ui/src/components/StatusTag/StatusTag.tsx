@@ -1,4 +1,4 @@
-import { Tag, Text } from '@chakra-ui/react';
+import { Tag, TagLabel } from '@chakra-ui/react';
 
 export enum StatusTagVariants {
   success = 'success',
@@ -79,6 +79,7 @@ export const StatusTagText = {
   failed: 'Failed',
 };
 
+<<<<<<< HEAD
 const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => {
   return (
     <Tag
@@ -99,5 +100,25 @@ const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagPro
     </Tag>
   );
 };
+=======
+const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => (
+  <Tag
+    colorScheme='teal'
+    size='xs'
+    bgColor={theme[variant].bgColor}
+    paddingX={2}
+    fontWeight={600}
+    borderColor={theme[variant].borderColor}
+    borderWidth='1px'
+    borderStyle='solid'
+    height='22px'
+    borderRadius='4px'
+  >
+    <TagLabel fontSize='small' fontWeight='semibold' color={theme[variant].textColor}>
+      {status}
+    </TagLabel>
+  </Tag>
+);
+>>>>>>> 47c00b0f (fix(CE): added tag label to auto-truncate text)
 
 export default StatusTag;
