@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.2"
+>>>>>>> d0d10d4d (chore(CE): add request response log for MariaDB (#350))
 
     ENABLED_SOURCES = %w[
       Snowflake
