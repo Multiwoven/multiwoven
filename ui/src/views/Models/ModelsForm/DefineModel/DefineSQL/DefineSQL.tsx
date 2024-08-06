@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { DefineSQLProps } from './types';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
 import ContentContainer from '@/components/ContentContainer';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
@@ -276,7 +276,7 @@ const DefineSQL = ({
         </Box>
       </ContentContainer>
       {isUpdateButtonVisible ? (
-        <SourceFormFooter
+        <FormFooter
           ctaName='Save Changes'
           ctaType='button'
           isCtaDisabled={!moveForward}
@@ -287,7 +287,7 @@ const DefineSQL = ({
           isDocumentsSectionRequired
         />
       ) : (
-        <SourceFormFooter
+        <FormFooter
           ctaName='Continue'
           ctaType='button'
           isBackRequired

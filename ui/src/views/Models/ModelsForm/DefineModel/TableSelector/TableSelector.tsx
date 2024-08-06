@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import ContentContainer from '@/components/ContentContainer';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import ModelQueryResults from '../ModelQueryResults';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { PrefillValue } from '../DefineSQL/types';
@@ -241,7 +241,7 @@ const TableSelector = ({
         </Box>
       </ContentContainer>
       {isUpdateButtonVisible ? (
-        <SourceFormFooter
+        <FormFooter
           ctaName='Save Changes'
           ctaType='button'
           isCtaDisabled={!tableData}
@@ -252,7 +252,7 @@ const TableSelector = ({
           isDocumentsSectionRequired
         />
       ) : (
-        <SourceFormFooter
+        <FormFooter
           ctaName='Continue'
           ctaType='button'
           isBackRequired

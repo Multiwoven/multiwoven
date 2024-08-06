@@ -1,6 +1,7 @@
 import ContentContainer from '@/components/ContentContainer';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { createSync } from '@/services/syncs';
+<<<<<<< HEAD
 import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
 import {
   Box,
@@ -13,6 +14,10 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
+=======
+import FormFooter from '@/components/FormFooter';
+import { Box, Divider, Input, Select, Text, Textarea } from '@chakra-ui/react';
+>>>>>>> 4dc44c9c (refactor(CE): Connector creation process)
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { ConfigSync } from '../../types';
@@ -242,7 +247,7 @@ const FinaliseSync = (): JSX.Element => {
               </Box>
             </Box>
           </Box>
-          <SourceFormFooter
+          <FormFooter
             ctaName='Finish'
             ctaType='submit'
             isCtaLoading={isLoading}

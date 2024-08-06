@@ -20,7 +20,7 @@ import {
 } from '@/views/Activate/Syncs/types';
 import ScheduleForm from './ScheduleForm';
 import { FormikProps, useFormik } from 'formik';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
 import { useStore } from '@/stores';
@@ -264,7 +264,7 @@ const EditSync = (): JSX.Element | null => {
             <ScheduleForm formik={formik} isEdit />
           </React.Fragment>
         ) : null}
-        <SourceFormFooter
+        <FormFooter
           ctaName='Save Changes'
           ctaType='submit'
           isCtaLoading={isEditLoading}

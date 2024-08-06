@@ -2,7 +2,7 @@ import { Box, Text, Textarea, Input, Divider } from '@chakra-ui/react';
 import { useStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
 import { getWorkspaces, CreateWorkspaceResponse, updateWorkspace } from '@/services/settings';
-import SourceFormFooter from '../Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { FormikProps, useFormik } from 'formik';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast/index';
@@ -225,6 +225,7 @@ const Workspace = () => {
             />
           </Box>
         </Box>
+<<<<<<< HEAD
         <SourceFormFooter
           ctaName='Save Changes'
           isContinueCtaRequired
@@ -233,6 +234,18 @@ const Workspace = () => {
           isCtaLoading={isEditLoading}
           isCtaDisabled={!formik.values.name}
         />
+=======
+        <RoleAccess location='user' type='item' action={UserActions.Update}>
+          <FormFooter
+            ctaName='Save Changes'
+            isContinueCtaRequired
+            ctaType='submit'
+            isAlignToContentContainer
+            isCtaLoading={isEditLoading}
+            isCtaDisabled={!formik.values.name}
+          />
+        </RoleAccess>
+>>>>>>> 4dc44c9c (refactor(CE): Connector creation process)
       </Box>
     </form>
   );

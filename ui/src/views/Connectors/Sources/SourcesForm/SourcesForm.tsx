@@ -1,11 +1,11 @@
 import SteppedForm from '@/components/SteppedForm';
 import SelectDataSourcesForm from './SelectDataSourcesForm';
-import SourceConfigForm from './SourceConfigForm';
 
 import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import SourceConnectionTest from './SourceConnectionTest';
-import SourceFinalizeForm from './SourceFinalizeForm';
+import ConnectorConfigForm from '@/views/Connectors/ConnectorConfigForm';
+import ConnectorConnectionTest from '@/views/Connectors/ConnectorConnectionTest';
+import ConnectorFinaliseForm from '@/views/Connectors/ConnectorFinaliseForm';
 
 const SourcesForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -19,19 +19,19 @@ const SourcesForm = (): JSX.Element => {
     {
       formKey: 'connectToSources',
       name: 'Connect to your Source',
-      component: <SourceConfigForm />,
+      component: <ConnectorConfigForm connectorType='source' />,
       isRequireContinueCta: false,
     },
     {
       formKey: 'testSource',
       name: 'Test your Source',
-      component: <SourceConnectionTest />,
+      component: <ConnectorConnectionTest connectorType='source' />,
       isRequireContinueCta: false,
     },
     {
       formKey: 'finalizeSource',
       name: 'Finalize your Source',
-      component: <SourceFinalizeForm />,
+      component: <ConnectorFinaliseForm connectorType='source' />,
       isRequireContinueCta: false,
     },
   ];

@@ -2,9 +2,9 @@ import SteppedForm from '@/components/SteppedForm';
 import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import SelectDestinations from './SelectDestinations';
-import DestinationConfigForm from './DestinationConfigForm';
-import DestinationFinalizeForm from './DestinationFinalizeForm';
-import DestinationConnectionTest from './DestinationConnectionTest/DestinationConnectionTest';
+import ConnectorConfigForm from '@/views/Connectors/ConnectorConfigForm';
+import ConnectorConnectionTest from '@/views/Connectors/ConnectorConnectionTest';
+import ConnectorFinaliseForm from '@/views/Connectors/ConnectorFinaliseForm';
 
 const DestinationsForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -19,19 +19,19 @@ const DestinationsForm = (): JSX.Element => {
     {
       formKey: 'destinationConfig',
       name: 'Connect your Destination',
-      component: <DestinationConfigForm />,
+      component: <ConnectorConfigForm connectorType='destination' />,
       isRequireContinueCta: false,
     },
     {
       formKey: 'testDestination',
       name: 'Test your Destination',
-      component: <DestinationConnectionTest />,
+      component: <ConnectorConnectionTest connectorType='destination' />,
       isRequireContinueCta: false,
     },
     {
       formKey: 'finalizeDestination',
       name: 'Finalize your Destination',
-      component: <DestinationFinalizeForm />,
+      component: <ConnectorFinaliseForm connectorType='destination' />,
       isRequireContinueCta: false,
     },
   ];
