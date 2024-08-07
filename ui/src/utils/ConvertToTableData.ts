@@ -39,6 +39,7 @@ type Field = {
 };
 
 export function ConvertModelPreviewToTableData(apiData: Array<Field>): TableDataType {
+  if (apiData.length === 0) return { columns: [], data: [] };
   const column_names = Object.keys(apiData[0]);
 
   const columns = column_names.map((column_name) => {

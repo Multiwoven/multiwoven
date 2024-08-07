@@ -116,6 +116,11 @@ const SignUp = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const showToast = useCustomToast();
+<<<<<<< HEAD
+=======
+  const apiErrorToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
+>>>>>>> ea250018 (fix(CE): added try catch to model query preview API Call)
 
   const { mutateAsync } = useMutation({
     mutationFn: (values: SignUpPayload) => signUp(values),
@@ -144,6 +149,7 @@ const SignUp = (): JSX.Element => {
 
         navigate('/');
       } else {
+<<<<<<< HEAD
         result.data?.errors?.map((error: SignUpErrors) => {
           Object.keys(error.source).map((error_key) => {
             showToast({
@@ -166,6 +172,12 @@ const SignUp = (): JSX.Element => {
         position: 'bottom-right',
         colorScheme: 'red',
       });
+=======
+        apiErrorToast(result.errors || []);
+      }
+    } catch (error) {
+      errorToast('An error occured. Please try again later.', true, null, true);
+>>>>>>> ea250018 (fix(CE): added try catch to model query preview API Call)
     } finally {
       setSubmitting(false);
     }
