@@ -4,7 +4,7 @@ import StarsImage from '@/assets/images/stars.svg';
 
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Field, getModelPreviewById, putModelById } from '@/services/models';
+import { getModelPreviewById, putModelById } from '@/services/models';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
 import { TableDataType } from '@/components/Table/types';
@@ -78,6 +78,7 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = editorRef.current?.getValue() as string;
+<<<<<<< HEAD
     const response = await getModelPreviewById(query, connector_id?.toString());
     if ('errors' in response) {
       response.errors?.forEach((error) => {
@@ -94,6 +95,35 @@ const DefineSQL = ({
     } else {
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
       canMoveForward(true);
+=======
+    try {
+      const response = await getModelPreviewById(query, connector_id?.toString());
+      if (response.errors) {
+        if (response.errors) {
+          apiErrorsToast(response.errors);
+        } else {
+          errorToast('Error fetching preview data', true, null, true);
+        }
+        setLoading(false);
+      } else {
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoading(false);
+        } else {
+          showToast({
+            title: 'No data found',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          setTableData(null);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
+>>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
       setLoading(false);
     }
   }

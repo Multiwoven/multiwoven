@@ -11,7 +11,7 @@ import { getCatalog } from '@/services/syncs';
 import { useStore } from '@/stores';
 import Loader from '@/components/Loader';
 import ListTables from './ListTables';
-import { Field, getModelPreviewById, putModelById } from '@/services/models';
+import { getModelPreviewById, putModelById } from '@/services/models';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast/index';
 import titleCase from '@/utils/TitleCase';
@@ -125,6 +125,7 @@ const TableSelector = ({
   const getPreview = async () => {
     setLoadingPreviewData(true);
 
+<<<<<<< HEAD
     const response = await getModelPreviewById(userQuery, connector_id?.toString());
     if ('errors' in response) {
       response.errors?.forEach((error) => {
@@ -140,6 +141,35 @@ const TableSelector = ({
       setLoadingPreviewData(false);
     } else {
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
+=======
+    try {
+      const response = await getModelPreviewById(userQuery, connector_id?.toString());
+      if (response.errors) {
+        if (response.errors) {
+          apiErrorsToast(response.errors);
+        } else {
+          errorToast('Error fetching preview data', true, null, true);
+        }
+        setLoadingPreviewData(false);
+      } else {
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoadingPreviewData(false);
+        } else {
+          showToast({
+            title: 'No data found',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          setTableData(null);
+          setLoadingPreviewData(false);
+        }
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
+>>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
       setLoadingPreviewData(false);
     }
   };

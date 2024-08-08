@@ -5,6 +5,10 @@ import {
 } from '@/views/Models/types';
 import { apiRequest, multiwovenFetch, ApiResponse, ErrorResponse } from './common';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
+<<<<<<< HEAD
+=======
+import { ApiResponse } from './common';
+>>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
 
 export type APIData = {
   data?: Array<GetAllModelsResponse>;
@@ -24,6 +28,7 @@ export type Field = {
   [key: string]: string | number | null;
 };
 
+<<<<<<< HEAD
 export type ModelPreviewResponse =
   | { errors?: ErrorResponse[] }
   | Field[]
@@ -35,6 +40,8 @@ export type ModelPreviewResponse =
       }[];
     };
 
+=======
+>>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
 export type ModelAttributes = {
   updated_at: string;
   created_at: string;
@@ -73,7 +80,7 @@ export const getAllModels = async (): Promise<APIData> =>
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>
-  multiwovenFetch<ModelPreviewPayload, ModelPreviewResponse>({
+  multiwovenFetch<ModelPreviewPayload, ApiResponse<Field[]>>({
     method: 'post',
     url: '/connectors/' + id + '/query_source',
     data: { query: query },
