@@ -78,6 +78,7 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = editorRef.current?.getValue() as string;
+<<<<<<< HEAD
     const response = await getModelPreviewById(query, connector_id?.toString());
     if ('errors' in response) {
       response.errors?.forEach((error) => {
@@ -94,6 +95,37 @@ const DefineSQL = ({
     } else {
       setTableData(ConvertModelPreviewToTableData(response as Field[]));
       canMoveForward(true);
+=======
+    try {
+      const response = await getModelPreviewById(query, connector_id?.toString());
+      if (response.errors) {
+        if (response.errors) {
+          apiErrorsToast(response.errors);
+        } else {
+          errorToast('Error fetching preview data', true, null, true);
+        }
+        setLoading(false);
+      } else {
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoading(false);
+          canMoveForward(true);
+        } else {
+          showToast({
+            title: 'No data found',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          setTableData(null);
+          setLoading(false);
+          canMoveForward(false);
+        }
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
+>>>>>>> ea46d2b5 (fix(CE): added move forward if query has data)
       setLoading(false);
     }
   }
