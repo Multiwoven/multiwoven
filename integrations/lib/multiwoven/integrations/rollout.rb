@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.4"
+>>>>>>> 5355126f (chore(CE): add request response log for Slack (#351))
 
     ENABLED_SOURCES = %w[
       Snowflake

@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.7.4)
+>>>>>>> 5355126f (chore(CE): add request response log for Slack (#351))
       activesupport
       async-websocket
       aws-sdk-athena
