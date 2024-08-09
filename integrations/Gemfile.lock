@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.7.3)
+>>>>>>> 07b100a1 (chore(CE): add request response log for Google Sheets (#347))
       activesupport
       async-websocket
       aws-sdk-athena

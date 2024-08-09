@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.3"
+>>>>>>> 07b100a1 (chore(CE): add request response log for Google Sheets (#347))
 
     ENABLED_SOURCES = %w[
       Snowflake
