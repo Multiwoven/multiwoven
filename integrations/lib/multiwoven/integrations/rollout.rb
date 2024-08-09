@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.5"
+>>>>>>> f48f9738 (chore(CE): add request response log for Iterable (#348))
 
     ENABLED_SOURCES = %w[
       Snowflake
