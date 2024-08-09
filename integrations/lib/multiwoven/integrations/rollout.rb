@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.8"
+>>>>>>> 099f4192 (chore(CE): add request response log for HTTP (#346))
 
     ENABLED_SOURCES = %w[
       Snowflake

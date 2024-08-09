@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.7.8)
+>>>>>>> 099f4192 (chore(CE): add request response log for HTTP (#346))
       activesupport
       async-websocket
       aws-sdk-athena
