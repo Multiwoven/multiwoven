@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.7.6)
+>>>>>>> 43083868 (chore(CE): add request response log for Zendesk (#352))
       activesupport
       async-websocket
       aws-sdk-athena

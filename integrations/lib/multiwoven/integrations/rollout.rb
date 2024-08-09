@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.6"
+>>>>>>> 43083868 (chore(CE): add request response log for Zendesk (#352))
 
     ENABLED_SOURCES = %w[
       Snowflake
