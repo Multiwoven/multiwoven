@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.7.7"
+>>>>>>> 38666561 (chore(CE): add request reponse log for Airtable (#342))
 
     ENABLED_SOURCES = %w[
       Snowflake

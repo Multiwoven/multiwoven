@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.7.7)
+>>>>>>> 38666561 (chore(CE): add request reponse log for Airtable (#342))
       activesupport
       async-websocket
       aws-sdk-athena
