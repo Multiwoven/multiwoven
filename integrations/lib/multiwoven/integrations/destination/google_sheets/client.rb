@@ -153,13 +153,15 @@ module Multiwoven
 
           # Batch has a limit of sending 2MB data. So creating a chunk of records to meet that limit
           def process_record_chunks(records, sync_config)
+            log_message_array = []
             write_success = 0
             write_failure = 0
 
             records.each_slice(MAX_CHUNK_SIZE) do |chunk|
               values = prepare_chunk_values(chunk, sync_config.stream)
-              update_sheet_values(values, sync_config.stream.name)
+              request, response = *update_sheet_values(values, sync_config.stream.name)
               write_success += values.size
+              log_message_array << log_request_response("info", request, response)
             rescue StandardError => e
               handle_exception(e, {
                                  context: "GOOGLE_SHEETS:RECORD:WRITE:EXCEPTION",
@@ -168,9 +170,9 @@ module Multiwoven
                                  sync_run_id: sync_config.sync_run_id
                                })
               write_failure += chunk.size
+              log_message_array << log_request_response("error", request, e.message)
             end
-
-            tracking_message(write_success, write_failure)
+            tracking_message(write_success, write_failure, log_message_array)
           end
 
           # We need to format the data to adhere to google sheets API format. This converts the sync mapped data to 2D array format expected by google sheets API
@@ -199,17 +201,12 @@ module Multiwoven
             )
 
             # TODO: Remove & this is added for the test to pass we need
-            @client&.batch_update_values(@spreadsheet_id, batch_update_request)
+            response = @client&.batch_update_values(@spreadsheet_id, batch_update_request)
+            [batch_update_request, response]
           end
 
           def load_catalog
             read_json(CATALOG_SPEC_PATH)
-          end
-
-          def tracking_message(success, failure)
-            Multiwoven::Integrations::Protocol::TrackingMessage.new(
-              success: success, failed: failure
-            ).to_multiwoven_message
           end
 
           def delete_extra_sheets(sheet_ids)

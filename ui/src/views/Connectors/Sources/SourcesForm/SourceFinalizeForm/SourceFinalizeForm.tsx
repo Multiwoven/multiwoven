@@ -1,5 +1,5 @@
 import { Box, Input, Text, Textarea } from '@chakra-ui/react';
-import SourceFormFooter from '../SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
@@ -123,7 +123,7 @@ const SourceFinalizeForm = (): JSX.Element | null => {
                 />
               </Box>
             </Box>
-            <SourceFormFooter
+            <FormFooter
               ctaName='Finish'
               ctaType='submit'
               isCtaLoading={isLoading}
