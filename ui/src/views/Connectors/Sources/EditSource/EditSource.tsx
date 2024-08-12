@@ -24,12 +24,7 @@ import useCustomToast from '@/hooks/useCustomToast';
 import JSONSchemaForm from '../../../../components/JSONSchemaForm';
 import { generateUiSchema } from '@/utils/generateUiSchema';
 import { useStore } from '@/stores';
-<<<<<<< HEAD
-=======
-import RoleAccess from '@/enterprise/components/RoleAccess';
-import { UserActions } from '@/enterprise/types';
 import FormFooter from '@/components/FormFooter';
->>>>>>> 4dc44c9c (refactor(CE): Connector creation process)
 
 const EditSource = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);

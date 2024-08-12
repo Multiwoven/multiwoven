@@ -14,11 +14,7 @@ import { generateUiSchema } from '@/utils/generateUiSchema';
 import JSONSchemaForm from '@/components/JSONSchemaForm';
 import { useStore } from '@/stores';
 
-<<<<<<< HEAD:ui/src/views/Connectors/Sources/SourcesForm/SourceConfigForm/SourceConfigForm.tsx
-const SourceConfigForm = (): JSX.Element | null => {
-=======
 const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.Element | null => {
->>>>>>> 4dc44c9c (refactor(CE): Connector creation process):ui/src/views/Connectors/ConnectorConfigForm/ConnectorConfigForm.tsx
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
   const selectedConnector = forms.find(

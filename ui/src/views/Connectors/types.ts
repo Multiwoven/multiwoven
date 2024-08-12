@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-export type ConnectorTypes = 'source' | 'destination' | 'model';
-=======
-import { ErrorResponse } from '@/services/common';
-
 export type ConnectorTypes = 'source' | 'destination';
->>>>>>> 4dc44c9c (refactor(CE): Connector creation process)
 
 export type DatasourceType = {
   icon: string;

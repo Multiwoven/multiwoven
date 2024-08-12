@@ -225,8 +225,7 @@ const Workspace = () => {
             />
           </Box>
         </Box>
-<<<<<<< HEAD
-        <SourceFormFooter
+        <FormFooter
           ctaName='Save Changes'
           isContinueCtaRequired
           ctaType='submit'
@@ -234,18 +233,6 @@ const Workspace = () => {
           isCtaLoading={isEditLoading}
           isCtaDisabled={!formik.values.name}
         />
-=======
-        <RoleAccess location='user' type='item' action={UserActions.Update}>
-          <FormFooter
-            ctaName='Save Changes'
-            isContinueCtaRequired
-            ctaType='submit'
-            isAlignToContentContainer
-            isCtaLoading={isEditLoading}
-            isCtaDisabled={!formik.values.name}
-          />
-        </RoleAccess>
->>>>>>> 4dc44c9c (refactor(CE): Connector creation process)
       </Box>
     </form>
   );
