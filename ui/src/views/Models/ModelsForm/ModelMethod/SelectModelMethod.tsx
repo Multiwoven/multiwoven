@@ -5,7 +5,7 @@ import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { ModelMethodType } from './types';
 import ContentContainer from '@/components/ContentContainer';
 import Badge from '@/components/Badge';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { extractData } from '@/utils';
 import { getCatalog } from '@/services/syncs';
 import { useStore } from '@/stores';
@@ -96,7 +96,7 @@ const ModelMethod = (): JSX.Element => {
             );
           })}
         </SimpleGrid>
-        <SourceFormFooter ctaName='Continue' ctaType='submit' isBackRequired />
+        <FormFooter ctaName='Continue' ctaType='submit' isBackRequired />
       </ContentContainer>
     </Box>
   );

@@ -1,61 +1,67 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { getConnectorDefinition } from '@/services/connectors';
-import { Box } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
+import { Box } from '@chakra-ui/react';
+
+import FormFooter from '@/components/FormFooter';
 
 import Loader from '@/components/Loader';
-import ContentContainer from '@/components/ContentContainer';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
-import JSONSchemaForm from '@/components/JSONSchemaForm';
-import { generateUiSchema } from '@/utils/generateUiSchema';
-import { useStore } from '@/stores';
 import { processFormData } from '@/views/Connectors/helpers';
+import ContentContainer from '@/components/ContentContainer';
+import { generateUiSchema } from '@/utils/generateUiSchema';
+import JSONSchemaForm from '@/components/JSONSchemaForm';
+import { useStore } from '@/stores';
 
-const DestinationConfigForm = (): JSX.Element | null => {
+const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.Element | null => {
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
-  const selectedDestination = forms.find(({ stepKey }) => stepKey === 'destination');
+  const selectedConnector = forms.find(
+    ({ stepKey }) => stepKey === (connectorType === 'source' ? 'datasource' : connectorType),
+  );
+  const connector = selectedConnector?.data?.[
+    connectorType === 'source' ? 'datasource' : connectorType
+  ] as string;
   const activeWorkspaceId = useStore((state) => state.workspaceId);
 
-  const destination = selectedDestination?.data?.destination as string;
-  if (!destination) return null;
+  if (!connector) return null;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['connector_definition', destination, activeWorkspaceId],
-    queryFn: () => getConnectorDefinition('destination', destination),
-    enabled: !!destination && activeWorkspaceId > 0,
+    queryKey: ['connector_definition', connector, activeWorkspaceId],
+    queryFn: () => getConnectorDefinition(connectorType, connector),
+    enabled: !!connector && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
   if (isLoading) return <Loader />;
 
-  const connectorSchema = data?.data?.connector_spec?.connection_specification;
-  if (!connectorSchema) return null;
-
   const handleFormSubmit = async (formData: FormData) => {
     const processedFormData = processFormData(formData);
     handleMoveForward(stepInfo?.formKey as string, processedFormData);
   };
 
+  const connectorSchema = data?.data?.connector_spec?.connection_specification;
+  if (!connectorSchema) return null;
+
   const generatedSchema = generateUiSchema(connectorSchema);
 
   return (
-    <Box width='100%' display='flex' justifyContent='center'>
+    <Box display='flex' justifyContent='center' marginBottom='80px'>
       <ContentContainer>
-        <Box backgroundColor='gray.300' padding='20px' borderRadius='8px' marginBottom='100px'>
+        <Box backgroundColor='gray.200' padding='24px' borderRadius='8px'>
           <JSONSchemaForm
             schema={connectorSchema}
             uiSchema={generatedSchema}
             onSubmit={(formData: FormData) => handleFormSubmit(formData)}
           >
-            <SourceFormFooter
-              ctaName='Finish'
+            <FormFooter
+              ctaName='Continue'
               ctaType='submit'
-              isBackRequired
-              isDocumentsSectionRequired
               isContinueCtaRequired
+              isDocumentsSectionRequired
+              isBackRequired
             />
           </JSONSchemaForm>
         </Box>
@@ -64,4 +70,4 @@ const DestinationConfigForm = (): JSX.Element | null => {
   );
 };
 
-export default DestinationConfigForm;
+export default ConnectorConfigForm;

@@ -7,7 +7,7 @@ import SelectStreams from './SelectStreams';
 import { Stream, FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapFields from './MapFields';
 import { ConnectorItem } from '@/views/Connectors/types';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import MapCustomFields from './MapCustomFields';
 import { useQuery } from '@tanstack/react-query';
 import { getCatalog } from '@/services/syncs';
@@ -138,7 +138,7 @@ const ConfigureSyncs = ({
             />
           )}
 
-          <SourceFormFooter
+          <FormFooter
             ctaName='Continue'
             ctaType='submit'
             isCtaDisabled={!selectedStream || !SchemaMode.schemaless}

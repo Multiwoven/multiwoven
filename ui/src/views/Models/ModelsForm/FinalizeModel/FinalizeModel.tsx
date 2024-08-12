@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { FinalizeForm } from './types';
 import { CreateModelPayload } from '../../types';
 import { createNewModel } from '@/services/models';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import ContentContainer from '@/components/ContentContainer';
@@ -186,7 +186,7 @@ const FinalizeModel = (): JSX.Element => {
                   </Text>
                 </FormControl>
               </VStack>
-              <SourceFormFooter
+              <FormFooter
                 isCtaLoading={isLoading}
                 ctaType='submit'
                 ctaName='Finish'

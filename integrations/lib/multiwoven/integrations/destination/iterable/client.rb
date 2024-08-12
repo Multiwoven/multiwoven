@@ -54,31 +54,35 @@ module Multiwoven
           end
 
           def process_records(records, stream)
+            log_message_array = []
             write_success = 0
             write_failure = 0
             records.each do |record_object|
               record = extract_data(record_object, stream.json_schema[:properties])
-              response = process_stream(record, stream)
+              request, response = *process_stream(record, stream)
               if response.success?
                 write_success += 1
               else
                 write_failure += 1
               end
+              log_message_array << log_request_response("info", request, response.body)
             rescue StandardError => e
               handle_exception("ITERABLE:WRITE:EXCEPTION", "error", e)
               write_failure += 1
+              log_message_array << log_request_response("error", request, e.message)
             end
-            tracking_message(write_success, write_failure)
+            tracking_message(write_success, write_failure, log_message_array)
           end
 
           def process_stream(record, stream)
             klass = ::Iterable.const_get(stream.name).new(*initialize_params(stream, record))
             item_attrs = initialize_attribute(stream, record)
-            if stream.name == "CatalogItems"
-              klass.send(@action, item_attrs)
-            else
-              klass.send(@action)
-            end
+            response = if stream.name == "CatalogItems"
+                         klass.send("create", item_attrs)
+                       else
+                         klass.send("create")
+                       end
+            [item_attrs, response]
           end
 
           def initialize_params(stream, record)
@@ -95,12 +99,6 @@ module Multiwoven
             else
               {}
             end
-          end
-
-          def tracking_message(success, failure)
-            Multiwoven::Integrations::Protocol::TrackingMessage.new(
-              success: success, failed: failure
-            ).to_multiwoven_message
           end
 
           def load_catalog

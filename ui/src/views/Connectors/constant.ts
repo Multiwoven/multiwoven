@@ -1,19 +1,4 @@
-import { ConnectionStatus, ConnectorTypes, SourceListColumnType } from './types';
-
-export const CONNECTORS: Record<ConnectorTypes, Record<string, string>> = {
-  source: {
-    name: 'Source',
-    key: 'source',
-  },
-  destination: {
-    name: 'Destination',
-    key: 'destination',
-  },
-  model: {
-    name: 'Model',
-    key: 'model',
-  },
-};
+import { ConnectionStatus, SourceListColumnType } from './types';
 
 export const CONNECTION_STATUS: ConnectionStatus[] = [
   {
