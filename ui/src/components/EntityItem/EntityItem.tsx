@@ -1,4 +1,5 @@
 import { Box, Image, Text } from '@chakra-ui/react';
+import connectorPlaceholderIcon from '@/assets/icons/connector-placeholder.svg';
 
 type EntityItem = {
   icon: string;
@@ -21,7 +22,14 @@ const EntityItem = ({ icon, name }: EntityItem): JSX.Element => {
         justifyContent='center'
         alignItems='center'
       >
-        <Image src={icon} alt='icon' maxHeight='100%' height='24px' width='24px' />
+        <Image
+          src={icon}
+          fallbackSrc={connectorPlaceholderIcon}
+          alt='icon'
+          maxHeight='100%'
+          height='24px'
+          width='24px'
+        />
       </Box>
       <Text fontSize='sm' fontWeight='semibold' color='black.500'>
         {name}
