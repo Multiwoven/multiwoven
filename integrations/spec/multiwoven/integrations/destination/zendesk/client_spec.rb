@@ -160,6 +160,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
         result = client.write(sync_config, records)
         expect(result.tracking.success).to eq(records.size)
         expect(result.tracking.failed).to eq(0)
+        log_message = result.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
@@ -172,6 +178,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Zendesk::Client do
         result = client.write(sync_config, records)
         expect(result.tracking.success).to eq(0)
         expect(result.tracking.failed).to eq(records.size)
+        log_message = result.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("error")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
   end
