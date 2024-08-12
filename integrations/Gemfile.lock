@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.8.1)
+>>>>>>> 27c4c0e4 (chore(CE): fix oci8 version (#375))
       activesupport
       async-websocket
       aws-sdk-athena
@@ -360,7 +364,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   ruby-limiter
-  ruby-oci8
+  ruby-oci8 (~> 2.2.12)
   ruby-odbc!
   rubyzip
   sequel
