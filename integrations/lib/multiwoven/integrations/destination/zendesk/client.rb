@@ -64,21 +64,24 @@ module Multiwoven
           end
 
           def process_records(records, stream)
+            log_message_array = []
             write_success = 0
             write_failure = 0
 
             records.each do |record|
               zendesk_data = prepare_record_data(record, stream.name)
               plural_stream_name = pluralize_stream_name(stream.name.downcase)
+              args = [plural_stream_name, @action, zendesk_data]
 
               if @action == "create"
-                @client.send(plural_stream_name).create!(zendesk_data)
+                response = @client.send(plural_stream_name).create!(zendesk_data)
               else
                 existing_record = @client.send(plural_stream_name).find(id: record[:id])
-                existing_record.update!(zendesk_data)
+                response = existing_record.update!(zendesk_data)
               end
 
               write_success += 1
+              log_message_array << log_request_response("info", args, response)
             rescue StandardError => e
               handle_exception(e, {
                                  context: "ZENDESK:WRITE:EXCEPTION",
@@ -87,9 +90,9 @@ module Multiwoven
                                  sync_run_id: @sync_config.sync_run_id
                                })
               write_failure += 1
+              log_message_array << log_request_response("error", args, e.message)
             end
-
-            tracking_message(write_success, write_failure)
+            tracking_message(write_success, write_failure, log_message_array)
           end
 
           def pluralize_stream_name(name)
@@ -121,12 +124,6 @@ module Multiwoven
 
           def load_catalog
             read_json(CATALOG_SPEC_PATH)
-          end
-
-          def tracking_message(success, failure)
-            Multiwoven::Integrations::Protocol::TrackingMessage.new(
-              success: success, failed: failure
-            ).to_multiwoven_message
           end
         end
       end
