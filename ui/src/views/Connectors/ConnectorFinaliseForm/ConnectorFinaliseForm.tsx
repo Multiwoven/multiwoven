@@ -2,20 +2,28 @@ import { Box, Input, Text, Textarea } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useContext, useState } from 'react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
-import { CreateConnectorPayload, TestConnectionPayload } from '@/views/Connectors/types';
+import {
+  CreateConnectorPayload,
+  TestConnectionPayload,
+  ConnectorTypes,
+} from '@/views/Connectors/types';
 import { useNavigate } from 'react-router-dom';
 import { createNewConnector } from '@/services/connectors';
 import { useQueryClient } from '@tanstack/react-query';
-import { DESTINATIONS_LIST_QUERY_KEY } from '@/views/Connectors/constant';
 import { useUiConfig } from '@/utils/hooks';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import ContentContainer from '@/components/ContentContainer';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 
 const finalDestinationConfigFormKey = 'testDestination';
+const finalDataSourceFormKey = 'testSource';
 
-const DestinationFinalizeForm = (): JSX.Element | null => {
+const ConnectorFinaliseForm = ({
+  connectorType,
+}: {
+  connectorType: ConnectorTypes;
+}): JSX.Element | null => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { maxContentWidth } = useUiConfig();
   const { state } = useContext(SteppedFormContext);
@@ -23,15 +31,21 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
   const showToast = useCustomToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const finalDestinationConfigForm = forms.find(
-    ({ stepKey }) => stepKey === finalDestinationConfigFormKey,
-  )?.data?.[finalDestinationConfigFormKey] as TestConnectionPayload | undefined;
 
-  if (!finalDestinationConfigForm) return null;
+  const CONNECTOR_TYPE_TITLE = connectorType === 'source' ? 'Source' : 'Destination';
+
+  const configKey =
+    connectorType === 'source' ? finalDataSourceFormKey : finalDestinationConfigFormKey;
+
+  const finalConnectorConfigForm = forms.find(({ stepKey }) => stepKey === configKey)?.data?.[
+    configKey
+  ] as TestConnectionPayload | undefined;
+
+  if (!finalConnectorConfigForm) return null;
 
   const formik = useFormik({
     initialValues: {
-      connector_name: finalDestinationConfigForm.name,
+      connector_name: finalConnectorConfigForm.name,
       description: '',
     },
     onSubmit: async (formData) => {
@@ -39,10 +53,10 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
       try {
         const payload: CreateConnectorPayload = {
           connector: {
-            configuration: finalDestinationConfigForm.connection_spec,
+            configuration: finalConnectorConfigForm.connection_spec,
             name: formData.connector_name,
-            connector_type: 'destination',
-            connector_name: finalDestinationConfigForm.name,
+            connector_type: connectorType,
+            connector_name: finalConnectorConfigForm.name,
             description: formData.description,
           },
         };
@@ -50,16 +64,20 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
         const createConnectorResponse = await createNewConnector(payload);
         if (createConnectorResponse?.data) {
           queryClient.removeQueries({
-            queryKey: DESTINATIONS_LIST_QUERY_KEY,
+            queryKey: ['connectors', connectorType],
           });
 
           showToast({
             status: CustomToastStatus.Success,
             title: 'Success!!',
-            description: 'Destination created successfully!',
+            description: `${CONNECTOR_TYPE_TITLE} created successfully!`,
             position: 'bottom-right',
           });
-          navigate('/setup/destinations');
+          if (connectorType === 'source') {
+            navigate('/setup/sources');
+          } else {
+            navigate('/setup/destinations');
+          }
         } else {
           throw new Error();
         }
@@ -67,7 +85,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
         showToast({
           status: CustomToastStatus.Error,
           title: 'An error occurred.',
-          description: 'Something went wrong while creating the Destination.',
+          description: `Something went wrong while creating the ${CONNECTOR_TYPE_TITLE}.`,
           position: 'bottom-right',
           isClosable: true,
         });
@@ -84,16 +102,16 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
           <form onSubmit={formik.handleSubmit}>
             <Box padding='24px' backgroundColor='gray.300' borderRadius='8px' marginBottom='16px'>
               <Text size='md' fontWeight='semibold' marginBottom='24px'>
-                Finalize settings for this Destination
+                {`Finalize settings for this ${CONNECTOR_TYPE_TITLE}`}
               </Text>
               <Box>
                 <Text marginBottom='8px' fontWeight='semibold' size='sm'>
-                  Destination Name
+                  {`${CONNECTOR_TYPE_TITLE} Name`}
                 </Text>
                 <Input
                   name='connector_name'
                   type='text'
-                  placeholder='Enter Destination name'
+                  placeholder={`Enter ${CONNECTOR_TYPE_TITLE} name`}
                   background='gray.100'
                   marginBottom='24px'
                   onChange={formik.handleChange}
@@ -126,7 +144,7 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
                 />
               </Box>
             </Box>
-            <SourceFormFooter
+            <FormFooter
               ctaName='Finish'
               ctaType='submit'
               isCtaLoading={isLoading}
@@ -141,4 +159,4 @@ const DestinationFinalizeForm = (): JSX.Element | null => {
   );
 };
 
-export default DestinationFinalizeForm;
+export default ConnectorFinaliseForm;

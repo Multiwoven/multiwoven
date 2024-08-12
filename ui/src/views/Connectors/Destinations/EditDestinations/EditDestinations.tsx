@@ -13,7 +13,6 @@ import ContentContainer from '@/components/ContentContainer';
 import { useEffect, useState } from 'react';
 import { CreateConnectorPayload, TestConnectionPayload } from '../../types';
 import { RJSFSchema } from '@rjsf/utils';
-import SourceFormFooter from '../../Sources/SourcesForm/SourceFormFooter';
 import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
 import EntityItem from '@/components/EntityItem';
@@ -24,6 +23,7 @@ import useCustomToast from '@/hooks/useCustomToast';
 import { generateUiSchema } from '@/utils/generateUiSchema';
 import JSONSchemaForm from '../../../../components/JSONSchemaForm';
 import { useStore } from '@/stores';
+import FormFooter from '@/components/FormFooter';
 
 const EditDestination = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
@@ -214,7 +214,7 @@ const EditDestination = (): JSX.Element => {
             onSubmit={(formData: FormData) => handleOnTestClick(formData)}
             onChange={(formData: FormData) => setFormData(formData)}
           >
-            <SourceFormFooter
+            <FormFooter
               ctaName='Save Changes'
               ctaType='button'
               isCtaDisabled={!testedFormData}
