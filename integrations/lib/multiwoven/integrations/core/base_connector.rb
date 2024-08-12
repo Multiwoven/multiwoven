@@ -63,7 +63,8 @@ module Multiwoven
       end
 
       def failure_status(error)
-        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: error.message).to_multiwoven_message
+        message = error&.message || "failed"
+        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: message).to_multiwoven_message
       end
     end
   end

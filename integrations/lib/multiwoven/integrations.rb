@@ -81,6 +81,7 @@ require_relative "integrations/destination/iterable/client"
 require_relative "integrations/destination/maria_db/client"
 require_relative "integrations/destination/databricks_lakehouse/client"
 require_relative "integrations/destination/oracle_db/client"
+require_relative "integrations/destination/microsoft_excel/client"
 
 module Multiwoven
   module Integrations
