@@ -1,18 +1,20 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 import TopBar from '@/components/TopBar';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import { SOURCES_LIST_QUERY_KEY, CONNECTOR_LIST_COLUMNS } from '@/views/Connectors/constant';
 import Table from '@/components/Table';
+=======
+import { SOURCES_LIST_QUERY_KEY } from '@/views/Connectors/constant';
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
 import { getUserConnectors } from '@/services/connectors';
-import { ConnectorAttributes, ConnectorTableColumnFields } from '../../types';
-import moment from 'moment';
 import ContentContainer from '@/components/ContentContainer';
-import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import NoConnectors from '@/views/Connectors/NoConnectors';
+<<<<<<< HEAD
 import StatusTag from '@/components/StatusTag';
 
 type TableItem = {
@@ -43,6 +45,18 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
       );
   }
 };
+=======
+import { useStore } from '@/stores';
+import useCustomToast from '@/hooks/useCustomToast';
+import { CustomToastStatus } from '@/components/Toast/index';
+import titleCase from '@/utils/TitleCase';
+import { useRoleDataStore } from '@/enterprise/store/useRoleDataStore';
+import { UserActions } from '@/enterprise/types';
+import { hasActionPermission } from '@/enterprise/utils/accessControlPermission';
+import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
+import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/ConnectorsListColumns';
+import DataTable from '@/components/DataTable';
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
 
 const SourcesList = (): JSX.Element | null => {
   const navigate = useNavigate();
@@ -53,6 +67,7 @@ const SourcesList = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
+<<<<<<< HEAD
   const connectors = data?.data;
 
   const tableData = useMemo(() => {
@@ -79,6 +94,28 @@ const SourcesList = (): JSX.Element | null => {
 
   if (!isLoading && !tableData) return <NoConnectors connectorType='source' />;
 
+=======
+  if (isLoading || activeRole === null) return <Loader />;
+
+  if (data?.data?.length === 0 || !data) return <NoConnectors connectorType='source' />;
+
+  if (data?.errors) {
+    data.errors?.forEach((error) => {
+      showToast({
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom-right',
+        colorScheme: 'red',
+        status: CustomToastStatus.Warning,
+        title: titleCase(error.detail),
+      });
+    });
+    return <NoConnectors connectorType='source' />;
+  }
+
+  const hasPermission = hasActionPermission(activeRole, 'model', UserActions.Create);
+
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
   return (
     <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
@@ -90,9 +127,23 @@ const SourcesList = (): JSX.Element | null => {
           ctaButtonVariant='solid'
           isCtaVisible
         />
+<<<<<<< HEAD
         {tableData ? (
           <Table data={tableData} onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)} />
         ) : null}
+=======
+        <DataTable
+          data={data?.data}
+          columns={ConnectorsListColumns}
+          onRowClick={(row) =>
+            navigate({
+              to: `/setup/sources/${row?.original?.id}`,
+              location: 'connector',
+              action: UserActions.Update,
+            })
+          }
+        />
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
       </ContentContainer>
     </Box>
   );

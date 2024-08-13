@@ -2,12 +2,18 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getSyncRunsBySyncId } from '@/services/syncs';
 import { useMemo, useState, useEffect } from 'react';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import Loader from '@/components/Loader';
 import Pagination from '@/components/Pagination';
 import { SyncRunsColumns } from './SyncRunsColumns';
 import DataTable from '@/components/DataTable';
+<<<<<<< HEAD
 import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
+=======
+import { Row } from '@tanstack/react-table';
+import { SyncRunsResponse } from '../types';
+import RowsNotFound from '@/components/DataTable/RowsNotFound';
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
 
 const SyncRuns = () => {
   const { syncId } = useParams();
@@ -51,19 +57,7 @@ const SyncRuns = () => {
       ) : (
         <Box>
           {data?.data?.length === 0 || !data?.data ? (
-            <Box
-              display='flex'
-              w='fit-content'
-              mx='auto'
-              flexDirection='column'
-              gap='20px'
-              mt='10%'
-            >
-              <Image src={SyncRunEmptyImage} w='175px' h='132px' />
-              <Text fontSize='xl' mx='auto' color='gray.600' fontWeight='semibold'>
-                No rows found
-              </Text>
-            </Box>
+            <RowsNotFound />
           ) : (
             <DataTable data={data?.data} columns={allColumns} onRowClick={handleOnSyncClick} />
           )}

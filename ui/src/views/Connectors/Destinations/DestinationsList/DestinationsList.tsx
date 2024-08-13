@@ -4,12 +4,24 @@ import TopBar from '@/components/TopBar';
 import { useNavigate } from 'react-router-dom';
 
 import ContentContainer from '@/components/ContentContainer';
-import DestinationsTable from './DestinationsTable';
 import { useQuery } from '@tanstack/react-query';
 import { DESTINATIONS_LIST_QUERY_KEY } from '../../constant';
 import { getUserConnectors } from '@/services/connectors';
 import NoConnectors from '../../NoConnectors';
 import Loader from '@/components/Loader';
+<<<<<<< HEAD
+=======
+import { useStore } from '@/stores';
+import useCustomToast from '@/hooks/useCustomToast';
+import { CustomToastStatus } from '@/components/Toast/index';
+import titleCase from '@/utils/TitleCase';
+import { useRoleDataStore } from '@/enterprise/store/useRoleDataStore';
+import { UserActions } from '@/enterprise/types';
+import { hasActionPermission } from '@/enterprise/utils/accessControlPermission';
+import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
+import DataTable from '@/components/DataTable';
+import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/ConnectorsListColumns';
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
 
 const DestinationsList = (): JSX.Element | null => {
   const navigate = useNavigate();
@@ -36,7 +48,22 @@ const DestinationsList = (): JSX.Element | null => {
           ctaButtonVariant='solid'
           ctaButtonWidth='fit'
           ctaButtonHeight='40px'
+<<<<<<< HEAD
           isCtaVisible
+=======
+          isCtaVisible={hasPermission}
+        />
+        <DataTable
+          data={data?.data}
+          columns={ConnectorsListColumns}
+          onRowClick={(row) =>
+            navigate({
+              to: `/setup/destinations/${row?.original?.id}`,
+              location: 'connector',
+              action: UserActions.Update,
+            })
+          }
+>>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
         />
         {isLoading || !data ? (
           <Loader />
