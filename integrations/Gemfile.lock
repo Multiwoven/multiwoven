@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
+=======
+    multiwoven-integrations (0.8.2)
+>>>>>>> c8cca87b (chore(CE): update connector name (#378))
       activesupport
       async-websocket
       aws-sdk-athena

@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.7.9"
+=======
+    VERSION = "0.8.2"
+>>>>>>> c8cca87b (chore(CE): update connector name (#378))
 
     ENABLED_SOURCES = %w[
       Snowflake
