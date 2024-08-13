@@ -12,10 +12,9 @@ import {
   useDisclosure,
   Image,
   ModalHeader,
-  Icon,
 } from '@chakra-ui/react';
 import { FiCopy, FiArrowRight, FiAlertTriangle } from 'react-icons/fi';
-import { FaBug } from 'react-icons/fa';
+import FiBug from '@/assets/icons/FiBug.svg';
 
 import { useSyncStore } from '@/stores/useSyncStore';
 import { SyncRecordStatus } from '../types';
@@ -59,7 +58,7 @@ const ErrorLogsModal = ({
         cursor='pointer'
         data-testid='logs-button'
       >
-        <Icon as={FaBug} boxSize='4' />
+        <Image src={FiBug} alt='bug icon' boxSize='4' />
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size='xl'>
