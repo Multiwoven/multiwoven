@@ -444,6 +444,40 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
     end
   end
 
+  describe "PATCH /api/v1/syncs/enable - Enable/Disable sync" do
+    let(:request_body) do
+      { enable: true }
+    end
+
+    context "when it is an unauthenticated user for update sync" do
+      it "returns unauthorized" do
+        patch "/api/v1/syncs/#{syncs.first.id}/enable"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user and update sync" do
+      it "disables and enables a sync and returns success" do
+        request_body[:enable] = false
+        patch "/api/v1/syncs/#{syncs.first.id}/enable", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(syncs.first.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :status)).to eq("disabled")
+        request_body[:enable] = true
+        patch "/api/v1/syncs/#{syncs.first.id}/enable", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(syncs.first.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+      end
+    end
+  end
+
   describe "POST /api/v1/syncs - Create sync" do
     let(:request_body) do
       {
