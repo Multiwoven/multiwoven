@@ -4,7 +4,7 @@ module Api
   module V1
     class SyncsController < ApplicationController
       include Syncs
-      before_action :set_sync, only: %i[show update destroy]
+      before_action :set_sync, only: %i[show update enable destroy]
       before_action :modify_sync_params, only: %i[create update]
 
       after_action :event_logger
@@ -81,6 +81,17 @@ module Api
             status: :unprocessable_entity,
             details: format_errors(result.error)
           )
+        end
+      end
+
+      def enable
+        authorize current_workspace, policy_class: SyncPolicy
+        params[:enable] ? @sync.enable : @sync.disable
+        if @sync.save
+          render json: @sync, status: :ok
+        else
+          render_error(message: "Sync update failed", status: :unprocessable_entity,
+                       details: format_errors(result.sync))
         end
       end
 
