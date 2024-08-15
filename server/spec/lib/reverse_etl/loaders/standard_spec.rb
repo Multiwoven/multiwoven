@@ -54,7 +54,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       create(:sync_record, sync: sync_update, sync_run: sync_run_dest_update, action: "destination_update")
     end
     before do
-      allow(activity).to receive(:heartbeat)
+      allow(activity).to receive(:heartbeat).and_return(activity)
       allow(activity).to receive(:cancel_requested).and_return(false)
     end
     context "when batch support is enabled" do
@@ -76,7 +76,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         sync_config.sync_run_id = sync_run_batch.id.to_s
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_config, transform).and_return(multiwoven_message)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_batch)
         expect(sync_run_batch).to have_state(:queued)
         subject.write(sync_run_batch.id, activity)
         sync_run_batch.reload
@@ -108,7 +108,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         sync_config.sync_run_id = sync_run_batch.id.to_s
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_config, transform).and_return(multiwoven_message)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_batch)
         subject.write(sync_run_batch.id, activity)
         expect(sync_run_batch).to have_state(:queued)
         sync_run_batch.reload
@@ -148,7 +148,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         expect(subject).to receive(:update_sync_record_logs_and_status)
           .once.with(multiwoven_message, sync_run_individual.sync_records.first)
           .and_call_original
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_individual)
         expect(sync_run_individual).to have_state(:queued)
         subject.write(sync_run_individual.id, activity)
         sync_run_individual.reload
@@ -170,6 +170,19 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:client) { instance_double(sync_individual.destination.connector_client) }
       before do
         allow(client).to receive(:connector_spec).and_return(connector_spec)
+        allow(activity).to receive(:heartbeat).and_return(activity)
+      end
+
+      it "calls process_individual_records throw standard error" do
+        sync_config = sync_individual.to_protocol
+        sync_config.sync_run_id = sync_run_individual.id.to_s
+
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_insert").and_raise(StandardError.new("write error"))
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_individual)
+        expect(sync_run_individual).to have_state(:queued)
+        subject.write(sync_run_individual.id, activity)
       end
 
       it "calls process_individual_records method" do
@@ -179,7 +192,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_config, [transform],
                                               "destination_insert").and_return(multiwoven_message)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_individual)
         expect(sync_run_individual).to have_state(:queued)
         subject.write(sync_run_individual.id, activity)
         sync_run_individual.reload
@@ -197,7 +210,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(sync_update.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_config, [transform],
                                               "destination_update").and_return(multiwoven_message)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_dest_update)
         expect(sync_run_dest_update).to have_state(:queued)
         subject.write(sync_run_dest_update.id, activity)
         sync_run_dest_update.reload
@@ -216,6 +229,19 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(client).to receive(:write).with(sync_config, [transform]).and_return(multiwoven_message)
         expect(Parallel).to receive(:each).with(anything, in_threads: catalog.catalog["request_rate_concurrency"]).once
         subject.write(sync_run_individual.id, activity)
+      end
+
+      it "handles heartbeat timeout and updates sync run state" do
+        sync_config = sync_individual.to_protocol
+        sync_config.sync_run_id = sync_run_individual.id.to_s
+        allow(activity).to receive(:cancel_requested).and_return(true)
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_config, [transform]).and_return(multiwoven_message)
+        expect(Parallel).to receive(:each).with(anything, in_threads: catalog.catalog["request_rate_concurrency"]).once
+        expect { subject.write(sync_run_individual.id, activity) }
+          .to raise_error(StandardError, "Cancel activity request received")
+        sync_run_individual.reload
+        expect(sync_run_individual).to have_state(:failed)
       end
     end
 

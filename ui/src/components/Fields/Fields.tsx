@@ -3,7 +3,7 @@ import HiddenInput from '../HiddenInput';
 import { ErrorMessage, FieldInputProps, FormikErrors, FormikTouched } from 'formik';
 import { FiInfo } from 'react-icons/fi';
 
-type FormFieldProps = {
+export type FormFieldProps = {
   name: string;
   type: string;
   placeholder?: string;
@@ -23,6 +23,7 @@ type FormFieldProps = {
   touched: FormikTouched<any>;
   errors: FormikErrors<any>;
   helperText?: string;
+  isDisabled?: boolean;
 };
 
 export const FormField = ({
@@ -34,6 +35,7 @@ export const FormField = ({
   placeholder,
   tooltipText,
   hasTooltip,
+  isDisabled,
 }: FormFieldProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <InputGroup>
@@ -68,6 +70,7 @@ export const FormField = ({
         fontSize='sm'
         color='black.500'
         focusBorderColor='brand.400'
+        disabled={isDisabled}
       />
     </InputGroup>
     <Text size='xs' color='red.500' mt={2}>

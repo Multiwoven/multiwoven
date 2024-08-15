@@ -18,6 +18,9 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   let(:sync_run3) do
     create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
   end
+  let(:sync_run4) do
+    create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
+  end
 
   let(:sync_run_pending) do
     create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "pending")
@@ -48,14 +51,14 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
     allow(client).to receive(:read).and_return(records)
     allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1, nil)
     allow(sync_run1.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
-    allow(activity).to receive(:heartbeat)
+    allow(activity).to receive(:heartbeat).and_return(activity)
     allow(activity).to receive(:cancel_requested).and_return(false)
   end
 
   describe "#read" do
     context "when there is a new record" do
       it "creates a new sync record" do
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).exactly(:once)
         expect { subject.read(sync_run1.id, activity) }.to change(sync_run1.sync_records, :count).by(2)
       end
     end
@@ -64,7 +67,6 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       it "updates the existing sync record with fingerprint change" do
         # First sync run
         expect(sync_run1).to have_state(:started)
-        expect(subject).to receive(:heartbeat).once.with(activity)
         subject.read(sync_run1.id, activity)
         sync_run1.reload
         expect(sync_run1.sync_records.count).to eq(2)
@@ -88,7 +90,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
 
         # Second sync run
         expect(sync_run2).to have_state(:started)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run2, nil)
         subject.read(sync_run2.id, activity)
         sync_run2.reload
         expect(sync_run2).to have_state(:queued)
@@ -105,12 +107,37 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
 
         # Third sync run with same record
         expect(sync_run3).to have_state(:started)
-        expect(subject).to receive(:heartbeat).once.with(activity)
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run3, "2022-01-01")
         subject.read(sync_run3.id, activity)
         sync_run3.reload
         expect(sync_run3).to have_state(:queued)
         expect(sync_run3.sync_records.count).to eq(0)
         expect(sync_run3.sync.current_cursor_field).to eql("2022-01-02")
+      end
+
+      it "handles heartbeat timeout and updates sync run state" do
+        expect(sync_run1).to have_state(:started)
+        allow(activity).to receive(:cancel_requested).and_return(true)
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches)
+          .and_yield([record2, record3], 1, "2022-01-06")
+        expect { subject.read(sync_run1.id, activity) }
+          .to raise_error(StandardError, "Cancel activity request received")
+        sync_run1.reload
+        expect(sync_run1.sync_records.count).to eq(0)
+        expect(sync_run1.sync.current_cursor_field).to eq(nil)
+        expect(sync_run1).to have_state(:failed)
+      end
+
+      it "handles heartbeat timeout cursor field" do
+        expect(sync_run1).to have_state(:started)
+        sync_run1.sync.update(current_cursor_field: "2022-05-01")
+        allow(activity).to receive(:cancel_requested).and_return(true)
+        expect { subject.read(sync_run1.id, activity) }
+          .to raise_error(StandardError, "Cancel activity request received")
+        sync_run1.reload
+        expect(sync_run1.sync_records.count).to eq(0)
+        expect(sync_run1.sync.current_cursor_field).to eq("2022-05-01")
+        expect(sync_run1).to have_state(:failed)
       end
     end
 

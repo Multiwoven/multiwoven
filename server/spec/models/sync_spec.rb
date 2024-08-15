@@ -359,4 +359,54 @@ RSpec.describe Sync, type: :model do
       expect(sync.errors[:sync_interval]).to include("must be greater than 0")
     end
   end
+
+  describe "#schedule_sync?" do
+    let(:sync) { build(:sync) }
+
+    context "when schedule_type is manual" do
+      before do
+        sync.schedule_type = "manual"
+      end
+
+      it "returns false" do
+        expect(sync.schedule_sync?).to be false
+      end
+
+      it "returns false even when other conditions are met" do
+        sync.sync_interval = 5
+        sync.sync_interval_unit = "hours"
+        sync.save
+        expect(sync.schedule_sync?).to be false
+      end
+    end
+
+    context "when schedule_type is not manual" do
+      before do
+        sync.schedule_type = "interval"
+      end
+
+      it "returns true for a new record" do
+        expect(sync.schedule_sync?).to be true
+      end
+
+      it "returns true when sync_interval changes" do
+        sync.save
+        sync.sync_interval = 10
+        expect(sync.schedule_sync?).to be true
+      end
+
+      it "returns true when sync_interval_unit changes" do
+        sync.save
+        sync.sync_interval_unit = "days"
+        expect(sync.schedule_sync?).to be true
+      end
+
+      it "returns true when cron_expression changes" do
+        sync.schedule_type = "cron_expression"
+        sync.save
+        sync.cron_expression = "0 0 * * *"
+        expect(sync.schedule_sync?).to be true
+      end
+    end
+  end
 end

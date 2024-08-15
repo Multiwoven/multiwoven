@@ -67,6 +67,8 @@ gem "mysql2"
 
 gem "aws-sdk-sts"
 
+gem "ruby-oci8"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

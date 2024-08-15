@@ -2,12 +2,18 @@ import { Form, Formik } from 'formik';
 import { Button, HStack, Stack, Text } from '@chakra-ui/react';
 import { FormField, PasswordField } from '@/components/Fields';
 import { Link } from 'react-router-dom';
-import { SignUpAuthViewProps, SignUpSchema } from '../types';
+
+import { SignUpAuthViewProps } from '../types';
+import { SignUpSchema } from '@/constants/schemas';
 
 export const SignUpAuthView = ({
   handleSubmit,
   submitting,
   initialValues,
+  privacyPolicyUrl,
+  termsOfServiceUrl,
+  isCompanyNameDisabled,
+  isEmailDisabled,
 }: SignUpAuthViewProps) => (
   <>
     <Formik
@@ -34,6 +40,7 @@ export const SignUpAuthView = ({
                 errors={errors}
                 tooltipText='Company Names are unique across the platform'
                 hasTooltip
+                isDisabled={isCompanyNameDisabled}
               />
               <FormField
                 placeholder='Enter name'
@@ -52,6 +59,7 @@ export const SignUpAuthView = ({
                 errors={errors}
                 tooltipText='Please use an email linked to your company'
                 hasTooltip
+                isDisabled={isEmailDisabled}
               />
               <PasswordField
                 id='password'
@@ -76,7 +84,7 @@ export const SignUpAuthView = ({
                 <Text color='black.200' size='xs' fontWeight='regular'>
                   By creating an account, I agree to the{' '}
                 </Text>
-                <Link to='https://multiwoven.com/terms' target='_blank'>
+                <Link to={termsOfServiceUrl} target='_blank'>
                   <Text color='brand.400' size='xs' fontWeight='medium'>
                     Terms
                   </Text>
@@ -84,7 +92,7 @@ export const SignUpAuthView = ({
                 <Text color='black.200' size='xs' fontWeight='regular'>
                   and
                 </Text>
-                <Link to='https://multiwoven.com/privacy' target='_blank'>
+                <Link to={privacyPolicyUrl} target='_blank'>
                   <Text color='brand.400' size='xs' fontWeight='medium'>
                     Privacy Policy
                   </Text>

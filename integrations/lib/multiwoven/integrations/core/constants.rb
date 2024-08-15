@@ -16,6 +16,8 @@ module Multiwoven
       JSON_SCHEMA_URL = "https://json-schema.org/draft-07/schema#"
 
       # CONNECTORS
+      INSTALL_HTTPFS_QUERY = ENV["INSTALL_HTTPFS_QUERY"] || "INSTALL HTTPFS; LOAD HTTPFS;"
+
       KLAVIYO_AUTH_ENDPOINT = "https://a.klaviyo.com/api/lists/"
       KLAVIYO_AUTH_PAYLOAD = {
         data: {

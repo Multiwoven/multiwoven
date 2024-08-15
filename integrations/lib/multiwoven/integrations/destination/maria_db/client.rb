@@ -41,6 +41,7 @@ module Multiwoven::Integrations::Destination
         primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
 
+        log_message_array = []
         write_success = 0
         write_failure = 0
 
@@ -50,6 +51,7 @@ module Multiwoven::Integrations::Destination
           begin
             db.run(query)
             write_success += 1
+            log_message_array << log_request_response("info", query, "Successful")
           rescue StandardError => e
             handle_exception(e, {
                                context: "MARIA:DB:RECORD:WRITE:EXCEPTION",
@@ -58,9 +60,10 @@ module Multiwoven::Integrations::Destination
                                sync_run_id: sync_config.sync_run_id
                              })
             write_failure += 1
+            log_message_array << log_request_response("error", query, e.message)
           end
         end
-        tracking_message(write_success, write_failure)
+        tracking_message(write_success, write_failure, log_message_array)
       rescue StandardError => e
         handle_exception(e, {
                            context: "MARIA:DB:RECORD:WRITE:EXCEPTION",
@@ -102,13 +105,9 @@ module Multiwoven::Integrations::Destination
           result[index][:tablename] = table_name
           result[index][:columns] = [column_data]
         end
-        result
-      end
-
-      def tracking_message(success, failure)
-        Multiwoven::Integrations::Protocol::TrackingMessage.new(
-          success: success, failed: failure
-        ).to_multiwoven_message
+        result.values.group_by { |entry| entry[:tablename] }.transform_values do |entries|
+          { tablename: entries.first[:tablename], columns: entries.flat_map { |entry| entry[:columns] } }
+        end
       end
     end
   end

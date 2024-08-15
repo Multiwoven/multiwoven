@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "DatabricksLakehouse",
+    "title": "Databricks Datawarehouse",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.multiwoven.com/destinations/databricks_lakehouse",
+    "github_issue_label": "destination-databricks-lakehouse",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

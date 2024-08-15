@@ -3,7 +3,6 @@ const AboutUs = lazy(() => import('@/views/AboutUs'));
 const Dashboard = lazy(() => import('@/views/Dashboard'));
 const SignIn = lazy(() => import('@/views/Authentication/SignIn'));
 const SignUp = lazy(() => import('@/views/Authentication/SignUp'));
-const AccountVerify = lazy(() => import('@/views/AccountVerify'));
 const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
 
@@ -100,15 +99,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
         <>
           <SignUp />
         </>
-      </SuspenseWithLoader>
-    ),
-  },
-  {
-    name: 'Account Verify',
-    url: '/account-verify',
-    component: (
-      <SuspenseWithLoader redirectRoute='/account-verify'>
-        <AccountVerify />
       </SuspenseWithLoader>
     ),
   },

@@ -20,7 +20,7 @@ import {
 } from '@/views/Activate/Syncs/types';
 import ScheduleForm from './ScheduleForm';
 import { FormikProps, useFormik } from 'formik';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
 import { useStore } from '@/stores';
@@ -33,6 +33,7 @@ const EditSync = (): JSX.Element | null => {
   const [selectedSyncMode, setSelectedSyncMode] = useState('');
   const [cursorField, setCursorField] = useState('');
   const activeWorkspaceId = useStore((state) => state.workspaceId);
+  const [refresh, setRefresh] = useState(false);
 
   const { syncId } = useParams();
   const showToast = useCustomToast();
@@ -61,9 +62,9 @@ const EditSync = (): JSX.Element | null => {
     enabled: !!syncData?.destination.id && activeWorkspaceId > 0,
   });
 
-  const { data: catalogData } = useQuery({
+  const { data: catalogData, refetch } = useQuery({
     queryKey: ['syncs', 'catalog', syncData?.destination.id, activeWorkspaceId],
-    queryFn: () => getCatalog(syncData?.destination?.id as string),
+    queryFn: () => getCatalog(syncData?.destination?.id as string, refresh),
     enabled: !!syncData?.destination.id && activeWorkspaceId > 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -145,6 +146,17 @@ const EditSync = (): JSX.Element | null => {
     },
   });
 
+  const handleRefreshCatalog = () => {
+    setRefresh(true);
+  };
+
+  useEffect(() => {
+    if (refresh) {
+      refetch();
+      setRefresh(false);
+    }
+  }, [refresh]);
+
   useEffect(() => {
     if (isError) {
       showToast({
@@ -193,9 +205,18 @@ const EditSync = (): JSX.Element | null => {
       setSelectedStream(selectedStream);
     }
   };
+
   const handleOnConfigChange = (config: FieldMapType[]) => {
     setConfiguration(config);
   };
+
+  useEffect(() => {
+    if (catalogData) {
+      handleOnStreamsLoad(catalogData);
+    }
+  }, [catalogData]);
+
+  const streams = catalogData?.data?.attributes?.catalog?.streams || [];
 
   return (
     <form onSubmit={formik.handleSubmit} style={{ backgroundColor: 'gray.200' }}>
@@ -208,13 +229,13 @@ const EditSync = (): JSX.Element | null => {
               <SelectStreams
                 model={syncData?.model}
                 destination={destinationFetchResponse?.data}
-                onStreamsLoad={handleOnStreamsLoad}
                 isEdit
                 setSelectedSyncMode={setSelectedSyncMode}
                 selectedSyncMode={selectedSyncMode}
                 selectedStreamName={syncData?.stream_name}
                 selectedCursorField={cursorField}
                 setCursorField={setCursorField}
+                streams={streams}
               />
               {catalogData?.data.attributes.catalog.schema_mode === SchemaMode.schemaless ? (
                 <MapCustomFields
@@ -235,6 +256,7 @@ const EditSync = (): JSX.Element | null => {
                   data={configuration}
                   isEdit
                   configuration={configuration}
+                  handleRefreshCatalog={handleRefreshCatalog}
                 />
               )}
             </>
@@ -242,7 +264,7 @@ const EditSync = (): JSX.Element | null => {
             <ScheduleForm formik={formik} isEdit />
           </React.Fragment>
         ) : null}
-        <SourceFormFooter
+        <FormFooter
           ctaName='Save Changes'
           ctaType='submit'
           isCtaLoading={isEditLoading}

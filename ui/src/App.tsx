@@ -67,7 +67,14 @@ const App = (): JSX.Element => {
             <Route path={url} element={component} key={name} />
           ))}
 
-          <Route path='/' element={<MainLayout />}>
+          <Route
+            path='/'
+            element={
+              <Protected>
+                <MainLayout />
+              </Protected>
+            }
+          >
             {MAIN_PAGE_ROUTES.map(({ url, component, name }) => (
               <Route path={url} key={name} element={<Protected>{component}</Protected>} />
             ))}

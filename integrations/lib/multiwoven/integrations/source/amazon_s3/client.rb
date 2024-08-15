@@ -74,6 +74,8 @@ module Multiwoven::Integrations::Source
         @session_name = "preview-#{connection_config[:region]}-#{connection_config[:bucket]}" if @session_name.to_s.empty?
         auth_data = get_auth_data(connection_config)
         conn = DuckDB::Database.open.connect
+        # Install and/or Load the HTTPFS extension
+        conn.execute(INSTALL_HTTPFS_QUERY)
         # Set up S3 configuration
         secret_query = "
               CREATE SECRET amazons3_source (
