@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.8.1)
+    multiwoven-integrations (0.8.2)
       activesupport
       async-websocket
       aws-sdk-athena

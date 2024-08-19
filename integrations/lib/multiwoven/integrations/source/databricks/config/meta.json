@@ -1,7 +1,7 @@
 {
     "data": {
       "name": "Databricks",
-      "title": "Databricks",
+      "title": "Databricks Data Warehouse",
       "connector_type": "source",
       "category": "Data Warehouse",
       "documentation_url": "https://docs.mutliwoven.com",
