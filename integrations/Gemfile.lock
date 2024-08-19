@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.7.9)
-=======
     multiwoven-integrations (0.8.1)
->>>>>>> 27c4c0e4 (chore(CE): fix oci8 version (#375))
       activesupport
       async-websocket
       aws-sdk-athena

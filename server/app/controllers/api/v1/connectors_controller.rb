@@ -95,7 +95,7 @@ module Api
 
           if result.success?
             @records = result.records.map(&:record).map(&:data)
-            render json: @records, status: :ok
+            render json: { data: @records }, status: :ok
           else
             render_error(
               message: result["error"],

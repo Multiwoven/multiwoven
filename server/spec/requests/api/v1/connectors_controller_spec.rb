@@ -438,8 +438,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns success status for a valid query for member role" do
@@ -449,8 +449,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns success status for a valid query for viewer role" do
@@ -460,8 +460,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns failure status for a invalid query" do

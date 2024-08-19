@@ -84,7 +84,8 @@ module ReverseEtl
         # there might be a risk of losing either the update or the create due to these concurrent operations.
         # we can use  ActiveRecord::Base.transaction  to prevent such scenarios
         SyncRecord.find_by(sync_id: sync_run.sync_id, primary_key:) ||
-          sync_run.sync_records.new(sync_id: sync_run.sync_id, primary_key:, created_at: DateTime.current)
+          SyncRecord.new(sync_id: sync_run.sync_id, sync_run_id: sync_run.id,
+                         primary_key:, created_at: DateTime.current)
       end
 
       def new_record?(sync_record, fingerprint)
