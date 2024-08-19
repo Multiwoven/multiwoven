@@ -36,7 +36,7 @@ RSpec.describe Multiwoven::Integrations::Destination::MicrosoftExcel::Client do
       sync_mode: "incremental",
       destination_sync_mode: "insert",
       stream: {
-        name: "test_table.xlsx",
+        name: "test_table.xlsx, sheet",
         action: "create",
         json_schema: {},
         supported_sync_modes: %w[incremental],
@@ -108,7 +108,7 @@ RSpec.describe Multiwoven::Integrations::Destination::MicrosoftExcel::Client do
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
       expect(catalog.streams.first.request_rate_limit).to eql(6000)
       expect(catalog.streams.first.request_rate_limit_unit).to eql("minute")
-      expect(catalog.streams.first.request_rate_concurrency).to eql(10)
+      expect(catalog.streams.first.request_rate_concurrency).to eql(1)
       expect(catalog.streams.count).to eql(1)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
     end
@@ -144,7 +144,7 @@ RSpec.describe Multiwoven::Integrations::Destination::MicrosoftExcel::Client do
           )
 
         stub_request(:post, "https://graph.microsoft.com/v1.0/drives/DRIVE1/items/file1_id/workbook/worksheets/"\
-        "test_table.xlsx/tables/Table1/rows")
+        "sheet/tables/Table1/rows")
           .to_return(status: 201, body: successful_update_response_body, headers: {})
 
         sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
@@ -194,7 +194,7 @@ RSpec.describe Multiwoven::Integrations::Destination::MicrosoftExcel::Client do
 
         stub_request(:post,
                      "https://graph.microsoft.com/v1.0/drives/DRIVE1/items/file1_id/workbook/worksheets/"\
-                     "test_table.xlsx/tables/Table1/rows")
+                     "sheet/tables/Table1/rows")
           .to_return(status: 400, body: failed_update_response_body, headers: {})
 
         sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)

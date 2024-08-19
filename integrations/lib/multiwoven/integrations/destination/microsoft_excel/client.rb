@@ -49,8 +49,7 @@ module Multiwoven::Integrations::Destination
         excel_files = get_file(token, drive_id)
         worksheet = excel_files.find { |file| file[:name] == file_name }
         item_id = worksheet[:id]
-
-        table = get_table(token, drive_id, item_id)
+        table = get_table(token, drive_id, item_id, sheet_name)
         write_url = format(MS_EXCEL_TABLE_ROW_WRITE_API, drive_id: drive_id, item_id: item_id, sheet_name: sheet_name,
                                                          table_name: table["name"])
         payload = { values: records.map(&:values) }
@@ -69,8 +68,8 @@ module Multiwoven::Integrations::Destination
         JSON.parse(response.body)["id"]
       end
 
-      def get_table(token, drive_id, item_id)
-        table_url = format(MS_EXCEL_TABLE_API, drive_id: drive_id, item_id: item_id)
+      def get_table(token, drive_id, item_id, sheet_name)
+        table_url = format(MS_EXCEL_TABLE_API, drive_id: drive_id, item_id: item_id, sheet_name: sheet_name)
         response = Multiwoven::Integrations::Core::HttpClient.request(
           table_url,
           HTTP_GET,
@@ -114,9 +113,14 @@ module Multiwoven::Integrations::Destination
             headers: auth_headers(token)
           )
           sheets_data = JSON.parse(sheet_response.body)
+          column_names = if sheets_data.key?("error")
+                           ["Column A"]
+                         else
+                           sheets_data["values"].first
+                         end
           result << {
             sheet_name: sheet_name,
-            column_names: sheets_data["values"].first
+            column_names: column_names
           }
         end
         result
