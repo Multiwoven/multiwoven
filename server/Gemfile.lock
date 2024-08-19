@@ -2100,11 +2100,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-<<<<<<< HEAD
-    sequel (5.83.0)
-=======
     sequel (5.83.1)
->>>>>>> eda538f9 (chore(CE): update server gem (#377))
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
