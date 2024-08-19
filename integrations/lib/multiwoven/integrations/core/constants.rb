@@ -36,6 +36,17 @@ module Multiwoven
       AIRTABLE_BASES_ENDPOINT = "https://api.airtable.com/v0/meta/bases"
       AIRTABLE_GET_BASE_SCHEMA_ENDPOINT = "https://api.airtable.com/v0/meta/bases/{baseId}/tables"
 
+      MS_EXCEL_AUTH_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
+      MS_EXCEL_TABLE_ROW_WRITE_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/"\
+      "workbook/worksheets/%<sheet_name>s/tables/%<table_name>s/rows"
+      MS_EXCEL_TABLE_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/workbook/"\
+      "worksheets/sheet/tables?$select=name"
+      MS_EXCEL_FILES_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/root/children"
+      MS_EXCEL_WORKSHEETS_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/"\
+      "workbook/worksheets"
+      MS_EXCEL_SHEET_RANGE_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/"\
+      "workbook/worksheets/%<sheet_name>s/range(address='A1:Z1')/usedRange?$select=values"
+
       AWS_ACCESS_KEY_ID = ENV["AWS_ACCESS_KEY_ID"]
       AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
 
@@ -44,6 +55,7 @@ module Multiwoven
       HTTP_POST = "POST"
       HTTP_PUT = "PUT"
       HTTP_DELETE = "DELETE"
+      HTTP_PATCH = "PATCH"
 
       # google sheets
       GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/drive"
