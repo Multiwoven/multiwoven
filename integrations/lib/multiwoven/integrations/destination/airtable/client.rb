@@ -109,14 +109,6 @@ module Multiwoven
             }
           end
 
-          def auth_headers(access_token)
-            {
-              "Accept" => "application/json",
-              "Authorization" => "Bearer #{access_token}",
-              "Content-Type" => "application/json"
-            }
-          end
-
           def base_id_exists?(bases, base_id)
             return if extract_bases(bases).any? { |base| base["id"] == base_id }
 

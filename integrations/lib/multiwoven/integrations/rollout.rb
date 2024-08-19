@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.7.9"
-=======
     VERSION = "0.8.3"
->>>>>>> 58adff6e (fix(CE): fix discover and table url (#380))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -40,6 +36,7 @@ module Multiwoven
       MariaDB
       DatabricksLakehouse
       Oracle
+      MicrosoftExcel
     ].freeze
   end
 end
