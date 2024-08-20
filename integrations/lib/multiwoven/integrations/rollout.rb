@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.8.4"
+=======
+    VERSION = "0.8.6"
+>>>>>>> 87c1fa2f (chore(CE): add request response log for SalesforceCrm (#344))
 
     ENABLED_SOURCES = %w[
       Snowflake
