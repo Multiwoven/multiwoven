@@ -119,14 +119,18 @@ class Sync < ApplicationRecord
 
   def schedule_sync?
     (new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit ||
-      saved_change_to_cron_expression?) && !manual?
+      saved_change_to_cron_expression? || saved_change_to_status?) && !manual?
   end
 
   def schedule_sync
-    Temporal.start_workflow(
-      Workflows::ScheduleSyncWorkflow,
-      id
-    )
+    if saved_change_to_status? && status == "disabled"
+      Temporal.start_workflow(Workflows::TerminateWorkflow, id, options: { workflow_id: "terminate-#{id}" })
+    elsif new_record? || (saved_change_to_status? && status == "pending")
+      Temporal.start_workflow(
+        Workflows::ScheduleSyncWorkflow,
+        id
+      )
+    end
   rescue StandardError => e
     Utils::ExceptionReporter.report(e, {
                                       sync_id: id
@@ -137,13 +141,7 @@ class Sync < ApplicationRecord
   def perform_post_discard_sync
     sync_runs.discard_all
     terminate_workflow_id = "terminate-#{workflow_id}"
-    Temporal.start_workflow(
-      Workflows::TerminateWorkflow,
-      workflow_id,
-      options: {
-        workflow_id: terminate_workflow_id
-      }
-    )
+    Temporal.start_workflow(Workflows::TerminateWorkflow, workflow_id, options: { workflow_id: terminate_workflow_id })
   rescue StandardError => e
     Utils::ExceptionReporter.report(e, {
                                       sync_id: id

@@ -200,6 +200,24 @@ RSpec.describe "SyncContracts" do
     end
   end
 
+  describe SyncContracts::Enable do
+    subject(:contract) { described_class.new }
+
+    context "with valid parameters " do
+      let(:valid_inputs) { { id: 1, enable: true } }
+      let(:invalid_inputs) { { id: 1, enable: "disabled" } }
+
+      it "passes validation" do
+        expect(contract.call(valid_inputs)).to be_success
+      end
+
+      it "fails validation" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:enable]).to include("must be boolean")
+      end
+    end
+  end
+
   describe SyncContracts::Destroy do
     subject(:contract) { described_class.new }
 
