@@ -86,4 +86,8 @@ class Connector < ApplicationRecord
     connector_spec = client.connector_spec
     connector_spec&.connector_query_type || "raw_sql"
   end
+
+  def pull_catalog
+    connector_client.new.discover(configuration).catalog.to_h.with_indifferent_access
+  end
 end
