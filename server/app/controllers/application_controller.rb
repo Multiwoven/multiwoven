@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
     return if user_signed_in?
 
     # If not authenticated, return a 401 unauthorized response
-    render json: { error: "Unauthorized" }, status: :unauthorized
+    render_error(message: "Unauthorized", status: :unauthorized)
   end
 
   def current_workspace
