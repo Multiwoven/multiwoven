@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.8.4"
-=======
     VERSION = "0.9.0"
->>>>>>> 1224a32b (feat(CE): Databricks AI Model connector (#385))
 
     ENABLED_SOURCES = %w[
       Snowflake

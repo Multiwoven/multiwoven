@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.8.4)
-=======
     multiwoven-integrations (0.9.0)
->>>>>>> 1224a32b (feat(CE): Databricks AI Model connector (#385))
       activesupport
       async-websocket
       aws-sdk-athena
