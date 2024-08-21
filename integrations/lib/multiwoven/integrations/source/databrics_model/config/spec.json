@@ -6,7 +6,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Databricks Model",
       "type": "object",
-      "required": ["databricks_host", "token", "model_name"],
+      "required": ["databricks_host", "token", "endpoint"],
       "properties": {
         "databricks_host": {
           "title": "databricks_host",
