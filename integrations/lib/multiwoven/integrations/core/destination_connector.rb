@@ -15,14 +15,6 @@ module Multiwoven
           success: success, failed: failure, logs: log_message_array
         ).to_multiwoven_message
       end
-
-      def auth_headers(access_token)
-        {
-          "Accept" => "application/json",
-          "Authorization" => "Bearer #{access_token}",
-          "Content-Type" => "application/json"
-        }
-      end
     end
   end
 end

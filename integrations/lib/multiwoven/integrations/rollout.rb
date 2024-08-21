@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.8.6"
+    VERSION = "0.9.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -16,6 +16,7 @@ module Multiwoven
       AmazonS3
       MariaDB
       Oracle
+      DatabricksModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

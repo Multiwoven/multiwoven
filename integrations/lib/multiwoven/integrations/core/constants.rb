@@ -46,6 +46,10 @@ module Multiwoven
       "workbook/worksheets"
       MS_EXCEL_SHEET_RANGE_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/"\
       "workbook/worksheets/%<sheet_name>s/range(address='A1:Z1')/usedRange?$select=values"
+
+      DATABRICKS_HEALTH_URL  = "https://%<databricks_host>s/api/2.0/serving-endpoints/%<endpoint_name>s"
+      DATABRICKS_SERVING_URL = "https://%<databricks_host>s/serving-endpoints/%<endpoint_name>s/invocations"
+
       AWS_ACCESS_KEY_ID = ENV["AWS_ACCESS_KEY_ID"]
       AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
 
