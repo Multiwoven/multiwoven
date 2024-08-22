@@ -112,12 +112,12 @@ GEM
       console (~> 1.26)
       fiber-annotation
       io-event (~> 1.6, >= 1.6.5)
-    async-http (0.69.0)
+    async-http (0.70.0)
       async (>= 2.10.2)
       async-pool (~> 0.7)
       io-endpoint (~> 0.11)
       io-stream (~> 0.4)
-      protocol-http (~> 0.26)
+      protocol-http (~> 0.28)
       protocol-http1 (~> 0.19)
       protocol-http2 (~> 0.18)
       traces (>= 0.10)
@@ -1781,7 +1781,7 @@ GEM
     gli (2.21.5)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.75.0)
+    google-apis-bigquery_v2 (0.76.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (0.15.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -1898,7 +1898,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.8.1)
+    multiwoven-integrations (0.9.1)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -1973,7 +1973,7 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     process_executer (1.1.0)
     protocol-hpack (1.5.0)
-    protocol-http (0.28.1)
+    protocol-http (0.28.2)
     protocol-http1 (0.19.1)
       protocol-http (~> 0.22)
     protocol-http2 (0.18.0)
@@ -2123,7 +2123,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    sorbet-runtime (0.5.11518)
+    sorbet-runtime (0.5.11532)
     stringio (3.1.0)
     stripe (12.5.0)
     strong_migrations (1.8.0)
@@ -2197,7 +2197,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.8.1)
+  multiwoven-integrations (~> 0.9.1)
   mysql2
   newrelic_rpm
   parallel
