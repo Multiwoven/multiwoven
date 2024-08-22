@@ -93,7 +93,7 @@ module Api
                                  attributes: { message: "Email verification link sent successfully!" } } },
                  status: :ok
         else
-          render json: { errors: [{ detail: result.error || result.errors }] }, status: :unprocessable_entity
+          render_error(message: result.error, status: :unprocessable_entity)
         end
       end
     end
