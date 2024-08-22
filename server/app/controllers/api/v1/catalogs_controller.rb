@@ -4,7 +4,8 @@ module Api
   module V1
     class CatalogsController < ApplicationController
       include Catalogs
-      before_action :set_connector, only: %i[create]
+      before_action :set_connector, only: %i[create update]
+      before_action :set_catalog, only: %i[update]
 
       def create
         authorize current_workspace, policy_class: ConnectorPolicy
@@ -25,6 +26,26 @@ module Api
         end
       end
 
+      def update
+        authorize current_workspace, policy_class: ConnectorPolicy
+        result = UpdateCatalog.call(
+          connector: @connector,
+          catalog: @catalog,
+          catalog_params: catalog_params.to_h
+        )
+
+        if result.success?
+          @catalog = result.catalog
+          render json: @catalog, status: :created
+        else
+          render_error(
+            message: "Catalog update failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.catalog)
+          )
+        end
+      end
+
       private
 
       def set_connector
@@ -34,6 +55,10 @@ module Api
           message: "Connector not found",
           status: :not_found
         )
+      end
+
+      def set_catalog
+        @catalog = @connector.catalog
       end
 
       def catalog_params
