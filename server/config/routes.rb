@@ -25,6 +25,7 @@ Rails.application.routes.draw do
           post :query_source
         end
       end
+      resources :catalogs, only: %i[create]
       resources :models
       resources :syncs do
         collection do
