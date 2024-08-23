@@ -9,4 +9,14 @@ module CatalogContracts
       end
     end
   end
+
+  class Update < Dry::Validation::Contract
+    params do
+      required(:id).filled(:integer)
+      required(:connector_id).filled(:integer)
+      required(:catalog).hash do
+        required(:json_schema).filled(:hash)
+      end
+    end
+  end
 end
