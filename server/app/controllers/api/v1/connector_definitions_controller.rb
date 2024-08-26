@@ -46,6 +46,13 @@ module Api
                               params[:name].camelize
                             ).new
       end
+<<<<<<< HEAD
+=======
+
+      def connection_definitions_params
+        params.permit(:type, :category)
+      end
+>>>>>>> 9a486028 (fix(CE): fixes typo and add tests (#402))
     end
   end
 end
