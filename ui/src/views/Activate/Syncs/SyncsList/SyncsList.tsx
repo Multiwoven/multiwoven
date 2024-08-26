@@ -1,20 +1,23 @@
 import ContentContainer from '@/components/ContentContainer';
 import TopBar from '@/components/TopBar';
 import { fetchSyncs } from '@/services/syncs';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { FiPlus } from 'react-icons/fi';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from '../constants';
 import EntityItem from '@/components/EntityItem';
 import Table from '@/components/Table';
+=======
+import { SYNCS_LIST_QUERY_KEY } from '../constants';
+
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
 import Loader from '@/components/Loader';
-import moment from 'moment';
 import NoActivations, { ActivationType } from '../../NoSyncs/NoSyncs';
-import StatusTag from '@/components/StatusTag';
-import { ErrorResponse, CreateSyncResponse, SyncColumnFields } from '@/views/Activate/Syncs/types';
+import { CreateSyncResponse } from '@/views/Activate/Syncs/types';
 import { useStore } from '@/stores';
+<<<<<<< HEAD
 
 type TableItem = {
   field: SyncColumnFields;
@@ -52,6 +55,15 @@ const TableItem = ({ field, data }: TableItem): JSX.Element => {
       return <StatusTag status='Active' />;
   }
 };
+=======
+import { useRoleDataStore } from '@/enterprise/store/useRoleDataStore';
+import { hasActionPermission } from '@/enterprise/utils/accessControlPermission';
+import { UserActions } from '@/enterprise/types';
+import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
+import DataTable from '@/components/DataTable';
+import { SyncsListColumns } from './SyncsListColumns';
+import { Row } from '@tanstack/react-table';
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
 
 const SyncsList = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
@@ -67,6 +79,7 @@ const SyncsList = (): JSX.Element => {
 
   const syncList = data?.data;
 
+<<<<<<< HEAD
   const tableData = useMemo(() => {
     if ((syncList as ErrorResponse)?.errors?.length > 0) {
       return {
@@ -99,8 +112,15 @@ const SyncsList = (): JSX.Element => {
   };
 
   if (isLoading) return <Loader />;
+=======
+  const handleOnSyncClick = (row: Row<CreateSyncResponse>) => {
+    navigate({ to: `${row.original.id}`, location: 'sync_run', action: UserActions.Read });
+  };
 
-  if (!isLoading && tableData.data?.length === 0)
+  if (isLoading || activeRole === null || !syncList) return <Loader />;
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
+
+  if (!isLoading && syncList.length === 0)
     return <NoActivations activationType={ActivationType.Sync} />;
 
   return (
@@ -122,11 +142,9 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor='orange.400'
           isCtaVisible
         />
-        {!syncList && isLoading ? (
-          <Loader />
-        ) : (
-          <Table data={tableData} onRowClick={handleOnSyncClick} />
-        )}
+        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+          <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
+        </Box>
       </ContentContainer>
     </Box>
   );

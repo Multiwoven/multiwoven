@@ -191,3 +191,14 @@ export type SyncRecordResponse = {
     updated_at: string;
   };
 };
+<<<<<<< HEAD
+=======
+
+export type TriggerSyncButtonProps = {
+  isSubmitting: boolean;
+  showCancelSync: boolean;
+  onClick: (method: APIRequestMethod) => void;
+};
+
+export type ChangeSyncStatusPayload = { enable: boolean };
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)

@@ -2,10 +2,14 @@ import {
   CreateSyncPayload,
   CreateSyncResponse,
   DiscoverResponse,
-  ErrorResponse,
   SyncRecordResponse,
   SyncsConfigurationForTemplateMapping,
   SyncRunsResponse,
+<<<<<<< HEAD
+=======
+  TriggerManualSyncPayload,
+  ChangeSyncStatusPayload,
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
 } from '@/views/Activate/Syncs/types';
 import { multiwovenFetch, ApiResponse } from './common';
 
@@ -25,7 +29,7 @@ export const createSync = (payload: CreateSyncPayload): Promise<ApiResponse<Crea
     data: payload,
   });
 
-export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[] | ErrorResponse>> =>
+export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[]>> =>
   multiwovenFetch<null, ApiResponse<CreateSyncResponse[]>>({
     method: 'get',
     url: `/syncs`,
@@ -86,3 +90,38 @@ export const getSyncsConfiguration = (): Promise<SyncsConfigurationForTemplateMa
     method: 'get',
     url: `/syncs/configurations`,
   });
+<<<<<<< HEAD
+=======
+
+export const triggerManualSync = (
+  payload: TriggerManualSyncPayload,
+  method: APIRequestMethod,
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<TriggerManualSyncPayload, ApiResponse<CreateSyncResponse>>({
+    method,
+    url: '/schedule_syncs',
+    data: payload,
+  });
+
+export const cancelManualSyncSchedule = (id: string): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: 'delete',
+    url: `/schedule_syncs/${id}`,
+  });
+
+export const testSync = (id: string): Promise<ApiResponse<MessageResponse>> =>
+  enterpriseMultiwovenFetch<string, ApiResponse<MessageResponse>>({
+    method: 'post',
+    url: `/syncs/${id}/test`,
+  });
+
+export const changeSyncStatus = (
+  id: string,
+  payload: ChangeSyncStatusPayload,
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<ChangeSyncStatusPayload, ApiResponse<CreateSyncResponse>>({
+    method: 'patch',
+    url: `/syncs/${id}/enable`,
+    data: payload,
+  });
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)

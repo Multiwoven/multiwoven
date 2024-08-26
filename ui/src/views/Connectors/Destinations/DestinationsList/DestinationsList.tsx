@@ -36,6 +36,7 @@ const DestinationsList = (): JSX.Element | null => {
           ctaButtonVariant='solid'
           ctaButtonWidth='fit'
           ctaButtonHeight='40px'
+<<<<<<< HEAD
           isCtaVisible
         />
         {isLoading || !data ? (
@@ -47,6 +48,23 @@ const DestinationsList = (): JSX.Element | null => {
             isLoading={isLoading}
           />
         )}
+=======
+          isCtaVisible={hasPermission}
+        />
+        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+          <DataTable
+            data={data?.data}
+            columns={ConnectorsListColumns}
+            onRowClick={(row) =>
+              navigate({
+                to: `/setup/destinations/${row?.original?.id}`,
+                location: 'connector',
+                action: UserActions.Update,
+              })
+            }
+          />
+        </Box>
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
       </ContentContainer>
     </Box>
   );

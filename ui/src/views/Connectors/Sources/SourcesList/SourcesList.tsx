@@ -88,11 +88,29 @@ const SourcesList = (): JSX.Element | null => {
           ctaIcon={<FiPlus color='gray.100' />}
           onCtaClicked={() => navigate('new')}
           ctaButtonVariant='solid'
+<<<<<<< HEAD
           isCtaVisible
         />
         {tableData ? (
           <Table data={tableData} onRowClick={(row) => navigate(`/setup/sources/${row?.id}`)} />
         ) : null}
+=======
+          isCtaVisible={hasPermission}
+        />
+        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+          <DataTable
+            data={data?.data}
+            columns={ConnectorsListColumns}
+            onRowClick={(row) =>
+              navigate({
+                to: `/setup/sources/${row?.original?.id}`,
+                location: 'connector',
+                action: UserActions.Update,
+              })
+            }
+          />
+        </Box>
+>>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
       </ContentContainer>
     </Box>
   );
