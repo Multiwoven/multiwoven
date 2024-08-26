@@ -180,6 +180,31 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
+      context "when creating a model with query_type = ai_ml and configuration is present" do
+        let(:request_body) do
+          {
+            model: {
+              connector_id: models.first.connector_id,
+              name: "AI/ML Model",
+              query_type: "ai_ml",
+              primary_key: "id",
+              configuration: { "test" => "value" }
+            }
+          }
+        end
+
+        it "creates the model and returns success" do
+          post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+            .merge(auth_headers(user, workspace_id))
+          expect(response).to have_http_status(:created)
+          response_hash = JSON.parse(response.body).with_indifferent_access
+          expect(response_hash.dig(:data, :id)).to be_present
+          expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+          expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
+          expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+        end
+      end
+
       it "returns fail viwer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
@@ -242,6 +267,31 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      context "when updating a model with query_type = ai_ml and configuration is present" do
+        let(:request_body) do
+          {
+            model: {
+              connector_id: models.first.connector_id,
+              name: "Updated AI/ML Model",
+              query_type: "ai_ml",
+              primary_key: "updated_id",
+              configuration: { "updated_test" => "value" }
+            }
+          }
+        end
+        it "updates the model and returns success" do
+          put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+            { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+          expect(response).to have_http_status(:ok)
+          response_hash = JSON.parse(response.body).with_indifferent_access
+          expect(response_hash.dig(:data, :id)).to be_present
+          expect(response_hash.dig(:data, :id)).to eq(models.second.id.to_s)
+          expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+          expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
+          expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+        end
       end
 
       it "returns fail for viewer role" do
