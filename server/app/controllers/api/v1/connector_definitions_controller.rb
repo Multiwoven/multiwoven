@@ -48,7 +48,7 @@ module Api
       end
 
       def connection_definitions_params
-        params.permit(:type, :catagory)
+        params.permit(:type, :category)
       end
     end
   end
