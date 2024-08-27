@@ -3,6 +3,7 @@
 module Api
   module V1
     class ConnectorDefinitionsController < ApplicationController
+      include ConnectorDefinitions
       before_action :set_connectors, only: %i[show index]
       before_action :set_connector_client, only: %i[check_connection]
 
@@ -33,10 +34,9 @@ module Api
       private
 
       def set_connectors
-        @connectors = Multiwoven::Integrations::Service
-                      .connectors
-                      .with_indifferent_access
-        @connectors = @connectors[params[:type]] if params[:type]
+        @connectors = FilterConnectors.call(
+          connection_definitions_params
+        ).connectors
       end
 
       def set_connector_client
@@ -46,13 +46,10 @@ module Api
                               params[:name].camelize
                             ).new
       end
-<<<<<<< HEAD
-=======
 
       def connection_definitions_params
         params.permit(:type, :category)
       end
->>>>>>> 9a486028 (fix(CE): fixes typo and add tests (#402))
     end
   end
 end
