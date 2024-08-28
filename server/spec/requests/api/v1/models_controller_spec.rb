@@ -9,6 +9,10 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
   let(:connector) do
     create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
   end
+
+  let(:connector_without_catalog) do
+    create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
+  end
   let!(:models) do
     [
       create(:model, connector:, workspace:, name: "model1", query: "SELECT * FROM locations"),
@@ -19,6 +23,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
   let(:member_role) { create(:role, :member) }
 
   before do
+    create(:catalog, connector:)
     user.confirm
   end
 
@@ -152,7 +157,16 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
-      it "creates a new model and returns success" do
+      it "fails model creation for connector without catalog" do
+        workspace.workspace_users.first.update(role: member_role)
+        # set connector without catalog
+        request_body[:model][:connector_id] = connector_without_catalog.id
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it " creates a new model and returns success" do
         workspace.workspace_users.first.update(role: member_role)
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
@@ -253,6 +267,18 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      it "fails model update for connector without catalog" do
+        workspace.workspace_users.first.update(role: member_role)
+        model = models.second
+        model.connector_id = connector_without_catalog.id
+        model.save!
+
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json,
+                                                  headers: { "Content-Type": "application/json" }
+                                                    .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "updates the model and returns success for member role" do

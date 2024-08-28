@@ -8,6 +8,7 @@ module Api
 
       before_action :set_connector, only: %i[create]
       before_action :set_model, only: %i[show update destroy]
+      before_action :validate_catalog, only: %i[create update]
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[create update]
       after_action :event_logger
@@ -75,6 +76,16 @@ module Api
 
       def set_model
         @model = current_workspace.models.find(params[:id])
+        @connector = @model.connector
+      end
+
+      def validate_catalog
+        return if connector.catalog.present?
+
+        render_error(
+          message: "Catalog is not present for the connector",
+          status: :unprocessable_entity
+        )
       end
 
       def validate_query
