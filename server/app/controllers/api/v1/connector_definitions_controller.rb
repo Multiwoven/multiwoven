@@ -34,7 +34,7 @@ module Api
       private
 
       def set_connectors
-        @connectors = FilterConnectors.call(
+        @connectors = FilterConnectorDefinitions.call(
           connection_definitions_params
         ).connectors
       end
