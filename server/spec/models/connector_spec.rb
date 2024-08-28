@@ -164,4 +164,26 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "#set_category" do
+    let(:workspace) { create(:workspace) }
+    let(:connector) do
+      create(:connector,
+             workspace:)
+    end
+
+    context "populate category from connector meta data" do
+      it "sets the connector_category based on the meta_data" do
+        connector.run_callbacks(:save) { true }
+        expect(connector.connector_category).to eq("Marketing Automation")
+      end
+    end
+
+    context "catagory is set by user" do
+      it "does not change the connector_category" do
+        connector.update!(connector_category: "user_input_category")
+        expect(connector.connector_category).to eq("user_input_category")
+      end
+    end
+  end
 end
