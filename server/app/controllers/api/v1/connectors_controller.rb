@@ -15,6 +15,7 @@ module Api
         @connectors = current_workspace.connectors
         authorize @connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
+        @connectors = @connectors.send(params[:category].downcase) if params[:category]
         @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
       end
