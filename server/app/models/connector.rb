@@ -36,6 +36,39 @@ class Connector < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
 
+<<<<<<< HEAD
+=======
+  before_save :set_category
+  before_update :set_category, if: :will_save_change_to_connector_name?
+
+  DEFAULT_CONNECTOR_CATEGORY = "data"
+
+  # TODO: Move this to integrations gem
+  DATA_CATEGORIES = [
+    "Data Warehouse",
+    "Retail",
+    "Data Lake",
+    "Database",
+    "Marketing Automation",
+    "CRM",
+    "Ad-Tech",
+    "Team Collaboration",
+    "Productivity Tools",
+    "Payments",
+    "File Storage",
+    "HTTP",
+    "Customer Support",
+    "data"
+  ].freeze
+
+  AI_ML_CATEGORIES = [
+    "AI Model"
+  ].freeze
+
+  scope :ai_ml, -> { where(connector_category: AI_ML_CATEGORIES) }
+  scope :data, -> { where(connector_category: DATA_CATEGORIES) }
+
+>>>>>>> 4475eb7c (chore(CE): add filtering scope to connectors)
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
