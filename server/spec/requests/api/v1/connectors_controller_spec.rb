@@ -406,7 +406,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
   end
 
   describe "POST /api/v1/connectors/id/query_source" do
-    let(:connector) { create(:connector, connector_type: "source") }
+    let(:connector) { create(:connector, connector_type: "source", workspace:, connector_name: "AmazonS3") }
     let(:query) { "SELECT * FROM table_name" }
     let(:limit) { 50 }
     let(:record1) do
@@ -424,9 +424,13 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       }
     end
 
+    before do
+      create(:catalog, connector_id: connector.id, workspace:)
+    end
+
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do
-        post "/api/v1/connectors/#{connectors.second.id}/query_source"
+        post "/api/v1/connectors/#{connector.id}/query_source"
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -435,7 +439,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns success status for a valid query" do
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -446,18 +450,32 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         workspace.workspace_users.first.update(role: member_role)
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
+      it "returns an error message for missing catalog" do
+        catalog = connector.catalog
+        catalog.connector_id = connectors.second.id
+        catalog.save
+
+        allow(Connectors::QuerySource).to receive(:call).and_return(double(:context, success?: true,
+                                                                                     records: [record1, record2]))
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace.id))
+        expect(response).to have_http_status(:unprocessable_entity)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:errors, 0, :detail)).to eq("Catalog is not present for the connector")
+      end
+
       it "returns success status for a valid query for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -467,7 +485,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns failure status for a invalid query" do
         allow(Connectors::QuerySource).to receive(:call).and_raise(StandardError, "query failed")
 
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:bad_request)
@@ -475,7 +493,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
       it "returns failure status for a invalid query" do
         request_body[:query] = "invalid"
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:unprocessable_entity)
