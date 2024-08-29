@@ -7,13 +7,7 @@ import Loader from '@/components/Loader';
 import Pagination from '@/components/Pagination';
 import { SyncRunsColumns } from './SyncRunsColumns';
 import DataTable from '@/components/DataTable';
-<<<<<<< HEAD
-import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
-=======
-import { Row } from '@tanstack/react-table';
-import { SyncRunsResponse } from '../types';
 import RowsNotFound from '@/components/DataTable/RowsNotFound';
->>>>>>> a6ab37fc (refactor(CE): created common connector lists component)
 
 const SyncRuns = () => {
   const { syncId } = useParams();
