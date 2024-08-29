@@ -62,6 +62,7 @@ require_relative "integrations/source/clickhouse/client"
 require_relative "integrations/source/amazon_s3/client"
 require_relative "integrations/source/maria_db/client"
 require_relative "integrations/source/oracle_db/client"
+require_relative "integrations/source/databrics_model/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
@@ -81,6 +82,7 @@ require_relative "integrations/destination/iterable/client"
 require_relative "integrations/destination/maria_db/client"
 require_relative "integrations/destination/databricks_lakehouse/client"
 require_relative "integrations/destination/oracle_db/client"
+require_relative "integrations/destination/microsoft_excel/client"
 
 module Multiwoven
   module Integrations

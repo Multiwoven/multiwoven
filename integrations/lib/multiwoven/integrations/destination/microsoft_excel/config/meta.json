@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "MicrosoftExcel",
+    "title": "Microsoft Excel",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/microsoft_excel",
+    "github_issue_label": "destination-microsoft-excel",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

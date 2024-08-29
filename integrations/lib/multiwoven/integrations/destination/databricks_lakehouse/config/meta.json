@@ -1,7 +1,7 @@
 {
   "data": {
     "name": "DatabricksLakehouse",
-    "title": "Databricks Datawarehouse",
+    "title": "Databricks Data Warehouse",
     "connector_type": "destination",
     "category": "Database",
     "documentation_url": "https://docs.multiwoven.com/destinations/databricks_lakehouse",
