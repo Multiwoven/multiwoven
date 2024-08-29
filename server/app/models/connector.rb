@@ -133,17 +133,4 @@ class Connector < ApplicationRecord
   rescue StandardError => e
     Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
   end
-
-  def set_category
-    unless connector_category.present? &&
-           connector_category == DEFAULT_CONNECTOR_CATEGORY &&
-           !will_save_change_to_connector_category?
-      return
-    end
-
-    category_name = connector_client.new.meta_data[:data][:category]
-    self.connector_category = category_name if category_name.present?
-  rescue StandardError => e
-    Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
-  end
 end
