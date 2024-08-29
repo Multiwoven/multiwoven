@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ConnectorDefinitions::FilterConnectors, type: :interactor do
+RSpec.describe ConnectorDefinitions::FilterConnectorDefinitions, type: :interactor do
   let(:connectors) do
     {
       source: [
