@@ -14,8 +14,9 @@ module Api
       after_action :event_logger
 
       def index
+        filter = params[:query_type] || "all"
         @models = current_workspace
-                  .models.all.page(params[:page] || 1)
+                  .models.send(filter).page(params[:page] || 1)
         authorize @models
         render json: @models, status: :ok
       end

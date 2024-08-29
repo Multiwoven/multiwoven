@@ -30,6 +30,9 @@ class Model < ApplicationRecord
 
   has_many :syncs, dependent: :destroy
 
+  scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector]) }
+  scope :ai_ml, -> { where(query_type: :ai_ml) }
+
   default_scope { order(updated_at: :desc) }
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(
