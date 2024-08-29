@@ -164,8 +164,6 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
-<<<<<<< HEAD
-=======
 
   describe "#set_category" do
     let(:workspace) { create(:workspace) }
@@ -210,5 +208,4 @@ RSpec.describe Connector, type: :model do
       expect(result).not_to include(non_data_connector)
     end
   end
->>>>>>> 4475eb7c (chore(CE): add filtering scope to connectors)
 end

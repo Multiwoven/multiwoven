@@ -36,8 +36,6 @@ class Connector < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
 
-<<<<<<< HEAD
-=======
   before_save :set_category
   before_update :set_category, if: :will_save_change_to_connector_name?
 
@@ -68,7 +66,6 @@ class Connector < ApplicationRecord
   scope :ai_ml, -> { where(connector_category: AI_ML_CATEGORIES) }
   scope :data, -> { where(connector_category: DATA_CATEGORIES) }
 
->>>>>>> 4475eb7c (chore(CE): add filtering scope to connectors)
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
@@ -122,5 +119,18 @@ class Connector < ApplicationRecord
 
   def pull_catalog
     connector_client.new.discover(configuration).catalog.to_h.with_indifferent_access
+  end
+
+  def set_category
+    unless connector_category.present? &&
+           connector_category == DEFAULT_CONNECTOR_CATEGORY &&
+           !will_save_change_to_connector_category?
+      return
+    end
+
+    category_name = connector_client.new.meta_data[:data][:category]
+    self.connector_category = category_name if category_name.present?
+  rescue StandardError => e
+    Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
   end
 end
