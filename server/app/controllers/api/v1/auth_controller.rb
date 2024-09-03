@@ -28,15 +28,7 @@ module Api
       def signup
         result = Signup.call(params:)
         if result.success?
-          render json: {
-            data: {
-              type: "token",
-              id: result.token,
-              attributes: {
-                token: result.token
-              }
-            }
-          }, status: :created
+          render json: result.user, status: :created
         else
           render_error(message: result.errors, status: :unprocessable_entity,
                        details: nil)
@@ -81,17 +73,11 @@ module Api
         end
       end
 
-      def verify_code
-        unless params[:email] && params[:confirmation_code]
-          return render json: { errors: [{ detail: "Missing required parameters" }] }, status: :bad_request
-        end
-
-        user = User.find_by(email: params[:email])
-
-        if user&.confirmation_code == params[:confirmation_code]
-          user.update!(confirmed_at: Time.current, confirmation_code: nil)
+      def verify_user
+        confirmed_user = User.confirm_by_token(params[:confirmation_token])
+        if confirmed_user.errors.empty?
           render json: { data: { type: "message",
-                                 id: user.id,
+                                 id: confirmed_user.id,
                                  attributes: { message: "Account verified successfully!" } } },
                  status: :ok
         else
@@ -100,14 +86,14 @@ module Api
       end
 
       def resend_verification
-        result = Authentication::ResendVerificationCode.call(params:)
+        result = Authentication::ResendVerificationEmail.call(params:)
         if result.success?
           render json: { data: { type: "message",
                                  id: SecureRandom.uuid,
-                                 attributes: { message: "Verification code resent successfully." } } },
+                                 attributes: { message: "Email verification link sent successfully!" } } },
                  status: :ok
         else
-          render json: { errors: [{ detail: result.error || result.errors }] }, status: :unprocessable_entity
+          render_error(message: result.error, status: :unprocessable_entity)
         end
       end
     end

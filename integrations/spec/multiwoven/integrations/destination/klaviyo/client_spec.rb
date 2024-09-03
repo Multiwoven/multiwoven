@@ -193,6 +193,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do
 
         expect(tracker.success).to eq(records.count)
         expect(tracker.failed).to eq(0)
+        log_message = message.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
@@ -208,6 +214,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do
         tracker = message.tracking
         expect(tracker.failed).to eq(records.count)
         expect(tracker.success).to eq(0)
+        log_message = message.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("error")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
 
       it "returns log message" do

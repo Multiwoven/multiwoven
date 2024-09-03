@@ -293,4 +293,6 @@ export const defaultExtension = {
   },
   brandName: 'Multiwoven',
   logoUrl: '',
+  termsOfServiceUrl: 'https://multiwoven.com/terms-of-service',
+  privacyPolicyUrl: 'https://multiwoven.com/privacy-policy',
 };

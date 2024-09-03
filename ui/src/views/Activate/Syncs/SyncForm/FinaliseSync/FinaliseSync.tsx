@@ -1,7 +1,7 @@
 import ContentContainer from '@/components/ContentContainer';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { createSync } from '@/services/syncs';
-import SourceFormFooter from '@/views/Connectors/Sources/SourcesForm/SourceFormFooter';
+import FormFooter from '@/components/FormFooter';
 import {
   Box,
   Divider,
@@ -242,7 +242,7 @@ const FinaliseSync = (): JSX.Element => {
               </Box>
             </Box>
           </Box>
-          <SourceFormFooter
+          <FormFooter
             ctaName='Finish'
             ctaType='submit'
             isCtaLoading={isLoading}

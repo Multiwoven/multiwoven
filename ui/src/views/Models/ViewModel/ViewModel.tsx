@@ -165,7 +165,7 @@ const ViewModel = (): JSX.Element => {
               borderColor='gray.400'
             >
               <EntityItem
-                name={data.data?.attributes.connector.connector_name || ''}
+                name={data.data?.attributes.connector.name || ''}
                 icon={data.data?.attributes.connector.icon || ''}
               />
               <Spacer />

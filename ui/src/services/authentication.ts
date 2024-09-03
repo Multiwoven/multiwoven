@@ -1,4 +1,4 @@
-import { multiwovenFetch } from './common';
+import { ErrorResponse, multiwovenFetch } from './common';
 
 export type SignUpPayload = {
   email: string;
@@ -28,6 +28,12 @@ export type SignInResponse = {
   errors?: SignInErrorResponse[];
 };
 
+export type AuthErrorResponse = {
+  status: number;
+  title: string;
+  detail: string;
+};
+
 export type AuthResponse = {
   type: string;
   id: string;
@@ -44,8 +50,6 @@ export type AuthResponse = {
 export type ApiResponse<T> = {
   data?: T;
   status: number;
-<<<<<<< HEAD
-=======
   errors?: ErrorResponse[];
 };
 
@@ -65,7 +69,6 @@ export type ResetPasswordPayload = {
   reset_password_token: string;
   password: string;
   password_confirmation: string;
->>>>>>> b566af53 (feat(CE): verify user after signup)
 };
 
 export type SignUpResponse = {
@@ -76,7 +79,7 @@ export type SignUpResponse = {
     email: string;
     name: string;
   };
-  errors?: AuthErrorResponse[];
+  errors?: ErrorResponse[];
 };
 
 export const signUp = async (payload: SignUpPayload) =>
@@ -92,8 +95,6 @@ export const signIn = async (payload: SignInPayload) =>
     url: '/login',
     data: payload,
   });
-<<<<<<< HEAD
-=======
 
 export const forgotPassword = async (payload: ForgotPasswordPayload) =>
   multiwovenFetch<ForgotPasswordPayload, ApiResponse<MessageResponse>>({
@@ -121,4 +122,3 @@ export const resendUserVerification = async (payload: ForgotPasswordPayload) =>
     url: `/resend_verification`,
     data: payload,
   });
->>>>>>> b566af53 (feat(CE): verify user after signup)

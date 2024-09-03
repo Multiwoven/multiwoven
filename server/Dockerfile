@@ -20,6 +20,10 @@ FROM base as build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
+# Copy and run the Oracle Instant Client installation script
+COPY getoracleinstantclient.sh .
+RUN chmod +x getoracleinstantclient.sh && ./getoracleinstantclient.sh
+
 COPY getduckdb.sh .
 COPY gethttpfsextension.sh .
 
@@ -72,16 +76,15 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 ARG TARGETARCH=amd64
 
 RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
-        wget https://sfc-repo.snowflakecomputing.com/odbc/linux/latest/snowflake-odbc-3.2.0.x86_64.deb -O snowflake-odbc.deb && \
-        dpkg -i snowflake-odbc.deb || apt-get -y -f install; \
+    wget https://sfc-repo.snowflakecomputing.com/odbc/linux/latest/snowflake-odbc-3.2.0.x86_64.deb -O snowflake-odbc.deb && \
+    dpkg -i snowflake-odbc.deb || apt-get -y -f install; \
     elif [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "aarch64" ]; then \
-        wget https://sfc-repo.snowflakecomputing.com/odbc/linuxaarch64/3.2.0/snowflake-odbc-3.2.0.aarch64.deb -O snowflake-odbc.deb && \
-        dpkg -i snowflake-odbc.deb || apt-get -y -f install; \
+    wget https://sfc-repo.snowflakecomputing.com/odbc/linuxaarch64/3.2.0/snowflake-odbc-3.2.0.aarch64.deb -O snowflake-odbc.deb && \
+    dpkg -i snowflake-odbc.deb || apt-get -y -f install; \
     else \
-        echo "Unsupported architecture: $TARGETARCH" >&2; \
-        exit 1; \
+    echo "Unsupported architecture: $TARGETARCH" >&2; \
+    exit 1; \
     fi
-
 
 RUN apt-get update -qq && \
     apt-get install -y unzip 
@@ -90,13 +93,12 @@ RUN apt-get update -qq && \
     apt-get install -y libsasl2-modules-gssapi-mit
 
 RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
-        wget --quiet https://databricks-bi-artifacts.s3.us-east-2.amazonaws.com/simbaspark-drivers/odbc/2.7.7/SimbaSparkODBC-2.7.7.1016-Debian-64bit.zip -O /tmp/databricks_odbc.zip && \
-        unzip /tmp/databricks_odbc.zip -d /tmp && \
-        dpkg -i /tmp/simbaspark_*.deb && \
-        rm -rf /tmp/*; \
+    wget --quiet https://databricks-bi-artifacts.s3.us-east-2.amazonaws.com/simbaspark-drivers/odbc/2.7.7/SimbaSparkODBC-2.7.7.1016-Debian-64bit.zip -O /tmp/databricks_odbc.zip && \
+    unzip /tmp/databricks_odbc.zip -d /tmp && \
+    dpkg -i /tmp/simbaspark_*.deb && \
+    rm -rf /tmp/*; \
     fi
 # ARM64 version of the Simba Spark ODBC driver is not currently available
-
 
 # Change back to the root directory before copying the Rails app
 # Rails app lives here

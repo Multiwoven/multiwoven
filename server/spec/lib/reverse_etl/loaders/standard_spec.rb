@@ -173,6 +173,18 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(activity).to receive(:heartbeat).and_return(activity)
       end
 
+      it "calls process_individual_records throw standard error" do
+        sync_config = sync_individual.to_protocol
+        sync_config.sync_run_id = sync_run_individual.id.to_s
+
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_config, [transform],
+                                              "destination_insert").and_raise(StandardError.new("write error"))
+        expect(subject).to receive(:heartbeat).once.with(activity, sync_run_individual)
+        expect(sync_run_individual).to have_state(:queued)
+        subject.write(sync_run_individual.id, activity)
+      end
+
       it "calls process_individual_records method" do
         sync_config = sync_individual.to_protocol
         sync_config.sync_run_id = sync_run_individual.id.to_s

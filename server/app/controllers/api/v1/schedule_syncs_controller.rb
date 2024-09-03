@@ -5,6 +5,7 @@ module Api
     class ScheduleSyncsController < ApplicationController
       include Syncs
       before_action :set_sync
+      before_action :validate_sync_status
       before_action :validate_sync_schedule_type
 
       def create
@@ -34,6 +35,13 @@ module Api
       def set_sync
         @sync = current_workspace.syncs.find_by(id: params.dig(:schedule_sync, :sync_id) || params[:sync_id])
         render_error(message: "Sync not found", status: :not_found) unless @sync
+      end
+
+      def validate_sync_status
+        return unless @sync.disabled?
+
+        render_error(message: "Sync is disabled",
+                     status: :failed_dependency)
       end
 
       def validate_sync_schedule_type

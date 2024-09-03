@@ -1,4 +1,4 @@
-import { Tag, Text } from '@chakra-ui/react';
+import { Tag, TagLabel } from '@chakra-ui/react';
 
 export enum StatusTagVariants {
   success = 'success',
@@ -79,25 +79,23 @@ export const StatusTagText = {
   failed: 'Failed',
 };
 
-const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => {
-  return (
-    <Tag
-      colorScheme='teal'
-      size='xs'
-      bgColor={theme[variant].bgColor}
-      paddingX={2}
-      fontWeight={600}
-      borderColor={theme[variant].borderColor}
-      borderWidth='1px'
-      borderStyle='solid'
-      height='22px'
-      borderRadius='4px'
-    >
-      <Text size='xs' fontWeight='semibold' color={theme[variant].textColor}>
-        {status}
-      </Text>
-    </Tag>
-  );
-};
+const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => (
+  <Tag
+    colorScheme='teal'
+    size='xs'
+    bgColor={theme[variant].bgColor}
+    paddingX={2}
+    fontWeight={600}
+    borderColor={theme[variant].borderColor}
+    borderWidth='1px'
+    borderStyle='solid'
+    height='22px'
+    borderRadius='4px'
+  >
+    <TagLabel fontSize='small' fontWeight='semibold' color={theme[variant].textColor}>
+      {status}
+    </TagLabel>
+  </Tag>
+);
 
 export default StatusTag;

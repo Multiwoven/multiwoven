@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { getSyncRunsBySyncId } from '@/services/syncs';
 import { useMemo, useState, useEffect } from 'react';
-import { SYNC_RUNS_COLUMNS } from '@/views/Activate/Syncs/constants';
 import { Box } from '@chakra-ui/react';
 import Loader from '@/components/Loader';
-import Table from '@/components/Table';
-import { TableItem } from '@/views/Activate/Syncs/SyncRuns/SyncRunTableItem';
 import Pagination from '@/components/Pagination';
+import { SyncRunsColumns } from './SyncRunsColumns';
+import DataTable from '@/components/DataTable';
+import RowsNotFound from '@/components/DataTable/RowsNotFound';
 
 const SyncRuns = () => {
   const { syncId } = useParams();
@@ -34,24 +34,7 @@ const SyncRuns = () => {
 
   const syncList = data?.data;
 
-  const tableData = useMemo(() => {
-    const rows = (syncList ?? []).map((data) => {
-      return SYNC_RUNS_COLUMNS.reduce(
-        (acc, { key }) => ({
-          ...acc,
-          [key]: <TableItem field={key} data={data} />,
-          id: data.id,
-        }),
-        {},
-      );
-    });
-
-    return {
-      columns: SYNC_RUNS_COLUMNS,
-      data: rows,
-      error: '',
-    };
-  }, [data]);
+  const allColumns = useMemo(() => [...SyncRunsColumns], [SyncRunsColumns]);
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1));
@@ -67,7 +50,11 @@ const SyncRuns = () => {
         <Loader />
       ) : (
         <Box>
-          <Table data={tableData} onRowClick={handleOnSyncClick} />
+          {data?.data?.length === 0 || !data?.data ? (
+            <RowsNotFound />
+          ) : (
+            <DataTable data={data?.data} columns={allColumns} onRowClick={handleOnSyncClick} />
+          )}
           <Box display='flex' flexDirection='row-reverse' pt='10px'>
             <Pagination
               currentPage={currentPage}

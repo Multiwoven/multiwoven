@@ -38,6 +38,7 @@ module Multiwoven::Integrations::Destination
 
         request_method = sync_config.stream.request_method
 
+        log_message_array = []
         write_success = 0
         write_failure = 0
         records.each do |record|
@@ -45,6 +46,7 @@ module Multiwoven::Integrations::Destination
           # Add hardcode values into payload
           record["data"] ||= {}
           record["data"]["type"] = sync_config.stream.name
+          args = [request_method, url, record]
 
           response = Multiwoven::Integrations::Core::HttpClient.request(
             url,
@@ -57,6 +59,7 @@ module Multiwoven::Integrations::Destination
           else
             write_failure += 1
           end
+          log_message_array << log_request_response("info", args, response)
         rescue StandardError => e
           handle_exception(e, {
                              context: "KLAVIYO:RECORD:WRITE:FAILURE",
@@ -65,12 +68,9 @@ module Multiwoven::Integrations::Destination
                              sync_run_id: sync_config.sync_run_id
                            })
           write_failure += 1
+          log_message_array << log_request_response("error", args, e.message)
         end
-        tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
-          success: write_success,
-          failed: write_failure
-        )
-        tracker.to_multiwoven_message
+        tracking_message(write_success, write_failure, log_message_array)
       rescue StandardError => e
         # TODO: Handle rate limiting seperately
         handle_exception(e, {

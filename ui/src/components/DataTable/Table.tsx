@@ -1,13 +1,14 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { flexRender, getCoreRowModel, useReactTable, ColumnDef } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable, ColumnDef, Row } from '@tanstack/react-table';
 import { useState } from 'react';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onRowClick?: (row: Row<TData>) => void;
 };
 
-const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({ data, columns, onRowClick }: DataTableProps<TData, TValue>) => {
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
@@ -46,7 +47,7 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
           <Tr
             key={row.id}
             _hover={{ backgroundColor: 'gray.200', cursor: 'pointer' }}
-            //  onClick={() => onRowClick?.(row)}
+            onClick={() => onRowClick?.(row)}
             backgroundColor='gray.100'
           >
             {row.getVisibleCells().map((cell) => (

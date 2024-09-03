@@ -14,6 +14,13 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
+  let!(:data_connector) { create(:connector, workspace:, connector_category: "Data Warehouse") }
+  let!(:ai_ml_connector) { create(:connector, workspace:, connector_category: "AI Model") }
+  let!(:other_connector) { create(:connector, workspace:, connector_category: "CRM") }
+
+  before do
+    user.confirm
+  end
 
   describe "GET /api/v1/connectors" do
     context "when it is an unauthenticated user" do
@@ -29,7 +36,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count)
+        expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -39,7 +46,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count)
+        expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -49,7 +56,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count)
+        expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -59,7 +66,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count)
+        expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -78,10 +85,31 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=destination", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(1)
+        expect(response_hash[:data].count).to eql(4)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
+      end
+
+      it "returns only data connectors" do
+        get "/api/v1/connectors?category=data", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).not_to include(ai_ml_connector.id.to_s)
+      end
+
+      it "returns only ai_ml connectors" do
+        get "/api/v1/connectors?category=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).to eql([ai_ml_connector.id.to_s])
+      end
+
+      it "returns only ai_ml connectors for source" do
+        get "/api/v1/connectors?type=source&&category=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(0)
       end
 
       it "returns an error response for connectors" do
@@ -402,7 +430,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
   end
 
   describe "POST /api/v1/connectors/id/query_source" do
-    let(:connector) { create(:connector, connector_type: "source") }
+    let(:connector) { create(:connector, connector_type: "source", workspace:, connector_name: "AmazonS3") }
     let(:query) { "SELECT * FROM table_name" }
     let(:limit) { 50 }
     let(:record1) do
@@ -420,9 +448,13 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       }
     end
 
+    before do
+      create(:catalog, connector_id: connector.id, workspace:)
+    end
+
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do
-        post "/api/v1/connectors/#{connectors.second.id}/query_source"
+        post "/api/v1/connectors/#{connector.id}/query_source"
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -431,39 +463,53 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns success status for a valid query" do
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns success status for a valid query for member role" do
         workspace.workspace_users.first.update(role: member_role)
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
+      end
+
+      it "returns an error message for missing catalog" do
+        catalog = connector.catalog
+        catalog.connector_id = connectors.second.id
+        catalog.save
+
+        allow(Connectors::QuerySource).to receive(:call).and_return(double(:context, success?: true,
+                                                                                     records: [record1, record2]))
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace.id))
+        expect(response).to have_http_status(:unprocessable_entity)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:errors, 0, :detail)).to eq("Catalog is not present for the connector")
       end
 
       it "returns success status for a valid query for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         allow(Connectors::QuerySource).to receive(:call)
           .and_return(double(:context, success?: true, records: [record1, record2]))
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:ok)
-        response_hash = JSON.parse(response.body)
-        expect(response_hash).to eq([record1.record.data, record2.record.data])
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
       it "returns failure status for a invalid query" do
         allow(Connectors::QuerySource).to receive(:call).and_raise(StandardError, "query failed")
 
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:bad_request)
@@ -471,7 +517,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
       it "returns failure status for a invalid query" do
         request_body[:query] = "invalid"
-        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
         expect(response).to have_http_status(:unprocessable_entity)

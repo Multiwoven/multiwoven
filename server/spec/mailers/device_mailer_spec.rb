@@ -96,4 +96,34 @@ RSpec.describe DeviseMailer, type: :mailer do
       expect(mail.body.encoded).to match("Your password has been changed")
     end
   end
+
+  describe "confirmation_instructions" do
+    let(:user) { create(:user) }
+    let(:token) { "testtoken" }
+    let(:mail) { DeviseMailer.confirmation_instructions(user, token) }
+
+    before do
+      allow(ENV).to receive(:[]).with("UI_HOST").and_return("https://example.com")
+      user.update(confirmation_sent_at: Time.current)
+    end
+
+    it "renders the headers" do
+      expect(mail.subject).to eq("Confirmation instructions")
+      expect(mail.to).to eq([user.email])
+    end
+
+    it "renders the body" do
+      query_params = [
+        ["confirmation_token", token],
+        ["email", user.email]
+      ]
+      expect(mail.body.encoded).to match("Verify your email")
+      expect(mail.body.encoded)
+        .to match("To complete signup and start using AI Squared, just click the verification button below.")
+      doc = Nokogiri::HTML(mail.body.encoded)
+      link = doc.at_css("a")["href"]
+      reset_url = "https://example.com/verify-user?#{URI.encode_www_form(query_params)}"
+      expect(link).to eq(reset_url)
+    end
+  end
 end

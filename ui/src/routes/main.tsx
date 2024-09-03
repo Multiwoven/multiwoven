@@ -5,15 +5,13 @@ const SignIn = lazy(() => import('@/views/Authentication/SignIn'));
 const SignUp = lazy(() => import('@/views/Authentication/SignUp'));
 
 const AccountVerify = lazy(() => import('@/views/AccountVerify'));
-<<<<<<< HEAD
-=======
+
 const SignUpVerification = lazy(() => import('@/views/Authentication/SignUp/SignUpVerification'));
 const VerifyUser = lazy(() => import('@/views/Authentication/VerifyUser'));
 
 const ForgotPassword = lazy(() => import('@/views/Authentication/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/views/Authentication/ResetPassword'));
 
->>>>>>> b566af53 (feat(CE): verify user after signup)
 const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
 
@@ -113,8 +111,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
       </SuspenseWithLoader>
     ),
   },
-<<<<<<< HEAD
-=======
   {
     name: 'Sign Up Success',
     url: '/sign-up/success',
@@ -151,7 +147,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
       </SuspenseWithLoader>
     ),
   },
->>>>>>> b566af53 (feat(CE): verify user after signup)
   {
     name: 'Account Verify',
     url: '/account-verify',

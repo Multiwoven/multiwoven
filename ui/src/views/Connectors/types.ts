@@ -1,4 +1,6 @@
-export type ConnectorTypes = 'source' | 'destination' | 'model';
+import { ErrorResponse } from '@/services/common';
+
+export type ConnectorTypes = 'source' | 'destination';
 
 export type DatasourceType = {
   icon: string;
@@ -59,7 +61,7 @@ export type CreateConnectorPayload = {
   connector: {
     configuration: unknown;
     name: string;
-    connector_type: 'source' | 'destination';
+    connector_type: ConnectorTypes;
     connector_name: string;
     description: string;
   };
@@ -95,6 +97,7 @@ export type ConnectorInfoResponse = {
 
 export type ConnectorListResponse = {
   data: ConnectorItem[];
+  errors?: ErrorResponse[];
 };
 
 export type ConnectorTableColumnFields =

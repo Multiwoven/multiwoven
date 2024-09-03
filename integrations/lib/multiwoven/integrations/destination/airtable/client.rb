@@ -59,10 +59,12 @@ module Multiwoven
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
             api_key = connection_config[:api_key]
             url = sync_config.stream.url
+            log_message_array = []
             write_success = 0
             write_failure = 0
             records.each_slice(MAX_CHUNK_SIZE) do |chunk|
               payload = create_payload(chunk)
+              args = [sync_config.stream.request_method, url, payload]
               response = Multiwoven::Integrations::Core::HttpClient.request(
                 url,
                 sync_config.stream.request_method,
@@ -74,6 +76,7 @@ module Multiwoven
               else
                 write_failure += chunk.size
               end
+              log_message_array << log_request_response("info", args, response)
             rescue StandardError => e
               handle_exception(e, {
                                  context: "AIRTABLE:RECORD:WRITE:EXCEPTION",
@@ -82,13 +85,9 @@ module Multiwoven
                                  sync_run_id: sync_config.sync_run_id
                                })
               write_failure += chunk.size
+              log_message_array << log_request_response("error", args, e.message)
             end
-
-            tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
-              success: write_success,
-              failed: write_failure
-            )
-            tracker.to_multiwoven_message
+            tracking_message(write_success, write_failure, log_message_array)
           rescue StandardError => e
             handle_exception(e, {
                                context: "AIRTABLE:RECORD:WRITE:EXCEPTION",
@@ -110,16 +109,8 @@ module Multiwoven
             }
           end
 
-          def auth_headers(access_token)
-            {
-              "Accept" => "application/json",
-              "Authorization" => "Bearer #{access_token}",
-              "Content-Type" => "application/json"
-            }
-          end
-
           def base_id_exists?(bases, base_id)
-            return if extract_data(bases).any? { |base| base["id"] == base_id }
+            return if extract_bases(bases).any? { |base| base["id"] == base_id }
 
             raise ArgumentError, "base_id not found"
           end

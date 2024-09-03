@@ -39,6 +39,13 @@ module Multiwoven
           end
         end
 
+        context "when making a PATCH request" do
+          it "creates a PATCH request" do
+            described_class.request(url, "PATCH", headers: headers)
+            expect(a_request(:patch, url).with(headers: headers)).to have_been_made.once
+          end
+        end
+
         context "with an unsupported HTTP method" do
           it "raises an ArgumentError" do
             expect { described_class.request(url, "INVALID", headers: headers) }.to raise_error(ArgumentError)

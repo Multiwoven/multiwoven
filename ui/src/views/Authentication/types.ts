@@ -1,35 +1,28 @@
 import { ReactNode } from 'react';
-
-type DefaultAuthViewProps = {
+export type AuthCardProps = {
+  children: ReactNode;
   brandName: string;
   logoUrl: string;
 };
 
-type Email = {
-  email: string;
-};
-
-type Password = {
-  password: string;
-  password_confirmation: string;
-};
-
-export type AuthCardProps = {
-  children: ReactNode;
-} & DefaultAuthViewProps;
-
 export type SignInAuthViewProps = {
+  brandName: string;
+  logoUrl: string;
   handleSubmit: (values: any) => void;
   submitting: boolean;
-} & DefaultAuthViewProps;
+};
 
 type InitialValues = {
   company_name: string;
   name: string;
-} & Email &
-  Password;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
 
 export type SignUpAuthViewProps = {
+  brandName: string;
+  logoUrl: string;
   handleSubmit: (values: any) => void;
   submitting: boolean;
   initialValues?: InitialValues;
@@ -37,28 +30,23 @@ export type SignUpAuthViewProps = {
   termsOfServiceUrl: string;
   isCompanyNameDisabled?: boolean;
   isEmailDisabled?: boolean;
-} & DefaultAuthViewProps;
+};
 
-export type ResetPasswordFormPayload = Password;
+export type ResetPasswordFormPayload = {
+  password: string;
+  password_confirmation: string;
+};
 
-export type ForgotPasswordFormPayload = Email;
+export type ForgotPasswordFormPayload = {
+  email: string;
+};
 
 type ChangePasswordProps<T> = {
+  brandName: string;
+  logoUrl: string;
   handleSubmit: (values: T) => void;
   submitting: boolean;
-} & DefaultAuthViewProps;
+};
 
 export type ForgotPasswordAuthViewProps = ChangePasswordProps<ForgotPasswordFormPayload>;
 export type ResetPasswordAuthViewProps = ChangePasswordProps<ResetPasswordFormPayload>;
-
-export type VerificationAuthViewProps = {
-  handleEmailResend: (email: string) => void;
-  submitting: boolean;
-} & DefaultAuthViewProps &
-  Email;
-
-export type VerifyUserFailedAuthViewProps = {
-  resendEmail: () => void;
-} & DefaultAuthViewProps;
-
-export type VerifyUserSuccessAuthViewProps = DefaultAuthViewProps;
