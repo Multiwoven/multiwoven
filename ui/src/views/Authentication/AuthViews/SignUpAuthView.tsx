@@ -2,7 +2,6 @@ import { Form, Formik } from 'formik';
 import { Button, HStack, Stack, Text } from '@chakra-ui/react';
 import { FormField, PasswordField } from '@/components/Fields';
 import { Link } from 'react-router-dom';
-
 import { SignUpAuthViewProps } from '../types';
 import { SignUpSchema } from '@/constants/schemas';
 
