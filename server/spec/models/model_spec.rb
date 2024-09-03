@@ -22,6 +22,7 @@ RSpec.describe Model, type: :model do
     it { should belong_to(:workspace) }
     it { should belong_to(:connector) }
     it { should have_many(:syncs).dependent(:destroy) }
+    it { should have_many(:visual_components).dependent(:destroy) }
   end
 
   describe "validations" do
