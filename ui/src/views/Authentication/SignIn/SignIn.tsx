@@ -1,28 +1,6 @@
 import { useState } from 'react';
-<<<<<<< HEAD
-import { Formik, Form, ErrorMessage, FormikTouched, FormikErrors, FieldInputProps } from 'formik';
-import * as Yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  FormControl,
-  Input,
-  Heading,
-  Text,
-  Container,
-  Stack,
-  Flex,
-  HStack,
-  Image,
-  Checkbox,
-} from '@chakra-ui/react';
-import MultiwovenIcon from '@/assets/images/icon-white.svg';
-import { SignInErrorResponse, SignInPayload, signIn } from '@/services/authentication';
-=======
 import { useNavigate } from 'react-router-dom';
 import { AuthErrorResponse, SignInPayload, signIn } from '@/services/authentication';
->>>>>>> 9f11d025 (refactor(CE): moved common elements of sign up and sign in to separate views)
 import Cookies from 'js-cookie';
 import titleCase from '@/utils/TitleCase';
 import AuthFooter from '../AuthFooter';
@@ -60,7 +38,7 @@ const SignIn = (): JSX.Element => {
         });
         navigate('/', { replace: true });
       } else {
-        result.data?.errors?.forEach((error: SignInErrorResponse) => {
+        result?.errors?.forEach((error: AuthErrorResponse) => {
           showToast({
             duration: 5000,
             isClosable: true,
@@ -84,7 +62,7 @@ const SignIn = (): JSX.Element => {
     }
   };
 
-  const { logoUrl, brandName } = mwTheme;
+  const { logoUrl, brandName, privacyPolicyUrl, termsOfServiceUrl } = mwTheme;
 
   return (
     <>
@@ -94,7 +72,11 @@ const SignIn = (): JSX.Element => {
         handleSubmit={handleSubmit}
         submitting={submitting}
       />
-      <AuthFooter />
+      <AuthFooter
+        brandName={brandName}
+        privacyPolicyUrl={privacyPolicyUrl}
+        termsOfServiceUrl={termsOfServiceUrl}
+      />
     </>
   );
 };
