@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-
 export type AuthCardProps = {
   children: ReactNode;
   brandName: string;
