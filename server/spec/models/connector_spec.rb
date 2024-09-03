@@ -196,6 +196,11 @@ RSpec.describe Connector, type: :model do
       expect(result).to include(ai_ml_connector)
       expect(result).not_to include(non_ai_ml_connector)
     end
+
+    it "check whether connector is ai model or not" do
+      expect(ai_ml_connector.ai_model?).to eq(true)
+      expect(non_ai_ml_connector.ai_model?).to eq(false)
+    end
   end
 
   describe ".data" do

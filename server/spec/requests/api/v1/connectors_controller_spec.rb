@@ -481,10 +481,20 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
+<<<<<<< HEAD
       it "returns an error message for missing catalog" do
         catalog = connector.catalog
         catalog.connector_id = connectors.second.id
         catalog.save
+=======
+      it "returns an error message for missing catalog for ai connectors" do
+        catalog = connector.catalog
+        catalog.connector_id = connectors.second.id
+        catalog.save
+        # rubocop:disable Rails/SkipsModelValidations
+        connector.update_column(:connector_category, "AI Model")
+        # rubocop:enable Rails/SkipsModelValidations
+>>>>>>> 6de5e956 (fix(CE): enable catalog validation only for ai models (#425))
 
         allow(Connectors::QuerySource).to receive(:call).and_return(double(:context, success?: true,
                                                                                      records: [record1, record2]))
@@ -494,6 +504,26 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, 0, :detail)).to eq("Catalog is not present for the connector")
       end
+<<<<<<< HEAD
+=======
+
+      it "should not return error message for missing catalog for data connectors" do
+        catalog = connector.catalog
+        catalog.connector_id = connectors.second.id
+        # rubocop:disable Rails/SkipsModelValidations
+        connector.update_column(:connector_category, "Data Warehouse")
+        # rubocop:enable Rails/SkipsModelValidations
+        catalog.save
+
+        allow(Connectors::QuerySource).to receive(:call).and_return(double(:context, success?: true,
+                                                                                     records: [record1, record2]))
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace.id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
+      end
+>>>>>>> 6de5e956 (fix(CE): enable catalog validation only for ai models (#425))
 
       it "returns success status for a valid query for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
