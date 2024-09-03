@@ -63,7 +63,16 @@ module Multiwoven
       end
 
       def failure_status(error)
-        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: error.message).to_multiwoven_message
+        message = error&.message || "failed"
+        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: message).to_multiwoven_message
+      end
+
+      def auth_headers(access_token)
+        {
+          "Accept" => "application/json",
+          "Authorization" => "Bearer #{access_token}",
+          "Content-Type" => "application/json"
+        }
       end
     end
   end
