@@ -133,4 +133,8 @@ class Connector < ApplicationRecord
   rescue StandardError => e
     Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
   end
+
+  def ai_model?
+    connector_category == "AI Model"
+  end
 end
