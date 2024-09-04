@@ -16,7 +16,8 @@ const VerifyUser = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(true); // Add this to handle the final state
 
   const showToast = useCustomToast();
-  const errorToast = useAPIErrorsToast();
+  const apiErrorToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
 
   const [searchParams] = useSearchParams();
   const confirmation_token = searchParams.get('confirmation_token');
@@ -47,10 +48,10 @@ const VerifyUser = (): JSX.Element => {
         });
         setSuccess(true);
       } else {
-        errorToast(result.errors || []);
+        apiErrorToast(result.errors || []);
       }
     } catch (error) {
-      useErrorToast(true, error, true, 'An error occured. Please try again later.');
+      errorToast('An error occured. Please try again later.', true, null, true);
     } finally {
       setSubmitting(false);
     }

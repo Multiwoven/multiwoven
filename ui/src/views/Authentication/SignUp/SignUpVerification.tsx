@@ -12,7 +12,8 @@ import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 const SignUpVerification = (): JSX.Element => {
   const [submitting, setSubmitting] = useState(false);
   const showToast = useCustomToast();
-  const errorToast = useAPIErrorsToast();
+  const apiErrorToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
 
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -38,10 +39,10 @@ const SignUpVerification = (): JSX.Element => {
 
         setSubmitting(false);
       } else {
-        errorToast(result.errors || []);
+        apiErrorToast(result.errors || []);
       }
     } catch (error) {
-      useErrorToast(true, error, true, 'An error occured. Please try again later.');
+      errorToast('An error occured. Please try again later.', true, null, true);
     } finally {
       setSubmitting(false);
     }
