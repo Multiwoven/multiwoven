@@ -173,7 +173,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors/test", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:errors][0][:detail]).to eq("id must be an integer")
+        expect(response_hash.dig(:errors, :id)).to eq(["must be an integer"])
       end
     end
   end
@@ -391,7 +391,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors/test/discover", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:errors][0][:detail]).to eq("id must be an integer")
+        expect(response_hash.dig(:errors, :id)).to eq(["must be an integer"])
       end
     end
   end
