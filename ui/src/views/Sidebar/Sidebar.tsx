@@ -74,7 +74,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
     )}
     <Stack spacing='0'>
       {section.menu.map((menuItem, idx) => (
-        <NavLink to={menuItem.link} key={`${index}-${idx}`}>
+        <NavLink to={menuItem.disabled ? '' : menuItem.link} key={`${index}-${idx}`}>
           {({ isActive }) => (
             <NavButton
               label={menuItem.title}
