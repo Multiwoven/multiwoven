@@ -11,7 +11,6 @@ module Api
       # TODO: Enable this for ai_ml sources
       before_action :validate_catalog, only: %i[query_source]
       after_action :event_logger
-      after_action :event_logger
 
       def index
         @connectors = current_workspace.connectors
