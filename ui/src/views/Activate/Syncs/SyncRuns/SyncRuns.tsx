@@ -1,27 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { getSyncRunsBySyncId } from '@/services/syncs';
 import { useMemo, useState, useEffect } from 'react';
-import { SYNC_RUNS_COLUMNS } from '@/views/Activate/Syncs/constants';
 import { Box } from '@chakra-ui/react';
 import Loader from '@/components/Loader';
-import Table from '@/components/Table';
-import { TableItem } from '@/views/Activate/Syncs/SyncRuns/SyncRunTableItem';
 import Pagination from '@/components/Pagination';
-<<<<<<< HEAD
-=======
 import { useStore } from '@/stores';
-import useProtectedNavigate from '@/enterprise/hooks/useProtectedNavigate';
-import { UserActions } from '@/enterprise/types';
 import useSyncRuns from '@/hooks/syncs/useSyncRuns';
 import { SyncRunsColumns } from './SyncRunsColumns';
 import DataTable from '@/components/DataTable';
-import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
 import { Row } from '@tanstack/react-table';
 import { SyncRunsResponse } from '../types';
->>>>>>> 966eb997 (fix(CE): fixed sync runs on click function)
+import RowsNotFound from '@/components/DataTable/RowsNotFound';
 
 const SyncRuns = () => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
   const { syncId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -33,42 +25,15 @@ const SyncRuns = () => {
     setSearchParams({ page: currentPage.toString() });
   }, [currentPage, setSearchParams]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['activate', 'sync-runs', syncId, 'page-' + currentPage],
-    queryFn: () => getSyncRunsBySyncId(syncId as string, currentPage.toString()),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading } = useSyncRuns(syncId as string, currentPage, activeWorkspaceId);
 
-<<<<<<< HEAD
-  const handleOnSyncClick = (row: Record<'id', string>) => {
-    navigate(`run/${row.id}`);
-=======
   const handleOnSyncClick = (row: Row<SyncRunsResponse>) => {
-    navigate({ to: `run/${row.original.id}`, location: 'sync_record', action: UserActions.Read });
->>>>>>> 966eb997 (fix(CE): fixed sync runs on click function)
+    navigate(`run/${row.original.id}`);
   };
 
   const syncList = data?.data;
 
-  const tableData = useMemo(() => {
-    const rows = (syncList ?? []).map((data) => {
-      return SYNC_RUNS_COLUMNS.reduce(
-        (acc, { key }) => ({
-          ...acc,
-          [key]: <TableItem field={key} data={data} />,
-          id: data.id,
-        }),
-        {},
-      );
-    });
-
-    return {
-      columns: SYNC_RUNS_COLUMNS,
-      data: rows,
-      error: '',
-    };
-  }, [data]);
+  const allColumns = useMemo(() => [...SyncRunsColumns], [SyncRunsColumns]);
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1));
@@ -84,7 +49,11 @@ const SyncRuns = () => {
         <Loader />
       ) : (
         <Box>
-          <Table data={tableData} onRowClick={handleOnSyncClick} />
+          {data?.data?.length === 0 || !data?.data ? (
+            <RowsNotFound />
+          ) : (
+            <DataTable data={data?.data} columns={allColumns} onRowClick={handleOnSyncClick} />
+          )}
           <Box display='flex' flexDirection='row-reverse' pt='10px'>
             <Pagination
               currentPage={currentPage}
