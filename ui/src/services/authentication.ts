@@ -13,7 +13,7 @@ export type SignInPayload = {
   password: string;
 };
 
-export type SignInErrorResponse = {
+export type AuthErrorResponse = {
   status: number;
   title: string;
   detail: string;
@@ -25,13 +25,7 @@ export type SignInResponse = {
   attributes: {
     token: string;
   };
-  errors?: SignInErrorResponse[];
-};
-
-export type AuthErrorResponse = {
-  status: number;
-  title: string;
-  detail: string;
+  errors?: AuthErrorResponse[];
 };
 
 export type AuthResponse = {
@@ -40,11 +34,7 @@ export type AuthResponse = {
   attributes: {
     token: string;
   };
-  errors?: Array<{
-    source: {
-      [key: string]: string;
-    };
-  }>;
+  errors?: AuthErrorResponse[];
 };
 
 export type ApiResponse<T> = {
@@ -79,7 +69,7 @@ export type SignUpResponse = {
     email: string;
     name: string;
   };
-  errors?: ErrorResponse[];
+  errors?: AuthErrorResponse[];
 };
 
 export const signUp = async (payload: SignUpPayload) =>

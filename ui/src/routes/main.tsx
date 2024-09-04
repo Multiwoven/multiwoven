@@ -4,8 +4,6 @@ const Dashboard = lazy(() => import('@/views/Dashboard'));
 const SignIn = lazy(() => import('@/views/Authentication/SignIn'));
 const SignUp = lazy(() => import('@/views/Authentication/SignUp'));
 
-const AccountVerify = lazy(() => import('@/views/AccountVerify'));
-
 const SignUpVerification = lazy(() => import('@/views/Authentication/SignUp/SignUpVerification'));
 const VerifyUser = lazy(() => import('@/views/Authentication/VerifyUser'));
 
@@ -144,15 +142,6 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     component: (
       <SuspenseWithLoader redirectRoute='/forgot-password'>
         <ResetPassword />
-      </SuspenseWithLoader>
-    ),
-  },
-  {
-    name: 'Account Verify',
-    url: '/account-verify',
-    component: (
-      <SuspenseWithLoader redirectRoute='/account-verify'>
-        <AccountVerify />
       </SuspenseWithLoader>
     ),
   },
