@@ -15,8 +15,6 @@ import { NavButton } from './navButton';
 import Profile from './Profile';
 import Workspace from './Workspace/Workspace';
 
-import { useConfigStore } from '@/stores/useConfigStore';
-
 type MenuItem = {
   title: string;
   link: string;
@@ -107,7 +105,6 @@ const SideBarFooter = () => (
 );
 
 const Sidebar = (): JSX.Element => {
-  // const { logoUrl } = useConfigStore.getState().configs;
   return (
     <Flex
       position='relative'
