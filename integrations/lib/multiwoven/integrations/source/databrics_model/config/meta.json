@@ -1,0 +1,16 @@
+{
+    "data": {
+      "name": "DatabricksModel",
+      "title": "Databricks Model",
+      "connector_type": "source",
+      "category": "AI Model",
+      "documentation_url": "https://docs.mutliwoven.com",
+      "github_issue_label": "source-databricks-foundation",
+      "icon": "icon.svg",
+      "license": "MIT",
+      "release_stage": "alpha",
+      "support_level": "community",
+      "tags": ["language:ruby", "multiwoven"]
+    }
+  }
+  

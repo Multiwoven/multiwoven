@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_26_095056) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_29_131951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_095056) do
     t.datetime "updated_at", null: false
     t.string "connector_name"
     t.string "description"
+    t.string "connector_category", default: "data", null: false
+  end
+
+  create_table "data_apps", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "status", null: false
+    t.integer "workspace_id", null: false
+    t.text "description"
+    t.json "meta_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
@@ -48,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_095056) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.jsonb "configuration"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -131,6 +143,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_095056) do
     t.string "cursor_field"
     t.string "current_cursor_field"
     t.string "cron_expression"
+    t.string "name"
     t.index ["discarded_at"], name: "index_syncs_on_discarded_at"
   end
 
@@ -170,6 +183,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_095056) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unique_id"], name: "index_users_on_unique_id"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "visual_components", force: :cascade do |t|
+    t.integer "component_type", null: false
+    t.string "name", null: false
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "model_id", null: false
+    t.jsonb "properties"
+    t.jsonb "feedback_config"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "workspace_users", force: :cascade do |t|

@@ -8,7 +8,15 @@ RSpec.describe Connectors::DiscoverConnector, type: :interactor do
     let(:connector_client) { double("ConnectorClient") }
     let(:streams) { "stream_test_data" }
 
-    context "when catalog is already present" do
+    context "when catalog is already present with refresh param present" do
+      it "returns existing catalog" do
+        catalog = create(:catalog, connector:)
+        result = described_class.call(connector:, refresh: "false")
+        expect(result.catalog).to eq(catalog)
+      end
+    end
+
+    context "when catalog is already present with refresh param absent" do
       it "returns existing catalog" do
         catalog = create(:catalog, connector:)
         result = described_class.call(connector:)
@@ -20,7 +28,7 @@ RSpec.describe Connectors::DiscoverConnector, type: :interactor do
       it "returns refreshed catalog" do
         catalog = create(:catalog, connector:)
         allow_any_instance_of(described_class).to receive(:streams).and_return(streams)
-        result = described_class.call(connector:, refresh: true)
+        result = described_class.call(connector:, refresh: "true")
         expect(result.catalog).not_to eq(catalog)
       end
     end

@@ -1,7 +1,7 @@
 {
   "data": {
     "name": "Oracle",
-    "title": "Oracle",
+    "title": "Oracle DB",
     "connector_type": "destination",
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/oracle",
