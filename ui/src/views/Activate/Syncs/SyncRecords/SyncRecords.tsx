@@ -28,27 +28,35 @@ const SyncRecords = (): JSX.Element => {
   const toast = useCustomToast();
 
   const pageId = searchParams.get('page');
-  const [currentPage, setCurrentPage] = useState(Number(pageId) || 1);
+  const statusTab = searchParams.get('status');
 
-  const [currentFilter, setCurrentFilter] = useState<SyncRecordStatus>(SyncRecordStatus.success);
+  const [currentPage, setCurrentPage] = useState(Number(pageId) || 1);
+  const [currentStatusTab, setCurrentStatusTab] = useState<SyncRecordStatus>(
+    statusTab === SyncRecordStatus.failed ? SyncRecordStatus.failed : SyncRecordStatus.success,
+  );
 
   const {
-    data: syncRunRecords,
-    isLoading: isSyncRecordsLoading,
-    isError: isSyncRecordsError,
+    data: filteredSyncRunRecords,
+    isLoading: isFilteredSyncRecordsLoading,
+    isError: isFilteredSyncRecordsError,
+    refetch: refetchFilteredSyncRecords,
   } = useQueryWrapper<ApiResponse<Array<SyncRecordResponse>>, Error>(
-    ['activate', 'sync-records', syncRunId, currentPage],
-    () => getSyncRecords(syncId as string, syncRunId as string, currentPage.toString()),
+    ['activate', 'sync-records', syncRunId, currentPage, statusTab],
+    () =>
+      getSyncRecords(
+        syncId as string,
+        syncRunId as string,
+        currentPage.toString(),
+        true,
+        statusTab || 'success',
+      ),
     {
-      refetchOnMount: true,
+      refetchOnMount: false,
       refetchOnWindowFocus: false,
     },
   );
 
-  const data = useMemo(
-    () => syncRunRecords?.data?.filter?.((record) => record.attributes.status === currentFilter),
-    [syncRunRecords, currentFilter],
-  );
+  const data = filteredSyncRunRecords?.data;
 
   const dynamicSyncColumns = useDynamicSyncColumns(data ? data : []);
   const allColumns = useMemo(
@@ -57,11 +65,11 @@ const SyncRecords = (): JSX.Element => {
   );
 
   useEffect(() => {
-    setSearchParams({ page: currentPage.toString() });
-  }, [currentPage, setSearchParams]);
+    setSearchParams({ page: currentPage.toString(), status: currentStatusTab });
+  }, [currentPage, currentStatusTab, setSearchParams]);
 
   useEffect(() => {
-    if (isSyncRecordsError) {
+    if (isFilteredSyncRecordsError) {
       toast({
         title: 'Error',
         description: 'There was an issue fetching the sync records.',
@@ -71,18 +79,24 @@ const SyncRecords = (): JSX.Element => {
         position: 'bottom-right',
       });
     }
-  }, [isSyncRecordsError, toast]);
+  }, [isFilteredSyncRecordsError, toast]);
 
   const handleNextPage = () => {
-    if (syncRunRecords?.links?.next) {
+    if (filteredSyncRunRecords?.links?.next) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   const handlePrevPage = () => {
-    if (syncRunRecords?.links?.prev) {
+    if (filteredSyncRunRecords?.links?.prev) {
       setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
     }
+  };
+
+  const handleStatusTabChange = (status: SyncRecordStatus) => {
+    setCurrentPage(1);
+    setCurrentStatusTab(status);
+    refetchFilteredSyncRecords;
   };
 
   return (
@@ -92,8 +106,9 @@ const SyncRecords = (): JSX.Element => {
         size='md'
         variant='indicator'
         onChange={(index) =>
-          setCurrentFilter(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)
+          handleStatusTabChange(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)
         }
+        index={currentStatusTab === SyncRecordStatus.success ? 0 : 1}
         background='gray.300'
         padding='4px'
         borderRadius='8px'
@@ -103,9 +118,9 @@ const SyncRecords = (): JSX.Element => {
         width='fit-content'
         height='fit'
       >
-        <FilterTabs setFilter={setCurrentFilter} syncRunRecords={syncRunRecords} />
+        <FilterTabs setFilter={handleStatusTabChange} />
       </Tabs>
-      {isSyncRecordsLoading ? (
+      {isFilteredSyncRecordsLoading ? (
         <Loader />
       ) : (
         <Box width='100%' pt={'20px'}>
@@ -131,8 +146,8 @@ const SyncRecords = (): JSX.Element => {
               <Box display='flex' flexDirection='row-reverse' pt='10px'>
                 <Pagination
                   currentPage={currentPage}
-                  isPrevPageEnabled={syncRunRecords?.links?.prev != null}
-                  isNextPageEnabled={syncRunRecords?.links?.next != null}
+                  isPrevPageEnabled={filteredSyncRunRecords?.links?.prev != null}
+                  isNextPageEnabled={filteredSyncRunRecords?.links?.next != null}
                   handleNextPage={handleNextPage}
                   handlePrevPage={handlePrevPage}
                 />
