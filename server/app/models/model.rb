@@ -18,17 +18,23 @@ class Model < ApplicationRecord
   validates :workspace_id, presence: true
   validates :connector_id, presence: true
   validates :name, presence: true
-  validates :query, presence: true
-  validates :primary_key, presence: true
-  enum :query_type, %i[raw_sql dbt soql table_selector]
+
+  enum :query_type, %i[raw_sql dbt soql table_selector ai_ml]
+
+  validates :query, presence: true, if: :requires_query?
+  # Havesting configuration
+  validates :configuration, presence: true, if: :requires_configuration?
 
   belongs_to :workspace
   belongs_to :connector
 
   has_many :syncs, dependent: :destroy
+  has_many :visual_components, dependent: :destroy
+
+  scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector]) }
+  scope :ai_ml, -> { where(query_type: :ai_ml) }
 
   default_scope { order(updated_at: :desc) }
-
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(
       name:,
@@ -36,5 +42,13 @@ class Model < ApplicationRecord
       query_type:,
       primary_key:
     )
+  end
+
+  def requires_query?
+    %w[raw_sql dbt soql table_selector].include?(query_type)
+  end
+
+  def requires_configuration?
+    %w[ai_ml].include?(query_type)
   end
 end

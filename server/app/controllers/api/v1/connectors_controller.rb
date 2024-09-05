@@ -2,17 +2,21 @@
 
 module Api
   module V1
+    # rubocop:disable Metrics/ClassLength
     class ConnectorsController < ApplicationController
       include Connectors
       before_action :set_connector, only: %i[show update destroy discover query_source]
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[query_source]
+      # TODO: Enable this for ai_ml sources
+      before_action :validate_catalog, only: %i[query_source]
       after_action :event_logger
 
       def index
         @connectors = current_workspace.connectors
         authorize @connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
+        @connectors = @connectors.send(params[:category].downcase) if params[:category]
         @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
       end
@@ -95,7 +99,7 @@ module Api
 
           if result.success?
             @records = result.records.map(&:record).map(&:data)
-            render json: @records, status: :ok
+            render json: { data: @records }, status: :ok
           else
             render_error(
               message: result["error"],
@@ -121,6 +125,16 @@ module Api
         )
       end
 
+      def validate_catalog
+        return unless @connector.ai_model?
+        return if @connector.catalog.present?
+
+        render_error(
+          message: "Catalog is not present for the connector",
+          status: :unprocessable_entity
+        )
+      end
+
       def validate_query
         Utils::QueryValidator.validate_query(@connector.connector_query_type, params[:query])
       rescue StandardError => e
@@ -137,5 +151,6 @@ module Api
                                           configuration: {})
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

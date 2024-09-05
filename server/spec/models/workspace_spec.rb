@@ -29,6 +29,7 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:models).dependent(:nullify) }
     it { should have_many(:catalogs).dependent(:nullify) }
     it { should have_many(:syncs).dependent(:nullify) }
+    it { should have_many(:data_apps).dependent(:nullify) }
     it { should belong_to(:organization) }
   end
 
