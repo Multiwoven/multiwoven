@@ -10,10 +10,10 @@ const VerifyUser = lazy(() => import('@/views/Authentication/VerifyUser'));
 const ForgotPassword = lazy(() => import('@/views/Authentication/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/views/Authentication/ResetPassword'));
 
-const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
-
+const SetupDefine = lazy(() => import('@/views/Define/SetupDefine'));
 const SetupActivate = lazy(() => import('@/views/Activate/SetupActivate'));
+
 const Settings = lazy(() => import('@/views/Settings'));
 
 type MAIN_PAGE_ROUTES_ITEM = {
@@ -53,7 +53,7 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
     url: '/define/*',
     component: (
       <SuspenseWithLoader redirectRoute='/define'>
-        <Models />
+        <SetupDefine />
       </SuspenseWithLoader>
     ),
   },

@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import ModelsList from './ModelsList';
-import ModelsForm from './ModelsForm';
-import ViewModel from './ViewModel';
-import EditModel from './EditModel';
+import ModelsList from '@/views/Models/ModelsList';
+import ModelsForm from '@/views/Models/ModelsForm';
+import ViewModel from '@/views/Models/ViewModel';
+import EditModel from '@/views/Models/EditModel';
 
 const SetupModels = (): JSX.Element => {
   return (
