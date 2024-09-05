@@ -2,32 +2,34 @@ import ContentContainer from '@/components/ContentContainer';
 import TopBar from '@/components/TopBar';
 import { Box } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
-import { Outlet, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getAllModels } from '@/services/models';
+import { getAllModels, GetAllModelsResponse } from '@/services/models';
 import Loader from '@/components/Loader';
-import ModelTable from './ModelTable';
-import NoModels from '../NoModels';
+import NoModels from '@/views/Models/NoModels';
+import { useStore } from '@/stores';
+import DataTable from '@/components/DataTable';
+import { Row } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
+import ModelsListTable from '@/views/Models/ModelsList/ModelsListTable';
 
 const ModelsList = (): JSX.Element | null => {
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
   const navigate = useNavigate();
 
-  const handleOnRowClick = (row: any) => {
-    navigate(row?.id);
+  const handleOnRowClick = (row: Row<GetAllModelsResponse>) => {
+    navigate(`/define/models/ai/${row.original.id}`);
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['models'],
-    queryFn: () => getAllModels(),
+    queryKey: ['models', activeWorkspaceId, 'data'],
+    queryFn: () => getAllModels({ type: 'data' }),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
+    enabled: activeWorkspaceId > 0,
   });
 
-  if (isLoading && !data) return <Loader />;
-  if (data?.data?.length === 0) return <NoModels />;
-
   return (
-    <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
+    <Box width='100%' display='flex' flexDirection='column' alignItems='center' height='100%'>
       <ContentContainer>
         <TopBar
           name={'Models'}
@@ -35,20 +37,19 @@ const ModelsList = (): JSX.Element | null => {
           ctaIcon={<FiPlus color='gray.100' />}
           ctaButtonVariant='solid'
           onCtaClicked={() => navigate('new')}
-          isCtaVisible
         />
-        <Box>
-          {isLoading || !data ? (
-            <Loader />
-          ) : (
-            <ModelTable
-              handleOnRowClick={handleOnRowClick}
-              modelData={data}
-              isLoading={isLoading}
-            />
-          )}
-        </Box>
-        <Outlet />
+
+        {isLoading ? (
+          <Loader />
+        ) : data?.data && data.data.length > 0 ? (
+          <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll' mt={'20px'}>
+            <DataTable columns={ModelsListTable} data={data.data} onRowClick={handleOnRowClick} />
+          </Box>
+        ) : (
+          <Box h='85%'>
+            <NoModels />
+          </Box>
+        )}
       </ContentContainer>
     </Box>
   );

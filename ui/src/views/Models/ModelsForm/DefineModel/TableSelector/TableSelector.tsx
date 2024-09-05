@@ -11,7 +11,7 @@ import { getCatalog } from '@/services/syncs';
 import { useStore } from '@/stores';
 import Loader from '@/components/Loader';
 import ListTables from './ListTables';
-import { Field, getModelPreviewById, putModelById } from '@/services/models';
+import { getModelPreviewById, putModelById } from '@/services/models';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast/index';
 import { TableDataType } from '@/components/Table/types';
@@ -120,7 +120,7 @@ const TableSelector = ({
 
     try {
       const response = await getModelPreviewById(userQuery, connector_id?.toString());
-      if ('errors' in response) {
+      if (response.errors) {
         if (response.errors) {
           apiErrorsToast(response.errors);
         } else {
@@ -128,8 +128,20 @@ const TableSelector = ({
         }
         setLoadingPreviewData(false);
       } else {
-        setTableData(ConvertModelPreviewToTableData(response as Field[]));
-        setLoadingPreviewData(false);
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoadingPreviewData(false);
+        } else {
+          showToast({
+            title: 'No data found',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          setTableData(null);
+          setLoadingPreviewData(false);
+        }
       }
     } catch (error) {
       errorToast('Error fetching preview data', true, null, true);
