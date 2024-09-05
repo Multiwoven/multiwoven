@@ -1,3 +1,5 @@
+import { ErrorResponse } from '@/services/common';
+
 export type ConnectorTypes = 'source' | 'destination';
 
 export type DatasourceType = {
@@ -95,6 +97,7 @@ export type ConnectorInfoResponse = {
 
 export type ConnectorListResponse = {
   data: ConnectorItem[];
+  errors?: ErrorResponse[];
 };
 
 export type ConnectorTableColumnFields =

@@ -15,7 +15,7 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
 
   const { data } = useQueryWrapper<APIData, Error>(
     ['models', activeWorkspaceId],
-    () => getAllModels(),
+    () => getAllModels({ type: 'data' }),
     {
       refetchOnMount: true,
       refetchOnWindowFocus: false,

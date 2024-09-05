@@ -110,14 +110,6 @@ module Multiwoven::Integrations::Destination
         [schema, data]
       end
 
-      def auth_headers(access_token)
-        {
-          "Accept" => "application/json",
-          "Authorization" => "Bearer #{access_token}",
-          "Content-Type" => "application/json"
-        }
-      end
-
       def ad_account_exists?(response, ad_account_id)
         return if extract_data(response).any? { |ad_account| ad_account["id"] == "act_#{ad_account_id}" }
 

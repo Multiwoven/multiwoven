@@ -19,8 +19,8 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
-import titleCase from '@/utils/TitleCase';
 import ModelQueryResults from '../ModelQueryResults';
+import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -36,6 +36,9 @@ const DefineSQL = ({
   const [userQuery, setUserQuery] = useState(prefillValues?.query || '');
 
   const showToast = useCustomToast();
+  const apiErrorsToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
+
   const navigate = useNavigate();
   const editorRef = useRef<any>(null);
   const monaco = useMonaco();
@@ -78,24 +81,6 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = editorRef.current?.getValue() as string;
-<<<<<<< HEAD
-    const response = await getModelPreviewById(query, connector_id?.toString());
-    if ('errors' in response) {
-      response.errors?.forEach((error) => {
-        showToast({
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
-        });
-      });
-      setLoading(false);
-    } else {
-      setTableData(ConvertModelPreviewToTableData(response as Field[]));
-      canMoveForward(true);
-=======
     try {
       const response = await getModelPreviewById(query, connector_id?.toString());
       if (response.errors) {
@@ -109,6 +94,7 @@ const DefineSQL = ({
         if (response.data && response.data.length > 0) {
           setTableData(ConvertModelPreviewToTableData(response.data));
           setLoading(false);
+          canMoveForward(true);
         } else {
           showToast({
             title: 'No data found',
@@ -119,11 +105,11 @@ const DefineSQL = ({
           });
           setTableData(null);
           setLoading(false);
+          canMoveForward(false);
         }
       }
     } catch (error) {
       errorToast('Error fetching preview data', true, null, true);
->>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
       setLoading(false);
     }
   }
@@ -141,27 +127,25 @@ const DefineSQL = ({
       },
     };
 
-    const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
-    if (modelUpdateResponse.data) {
-      showToast({
-        title: 'Model updated successfully',
-        status: CustomToastStatus.Success,
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
-      navigate('/define/models/' + prefillValues?.model_id || '');
-    } else {
-      modelUpdateResponse.errors?.forEach((error) => {
+    try {
+      const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
+      if (modelUpdateResponse.errors) {
+        apiErrorsToast(modelUpdateResponse.errors);
+        setLoading(false);
+      } else {
         showToast({
-          duration: 5000,
+          title: 'Model updated successfully',
+          status: CustomToastStatus.Success,
+          duration: 3000,
           isClosable: true,
           position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
         });
-      });
+        navigate('/define/models/' + prefillValues?.model_id || '');
+        setLoading(false);
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
+      setLoading(false);
     }
   }
 

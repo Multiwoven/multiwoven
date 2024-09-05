@@ -3,12 +3,9 @@ import {
   CreateModelResponse,
   GetModelByIdResponse,
 } from '@/views/Models/types';
-import { apiRequest, multiwovenFetch, ApiResponse, ErrorResponse } from './common';
+import { apiRequest, multiwovenFetch } from './common';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
-<<<<<<< HEAD
-=======
 import { ApiResponse } from './common';
->>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
 
 export type APIData = {
   data?: Array<GetAllModelsResponse>;
@@ -28,20 +25,6 @@ export type Field = {
   [key: string]: string | number | null;
 };
 
-<<<<<<< HEAD
-export type ModelPreviewResponse =
-  | { errors?: ErrorResponse[] }
-  | Field[]
-  | {
-      errors?: {
-        detail: string;
-        status: number;
-        title: string;
-      }[];
-    };
-
-=======
->>>>>>> fc23d7b2 (refactor(CE): changed model query response format (#367))
 export type ModelAttributes = {
   updated_at: string;
   created_at: string;
@@ -64,19 +47,21 @@ export type GetAllModelsResponse = {
   attributes: ModelAttributes;
 };
 
-// export const getAllModels = async (): Promise<ModelAPIResponse<APIData>> => {
-//   return apiRequest("/models", null);
-// };
+export type ModelQueryType = 'data' | 'ai_ml' | 'raw_sql' | 'dbt' | 'soql' | 'table_selector';
+
+export type GetAllModelsProps = {
+  type: ModelQueryType;
+};
 
 export const getModelPreview = async (query: string, connector_id: string): Promise<any> => {
   const url = '/connectors/' + connector_id + '/query_source';
   return apiRequest(url, { query: query });
 };
 
-export const getAllModels = async (): Promise<APIData> =>
+export const getAllModels = async ({ type = 'data' }: GetAllModelsProps): Promise<APIData> =>
   multiwovenFetch<null, APIData>({
     method: 'get',
-    url: '/models',
+    url: type ? `/models?query_type=${type}` : '/models',
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>
@@ -86,8 +71,8 @@ export const getModelPreviewById = async (query: string, id: string) =>
     data: { query: query },
   });
 
-export const createNewModel = async (payload: CreateModelPayload): Promise<CreateModelResponse> =>
-  multiwovenFetch<CreateModelPayload, CreateModelResponse>({
+export const createNewModel = async (payload: CreateModelPayload) =>
+  multiwovenFetch<CreateModelPayload, ApiResponse<CreateModelResponse>>({
     method: 'post',
     url: '/models',
     data: payload,

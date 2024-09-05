@@ -3,6 +3,13 @@ const AboutUs = lazy(() => import('@/views/AboutUs'));
 const Dashboard = lazy(() => import('@/views/Dashboard'));
 const SignIn = lazy(() => import('@/views/Authentication/SignIn'));
 const SignUp = lazy(() => import('@/views/Authentication/SignUp'));
+
+const SignUpVerification = lazy(() => import('@/views/Authentication/SignUp/SignUpVerification'));
+const VerifyUser = lazy(() => import('@/views/Authentication/VerifyUser'));
+
+const ForgotPassword = lazy(() => import('@/views/Authentication/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/views/Authentication/ResetPassword'));
+
 const Models = lazy(() => import('@/views/Models'));
 const SetupConnectors = lazy(() => import('@/views/Connectors/SetupConnectors'));
 
@@ -99,6 +106,42 @@ export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
         <>
           <SignUp />
         </>
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Sign Up Success',
+    url: '/sign-up/success',
+    component: (
+      <SuspenseWithLoader redirectRoute='/sign-up'>
+        <SignUpVerification />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Verify User',
+    url: '/verify-user',
+    component: (
+      <SuspenseWithLoader redirectRoute='/verify-user'>
+        <VerifyUser />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Forgot Password',
+    url: '/forgot-password',
+    component: (
+      <SuspenseWithLoader redirectRoute='/forgot-password'>
+        <ForgotPassword />
+      </SuspenseWithLoader>
+    ),
+  },
+  {
+    name: 'Reset Password',
+    url: '/reset-password',
+    component: (
+      <SuspenseWithLoader redirectRoute='/forgot-password'>
+        <ResetPassword />
       </SuspenseWithLoader>
     ),
   },

@@ -25,10 +25,14 @@ Rails.application.routes.draw do
           post :query_source
         end
       end
+      resources :catalogs, only: %i[create update]
       resources :models
       resources :syncs do
         collection do
           get :configurations
+        end
+        member do
+          patch :enable
         end
         resources :sync_runs, only: %i[index show] do
           resources :sync_records, only: [:index]

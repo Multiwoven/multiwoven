@@ -1,7 +1,7 @@
 {
   "data": {
     "name": "Airtable",
-    "title": "airtable",
+    "title": "Airtable",
     "connector_type": "destination",
     "category": "Productivity Tools",
     "documentation_url": "https://docs.multiwoven.com/destinations/productivity-tools/airtable",

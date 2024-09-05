@@ -57,8 +57,25 @@ RSpec.describe "ModelContracts" do
       end
 
       it "passes validation" do
-        allow(PgQuery).to receive(:parse).with("SELECT * FROM table;").and_return(true)
         expect(contract.call(valid_inputs)).to be_success
+      end
+    end
+
+    context "with missing query for query_type requiring it" do
+      let(:invalid_inputs) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query_type: "raw_sql",
+            primary_key: "id"
+          }
+        }
+      end
+
+      it "fails validation due to missing query" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:model][:query]).to include("Query is required for this query type")
       end
     end
 
@@ -101,43 +118,21 @@ RSpec.describe "ModelContracts" do
       end
     end
 
-    context "with query containing OFFSET" do
+    context "with missing configuration for ai_ml query_type" do
       let(:invalid_inputs) do
         {
           model: {
             connector_id: 1,
             name: "Model Name",
-            query: "SELECT * FROM table OFFSET 10;",
-            query_type: "raw_sql",
+            query_type: "ai_ml",
             primary_key: "id"
           }
         }
       end
 
-      it "fails validation due to OFFSET in query" do
-        error_message = "Query validation failed: Query cannot contain LIMIT or OFFSET"
+      it "fails validation due to missing configuration" do
         result = contract.call(invalid_inputs)
-        expect(result.errors[:model][:query]).to include(error_message)
-      end
-    end
-
-    context "with query containing LIMIT and OFFSET" do
-      let(:invalid_inputs) do
-        {
-          model: {
-            connector_id: 1,
-            name: "Model Name",
-            query: "SELECT * FROM table LIMIT 10 OFFSET 5;",
-            query_type: "raw_sql",
-            primary_key: "id"
-          }
-        }
-      end
-
-      it "fails validation due to LIMIT and OFFSET in query" do
-        error_message = "Query validation failed: Query cannot contain LIMIT or OFFSET"
-        result = contract.call(invalid_inputs)
-        expect(result.errors[:model][:query]).to include(error_message)
+        expect(result.errors[:model][:configuration]).to include("Configuration is required for this query type")
       end
     end
   end
@@ -202,43 +197,20 @@ RSpec.describe "ModelContracts" do
       end
     end
 
-    context "with query containing OFFSET" do
-      let(:invalid_inputs) do
+    context "with valid inputs without query" do
+      let(:valid_inputs) do
         {
           id: 1,
           model: {
             name: "Updated Model Name",
-            query: "SELECT * FROM updated_table OFFSET 10;",
-            query_type: "soql",
+            query_type: "ai_ml",
             primary_key: "updated_id"
           }
         }
       end
 
-      it "fails validation due to OFFSET in query" do
-        error_message = "Query validation failed: Query cannot contain LIMIT or OFFSET"
-        result = contract.call(invalid_inputs)
-        expect(result.errors[:model][:query]).to include(error_message)
-      end
-    end
-
-    context "with query containing LIMIT and OFFSET" do
-      let(:invalid_inputs) do
-        {
-          id: 1,
-          model: {
-            name: "Updated Model Name",
-            query: "SELECT * FROM updated_table LIMIT 10 OFFSET 5;",
-            query_type: "soql",
-            primary_key: "updated_id"
-          }
-        }
-      end
-
-      it "fails validation due to LIMIT and OFFSET in query" do
-        error_message = "Query validation failed: Query cannot contain LIMIT or OFFSET"
-        result = contract.call(invalid_inputs)
-        expect(result.errors[:model][:query]).to include(error_message)
+      it "passes validation" do
+        expect(contract.call(valid_inputs)).to be_success
       end
     end
   end

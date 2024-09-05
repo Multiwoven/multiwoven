@@ -119,6 +119,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do
 
         expect(response.tracking.success).to eq(records.size)
         expect(response.tracking.failed).to eq(0)
+        log_message = response.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
@@ -133,6 +139,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do
 
         expect(response.tracking.failed).to eq(records.size)
         expect(response.tracking.success).to eq(0)
+        log_message = response.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("error")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
   end
