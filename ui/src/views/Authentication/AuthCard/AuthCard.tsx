@@ -1,5 +1,6 @@
 import { Box, Container, Flex, Image, Stack } from '@chakra-ui/react';
 import { AuthCardProps } from '../types';
+import multiwovenLogo from '@/assets/images/icon-white.svg';
 
 const AuthCard = ({ children, brandName, logoUrl }: AuthCardProps): JSX.Element => (
   <>
@@ -17,7 +18,11 @@ const AuthCard = ({ children, brandName, logoUrl }: AuthCardProps): JSX.Element 
               borderRadius='11px'
               mx='auto'
             >
-              <Image src={logoUrl} width={'100%'} alt={`${brandName} Logo in White`} />
+              <Image
+                src={logoUrl || multiwovenLogo}
+                width={logoUrl ? '100%' : '50px'}
+                alt={`${brandName} Logo in White`}
+              />
             </Box>
           </Box>
           <Box

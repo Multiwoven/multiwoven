@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Stack, Heading } from '@chakra-ui/react';
+
 import mwTheme from '@/chakra.config';
 import AuthFooter from '../AuthFooter';
 import { SignUpAuthView } from '@/views/Authentication/AuthViews/SignUpAuthView';
@@ -9,6 +10,7 @@ import { SignUpPayload, signUp } from '@/services/authentication';
 import { useState } from 'react';
 import useCustomToast from '@/hooks/useCustomToast';
 import { useMutation } from '@tanstack/react-query';
+
 import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 // import isValidEmailDomain from '@/utils/isValidEmailDomain';
 
