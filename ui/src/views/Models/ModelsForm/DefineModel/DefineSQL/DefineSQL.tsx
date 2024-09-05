@@ -4,7 +4,7 @@ import StarsImage from '@/assets/images/stars.svg';
 
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Field, getModelPreviewById, putModelById } from '@/services/models';
+import { getModelPreviewById, putModelById } from '@/services/models';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
 import { TableDataType } from '@/components/Table/types';
@@ -83,7 +83,7 @@ const DefineSQL = ({
     const query = editorRef.current?.getValue() as string;
     try {
       const response = await getModelPreviewById(query, connector_id?.toString());
-      if ('errors' in response) {
+      if (response.errors) {
         if (response.errors) {
           apiErrorsToast(response.errors);
         } else {
@@ -91,8 +91,11 @@ const DefineSQL = ({
         }
         setLoading(false);
       } else {
-        const previewData = response as Field[];
-        if (previewData.length === 0) {
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoading(false);
+          canMoveForward(true);
+        } else {
           showToast({
             title: 'No data found',
             status: CustomToastStatus.Success,
@@ -100,10 +103,9 @@ const DefineSQL = ({
             isClosable: true,
             position: 'bottom-right',
           });
+          setTableData(null);
           setLoading(false);
-        } else {
-          setTableData(ConvertModelPreviewToTableData(response as Field[]));
-          setLoading(false);
+          canMoveForward(false);
         }
       }
     } catch (error) {
