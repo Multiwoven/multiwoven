@@ -107,7 +107,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Iterable::Client do
   describe "#write" do
     context "when the write operation is successful" do
       before do
-        allow_any_instance_of(::Iterable::CatalogItems).to receive(:create).and_return(double(success?: true))
+        allow_any_instance_of(::Iterable::CatalogItems).to receive(:create).and_return(double(success?: true, body: 1))
       end
 
       it "increments the success count" do
@@ -117,12 +117,18 @@ RSpec.describe Multiwoven::Integrations::Destination::Iterable::Client do
         response = client.write(sync_config, records)
         expect(response.tracking.success).to eq(records.size)
         expect(response.tracking.failed).to eq(0)
+        log_message = response.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
     context "when the write operation fails" do
       before do
-        allow_any_instance_of(::Iterable::CatalogItems).to receive(:create).and_return(double(success?: false))
+        allow_any_instance_of(::Iterable::CatalogItems).to receive(:create).and_return(double(success?: false, body: 1))
       end
       it "increments the failure count" do
         sync_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(
@@ -131,6 +137,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Iterable::Client do
         response = client.write(sync_config, records)
         expect(response.tracking.failed).to eq(records.size)
         expect(response.tracking.success).to eq(0)
+        log_message = response.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
   end

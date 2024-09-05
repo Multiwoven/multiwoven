@@ -14,9 +14,9 @@ RSpec.describe Activities::CreateSyncRunActivity do
     let(:activity) { Activities::CreateSyncRunActivity.new(mock_context) }
 
     context "when no pending SyncRun exists" do
-      it "creates a new SyncRun with pending status" do
+      it "creates a new SyncRun with type general and pending status" do
         expect do
-          sync_run_id = activity.execute(sync.id)
+          sync_run_id = activity.execute(sync.id, "general")
           sync_run = SyncRun.find(sync_run_id)
           expect(sync_run).to have_state(:pending)
           expect(sync_run.sync_id).to eq(sync.id)
@@ -24,6 +24,21 @@ RSpec.describe Activities::CreateSyncRunActivity do
           expect(sync_run.source_id).to eq(sync.source_id)
           expect(sync_run.destination_id).to eq(sync.destination_id)
           expect(sync_run.model_id).to eq(sync.model_id)
+          expect(sync_run.sync_run_type).to eq("general")
+        end.to change(SyncRun, :count).by(1)
+      end
+
+      it "creates a new SyncRun with type test and pending status" do
+        expect do
+          sync_run_id = activity.execute(sync.id, "test")
+          sync_run = SyncRun.find(sync_run_id)
+          expect(sync_run).to have_state(:pending)
+          expect(sync_run.sync_id).to eq(sync.id)
+          expect(sync_run.workspace_id).to eq(sync.workspace_id)
+          expect(sync_run.source_id).to eq(sync.source_id)
+          expect(sync_run.destination_id).to eq(sync.destination_id)
+          expect(sync_run.model_id).to eq(sync.model_id)
+          expect(sync_run.sync_run_type).to eq("test")
         end.to change(SyncRun, :count).by(1)
       end
     end
@@ -35,7 +50,7 @@ RSpec.describe Activities::CreateSyncRunActivity do
 
       it "create a new SyncRun" do
         expect do
-          sync_run_id = activity.execute(sync.id)
+          sync_run_id = activity.execute(sync.id, "general")
           sync_run = SyncRun.find(sync_run_id)
           expect(sync_run).to have_state(:pending)
           expect(sync_run.sync_id).to eq(sync.id)

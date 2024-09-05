@@ -17,6 +17,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
   end
 
   before do
+    user.confirm
     create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
     create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
   end
@@ -92,6 +93,19 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
       it "returns failure" do
         sync.update(schedule_type: "interval")
         error_message = "Sync Schedule type should be manual"
+        post "/api/v1/schedule_syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+
+        result = JSON.parse(response.body)
+        expect(result["errors"][0]["status"]).to eq(424)
+        expect(result["errors"][0]["detail"]).to eq(error_message)
+      end
+    end
+
+    context "when sync id is correct but it is disabled" do
+      it "returns failure" do
+        sync.update(status: "disabled")
+        error_message = "Sync is disabled"
         post "/api/v1/schedule_syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
 

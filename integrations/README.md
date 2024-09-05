@@ -59,6 +59,10 @@ Before you begin the installation, ensure you have the following dependencies in
   - Command: `brew install openssl@3`
   - Description: Essential for secure communication.
 
+- **Oracle Instant Client**
+  - Download Link: https://www.oracle.com/database/technologies/instant-client/downloads.html
+  - Description: Required for database interactions.
+
 
 ### Installation
 

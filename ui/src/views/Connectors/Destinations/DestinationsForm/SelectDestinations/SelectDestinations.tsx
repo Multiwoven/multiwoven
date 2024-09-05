@@ -1,12 +1,13 @@
 import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
 import { getDestinationCategories } from '@/views/Connectors/helpers';
 import { useContext, useState } from 'react';
-import { Box, Grid, Image, Text, Wrap } from '@chakra-ui/react';
+import { Box, Grid, Text, Wrap } from '@chakra-ui/react';
 import ContentContainer from '@/components/ContentContainer';
 import { ALL_DESTINATIONS_CATEGORY } from '@/views/Connectors/constant';
 import { Connector } from '@/views/Connectors/types';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
+import EntityItem from '@/components/EntityItem';
 
 const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
@@ -84,29 +85,7 @@ const SelectDestinations = (): JSX.Element => {
                   height='56px'
                   onClick={() => onDestinationSelect(connector)}
                 >
-                  <Box
-                    height='40px'
-                    width='40px'
-                    marginRight='10px'
-                    borderWidth='thin'
-                    padding='5px'
-                    borderRadius='8px'
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                    backgroundColor='gray.100'
-                  >
-                    <Image
-                      src={connector.icon}
-                      alt='source icon'
-                      maxHeight='100%'
-                      height='24px'
-                      width='24px'
-                    />
-                  </Box>
-                  <Text fontWeight='semibold' size='sm'>
-                    {connector.title}
-                  </Text>
+                  <EntityItem name={connector.title} icon={connector.icon} />
                 </Box>
               ) : null,
             )}

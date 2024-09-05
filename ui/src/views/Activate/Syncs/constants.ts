@@ -29,6 +29,10 @@ export const SYNC_RUNS_COLUMNS: SyncRunsColumnEntity[] = [
     name: 'start_time',
   },
   {
+    key: 'sync_run_type',
+    name: 'Sync Type',
+  },
+  {
     key: 'duration',
     name: 'Duration',
   },

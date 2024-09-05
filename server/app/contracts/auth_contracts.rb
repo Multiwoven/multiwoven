@@ -58,14 +58,9 @@ module AuthContracts
     end
   end
 
-  class VerifyCode < Dry::Validation::Contract
+  class VerifyUser < Dry::Validation::Contract
     params do
-      required(:email).filled(:string)
-      required(:confirmation_code).filled(:string)
-    end
-
-    rule(:email) do
-      key.failure("has invalid email format") unless /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i.match?(value)
+      required(:confirmation_token).filled(:string)
     end
   end
 

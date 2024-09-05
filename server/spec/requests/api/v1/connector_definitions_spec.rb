@@ -11,6 +11,10 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
   let(:viewer_role) { create(:role, :viewer) }
   let(:member_role) { create(:role, :member) }
 
+  before do
+    user.confirm
+  end
+
   describe "GET /api/v1/connector_definitions" do
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do
@@ -27,6 +31,34 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:source].count).to eql(service.connectors[:source].count)
         expect(response_hash[:destination].count).to eql(service.connectors[:destination].count)
+      end
+
+      it "returns only ai/ml sources" do
+        get "/api/v1/connector_definitions?type=source&category=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_hash = JSON.parse(response.body)
+
+        categories = response_hash.map { |item| item["category"] }.uniq
+        connector_types = response_hash.map { |item| item["connector_type"] }.uniq
+        expect(categories.count).to eql(1)
+        expect(connector_types.count).to eql(1)
+        expect(categories).to eql(["AI Model"])
+        expect(connector_types).to eql(["source"])
+      end
+
+      it "returns only ai/ml connectors" do
+        get "/api/v1/connector_definitions?category=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+
+        source_categories = response_hash[:source].map { |item| item["category"] }.uniq
+        destination_categories = response_hash[:destination].map { |item| item["category"] }.uniq
+
+        categories = (source_categories + destination_categories).uniq
+        expect(categories.count).to eql(1)
+        expect(categories).to eql(["AI Model"])
       end
 
       it "returns success viewer role" do

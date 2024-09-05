@@ -3,7 +3,7 @@
   "stream_type": "static",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Databricks Lakehouse",
+    "title": "Databricks Datawarehouse",
     "type": "object",
     "required": ["host", "api_token", "warehouse_id", "catalog", "schema"],
     "properties": {

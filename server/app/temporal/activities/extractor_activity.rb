@@ -30,7 +30,16 @@ module Activities
     private
 
     def select_extractor(sync_run)
-      sync_mode = sync_run.sync.sync_mode.to_sym
+      return test_sync_extractor if sync_run.test?
+
+      sync_mode_extractor(sync_run.sync.sync_mode.to_sym)
+    end
+
+    def test_sync_extractor
+      ReverseEtl::Extractors::TestSyncExtractor.new
+    end
+
+    def sync_mode_extractor(sync_mode)
       case sync_mode
       when :incremental
         ReverseEtl::Extractors::IncrementalDelta.new

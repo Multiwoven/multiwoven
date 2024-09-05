@@ -164,4 +164,53 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "#set_category" do
+    let(:workspace) { create(:workspace) }
+    let(:connector) do
+      create(:connector,
+             workspace:)
+    end
+
+    context "populate category from connector meta data" do
+      it "sets the connector_category based on the meta_data" do
+        connector.run_callbacks(:save) { true }
+        expect(connector.connector_category).to eq("Marketing Automation")
+      end
+    end
+
+    context "catagory is set by user" do
+      it "does not change the connector_category" do
+        connector.update!(connector_category: "user_input_category")
+        expect(connector.connector_category).to eq("user_input_category")
+      end
+    end
+  end
+
+  describe ".ai_ml" do
+    let!(:ai_ml_connector) { create(:connector, connector_category: "AI Model") }
+    let!(:non_ai_ml_connector) { create(:connector, connector_category: "Data Warehouse") }
+
+    it "returns connectors with connector_category in AI_ML_CATEGORIES" do
+      result = Connector.ai_ml
+      expect(result).to include(ai_ml_connector)
+      expect(result).not_to include(non_ai_ml_connector)
+    end
+
+    it "check whether connector is ai model or not" do
+      expect(ai_ml_connector.ai_model?).to eq(true)
+      expect(non_ai_ml_connector.ai_model?).to eq(false)
+    end
+  end
+
+  describe ".data" do
+    let!(:data_connector) { create(:connector, connector_category: "Data Warehouse") }
+    let!(:non_data_connector) { create(:connector, connector_category: "AI Model") }
+
+    it "returns connectors with connector_category in DATA_CATEGORIES" do
+      result = Connector.data
+      expect(result).to include(data_connector)
+      expect(result).not_to include(non_data_connector)
+    end
+  end
 end

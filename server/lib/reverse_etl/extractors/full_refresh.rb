@@ -45,10 +45,10 @@ module ReverseEtl
         log_mismatch_error(records, sync_records_to_save, result.rows.flatten,
                            sync_run)
       rescue StandardError => e
-        Utils::ExceptionReporter.report(e, {
-                                          sync_id: sync_run.sync_id,
-                                          sync_run_id: sync_run.id
-                                        })
+        # Utils::ExceptionReporter.report(e, {
+        #                                   sync_id: sync_run.sync_id,
+        #                                   sync_run_id: sync_run.id
+        #                                 })
         log_error("#{e.message}. Sync ID: #{sync_run.sync_id}, Sync Run ID: #{sync_run.id}.")
       end
 
@@ -79,10 +79,10 @@ module ReverseEtl
           record: record_data
         }
       rescue StandardError => e
-        Utils::ExceptionReporter.report(e, {
-                                          sync_id: sync_run.sync_id,
-                                          sync_run_id: sync_run.id
-                                        })
+        # Utils::ExceptionReporter.report(e, {
+        #                                   sync_id: sync_run.sync_id,
+        #                                   sync_run_id: sync_run.id
+        #                                 })
         error_message = "#{e.message}. Sync ID: #{sync_run.sync_id}, Sync Run ID: #{sync_run.id}.
           Record data: #{record_data.to_json}"
         log_error(error_message)

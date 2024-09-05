@@ -23,5 +23,16 @@ RSpec.describe Workflows::SyncWorkflow do
     expect(Activities::ExtractorActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
     expect(Activities::LoaderActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
     expect(Activities::ReporterActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
+    expect(sync.sync_runs.first.sync_run_type).to eq("general")
+  end
+
+  it "executes sync workflow with sync run type test" do
+    # TODO: Add more tests
+    subject.execute_locally(sync.id, "test")
+
+    expect(Activities::ExtractorActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
+    expect(Activities::LoaderActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
+    expect(Activities::ReporterActivity).to have_received(:execute!).with(sync.sync_runs.first.id)
+    expect(sync.sync_runs.first.sync_run_type).to eq("test")
   end
 end

@@ -79,7 +79,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do
 
     it "returns a successful connection status if the request is successful" do
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request).and_return(success_response)
-      allow(client).to receive(:extract_data).with(success_response).and_return([{ "id" => "app43WSzJbarW7bTX" }])
+      allow(client).to receive(:extract_bases).with(success_response).and_return([{ "id" => "app43WSzJbarW7bTX" }])
       message = client.check_connection(connection_config)
       expect(message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
       result = message.connection_status
@@ -88,7 +88,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do
 
     it "raises an error if the base idis not found in the response" do
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request).and_return(success_response)
-      allow(client).to receive(:extract_data).with(success_response).and_return([{ "id" => "invalid" }])
+      allow(client).to receive(:extract_bases).with(success_response).and_return([{ "id" => "invalid" }])
       message = client.check_connection(connection_config)
       expect(message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
       result = message.connection_status
@@ -156,6 +156,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do
       message = client.write(sync_config, records)
       expect(message.tracking.success).to eq(2)
       expect(message.tracking.failed).to eq(0)
+      log_message = message.tracking.logs.first
+      expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+      expect(log_message.level).to eql("info")
+
+      expect(log_message.message).to include("request")
+      expect(log_message.message).to include("response")
     end
 
     it "increments the failure count" do
@@ -164,6 +170,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Airtable::Client do
       message = client.write(sync_config, records)
       expect(message.tracking.success).to eq(0)
       expect(message.tracking.failed).to eq(2)
+      log_message = message.tracking.logs.first
+      expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+      expect(log_message.level).to eql("info")
+
+      expect(log_message.message).to include("request")
+      expect(log_message.message).to include("response")
     end
   end
 

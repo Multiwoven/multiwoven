@@ -146,6 +146,13 @@ module SyncContracts
     end
   end
 
+  class Enable < Dry::Validation::Contract
+    params do
+      required(:id).filled(:integer)
+      required(:enable).filled(:bool)
+    end
+  end
+
   class Destroy < Dry::Validation::Contract
     params do
       required(:id).filled(:integer)

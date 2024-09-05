@@ -97,7 +97,7 @@ RSpec.describe Activities::ExtractorActivity do
     end
   end
 
-  describe "#select_extractor" do
+  describe "#sync_mode_extractor" do
     let(:sync_run) { instance_double("SyncRun", sync: instance_double("Sync", sync_mode:)) }
     let(:mock_context) { double("context") }
     let(:activity) { Activities::ExtractorActivity.new(mock_context) }
@@ -106,7 +106,7 @@ RSpec.describe Activities::ExtractorActivity do
       let(:sync_mode) { "incremental" }
 
       it "returns an instance of IncrementalDelta extractor" do
-        extractor = activity.send(:select_extractor, sync_run)
+        extractor = activity.send(:sync_mode_extractor, sync_run.sync.sync_mode.to_sym)
         expect(extractor).to be_a(ReverseEtl::Extractors::IncrementalDelta)
       end
     end
@@ -115,7 +115,7 @@ RSpec.describe Activities::ExtractorActivity do
       let(:sync_mode) { "full_refresh" }
 
       it "returns an instance of FullRefresh extractor" do
-        extractor = activity.send(:select_extractor, sync_run)
+        extractor = activity.send(:sync_mode_extractor, sync_run.sync.sync_mode.to_sym)
         expect(extractor).to be_a(ReverseEtl::Extractors::FullRefresh)
       end
     end
@@ -125,8 +125,41 @@ RSpec.describe Activities::ExtractorActivity do
 
       it "raises an error" do
         expect do
-          activity.send(:select_extractor, sync_run)
+          activity.send(:sync_mode_extractor, sync_run.sync.sync_mode.to_sym)
         end.to raise_error(RuntimeError, "Unsupported sync mode: #{sync_mode}")
+      end
+    end
+  end
+
+  describe "#select_extractor" do
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:sync) { create(:sync, destination:) }
+    let(:sync_run) { create(:sync_run, sync:, sync_run_type: "general") }
+    let(:sync_run_test) { create(:sync_run, sync:, sync_run_type: "test") }
+    let(:mock_context) { double("context") }
+    let(:activity) { Activities::ExtractorActivity.new(mock_context) }
+
+    context "when sync_run_type is test" do
+      it "returns an instance of TestSyncExtractor" do
+        extractor = activity.send(:select_extractor, sync_run_test)
+        expect(extractor).to be_a(ReverseEtl::Extractors::TestSyncExtractor)
+      end
+    end
+
+    context "when sync_run_type is not test in incremental" do
+      it "returns an instance of IncrementalDelta extractor for incremental sync_mode" do
+        sync.update(sync_mode: "incremental")
+        extractor = activity.send(:select_extractor, sync_run)
+        expect(extractor).to be_a(ReverseEtl::Extractors::IncrementalDelta)
+      end
+    end
+
+    context "when sync_run_type is not test in fullrefresh" do
+      it "returns an instance of FullRefresh extractor for full_refresh sync_mode" do
+        sync.update(sync_mode: "full_refresh")
+        extractor = activity.send(:select_extractor, sync_run)
+        expect(extractor).to be_a(ReverseEtl::Extractors::FullRefresh)
       end
     end
   end

@@ -9,14 +9,30 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
   let(:connector) do
     create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
   end
+
+  let(:connector_without_catalog) do
+    create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
+  end
   let!(:models) do
     [
       create(:model, connector:, workspace:, name: "model1", query: "SELECT * FROM locations"),
       create(:model, connector:, workspace:, name: "model2", query: "SELECT * FROM locations")
     ]
   end
+
+  let!(:raw_sql_model) { create(:model, query_type: :raw_sql, connector:, workspace:) }
+  let!(:dbt_model) { create(:model, query_type: :dbt, connector:, workspace:) }
+  let!(:soql_model) { create(:model, query_type: :soql, connector:, workspace:) }
+  let!(:ai_ml_model) do
+    create(:model, query_type: :ai_ml, connector:, configuration: { key: "value" }, workspace:)
+  end
   let(:viewer_role) { create(:role, :viewer) }
   let(:member_role) { create(:role, :member) }
+
+  before do
+    create(:catalog, connector:)
+    user.confirm
+  end
 
   describe "GET /api/v1/models" do
     context "when it is an unauthenticated user" do
@@ -31,7 +47,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         get "/api/v1/models", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash[:data].count).to eql(6)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
       end
@@ -41,7 +57,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         get "/api/v1/models", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash[:data].count).to eql(6)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
       end
@@ -51,9 +67,30 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         get "/api/v1/models", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(models.count)
+        expect(response_hash[:data].count).to eql(6)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+      end
+
+      it "filters models based on the query_type parameter" do
+        get "/api/v1/models?query_type=data", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["data"].map { |m| m["id"] }).not_to include(ai_ml_model.id)
+      end
+
+      it "filters models based on a different query_type" do
+        get "/api/v1/models?query_type=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["data"].map do |m|
+                 m["id"]
+               end).not_to include(raw_sql_model.id, dbt_model.id, soql_model.id)
+      end
+
+      it "returns all models" do
+        get "/api/v1/models", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        model_ids = JSON.parse(response.body)["data"].map { |m| m["id"] }
+        expect(model_ids.count).to eql(6)
       end
     end
   end
@@ -148,7 +185,27 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
-      it "creates a new model and returns success" do
+      it "fails model creation for connector without catalog" do
+        workspace.workspace_users.first.update(role: member_role)
+        # set connector without catalog
+        request_body[:model][:connector_id] = connector_without_catalog.id
+        # rubocop:disable Rails/SkipsModelValidations
+        connector_without_catalog.update_column(:connector_category, "AI Model")
+        # rubocop:enable Rails/SkipsModelValidations
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "shouldn't fail model creation for connector without catalog for data sources" do
+        workspace.workspace_users.first.update(role: member_role)
+        request_body[:model][:connector_id] = connector_without_catalog.id
+        post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:created)
+      end
+
+      it " creates a new model and returns success" do
         workspace.workspace_users.first.update(role: member_role)
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
@@ -174,6 +231,31 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq("table_selector")
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      context "when creating a model with query_type = ai_ml and configuration is present" do
+        let(:request_body) do
+          {
+            model: {
+              connector_id: models.first.connector_id,
+              name: "AI/ML Model",
+              query_type: "ai_ml",
+              primary_key: "id",
+              configuration: { "test" => "value" }
+            }
+          }
+        end
+
+        it "creates the model and returns success" do
+          post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+            .merge(auth_headers(user, workspace_id))
+          expect(response).to have_http_status(:created)
+          response_hash = JSON.parse(response.body).with_indifferent_access
+          expect(response_hash.dig(:data, :id)).to be_present
+          expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+          expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
+          expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+        end
       end
 
       it "returns fail viwer role" do
@@ -226,6 +308,32 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
+      it "fails model update for connector without catalog for ai model" do
+        workspace.workspace_users.first.update(role: member_role)
+        model = models.second
+        model.connector_id = connector_without_catalog.id
+        model.save!
+        # rubocop:disable Rails/SkipsModelValidations
+        connector_without_catalog.update_column(:connector_category, "AI Model")
+        # rubocop:enable Rails/SkipsModelValidations
+
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json,
+                                                  headers: { "Content-Type": "application/json" }
+                                                    .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "shouldn't fail model update for connector without catalog for data connector" do
+        workspace.workspace_users.first.update(role: member_role)
+        model = models.second
+        model.connector_id = connector_without_catalog.id
+        model.save!
+        put "/api/v1/models/#{models.second.id}", params: request_body.to_json,
+                                                  headers: { "Content-Type": "application/json" }
+                                                    .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+      end
+
       it "updates the model and returns success for member role" do
         workspace.workspace_users.first.update(role: member_role)
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
@@ -238,6 +346,31 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+      end
+
+      context "when updating a model with query_type = ai_ml and configuration is present" do
+        let(:request_body) do
+          {
+            model: {
+              connector_id: models.first.connector_id,
+              name: "Updated AI/ML Model",
+              query_type: "ai_ml",
+              primary_key: "updated_id",
+              configuration: { "updated_test" => "value" }
+            }
+          }
+        end
+        it "updates the model and returns success" do
+          put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
+            { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+          expect(response).to have_http_status(:ok)
+          response_hash = JSON.parse(response.body).with_indifferent_access
+          expect(response_hash.dig(:data, :id)).to be_present
+          expect(response_hash.dig(:data, :id)).to eq(models.second.id.to_s)
+          expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+          expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
+          expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+        end
       end
 
       it "returns fail for viewer role" do
