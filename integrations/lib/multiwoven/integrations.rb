@@ -32,6 +32,8 @@ require "duckdb"
 require "iterable-api-client"
 require "aws-sdk-sts"
 require "ruby-oci8"
+require "aws-sdk-sagemaker"
+require "aws-sdk-sagemakerruntime"
 
 # Service
 require_relative "integrations/config"
@@ -62,6 +64,8 @@ require_relative "integrations/source/clickhouse/client"
 require_relative "integrations/source/amazon_s3/client"
 require_relative "integrations/source/maria_db/client"
 require_relative "integrations/source/oracle_db/client"
+require_relative "integrations/source/databrics_model/client"
+require_relative "integrations/source/aws_sagemaker_model/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

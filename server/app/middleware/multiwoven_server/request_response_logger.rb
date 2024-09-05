@@ -25,7 +25,7 @@ module MultiwovenServer
       Rails.logger.info({
         request_method: request.request_method,
         request_url: request.url,
-        request_params: request.parameters,
+        request_params: request.filtered_parameters,
         request_headers: { "Workspace-Id": request.headers["Workspace-Id"] }
       }.to_s)
     end
