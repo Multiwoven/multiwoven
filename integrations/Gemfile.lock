@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
     multiwoven-integrations (0.7.9)
-=======
-    multiwoven-integrations (0.7.2)
->>>>>>> d0d10d4d (chore(CE): add request response log for MariaDB (#350))
       activesupport
       async-websocket
       aws-sdk-athena
