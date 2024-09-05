@@ -156,6 +156,24 @@ RSpec.describe Sync, type: :model do
         )
       end
 
+      it "terminate a sync workflow if sync is disabled and schedule sync workflow if sync is enabled" do
+        sync.disable
+        sync.save(validate: false)
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::TerminateWorkflow,
+          sync.id,
+          options: {
+            workflow_id: "terminate-#{sync.id}"
+          }
+        )
+        sync.enable
+        sync.save(validate: false)
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::ScheduleSyncWorkflow,
+          sync.id
+        )
+      end
+
       it "does not schedule a sync workflow if sync interval does not change" do
         sync.primary_key = "primary_key"
         sync.save

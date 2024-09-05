@@ -20,6 +20,7 @@ class Workspace < ApplicationRecord
   has_many :catalogs, dependent: :nullify
   has_many :syncs, dependent: :nullify
   has_many :sync_runs, dependent: :nullify
+  has_many :data_apps, dependent: :nullify
   belongs_to :organization
 
   STATUS_ACTIVE = "active"
