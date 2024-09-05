@@ -17,7 +17,7 @@ const ModelsList = (): JSX.Element | null => {
   const navigate = useNavigate();
 
   const handleOnRowClick = (row: Row<GetAllModelsResponse>) => {
-    navigate(`/define/models/ai/${row.original.id}`);
+    navigate(`/define/models/${row.original.id}`);
   };
 
   const { data, isLoading } = useQuery({
@@ -37,6 +37,7 @@ const ModelsList = (): JSX.Element | null => {
           ctaIcon={<FiPlus color='gray.100' />}
           ctaButtonVariant='solid'
           onCtaClicked={() => navigate('new')}
+          isCtaVisible
         />
 
         {isLoading ? (
