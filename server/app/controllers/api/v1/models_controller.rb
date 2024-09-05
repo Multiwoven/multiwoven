@@ -81,6 +81,7 @@ module Api
       end
 
       def validate_catalog
+        return unless connector.ai_model?
         return if connector.catalog.present?
 
         render_error(
