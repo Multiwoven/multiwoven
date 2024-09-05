@@ -61,6 +61,18 @@ module Multiwoven
           expect(instance.supported_destination_sync_modes).to eq(["insert"])
           expect(instance.connector_query_type).to eq("soql")
         end
+
+        it "creates an instance from JSON connector_query_type ai_ml" do
+          json_data[:connector_query_type] = "ai_ml"
+          json_data[:stream_type] = "user_defined"
+          instance = ConnectorSpecification.from_json(json_data.to_json)
+          expect(instance).to be_a(ConnectorSpecification)
+          expect(instance.connection_specification).to eq(key: "value")
+          expect(instance.supports_normalization).to eq(true)
+          expect(instance.supported_destination_sync_modes).to eq(["insert"])
+          expect(instance.connector_query_type).to eq("ai_ml")
+          expect(instance.stream_type).to eq("user_defined")
+        end
       end
 
       describe "#to_multiwoven_message" do
@@ -366,23 +378,40 @@ module Multiwoven
           model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "table_selector", primary_key: "id")
           expect(ModelQueryType.values).to include(model.query_type)
         end
+
+        it "has a query_type 'ai_ml'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "ai_ml", primary_key: "id")
+          expect("ai_ml").to include(model.query_type)
+        end
       end
     end
 
     RSpec.describe Connector do
       context ".from_json" do
-        it "creates an instance from JSON" do
-          json_data =  {
-            "name": "example_connector",
-            "type": "source",
-            "connection_specification": { "key": "value" }
-          }.to_json
+        json_data = {
+          "name": "example_connector",
+          "type": "source",
+          "connection_specification": { "key": "value" },
+          "query_type": "raw_sql"
+        }
 
-          connector = Connector.from_json(json_data)
+        it "creates an instance from JSON" do
+          connector = Connector.from_json(json_data.to_json)
           expect(connector).to be_a(described_class)
           expect(connector.name).to eq("example_connector")
           expect(connector.type).to eq("source")
           expect(connector.query_type).to eq("raw_sql")
+          expect(connector.connection_specification).to eq(key: "value")
+        end
+
+        it "creates an instance from JSON connector_query_type ai_ml" do
+          json_data[:query_type] = "ai_ml"
+
+          connector = Connector.from_json(json_data.to_json)
+          expect(connector).to be_a(described_class)
+          expect(connector.name).to eq("example_connector")
+          expect(connector.type).to eq("source")
+          expect(connector.query_type).to eq("ai_ml")
           expect(connector.connection_specification).to eq(key: "value")
         end
       end

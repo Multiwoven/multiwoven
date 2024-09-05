@@ -8,7 +8,7 @@ export const useErrorToast = () => {
 
   const showErrorToast = useCallback(
     (message: string, isError: boolean, data: any, isFetched: boolean) => {
-      if (isError || (!data && isFetched)) {
+      if (isError && !data && isFetched) {
         showToast({
           status: CustomToastStatus.Warning,
           title: message,

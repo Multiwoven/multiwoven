@@ -1,6 +1,6 @@
 import { Box, Flex, Stack, Text, Divider } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
-import IconImage from '../../assets/images/multiwoven-logo.svg';
+import IconImage from '@/assets/images/multiwoven-logo.svg';
 import {
   FiSettings,
   FiDatabase,
@@ -14,8 +14,6 @@ import {
 import { NavButton } from './navButton';
 import Profile from './Profile';
 import Workspace from './Workspace/Workspace';
-
-import { useConfigStore } from '@/stores/useConfigStore';
 
 type MenuItem = {
   title: string;
@@ -76,7 +74,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
     )}
     <Stack spacing='0'>
       {section.menu.map((menuItem, idx) => (
-        <NavLink to={menuItem.link} key={`${index}-${idx}`}>
+        <NavLink to={menuItem.disabled ? '' : menuItem.link} key={`${index}-${idx}`}>
           {({ isActive }) => (
             <NavButton
               label={menuItem.title}
@@ -107,7 +105,6 @@ const SideBarFooter = () => (
 );
 
 const Sidebar = (): JSX.Element => {
-  const { logoUrl } = useConfigStore.getState().configs;
   return (
     <Flex
       position='relative'
@@ -122,7 +119,7 @@ const Sidebar = (): JSX.Element => {
         <Stack justify='space-between' spacing='1' width='full'>
           <Stack spacing='6' shouldWrapChildren>
             <Flex justifyContent='center'>
-              <img width={160} src={logoUrl ? logoUrl : IconImage} alt='IconImage' />
+              <img width={160} src={IconImage} alt='IconImage' />
             </Flex>
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />

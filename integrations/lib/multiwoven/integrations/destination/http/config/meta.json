@@ -3,7 +3,7 @@
     "name": "Http",
     "title": "http",
     "connector_type": "destination",
-    "category": "Http",
+    "category": "HTTP",
     "documentation_url": "https://docs.multiwoven.com/destinations/http",
     "github_issue_label": "destination-http",
     "icon": "icon.svg",

@@ -20,6 +20,8 @@ module Multiwoven
       AmazonS3
       MariaDB
       Oracle
+      DatabricksModel
+      AwsSagemakerModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -40,6 +42,7 @@ module Multiwoven
       MariaDB
       DatabricksLakehouse
       Oracle
+      MicrosoftExcel
     ].freeze
   end
 end

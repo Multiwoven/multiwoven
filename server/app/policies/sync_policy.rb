@@ -24,4 +24,8 @@ class SyncPolicy < ApplicationPolicy
   def configurations?
     permitted?(:read, :sync)
   end
+
+  def enable?
+    permitted?(:update, :sync)
+  end
 end

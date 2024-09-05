@@ -67,7 +67,11 @@ gem "mysql2"
 
 gem "aws-sdk-sts"
 
-gem "ruby-oci8"
+gem "ruby-oci8", "~> 2.2.12"
+
+gem "aws-sdk-sagemaker"
+
+gem "aws-sdk-sagemakerruntime"
 
 group :development, :test do
   gem "simplecov", require: false
