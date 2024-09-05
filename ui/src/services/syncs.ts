@@ -59,10 +59,14 @@ export const getSyncRecords = (
   syncId: string,
   runId: string,
   page: string = '1',
+  isFiltered: boolean = false,
+  status: string = 'success',
 ): Promise<ApiResponse<Array<SyncRecordResponse>>> =>
   multiwovenFetch<null, ApiResponse<Array<SyncRecordResponse>>>({
     method: 'get',
-    url: `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10`,
+    url: isFiltered
+      ? `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10&status=${status}`
+      : `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10`,
   });
 
 export const editSync = (
