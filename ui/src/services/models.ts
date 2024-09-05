@@ -24,16 +24,7 @@ export type Field = {
   [key: string]: string | number | null;
 };
 
-export type ModelPreviewResponse =
-  | { errors?: ErrorResponse[] }
-  | Field[]
-  | {
-      errors?: {
-        detail: string;
-        status: number;
-        title: string;
-      }[];
-    };
+export type ModelPreviewResponse = { errors?: ErrorResponse[] } | Field[];
 
 export type ModelAttributes = {
   updated_at: string;

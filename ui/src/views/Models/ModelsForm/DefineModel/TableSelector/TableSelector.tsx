@@ -14,7 +14,6 @@ import ListTables from './ListTables';
 import { Field, getModelPreviewById, putModelById } from '@/services/models';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast/index';
-import titleCase from '@/utils/TitleCase';
 import { TableDataType } from '@/components/Table/types';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
@@ -23,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { QueryType } from '@/views/Models/types';
 import ViewSQLModal from './ViewSQLModal';
 import SearchBar from '@/components/SearchBar/SearchBar';
+import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 
 const generateQuery = (table: string) => `SELECT * FROM ${table}`;
 
@@ -46,6 +46,8 @@ const TableSelector = ({
   const navigate = useNavigate();
 
   const showToast = useCustomToast();
+  const apiErrorsToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
 
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
@@ -99,7 +101,9 @@ const TableSelector = ({
     };
 
     const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
-    if (modelUpdateResponse.data) {
+    if (modelUpdateResponse.errors) {
+      apiErrorsToast(modelUpdateResponse.errors);
+    } else {
       showToast({
         title: 'Model updated successfully',
         status: CustomToastStatus.Success,
@@ -108,38 +112,27 @@ const TableSelector = ({
         position: 'bottom-right',
       });
       navigate('/define/models/' + prefillValues?.model_id || '');
-    } else {
-      modelUpdateResponse.errors?.forEach((error) => {
-        showToast({
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
-        });
-      });
     }
   }
 
   const getPreview = async () => {
     setLoadingPreviewData(true);
 
-    const response = await getModelPreviewById(userQuery, connector_id?.toString());
-    if ('errors' in response) {
-      response.errors?.forEach((error) => {
-        showToast({
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
-        });
-      });
-      setLoadingPreviewData(false);
-    } else {
-      setTableData(ConvertModelPreviewToTableData(response as Field[]));
+    try {
+      const response = await getModelPreviewById(userQuery, connector_id?.toString());
+      if ('errors' in response) {
+        if (response.errors) {
+          apiErrorsToast(response.errors);
+        } else {
+          errorToast('Error fetching preview data', true, null, true);
+        }
+        setLoadingPreviewData(false);
+      } else {
+        setTableData(ConvertModelPreviewToTableData(response as Field[]));
+        setLoadingPreviewData(false);
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
       setLoadingPreviewData(false);
     }
   };
