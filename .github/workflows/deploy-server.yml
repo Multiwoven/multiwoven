@@ -1,0 +1,56 @@
+name: Deploy Server
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["server-docker-build (AMD)"]
+    branches: ["main"]
+    types:
+      - completed
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE_NAME: multiwoven/multiwoven-server
+
+jobs:
+  deploy:
+    environment: community
+    runs-on: self-hosted
+    steps:
+      - uses: azure/setup-helm@v4.2.0
+        with:
+          version: 'latest'
+        id: install
+
+      - name: Azure Login
+        uses: Azure/login@v2.1.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.1.3'
+
+      - name: Gets K8s context
+        uses: azure/aks-set-context@v3
+        with:
+            resource-group: ${{ vars.RESOURCE_GROUP }}
+            cluster-name: ${{ vars.CLUSTER_NAME }}
+            admin: 'false'
+            use-kubelogin: 'true'
+
+      - name: Deploy server
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          helm repo add multiwoven https://multiwoven.github.io/helm-charts
+          helm upgrade -i --reuse-values multiwoven multiwoven/multiwoven \
+            --set multiwovenConfig.appRevision=$IMAGE_TAG \
+            --set multiwovenServer.multiwovenServer.image.repository=$IMAGE_NAME \
+            --set multiwovenServer.multiwovenServer.image.tag=$IMAGE_TAG \
+            --set multiwovenWorker.multiwovenWorker.image.repository=$IMAGE_NAME \
+            --set multiwovenWorker.multiwovenWorker.image.tag=$IMAGE_TAG
