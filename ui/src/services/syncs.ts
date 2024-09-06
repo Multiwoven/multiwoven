@@ -5,19 +5,16 @@ import {
   SyncRecordResponse,
   SyncsConfigurationForTemplateMapping,
   SyncRunsResponse,
-<<<<<<< HEAD
-=======
   TriggerManualSyncPayload,
   ChangeSyncStatusPayload,
->>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)
 } from '@/views/Activate/Syncs/types';
-import { multiwovenFetch, ApiResponse } from './common';
+import { multiwovenFetch, ApiResponse, APIRequestMethod } from './common';
 
 export const getCatalog = (
   connectorId: string,
   refresh: boolean = false,
-): Promise<DiscoverResponse> =>
-  multiwovenFetch<null, DiscoverResponse>({
+): Promise<ApiResponse<DiscoverResponse>> =>
+  multiwovenFetch<null, ApiResponse<DiscoverResponse>>({
     method: 'get',
     url: `/connectors/${connectorId}/discover?refresh=${refresh}`,
   });
@@ -94,8 +91,6 @@ export const getSyncsConfiguration = (): Promise<SyncsConfigurationForTemplateMa
     method: 'get',
     url: `/syncs/configurations`,
   });
-<<<<<<< HEAD
-=======
 
 export const triggerManualSync = (
   payload: TriggerManualSyncPayload,
@@ -113,12 +108,6 @@ export const cancelManualSyncSchedule = (id: string): Promise<ApiResponse<Create
     url: `/schedule_syncs/${id}`,
   });
 
-export const testSync = (id: string): Promise<ApiResponse<MessageResponse>> =>
-  enterpriseMultiwovenFetch<string, ApiResponse<MessageResponse>>({
-    method: 'post',
-    url: `/syncs/${id}/test`,
-  });
-
 export const changeSyncStatus = (
   id: string,
   payload: ChangeSyncStatusPayload,
@@ -128,4 +117,3 @@ export const changeSyncStatus = (
     url: `/syncs/${id}/enable`,
     data: payload,
   });
->>>>>>> 38bcb066 (feat(CE): Enable and Disable sync via UI)

@@ -1,22 +1,24 @@
 import { AlertData } from '../commonTypes';
-import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Box, AlertDescription } from '@chakra-ui/react';
 
-export const alertMessage: AlertData = {
-  status: undefined,
-  description: [''],
+type AlertBoxProps = {
+  title: string;
+  description: string;
+  status: AlertData['status'];
 };
 
-function AlertPopUp({ status, description }: AlertData) {
-  return (
-    <>
-      {description.map((desc, index) => (
-        <Alert status={status} marginBottom={5} width='fit' rounded='md' key={index}>
-          <AlertIcon />
-          <AlertDescription>{desc}</AlertDescription>
-        </Alert>
-      ))}
-    </>
-  );
-}
+const AlertBox = ({ title, description, status }: AlertBoxProps) => (
+  <Alert status={status} borderRadius='8px' paddingX='16px' paddingY='12px'>
+    <AlertIcon />
+    <Box>
+      <AlertTitle fontSize='14px' fontWeight='semibold' letterSpacing='-0.14px'>
+        {title}
+      </AlertTitle>
+      <AlertDescription color='black.200' fontSize='12px' fontWeight={400} letterSpacing='-0.14px'>
+        {description}
+      </AlertDescription>
+    </Box>
+  </Alert>
+);
 
-export default AlertPopUp;
+export default AlertBox;
