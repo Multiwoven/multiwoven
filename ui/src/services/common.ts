@@ -1,5 +1,7 @@
 export * from '@/services/axios';
 
+export type APIRequestMethod = 'get' | 'post' | 'put' | 'delete';
+
 type LinksType = {
   first: string;
   last: string;

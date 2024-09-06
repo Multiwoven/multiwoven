@@ -53,11 +53,13 @@ const SourcesList = (): JSX.Element | null => {
           ctaButtonVariant='solid'
           isCtaVisible
         />
-        <DataTable
-          data={data?.data}
-          columns={ConnectorsListColumns}
-          onRowClick={(row) => navigate(`/setup/sources/${row?.original?.id}`)}
-        />
+        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+          <DataTable
+            data={data?.data}
+            columns={ConnectorsListColumns}
+            onRowClick={(row) => navigate(`/setup/sources/${row?.original?.id}`)}
+          />
+        </Box>
       </ContentContainer>
     </Box>
   );

@@ -1,11 +1,19 @@
 import { ModelEntity } from '@/views/Models/types';
 import { RJSFSchema } from '@rjsf/utils';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
+import { APIRequestMethod } from '@/services/common';
 
 export type Stream = {
   action: string;
   name: string;
   json_schema: RJSFSchema;
+  url: string;
+  supported_sync_modes: string[];
+};
+
+export type AIStream = {
+  action: string;
+  name: string;
   url: string;
   supported_sync_modes: string[];
 };
@@ -21,19 +29,25 @@ export enum SyncRecordStatus {
 }
 
 export type DiscoverResponse = {
-  data: {
-    attributes: {
-      catalog: {
-        streams: Stream[];
-        schema_mode: SchemaMode;
-        catalog_hash: string;
-        connector_id: number;
-        workspace_id: number;
-        source_defined_cursor: boolean;
-      };
+  attributes: {
+    catalog: {
+      streams: Stream[];
+      schema_mode: SchemaMode;
+      catalog_hash: string;
+      connector_id: number;
+      workspace_id: number;
+      source_defined_cursor: boolean;
     };
-    id: string;
-    type: 'catalogs';
+  };
+  id: string;
+};
+
+export type AICatalog = {
+  id: string;
+  attributes: {
+    catalog: {
+      streams: AIStream[];
+    };
   };
 };
 
@@ -77,6 +91,12 @@ export interface SyncEntity extends ConfigSync {
 
 export type CreateSyncPayload = {
   sync: SyncEntity;
+};
+
+export type TriggerManualSyncPayload = {
+  schedule_sync: {
+    sync_id: number;
+  };
 };
 
 export type ErrorResponse = {
@@ -191,3 +211,11 @@ export type SyncRecordResponse = {
     updated_at: string;
   };
 };
+
+export type TriggerSyncButtonProps = {
+  isSubmitting: boolean;
+  showCancelSync: boolean;
+  onClick: (method: APIRequestMethod) => void;
+};
+
+export type ChangeSyncStatusPayload = { enable: boolean };

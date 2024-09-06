@@ -60,6 +60,7 @@ const DestinationsList = (): JSX.Element | null => {
           ctaButtonVariant='solid'
           ctaButtonWidth='fit'
           ctaButtonHeight='40px'
+          isCtaVisible
         />
         <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
           <DataTable

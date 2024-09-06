@@ -1,8 +1,7 @@
 import { Box } from '@chakra-ui/react';
-import { SYNCS_LIST_QUERY_KEY } from '@/views/Activate/Syncs/constants';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { editSync, getCatalog, getSyncById } from '@/services/syncs';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getCatalog } from '@/services/syncs';
 import Loader from '@/components/Loader';
 import React, { useEffect, useState } from 'react';
 import SelectStreams from '@/views/Activate/Syncs/SyncForm/ConfigureSyncs/SelectStreams';
@@ -10,13 +9,12 @@ import MapFields from '../SyncForm/ConfigureSyncs/MapFields';
 import { getConnectorInfo } from '@/services/connectors';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
-
 import {
-  CreateSyncPayload,
   DiscoverResponse,
   FinalizeSyncFormFields,
   SchemaMode,
   Stream,
+  TriggerSyncButtonProps,
 } from '@/views/Activate/Syncs/types';
 import ScheduleForm from './ScheduleForm';
 import { FormikProps, useFormik } from 'formik';
@@ -24,33 +22,56 @@ import FormFooter from '@/components/FormFooter';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
 import { useStore } from '@/stores';
-import titleCase from '@/utils/TitleCase';
+import BaseButton from '@/components/BaseButton';
+import { FiRefreshCcw } from 'react-icons/fi';
+import AlertBox from '@/components/Alerts/Alerts';
+import useEditSync from '@/hooks/syncs/useEditSync';
+import useManualSync from '@/hooks/syncs/useManualSync';
+import useSyncRuns from '@/hooks/syncs/useSyncRuns';
+import { APIRequestMethod } from '@/services/common';
+import { useAPIErrorsToast } from '@/hooks/useErrorToast';
+import useGetSyncById from '@/hooks/syncs/useGetSyncById';
+
+const SYNC_STATUS = ['pending', 'started', 'querying', 'queued', 'in_progress'];
+
+const RenderTriggerSyncButton = ({
+  isSubmitting,
+  showCancelSync,
+  onClick,
+}: TriggerSyncButtonProps) => (
+  <Box marginRight='12px'>
+    <BaseButton
+      variant='shell'
+      leftIcon={<FiRefreshCcw color='black.500' />}
+      text={showCancelSync ? 'Cancel Run' : 'Run Now'}
+      color='black.500'
+      onClick={() => onClick(showCancelSync ? 'delete' : 'post')}
+      isLoading={isSubmitting}
+    />
+  </Box>
+);
 
 const EditSync = (): JSX.Element | null => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
-  const [selectedSyncMode, setSelectedSyncMode] = useState('');
-  const [cursorField, setCursorField] = useState('');
   const activeWorkspaceId = useStore((state) => state.workspaceId);
   const [refresh, setRefresh] = useState(false);
 
+  const showAPIErrorsToast = useAPIErrorsToast();
+
   const { syncId } = useParams();
   const showToast = useCustomToast();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
+  const { isSubmitting, runSyncNow, showCancelSync, setShowCancelSync } = useManualSync(
+    syncId as string,
+  );
 
   const {
     data: syncFetchResponse,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['sync', syncId, activeWorkspaceId],
-    queryFn: () => getSyncById(syncId as string),
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    enabled: !!syncId && activeWorkspaceId > 0,
-  });
+  } = useGetSyncById(syncId as string, activeWorkspaceId);
 
   const syncData = syncFetchResponse?.data?.attributes;
 
@@ -70,6 +91,19 @@ const EditSync = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: syncRuns } = useSyncRuns(syncId as string, 1, activeWorkspaceId);
+  const syncList = syncRuns?.data;
+
+  const { handleSubmit, selectedSyncMode, setSelectedSyncMode, cursorField, setCursorField } =
+    useEditSync(
+      configuration,
+      setIsEditLoading,
+      syncData,
+      destinationFetchResponse?.data.id,
+      syncData?.model?.id,
+      syncData?.source?.id,
+    );
+
   const formik: FormikProps<FinalizeSyncFormFields> = useFormik({
     initialValues: {
       sync_mode: 'full_refresh',
@@ -78,76 +112,27 @@ const EditSync = (): JSX.Element | null => {
       schedule_type: 'interval',
       cron_expression: '',
     },
-    onSubmit: async (data) => {
-      setIsEditLoading(true);
-      try {
-        if (
-          destinationFetchResponse?.data.id &&
-          syncData?.model.id &&
-          syncData?.source.id &&
-          configuration
-        ) {
-          const payload: CreateSyncPayload = {
-            sync: {
-              configuration,
-              destination_id: destinationFetchResponse?.data.id,
-              model_id: syncData?.model.id,
-              schedule_type: data.schedule_type,
-              source_id: syncData?.source.id,
-              stream_name: syncData?.stream_name,
-              sync_interval: data.sync_interval,
-              sync_interval_unit: data.sync_interval_unit,
-              sync_mode: selectedSyncMode,
-              cursor_field: cursorField,
-              cron_expression: data?.cron_expression,
-            },
-          };
-
-          const editSyncResponse = await editSync(payload, syncId as string);
-          if (editSyncResponse?.data?.attributes) {
-            showToast({
-              title: 'Sync updated successfully',
-              status: CustomToastStatus.Success,
-              duration: 3000,
-              isClosable: true,
-              position: 'bottom-right',
-            });
-
-            queryClient.removeQueries({
-              queryKey: SYNCS_LIST_QUERY_KEY,
-            });
-
-            navigate('/activate/syncs');
-            return;
-          } else {
-            editSyncResponse.errors?.forEach((error) => {
-              showToast({
-                duration: 5000,
-                isClosable: true,
-                position: 'bottom-right',
-                colorScheme: 'red',
-                status: CustomToastStatus.Warning,
-                title: titleCase(error.detail),
-              });
-            });
-          }
-        }
-      } catch {
-        showToast({
-          status: CustomToastStatus.Error,
-          title: 'Error!!',
-          description: 'Something went wrong while editing the sync',
-          position: 'bottom-right',
-          isClosable: true,
-        });
-      } finally {
-        setIsEditLoading(false);
-      }
-    },
+    onSubmit: (data) => handleSubmit(data, syncId as string),
   });
 
   const handleRefreshCatalog = () => {
     setRefresh(true);
+  };
+
+  const handleOnStreamsLoad = (catalog: DiscoverResponse) => {
+    const { streams } = catalog.attributes.catalog;
+    const selectedStream = streams.find(({ name }) => name === syncData?.stream_name);
+    if (selectedStream) {
+      setSelectedStream(selectedStream);
+    }
+  };
+
+  const handleOnConfigChange = (config: FieldMapType[]) => {
+    setConfiguration(config);
+  };
+
+  const handleManualSyncTrigger = async (triggerMethod: APIRequestMethod) => {
+    await runSyncNow(triggerMethod);
   };
 
   useEffect(() => {
@@ -198,23 +183,24 @@ const EditSync = (): JSX.Element | null => {
     }
   }, [syncFetchResponse]);
 
-  const handleOnStreamsLoad = (catalog: DiscoverResponse) => {
-    const { streams } = catalog.data.attributes.catalog;
-    const selectedStream = streams.find(({ name }) => name === syncData?.stream_name);
-    if (selectedStream) {
-      setSelectedStream(selectedStream);
-    }
-  };
-
-  const handleOnConfigChange = (config: FieldMapType[]) => {
-    setConfiguration(config);
-  };
-
   useEffect(() => {
-    if (catalogData) {
-      handleOnStreamsLoad(catalogData);
+    if (catalogData?.errors && catalogData?.errors?.length > 0) {
+      showAPIErrorsToast(catalogData?.errors);
+    } else {
+      if (catalogData?.data) {
+        handleOnStreamsLoad(catalogData?.data);
+      }
     }
   }, [catalogData]);
+
+  useEffect(() => {
+    if (syncList && syncList.length > 0) {
+      const latestSyncStatus = syncList[0]?.attributes?.status;
+      if (SYNC_STATUS.includes(latestSyncStatus)) {
+        setShowCancelSync(true);
+      }
+    }
+  }, [syncList]);
 
   const streams = catalogData?.data?.attributes?.catalog?.streams || [];
 
@@ -237,7 +223,7 @@ const EditSync = (): JSX.Element | null => {
                 setCursorField={setCursorField}
                 streams={streams}
               />
-              {catalogData?.data.attributes.catalog.schema_mode === SchemaMode.schemaless ? (
+              {catalogData?.data?.attributes?.catalog?.schema_mode === SchemaMode.schemaless ? (
                 <MapCustomFields
                   model={syncData?.model}
                   destination={destinationFetchResponse?.data}
@@ -262,6 +248,15 @@ const EditSync = (): JSX.Element | null => {
             </>
 
             <ScheduleForm formik={formik} isEdit />
+            {formik.values.schedule_type === 'manual' && (
+              <Box marginTop='20px' marginBottom='100px'>
+                <AlertBox
+                  title='Trigger syncs using API keys'
+                  description='You can also trigger this sync using Airflow, Dagster, or Prefect. If you need an API key, please create one in the Settings page.'
+                  status='info'
+                />
+              </Box>
+            )}
           </React.Fragment>
         ) : null}
         <FormFooter
@@ -271,9 +266,20 @@ const EditSync = (): JSX.Element | null => {
           isAlignToContentContainer
           isDocumentsSectionRequired
           isContinueCtaRequired
-          isBackRequired
+          isBackRequired={formik.values.schedule_type !== 'manual'}
           navigateToListScreen
           listScreenUrl='/activate/syncs'
+          extra={
+            formik.values.schedule_type === 'manual' ? (
+              <RenderTriggerSyncButton
+                isSubmitting={isSubmitting}
+                showCancelSync={showCancelSync}
+                onClick={handleManualSyncTrigger}
+              />
+            ) : (
+              <></>
+            )
+          }
         />
       </Box>
     </form>

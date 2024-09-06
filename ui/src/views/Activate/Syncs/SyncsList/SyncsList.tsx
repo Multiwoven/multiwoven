@@ -1,62 +1,24 @@
 import ContentContainer from '@/components/ContentContainer';
 import TopBar from '@/components/TopBar';
 import { fetchSyncs } from '@/services/syncs';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { SYNCS_LIST_QUERY_KEY, SYNC_TABLE_COLUMS } from '../constants';
-import EntityItem from '@/components/EntityItem';
-import Table from '@/components/Table';
+import { SYNCS_LIST_QUERY_KEY } from '../constants';
+
 import Loader from '@/components/Loader';
-import moment from 'moment';
 import NoActivations, { ActivationType } from '../../NoSyncs/NoSyncs';
-import StatusTag from '@/components/StatusTag';
-import { ErrorResponse, CreateSyncResponse, SyncColumnFields } from '@/views/Activate/Syncs/types';
+import { CreateSyncResponse } from '@/views/Activate/Syncs/types';
 import { useStore } from '@/stores';
-
-type TableItem = {
-  field: SyncColumnFields;
-  data: CreateSyncResponse;
-};
-
-const TableItem = ({ field, data }: TableItem): JSX.Element => {
-  switch (field) {
-    case 'name':
-      return (
-        <Text size='sm' fontWeight={600} color='black.500'>
-          {data.attributes.name}
-        </Text>
-      );
-    case 'model':
-      return (
-        <EntityItem
-          icon={data.attributes.model.connector.icon}
-          name={data.attributes.model.connector.name}
-        />
-      );
-
-    case 'destination':
-      return (
-        <EntityItem
-          icon={data.attributes.destination.icon}
-          name={data.attributes.destination.connector_name}
-        />
-      );
-
-    case 'lastUpdated':
-      return <Text>{moment(data.attributes.updated_at).format('DD/MM/YYYY')}</Text>;
-
-    case 'status':
-      return <StatusTag status='Active' />;
-  }
-};
+import DataTable from '@/components/DataTable';
+import { SyncsListColumns } from './SyncsListColumns';
+import { Row } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 
 const SyncsList = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
-
   const navigate = useNavigate();
+
   const { data, isLoading } = useQuery({
     queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId],
     queryFn: () => fetchSyncs(),
@@ -67,40 +29,13 @@ const SyncsList = (): JSX.Element => {
 
   const syncList = data?.data;
 
-  const tableData = useMemo(() => {
-    if ((syncList as ErrorResponse)?.errors?.length > 0) {
-      return {
-        error: (syncList as ErrorResponse).errors[0]?.detail,
-        columns: [],
-        data: [],
-      };
-    }
-
-    const rows = ((syncList as CreateSyncResponse[]) ?? [])?.map((data) => {
-      return SYNC_TABLE_COLUMS.reduce(
-        (acc, { key }) => ({
-          [key]: <TableItem field={key} data={data} />,
-          id: data.id,
-          ...acc,
-        }),
-        {},
-      );
-    });
-
-    return {
-      columns: SYNC_TABLE_COLUMS,
-      data: rows,
-      error: '',
-    };
-  }, [data]);
-
-  const handleOnSyncClick = (row: Record<'id', string>) => {
-    navigate(`${row.id}`);
+  const handleOnSyncClick = (row: Row<CreateSyncResponse>) => {
+    navigate(`${row.original.id}`);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading || !syncList) return <Loader />;
 
-  if (!isLoading && tableData.data?.length === 0)
+  if (!isLoading && syncList.length === 0)
     return <NoActivations activationType={ActivationType.Sync} />;
 
   return (
@@ -122,11 +57,9 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor='orange.400'
           isCtaVisible
         />
-        {!syncList && isLoading ? (
-          <Loader />
-        ) : (
-          <Table data={tableData} onRowClick={handleOnSyncClick} />
-        )}
+        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+          <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
+        </Box>
       </ContentContainer>
     </Box>
   );

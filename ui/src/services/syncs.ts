@@ -2,18 +2,19 @@ import {
   CreateSyncPayload,
   CreateSyncResponse,
   DiscoverResponse,
-  ErrorResponse,
   SyncRecordResponse,
   SyncsConfigurationForTemplateMapping,
   SyncRunsResponse,
+  TriggerManualSyncPayload,
+  ChangeSyncStatusPayload,
 } from '@/views/Activate/Syncs/types';
-import { multiwovenFetch, ApiResponse } from './common';
+import { multiwovenFetch, ApiResponse, APIRequestMethod } from './common';
 
 export const getCatalog = (
   connectorId: string,
   refresh: boolean = false,
-): Promise<DiscoverResponse> =>
-  multiwovenFetch<null, DiscoverResponse>({
+): Promise<ApiResponse<DiscoverResponse>> =>
+  multiwovenFetch<null, ApiResponse<DiscoverResponse>>({
     method: 'get',
     url: `/connectors/${connectorId}/discover?refresh=${refresh}`,
   });
@@ -25,7 +26,7 @@ export const createSync = (payload: CreateSyncPayload): Promise<ApiResponse<Crea
     data: payload,
   });
 
-export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[] | ErrorResponse>> =>
+export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[]>> =>
   multiwovenFetch<null, ApiResponse<CreateSyncResponse[]>>({
     method: 'get',
     url: `/syncs`,
@@ -89,4 +90,30 @@ export const getSyncsConfiguration = (): Promise<SyncsConfigurationForTemplateMa
   multiwovenFetch<null, SyncsConfigurationForTemplateMapping>({
     method: 'get',
     url: `/syncs/configurations`,
+  });
+
+export const triggerManualSync = (
+  payload: TriggerManualSyncPayload,
+  method: APIRequestMethod,
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<TriggerManualSyncPayload, ApiResponse<CreateSyncResponse>>({
+    method,
+    url: '/schedule_syncs',
+    data: payload,
+  });
+
+export const cancelManualSyncSchedule = (id: string): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<null, ApiResponse<CreateSyncResponse>>({
+    method: 'delete',
+    url: `/schedule_syncs/${id}`,
+  });
+
+export const changeSyncStatus = (
+  id: string,
+  payload: ChangeSyncStatusPayload,
+): Promise<ApiResponse<CreateSyncResponse>> =>
+  multiwovenFetch<ChangeSyncStatusPayload, ApiResponse<CreateSyncResponse>>({
+    method: 'patch',
+    url: `/syncs/${id}/enable`,
+    data: payload,
   });
