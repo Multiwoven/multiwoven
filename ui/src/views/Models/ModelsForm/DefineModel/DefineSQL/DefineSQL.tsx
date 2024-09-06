@@ -4,7 +4,7 @@ import StarsImage from '@/assets/images/stars.svg';
 
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Field, getModelPreviewById, putModelById } from '@/services/models';
+import { getModelPreviewById, putModelById } from '@/services/models';
 import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
 import { TableDataType } from '@/components/Table/types';
@@ -19,8 +19,8 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
 import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
-import titleCase from '@/utils/TitleCase';
 import ModelQueryResults from '../ModelQueryResults';
+import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -36,6 +36,9 @@ const DefineSQL = ({
   const [userQuery, setUserQuery] = useState(prefillValues?.query || '');
 
   const showToast = useCustomToast();
+  const apiErrorsToast = useAPIErrorsToast();
+  const errorToast = useErrorToast();
+
   const navigate = useNavigate();
   const editorRef = useRef<any>(null);
   const monaco = useMonaco();
@@ -78,22 +81,35 @@ const DefineSQL = ({
   async function getPreview() {
     setLoading(true);
     const query = editorRef.current?.getValue() as string;
-    const response = await getModelPreviewById(query, connector_id?.toString());
-    if ('errors' in response) {
-      response.errors?.forEach((error) => {
-        showToast({
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
-        });
-      });
-      setLoading(false);
-    } else {
-      setTableData(ConvertModelPreviewToTableData(response as Field[]));
-      canMoveForward(true);
+    try {
+      const response = await getModelPreviewById(query, connector_id?.toString());
+      if (response.errors) {
+        if (response.errors) {
+          apiErrorsToast(response.errors);
+        } else {
+          errorToast('Error fetching preview data', true, null, true);
+        }
+        setLoading(false);
+      } else {
+        if (response.data && response.data.length > 0) {
+          setTableData(ConvertModelPreviewToTableData(response.data));
+          setLoading(false);
+          canMoveForward(true);
+        } else {
+          showToast({
+            title: 'No data found',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          setTableData(null);
+          setLoading(false);
+          canMoveForward(false);
+        }
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
       setLoading(false);
     }
   }
@@ -111,27 +127,25 @@ const DefineSQL = ({
       },
     };
 
-    const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
-    if (modelUpdateResponse.data) {
-      showToast({
-        title: 'Model updated successfully',
-        status: CustomToastStatus.Success,
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
-      navigate('/define/models/' + prefillValues?.model_id || '');
-    } else {
-      modelUpdateResponse.errors?.forEach((error) => {
+    try {
+      const modelUpdateResponse = await putModelById(prefillValues?.model_id || '', updatePayload);
+      if (modelUpdateResponse.errors) {
+        apiErrorsToast(modelUpdateResponse.errors);
+        setLoading(false);
+      } else {
         showToast({
-          duration: 5000,
+          title: 'Model updated successfully',
+          status: CustomToastStatus.Success,
+          duration: 3000,
           isClosable: true,
           position: 'bottom-right',
-          colorScheme: 'red',
-          status: CustomToastStatus.Warning,
-          title: titleCase(error.detail),
         });
-      });
+        navigate('/define/models/' + prefillValues?.model_id || '');
+        setLoading(false);
+      }
+    } catch (error) {
+      errorToast('Error fetching preview data', true, null, true);
+      setLoading(false);
     }
   }
 

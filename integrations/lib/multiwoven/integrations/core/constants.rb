@@ -50,9 +50,6 @@ module Multiwoven
       DATABRICKS_HEALTH_URL  = "https://%<databricks_host>s/api/2.0/serving-endpoints/%<endpoint_name>s"
       DATABRICKS_SERVING_URL = "https://%<databricks_host>s/serving-endpoints/%<endpoint_name>s/invocations"
 
-      AWS_ACCESS_KEY_ID = ENV["AWS_ACCESS_KEY_ID"]
-      AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
-
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"

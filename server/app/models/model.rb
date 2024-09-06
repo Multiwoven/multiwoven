@@ -29,6 +29,10 @@ class Model < ApplicationRecord
   belongs_to :connector
 
   has_many :syncs, dependent: :destroy
+  has_many :visual_components, dependent: :destroy
+
+  scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector]) }
+  scope :ai_ml, -> { where(query_type: :ai_ml) }
 
   default_scope { order(updated_at: :desc) }
   def to_protocol

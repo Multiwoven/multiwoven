@@ -22,6 +22,7 @@ RSpec.describe Model, type: :model do
     it { should belong_to(:workspace) }
     it { should belong_to(:connector) }
     it { should have_many(:syncs).dependent(:destroy) }
+    it { should have_many(:visual_components).dependent(:destroy) }
   end
 
   describe "validations" do
@@ -128,6 +129,31 @@ RSpec.describe Model, type: :model do
   describe "query_type" do
     it "defines query_type enum with specified values" do
       expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2, "table_selector" => 3, "ai_ml" => 4 })
+    end
+  end
+
+  describe "scopes" do
+    let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
+    let!(:raw_sql_model) { create(:model, query_type: :raw_sql, connector: source) }
+    let!(:dbt_model) { create(:model, query_type: :dbt, connector: source) }
+    let!(:soql_model) { create(:model, query_type: :soql, connector: source) }
+    let!(:table_selector_model) { create(:model, query_type: :table_selector, connector: source) }
+    let!(:ai_ml_model) { create(:model, query_type: :ai_ml, connector: source, configuration: { test: "value" }) }
+
+    describe ".data" do
+      it "returns models with query_type in [raw_sql, dbt, soql, table_selector]" do
+        data_models = Model.data
+        expect(data_models).to include(raw_sql_model, dbt_model, soql_model, table_selector_model)
+        expect(data_models).not_to include(ai_ml_model)
+      end
+    end
+
+    describe ".ai_ml" do
+      it "returns models with query_type equal to ai_ml" do
+        ai_ml_models = Model.ai_ml
+        expect(ai_ml_models).to include(ai_ml_model)
+        expect(ai_ml_models).not_to include(raw_sql_model, dbt_model, soql_model, table_selector_model)
+      end
     end
   end
 end
