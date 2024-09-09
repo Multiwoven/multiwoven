@@ -107,7 +107,7 @@ const ConnectorConnectionTest = ({
                 >
                   {isConnectionFailed
                     ? connectionResponse?.connection_status.message
-                    : `All tests passed. Continue to finish setting up your ${selectedConnector} Source`}
+                    : `All tests passed. Continue to finish setting up your ${selectedConnector} ${connectorType}.`}
                 </AlertDescription>
               </Box>
             </Alert>
