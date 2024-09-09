@@ -18,7 +18,7 @@ env:
 jobs:
   deploy:
     environment: community
-    runs-on: self-hosted
+    runs-on: ["self-hosted","linux","x64"]
     steps:
       - uses: azure/setup-helm@v4.2.0
         with:
