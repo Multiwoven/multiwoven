@@ -34,6 +34,8 @@ require "aws-sdk-sts"
 require "ruby-oci8"
 require "aws-sdk-sagemaker"
 require "aws-sdk-sagemakerruntime"
+require "google/cloud/ai_platform/v1"
+require "grpc"
 
 # Service
 require_relative "integrations/config"
@@ -66,6 +68,7 @@ require_relative "integrations/source/maria_db/client"
 require_relative "integrations/source/oracle_db/client"
 require_relative "integrations/source/databrics_model/client"
 require_relative "integrations/source/aws_sagemaker_model/client"
+require_relative "integrations/source/google_vertex_model/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
