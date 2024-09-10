@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.10.1"
+    VERSION = "0.11.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -18,6 +18,7 @@ module Multiwoven
       Oracle
       DatabricksModel
       AwsSagemakerModel
+      VertexModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

@@ -73,6 +73,8 @@ gem "aws-sdk-sagemaker"
 
 gem "aws-sdk-sagemakerruntime"
 
+gem "google-cloud-ai_platform-v1"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

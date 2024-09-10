@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "VertexModel",
+    "title": "Google Vertex",
+    "connector_type": "source",
+    "category": "AI Model",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "source-vertex",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
+  

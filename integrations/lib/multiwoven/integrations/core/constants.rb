@@ -50,6 +50,9 @@ module Multiwoven
       DATABRICKS_HEALTH_URL  = "https://%<databricks_host>s/api/2.0/serving-endpoints/%<endpoint_name>s"
       DATABRICKS_SERVING_URL = "https://%<databricks_host>s/serving-endpoints/%<endpoint_name>s/invocations"
 
+      GOOGLE_VERTEX_ENDPOINT_SERVICE_URL = "%<region>s-aiplatform.googleapis.com"
+      GOOGLE_VERTEX_MODEL_NAME = "projects/%<project_id>s/locations/%<region>s/endpoints/%<endpoint_id>s"
+
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"
