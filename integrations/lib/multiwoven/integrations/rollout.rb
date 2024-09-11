@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.11.0"
+=======
+    VERSION = "0.11.3"
+>>>>>>> d30241fe (chore(CE): Update databricks json schema (#437))
 
     ENABLED_SOURCES = %w[
       Snowflake
