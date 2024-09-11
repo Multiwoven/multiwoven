@@ -30,12 +30,14 @@
         "title": "Request Format",
         "description": "Sample Request Format",
         "type": "string",
+        "x-request-format": true,
         "order": 3
       },
       "response_format": {
         "title": "Response Format",
         "description": "Sample Response Format",
         "type": "string",
+        "x-response-format": true,
         "order": 4
       },
       "credentials_json": {
