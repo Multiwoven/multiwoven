@@ -9,8 +9,8 @@
       "required": ["databricks_host", "token", "endpoint", "request_format", "response_format"],
       "properties": {
         "databricks_host": {
-          "title": "databricks_host",
-          "description": "databricks_host",
+          "title": "Databricks Host URL",
+          "description": "Endpoint host URL for the Databricks serving endpoint.",
           "type": "string",
           "examples": ["app.databricks.com"],
           "order": 0
