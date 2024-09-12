@@ -56,7 +56,7 @@ module Multiwoven::Integrations::Source
 
       def create_connection(connection_config)
         @auth_token = Base64.strict_encode64("#{connection_config[:username]}:#{connection_config[:password]}")
-        Faraday.new(connection_config[:host]) do |faraday|
+        Faraday.new(connection_config[:url]) do |faraday|
           faraday.request :url_encoded
           faraday.adapter Faraday.default_adapter
         end
