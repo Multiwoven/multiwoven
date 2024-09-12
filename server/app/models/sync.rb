@@ -41,7 +41,7 @@ class Sync < ApplicationRecord
   enum :schedule_type, %i[manual interval cron_expression]
   enum :status, %i[disabled healthy pending failed aborted]
   enum :sync_mode, %i[full_refresh incremental]
-  enum :sync_interval_unit, %i[minutes hours days]
+  enum :sync_interval_unit, %i[minutes hours days weeks]
 
   belongs_to :workspace
   belongs_to :source, class_name: "Connector"
@@ -112,6 +112,9 @@ class Sync < ApplicationRecord
     when "days"
       # Every X days: 0 0 */X * *
       "0 0 */#{sync_interval} * *"
+    when "weeks"
+      # Every X days: 0 0 */X*7 * *
+      "0 0 */#{sync_interval * 7} * *"
     else
       raise ArgumentError, "Invalid sync_interval_unit: #{sync_interval_unit}"
     end
