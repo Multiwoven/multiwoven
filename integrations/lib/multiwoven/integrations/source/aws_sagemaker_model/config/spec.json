@@ -37,12 +37,14 @@
         "description": "Sample Request Format",
         "type": "string",
         "title": "Request Format",
+        "x-request-format": true,
         "order": 4
       },
       "response_format": {
         "description": "Sample Response Format",
         "type": "string",
         "title": "Response Format",
+        "x-response-format": true,
         "order": 5
       }
     }

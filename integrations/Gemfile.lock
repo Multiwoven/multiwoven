@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.11.0)
-=======
-    multiwoven-integrations (0.11.3)
->>>>>>> d30241fe (chore(CE): Update databricks json schema (#437))
+    multiwoven-integrations (0.11.2)
       activesupport
       async-websocket
       aws-sdk-athena
