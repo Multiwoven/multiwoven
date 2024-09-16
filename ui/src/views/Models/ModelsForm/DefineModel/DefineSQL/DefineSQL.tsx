@@ -21,6 +21,7 @@ import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
 import ModelQueryResults from '../ModelQueryResults';
 import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
+import RefreshModelCatalog from '../RefreshModelCatalog';
 
 const DefineSQL = ({
   hasPrefilledValues = false,
@@ -207,6 +208,7 @@ const DefineSQL = ({
                 </Flex>
                 <Spacer />
                 <HStack spacing={3}>
+                  <RefreshModelCatalog source_id={connector_id} />
                   <Button
                     variant='shell'
                     onClick={getPreview}
@@ -233,6 +235,7 @@ const DefineSQL = ({
                     fontSize='12px'
                     height='32px'
                     paddingX={3}
+                    isDisabled={!runQuery}
                     onClick={() => setUserQuery(format(userQuery))}
                   >
                     <Image src={StarsImage} w={6} mr={2} /> Beautify
