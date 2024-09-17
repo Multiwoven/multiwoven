@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_29_131951) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_17_075008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -187,7 +187,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_131951) do
 
   create_table "visual_components", force: :cascade do |t|
     t.integer "component_type", null: false
-    t.string "name", null: false
+    t.string "name"
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
     t.integer "model_id", null: false
