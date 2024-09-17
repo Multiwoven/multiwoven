@@ -134,20 +134,23 @@ RSpec.describe Sync, type: :model do
   end
 
   describe "#schedule_sync" do
+    let(:workspace) { create(:workspace) }
     let(:source) do
-      create(:connector, connector_type: "source", connector_name: "Snowflake")
+      create(:connector, connector_type: "source", connector_name: "Snowflake", workspace:)
     end
+    let(:model) { create(:model, connector: source, workspace:) }
     let(:destination) { create(:connector, connector_type: "destination") }
     let!(:catalog) { create(:catalog, connector: destination) }
-    let(:sync) { build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+    let(:sync) do
+      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, model:, workspace:)
+    end
 
     before do
-      allow(Temporal).to receive(:start_workflow).and_return(true)
+      allow(Temporal).to receive(:start_workflow)
     end
 
     context "when a new record is created" do
       it "schedules a sync workflow" do
-        sync.schedule_sync
         expect(Temporal).to have_received(:start_workflow).with(
           Workflows::ScheduleSyncWorkflow,
           sync.id
@@ -157,36 +160,38 @@ RSpec.describe Sync, type: :model do
 
     context "when an existing record is updated" do
       it "schedules a sync workflow if sync interval changes" do
-        sync.sync_interval = 1
-        sync.save(validate: false)
+        sync.update!(sync_interval: 1)
         expect(Temporal).to have_received(:start_workflow).with(
           Workflows::ScheduleSyncWorkflow,
           sync.id
-        )
+        ).twice
+      end
+
+      it "change current schedules sync in workflow" do
+        sync.update!(sync_interval: 2)
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::ScheduleSyncWorkflow,
+          sync.id
+        ).exactly(2).times
       end
 
       it "terminate a sync workflow if sync is disabled and schedule sync workflow if sync is enabled" do
-        sync.disable
-        sync.save(validate: false)
+        sync.update!(status: "disabled")
         expect(Temporal).to have_received(:start_workflow).with(
           Workflows::TerminateWorkflow,
-          sync.id,
+          sync.workflow_id,
           options: {
-            workflow_id: "terminate-#{sync.id}"
+            workflow_id: "terminate-#{sync.workflow_id}"
           }
-        )
-        sync.enable
-        sync.save(validate: false)
-        expect(Temporal).to have_received(:start_workflow).with(
-          Workflows::ScheduleSyncWorkflow,
-          sync.id
         )
       end
 
       it "does not schedule a sync workflow if sync interval does not change" do
-        sync.primary_key = "primary_key"
-        sync.save
-        expect(Temporal).not_to have_received(:start_workflow)
+        sync.update!(primary_key: "primary_key")
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::ScheduleSyncWorkflow,
+          sync.id
+        )
       end
     end
   end
