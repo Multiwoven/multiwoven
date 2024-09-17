@@ -44,7 +44,9 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].size).to eq(2)
-
+        first_row_date = DateTime.parse(response_hash[:data].first.dig(:attributes, :created_at))
+        second_row_date = DateTime.parse(response_hash[:data].last.dig(:attributes, :created_at))
+        expect(second_row_date).to be > first_row_date
         response_hash[:data].each_with_index do |row, _index|
           sync_record = sync_records.find { |sr| sr.id == row[:id].to_i }
 
