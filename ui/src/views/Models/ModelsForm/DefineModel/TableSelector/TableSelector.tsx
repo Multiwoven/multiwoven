@@ -23,6 +23,7 @@ import { QueryType } from '@/views/Models/types';
 import ViewSQLModal from './ViewSQLModal';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
+import RefreshModelCatalog from '../RefreshModelCatalog';
 
 const generateQuery = (table: string) => `SELECT * FROM ${table}`;
 
@@ -203,6 +204,7 @@ const TableSelector = ({
                 />
               </Box>
               <HStack spacing={3} flex={1} justifyContent='flex-end'>
+                <RefreshModelCatalog source_id={connector_id} />
                 <Button
                   variant='shell'
                   onClick={getPreview}
