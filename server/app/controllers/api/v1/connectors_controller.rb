@@ -28,6 +28,7 @@ module Api
 
       def create
         authorize current_workspace, policy_class: ConnectorPolicy
+
         result = CreateConnector.call(
           workspace: current_workspace,
           connector_params:
@@ -37,9 +38,9 @@ module Api
           render json: @connector, status: :created
         else
           render_error(
-            message: "Connector creation failed",
+            message: result.error || "Connector creation failed",
             status: :unprocessable_entity,
-            details: format_errors(result.connector)
+            details: result.connector ? format_errors(result.connector) : nil
           )
         end
       end
