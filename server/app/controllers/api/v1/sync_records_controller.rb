@@ -8,7 +8,7 @@ module Api
       attr_reader :sync, :sync_run
 
       def index
-        sync_records = @sync_run.sync_records
+        sync_records = @sync_run.sync_records.order(created_at: :asc)
         authorize sync_records
         sync_records = sync_records.where(status: params[:status]) if params[:status].present?
         sync_records = sync_records.page(params[:page] || 1)
