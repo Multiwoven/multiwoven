@@ -70,6 +70,11 @@ class Connector < ApplicationRecord
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
 
+  def icon
+    @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
+    @connector_definition.dig(:data, :icon)
+  end
+
   # TODO: move the method to integration gem
   def execute_query(query, limit: 50)
     connection_config = configuration.with_indifferent_access

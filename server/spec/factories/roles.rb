@@ -30,7 +30,8 @@ FactoryBot.define do
             "connector" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "workspace" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "sync_record" => { "read" => true, "create" => true, "delete" => true, "update" => true },
-            "connector_definition" => { "read" => true, "create" => true, "delete" => true, "update" => true }
+            "connector_definition" => { "read" => true, "create" => true, "delete" => true, "update" => true },
+            "data_app" => { "read" => true, "create" => true, "delete" => true, "update" => true }
           }
         }
       end
@@ -50,7 +51,8 @@ FactoryBot.define do
             "connector" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "workspace" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "sync_record" => { "read" => true, "create" => true, "delete" => true, "update" => true },
-            "connector_definition" => { "read" => true, "create" => true, "delete" => true, "update" => true }
+            "connector_definition" => { "read" => true, "create" => true, "delete" => true, "update" => true },
+            "data_app" => { "read" => true, "create" => true, "delete" => true, "update" => true }
           }
         }
       end
@@ -70,7 +72,8 @@ FactoryBot.define do
             "connector" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "workspace" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "sync_record" => { "read" => true, "create" => false, "delete" => false, "update" => false },
-            "connector_definition" => { "read" => true, "create" => false, "delete" => false, "update" => false }
+            "connector_definition" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "data_app" => { "read" => true, "create" => false, "delete" => false, "update" => false }
           }
         }
       end
