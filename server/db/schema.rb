@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_17_075008) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_17_075008) do
     t.json "meta_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "data_app_token"
+    t.index ["data_app_token"], name: "index_data_apps_on_data_app_token", unique: true
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
