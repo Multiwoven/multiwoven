@@ -71,7 +71,7 @@ module Multiwoven::Integrations::Source
 
       def build_url(url, connection_config)
         format(url, databricks_host: connection_config[:databricks_host],
-                    endpoint_name: connection_config[:endpoint_name])
+                    endpoint_name: connection_config[:endpoint])
       end
 
       def send_request(url, token, payload)
