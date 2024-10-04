@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/env', (req, res) => {
   res.json({
-    VITE_API_HOST: process.env.VITE_API_HOST,
+    VITE_API_HOST: process.env.VITE_API_HOST || 'http://localhost:3000',
   });
 });
 
