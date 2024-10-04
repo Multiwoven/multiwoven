@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "MicrosoftSql",
+    "title": "Microsoft SQL",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "destination-mssql",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
