@@ -11,4 +11,6 @@ class VisualComponent < ApplicationRecord
   belongs_to :workspace
   belongs_to :data_app
   belongs_to :model
+
+  has_many :feedbacks, dependent: :destroy
 end

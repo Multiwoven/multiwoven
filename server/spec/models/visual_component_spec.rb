@@ -13,4 +13,5 @@ RSpec.describe VisualComponent, type: :model do
   it { should belong_to(:workspace) }
   it { should belong_to(:data_app) }
   it { should belong_to(:model) }
+  it { should have_many(:feedbacks).dependent(:destroy) }
 end
