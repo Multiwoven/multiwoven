@@ -99,6 +99,25 @@ RSpec.describe User, type: :model do
       )
     end
 
+    it "is invalid if the password length does not meet complexity requirements" do
+      user = User.new(password: "test", email: "test@example.com", name: "Test User")
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to include(
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
+      )
+      password = "Tg6$eYp9Z!q3rV8W&dC1xJs@uH4nF7bLmK2tPiO0vQ!f5AaXyR9M$wB8ZcQ7Ds1EkJ2Tx!" \
+                 "Lo3iNvU6Pg#m9RdFs4ThWz8YhT$uI5Lq3WrXvNp7O@dZm2BcJf1CkV0Aa4EvR6Pi8"
+      user = User.new(
+        password:,
+        email: "test@example.com",
+        name: "Test User"
+      )
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to include(
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
+      )
+    end
+
     it "is valid if the password meets complexity requirements" do
       user = User.new(password: "Test123!", email: "test@example.com", name: "Test User")
       expect(user).to be_valid
