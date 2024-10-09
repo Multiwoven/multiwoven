@@ -186,7 +186,9 @@ const ViewSync = (): JSX.Element => {
           </Box>
         )}
       </Box>
-      <SyncTabContent syncTab={syncTab} />
+      <Box pb={1}>
+        <SyncTabContent syncTab={syncTab} />
+      </Box>
     </ContentContainer>
   );
 };
