@@ -125,16 +125,31 @@ RSpec.describe Authentication::Signup, type: :interactor do
           }
         end
 
-        it "fails" do
-          expect(context).to be_failure
+        it "succeeds" do
+          expect(context).to be_success
         end
 
-        it "does not create a new user" do
-          expect { context }.not_to change(User, :count)
+        it "creates and does not confirm the user" do
+          expect { context }.to change(User, :count).by(1)
+          user = User.find_by(email: params[:email])
+          expect(user).not_to be_nil
+          expect(user.confirmed_at).to be_nil
         end
 
-        it "provides error messages related to company name" do
-          expect(context.errors).to eq("Signup failed: Company name has already been taken")
+        it "creates a new user" do
+          expect { context }.to change(User, :count).by(1)
+        end
+
+        it "creates a new organization" do
+          expect { context }.to change(Organization, :count).by(1)
+        end
+
+        it "creates a new workspace" do
+          expect { context }.to change(Workspace, :count).by(1)
+        end
+
+        it "returns a success message" do
+          expect(context.message).to eq("Signup successful! Please check your email to confirm your account.")
         end
       end
     end
