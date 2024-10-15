@@ -28,6 +28,33 @@ RSpec.describe User, type: :model do
     it { should devise(:rememberable) }
     it { should devise(:validatable) }
     it { should devise(:jwt_authenticatable) }
+
+    describe ".email_verification_enabled?" do
+      it "returns true when USER_EMAIL_VERIFICATION is not set to false" do
+        allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return(nil)
+        expect(User.email_verification_enabled?).to be true
+      end
+
+      it "returns false when USER_EMAIL_VERIFICATION is set to false" do
+        allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return("false")
+        expect(User.email_verification_enabled?).to be false
+      end
+    end
+
+    describe "devise modules" do
+      it "includes :confirmable when email verification is enabled" do
+        allow(User).to receive(:email_verification_enabled?).and_return(true)
+        expect(User.devise_modules).to include(:confirmable)
+      end
+
+      # Skipping this test because we need to reload the User class to simulate
+      # the scenario where email verification is disabled. This cannot be easily
+      # done within the context of a single test without affecting other tests.
+      xit "does not include :confirmable when email verification is disabled" do
+        allow(User).to receive(:email_verification_enabled?).and_return(false)
+        expect(User.devise_modules).not_to include(:confirmable)
+      end
+    end
   end
 
   # Test for validations

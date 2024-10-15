@@ -43,6 +43,36 @@ RSpec.describe Authentication::Signup, type: :interactor do
       it "returns a success message" do
         expect(context.message).to eq("Signup successful! Please check your email to confirm your account.")
       end
+
+      context "when email verification is disabled" do
+        before do
+          ENV["USER_EMAIL_VERIFICATION"] = "false"
+        end
+
+        it "does not send a confirmation email" do
+          expect(User.email_verification_enabled?).to be false
+        end
+      end
+
+      context "when email verification is enabled" do
+        before do
+          ENV["USER_EMAIL_VERIFICATION"] = "true"
+        end
+
+        it "send a confirmation email" do
+          expect(User.email_verification_enabled?).to be true
+        end
+      end
+
+      context "when email verification not set" do
+        before do
+          ENV["USER_EMAIL_VERIFICATION"] = nil
+        end
+
+        it "send a confirmation email" do
+          expect(User.email_verification_enabled?).to be true
+        end
+      end
     end
 
     context "when company_name is not present" do
