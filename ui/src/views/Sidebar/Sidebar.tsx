@@ -91,15 +91,6 @@ const renderMenuSection = (section: MenuSection, index: number) => (
 
 const SideBarFooter = () => (
   <Stack>
-    <Box />
-    <Stack spacing='0'>
-      <NavLink to='/settings'>
-        <NavButton label='Settings' icon={FiSettings} />
-      </NavLink>
-      <NavLink to='https://docs.multiwoven.com/get-started/introduction'>
-        <NavButton label='Documentation' icon={FiBookOpen} />
-      </NavLink>
-    </Stack>
     <Profile />
   </Stack>
 );
@@ -115,15 +106,6 @@ const Sidebar = (): JSX.Element => {
       borderRightStyle='solid'
       borderRightColor='gray.400'
       minWidth='240px'
-      overflow='hidden auto'
-      css={{
-        '&::-webkit-scrollbar': {
-          width: '2px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: 'var(--chakra-colors-gray-400)',
-        },
-      }}
     >
       <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
         <Stack justify='space-between' spacing='1' width='full'>
@@ -134,8 +116,33 @@ const Sidebar = (): JSX.Element => {
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />
             </Box>
+          </Stack>
+          <Stack
+            paddingX='6px'
+            marginTop='20px'
+            spacing='6'
+            shouldWrapChildren
+            overflow='hidden auto'
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '2px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'var(--chakra-colors-gray-400)',
+              },
+            }}
+          >
             <Workspace />
             {menus.map(renderMenuSection)}
+            <Box />
+            <Stack spacing='0'>
+              <NavLink to='/settings'>
+                <NavButton label='Settings' icon={FiSettings} />
+              </NavLink>
+              <NavLink to='https://docs.squared.ai/guides/core-concepts'>
+                <NavButton label='Documentation' icon={FiBookOpen} />
+              </NavLink>
+            </Stack>
           </Stack>
           <SideBarFooter />
         </Stack>
