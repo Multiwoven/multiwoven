@@ -96,7 +96,7 @@ const SideBarFooter = () => (
       <NavLink to='/settings'>
         <NavButton label='Settings' icon={FiSettings} />
       </NavLink>
-      <NavLink to='https://docs.multiwoven.com/get-started/introduction'>
+      <NavLink to='https://docs.squared.ai/guides/core-concepts'>
         <NavButton label='Documentation' icon={FiBookOpen} />
       </NavLink>
     </Stack>
