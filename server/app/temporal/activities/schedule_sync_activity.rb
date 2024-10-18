@@ -17,7 +17,7 @@ module Activities
         Utils::ExceptionReporter.report(e, {
                                           sync_id:
                                         })
-        Rails.logger.error(e)
+        Rails.logger.error("Failed to terminate workflow error: #{e.message}")
       end
 
       source_connector_name = sync.source.connector_name.downcase
