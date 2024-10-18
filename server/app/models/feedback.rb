@@ -12,6 +12,6 @@ class Feedback < ApplicationRecord
 
   enum feedback_type: { thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3 }
 
-  enum reaction: { positive: 0, negative: 1, scale_one: 2, scale_two: 3, scale_three: 4, scale_four: 5, scale_five: 6,
-                   scale_six: 7, scale_seven: 8, scale_eight: 9, scale_nine: 10, scale_ten: 11 }
+  enum reaction: { negative: -99, positive: 99, scale_one: 1, scale_two: 2, scale_three: 3, scale_four: 4,
+                   scale_five: 5, scale_six: 6, scale_seven: 7, scale_eight: 8, scale_nine: 9, scale_ten: 10 }
 end
