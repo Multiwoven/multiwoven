@@ -10,7 +10,7 @@
 #  updated_at  :datetime         not null
 #
 class Organization < ApplicationRecord
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true
 
   has_many :workspaces, dependent: :destroy
   has_many :workspace_users, through: :workspaces

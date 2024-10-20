@@ -10,7 +10,7 @@ module Authentication
         create_organization_and_workspace
         save_user
         if user.persisted?
-          user.send_confirmation_instructions
+          user.send_confirmation_instructions if User.email_verification_enabled?
           context.message = "Signup successful! Please check your email to confirm your account."
         else
           context.fail!(errors: user.errors.full_messages)

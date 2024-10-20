@@ -18,17 +18,10 @@ module Authentication
     end
 
     def authenticate(user)
-      if user&.access_locked?
-        context.fail!(error: "Account is locked due to multiple login attempts. Please retry after sometime")
-      elsif user&.valid_password?(context.params[:password])
-        if user.verified?
-          token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
-          user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
-          user.update!(jti: payload["jti"])
-          context.token = token
-        else
-          context.fail!(error: "Account not verified. Please verify your account.")
-        end
+      if account_locked?(user)
+        handle_account_locked
+      elsif valid_password?(user)
+        process_successful_authentication(user)
       else
         handle_failed_attempt(user)
       end
@@ -48,6 +41,37 @@ module Authentication
       else
         context.fail!(error: "Invalid email or password")
       end
+    end
+
+    def account_locked?(user)
+      user&.access_locked?
+    end
+
+    def valid_password?(user)
+      user&.valid_password?(context.params[:password])
+    end
+
+    def process_successful_authentication(user)
+      if user_verified_or_verification_disabled?(user)
+        issue_token_and_update_user(user)
+      else
+        context.fail!(error: "Account not verified. Please verify your account.")
+      end
+    end
+
+    def user_verified_or_verification_disabled?(user)
+      user.verified? || !User.email_verification_enabled?
+    end
+
+    def issue_token_and_update_user(user)
+      token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+      user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
+      user.update!(jti: payload["jti"])
+      context.token = token
+    end
+
+    def handle_account_locked
+      context.fail!(error: "Account is locked due to multiple login attempts. Please retry after sometime")
     end
   end
 end
