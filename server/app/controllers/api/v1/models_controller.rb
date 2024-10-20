@@ -36,6 +36,7 @@ module Api
           @model = result.model
           render json: @model, status: :created
         else
+          Sentry.capture_exception("Model creation failed")
           render_error(
             message: "Model creation failed",
             status: :unprocessable_entity,
@@ -55,6 +56,7 @@ module Api
           @model = result.model
           render json: @model, status: :ok
         else
+          Sentry.capture_exception("Model update failed")
           render_error(
             message: "Model update failed",
             status: :unprocessable_entity,

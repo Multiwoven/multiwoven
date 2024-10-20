@@ -21,6 +21,7 @@ module Api
             }
           }, status: :ok
         else
+          Sentry.capture_exception(result.error)
           render_error(message: result.error, status: :unauthorized)
         end
       end
@@ -30,6 +31,7 @@ module Api
         if result.success?
           render json: result.user, status: :created
         else
+          Sentry.capture_exception(result.errors)
           render_error(message: result.errors, status: :unprocessable_entity,
                        details: nil)
         end
@@ -41,6 +43,7 @@ module Api
           render json: { data: { type: "message", id: SecureRandom.uuid, attributes: { message: result.message } } },
                  status: :ok
         else
+          Sentry.capture_exception(result.message)
           render_error(message: result.message, status: :internal_server_error)
         end
       end
@@ -55,6 +58,7 @@ module Api
                                  attributes: { message: "Reset password instructions sent to email." } } },
                  status: :ok
         else
+          Sentry.capture_exception("Email not found")
           render_error(message: "Email not found", status: :not_found)
         end
       end
@@ -69,6 +73,7 @@ module Api
                                  attributes: { message: "Password successfully reset." } } },
                  status: :ok
         else
+          Sentry.capture_exception('Invalid token or password mismatch.')
           render_error(message: "Invalid token or password mismatch.", status: :unprocessable_entity)
         end
       end
@@ -81,6 +86,7 @@ module Api
                                  attributes: { message: "Account verified successfully!" } } },
                  status: :ok
         else
+          Sentry.capture_exception('Invalid confirmation code.')
           render_error(message: "Invalid confirmation code.", status: :unprocessable_entity)
         end
       end
@@ -93,6 +99,7 @@ module Api
                                  attributes: { message: "Email verification link sent successfully!" } } },
                  status: :ok
         else
+          Sentry.capture_exception(result.error)
           render_error(message: result.error, status: :unprocessable_entity)
         end
       end
