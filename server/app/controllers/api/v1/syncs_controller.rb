@@ -2,12 +2,15 @@
 
 module Api
   module V1
+    # rubocop:disable Metrics/ClassLength
     class SyncsController < ApplicationController
       include Syncs
+      include AuditLogger
       before_action :set_sync, only: %i[show update enable destroy]
       before_action :modify_sync_params, only: %i[create update]
 
       after_action :event_logger
+      after_action :create_audit_log
 
       attr_reader :sync
 
@@ -20,6 +23,7 @@ module Api
 
       def show
         authorize @sync
+        @audit_resource = @sync.name
         render json: @sync, status: :ok
       end
 
@@ -32,6 +36,8 @@ module Api
 
         if result.success?
           @sync = result.sync
+          @audit_resource = @sync.name
+          @payload = sync_params
           render json: @sync, status: :created
         else
           render_error(
@@ -51,6 +57,8 @@ module Api
 
         if result.success?
           @sync = result.sync
+          @audit_resource = @sync.name
+          @payload = sync_params
           render json: @sync, status: :ok
         else
           render_error(
@@ -115,6 +123,10 @@ module Api
         end
       end
 
+      def create_audit_log
+        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+      end
+
       def sync_params
         strong_params = params.require(:sync)
                               .permit(:source_id,
@@ -142,5 +154,6 @@ module Api
         strong_params
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

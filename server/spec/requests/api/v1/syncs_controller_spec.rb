@@ -48,7 +48,6 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         get "/api/v1/syncs", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-
         expect(response_hash[:data].count).to eql(syncs.count)
         expect(response_hash.dig(:data, 0, :type)).to eq("syncs")
         expect(response_hash[:data][0][:attributes][:model_id].present?).to be_truthy
@@ -57,6 +56,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
                                                                              "query_type", "primary_key", "created_at",
                                                                              "updated_at", "connector")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and get all syncs for member role" do
@@ -73,6 +81,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
                                                                              "query_type", "primary_key", "created_at",
                                                                              "updated_at", "connector")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and get all syncs for viewer role" do
@@ -119,6 +136,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval_unit)).to eq(syncs.first.sync_interval_unit)
         expect(response_hash.dig(:data, :attributes, :stream_name)).to eq(syncs.first.stream_name)
         expect(response_hash.dig(:data, :attributes, :status)).to eq(syncs.first.status)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("show")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and fetch sync for viewer_role" do
@@ -139,6 +165,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval_unit)).to eq(syncs.first.sync_interval_unit)
         expect(response_hash.dig(:data, :attributes, :stream_name)).to eq(syncs.first.stream_name)
         expect(response_hash.dig(:data, :attributes, :status)).to eq(syncs.first.status)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("show")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and fetch sync for member_role" do
@@ -159,6 +194,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval_unit)).to eq(syncs.first.sync_interval_unit)
         expect(response_hash.dig(:data, :attributes, :stream_name)).to eq(syncs.first.stream_name)
         expect(response_hash.dig(:data, :attributes, :status)).to eq(syncs.first.status)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("show")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns an error response while fetch sync" do
@@ -217,6 +261,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cron_expression))
           .to eq(nil)
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "creates a new sync and returns success with cursor_field nil " do
@@ -235,6 +288,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "creates a new sync and returns success with cursor_field nil for member role" do
@@ -254,6 +316,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :status)).to eq("pending")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "creates a new sync and returns unauthorized for viewer role" do
@@ -304,6 +375,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
         expect(response_hash.dig(:data, :attributes,
                                  :sync_interval_unit)).to eq(request_body.dig(:sync, :sync_interval_unit))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       context "when  schedule type is cron expression " do
@@ -319,6 +399,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(nil)
           expect(response_hash.dig(:data, :attributes,
                                    :sync_interval_unit)).to eq(nil)
+
+          audit_log = AuditLog.last
+          expect(audit_log).not_to be_nil
+          expect(audit_log.user_id).to eq(user.id)
+          expect(audit_log.action).to eq("create")
+          expect(audit_log.resource_type).to eq("Sync")
+          expect(audit_log.resource_id).to eq(nil)
+          expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+          expect(audit_log.workspace_id).to eq(workspace.id)
         end
       end
     end
@@ -364,6 +453,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "updates the sync and returns success for member role" do
@@ -380,6 +478,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "updates the sync and returns success for viewer role" do
@@ -424,6 +531,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(request_body.dig(:sync, :sync_interval))
         expect(response_hash.dig(:data, :attributes,
                                  :sync_interval_unit)).to eq(request_body.dig(:sync, :sync_interval_unit))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Sync")
+        expect(audit_log.resource_id).to eq(syncs.first.id)
+        expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       context "when  schedule type is cron expression " do
@@ -439,6 +555,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           expect(response_hash.dig(:data, :attributes, :sync_interval)).to eq(nil)
           expect(response_hash.dig(:data, :attributes,
                                    :sync_interval_unit)).to eq(nil)
+
+          audit_log = AuditLog.last
+          expect(audit_log).not_to be_nil
+          expect(audit_log.user_id).to eq(user.id)
+          expect(audit_log.action).to eq("update")
+          expect(audit_log.resource_type).to eq("Sync")
+          expect(audit_log.resource_id).to eq(syncs.first.id)
+          expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
+          expect(audit_log.workspace_id).to eq(workspace.id)
         end
       end
     end
