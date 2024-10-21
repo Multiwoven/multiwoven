@@ -21,6 +21,7 @@ class ApplicationController < ActionController::API
     return if user_signed_in?
 
     # If not authenticated, return a 401 unauthorized response
+    Sentry.capture_exception("Unauthorized access")
     render_error(message: "Unauthorized", status: :unauthorized)
   end
 

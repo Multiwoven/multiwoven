@@ -35,6 +35,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :signup, params: { email: "test", password: "pass", password_confirmation: "wrong" }
 
         expect(response).to have_http_status(:bad_request)
+        expect(Sentry).to capture_exception("Unauthorized access")
         expect(response_errors).not_to be_empty
       end
 
@@ -44,6 +45,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
                        password_confirmation: "pass@1235" }
 
         expect(response).to have_http_status(:unprocessable_entity)
+        expect(Sentry).to capture_exception('Signup failed: Password Length should be 8-128 characters')
         expect(response_errors[0]["detail"]).not_to be_empty
         expect(response_errors[0]["detail"]).to include("Signup failed: Password Length should be 8-128 characters")
       end
@@ -91,6 +93,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "does not log in a user and returns an error" do
         post :login, params: { email: "wrong", password: "wrong" }
 
+        expect(Sentry).to capture_exception("Unauthorized access")
         expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_nil
       end
@@ -111,6 +114,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "does not send reset password instructions and returns an error" do
         post :forgot_password, params: { email: "nothing@123.com" }
 
+        expect(Sentry).to capture_exception("Email not found")
         expect(response).to have_http_status(:not_found)
         expect(response_errors).not_to be_empty
       end
@@ -139,7 +143,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :reset_password,
              params: { reset_password_token: token, password: "newPassword@123",
                        password_confirmation: "newPassword@123" }
-
+        
+        expect(Sentry).to capture_exception('Token has expired.')
         expect(response).to have_http_status(:unprocessable_entity)
         response_json = JSON.parse(response.body)
         expect(response_json["errors"].first["detail"]).to eq("Token has expired.")
@@ -152,7 +157,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         post :reset_password,
              params: { reset_password_token: "wrong", password: "newPassword@123",
                        password_confirmation: "newPassword@123" }
-
+        
+        expect(Sentry).to capture_exception('Invalid token or password mismatch.')
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty
       end
@@ -174,7 +180,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     context "with invalid confirmation code" do
       it "does not verify the user and returns an error" do
         get :verify_user, params: { confirmation_token: "wrong123" }
-
+        
+        expect(Sentry).to capture_exception('Invalid confirmation code.')
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty
       end
@@ -183,7 +190,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     context "with no parameters" do
       it "returns a bad request status with an error message" do
         get :verify_user
-
+        
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:bad_request)
         expect(response_errors).not_to be_empty
       end
@@ -203,6 +211,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "returns an error already confirmed" do
         unverified_user.confirm
         post :resend_verification, params: { email: unverified_user.email }
+        expect(Sentry).to capture_exception('Account already confirmed')
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors[0]["detail"]).to include("Account already confirmed")
       end
@@ -211,7 +220,8 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     context "with non-existent user" do
       it "returns an error" do
         post :resend_verification, params: { email: "nonexistent@example.com" }
-
+        
+        expect(Sentry).to capture_exception('User not found')
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_errors).not_to be_empty
         expect(response_errors[0]["detail"]).to include("User not found")
@@ -223,6 +233,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do
         delete :logout
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
     end
