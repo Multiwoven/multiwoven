@@ -7,7 +7,6 @@ import { getSyncRecords } from '@/services/syncs';
 import Loader from '@/components/Loader';
 import ContentContainer from '@/components/ContentContainer';
 
-import Pagination from '@/components/Pagination';
 import SyncRunEmptyImage from '@/assets/images/empty-state-illustration.svg';
 
 import { SyncRecordsTopBar } from './SyncRecordsTopBar';
@@ -21,6 +20,7 @@ import { SyncRecordResponse } from '@/views/Activate/Syncs/types';
 
 import DataTable from '@/components/DataTable';
 import { SyncRecordsColumns, useDynamicSyncColumns } from './SyncRecordsColumns';
+import Pagination from '@/components/EnhancedPagination';
 
 const SyncRecords = (): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,18 +81,6 @@ const SyncRecords = (): JSX.Element => {
     }
   }, [isFilteredSyncRecordsError, toast]);
 
-  const handleNextPage = () => {
-    if (filteredSyncRunRecords?.links?.next) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (filteredSyncRunRecords?.links?.prev) {
-      setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    }
-  };
-
   const handleStatusTabChange = (status: SyncRecordStatus) => {
     setCurrentPage(1);
     setCurrentStatusTab(status);
@@ -143,14 +131,16 @@ const SyncRecords = (): JSX.Element => {
               <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll'>
                 <DataTable data={data} columns={allColumns} />
               </Box>
-              <Box display='flex' flexDirection='row-reverse' pt='10px'>
-                <Pagination
-                  currentPage={currentPage}
-                  isPrevPageEnabled={filteredSyncRunRecords?.links?.prev != null}
-                  isNextPageEnabled={filteredSyncRunRecords?.links?.next != null}
-                  handleNextPage={handleNextPage}
-                  handlePrevPage={handlePrevPage}
-                />
+              <Box display='flex' justifyContent='center' pt='20px'>
+                {filteredSyncRunRecords.links ? (
+                  <Pagination
+                    links={filteredSyncRunRecords?.links}
+                    currentPage={currentPage}
+                    handlePageChange={setCurrentPage}
+                  />
+                ) : (
+                  <>Pagination unavailable.</>
+                )}
               </Box>
             </Box>
           )}
