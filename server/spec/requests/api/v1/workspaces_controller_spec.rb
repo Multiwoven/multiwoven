@@ -62,6 +62,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
     context "when it is an unauthenticated user" do
       it "returns unauthorized" do
         get "/api/v1/workspaces/#{workspace.id}"
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -120,6 +121,14 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+      end
+
+      it "return failure and not find id" do
+        allow(Find).to receive(:call).and_raise(ActiveRecord::RecordNotFound )
+        get "/api/v1/workspaces/#{1}", headers: auth_header(user, workspace_id)
+
+        expect(Sentry).to capture_exception('Workspace not found')
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
@@ -181,6 +190,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
+        expect(Sentry).to capture_exception('Unauthorized access')
       end
     end
   end
@@ -200,6 +210,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
     context "when it is an unauthenticated user for update workspace" do
       it "returns unauthorized" do
         put "/api/v1/workspaces/#{workspace.id}"
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -244,6 +255,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         request_body[:workspace][:organization_id] = "organization_id_wrong"
         put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(Sentry).to have_received(:capture_exception)
         expect(response).to have_http_status(:bad_request)
       end
     end

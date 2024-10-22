@@ -19,6 +19,7 @@ module Api
           @workspace = result.workspace
           render json: @workspace, status: :ok
         else
+          Sentry.capture_exception('Workspace not found')
           render_error(
             message: "Workspace not found",
             status: :not_found
@@ -33,6 +34,7 @@ module Api
           @workspace = result.workspace
           render json: result.workspace, status: :created
         else
+          Sentry.capture_exception('Workspace creation failed')
           render_error(
             message: "Workspace creation failed",
             status: :unprocessable_entity,
@@ -48,6 +50,7 @@ module Api
           @workspace = result.workspace
           render json: @workspace, status: :ok
         else
+          Sentry.capture_exception('Workspace update failed.')
           render_error(
             message: "Workspace update failed",
             status: :unprocessable_entity,
@@ -62,6 +65,7 @@ module Api
         if result.success?
           head :no_content
         else
+          Sentry.capture_exception('Workspace delete failed.')
           render_error(
             message: "Workspace delete failed",
             status: :unprocessable_entity,
