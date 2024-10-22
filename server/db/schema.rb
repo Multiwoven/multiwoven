@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_17_155337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "action", null: false
+    t.string "resource_type", null: false
+    t.integer "resource_id"
+    t.string "resource"
+    t.integer "workspace_id"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "catalogs", force: :cascade do |t|
     t.integer "workspace_id"
@@ -51,6 +63,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "visual_component_id", null: false
+    t.integer "model_id", null: false
+    t.integer "reaction"
+    t.json "feedback_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "feedback_type", default: 0, null: false
+  end
+
   create_table "models", force: :cascade do |t|
     t.string "name"
     t.integer "workspace_id"
@@ -68,7 +92,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_organizations_on_name", unique: true
   end
 
   create_table "resources", force: :cascade do |t|
