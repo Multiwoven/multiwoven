@@ -50,6 +50,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash[:data].count).to eql(6)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and all mode for viewer role" do
@@ -70,12 +79,30 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash[:data].count).to eql(6)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "filters models based on the query_type parameter" do
         get "/api/v1/models?query_type=data", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)["data"].map { |m| m["id"] }).not_to include(ai_ml_model.id)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "filters models based on a different query_type" do
@@ -84,6 +111,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(JSON.parse(response.body)["data"].map do |m|
                  m["id"]
                end).not_to include(raw_sql_model.id, dbt_model.id, soql_model.id)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns all models" do
@@ -91,6 +127,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response).to have_http_status(:ok)
         model_ids = JSON.parse(response.body)["data"].map { |m| m["id"] }
         expect(model_ids.count).to eql(6)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("index")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
     end
   end
@@ -115,6 +160,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(models.first.query)
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(models.first.query_type)
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(models.first.primary_key)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("show")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.first.id)
+        expect(audit_log.resource).to eq(models.first.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and fetch model for viewer role" do
@@ -143,6 +197,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(models.first.query)
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(models.first.query_type)
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(models.first.primary_key)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("show")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.first.id)
+        expect(audit_log.resource).to eq(models.first.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns an error response while fetch model" do
@@ -183,6 +246,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "fails model creation for connector without catalog" do
@@ -216,6 +288,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "creates a new model with query type table selector" do
@@ -231,6 +312,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq("table_selector")
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       context "when creating a model with query_type = ai_ml and configuration is present" do
@@ -255,6 +345,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
           expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
           expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+
+          audit_log = AuditLog.last
+          expect(audit_log).not_to be_nil
+          expect(audit_log.user_id).to eq(user.id)
+          expect(audit_log.action).to eq("create")
+          expect(audit_log.resource_type).to eq("Model")
+          expect(audit_log.resource_id).to eq(nil)
+          expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+          expect(audit_log.workspace_id).to eq(workspace.id)
         end
       end
 
@@ -306,6 +405,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.second.id)
+        expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "fails model update for connector without catalog for ai model" do
@@ -346,6 +454,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :query)).to eq(request_body.dig(:model, :query))
         expect(response_hash.dig(:data, :attributes, :query_type)).to eq(request_body.dig(:model, :query_type))
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.second.id)
+        expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       context "when updating a model with query_type = ai_ml and configuration is present" do
@@ -370,6 +487,15 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
           expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
           expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+
+          audit_log = AuditLog.last
+          expect(audit_log).not_to be_nil
+          expect(audit_log.user_id).to eq(user.id)
+          expect(audit_log.action).to eq("update")
+          expect(audit_log.resource_type).to eq("Model")
+          expect(audit_log.resource_id).to eq(models.second.id)
+          expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+          expect(audit_log.workspace_id).to eq(workspace.id)
         end
       end
 
@@ -407,12 +533,30 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
       it "returns success and delete model " do
         delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("destroy")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.first.id)
+        expect(audit_log.resource).to eq(models.first.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns success and delete model for member role" do
         workspace.workspace_users.first.update(role: member_role)
         delete "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("destroy")
+        expect(audit_log.resource_type).to eq("Model")
+        expect(audit_log.resource_id).to eq(models.first.id)
+        expect(audit_log.resource).to eq(models.first.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
 
       it "returns for viwer role " do
