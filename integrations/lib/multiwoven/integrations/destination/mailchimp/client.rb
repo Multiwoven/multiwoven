@@ -50,9 +50,9 @@ module Multiwoven
             config = config.with_indifferent_access
             @client = MailchimpMarketing::Client.new
             @client.set_config({
-              api_key: config[:api_key],
-              server: config[:api_key].split('-').last
-            })
+                                 api_key: config[:api_key],
+                                 server: config[:api_key].split("-").last
+                               })
             @list_id = config[:list_id]
           end
 
@@ -87,38 +87,37 @@ module Multiwoven
             case stream_name
             when "Audience"
               @client.lists.set_list_member(@list_id, Digest::MD5.hexdigest(record[:email].downcase), {
-                email_address: record[:email],
-                status_if_new: "subscribed",
-                merge_fields: {
-                  FNAME: record[:first_name],
-                  LNAME: record[:last_name]
-                }
-              })
+                                              email_address: record[:email],
+                                              status_if_new: "subscribed",
+                                              merge_fields: {
+                                                FNAME: record[:first_name],
+                                                LNAME: record[:last_name]
+                                              }
+                                            })
             when "Tags"
               @client.lists.update_list_member_tags(@list_id, Digest::MD5.hexdigest(record[:email].downcase), {
-                tags: record[:tags].map { |tag| { name: tag, status: 'active' } }
-              })
+                                                      tags: record[:tags].map { |tag| { name: tag, status: "active" } }
+                                                    })
             when "Campaigns"
               campaign = @client.campaigns.create({
-                type: 'regular',
-                recipients: { list_id: @list_id },
-                settings: {
-                  subject_line: record[:subject],
-                  from_name: record[:from_name],
-                  reply_to: record[:reply_to]
-                }
-              })
-              # Set the content for the campaign
+                                                    type: "regular",
+                                                    recipients: { list_id: @list_id },
+                                                    settings: {
+                                                      subject_line: record[:subject],
+                                                      from_name: record[:from_name],
+                                                      reply_to: record[:reply_to]
+                                                    }
+                                                  })
               if record[:email_template_id]
-                @client.campaigns.set_content(campaign['id'], {
-                  template: { id: record[:email_template_id] }
-                })
+                @client.campaigns.set_content(campaign["id"], {
+                                                template: { id: record[:email_template_id] }
+                                              })
               else
-                @client.campaigns.set_content(campaign['id'], {
-                  plain_text: record[:content]
-                })
+                @client.campaigns.set_content(campaign["id"], {
+                                                plain_text: record[:content]
+                                              })
               end
-              @client.campaigns.send(campaign['id'])
+              @client.campaigns.send(campaign["id"])
             else
               raise "Unsupported stream type: #{stream_name}"
             end
