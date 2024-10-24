@@ -36,6 +36,7 @@ require "aws-sdk-sagemaker"
 require "aws-sdk-sagemakerruntime"
 require "google/cloud/ai_platform/v1"
 require "grpc"
+require "MailchimpMarketing"
 
 # Service
 require_relative "integrations/config"
@@ -90,6 +91,7 @@ require_relative "integrations/destination/databricks_lakehouse/client"
 require_relative "integrations/destination/oracle_db/client"
 require_relative "integrations/destination/microsoft_excel/client"
 require_relative "integrations/destination/microsoft_sql/client"
+require_relative "integrations/destination/mailchimp/client"
 
 module Multiwoven
   module Integrations
