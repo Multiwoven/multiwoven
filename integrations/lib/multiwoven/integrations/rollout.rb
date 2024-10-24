@@ -41,6 +41,7 @@ module Multiwoven
       Oracle
       MicrosoftExcel
       MicrosoftSql
+      Mailchimp
     ].freeze
   end
 end
