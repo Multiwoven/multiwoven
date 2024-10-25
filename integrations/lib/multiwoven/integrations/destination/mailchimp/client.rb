@@ -54,6 +54,7 @@ module Multiwoven
                                  server: config[:api_key].split("-").last
                                })
             @list_id = config[:list_id]
+            @email_template_id = config[:email_template_id] || ""
           end
 
           def process_records(records, stream)
@@ -108,9 +109,9 @@ module Multiwoven
                                                       reply_to: record[:reply_to]
                                                     }
                                                   })
-              if record[:email_template_id]
+              if @email_template_id
                 @client.campaigns.set_content(campaign["id"], {
-                                                template: { id: record[:email_template_id] }
+                                                template: { id: @email_template_id }
                                               })
               else
                 @client.campaigns.set_content(campaign["id"], {
