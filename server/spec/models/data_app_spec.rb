@@ -14,6 +14,7 @@ RSpec.describe DataApp, type: :model do
     it { should belong_to(:workspace) }
     it { should have_many(:visual_components).dependent(:destroy) }
     it { should have_many(:models).through(:visual_components) }
+    it { should have_many(:data_app_sessions).dependent(:nullify) }
   end
 
   describe "#set_default_status" do
