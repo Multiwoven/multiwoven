@@ -96,6 +96,8 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
 
@@ -123,6 +125,8 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
 
@@ -172,6 +176,8 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(audit_log.resource_id).to eq(existing_catalog.id)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
 
@@ -200,6 +206,8 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(audit_log.resource_id).to eq(existing_catalog.id)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
 
