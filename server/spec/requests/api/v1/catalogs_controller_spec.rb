@@ -87,6 +87,15 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :catalog, :streams).first["name"]).to eq(connector.name)
         expect(response_hash.dig(:data, :attributes, :catalog,
                                  :streams).first["json_schema"]).to eq(request_body[:catalog]["json_schema"])
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Catalog")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(connector.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
     end
 
@@ -105,6 +114,15 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :catalog, :streams).first["name"]).to eq(connector.name)
         expect(response_hash.dig(:data, :attributes, :catalog,
                                  :streams).first["json_schema"]).to eq(request_body[:catalog]["json_schema"])
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Catalog")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(connector.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
     end
 
@@ -145,6 +163,15 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connector.id)
         expect(response_hash.dig(:data, :attributes, :catalog,
                                  :streams).first["json_schema"]).to eq(update_request_body[:catalog]["json_schema"])
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Catalog")
+        expect(audit_log.resource_id).to eq(existing_catalog.id)
+        expect(audit_log.resource).to eq(connector.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
     end
 
@@ -164,6 +191,15 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connector.id)
         expect(response_hash.dig(:data, :attributes, :catalog,
                                  :streams).first["json_schema"]).to eq(update_request_body[:catalog]["json_schema"])
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Catalog")
+        expect(audit_log.resource_id).to eq(existing_catalog.id)
+        expect(audit_log.resource).to eq(connector.name)
+        expect(audit_log.workspace_id).to eq(workspace.id)
       end
     end
 
