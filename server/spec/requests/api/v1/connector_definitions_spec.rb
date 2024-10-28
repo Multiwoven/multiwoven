@@ -40,6 +40,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns only ai/ml sources" do
@@ -63,6 +65,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns only ai/ml connectors" do
@@ -86,6 +90,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success viewer role" do
@@ -105,6 +111,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success member role" do
@@ -124,6 +132,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
   end
@@ -146,6 +156,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(0)
       expect(audit_log.resource).to eq("Snowflake")
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns a connector when found for member role" do
@@ -166,6 +178,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(0)
       expect(audit_log.resource).to eq("Snowflake")
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns a connector when found for viewer role" do
@@ -186,6 +200,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(0)
       expect(audit_log.resource).to eq("Snowflake")
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns empty array not found" do
@@ -204,6 +220,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(0)
       expect(audit_log.resource).to eq(nil)
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
   end
 
@@ -239,6 +257,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(nil)
       expect(audit_log.resource).to eq("Snowflake")
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns success status for a valid connection fro member role" do
@@ -263,6 +283,8 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(audit_log.resource_id).to eq(nil)
       expect(audit_log.resource).to eq("Snowflake")
       expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns authorization failure for a view role user" do

@@ -59,6 +59,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and all mode for viewer role" do
@@ -88,6 +90,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "filters models based on the query_type parameter" do
@@ -103,6 +107,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "filters models based on a different query_type" do
@@ -120,6 +126,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns all models" do
@@ -136,6 +144,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
   end
@@ -169,6 +179,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.first.id)
         expect(audit_log.resource).to eq(models.first.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and fetch model for viewer role" do
@@ -206,6 +218,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.first.id)
         expect(audit_log.resource).to eq(models.first.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns an error response while fetch model" do
@@ -255,6 +269,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "fails model creation for connector without catalog" do
@@ -297,6 +313,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "creates a new model with query type table selector" do
@@ -321,6 +339,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       context "when creating a model with query_type = ai_ml and configuration is present" do
@@ -354,6 +374,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(audit_log.resource_id).to eq(nil)
           expect(audit_log.resource).to eq(request_body.dig(:model, :name))
           expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.created_at).not_to be_nil
+          expect(audit_log.updated_at).not_to be_nil
         end
       end
 
@@ -414,6 +436,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "fails model update for connector without catalog for ai model" do
@@ -463,6 +487,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       context "when updating a model with query_type = ai_ml and configuration is present" do
@@ -496,6 +522,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(audit_log.resource_id).to eq(models.second.id)
           expect(audit_log.resource).to eq(request_body.dig(:model, :name))
           expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.created_at).not_to be_nil
+          expect(audit_log.updated_at).not_to be_nil
         end
       end
 
@@ -542,6 +570,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.first.id)
         expect(audit_log.resource).to eq(models.first.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and delete model for member role" do
@@ -557,6 +587,8 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.first.id)
         expect(audit_log.resource).to eq(models.first.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns for viwer role " do
