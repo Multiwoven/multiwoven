@@ -16,7 +16,7 @@ module AuditLogger
         resource_id:,
         resource:,
         workspace:,
-        metadata: payload ? payload.to_unsafe_h : {}
+        metadata: payload.try(:to_unsafe_h) || payload
       )
     rescue StandardError => e
       Rails.logger.error({

@@ -71,6 +71,7 @@ module Api
 
       def destroy
         authorize sync
+        @audit_resource = sync.name
         sync.discard
         head :no_content
       end
@@ -96,6 +97,7 @@ module Api
         authorize current_workspace, policy_class: SyncPolicy
         params[:enable] ? @sync.enable : @sync.disable
         if @sync.save
+          @audit_resource = @sync.name
           render json: @sync, status: :ok
         else
           render_error(message: "Sync update failed", status: :unprocessable_entity,
