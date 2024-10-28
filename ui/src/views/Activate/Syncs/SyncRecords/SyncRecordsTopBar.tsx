@@ -94,21 +94,23 @@ export const SyncRecordsTopBar = ({ syncId, syncRunId }: { syncId: string; syncR
           <Text size='sm' fontWeight='semibold'>
             {moment(syncRunData?.data?.attributes?.started_at).format('DD/MM/YYYY HH:mm a')}
           </Text>
-          <Divider
-            orientation='vertical'
-            height='24px'
-            borderColor='gray.500'
-            opacity='1'
-            marginX='13px'
-          />
-          <Text size='sm' fontWeight='medium'>
-            Duration :{' '}
-          </Text>
-          <Text size='sm' fontWeight='semibold'>
-            {syncRunData?.data?.attributes?.duration
-              ? syncRunData?.data.attributes.duration?.toPrecision(3) + ' seconds '
-              : 'No Duration Available'}
-          </Text>
+          {syncRunData?.data?.attributes?.duration && (
+            <>
+              <Divider
+                orientation='vertical'
+                height='24px'
+                borderColor='gray.500'
+                opacity='1'
+                marginX='13px'
+              />
+              <Text size='sm' fontWeight='medium'>
+                Duration :{' '}
+              </Text>
+              <Text size='sm' fontWeight='semibold'>
+                {syncRunData?.data?.attributes?.duration?.toPrecision(3) + ' seconds '}
+              </Text>
+            </>
+          )}
         </Box>
       }
     />

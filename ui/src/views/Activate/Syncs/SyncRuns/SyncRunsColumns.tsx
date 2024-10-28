@@ -7,6 +7,7 @@ import { FiCheckCircle, FiRefreshCw } from 'react-icons/fi';
 import StatusTag from '@/components/StatusTag';
 import { StatusTagText, StatusTagVariants } from '@/components/StatusTag/StatusTag';
 import { ResultEntity } from './ResultEntity';
+import formatDuration from '@/utils/formatDuration';
 
 const StatusCell = ({ value }: { value: StatusTagVariants }) => {
   const tagText = StatusTagText[value];
@@ -27,14 +28,13 @@ const SyncRunTypeCell = ({ value }: { value: string }) => {
 };
 
 const DurationCell = ({ value }: { value: number }) => {
-  if (value == null) return null;
-  return <Text fontSize='sm'>{value.toPrecision(3)} seconds</Text>;
+  return <Text fontSize='sm'>{formatDuration(value)}</Text>;
 };
 
 const RowCountCell = ({ value, label }: { value: number; label: string }) => {
   return (
     <Text fontSize='sm'>
-      {value} {label}
+      {value} {label + (value > 1 ? 's' : '')}
     </Text>
   );
 };
@@ -82,12 +82,12 @@ export const SyncRunsColumns: ColumnDef<SyncRunsResponse>[] = [
   {
     accessorKey: 'attributes.total_query_rows',
     header: () => <span>Rows Queried</span>,
-    cell: (info) => <RowCountCell value={info.getValue() as number} label='rows' />,
+    cell: (info) => <RowCountCell value={info.getValue() as number} label='row' />,
   },
   {
     accessorKey: 'attributes.skipped_rows',
     header: () => <span>Skipped Rows</span>,
-    cell: (info) => <RowCountCell value={info.getValue() as number} label='rows' />,
+    cell: (info) => <RowCountCell value={info.getValue() as number} label='row' />,
   },
   {
     accessorKey: 'attributes',

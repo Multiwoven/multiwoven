@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.11.5)
+    multiwoven-integrations (0.12.0)
       activesupport
       async-websocket
       aws-sdk-athena
@@ -38,6 +38,7 @@ PATH
       sequel
       slack-ruby-client
       stripe
+      tiny_tds
       zendesk_api
 
 GEM
@@ -230,6 +231,9 @@ GEM
     google-protobuf (4.28.0-x86_64-darwin)
       bigdecimal
       rake (>= 13)
+    google-protobuf (4.28.0-x86_64-linux)
+      bigdecimal
+      rake (>= 13)
     googleapis-common-protos (1.6.0)
       google-protobuf (>= 3.18, < 5.a)
       googleapis-common-protos-types (~> 1.7)
@@ -250,6 +254,9 @@ GEM
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
     grpc (1.66.0-x86_64-darwin)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
+    grpc (1.66.0-x86_64-linux)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
     grpc-google-iam-v1 (1.8.0)
@@ -367,6 +374,8 @@ GEM
     stripe (11.4.0)
     strscan (3.1.0)
     timers (4.3.5)
+    tiny_tds (2.1.7)
+    tiny_tds (2.1.7-x64-mingw-ucrt)
     trailblazer-option (0.1.2)
     typhoeus (1.4.1)
       ethon (>= 0.9.0)
@@ -395,6 +404,7 @@ PLATFORMS
   arm64-darwin-23
   x64-mingw-ucrt
   x86_64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   activesupport
@@ -434,6 +444,7 @@ DEPENDENCIES
   simplecov_json_formatter
   slack-ruby-client
   stripe
+  tiny_tds
   webmock (~> 3.0)
 
 BUNDLED WITH

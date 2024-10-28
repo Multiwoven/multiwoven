@@ -34,6 +34,20 @@ RSpec.describe Authentication::Login, type: :interactor do
           expect(context.error).to eq("Account not verified. Please verify your account.")
         end
       end
+
+      context "with an unverified user with email verification disabled" do
+        before do
+          ENV["USER_EMAIL_VERIFICATION"] = "false"
+        end
+
+        it "succeeds" do
+          expect(context).to be_success
+        end
+
+        it "provides a token" do
+          expect(context.token).to be_present
+        end
+      end
     end
 
     context "when given an invalid email" do
