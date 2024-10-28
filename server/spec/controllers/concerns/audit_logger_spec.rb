@@ -31,6 +31,8 @@ RSpec.describe AuditLogger, type: :controller do
         expect(audit_log.resource).to eq(nil)
         expect(audit_log.workspace.id).to eq(workspace.id)
         expect(audit_log.metadata).to eq(payload.to_unsafe_h)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
 
