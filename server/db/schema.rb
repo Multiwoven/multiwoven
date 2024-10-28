@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_24_103527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "action", null: false
+    t.string "resource_type", null: false
+    t.integer "resource_id"
+    t.string "resource"
+    t.integer "workspace_id"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "catalogs", force: :cascade do |t|
     t.integer "workspace_id"
@@ -36,6 +48,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
     t.string "connector_category", default: "data", null: false
   end
 
+  create_table "data_app_sessions", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.bigint "data_app_id", null: false
+    t.integer "workspace_id", null: false
+    t.datetime "start_time", null: false
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data_app_id"], name: "index_data_app_sessions_on_data_app_id"
+    t.index ["session_id"], name: "index_data_app_sessions_on_session_id", unique: true
+  end
+
   create_table "data_apps", force: :cascade do |t|
     t.string "name", null: false
     t.integer "status", null: false
@@ -49,6 +73,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "visual_component_id", null: false
+    t.integer "model_id", null: false
+    t.integer "reaction"
+    t.json "feedback_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "feedback_type", default: 0, null: false
+    t.string "session_id"
   end
 
   create_table "models", force: :cascade do |t|
@@ -68,7 +105,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_organizations_on_name", unique: true
   end
 
   create_table "resources", force: :cascade do |t|
@@ -197,6 +233,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_23_150740) do
     t.jsonb "feedback_config"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "session_count", default: 0
   end
 
   create_table "workspace_users", force: :cascade do |t|

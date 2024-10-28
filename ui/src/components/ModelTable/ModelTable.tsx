@@ -1,10 +1,11 @@
 import GenerateTable from '@/components/Table/Table';
-import { getAllModels, APIData } from '@/services/models';
+import { getAllModels, GetAllModelsResponse } from '@/services/models';
 import { addIconDataToArray, ConvertToTableData } from '@/utils';
 import NoModels from '@/views/Models/NoModels';
 import Loader from '@/components/Loader';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { useStore } from '@/stores';
+import { ApiResponse } from '@/services/common';
 
 type ModelTableProps = {
   handleOnRowClick: (args: unknown) => void;
@@ -13,7 +14,7 @@ type ModelTableProps = {
 const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
 
-  const { data } = useQueryWrapper<APIData, Error>(
+  const { data } = useQueryWrapper<ApiResponse<GetAllModelsResponse[]>, Error>(
     ['models', activeWorkspaceId],
     () => getAllModels({ type: 'data' }),
     {

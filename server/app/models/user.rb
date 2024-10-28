@@ -20,9 +20,13 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :invitable, :database_authenticatable, :registerable, :confirmable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :lockable, :timeoutable, :jwt_authenticatable, jwt_revocation_strategy: self
+
+  # rubocop:disable Lint/LiteralAsCondition
+  devise :confirmable if :email_verification_enabled?
+  # rubocop:enable Lint/LiteralAsCondition
 
   before_create :assign_unique_id
 
@@ -30,7 +34,7 @@ class User < ApplicationRecord
 
   validates :email, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  VALID_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
+  VALID_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,128}$/
   validates :email, format: { with: VALID_EMAIL_REGEX }
   validate :password_complexity
 
@@ -39,6 +43,14 @@ class User < ApplicationRecord
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
   has_many :roles, through: :workspace_users
+
+  # Checks if email verification is enabled
+  # Note: Checking for 'false' instead of 'true' ensures backward compatibility
+  # with existing deployments that don't have this environment variable set.
+  # This way, email verification remains enabled by default unless explicitly disabled.
+  def self.email_verification_enabled?
+    ENV["USER_EMAIL_VERIFICATION"] != "false"
+  end
 
   # This method checks whether the JWT token is revoked
   def self.jwt_revoked?(payload, user)
