@@ -18,6 +18,7 @@ const CronScheduleType = ({ formik }: { formik: FormikContextType<any> }): JSX.E
       currentDate: new Date(), // Start from current date
       endDate: '2100-01-01', // End date for calculating runs (can be adjusted based on your needs)
       iterator: true, // Return an iterator to get multiple occurrences
+      tz: 'UTC', // Timezone
     };
 
     const interval = parseExpression(cronExpression, options);

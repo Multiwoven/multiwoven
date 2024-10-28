@@ -28,6 +28,33 @@ RSpec.describe User, type: :model do
     it { should devise(:rememberable) }
     it { should devise(:validatable) }
     it { should devise(:jwt_authenticatable) }
+
+    describe ".email_verification_enabled?" do
+      it "returns true when USER_EMAIL_VERIFICATION is not set to false" do
+        allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return(nil)
+        expect(User.email_verification_enabled?).to be true
+      end
+
+      it "returns false when USER_EMAIL_VERIFICATION is set to false" do
+        allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return("false")
+        expect(User.email_verification_enabled?).to be false
+      end
+    end
+
+    describe "devise modules" do
+      it "includes :confirmable when email verification is enabled" do
+        allow(User).to receive(:email_verification_enabled?).and_return(true)
+        expect(User.devise_modules).to include(:confirmable)
+      end
+
+      # Skipping this test because we need to reload the User class to simulate
+      # the scenario where email verification is disabled. This cannot be easily
+      # done within the context of a single test without affecting other tests.
+      xit "does not include :confirmable when email verification is disabled" do
+        allow(User).to receive(:email_verification_enabled?).and_return(false)
+        expect(User.devise_modules).not_to include(:confirmable)
+      end
+    end
   end
 
   # Test for validations
@@ -93,6 +120,25 @@ RSpec.describe User, type: :model do
   describe "password complexity" do
     it "is invalid if the password does not meet complexity requirements" do
       user = User.new(password: "password", email: "test@example.com", name: "Test User")
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to include(
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
+      )
+    end
+
+    it "is invalid if the password length does not meet complexity requirements" do
+      user = User.new(password: "test", email: "test@example.com", name: "Test User")
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to include(
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
+      )
+      password = "Tg6$eYp9Z!q3rV8W&dC1xJs@uH4nF7bLmK2tPiO0vQ!f5AaXyR9M$wB8ZcQ7Ds1EkJ2Tx!" \
+                 "Lo3iNvU6Pg#m9RdFs4ThWz8YhT$uI5Lq3WrXvNp7O@dZm2BcJf1CkV0Aa4EvR6Pi8"
+      user = User.new(
+        password:,
+        email: "test@example.com",
+        name: "Test User"
+      )
       expect(user).not_to be_valid
       expect(user.errors[:password]).to include(
         "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"

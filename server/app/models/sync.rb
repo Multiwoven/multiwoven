@@ -51,6 +51,7 @@ class Sync < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
+  after_update :terminate_sync, if: :terminate_sync?
   after_discard :perform_post_discard_sync
 
   default_scope -> { kept.order(updated_at: :desc) }
@@ -122,33 +123,36 @@ class Sync < ApplicationRecord
 
   def schedule_sync?
     (new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit ||
-      saved_change_to_cron_expression? || saved_change_to_status?) && !manual?
+      saved_change_to_cron_expression? || (saved_change_to_status? && status == "pending")) && !manual?
   end
 
   def schedule_sync
-    if saved_change_to_status? && status == "disabled"
-      Temporal.start_workflow(Workflows::TerminateWorkflow, id, options: { workflow_id: "terminate-#{id}" })
-    elsif new_record? || (saved_change_to_status? && status == "pending")
-      Temporal.start_workflow(
-        Workflows::ScheduleSyncWorkflow,
-        id
-      )
-    end
+    Temporal.start_workflow(
+      Workflows::ScheduleSyncWorkflow,
+      id
+    )
   rescue StandardError => e
-    Utils::ExceptionReporter.report(e, {
-                                      sync_id: id
-                                    })
+    Utils::ExceptionReporter.report(e, { sync_id: id })
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+  end
+
+  def terminate_sync?
+    saved_change_to_status? && status == "disabled"
+  end
+
+  def terminate_sync
+    terminate_workflow_id = "terminate-#{workflow_id}"
+    Temporal.start_workflow(Workflows::TerminateWorkflow, workflow_id, options: { workflow_id: terminate_workflow_id })
+  rescue StandardError => e
+    Utils::ExceptionReporter.report(e, { sync_id: id })
+    Rails.logger.error "Failed to terminate sync with Temporal. Error: #{e.message}"
   end
 
   def perform_post_discard_sync
     sync_runs.discard_all
-    terminate_workflow_id = "terminate-#{workflow_id}"
-    Temporal.start_workflow(Workflows::TerminateWorkflow, workflow_id, options: { workflow_id: terminate_workflow_id })
+    terminate_sync
   rescue StandardError => e
-    Utils::ExceptionReporter.report(e, {
-                                      sync_id: id
-                                    })
+    Utils::ExceptionReporter.report(e, { sync_id: id })
     Rails.logger.error "Failed to Run post delete sync. Error: #{e.message}"
   end
 

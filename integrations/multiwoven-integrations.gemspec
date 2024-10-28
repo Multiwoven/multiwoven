@@ -63,6 +63,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "sequel"
   spec.add_runtime_dependency "slack-ruby-client"
   spec.add_runtime_dependency "stripe"
+  spec.add_runtime_dependency "tiny_tds"
   spec.add_runtime_dependency "zendesk_api"
 
   spec.add_development_dependency "byebug"
