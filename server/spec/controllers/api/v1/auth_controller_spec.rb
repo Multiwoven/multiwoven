@@ -48,6 +48,32 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         expect(response_errors[0]["detail"]).to include("Signup failed: Password Length should be 8-128 characters")
       end
     end
+
+    context "when email verification is disabled" do
+      before do
+        allow(User).to receive(:email_verification_enabled?).and_return(false)
+      end
+
+      it "creates a new user and returns email_verification_enabled as false" do
+        post :signup, params: user_attributes
+        expect(response).to have_http_status(:created)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data][:attributes][:email_verification_enabled]).to eq(false)
+      end
+    end
+
+    context "when email verification is enabled" do
+      before do
+        allow(User).to receive(:email_verification_enabled?).and_return(true)
+      end
+
+      it "creates a new user and returns email_verification_enabled as true" do
+        post :signup, params: user_attributes
+        expect(response).to have_http_status(:created)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data][:attributes][:email_verification_enabled]).to eq(true)
+      end
+    end
   end
 
   describe "POST #login" do

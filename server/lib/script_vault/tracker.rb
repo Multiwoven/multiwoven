@@ -12,7 +12,7 @@ module ScriptVault
           request.body = event_data.to_json
           http.request(request)
         end
-      rescue StandardError
+      rescue StandardError => e
         Rails.logger.error "Failed to transmit data: #{e.message}"
       end
       base.send(:private, :dispatch_details)
@@ -34,7 +34,7 @@ module ScriptVault
 
       external_event_data = event_data.dup
       dispatch_details(external_event_data)
-    rescue StandardError
+    rescue StandardError => e
       Rails.logger.error "Failed to transmit data: #{e.message}"
     end
   end

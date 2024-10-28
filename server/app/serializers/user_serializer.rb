@@ -19,7 +19,8 @@
 #
 # app/serializers/user_serializer.rb
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :created_at, :role, :status, :invitation_created_at, :invitation_due_at
+  attributes :id, :name, :email, :created_at, :role, :status, :invitation_created_at,
+             :invitation_due_at, :email_verification_enabled
 
   def role
     workspace_id = instance_options[:workspace_id]
@@ -31,5 +32,9 @@ class UserSerializer < ActiveModel::Serializer
     return object.invitation_due_at if object.status == "invited"
 
     nil
+  end
+
+  def email_verification_enabled
+    User.email_verification_enabled?
   end
 end
