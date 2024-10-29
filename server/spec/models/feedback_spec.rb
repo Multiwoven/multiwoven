@@ -7,6 +7,7 @@ RSpec.describe Feedback, type: :model do
     it { should belong_to(:data_app) }
     it { should belong_to(:visual_component) }
     it { should belong_to(:model) }
+    it { should belong_to(:workspace) }
   end
 
   describe "validations" do

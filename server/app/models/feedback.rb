@@ -9,6 +9,7 @@ class Feedback < ApplicationRecord
   belongs_to :data_app
   belongs_to :visual_component
   belongs_to :model
+  belongs_to :workspace
 
   enum feedback_type: { thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3 }
 
