@@ -31,6 +31,17 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response_hash.dig(:data, :attributes, :created_at)).not_to be_nil
         expect(response_hash.dig(:data, :attributes, :role)).to eq("Admin")
         expect(response_hash.dig(:data, :attributes, :status)).to eq("active")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("me")
+        expect(audit_log.resource_type).to eq("User")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns user details withg member role" do
@@ -45,6 +56,17 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response_hash.dig(:data, :attributes, :created_at)).not_to be_nil
         expect(response_hash.dig(:data, :attributes, :role)).to eq("Member")
         expect(response_hash.dig(:data, :attributes, :status)).to eq("active")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("me")
+        expect(audit_log.resource_type).to eq("User")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns user details withg viewer role" do
@@ -59,6 +81,17 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response_hash.dig(:data, :attributes, :created_at)).not_to be_nil
         expect(response_hash.dig(:data, :attributes, :role)).to eq("Viewer")
         expect(response_hash.dig(:data, :attributes, :status)).to eq("active")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("me")
+        expect(audit_log.resource_type).to eq("User")
+        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource).to eq(nil)
+        expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
     end
   end
