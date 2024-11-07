@@ -171,11 +171,12 @@ RSpec.describe Multiwoven::Integrations::Destination::Mailchimp::Client do
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
       catalog.streams.each do |stream|
-        if stream.name == "Audience" 
+        case stream.name
+        when "Audience"
           expect(stream.supported_sync_modes).to eql(["incremental"])
-        elsif stream.name == "Tags" 
+        when "Tags"
           expect(stream.supported_sync_modes).to eql(["incremental"])
-        elsif stream.name == "Campaigns" 
+        when "Campaigns"
           expect(stream.supported_sync_modes).to eql(["full_refresh"])
         end
       end
