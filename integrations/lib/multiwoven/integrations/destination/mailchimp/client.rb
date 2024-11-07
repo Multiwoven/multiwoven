@@ -30,9 +30,8 @@ module Multiwoven
                              })
           end
 
-          def write(sync_config, records, action = "create")
+          def write(sync_config, records, _action = "create")
             @sync_config = sync_config
-            @action = sync_config.stream.action || action
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
           rescue StandardError => e

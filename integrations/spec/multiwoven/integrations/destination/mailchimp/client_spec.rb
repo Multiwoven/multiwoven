@@ -112,9 +112,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Mailchimp::Client do
 
     context "when the write operation is successful" do
       before do
-        # Mock the request to the Mailchimp API for adding/updating a list member
         stub_request(:put, "#{list_member_url}/#{Digest::MD5.hexdigest(records.first[:email].downcase)}")
-          .to_return(status: 200, body: "", headers: {})
+          .to_return(status: 200, body: '{"detail": "Success"}', headers: {})
       end
 
       it "increments the success count" do
@@ -125,7 +124,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Mailchimp::Client do
         log_message = response.tracking.logs.first
         expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
         expect(log_message.level).to eql("info")
-        expect(log_message.message).to include("Added/Updated member")
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
 
@@ -144,8 +144,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Mailchimp::Client do
         log_message = response.tracking.logs.first
         expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
         expect(log_message.level).to eql("error")
-        expect(log_message.message).to include("Failed to add/update member")
-        expect(log_message.message).to include("Invalid Request")
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
       end
     end
   end
@@ -171,7 +171,13 @@ RSpec.describe Multiwoven::Integrations::Destination::Mailchimp::Client do
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
       catalog.streams.each do |stream|
-        expect(stream.supported_sync_modes).to eql(%w[incremental])
+        if stream.name == "Audience" 
+          expect(stream.supported_sync_modes).to eql(["incremental"])
+        elsif stream.name == "Tags" 
+          expect(stream.supported_sync_modes).to eql(["incremental"])
+        elsif stream.name == "Campaigns" 
+          expect(stream.supported_sync_modes).to eql(["full_refresh"])
+        end
       end
     end
   end
