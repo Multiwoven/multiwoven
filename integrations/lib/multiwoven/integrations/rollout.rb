@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.12.0"
+    VERSION = "0.13.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -41,6 +41,7 @@ module Multiwoven
       Oracle
       MicrosoftExcel
       MicrosoftSql
+      Mailchimp
     ].freeze
   end
 end
