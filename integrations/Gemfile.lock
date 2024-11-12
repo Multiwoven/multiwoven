@@ -7,12 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.12.0)
-=======
     multiwoven-integrations (0.13.2)
-      MailchimpMarketing
->>>>>>> b7d80ac9 (chore(CE): add timeout to http client (#552))
       activesupport
       async-websocket
       aws-sdk-athena

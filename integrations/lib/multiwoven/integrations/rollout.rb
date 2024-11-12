@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.13.0"
-=======
     VERSION = "0.13.2"
->>>>>>> b7d80ac9 (chore(CE): add timeout to http client (#552))
 
     ENABLED_SOURCES = %w[
       Snowflake
