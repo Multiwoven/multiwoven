@@ -14,7 +14,7 @@ RSpec.describe DataApp, type: :model do
     it { should belong_to(:workspace) }
     it { should have_many(:visual_components).dependent(:destroy) }
     it { should have_many(:models).through(:visual_components) }
-    it { should have_many(:data_app_sessions).dependent(:nullify) }
+    it { should have_many(:data_app_sessions).dependent(:destroy) }
     it { should have_many(:feedbacks).through(:visual_components) }
   end
 
