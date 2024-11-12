@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.13.1"
+=======
+    VERSION = "0.14.0"
+>>>>>>> 63e423bc (feat(CE): Add HTTP Model Source Connector (#541))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -19,6 +23,7 @@ module Multiwoven
       DatabricksModel
       AwsSagemakerModel
       VertexModel
+      HttpModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
