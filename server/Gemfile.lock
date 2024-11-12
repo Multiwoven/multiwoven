@@ -1931,7 +1931,12 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.11.6)
+=======
+    multiwoven-integrations (0.14.2)
+      MailchimpMarketing
+>>>>>>> 1fe9fb4c (chore(CE): http model source gem update 0.14.2 (#568))
       activesupport
       async-websocket
       aws-sdk-athena
@@ -2010,8 +2015,13 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     process_executer (1.1.2)
     protocol-hpack (1.5.1)
+<<<<<<< HEAD
     protocol-http (0.37.0)
     protocol-http1 (0.27.0)
+=======
+    protocol-http (0.44.0)
+    protocol-http1 (0.28.1)
+>>>>>>> 1fe9fb4c (chore(CE): http model source gem update 0.14.2 (#568))
       protocol-http (~> 0.22)
     protocol-http2 (0.19.3)
       protocol-hpack (~> 1.4)
@@ -2160,7 +2170,11 @@ GEM
       faraday-multipart
       gli
       hashie
+<<<<<<< HEAD
     sorbet-runtime (0.5.11592)
+=======
+    sorbet-runtime (0.5.11647)
+>>>>>>> 1fe9fb4c (chore(CE): http model source gem update 0.14.2 (#568))
     stringio (3.1.0)
     stripe (13.0.0)
     strong_migrations (1.8.0)
@@ -2234,7 +2248,11 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.11.6)
+=======
+  multiwoven-integrations (~> 0.14.2)
+>>>>>>> 1fe9fb4c (chore(CE): http model source gem update 0.14.2 (#568))
   mysql2
   newrelic_rpm
   parallel
