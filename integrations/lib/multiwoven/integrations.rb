@@ -92,6 +92,7 @@ require_relative "integrations/destination/oracle_db/client"
 require_relative "integrations/destination/microsoft_excel/client"
 require_relative "integrations/destination/microsoft_sql/client"
 require_relative "integrations/destination/mailchimp/client"
+require_relative "integrations/destination/ais_data_store/client"
 
 module Multiwoven
   module Integrations
