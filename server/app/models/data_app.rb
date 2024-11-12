@@ -13,7 +13,7 @@ class DataApp < ApplicationRecord
   has_many :visual_components, dependent: :destroy
   has_many :models, through: :visual_components
   has_many :feedbacks, through: :visual_components
-  has_many :data_app_sessions, dependent: :nullify
+  has_many :data_app_sessions, dependent: :destroy
 
   after_initialize :set_default_status, if: :new_record?
 
