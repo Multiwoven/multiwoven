@@ -1883,15 +1883,9 @@ GEM
     inflection (1.0.0)
     interactor (3.1.2)
     io-console (0.7.1)
-<<<<<<< HEAD
-    io-endpoint (0.13.1)
-    io-event (1.6.5)
-    io-stream (0.4.3)
-=======
     io-endpoint (0.14.0)
     io-event (1.7.3)
     io-stream (0.6.1)
->>>>>>> f97204df (chore(CE): update integration gem version (#559))
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
@@ -1941,12 +1935,8 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.11.6)
-=======
     multiwoven-integrations (0.13.1)
       MailchimpMarketing
->>>>>>> f97204df (chore(CE): update integration gem version (#559))
       activesupport
       async-websocket
       aws-sdk-athena
@@ -1977,6 +1967,7 @@ GEM
       sequel
       slack-ruby-client
       stripe
+      tiny_tds
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
@@ -2175,11 +2166,7 @@ GEM
       faraday-multipart
       gli
       hashie
-<<<<<<< HEAD
-    sorbet-runtime (0.5.11592)
-=======
     sorbet-runtime (0.5.11645)
->>>>>>> f97204df (chore(CE): update integration gem version (#559))
     stringio (3.1.0)
     stripe (13.1.1)
     strong_migrations (1.8.0)
@@ -2187,12 +2174,8 @@ GEM
     thor (1.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
-<<<<<<< HEAD
-    traces (0.13.1)
-=======
     tiny_tds (2.1.7)
     traces (0.14.1)
->>>>>>> f97204df (chore(CE): update integration gem version (#559))
     trailblazer-option (0.1.2)
     typhoeus (1.4.1)
       ethon (>= 0.9.0)
@@ -2258,11 +2241,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.11.6)
-=======
   multiwoven-integrations (~> 0.13.1)
->>>>>>> f97204df (chore(CE): update integration gem version (#559))
   mysql2
   newrelic_rpm
   parallel
