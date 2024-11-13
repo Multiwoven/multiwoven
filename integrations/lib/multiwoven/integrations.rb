@@ -70,6 +70,7 @@ require_relative "integrations/source/oracle_db/client"
 require_relative "integrations/source/databrics_model/client"
 require_relative "integrations/source/aws_sagemaker_model/client"
 require_relative "integrations/source/google_vertex_model/client"
+require_relative "integrations/source/http_model/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
