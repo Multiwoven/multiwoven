@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.13.1"
-=======
-    VERSION = "0.14.2"
->>>>>>> ecc469a6 (fix(CE): http model config (#571))
+    VERSION = "0.14.1"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -23,6 +19,7 @@ module Multiwoven
       DatabricksModel
       AwsSagemakerModel
       VertexModel
+      HttpModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
