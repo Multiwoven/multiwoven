@@ -1,7 +1,7 @@
 {
   "data": {
     "name": "HttpModel",
-    "title": "HTTP Model",
+    "title": "HTTP Model Endpoint",
     "connector_type": "source",
     "category": "AI Model",
     "documentation_url": "https://docs.mutliwoven.com",
