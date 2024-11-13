@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.13.1"
-=======
-    VERSION = "0.15.0"
->>>>>>> 70e1bd5d (feat(CE): AIS Data store destination connector (#573))
+    VERSION = "0.14.2"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -23,6 +19,7 @@ module Multiwoven
       DatabricksModel
       AwsSagemakerModel
       VertexModel
+      HttpModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
