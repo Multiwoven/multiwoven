@@ -24,7 +24,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
   let!(:dbt_model) { create(:model, query_type: :dbt, connector:, workspace:) }
   let!(:soql_model) { create(:model, query_type: :soql, connector:, workspace:) }
   let!(:ai_ml_model) do
-    create(:model, query_type: :ai_ml, connector:, configuration: { key: "value" }, workspace:)
+    create(:model, query_type: :ai_ml, connector:, configuration: { harvesters: [] }, workspace:)
   end
   let(:viewer_role) { create(:role, :viewer) }
   let(:member_role) { create(:role, :member) }
@@ -351,7 +351,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
               name: "AI/ML Model",
               query_type: "ai_ml",
               primary_key: "id",
-              configuration: { "test" => "value" }
+              configuration: { "harvesters" => [] }
             }
           }
         end
@@ -364,6 +364,70 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(response_hash.dig(:data, :id)).to be_present
           expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
           expect(response_hash.dig(:data, :attributes, :query_type)).to eq("ai_ml")
+          expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
+
+          audit_log = AuditLog.last
+          expect(audit_log).not_to be_nil
+          expect(audit_log.user_id).to eq(user.id)
+          expect(audit_log.action).to eq("create")
+          expect(audit_log.resource_type).to eq("Model")
+          expect(audit_log.resource_id).to eq(nil)
+          expect(audit_log.resource).to eq(request_body.dig(:model, :name))
+          expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.created_at).not_to be_nil
+          expect(audit_log.updated_at).not_to be_nil
+        end
+      end
+
+      context "when creating a model with query_type dynamic_sql with configuration present" do
+        let(:request_body) do
+          {
+            model: {
+              connector_id: models.first.connector_id,
+              name: "Dynamic SQL Model",
+              query_type: "dynamic_sql",
+              primary_key: "id",
+              configuration:
+              {
+                "harvesters" => [
+                  {
+                    "value" => "dynamic test",
+                    "method" => "dom",
+                    "selector" => "dom_id",
+                    "preprocess" => ""
+                  }
+                ],
+                "json_schema" => [
+                  {
+                    "input" => [
+                      {
+                        "name" => "risk_level",
+                        "type" => "string",
+                        "value" => "",
+                        "value_type" => "dynamic"
+                      }
+                    ],
+                    "output" => [
+                      {
+                        "name" => "data.col0.calculated_risk",
+                        "type" => "string"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        end
+
+        it "creates the model and returns success" do
+          post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+            .merge(auth_headers(user, workspace_id))
+          expect(response).to have_http_status(:created)
+          response_hash = JSON.parse(response.body).with_indifferent_access
+          expect(response_hash.dig(:data, :id)).to be_present
+          expect(response_hash.dig(:data, :attributes, :name)).to eq(request_body.dig(:model, :name))
+          expect(response_hash.dig(:data, :attributes, :query_type)).to eq("dynamic_sql")
           expect(response_hash.dig(:data, :attributes, :configuration)).to eq(request_body.dig(:model, :configuration))
 
           audit_log = AuditLog.last
@@ -499,7 +563,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
               name: "Updated AI/ML Model",
               query_type: "ai_ml",
               primary_key: "updated_id",
-              configuration: { "updated_test" => "value" }
+              configuration: { "harvesters" => [] }
             }
           }
         end

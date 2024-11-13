@@ -42,8 +42,20 @@ module ModelContracts
     end
 
     rule(model: :configuration) do
-      if values[:model][:configuration].blank? && (values[:model][:query_type] == "ai_ml")
-        key.failure("Configuration is required for this query type")
+      query_type = values[:model][:query_type]
+
+      if %w[dynamic_sql ai_ml].include? query_type
+        if value.blank?
+          key.failure("Configuration is required for this query type")
+        elsif query_type == "ai_ml"
+          key.failure("Config must contain harvester details") unless value.key?("harvesters")
+        else
+          key.failure("Config must contain harvester & json_schema") unless %w[harvesters
+                                                                               json_schema].any? do |k|
+                                                                              value.key?(k)
+                                                                            end
+
+        end
       end
     end
   end
