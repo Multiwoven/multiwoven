@@ -14,9 +14,11 @@
         "order": 0
       },
       "headers": {
-        "type": "string",
         "title": "Http Headers",
-        "order": 1
+        "order": 1,
+        "additionalProperties": {
+          "type": "string"
+        }
       },
       "config": {
         "title": "",
@@ -31,6 +33,20 @@
           }
         },
         "order": 2
+      },
+      "request_format": {
+        "title": "Request Format",
+        "description": "Sample Request Format",
+        "type": "string",
+        "x-request-format": true,
+        "order": 3
+      },
+      "response_format": {
+        "title": "Response Format",
+        "description": "Sample Response Format",
+        "type": "string",
+        "x-response-format": true,
+        "order": 4
       }
     }
   }
