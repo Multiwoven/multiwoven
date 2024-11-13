@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.13.2"
+    VERSION = "0.15.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -19,6 +19,7 @@ module Multiwoven
       DatabricksModel
       AwsSagemakerModel
       VertexModel
+      HttpModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -42,6 +43,7 @@ module Multiwoven
       MicrosoftExcel
       MicrosoftSql
       Mailchimp
+      AISDataStore
     ].freeze
   end
 end

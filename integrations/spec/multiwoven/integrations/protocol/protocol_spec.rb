@@ -383,6 +383,11 @@ module Multiwoven
           model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "ai_ml", primary_key: "id")
           expect("ai_ml").to include(model.query_type)
         end
+
+        it "has a query_type 'dynamic_sql'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "dynamic_sql", primary_key: "id")
+          expect("dynamic_sql").to include(model.query_type)
+        end
       end
     end
 
