@@ -1770,10 +1770,7 @@ GEM
       net-http
     faraday-retry (2.2.1)
       faraday (~> 2.0)
-    ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1935,7 +1932,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.13.1)
+    multiwoven-integrations (0.15.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1971,7 +1968,7 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
-    net-http (0.5.0)
+    net-http (0.3.2)
       uri
     net-imap (0.4.9.1)
       date
@@ -2016,7 +2013,7 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     process_executer (1.2.0)
     protocol-hpack (1.5.1)
-    protocol-http (0.43.0)
+    protocol-http (0.44.0)
     protocol-http1 (0.28.1)
       protocol-http (~> 0.22)
     protocol-http2 (0.20.0)
@@ -2166,7 +2163,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    sorbet-runtime (0.5.11645)
+    sorbet-runtime (0.5.11647)
     stringio (3.1.0)
     stripe (13.1.1)
     strong_migrations (1.8.0)
@@ -2187,7 +2184,7 @@ GEM
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
-    uri (1.0.1)
+    uri (0.12.0)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -2241,7 +2238,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.13.1)
+  multiwoven-integrations (~> 0.15.0)
   mysql2
   newrelic_rpm
   parallel
