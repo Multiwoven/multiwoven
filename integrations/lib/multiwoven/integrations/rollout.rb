@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.13.1"
-=======
-    VERSION = "0.14.1"
->>>>>>> ca655bf8 (feat(CE): Dynamic sql model type added (#570))
+    VERSION = "0.14.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -23,6 +19,7 @@ module Multiwoven
       DatabricksModel
       AwsSagemakerModel
       VertexModel
+      HttpModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
