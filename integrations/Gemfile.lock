@@ -7,12 +7,8 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.13.1)
-=======
     multiwoven-integrations (0.14.0)
       MailchimpMarketing
->>>>>>> 63e423bc (feat(CE): Add HTTP Model Source Connector (#541))
       activesupport
       async-websocket
       aws-sdk-athena
