@@ -15,15 +15,23 @@
 #  updated_at   :datetime         not null
 #
 class Model < ApplicationRecord
+  AI_ML_CONFIG_JSON_SCHEMA = Rails.root.join("app/models/schema_validations/models/configuration_aiml.json")
+  DYNAMIC_SQL_CONFIG_JSON_SCHEMA = Rails.root.join(
+    "app/models/schema_validations/models/configuration_dynamic_sql.json"
+  )
+
   validates :workspace_id, presence: true
   validates :connector_id, presence: true
   validates :name, presence: true
 
-  enum :query_type, %i[raw_sql dbt soql table_selector ai_ml]
+  enum :query_type, %i[raw_sql dbt soql table_selector ai_ml dynamic_sql]
 
   validates :query, presence: true, if: :requires_query?
   # Havesting configuration
   validates :configuration, presence: true, if: :requires_configuration?
+  validates :configuration, presence: true, json: { schema: lambda {
+                                                              configuration_schema_validation
+                                                            } }, if: :requires_configuration?
 
   belongs_to :workspace
   belongs_to :connector
@@ -31,10 +39,11 @@ class Model < ApplicationRecord
   has_many :syncs, dependent: :destroy
   has_many :visual_components, dependent: :destroy
 
-  scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector]) }
+  scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector dynamic_sql]) }
   scope :ai_ml, -> { where(query_type: :ai_ml) }
 
   default_scope { order(updated_at: :desc) }
+
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(
       name:,
@@ -49,6 +58,16 @@ class Model < ApplicationRecord
   end
 
   def requires_configuration?
-    %w[ai_ml].include?(query_type)
+    %w[ai_ml dynamic_sql].include?(query_type)
+  end
+
+  private
+
+  def configuration_schema_validation
+    if ai_ml?
+      AI_ML_CONFIG_JSON_SCHEMA
+    elsif dynamic_sql?
+      DYNAMIC_SQL_CONFIG_JSON_SCHEMA
+    end
   end
 end
