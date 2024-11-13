@@ -51,6 +51,18 @@ module Multiwoven
             expect { described_class.request(url, "INVALID", headers: headers) }.to raise_error(ArgumentError)
           end
         end
+
+        context "when timeout is set" do
+          it "raises a Net::OpenTimeout error if the request exceeds the timeout" do
+            stub_request(:get, url).to_timeout
+            expect { described_class.request(url, "GET", headers: headers, config: { timeout: 1 }) }.to raise_error(Net::OpenTimeout)
+          end
+
+          it "raises a Net::ReadTimeout error if the response exceeds the timeout" do
+            stub_request(:get, url).to_raise(Net::ReadTimeout)
+            expect { described_class.request(url, "GET", headers: headers, config: { timeout: 1 }) }.to raise_error(Net::ReadTimeout)
+          end
+        end
       end
     end
   end
