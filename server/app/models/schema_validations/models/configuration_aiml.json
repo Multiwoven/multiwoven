@@ -3,7 +3,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "properties": {
     "harvesters": { "type": "array" },
-    "json_schema": { "type": "array" }
+    "json_schema": { "type": "object" }
   },
   "required": ["harvesters"]
 }
