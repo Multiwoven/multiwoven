@@ -101,4 +101,29 @@ RSpec.describe Catalog, type: :model do
       end
     end
   end
+
+  describe "#json_schema" do
+    let(:json_schema) do
+      { "input" => [{ "name" => "inputs.0", "type" => "string", "value" => "dynamic", "value_type" => "dynamic" },
+                    { "name" => "inputs.0", "type" => "number", "value" => "9522", "value_type" => "static" }],
+        "output" => [{ "name" => "predictions.col1.0", "type" => "string" },
+                     { "name" => "predictions.col1.1", "type" => "number" }] }
+    end
+    let(:catalog) do
+      create(:catalog, catalog: { "streams" => [{
+               "name" => "DatabricksModel",
+               "json_schema" => json_schema
+             }] })
+    end
+
+    it "returns the correct json_schema when it exists" do
+      json_schema_from_catalog = catalog.json_schema("DatabricksModel")
+      expect(json_schema_from_catalog).to eq(json_schema)
+    end
+
+    it "returns an empty json when no valid schema available" do
+      json_schema_from_catalog = catalog.json_schema("NotExist")
+      expect(json_schema_from_catalog).to eq({})
+    end
+  end
 end
