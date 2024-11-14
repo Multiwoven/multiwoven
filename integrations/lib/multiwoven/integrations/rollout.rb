@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.15.1"
+=======
+    VERSION = "0.15.3"
+>>>>>>> d10fecac (chore(CE): update timeout in http client (#584))
 
     ENABLED_SOURCES = %w[
       Snowflake
