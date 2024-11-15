@@ -26,5 +26,6 @@ Rails.application.config.filter_parameters += [
   :pin,                     
   :current_password,        
   :new_password,            
-  :ssn_last4,               
+  :ssn_last4,    
+  :session_id,           
 ]
