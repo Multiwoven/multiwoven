@@ -64,7 +64,7 @@ RSpec.describe "ModelContracts" do
             query: "SELECT * FROM table;",
             query_type: "dynamic_sql",
             primary_key: "id",
-            configuration: { "json_schema" => [], "harvesters" => [] }
+            configuration: { "json_schema" => {}, "harvesters" => [] }
           }
         }
       end
