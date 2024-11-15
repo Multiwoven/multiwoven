@@ -116,7 +116,7 @@ RSpec.describe Model, type: :model do
               name: "test_model",
               query_type: :dynamic_sql, connector_id: source.id,
               workspace_id: source.workspace_id,
-              configuration: { "harvesters": [], "json_schema": [] }
+              configuration: { "harvesters": [], "json_schema": {} }
             )
             expect(dynamic_sql_model).to be_valid
           end
@@ -208,7 +208,7 @@ RSpec.describe Model, type: :model do
                             "preprocess": ""
                           }
                         ],
-                        "json_schema": [
+                        "json_schema":
                           {
                             "input": [
                               {
@@ -225,7 +225,6 @@ RSpec.describe Model, type: :model do
                               }
                             ]
                           }
-                        ]
                       })
     end
 
