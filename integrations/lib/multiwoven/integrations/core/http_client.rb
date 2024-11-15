@@ -10,8 +10,11 @@ module Multiwoven
           http.use_ssl = (uri.scheme == "https")
 
           # Set timeout if provided
-          http.open_timeout = config[:timeout] if config[:timeout]
-          http.read_timeout = config[:timeout] if config[:timeout]
+          if config[:timeout]
+            timeout_value = config[:timeout].to_f
+            http.open_timeout = timeout_value
+            http.read_timeout = timeout_value
+          end
 
           request = build_request(method, uri, payload, headers)
           http.request(request)
