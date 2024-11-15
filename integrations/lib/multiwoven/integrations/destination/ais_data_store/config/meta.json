@@ -5,7 +5,7 @@
     "connector_type": "destination",
     "category": "Database",
     "documentation_url": "https://docs.mutliwoven.com",
-    "github_issue_label": "destination-postgresql",
+    "github_issue_label": "destination-ais-data-store",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",

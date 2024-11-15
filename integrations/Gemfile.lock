@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.15.2)
+    multiwoven-integrations (0.15.4)
       MailchimpMarketing
       activesupport
       async-websocket
