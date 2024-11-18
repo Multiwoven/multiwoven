@@ -93,13 +93,13 @@ jobs:
   on_failure:
     environment: community
     if: ${{ failure() }}
-    needs: [ build_and_push, deploy ]
+    needs: [ prepare-changelog ]
     runs-on: ubuntu-latest
     steps:
       - name: Report error to AppSignal
         env:
           ACTION: Release
-          APPSIGNAL_PUSH_API_KEY: ${{ env.APPSIGNAL_PUSH_API_KEY }}
+          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
           MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           NAME: Community Release failed
         run: |

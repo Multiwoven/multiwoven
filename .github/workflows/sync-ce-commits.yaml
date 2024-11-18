@@ -80,7 +80,7 @@ jobs:
       - name: Report error to AppSignal
         env:
           ACTION: Sync Commits
-          APPSIGNAL_PUSH_API_KEY: ${{ env.APPSIGNAL_PUSH_API_KEY }}
+          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
           MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           NAME: Sync Commits from EE to CE failed
         run: |

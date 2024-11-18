@@ -54,3 +54,22 @@ jobs:
             --set multiwovenServer.multiwovenServer.image.tag=$IMAGE_TAG \
             --set multiwovenWorker.multiwovenWorker.image.repository=$IMAGE_NAME \
             --set multiwovenWorker.multiwovenWorker.image.tag=$IMAGE_TAG
+
+  on_failure:
+    environment: community
+    if: ${{ failure() }}
+    needs: [ build_and_push, deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report error to AppSignal
+        env:
+          ACTION: Release
+          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
+          MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          NAME: Deploy Server to Community failed
+        run: |
+          EPOCH=$(date +%s)
+          curl -verbose -H \"Content-Type: application/json\" \
+            -d "{ \"action\": \"$ACTION\", \"timestamp\": $EPOCH, \"namespace\": \"github\", \"error\": { \"name\": $NAME, \"message\": $MESSAGE } }" \
+            -X POST \
+            https://appsignal-endpoint.net/errors?api_key=$APPSIGNAL_PUSH_API_KEY
