@@ -61,6 +61,10 @@ class Model < ApplicationRecord
     %w[ai_ml dynamic_sql].include?(query_type)
   end
 
+  def json_schema
+    configuration["json_schema"]
+  end
+
   private
 
   def configuration_schema_validation
