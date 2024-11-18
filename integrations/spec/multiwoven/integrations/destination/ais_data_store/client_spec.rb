@@ -5,13 +5,13 @@ RSpec.describe Multiwoven::Integrations::Destination::AISDataStore::Client do
   let(:sync_config) do
     {
       "source": {
-        "name": "PostgresqlSourceConnector",
+        "name": "AISDataStoreSourceConnector",
         "type": "source",
         "connection_specification": {
           "credentials": {
             "auth_type": "username/password",
-            "username": ENV["POSTGRESQL_USERNAME"],
-            "password": ENV["POSTGRESQL_PASSWORD"]
+            "username": ENV["AISDATASTORE_USERNAME"],
+            "password": ENV["AISDATASTORE_PASSWORD"]
           },
           "host": "test.pg.com",
           "port": "8080",
@@ -25,8 +25,8 @@ RSpec.describe Multiwoven::Integrations::Destination::AISDataStore::Client do
         "connection_specification": {
           "credentials": {
             "auth_type": "username/password",
-            "username": ENV["POSTGRESQL_USERNAME"],
-            "password": ENV["POSTGRESQL_PASSWORD"]
+            "username": ENV["AISDATASTORE_USERNAME"],
+            "password": ENV["AISDATASTORE_PASSWORD"]
           },
           "host": "test.pg.com",
           "port": "8080",
@@ -192,7 +192,7 @@ RSpec.describe Multiwoven::Integrations::Destination::AISDataStore::Client do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
         an_instance_of(StandardError), {
-          context: "POSTGRESQL:DISCOVER:EXCEPTION",
+          context: "AIS:DATA:STORE:DISCOVER:EXCEPTION",
           type: "error"
         }
       )
