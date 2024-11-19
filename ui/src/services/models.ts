@@ -58,8 +58,10 @@ export const getModelPreview = async (query: string, connector_id: string): Prom
   return apiRequest(url, { query: query });
 };
 
-export const getAllModels = async ({ type = 'data' }: GetAllModelsProps): Promise<APIData> =>
-  multiwovenFetch<null, APIData>({
+export const getAllModels = async ({
+  type = 'data',
+}: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
+  multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',
     url: type ? `/models?query_type=${type}` : '/models',
   });
