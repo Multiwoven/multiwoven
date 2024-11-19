@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_07_074907) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_19_111441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_07_074907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "data_app_token"
+    t.integer "rendering_type"
     t.index ["data_app_token"], name: "index_data_apps_on_data_app_token", unique: true
   end
 

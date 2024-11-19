@@ -5,6 +5,7 @@ FactoryBot.define do
     name { "Sales Dashboard" }
     description { "A dashboard for visualizing sales data" }
     status { "active" }
+    rendering_type { "embed" }
     meta_data do
       {
         author: "John Doe",
