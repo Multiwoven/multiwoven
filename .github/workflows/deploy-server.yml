@@ -58,7 +58,7 @@ jobs:
   on_failure:
     environment: community
     if: ${{ failure() }}
-    needs: [ build_and_push, deploy ]
+    needs: [ deploy ]
     runs-on: ubuntu-latest
     steps:
       - name: Report error to AppSignal
