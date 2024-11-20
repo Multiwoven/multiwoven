@@ -1671,6 +1671,9 @@ GEM
       fiber-annotation
       fiber-local (~> 1.1)
       json
+    counter_culture (3.8.2)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
@@ -2226,6 +2229,7 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
+  counter_culture (~> 3.3)
   data_migrate
   devise
   devise-jwt

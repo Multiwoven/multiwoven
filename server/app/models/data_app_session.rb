@@ -6,6 +6,8 @@ class DataAppSession < ApplicationRecord
   validates :session_id, presence: true, uniqueness: true
   validates :data_app_id, :workspace_id, presence: true
 
+  counter_culture :data_app
+
   before_create :set_times
 
   scope :active, -> { where("end_time IS NULL OR end_time > ?", Time.zone.now) }

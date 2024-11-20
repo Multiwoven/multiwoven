@@ -42,6 +42,7 @@ gem "pundit"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
+gem "counter_culture", "~> 3.3"
 gem "fugit"
 gem "pg_query"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
