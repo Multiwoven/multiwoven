@@ -1809,7 +1809,7 @@ GEM
       retriable (>= 2.0, < 4.a)
     google-apis-sheets_v4 (0.38.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-cloud-ai_platform-v1 (0.57.0)
+    google-cloud-ai_platform-v1 (0.58.0)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
       google-cloud-location (>= 0.7, < 2.a)
@@ -1935,7 +1935,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.15.3)
+    multiwoven-integrations (0.15.4)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2168,7 +2168,7 @@ GEM
       hashie
     sorbet-runtime (0.5.11647)
     stringio (3.1.0)
-    stripe (13.1.1)
+    stripe (13.1.2)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
     thor (1.3.0)
@@ -2241,7 +2241,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.15.3)
+  multiwoven-integrations (~> 0.15.4)
   mysql2
   newrelic_rpm
   parallel
