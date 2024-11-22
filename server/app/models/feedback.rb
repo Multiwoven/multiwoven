@@ -6,6 +6,8 @@ class Feedback < ApplicationRecord
   validates :model_id, presence: true
   validates :feedback_type, presence: true
 
+  counter_culture %i[visual_component data_app]
+
   belongs_to :data_app
   belongs_to :visual_component
   belongs_to :model
