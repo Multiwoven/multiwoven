@@ -23,6 +23,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         type: "destination",
         connection_specification: {
           url_host: "https://your-subdomain",
+          http_method: "POST",
           headers: {
             "Accept" => "application/json",
             "Authorization" => "Bearer test_token",
@@ -30,7 +31,8 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
           },
           config: {
             timeout: 25
-          }
+          },
+          request_format: payload.to_json
         }
       },
       destination: {
@@ -73,12 +75,16 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         response = Net::HTTPSuccess.new("1.1", "200", "Unauthorized")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
         headers = sync_config_json[:source][:connection_specification][:headers]
+        config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
-                "GET",
-                headers: headers)
+                http_method,
+                payload: JSON.parse(payload.to_json),
+                headers: headers,
+                config: config)
           .and_return(response)
       end
 
@@ -95,11 +101,12 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
         headers = sync_config_json[:source][:connection_specification][:headers]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
-                "GET",
+                http_method,
                 headers: headers)
           .and_return(response)
       end
@@ -140,12 +147,13 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         response = Net::HTTPSuccess.new("1.1", "200", "Unauthorized")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
         headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
-                "POST",
+                http_method,
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
                 config: config)
@@ -166,12 +174,13 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
         headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
-                "GET",
+                http_method,
                 headers: headers,
                 config: config)
           .and_return(response)

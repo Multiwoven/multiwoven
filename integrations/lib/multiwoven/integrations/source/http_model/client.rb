@@ -7,12 +7,12 @@ module Multiwoven::Integrations::Source
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         url_host = connection_config[:url_host]
+        http_method = connection_config[:http_method]
         headers = connection_config[:headers]
-        response = Multiwoven::Integrations::Core::HttpClient.request(
-          url_host,
-          HTTP_GET,
-          headers: headers
-        )
+        payload = JSON.parse(connection_config[:request_format])
+        config = connection_config[:config]
+        config[:timeout] ||= 30
+        response = send_request(url_host, http_method, payload, headers, config)
         if success?(response)
           success_status
         else
@@ -60,7 +60,7 @@ module Multiwoven::Integrations::Source
         headers = connection_config[:headers]
         config = connection_config[:config]
         config[:timeout] ||= 30
-        response = send_request(url_host, payload, headers, config)
+        response = send_request(url_host, HTTP_POST, payload, headers, config)
         process_response(response)
       rescue StandardError => e
         handle_exception(e, context: "HTTP MODEL:RUN_MODEL:EXCEPTION", type: "error")
@@ -75,10 +75,10 @@ module Multiwoven::Integrations::Source
         end
       end
 
-      def send_request(url, payload, headers, config)
+      def send_request(url, http_method, payload, headers, config)
         Multiwoven::Integrations::Core::HttpClient.request(
           url,
-          HTTP_POST,
+          http_method,
           payload: payload,
           headers: headers,
           config: config
