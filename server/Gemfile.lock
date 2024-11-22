@@ -111,7 +111,7 @@ GEM
     appsignal (3.7.5)
       rack
     ast (2.4.2)
-    async (2.20.0)
+    async (2.21.0)
       console (~> 1.29)
       fiber-annotation
       io-event (~> 1.6, >= 1.6.5)
@@ -1789,7 +1789,7 @@ GEM
       googleapis-common-protos-types (>= 1.11.0, < 2.a)
       googleauth (~> 1.9)
       grpc (~> 1.59)
-    git (2.3.1)
+    git (2.3.2)
       activesupport (>= 5.0)
       addressable (~> 2.8)
       process_executer (~> 1.1)
@@ -1935,7 +1935,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.15.4)
+    multiwoven-integrations (0.15.5)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2168,7 +2168,7 @@ GEM
       hashie
     sorbet-runtime (0.5.11647)
     stringio (3.1.0)
-    stripe (13.1.2)
+    stripe (13.2.0)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
     thor (1.3.0)
@@ -2241,7 +2241,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.15.4)
+  multiwoven-integrations (~> 0.15.5)
   mysql2
   newrelic_rpm
   parallel
