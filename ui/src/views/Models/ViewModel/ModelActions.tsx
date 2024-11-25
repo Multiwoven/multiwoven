@@ -1,8 +1,7 @@
-import { Box, Popover, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
-import { FiMoreHorizontal } from 'react-icons/fi';
 import EditModelModal from './EditModelModal';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import DeleteModelModal from './DeleteModelModal';
+<<<<<<< HEAD
 
 const ModelActions = ({ prefillValues }: { prefillValues: PrefillValue }) => (
   <>
@@ -32,6 +31,23 @@ const ModelActions = ({ prefillValues }: { prefillValues: PrefillValue }) => (
       </PopoverContent>
     </Popover>
   </>
+=======
+import RoleAccess from '@/enterprise/components/RoleAccess';
+import { UserActions } from '@/enterprise/types';
+import HorizontalMenuActions from '@/components/HorizontalMenuActions';
+
+const ModelActions = ({ prefillValues }: { prefillValues: PrefillValue }) => (
+  <HorizontalMenuActions backgroundColor='gray.200' contentMargin='12px' borderColor='gray.400'>
+    <>
+      <RoleAccess location='model' type='item' action={UserActions.Update}>
+        <EditModelModal {...prefillValues} />
+      </RoleAccess>
+      <RoleAccess location='model' type='item' action={UserActions.Delete}>
+        <DeleteModelModal />
+      </RoleAccess>
+    </>
+  </HorizontalMenuActions>
+>>>>>>> 8f1c21c9 (refactor(CE): models creation flow)
 );
 
 export default ModelActions;
