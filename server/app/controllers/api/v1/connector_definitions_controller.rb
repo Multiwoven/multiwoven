@@ -7,7 +7,7 @@ module Api
       include AuditLogger
       before_action :set_connectors, only: %i[show index]
       before_action :set_connector_client, only: %i[check_connection]
-      after_action :create_audit_log
+      after_action :create_audit_log, only: %i[check_connection]
 
       def index
         authorize @connectors, policy_class: ConnectorDefinitionPolicy
