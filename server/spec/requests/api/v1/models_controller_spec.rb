@@ -510,6 +510,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
 
@@ -538,6 +539,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     context "when it is an unauthenticated user for update model" do
       it "returns unauthorized" do
         put "/api/v1/models/#{models.first.id}"
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -579,6 +581,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json,
                                                   headers: { "Content-Type": "application/json" }
                                                     .merge(auth_headers(user, workspace_id))
+        expect(Sentry).to have_receive(:capture_exception)
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
@@ -659,6 +662,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:unauthorized)
       end
 
@@ -672,6 +676,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         request_body[:model][:connector_id] = "connector_id_wrong"
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(Sentry).to capture_exception('Unauthorized access')
         expect(response).to have_http_status(:bad_request)
       end
     end
