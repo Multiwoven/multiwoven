@@ -13,7 +13,7 @@ module Api
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[create update]
       after_action :event_logger
-      after_action :create_audit_log
+      after_action :create_audit_log, only: %i[create update destroy]
 
       def index
         filter = params[:query_type] || "all"
@@ -72,6 +72,7 @@ module Api
 
       def destroy
         authorize model
+        @action = "delete"
         @audit_resource = model.name
         model.destroy!
         head :no_content
@@ -112,7 +113,7 @@ module Api
       end
 
       def create_audit_log
-        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
       end
 
       def model_params
