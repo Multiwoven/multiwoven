@@ -10,7 +10,7 @@ module Api
       before_action :modify_sync_params, only: %i[create update]
 
       after_action :event_logger
-      after_action :create_audit_log
+      after_action :create_audit_log, only: %i[create update enable destroy]
 
       attr_reader :sync
 
@@ -71,6 +71,7 @@ module Api
 
       def destroy
         authorize sync
+        @action = "delete"
         @audit_resource = sync.name
         sync.discard
         head :no_content
@@ -126,7 +127,7 @@ module Api
       end
 
       def create_audit_log
-        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
       end
 
       def sync_params
