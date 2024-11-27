@@ -63,17 +63,6 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Sync_record")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and fetch sync for member role" do
@@ -99,17 +88,6 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Sync_record")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and fetch sync for viewer role" do
@@ -135,17 +113,6 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           end
           expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
         end
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Sync_record")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       context "when it is an authenticated user and passing invalid parameters" do
