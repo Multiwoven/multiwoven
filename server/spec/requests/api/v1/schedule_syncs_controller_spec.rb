@@ -153,7 +153,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
         audit_log = AuditLog.last
         expect(audit_log).not_to be_nil
         expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("destroy")
+        expect(audit_log.action).to eq("delete")
         expect(audit_log.resource_type).to eq("Schedule_sync")
         expect(audit_log.resource_id).to eq(nil)
         expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
