@@ -73,17 +73,6 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
         expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(6)
         expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
         expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(3)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Report")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and time slices for viewer role" do
@@ -109,17 +98,6 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
         expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(6)
         expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
         expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(3)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Report")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and time slices for member role" do
@@ -145,17 +123,6 @@ RSpec.describe "Api::V1::ReportsController", type: :request do
         expect(total_sync_run_rows[slice_size - 1]["total_count"]).to eq(6)
         expect(total_sync_run_rows[slice_size - 1]["success_count"]).to eq(3)
         expect(total_sync_run_rows[slice_size - 1]["failed_count"]).to eq(3)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Report")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
     end
   end

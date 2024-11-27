@@ -4,8 +4,6 @@ module Api
   module V1
     class ReportsController < ApplicationController
       include Reports
-      include AuditLogger
-      after_action :create_audit_log
       attr_reader :report
 
       def index
@@ -20,10 +18,6 @@ module Api
       end
 
       private
-
-      def create_audit_log
-        audit!
-      end
 
       def report_params
         params.permit(:type, :time_period, :metric, connector_ids: []).merge(workspace: current_workspace)
