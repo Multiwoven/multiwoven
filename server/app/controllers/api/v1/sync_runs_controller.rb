@@ -3,10 +3,8 @@
 module Api
   module V1
     class SyncRunsController < ApplicationController
-      include AuditLogger
       before_action :set_sync
       before_action :set_sync_run, only: [:show]
-      after_action :create_audit_log
       attr_reader :sync
 
       def index
@@ -32,10 +30,6 @@ module Api
       def set_sync_run
         @sync_run = @sync.sync_runs.find_by(id: params[:id])
         render_error(message: "Sync Run not found", status: :not_found) unless @sync_run
-      end
-
-      def create_audit_log
-        audit!(resource_id: params[:id])
       end
     end
   end
