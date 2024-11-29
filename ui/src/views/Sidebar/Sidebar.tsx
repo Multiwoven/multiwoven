@@ -89,6 +89,7 @@ const renderMenuSection = (section: MenuSection, index: number) => (
   </Stack>
 );
 
+<<<<<<< HEAD
 const SideBarFooter = () => (
   <Stack>
     <Profile />
@@ -96,6 +97,11 @@ const SideBarFooter = () => (
 );
 
 const Sidebar = (): JSX.Element => {
+=======
+const Sidebar = (): JSX.Element => {
+  const { logoUrl = LOGO_URL } = useConfigStore.getState().configs;
+
+>>>>>>> 2f52a500 (fix(CE): sidebar responsiveness)
   return (
     <Flex
       position='relative'
@@ -116,6 +122,51 @@ const Sidebar = (): JSX.Element => {
             <Box bgColor='gray.300'>
               <Divider orientation='horizontal' />
             </Box>
+<<<<<<< HEAD
+=======
+          </Stack>
+          <Stack
+            marginTop='20px'
+            spacing='6'
+            overflow='hidden auto'
+            height='100%'
+            justify='space-between'
+            shouldWrapChildren
+          >
+            <Stack
+              gap='16px'
+              overflow='hidden auto'
+              height='100%'
+              justify='space-between'
+              css={{
+                '&::-webkit-scrollbar': {
+                  width: '2px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: 'var(--chakra-colors-gray-400)',
+                },
+              }}
+            >
+              <Workspace />
+              {menus.map(renderMenuSection)}
+            </Stack>
+            <Stack spacing='0'>
+              <NavLink to='/settings'>
+                {({ isActive }) => (
+                  <NavButton
+                    label='Settings'
+                    icon={FiSettings}
+                    location='workspace'
+                    isActive={isActive}
+                  />
+                )}
+              </NavLink>
+              <NavLink to='https://docs.squared.ai/guides/core-concepts'>
+                <NavButton label='Documentation' icon={FiBookOpen} />
+              </NavLink>
+              <Profile />
+            </Stack>
+>>>>>>> 2f52a500 (fix(CE): sidebar responsiveness)
           </Stack>
           <Stack
             paddingX='6px'
