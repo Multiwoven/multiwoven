@@ -59,8 +59,9 @@ module Multiwoven::Integrations::Source
         url_host = connection_config[:url_host]
         headers = connection_config[:headers]
         config = connection_config[:config]
+        http_method = connection_config[:http_method]
         config[:timeout] ||= 30
-        response = send_request(url_host, HTTP_POST, payload, headers, config)
+        response = send_request(url_host, http_method, payload, headers, config)
         process_response(response)
       rescue StandardError => e
         handle_exception(e, context: "HTTP MODEL:RUN_MODEL:EXCEPTION", type: "error")
