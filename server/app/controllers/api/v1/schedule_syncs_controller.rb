@@ -28,6 +28,7 @@ module Api
         result = CancelSync.call(sync: @sync)
 
         if result.success?
+          @action = "delete"
           @audit_resource = @sync.name
           render json: { message: "Sync cancelled successfully" }, status: :ok
         else
@@ -50,7 +51,7 @@ module Api
       end
 
       def create_audit_log
-        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
       end
 
       def validate_sync_schedule_type
