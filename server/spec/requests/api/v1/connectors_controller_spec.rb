@@ -39,17 +39,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and all connectors member role" do
@@ -60,17 +49,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and all connectors viewer role" do
@@ -91,17 +69,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and all source connectors" do
@@ -112,17 +79,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("source")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and destination connectors" do
@@ -133,17 +89,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("index")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(nil)
-        expect(audit_log.resource).to eq(nil)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns only data connectors" do
@@ -194,17 +139,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_type)).to eq(connectors.first.connector_type)
         expect(response_hash.dig(:data, :attributes, :name)).to eq(connectors.first.name)
         expect(response_hash.dig(:data, :attributes, :connector_name)).to eq(connectors.first.connector_name)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("show")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and fetch connector viewer role" do
@@ -233,17 +167,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_type)).to eq(connectors.first.connector_type)
         expect(response_hash.dig(:data, :attributes, :name)).to eq(connectors.first.name)
         expect(response_hash.dig(:data, :attributes, :connector_name)).to eq(connectors.first.connector_name)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("show")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns an error response while fetch connector" do
@@ -456,17 +379,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connectors.first.id)
         expect(response_hash.dig(:data, :attributes, :catalog)).to be_present
         expect(response_hash.dig(:data, :attributes, :catalog, :streams)).to be_present
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("discover")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and discover object for member role" do
@@ -480,17 +392,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connectors.first.id)
         expect(response_hash.dig(:data, :attributes, :catalog)).to be_present
         expect(response_hash.dig(:data, :attributes, :catalog, :streams)).to be_present
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("discover")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and should not refresh the catalog when refresh flag is absent" do
@@ -503,17 +404,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :type)).to eq("catalogs")
         expect(response_hash.dig(:data, :attributes, :catalog)).to eq(catalog.catalog)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("discover")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and refresh the catalog when refresh is true" do
@@ -526,17 +416,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :type)).to eq("catalogs")
         expect(response_hash.dig(:data, :attributes, :catalog)).not_to eq(catalog.catalog)
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("discover")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and discover object for viewer role" do
@@ -550,17 +429,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connectors.first.id)
         expect(response_hash.dig(:data, :attributes, :catalog)).to be_present
         expect(response_hash.dig(:data, :attributes, :catalog, :streams)).to be_present
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("discover")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connectors.first.id)
-        expect(audit_log.resource).to eq(connectors.first.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns an error response while get discover object" do
@@ -588,7 +456,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         audit_log = AuditLog.last
         expect(audit_log).not_to be_nil
         expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("destroy")
+        expect(audit_log.action).to eq("delete")
         expect(audit_log.resource_type).to eq("Connector")
         expect(audit_log.resource_id).to eq(connectors.first.id)
         expect(audit_log.resource).to eq(connectors.first.name)
@@ -605,7 +473,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         audit_log = AuditLog.last
         expect(audit_log).not_to be_nil
         expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("destroy")
+        expect(audit_log.action).to eq("delete")
         expect(audit_log.resource_type).to eq("Connector")
         expect(audit_log.resource_id).to eq(connectors.first.id)
         expect(audit_log.resource).to eq(connectors.first.name)

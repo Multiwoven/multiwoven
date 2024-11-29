@@ -12,7 +12,7 @@ module Api
       # TODO: Enable this for ai_ml sources
       before_action :validate_catalog, only: %i[query_source]
       after_action :event_logger
-      after_action :create_audit_log
+      after_action :create_audit_log, only: %i[create update destroy query_source]
 
       def index
         @connectors = current_workspace.connectors
@@ -73,6 +73,7 @@ module Api
 
       def destroy
         authorize @connector
+        @action = "delete"
         @audit_resource = @connector.name
         @connector.destroy!
         head :no_content
@@ -158,7 +159,7 @@ module Api
       end
 
       def create_audit_log
-        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
       end
 
       def connector_params
