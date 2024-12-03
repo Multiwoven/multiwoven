@@ -6,6 +6,6 @@ class AuditLogsSerializer < ActiveModel::Serializer
              :metadata, :created_at, :updated_at
 
   def user_name
-    object.user.name
+    object.user&.name
   end
 end
