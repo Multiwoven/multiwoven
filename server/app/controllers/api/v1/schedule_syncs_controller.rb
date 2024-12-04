@@ -17,6 +17,7 @@ module Api
 
         if result.success?
           @audit_resource = @sync.name
+          @resource_id = @sync.id
           render json: { message: "Sync scheduled successfully" }, status: :ok
         else
           render_error(message: result.message, status: result.status)
@@ -30,6 +31,7 @@ module Api
         if result.success?
           @action = "delete"
           @audit_resource = @sync.name
+          @resource_id = @sync.id
           render json: { message: "Sync cancelled successfully" }, status: :ok
         else
           render_error(message: result.message, status: result.status)
@@ -51,7 +53,8 @@ module Api
       end
 
       def create_audit_log
-        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        resource_id = @resource_id || params[:id]
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def validate_sync_schedule_type
