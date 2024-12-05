@@ -115,7 +115,7 @@ GEM
       console (~> 1.29)
       fiber-annotation
       io-event (~> 1.6, >= 1.6.5)
-    async-http (0.85.0)
+    async-http (0.86.0)
       async (>= 2.10.2)
       async-pool (~> 0.9)
       io-endpoint (~> 0.14)
@@ -123,7 +123,7 @@ GEM
       metrics (~> 0.12)
       protocol-http (~> 0.43)
       protocol-http1 (>= 0.28.1)
-      protocol-http2 (~> 0.21)
+      protocol-http2 (~> 0.22)
       traces (~> 0.10)
     async-pool (0.10.2)
       async (>= 1.25)
@@ -1792,7 +1792,7 @@ GEM
       googleapis-common-protos-types (>= 1.11.0, < 2.a)
       googleauth (~> 1.9)
       grpc (~> 1.59)
-    git (2.3.2)
+    git (2.3.3)
       activesupport (>= 5.0)
       addressable (~> 2.8)
       process_executer (~> 1.1)
@@ -1800,7 +1800,7 @@ GEM
     gli (2.22.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.80.0)
+    google-apis-bigquery_v2 (0.81.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (0.15.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -1812,12 +1812,12 @@ GEM
       retriable (>= 2.0, < 4.a)
     google-apis-sheets_v4 (0.38.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-cloud-ai_platform-v1 (0.58.0)
+    google-cloud-ai_platform-v1 (0.59.0)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
       google-cloud-location (>= 0.7, < 2.a)
       google-iam-v1 (>= 0.7, < 2.a)
-    google-cloud-bigquery (1.50.0)
+    google-cloud-bigquery (1.51.0)
       bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.71)
@@ -1834,7 +1834,7 @@ GEM
     google-cloud-location (0.8.1)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
-    google-iam-v1 (1.0.1)
+    google-iam-v1 (1.1.0)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
       grpc-google-iam-v1 (~> 1.1)
@@ -1922,7 +1922,7 @@ GEM
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
     liquid (5.4.0)
-    logger (1.6.1)
+    logger (1.6.2)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -1938,7 +1938,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.15.7)
+    multiwoven-integrations (0.15.8)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1974,7 +1974,7 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
-    net-http (0.5.0)
+    net-http (0.6.0)
       uri
     net-imap (0.4.9.1)
       date
@@ -2019,10 +2019,10 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     process_executer (1.2.0)
     protocol-hpack (1.5.1)
-    protocol-http (0.47.0)
+    protocol-http (0.47.1)
     protocol-http1 (0.28.1)
       protocol-http (~> 0.22)
-    protocol-http2 (0.21.0)
+    protocol-http2 (0.22.0)
       protocol-hpack (~> 1.4)
       protocol-http (~> 0.18)
     protocol-rack (0.11.0)
@@ -2146,7 +2146,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sequel (5.86.0)
+    sequel (5.87.0)
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -2169,7 +2169,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    sorbet-runtime (0.5.11670)
+    sorbet-runtime (0.5.11681)
     stringio (3.1.0)
     stripe (13.2.0)
     strong_migrations (1.8.0)
@@ -2245,7 +2245,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.15.7)
+  multiwoven-integrations (~> 0.15.8)
   mysql2
   newrelic_rpm
   parallel
