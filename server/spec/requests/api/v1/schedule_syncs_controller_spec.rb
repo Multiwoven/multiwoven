@@ -64,7 +64,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
         expect(audit_log.user_id).to eq(user.id)
         expect(audit_log.action).to eq("create")
         expect(audit_log.resource_type).to eq("Schedule_sync")
-        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource_id).to eq(request_body[:schedule_sync][:sync_id])
         expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
         expect(audit_log.created_at).not_to be_nil
@@ -155,7 +155,7 @@ RSpec.describe "Api::V1::ScheduleSyncsController", type: :request do
         expect(audit_log.user_id).to eq(user.id)
         expect(audit_log.action).to eq("delete")
         expect(audit_log.resource_type).to eq("Schedule_sync")
-        expect(audit_log.resource_id).to eq(nil)
+        expect(audit_log.resource_id).to eq(request_body[:schedule_sync][:sync_id])
         expect(audit_log.resource).to eq(request_body.dig(:sync, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
         expect(audit_log.created_at).not_to be_nil
