@@ -25,6 +25,9 @@
         "order": 2,
         "additionalProperties": {
           "type": "string"
+        },
+        "default": {
+          "Content-Type": "application/json"
         }
       },
       "config": {
