@@ -38,6 +38,7 @@ module Api
         if result.success?
           @model = result.model
           @audit_resource = @model.name
+          @resource_id = @model.id
           @payload = model_params
           render json: @model, status: :created
         else
@@ -113,7 +114,8 @@ module Api
       end
 
       def create_audit_log
-        audit!(action: @action, resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        resource_id = @resource_id || params[:id]
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def model_params
