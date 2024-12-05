@@ -18,7 +18,10 @@ RSpec.describe Feedback, type: :model do
   end
 
   describe "enum" do
-    it { should define_enum_for(:feedback_type).with_values(thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3) }
+    it {
+      should define_enum_for(:feedback_type)
+        .with_values(thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3, multiple_choice: 4)
+    }
 
     it do
       should define_enum_for(:reaction).with_values(

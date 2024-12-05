@@ -13,7 +13,7 @@ class Feedback < ApplicationRecord
   belongs_to :model
   belongs_to :workspace
 
-  enum feedback_type: { thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3 }
+  enum feedback_type: { thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3, multiple_choice: 4 }
 
   enum reaction: { negative: -99, positive: 99, scale_one: 1, scale_two: 2, scale_three: 3, scale_four: 4,
                    scale_five: 5, scale_six: 6, scale_seven: 7, scale_eight: 8, scale_nine: 9, scale_ten: 10 }
