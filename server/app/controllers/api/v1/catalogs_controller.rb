@@ -69,7 +69,8 @@ module Api
       end
 
       def create_audit_log
-        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
+        resource_id = params[:id] || params[:connector_id]
+        audit!(resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def catalog_params
