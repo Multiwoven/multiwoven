@@ -9,15 +9,45 @@ jobs:
   release-on-merge:
     runs-on: ubuntu-latest
     if: ${{ github.event.commits && contains(github.event.commits[0].message, 'Multiwoven release ') && contains(github.ref, 'refs/heads/main') }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Important to fetch all history for tags
 
-      - name: Get the latest tag
+      - name: Set Up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get the Latest Tag
         id: latest-tag
-        run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+        run: |
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: Check if Tag Exists on Remote
+        id: check_tag
+        run: |
+          if git rev-parse --verify refs/tags/${{ env.LATEST_TAG }} >/dev/null 2>&1; then
+            echo "Tag exists"
+            echo "tag_exists=true" >> $GITHUB_ENV
+          else
+            echo "Tag does not exist"
+            echo "tag_exists=false" >> $GITHUB_ENV
+          fi
+
+      - name: Delete Existing Tag if Exists
+        if: env.tag_exists == 'true'
+        run: |
+          git tag -d ${{ env.LATEST_TAG }}
+          git push --delete origin ${{ env.LATEST_TAG }}
+
+      - name: Create and Push New Tag
+        run: |
+          git tag ${{ env.LATEST_TAG }}
+          git push origin ${{ env.LATEST_TAG }}
 
       - name: Create Release
         uses: ncipollo/release-action@v1
