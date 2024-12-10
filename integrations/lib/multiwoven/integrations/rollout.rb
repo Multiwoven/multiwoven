@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.15.8"
-=======
     VERSION = "0.15.10"
->>>>>>> b17b4848 (chore(CE): Update mailchimp catalog (#688))
 
     ENABLED_SOURCES = %w[
       Snowflake

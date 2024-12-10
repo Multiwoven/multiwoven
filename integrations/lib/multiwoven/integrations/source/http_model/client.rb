@@ -72,7 +72,7 @@ module Multiwoven::Integrations::Source
           data = JSON.parse(response.body)
           [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
         else
-          create_log_message("HTTP MODEL:RUN_MODEL", "error", "request failed")
+          create_log_message("HTTP MODEL:RUN_MODEL", "error", "request failed: #{response.body}")
         end
       end
 

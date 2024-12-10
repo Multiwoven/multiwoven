@@ -4,14 +4,7 @@ GIT
   specs:
     ruby-odbc (0.999992)
 
-<<<<<<< HEAD
-PATH
-  remote: .
-  specs:
-    multiwoven-integrations (0.15.8)
-=======
     multiwoven-integrations (0.15.10)
->>>>>>> b17b4848 (chore(CE): Update mailchimp catalog (#688))
       MailchimpMarketing
       activesupport
       async-websocket
