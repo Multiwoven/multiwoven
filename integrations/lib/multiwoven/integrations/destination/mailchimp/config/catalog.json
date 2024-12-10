@@ -9,7 +9,7 @@
       "json_schema": {
         "type": "object",
         "additionalProperties": true,
-        "required": ["email"],
+        "required": ["email", "first_name", "last_name"],
         "properties": {
           "email": {
             "type": "string",
@@ -70,7 +70,7 @@
       "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
       "default_cursor_field": ["timestamp_opt"],
-      "source_defined_primary_key": [["email"]]
+      "source_defined_primary_key": ["email"]
     },
     {
       "name": "Tags",
@@ -94,7 +94,8 @@
       },
       "supported_sync_modes": ["incremental"],
       "source_defined_cursor": true,
-      "default_cursor_field": ["updated"]
+      "default_cursor_field": ["email"],
+      "source_defined_primary_key": ["email"]
     },
     {
       "name": "Campaigns",

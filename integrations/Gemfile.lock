@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.15.9)
+    multiwoven-integrations (0.15.10)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -396,7 +396,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.14)
-    zendesk_api (3.0.5)
+    zendesk_api (3.1.1)
       faraday (> 2.0.0)
       faraday-multipart
       hashie (>= 3.5.2, < 6.0.0)
