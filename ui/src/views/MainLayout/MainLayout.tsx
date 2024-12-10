@@ -1,6 +1,7 @@
 import { useUiConfig } from '@/utils/hooks';
 import Sidebar from '@/views/Sidebar/Sidebar';
 import { Box } from '@chakra-ui/layout';
+<<<<<<< HEAD
 import { Outlet } from 'react-router-dom';
 import Loader from '@/components/Loader';
 import { useState, useEffect } from 'react';
@@ -10,10 +11,21 @@ import { useStore } from '@/stores';
 import ServerError from '../ServerError';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
+=======
+import { Outlet, useLocation } from 'react-router-dom';
+import Prefetcher from '@/enterprise/views/Prefetcher';
+import { useEffect } from 'react';
+import getTitle from '@/utils/getPageTitle';
+>>>>>>> 8b3d98e0 (feat(CE): added title change based on route)
 
 const MainLayout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const { contentContainerId } = useUiConfig();
+  const location = useLocation();
+  useEffect(() => {
+    const title = getTitle(location.pathname);
+    document.title = title;
+  }, [location.pathname]);
 
   const setActiveWorkspaceId = useStore((state) => state.setActiveWorkspaceId);
   const activeWorkspaceId = useStore((state) => state.workspaceId);
