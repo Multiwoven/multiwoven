@@ -9,6 +9,7 @@ FactoryBot.define do
     metadata { nil }
     created_at { Time.current }
     updated_at { Time.current }
+    resource_link { "api/test_link" }
 
     association :workspace
     association :user
