@@ -169,6 +169,14 @@ module Multiwoven
               logs: log_message_array
             }
           end
+
+          def load_catalog
+            read_json(CATALOG_SPEC_PATH)
+          end
+
+          def log_debug(message)
+            Multiwoven::Integrations::Service.logger.debug(message)
+          end
         end
       end
     end
