@@ -228,6 +228,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/define/models/#{response_hash['data']['id'].to_i}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -272,6 +273,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/define/models/#{response_hash['data']['id'].to_i}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -298,6 +300,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/define/models/#{response_hash['data']['id'].to_i}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -334,6 +337,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
           expect(audit_log.resource).to eq(request_body.dig(:model, :name))
           expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.resource_link).to eq("/define/models/ai/#{response_hash['data']['id'].to_i}")
           expect(audit_log.created_at).not_to be_nil
           expect(audit_log.updated_at).not_to be_nil
         end
@@ -424,6 +428,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
           expect(audit_log.resource).to eq(request_body.dig(:model, :name))
           expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.resource_link).to eq("/define/models/#{response_hash['data']['id'].to_i}")
           expect(audit_log.created_at).not_to be_nil
           expect(audit_log.updated_at).not_to be_nil
         end
@@ -486,6 +491,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/define/models/#{models.second.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -537,6 +543,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(audit_log.resource_id).to eq(models.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:model, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/define/models/#{models.second.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -573,6 +580,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
           expect(audit_log.resource_id).to eq(models.second.id)
           expect(audit_log.resource).to eq(request_body.dig(:model, :name))
           expect(audit_log.workspace_id).to eq(workspace.id)
+          expect(audit_log.resource_link).to eq("/define/models/ai/#{models.second.id}")
           expect(audit_log.created_at).not_to be_nil
           expect(audit_log.updated_at).not_to be_nil
         end

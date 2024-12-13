@@ -5,6 +5,7 @@ module Api
     class ModelsController < ApplicationController
       include Models
       include AuditLogger
+      include ResourceLinkBuilder
       attr_reader :connector, :model
 
       before_action :set_connector, only: %i[create]
@@ -115,7 +116,8 @@ module Api
 
       def create_audit_log
         resource_id = @resource_id || params[:id]
-        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = @action == "delete" ? nil : build_link!(resource: @model, resource_id:)
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def model_params
