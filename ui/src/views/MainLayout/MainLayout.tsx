@@ -1,22 +1,19 @@
+import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import Loader from '@/components/Loader';
 import { useUiConfig } from '@/utils/hooks';
 import Sidebar from '@/views/Sidebar/Sidebar';
-import { Box } from '@chakra-ui/layout';
-<<<<<<< HEAD
-import { Outlet } from 'react-router-dom';
-import Loader from '@/components/Loader';
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getWorkspaces } from '@/services/settings';
-import { useStore } from '@/stores';
-import ServerError from '../ServerError';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
-=======
-import { Outlet, useLocation } from 'react-router-dom';
-import Prefetcher from '@/enterprise/views/Prefetcher';
-import { useEffect } from 'react';
+import ServerError from '../ServerError';
 import getTitle from '@/utils/getPageTitle';
->>>>>>> 8b3d98e0 (feat(CE): added title change based on route)
+
+import { Box } from '@chakra-ui/layout';
+import { useQuery } from '@tanstack/react-query';
+
+import { getWorkspaces } from '@/services/settings';
+import { useStore } from '@/stores';
 
 const MainLayout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);

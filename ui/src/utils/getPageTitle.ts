@@ -1,8 +1,6 @@
-import { BRAND_NAME } from '@/enterprise/app-constants';
+import mwTheme from '@/chakra.config';
 
 const ROUTE_MAP = {
-  '/reports': 'Reports',
-  '/data-apps': 'Data Apps',
   '/settings': 'Settings',
   '/activate/syncs': 'Syncs',
   '/setup/sources': 'Sources',
@@ -10,9 +8,11 @@ const ROUTE_MAP = {
   '/setup/destinations': 'Destinations',
 };
 
+const BRAND_NAME = mwTheme.brandName;
+
 const getTitle = (pathname: string) => {
   if (pathname === '/') {
-    return 'Reports | ' + BRAND_NAME;
+    return 'Dashboard | ' + BRAND_NAME;
   }
   const normalizedPath = pathname.replace(/\/+$/, '');
   const matchingRoute = Object.keys(ROUTE_MAP).find((route) => normalizedPath.startsWith(route));
