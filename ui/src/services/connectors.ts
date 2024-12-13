@@ -75,10 +75,21 @@ export const updateConnector = async (
     data: payload,
   });
 
+<<<<<<< HEAD
 export const getUserConnectors = async (connectorType: string): Promise<ConnectorListResponse> => {
   return multiwovenFetch<null, ConnectorListResponse>({
     method: 'get',
     url: `/connectors?type=${connectorType}`,
+=======
+export const getUserConnectors = async (
+  connectorType: string,
+  connectorCategory = 'data',
+  page = 1,
+): Promise<ConnectorListResponse> => {
+  return multiwovenFetch<null, ConnectorListResponse>({
+    method: 'get',
+    url: `/connectors?type=${connectorType}&category=${connectorCategory}&page=${page}&per_page=10`,
+>>>>>>> 87701c19 (feat(CE): added pagination to connector, models and syncs pages)
     data: null,
   });
 };

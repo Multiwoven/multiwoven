@@ -26,10 +26,10 @@ export const createSync = (payload: CreateSyncPayload): Promise<ApiResponse<Crea
     data: payload,
   });
 
-export const fetchSyncs = (): Promise<ApiResponse<CreateSyncResponse[]>> =>
+export const fetchSyncs = (page: string = '1'): Promise<ApiResponse<CreateSyncResponse[]>> =>
   multiwovenFetch<null, ApiResponse<CreateSyncResponse[]>>({
     method: 'get',
-    url: `/syncs`,
+    url: `/syncs?page=${page}&per_page=10`,
   });
 
 export const getSyncById = (id: string): Promise<ApiResponse<CreateSyncResponse>> =>

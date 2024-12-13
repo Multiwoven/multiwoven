@@ -13,15 +13,33 @@ import { useStore } from '@/stores';
 import DataTable from '@/components/DataTable';
 import { SyncsListColumns } from './SyncsListColumns';
 import { Row } from '@tanstack/react-table';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
+=======
+import { useSearchParams } from 'react-router-dom';
+import Pagination from '@/components/EnhancedPagination/Pagination';
+>>>>>>> 87701c19 (feat(CE): added pagination to connector, models and syncs pages)
 
 const SyncsList = (): JSX.Element => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useProtectedNavigate();
+
   const activeWorkspaceId = useStore((state) => state.workspaceId);
+<<<<<<< HEAD
   const navigate = useNavigate();
+=======
+  const activeRole = useRoleDataStore((state) => state.activeRole);
+
+  const pageId = searchParams.get('page');
+
+  const onPageSelect = (page: number) => {
+    setSearchParams({ page: page.toString() });
+  };
+>>>>>>> 87701c19 (feat(CE): added pagination to connector, models and syncs pages)
 
   const { data, isLoading } = useQuery({
-    queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId],
-    queryFn: () => fetchSyncs(),
+    queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId, pageId],
+    queryFn: () => fetchSyncs(pageId ? pageId : '1'),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
@@ -57,8 +75,19 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor='orange.400'
           isCtaVisible
         />
-        <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
-          <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
+        <Box display='flex' flexDirection='column' gap='20px'>
+          <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+            <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
+          </Box>
+          {data?.data && data.data.length > 0 && data.links && (
+            <Box display='flex' justifyContent='center'>
+              <Pagination
+                links={data?.links}
+                currentPage={pageId ? Number(pageId) : 1}
+                handlePageChange={onPageSelect}
+              />
+            </Box>
+          )}
         </Box>
       </ContentContainer>
     </Box>

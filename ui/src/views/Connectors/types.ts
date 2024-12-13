@@ -98,6 +98,7 @@ export type ConnectorInfoResponse = {
 export type ConnectorListResponse = {
   data: ConnectorItem[];
   errors?: ErrorResponse[];
+  links?: LinksType;
 };
 
 export type ConnectorTableColumnFields =
