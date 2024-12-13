@@ -5,6 +5,7 @@ module Api
     class ScheduleSyncsController < ApplicationController
       include Syncs
       include AuditLogger
+      include ResourceLinkBuilder
       before_action :set_sync
       before_action :validate_sync_status
       before_action :validate_sync_schedule_type
@@ -54,7 +55,8 @@ module Api
 
       def create_audit_log
         resource_id = @resource_id || params[:id]
-        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = @action == "delete" ? nil : build_link!(resource_id:)
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def validate_sync_schedule_type
