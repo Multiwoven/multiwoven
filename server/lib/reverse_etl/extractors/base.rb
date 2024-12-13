@@ -58,6 +58,19 @@ module ReverseEtl
         }.to_s)
       end
 
+      def log_skip_sync_run(sync_record, record, sync_run, error = nil)
+        primary_key = record.data.with_indifferent_access[sync_run.sync.model.primary_key]
+        message = error ? error.message : "Skipping sync record"
+
+        Rails.logger.info({
+          message:,
+          primary_key:,
+          sync_id: sync_run.sync_id,
+          sync_run_id: sync_run.id,
+          sync_record_id: sync_record&.id
+        }.to_s)
+      end
+
       def process_record(record, sync_run, model)
         primary_key = record.data.with_indifferent_access[model.primary_key]
         raise StandardError, "Primary key cannot be blank" if primary_key.blank?
@@ -97,26 +110,24 @@ module ReverseEtl
       end
 
       def update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
-        unless sync_record && new_record?(sync_record, fingerprint)
-          primary_key = record.data.with_indifferent_access[sync_run.sync.model.primary_key]
-          Rails.logger.info({
-            message: "Skipping sync record",
-            primary_key:,
-            sync_id: sync_run.sync_id,
-            sync_run_id: sync_run.id,
-            sync_record_id: sync_record&.id
-          }.to_s)
+        begin
+          unless sync_record && new_record?(sync_record, fingerprint)
+            log_skip_sync_run(sync_record, record, sync_run)
 
-          return false
+            return false
+          end
+          sync_record.assign_attributes(
+            sync_run_id: sync_run.id,
+            action: action(sync_record),
+            fingerprint:,
+            record: record.data,
+            status: "pending"
+          )
+          sync_record.save!
         end
-        sync_record.assign_attributes(
-          sync_run_id: sync_run.id,
-          action: action(sync_record),
-          fingerprint:,
-          record: record.data,
-          status: "pending"
-        )
-        sync_record.save!
+      rescue StandardError => e
+        log_skip_sync_run(sync_record, record, sync_run, e)
+        false
       end
     end
   end

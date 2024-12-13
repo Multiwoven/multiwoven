@@ -53,7 +53,8 @@ RSpec.describe Model, type: :model do
           name: "test_model",
           query_type: :ai_ml, connector_id: source.id,
           workspace_id: source.workspace_id,
-          configuration: { "field1" => "value1" }
+          configuration: { harvesters:
+                     [{ "value" => "dynamic test", "method" => "dom", "selector" => "dom_id", "preprocess" => "" }] }
         )
         model.query = nil
         expect(model).to be_valid
@@ -62,13 +63,64 @@ RSpec.describe Model, type: :model do
 
     context "when query_type requires configuration" do
       it "validates presence of configuration" do
-        model = Model.new(
+        ai_ml_model = Model.new(
           name: "test_model",
           query_type: :ai_ml, connector_id: source.id,
           workspace_id: source.workspace_id
         )
-        model.configuration = nil
-        expect(model).not_to be_valid
+        dynamic_sql_model = Model.new(
+          name: "test_model",
+          query_type: :dynamic_sql, connector_id: source.id,
+          workspace_id: source.workspace_id
+        )
+        ai_ml_model.configuration = nil
+        dynamic_sql_model.configuration = nil
+        expect(ai_ml_model).not_to be_valid
+        expect(dynamic_sql_model).not_to be_valid
+      end
+
+      context "validates json schema of configuration" do
+        context "validates json schema of ai_ml models" do
+          it "is does returns invalid for ai ml models without valid configuration" do
+            ai_ml_model = Model.new(
+              name: "test_model",
+              query_type: :ai_ml, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: { "harvesters": { "wrong": "format" } }
+            )
+            expect(ai_ml_model).not_to be_valid
+          end
+          it "is does returns valid for ai ml models with valid configuration" do
+            ai_ml_model = Model.new(
+              name: "test_model",
+              query_type: :ai_ml, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: { "harvesters": [] }
+            )
+            expect(ai_ml_model).to be_valid
+          end
+        end
+
+        context "validates json schema of dynamic_sql models" do
+          it "is does returns invalid for dyanmic models without valid configuration" do
+            dynamic_sql_model = Model.new(
+              name: "test_model",
+              query_type: :dynamic_sql, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: { "harvesters": { "wrong": "format" } }
+            )
+            expect(dynamic_sql_model).not_to be_valid
+          end
+          it "is does returns valid for ai ml models with valid configuration" do
+            dynamic_sql_model = Model.new(
+              name: "test_model",
+              query_type: :dynamic_sql, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: { "harvesters": [], "json_schema": {} }
+            )
+            expect(dynamic_sql_model).to be_valid
+          end
+        end
       end
     end
 
@@ -128,7 +180,8 @@ RSpec.describe Model, type: :model do
 
   describe "query_type" do
     it "defines query_type enum with specified values" do
-      expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2, "table_selector" => 3, "ai_ml" => 4 })
+      expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2, "table_selector" => 3, "ai_ml" => 4,
+                                        "dynamic_sql" => 5 })
     end
   end
 
@@ -138,12 +191,47 @@ RSpec.describe Model, type: :model do
     let!(:dbt_model) { create(:model, query_type: :dbt, connector: source) }
     let!(:soql_model) { create(:model, query_type: :soql, connector: source) }
     let!(:table_selector_model) { create(:model, query_type: :table_selector, connector: source) }
-    let!(:ai_ml_model) { create(:model, query_type: :ai_ml, connector: source, configuration: { test: "value" }) }
+    let!(:ai_ml_model) do
+      create(:model, query_type: :ai_ml, connector: source,
+                     configuration: { harvesters:
+                     [{ "value" => "dynamic test", "method" => "dom", "selector" => "dom_id", "preprocess" => "" }] })
+    end
+    let!(:dynamic_sql_model) do
+      create(:model, query_type: :dynamic_sql, connector: source,
+                     configuration:
+                      {
+                        "harvesters": [
+                          {
+                            "value": "dynamic test",
+                            "method": "dom",
+                            "selector": "dom_id",
+                            "preprocess": ""
+                          }
+                        ],
+                        "json_schema":
+                          {
+                            "input": [
+                              {
+                                "name": "risk_level",
+                                "type": "string",
+                                "value": "",
+                                "value_type": "dynamic"
+                              }
+                            ],
+                            "output": [
+                              {
+                                "name": "data.col0.calculated_risk",
+                                "type": "string"
+                              }
+                            ]
+                          }
+                      })
+    end
 
     describe ".data" do
       it "returns models with query_type in [raw_sql, dbt, soql, table_selector]" do
         data_models = Model.data
-        expect(data_models).to include(raw_sql_model, dbt_model, soql_model, table_selector_model)
+        expect(data_models).to include(raw_sql_model, dbt_model, soql_model, table_selector_model, dynamic_sql_model)
         expect(data_models).not_to include(ai_ml_model)
       end
     end

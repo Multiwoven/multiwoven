@@ -8,10 +8,13 @@ class DataApp < ApplicationRecord
   validates :data_app_token, presence: true, uniqueness: true
 
   enum :status, %i[inactive active draft]
+  enum :rendering_type, %i[embed no_code]
 
   belongs_to :workspace
   has_many :visual_components, dependent: :destroy
   has_many :models, through: :visual_components
+  has_many :feedbacks, through: :visual_components
+  has_many :data_app_sessions, dependent: :destroy
 
   after_initialize :set_default_status, if: :new_record?
 

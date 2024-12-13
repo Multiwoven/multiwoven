@@ -7,6 +7,7 @@ module ReverseEtl
     RSpec.describe RandomQueryBuilder do
       let(:existing_query) { "SELECT * FROM table" }
       let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
+      let(:source_bigquery) { create(:connector, connector_type: "source", connector_name: "Bigquery") }
       let(:source_salesforce) do
         create(:connector, connector_type: "source", connector_name: "SalesforceConsumerGoodsCloud")
       end
@@ -26,6 +27,20 @@ module ReverseEtl
             query = described_class.build_random_record_query(sync_config)
 
             expected_query = "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RANDOM()"
+            expect(query).to eq(expected_query)
+          end
+        end
+
+        context "when query_type is raw_sql" do
+          let(:sync) do
+            create(:sync, model:, source: source_bigquery, destination:)
+          end
+          let(:sync_config) { sync.to_protocol }
+
+          it "returns the query with ORDER BY RAND()" do
+            query = described_class.build_random_record_query(sync_config)
+
+            expected_query = "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RAND()"
             expect(query).to eq(expected_query)
           end
         end

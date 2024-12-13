@@ -89,3 +89,22 @@ jobs:
           source_branch: "release-changes-${{ steps.versioning.outputs.new_tag }}"
           destination_branch: "main"
           pr_label: "release,auto-pr"
+
+  on_failure:
+    environment: community
+    if: ${{ failure() }}
+    needs: [ prepare-changelog ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report error to AppSignal
+        env:
+          ACTION: Release
+          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
+          MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          NAME: Community Release failed
+        run: |
+          EPOCH=$(date +%s)
+          curl -verbose -H \"Content-Type: application/json\" \
+            -d "{ \"action\": \"$ACTION\", \"timestamp\": $EPOCH, \"namespace\": \"github\", \"error\": { \"name\": $NAME, \"message\": $MESSAGE } }" \
+            -X POST \
+            https://appsignal-endpoint.net/errors?api_key=$APPSIGNAL_PUSH_API_KEY

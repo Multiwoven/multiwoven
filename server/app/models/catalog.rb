@@ -50,4 +50,9 @@ class Catalog < ApplicationRecord
       request_rate_concurrency:
     )
   end
+
+  def json_schema(stream_name)
+    stream = find_stream_by_name(stream_name)
+    stream&.[]("json_schema") || {}
+  end
 end

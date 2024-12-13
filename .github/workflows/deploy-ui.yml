@@ -54,3 +54,21 @@ jobs:
             --set multiwovenUI.multiwovenUI.image.tag=$IMAGE_TAG
           kubectl rollout restart deployment/multiwoven-server -n multiwoven
       
+  on_failure:
+    environment: community
+    if: ${{ failure() }}
+    needs: [ deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report error to AppSignal
+        env:
+          ACTION: Deployment
+          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
+          MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          NAME: Deploy UI to Community failed
+        run: |
+          EPOCH=$(date +%s)
+          curl -verbose -H \"Content-Type: application/json\" \
+            -d "{ \"action\": \"$ACTION\", \"timestamp\": $EPOCH, \"namespace\": \"github\", \"error\": { \"name\": $NAME, \"message\": $MESSAGE } }" \
+            -X POST \
+            https://appsignal-endpoint.net/errors?api_key=$APPSIGNAL_PUSH_API_KEY

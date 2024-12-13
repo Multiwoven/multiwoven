@@ -149,6 +149,17 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
       response_hash = JSON.parse(response.body).with_indifferent_access
       expect(response_hash[:connection_status][:status]).to eql("succeeded")
+
+      audit_log = AuditLog.last
+      expect(audit_log).not_to be_nil
+      expect(audit_log.user_id).to eq(user.id)
+      expect(audit_log.action).to eq("check_connection")
+      expect(audit_log.resource_type).to eq("Connector_definition")
+      expect(audit_log.resource_id).to eq(nil)
+      expect(audit_log.resource).to eq("Snowflake")
+      expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns success status for a valid connection fro member role" do
@@ -164,6 +175,17 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
 
       response_hash = JSON.parse(response.body).with_indifferent_access
       expect(response_hash[:connection_status][:status]).to eql("succeeded")
+
+      audit_log = AuditLog.last
+      expect(audit_log).not_to be_nil
+      expect(audit_log.user_id).to eq(user.id)
+      expect(audit_log.action).to eq("check_connection")
+      expect(audit_log.resource_type).to eq("Connector_definition")
+      expect(audit_log.resource_id).to eq(nil)
+      expect(audit_log.resource).to eq("Snowflake")
+      expect(audit_log.workspace_id).to eq(workspace.id)
+      expect(audit_log.created_at).not_to be_nil
+      expect(audit_log.updated_at).not_to be_nil
     end
 
     it "returns authorization failure for a view role user" do

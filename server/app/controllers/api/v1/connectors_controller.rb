@@ -5,12 +5,14 @@ module Api
     # rubocop:disable Metrics/ClassLength
     class ConnectorsController < ApplicationController
       include Connectors
+      include AuditLogger
       before_action :set_connector, only: %i[show update destroy discover query_source]
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[query_source]
       # TODO: Enable this for ai_ml sources
       before_action :validate_catalog, only: %i[query_source]
       after_action :event_logger
+      after_action :create_audit_log, only: %i[create update destroy query_source]
 
       def index
         @connectors = current_workspace.connectors
@@ -23,6 +25,7 @@ module Api
 
       def show
         authorize @connector
+        @audit_resource = @connector.name
         render json: @connector, status: :ok
       end
 
@@ -35,6 +38,9 @@ module Api
         )
         if result.success?
           @connector = result.connector
+          @audit_resource = @connector.name
+          @resource_id = @connector.id
+          @payload = connector_params
           render json: @connector, status: :created
         else
           render_error(
@@ -54,6 +60,8 @@ module Api
 
         if result.success?
           @connector = result.connector
+          @audit_resource = @connector.name
+          @payload = connector_params
           render json: @connector, status: :ok
         else
           render_error(
@@ -66,6 +74,8 @@ module Api
 
       def destroy
         authorize @connector
+        @action = "delete"
+        @audit_resource = @connector.name
         @connector.destroy!
         head :no_content
       end
@@ -79,6 +89,8 @@ module Api
 
         if result.success?
           @catalog = result.catalog
+          @audit_resource = @connector.name
+          @payload = @catalog
           render json: @catalog, status: :ok
         else
           render_error(
@@ -100,6 +112,8 @@ module Api
 
           if result.success?
             @records = result.records.map(&:record).map(&:data)
+            @audit_resource = @connector.name
+            @payload = @records
             render json: { data: @records }, status: :ok
           else
             render_error(
@@ -143,6 +157,11 @@ module Api
           message: "Query validation failed: #{e.message}",
           status: :unprocessable_entity
         )
+      end
+
+      def create_audit_log
+        resource_id = @resource_id || params[:id]
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def connector_params

@@ -278,6 +278,37 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
           expect(updated_sync_record.status).to eq("success")
         end
       end
+
+      context "when error is raised skip the record" do
+        it "skip the record" do
+          sync_record = subject.send(:process_record, record.record, sync_run1, sync_run1.model)
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record.record.data)
+          sync_record.update!(status: "success", fingerprint:, action: "destination_insert",
+                              record: record.record.data)
+          fingerprint = ReverseEtl::Extractors::Base.new.send(:generate_fingerprint, record_dup.record.data)
+          sync_record_dup = subject.send(:process_record, record_dup.record, sync_run2, sync_run2.model)
+
+          expect(Rails.logger).to receive(:info).with({
+            message: "Test error",
+            primary_key: record_dup.record.data.with_indifferent_access[sync_run1.sync.model.primary_key],
+            sync_id: sync_run1.sync_id,
+            sync_run_id: sync_run1.id,
+            sync_record_id: sync_record_dup.id
+          }.to_s)
+
+          allow(sync_record_dup).to receive(:new_record?).and_raise(StandardError, "Test error")
+          result = subject.send(:update_or_create_sync_record, sync_record_dup, record_dup.record,
+                                sync_run1, fingerprint)
+
+          expect(result).to eq(false)
+          updated_sync_record = SyncRecord.find(sync_record_dup.id)
+          expect(updated_sync_record).not_to be_nil
+          expect(updated_sync_record.sync_run_id).to eq(sync_run1.id)
+          expect(updated_sync_record.action).to eq("destination_insert")
+          expect(updated_sync_record.fingerprint).to eq(fingerprint)
+          expect(updated_sync_record.status).to eq("success")
+        end
+      end
     end
   end
 end

@@ -4,8 +4,10 @@ module Api
   module V1
     class ConnectorDefinitionsController < ApplicationController
       include ConnectorDefinitions
+      include AuditLogger
       before_action :set_connectors, only: %i[show index]
       before_action :set_connector_client, only: %i[check_connection]
+      after_action :create_audit_log, only: %i[check_connection]
 
       def index
         authorize @connectors, policy_class: ConnectorDefinitionPolicy
@@ -17,6 +19,7 @@ module Api
         @connector = @connectors.find do |hash|
           hash[:name].downcase == params[:id].downcase
         end
+        @audit_resource = @connector&.[](:name)
         render json: @connector || []
       end
 
@@ -28,6 +31,7 @@ module Api
                             .check_connection(
                               connection_spec
                             )
+        @audit_resource = params[:name]
         render json: connection_status
       end
 
@@ -45,6 +49,10 @@ module Api
                               params[:type].camelize,
                               params[:name].camelize
                             ).new
+      end
+
+      def create_audit_log
+        audit!(resource_id: params[:id], resource: @audit_resource, payload: @payload)
       end
 
       def connection_definitions_params

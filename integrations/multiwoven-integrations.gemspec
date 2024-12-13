@@ -52,6 +52,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "grpc"
   spec.add_runtime_dependency "hubspot-api-client"
   spec.add_runtime_dependency "iterable-api-client"
+  spec.add_runtime_dependency "MailchimpMarketing"
   spec.add_runtime_dependency "net-sftp"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"

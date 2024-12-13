@@ -11,9 +11,32 @@ RSpec.describe DataApp, type: :model do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:data_app_token) }
     it { should define_enum_for(:status).with_values(inactive: 0, active: 1, draft: 2) }
+    it { should define_enum_for(:rendering_type).with_values(embed: 0, no_code: 1) }
     it { should belong_to(:workspace) }
     it { should have_many(:visual_components).dependent(:destroy) }
     it { should have_many(:models).through(:visual_components) }
+    it { should have_many(:data_app_sessions).dependent(:destroy) }
+    it { should have_many(:feedbacks).through(:visual_components) }
+
+    it "has a counter cache for sessions and feedbacks" do
+      data_app = create(:data_app)
+
+      expect do
+        create(:data_app_session, data_app:)
+      end.to change { data_app.reload.data_app_sessions_count }.by(1)
+
+      expect do
+        create(:feedback, visual_component: data_app.visual_components.first)
+      end.to change { data_app.reload.feedbacks_count }.by(1)
+
+      expect do
+        data_app.data_app_sessions.first.destroy
+      end.to change { data_app.reload.data_app_sessions_count }.by(-1)
+
+      expect do
+        data_app.visual_components.first.feedbacks.first.destroy
+      end.to change { data_app.reload.feedbacks_count }.by(-1)
+    end
   end
 
   describe "#set_default_status" do

@@ -61,11 +61,11 @@ module Multiwoven
         )
       end
 
-      def create_log_message(context, type, exception)
+      def create_log_message(context, type, message)
         Integrations::Protocol::LogMessage.new(
           name: context,
           level: type,
-          message: exception.message
+          message: message
         ).to_multiwoven_message
       end
 
@@ -74,7 +74,7 @@ module Multiwoven
           "#{hash_to_string(meta)}: #{exception.message}"
         )
         report_exception(exception, meta)
-        create_log_message(meta[:context], meta[:type], exception)
+        create_log_message(meta[:context], meta[:type], exception.message)
       end
 
       def hash_to_string(hash)

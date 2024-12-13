@@ -4,10 +4,18 @@ module Multiwoven
   module Integrations::Core
     class HttpClient
       class << self
-        def request(url, method, payload: nil, headers: {})
+        def request(url, method, payload: nil, headers: {}, config: {})
           uri = URI(url)
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = (uri.scheme == "https")
+
+          # Set timeout if provided
+          if config[:timeout]
+            timeout_value = config[:timeout].to_f
+            http.open_timeout = timeout_value
+            http.read_timeout = timeout_value
+          end
+
           request = build_request(method, uri, payload, headers)
           http.request(request)
         end

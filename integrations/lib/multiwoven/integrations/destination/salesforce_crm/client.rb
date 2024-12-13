@@ -65,9 +65,10 @@ module Multiwoven
             properties = stream.json_schema[:properties]
             records.each do |record_object|
               record = extract_data(record_object, properties)
-              request, response = *process_record(stream, record)
+              args = [stream.name, "Id", record]
+              response = send_data_to_salesforce(args)
               write_success += 1
-              log_message_array << log_request_response("info", request, response)
+              log_message_array << log_request_response("info", args, response)
             rescue StandardError => e
               # TODO: add sync_id and sync_run_id to the logs
               handle_exception(e, {
@@ -77,31 +78,14 @@ module Multiwoven
                                  sync_run_id: @sync_config.sync_run_id
                                })
               write_failure += 1
-              log_message_array << log_request_response("error", request, e.message)
+              log_message_array << log_request_response("error", args, e.message)
             end
             tracking_message(write_success, write_failure, log_message_array)
           end
 
-          def process_record(stream, record)
-            send_data_to_salesforce(stream.name, record)
-          end
-
-          def send_data_to_salesforce(stream_name, record = {})
-            method_name = "#{@action}!"
-            args = build_args(@action, stream_name, record)
-            response = @client.send(method_name, *args)
-            [args, response]
-          end
-
-          def build_args(action, stream_name, record)
-            case action
-            when :upsert
-              [stream_name, record[:external_key], record]
-            when :destroy
-              [stream_name, record[:id]]
-            else
-              [stream_name, record]
-            end
+          def send_data_to_salesforce(args)
+            method_name = "upsert!"
+            @client.send(method_name, *args)
           end
 
           def authenticate_client

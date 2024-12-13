@@ -4,8 +4,11 @@ module Api
   module V1
     class CatalogsController < ApplicationController
       include Catalogs
+      include AuditLogger
       before_action :set_connector, only: %i[create update]
       before_action :set_catalog, only: %i[update]
+
+      after_action :create_audit_log
 
       def create
         authorize current_workspace, policy_class: ConnectorPolicy
@@ -16,6 +19,8 @@ module Api
 
         if result.success?
           @catalog = result.catalog
+          @audit_resource = @catalog.catalog["streams"].first["name"]
+          @payload = catalog_params.to_h
           render json: @catalog, status: :created
         else
           render_error(
@@ -36,6 +41,8 @@ module Api
 
         if result.success?
           @catalog = result.catalog
+          @audit_resource = @catalog.catalog["streams"].first["name"]
+          @payload = catalog_params.to_h
           render json: @catalog, status: :created
         else
           render_error(
@@ -59,6 +66,11 @@ module Api
 
       def set_catalog
         @catalog = @connector.catalog
+      end
+
+      def create_audit_log
+        resource_id = params[:id] || params[:connector_id]
+        audit!(resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def catalog_params
