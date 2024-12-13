@@ -1,4 +1,4 @@
-import mwTheme from '@/chakra.config';
+import { BRAND_NAME } from '@/constants';
 
 const ROUTE_MAP = {
   '/settings': 'Settings',
@@ -7,8 +7,6 @@ const ROUTE_MAP = {
   '/define/models': 'Models',
   '/setup/destinations': 'Destinations',
 };
-
-const BRAND_NAME = mwTheme.brandName;
 
 const getTitle = (pathname: string) => {
   if (pathname === '/') {
