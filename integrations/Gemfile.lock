@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.15.10)
+=======
+    multiwoven-integrations (0.15.11)
+>>>>>>> c1226457 (feat(CE): stream support in http model (#707))
       MailchimpMarketing
       activesupport
       async-websocket
