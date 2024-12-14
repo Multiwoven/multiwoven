@@ -39,6 +39,16 @@ jobs:
           sudo alien -i --scripts oracle-instantclient*.rpm
           rm -f oracle-instantclient*.rpm
 
+      - name: Install FreeTDS for TinyTDS gem
+        run: |
+          sudo apt-get install libc6-dev
+          wget http://www.freetds.org/files/stable/freetds-1.4.10.tar.gz
+          tar -xzf freetds-1.4.10.tar.gz
+          cd freetds-1.4.10
+          ./configure --prefix=/usr/local --with-tdsver=7.4
+          sudo make
+          sudo make install
+
       - name: Install dependencies
         run: |
           gem install bundler

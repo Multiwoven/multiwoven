@@ -4,6 +4,7 @@ module Api
   module V1
     class ModelsController < ApplicationController
       include Models
+      include AuditLogger
       attr_reader :connector, :model
 
       before_action :set_connector, only: %i[create]
@@ -12,6 +13,7 @@ module Api
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[create update]
       after_action :event_logger
+      after_action :create_audit_log, only: %i[create update destroy]
 
       def index
         filter = params[:query_type] || "all"
@@ -23,6 +25,7 @@ module Api
 
       def show
         authorize @model
+        @audit_resource = @model.name
         render json: @model, status: :ok
       end
 
@@ -34,6 +37,9 @@ module Api
         )
         if result.success?
           @model = result.model
+          @audit_resource = @model.name
+          @resource_id = @model.id
+          @payload = model_params
           render json: @model, status: :created
         else
           render_error(
@@ -53,6 +59,8 @@ module Api
 
         if result.success?
           @model = result.model
+          @audit_resource = @model.name
+          @payload = model_params
           render json: @model, status: :ok
         else
           render_error(
@@ -65,6 +73,8 @@ module Api
 
       def destroy
         authorize model
+        @action = "delete"
+        @audit_resource = model.name
         model.destroy!
         head :no_content
       end
@@ -101,6 +111,11 @@ module Api
           message: "Query validation failed: #{e.message}",
           status: :unprocessable_entity
         )
+      end
+
+      def create_audit_log
+        resource_id = @resource_id || params[:id]
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def model_params

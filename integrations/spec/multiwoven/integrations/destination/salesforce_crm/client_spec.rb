@@ -147,9 +147,9 @@ RSpec.describe Multiwoven::Integrations::Destination::SalesforceCrm::Client do
   end
 
   def stub_create_request(id, name, response_code)
-    stub_request(:post, "https://your-instance-url.salesforce.com/services/data/v59.0/sobjects/Account")
+    stub_request(:patch, "https://your-instance-url.salesforce.com/services/data/v59.0/sobjects/Account/Id/#{id}")
       .with(
-        body: hash_including("Id" => id, "Name" => name),
+        body: hash_including({ "Name": name }),
         headers: { "Accept" => "*/*", "Authorization" => "OAuth",
                    "Content-Type" => "application/json" }
       ).to_return(status: response_code, body: "", headers: {})

@@ -2,12 +2,15 @@
 
 module Api
   module V1
+    # rubocop:disable Metrics/ClassLength
     class SyncsController < ApplicationController
       include Syncs
+      include AuditLogger
       before_action :set_sync, only: %i[show update enable destroy]
       before_action :modify_sync_params, only: %i[create update]
 
       after_action :event_logger
+      after_action :create_audit_log, only: %i[create update enable destroy]
 
       attr_reader :sync
 
@@ -20,6 +23,7 @@ module Api
 
       def show
         authorize @sync
+        @audit_resource = @sync.name
         render json: @sync, status: :ok
       end
 
@@ -32,6 +36,9 @@ module Api
 
         if result.success?
           @sync = result.sync
+          @audit_resource = @sync.name
+          @resource_id = @sync.id
+          @payload = sync_params
           render json: @sync, status: :created
         else
           render_error(
@@ -51,6 +58,8 @@ module Api
 
         if result.success?
           @sync = result.sync
+          @audit_resource = @sync.name
+          @payload = sync_params
           render json: @sync, status: :ok
         else
           render_error(
@@ -63,6 +72,8 @@ module Api
 
       def destroy
         authorize sync
+        @action = "delete"
+        @audit_resource = sync.name
         sync.discard
         head :no_content
       end
@@ -88,6 +99,7 @@ module Api
         authorize current_workspace, policy_class: SyncPolicy
         params[:enable] ? @sync.enable : @sync.disable
         if @sync.save
+          @audit_resource = @sync.name
           render json: @sync, status: :ok
         else
           render_error(message: "Sync update failed", status: :unprocessable_entity,
@@ -113,6 +125,11 @@ module Api
           params[:sync][:sync_interval_unit] = nil
           params[:sync][:cron_expression] = nil
         end
+      end
+
+      def create_audit_log
+        resource_id = @resource_id || params[:id]
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
       end
 
       def sync_params
@@ -142,5 +159,6 @@ module Api
         strong_params
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

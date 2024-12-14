@@ -67,6 +67,15 @@ RUN apt-get update -qq && \
     apt-get install -y unixodbc && \
     rm -rf /var/lib/apt/lists/*
 
+# Install free tds for tiny tds gem dependency
+RUN apt-get install libc6-dev && \
+    wget http://www.freetds.org/files/stable/freetds-1.4.10.tar.gz && \
+    tar -xzf freetds-1.4.10.tar.gz && \
+    cd freetds-1.4.10 && \
+    ./configure --prefix=/usr/local --with-tdsver=7.4 && \
+    make && \
+    make install
+
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends wget && \
     rm -rf /var/lib/apt/lists/*

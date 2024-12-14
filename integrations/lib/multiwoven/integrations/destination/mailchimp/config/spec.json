@@ -1,0 +1,28 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/destination/mailchimp",
+  "stream_type": "static",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Mailchimp",
+    "type": "object",
+    "required": ["api_key", "list_id"],
+    "properties": {
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 0
+      },
+      "list_id": {
+        "type": "string",
+        "title": "List Id",
+        "order": 1
+      },
+      "email_template_id": {
+        "type": "string",
+        "title": "Email Template Id",
+        "order": 2
+      }
+    }
+  }
+}

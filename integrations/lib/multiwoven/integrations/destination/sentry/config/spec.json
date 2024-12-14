@@ -1,0 +1,60 @@
+{
+  "documentationUrl": "https://docs.squared.ai/guides/data-integration/destination/sentry",
+  "changelogUrl": "https://docs.squared.ai/guides/data-integration/destination/sentry#changelog",
+  "streamType": "dynamic",
+  "connectionSpecification": {
+    "type": "object",
+    "required": "[dsn environment]",
+    "properties": {
+      "dsn": {
+        "type": "string",
+        "description": "The Data Source Name (DSN) for your Sentry project. This is used to identify and authenticate with your Sentry instance."
+      },
+      "environment": {
+        "type": "string",
+        "description": "The environment name (e.g., production, staging, or development) to associate with the events sent to Sentry.",
+        "examples": "[production staging development]"
+      },
+      "release": {
+        "type": "string",
+        "description": "The version of the application associated with the events. This can help in tracking issues across deployments.",
+        "default": "default-release",
+        "examples": ["1.0.0", "2.3.4"]
+      },
+      "debug": {
+        "type": "boolean",
+        "description": "Enable or disable debug mode for the Sentry integration.",
+        "default": true
+      },
+      "traceSampleRate": {
+        "type": "number",
+        "description": "A decimal value between 0 and 1 indicating the percentage of transactions to be sampled for performance monitoring.",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.5
+      },
+      "breadcrumbsLogger": {
+        "type": "array",
+        "description": "The loggers to be used for breadcrumbs (e.g., ActiveSupportLogger, HttpLogger).",
+        "items": {
+          "type": "string",
+          "enum": "[active_support_logger http_logger]"
+        },
+        "default": "[active_support_logger http_logger]"
+      },
+      "backgroundWorkerThreads": {
+        "type": "integer",
+        "description": "The number of background worker threads for processing.",
+        "default": 5
+      },
+      "excludedExceptions": {
+        "type": "array",
+        "description": "List of exceptions to be excluded from Sentry reporting.",
+        "items": {
+          "type": "string"
+        },
+        "default": []
+      }
+    }
+  }
+}

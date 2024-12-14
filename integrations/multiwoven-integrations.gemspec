@@ -52,6 +52,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "grpc"
   spec.add_runtime_dependency "hubspot-api-client"
   spec.add_runtime_dependency "iterable-api-client"
+  spec.add_runtime_dependency "MailchimpMarketing"
   spec.add_runtime_dependency "net-sftp"
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "rake"
@@ -63,6 +64,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "sequel"
   spec.add_runtime_dependency "slack-ruby-client"
   spec.add_runtime_dependency "stripe"
+  spec.add_runtime_dependency "tiny_tds"
   spec.add_runtime_dependency "zendesk_api"
 
   spec.add_development_dependency "byebug"

@@ -20,7 +20,14 @@ FactoryBot.define do
       {
         "streams" => [
           { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
-          { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
+          { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
+          { "name" => "DatabricksModel", "batch_support" => false, "batch_size" => 1, "json_schema" =>
+            {
+              "input" => [{ "name" => "inputs.0", "type" => "string", "value" => "dynamic", "value_type" => "dynamic" },
+                          { "name" => "inputs.0", "type" => "number", "value" => "9522", "value_type" => "static" }],
+              "output" => [{ "name" => "predictions.col1.0", "type" => "string" },
+                           { "name" => "predictions.col1.1", "type" => "number" }]
+            } }
         ],
         "request_rate_limit" => 60,
         "request_rate_limit_unit" => "minute",

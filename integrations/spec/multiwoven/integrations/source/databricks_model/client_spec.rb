@@ -29,7 +29,7 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
         connection_specification: {
           databricks_host: "test-host.databricks.com",
           token: "test_token",
-          endpoint_name: "test",
+          endpoint: "test",
           request_format: "{}",
           response_format: "{}"
         }

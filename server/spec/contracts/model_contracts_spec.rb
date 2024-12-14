@@ -56,8 +56,42 @@ RSpec.describe "ModelContracts" do
         }
       end
 
+      let(:valid_input_dynamic_sql) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query: "SELECT * FROM table;",
+            query_type: "dynamic_sql",
+            primary_key: "id",
+            configuration: { "json_schema" => {}, "harvesters" => [] }
+          }
+        }
+      end
+
+      let(:valid_input_ai_ml) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query: "SELECT * FROM table;",
+            query_type: "dynamic_sql",
+            primary_key: "id",
+            configuration: { "harvesters" => [] }
+          }
+        }
+      end
+
       it "passes validation" do
         expect(contract.call(valid_inputs)).to be_success
+      end
+
+      it "passes validation for dynamic_sql query_type" do
+        expect(contract.call(valid_input_dynamic_sql)).to be_success
+      end
+
+      it "passes validation for ai_ml query_type" do
+        expect(contract.call(valid_input_ai_ml)).to be_success
       end
     end
 
@@ -118,7 +152,7 @@ RSpec.describe "ModelContracts" do
       end
     end
 
-    context "with missing configuration for ai_ml query_type" do
+    context "with missing or invalid configuration for ai_ml query_type" do
       let(:invalid_inputs) do
         {
           model: {
@@ -130,9 +164,61 @@ RSpec.describe "ModelContracts" do
         }
       end
 
+      let(:invalid_configuration) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query_type: "ai_ml",
+            primary_key: "id",
+            configuration: { "test" => "new" }
+          }
+        }
+      end
+
       it "fails validation due to missing configuration" do
         result = contract.call(invalid_inputs)
         expect(result.errors[:model][:configuration]).to include("Configuration is required for this query type")
+      end
+
+      it "fails validation due to invalid configuration" do
+        result = contract.call(invalid_configuration)
+        expect(result.errors[:model][:configuration]).to include("Config must contain harvester details")
+      end
+    end
+
+    context "with missing or invalid configuration for dynamic_sql query_type" do
+      let(:invalid_inputs) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query_type: "dynamic_sql",
+            primary_key: "id"
+          }
+        }
+      end
+
+      let(:invalid_configuration) do
+        {
+          model: {
+            connector_id: 1,
+            name: "Model Name",
+            query_type: "dynamic_sql",
+            primary_key: "id",
+            configuration: { "test" => "new" }
+          }
+        }
+      end
+
+      it "fails validation due to missing configuration" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:model][:configuration]).to include("Configuration is required for this query type")
+      end
+
+      it "fails validation due to invalid configuration" do
+        result = contract.call(invalid_configuration)
+        expect(result.errors[:model][:configuration]).to include("Config must contain harvester & json_schema")
       end
     end
   end

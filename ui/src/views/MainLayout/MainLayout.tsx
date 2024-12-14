@@ -1,19 +1,28 @@
+import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import Loader from '@/components/Loader';
 import { useUiConfig } from '@/utils/hooks';
 import Sidebar from '@/views/Sidebar/Sidebar';
-import { Box } from '@chakra-ui/layout';
-import { Outlet } from 'react-router-dom';
-import Loader from '@/components/Loader';
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getWorkspaces } from '@/services/settings';
-import { useStore } from '@/stores';
-import ServerError from '../ServerError';
 import useCustomToast from '@/hooks/useCustomToast';
 import { CustomToastStatus } from '@/components/Toast';
+import ServerError from '../ServerError';
+import getTitle from '@/utils/getPageTitle';
+
+import { Box } from '@chakra-ui/layout';
+import { useQuery } from '@tanstack/react-query';
+
+import { getWorkspaces } from '@/services/settings';
+import { useStore } from '@/stores';
 
 const MainLayout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const { contentContainerId } = useUiConfig();
+  const location = useLocation();
+  useEffect(() => {
+    const title = getTitle(location.pathname);
+    document.title = title;
+  }, [location.pathname]);
 
   const setActiveWorkspaceId = useStore((state) => state.setActiveWorkspaceId);
   const activeWorkspaceId = useStore((state) => state.workspaceId);

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Mailchimp",
+    "title": "Mailchimp",
+    "connector_type": "destination",
+    "category": "Marketing Automation",
+    "documentation_url": "https://docs.multiwoven.com/destinations/crm/mailchimp",
+    "github_issue_label": "destination-mailchimp",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

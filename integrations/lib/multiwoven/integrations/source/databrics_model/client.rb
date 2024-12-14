@@ -65,13 +65,13 @@ module Multiwoven::Integrations::Source
           data = JSON.parse(response.body)
           [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
         else
-          create_log_message("DATABRICKS MODEL:RUN_MODEL", "error", "request failed")
+          create_log_message("DATABRICKS MODEL:RUN_MODEL", "error", "request failed: #{response.body}")
         end
       end
 
       def build_url(url, connection_config)
         format(url, databricks_host: connection_config[:databricks_host],
-                    endpoint_name: connection_config[:endpoint_name])
+                    endpoint_name: connection_config[:endpoint])
       end
 
       def send_request(url, token, payload)

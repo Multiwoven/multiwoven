@@ -1,0 +1,142 @@
+{
+  "request_rate_limit": 100000,
+  "request_rate_limit_unit": "day",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "Audience",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["email", "first_name", "last_name"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["subscribed", "unsubscribed", "cleaned", "pending"]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "merge_fields": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "FNAME": {
+                "type": "string"
+              },
+              "LNAME": {
+                "type": "string"
+              }
+            }
+          },
+          "language": {
+            "type": "string"
+          },
+          "vip": {
+            "type": "boolean"
+          },
+          "timestamp_signup": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ip_signup": {
+            "type": "string",
+            "format": "ipv4"
+          },
+          "timestamp_opt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ip_opt": {
+            "type": "string",
+            "format": "ipv4"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["timestamp_opt"],
+      "source_defined_primary_key": ["email"]
+    },
+    {
+      "name": "Tags",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["email", "tags"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": true,
+      "default_cursor_field": ["email"],
+      "source_defined_primary_key": ["email"]
+    },
+    {
+      "name": "Campaigns",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["subject", "from_name", "reply_to", "recipients"],
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "from_name": {
+            "type": "string"
+          },
+          "reply_to": {
+            "type": "string",
+            "format": "email"
+          },
+          "recipients": {
+            "type": "object",
+            "properties": {
+              "list_id": {
+                "type": "string"
+              }
+            }
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "send_time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "supported_sync_modes": ["full_refresh"],
+      "source_defined_cursor": false
+    }
+  ]
+}

@@ -60,7 +60,7 @@
                   <%= "#{@resource.invited_by.name} has invited you to use AI Squared with them, in a workspace called #{@workspace.name}." %>
                 </p>
                 <% query_params = { invited: true, invited_user:@resource.email, invitation_token: @token, workspace_id: @workspace.id, workspace_name: @workspace.name, invited_by: 	@resource.invited_by.name } %>
-                <% custom_url = "#{ENV['UI_HOST']}/sign-up?#{query_params.to_query}" %>
+                <% custom_url = @is_verified ? "#{ENV['UI_HOST']}/sign-in" : "#{ENV['UI_HOST']}/sign-up?#{query_params.to_query}" %>
                 <a
                   href="<%= custom_url %>"
                   style="display: inline-block; text-decoration: none"
@@ -96,7 +96,7 @@
                     margin: 0;
                   "
                 >
-                  <% if @resource.invitation_due_at %>
+                  <% if !@is_verified && @resource.invitation_due_at %>
                     <p><%= t("devise.mailer.invitation_instructions.accept_until", due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format')) %>
                     </p>
                   <% end %>

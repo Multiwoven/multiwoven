@@ -75,6 +75,12 @@ gem "aws-sdk-sagemakerruntime"
 
 gem "google-cloud-ai_platform-v1"
 
+gem "tiny_tds"
+
+gem "MailchimpMarketing"
+
+gem 'sentry-ruby'
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
