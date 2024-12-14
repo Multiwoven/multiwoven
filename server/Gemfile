@@ -33,8 +33,6 @@ gem "jwt"
 gem "kaminari"
 gem "liquid"
 gem "rack-cors"
-gem 'sentry'
-gem 'sentry-rails'
 
 # AuthN & AuthZ
 gem "devise"
