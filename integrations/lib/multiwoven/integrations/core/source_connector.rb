@@ -39,6 +39,28 @@ module Multiwoven
         # Appending the LIMIT and OFFSET clauses to the SQL query
         "#{sql_query} LIMIT #{limit} OFFSET #{offset}"
       end
+
+      def send_request(options = {})
+        Multiwoven::Integrations::Core::HttpClient.request(
+          options[:url],
+          options[:http_method],
+          payload: options[:payload],
+          headers: options[:headers],
+          config: options[:config]
+        )
+      end
+
+      def send_streaming_request(options = {})
+        Multiwoven::Integrations::Core::StreamingHttpClient.request(
+          options[:url],
+          options[:http_method],
+          payload: options[:payload],
+          headers: options[:headers],
+          config: options[:config]
+        ) do |chunk|
+          yield chunk if block_given? # Pass each chunk for processing (streaming response)
+        end
+      end
     end
   end
 end
