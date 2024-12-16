@@ -131,5 +131,14 @@ RSpec.describe ResourceLinkBuilder, type: :controller do
         expect(result).to eq("/reports/#{feedback.id}")
       end
     end
+
+    context "when error arises" do
+      it "return nil" do
+        result = build_link!(
+          resource_type: "Catalog"
+        )
+        expect(result).to be_nil
+      end
+    end
   end
 end
