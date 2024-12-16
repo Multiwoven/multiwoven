@@ -5,6 +5,7 @@ module Api
     class CatalogsController < ApplicationController
       include Catalogs
       include AuditLogger
+      include ResourceLinkBuilder
       before_action :set_connector, only: %i[create update]
       before_action :set_catalog, only: %i[update]
 
@@ -70,7 +71,8 @@ module Api
 
       def create_audit_log
         resource_id = params[:id] || params[:connector_id]
-        audit!(resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = build_link!(resource: @connector, resource_id: params[:connector_id])
+        audit!(resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def catalog_params
