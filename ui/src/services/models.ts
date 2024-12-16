@@ -51,6 +51,7 @@ export type ModelQueryType = 'data' | 'ai_ml' | 'raw_sql' | 'dbt' | 'soql' | 'ta
 
 export type GetAllModelsProps = {
   type: ModelQueryType;
+  page?: number;
 };
 
 export const getModelPreview = async (query: string, connector_id: string): Promise<any> => {
@@ -60,10 +61,11 @@ export const getModelPreview = async (query: string, connector_id: string): Prom
 
 export const getAllModels = async ({
   type = 'data',
+  page = 1,
 }: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
   multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',
-    url: type ? `/models?query_type=${type}` : '/models',
+    url: `/models?page=${page}&per_page=10&query_type=${type}`,
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>
