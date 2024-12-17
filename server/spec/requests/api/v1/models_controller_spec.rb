@@ -63,6 +63,18 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1&per_page=20")
       end
 
+      it "returns success and no models when the data is empty" do
+        workspace.models.destroy_all
+        get "/api/v1/models", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data].count).to eql(0)
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+        expect(response_hash.dig(:links, :last)).to include("http://www.example.com/api/v1/models?page=1")
+        expect(response_hash.dig(:links, :next)).to be_nil
+        expect(response_hash.dig(:links, :prev)).to be_nil
+      end
+
       it "returns success and all mode for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/models", headers: auth_headers(user, workspace_id)
