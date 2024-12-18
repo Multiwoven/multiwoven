@@ -39,8 +39,11 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
 <<<<<<< HEAD
+<<<<<<< HEAD
         get "/api/v1/syncs/#{sync.id}/sync_runs", headers: auth_headers(user, workspace_id)
 =======
+=======
+>>>>>>> ac183819 (chore(CE): list api accept per page (#732))
         get "/api/v1/syncs/#{sync.id}/sync_runs?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         response_hash = JSON.parse(response.body).with_indifferent_access
 >>>>>>> ac183819 (chore(CE): list api accept per page (#732))
