@@ -11,7 +11,7 @@ module Api
         sync_runs = @sync.sync_runs.order(started_at: :desc)
         authorize sync_runs
         sync_runs = sync_runs.where(status: params[:status]) if params[:status].present?
-        sync_runs = sync_runs.page(params[:page] || 1)
+        sync_runs = sync_runs.page(params[:page] || 1).per(params[:per_page])
         render json: sync_runs, status: :ok
       end
 

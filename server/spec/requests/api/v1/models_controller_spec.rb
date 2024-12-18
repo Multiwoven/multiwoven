@@ -55,12 +55,12 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and all model " do
-        get "/api/v1/models", headers: auth_headers(user, workspace_id)
+        get "/api/v1/models?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(8)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
-        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1&per_page=20")
       end
 
       it "returns success and all mode for viewer role" do
