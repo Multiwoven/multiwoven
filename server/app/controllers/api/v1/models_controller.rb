@@ -18,7 +18,7 @@ module Api
 
       def index
         query_type = request.query_parameters["query_type"].try(:split, ",")
-        workspace_models = current_workspace.models.page(params[:page] || 1)
+        workspace_models = current_workspace.models.page(params[:page] || 1).per(params[:per_page])
         @models = query_type ? workspace_models.where(query_type:) : workspace_models
         authorize @models
         render json: @models, status: :ok
