@@ -45,7 +45,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and get all syncs" do
-        get "/api/v1/syncs", headers: auth_headers(user, workspace_id)
+        get "/api/v1/syncs?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(syncs.count)
@@ -55,7 +55,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash[:data][0][:attributes][:model].keys).to include("id", "name", "description", "query",
                                                                              "query_type", "primary_key", "created_at",
                                                                              "updated_at", "connector")
-        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1&per_page=20")
       end
 
       it "returns success and get all syncs for member role" do
@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash[:data][0][:attributes][:model].keys).to include("id", "name", "description", "query",
                                                                              "query_type", "primary_key", "created_at",
                                                                              "updated_at", "connector")
-        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1")
+        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs?page=1&per_page=10")
       end
 
       it "returns success and get all syncs for viewer role" do

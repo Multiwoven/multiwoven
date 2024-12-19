@@ -17,7 +17,7 @@ module Api
 
       def index
         @syncs = current_workspace
-                 .syncs.all.page(params[:page] || 1)
+                 .syncs.all.page(params[:page] || 1).per(params[:per_page])
         authorize @syncs
         render json: @syncs, status: :ok
       end
