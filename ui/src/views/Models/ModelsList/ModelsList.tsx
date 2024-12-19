@@ -3,7 +3,7 @@ import TopBar from '@/components/TopBar';
 import { Box } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 import { useQuery } from '@tanstack/react-query';
-import { getAllModels, GetAllModelsResponse } from '@/services/models';
+import { AllDataModels, getAllModels, GetAllModelsResponse } from '@/services/models';
 import Loader from '@/components/Loader';
 import NoModels from '@/views/Models/NoModels';
 import { useStore } from '@/stores';
@@ -22,7 +22,7 @@ const ModelsList = (): JSX.Element | null => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['models', activeWorkspaceId, 'data'],
-    queryFn: () => getAllModels({ type: 'data' }),
+    queryFn: () => getAllModels({ type: AllDataModels }),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,

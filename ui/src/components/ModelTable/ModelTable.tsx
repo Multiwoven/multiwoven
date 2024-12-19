@@ -1,5 +1,5 @@
 import GenerateTable from '@/components/Table/Table';
-import { getAllModels, GetAllModelsResponse } from '@/services/models';
+import { AllDataModels, getAllModels, GetAllModelsResponse } from '@/services/models';
 import { addIconDataToArray, ConvertToTableData } from '@/utils';
 import NoModels from '@/views/Models/NoModels';
 import Loader from '@/components/Loader';
@@ -16,7 +16,7 @@ const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
 
   const { data } = useQueryWrapper<ApiResponse<GetAllModelsResponse[]>, Error>(
     ['models', activeWorkspaceId],
-    () => getAllModels({ type: 'data' }),
+    () => getAllModels({ type: AllDataModels }),
     {
       refetchOnMount: true,
       refetchOnWindowFocus: false,

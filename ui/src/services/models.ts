@@ -47,10 +47,10 @@ export type GetAllModelsResponse = {
   attributes: ModelAttributes;
 };
 
-export type ModelQueryType = 'data' | 'ai_ml' | 'raw_sql' | 'dbt' | 'soql' | 'table_selector';
+export const AllDataModels = 'raw_sql,dbt,soql,table_selector';
 
 export type GetAllModelsProps = {
-  type: ModelQueryType;
+  type: string;
 };
 
 export const getModelPreview = async (query: string, connector_id: string): Promise<any> => {
@@ -59,7 +59,7 @@ export const getModelPreview = async (query: string, connector_id: string): Prom
 };
 
 export const getAllModels = async ({
-  type = 'data',
+  type = AllDataModels,
 }: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
   multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',

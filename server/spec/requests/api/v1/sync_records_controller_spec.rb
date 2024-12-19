@@ -40,7 +40,8 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
-        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records", headers: auth_headers(user, workspace_id)
+        get "/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1&per_page=20",
+            headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].size).to eq(2)
@@ -61,7 +62,8 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
             expect(row.dig(:attributes, :logs)).to eq(sync_record.logs)
             expect { JSON.parse(row.dig(:attributes, :logs).to_json) }.not_to raise_error
           end
-          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1")
+          expect(response_hash.dig(:links, :first))
+            .to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs/#{sync_run.id}/sync_records?page=1&per_page=20")
         end
       end
 

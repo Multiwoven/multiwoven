@@ -6,6 +6,7 @@ module Api
     class SyncsController < ApplicationController
       include Syncs
       include AuditLogger
+      include ResourceLinkBuilder
       before_action :set_sync, only: %i[show update enable destroy]
       before_action :modify_sync_params, only: %i[create update]
 
@@ -16,7 +17,7 @@ module Api
 
       def index
         @syncs = current_workspace
-                 .syncs.all.page(params[:page] || 1)
+                 .syncs.all.page(params[:page] || 1).per(params[:per_page])
         authorize @syncs
         render json: @syncs, status: :ok
       end
@@ -129,7 +130,8 @@ module Api
 
       def create_audit_log
         resource_id = @resource_id || params[:id]
-        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = @action == "delete" ? nil : build_link!(resource_id:)
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def sync_params

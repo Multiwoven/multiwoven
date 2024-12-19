@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ResourceLinkBuilder
+  # rubocop:disable Metrics/CyclomaticComplexity
   extend ActiveSupport::Concern
   def build_link!(resource_type: nil, resource: nil, resource_id: nil)
     resource_type ||= controller_name.singularize.capitalize
@@ -18,6 +19,12 @@ module ResourceLinkBuilder
     else
       reports_link(resource_id)
     end
+  rescue StandardError => e
+    Rails.logger.error({
+      error_message: e.message,
+      stack_trace: Rails.backtrace_cleaner.clean(e.backtrace)
+    }.to_s)
+    nil
   end
 
   private
@@ -59,4 +66,5 @@ module ResourceLinkBuilder
   def reports_link(resource_id)
     "/reports/#{resource_id}"
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 end
