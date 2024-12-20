@@ -36,6 +36,7 @@ PATH
       ruby-oci8
       ruby-odbc
       rubyzip
+      sentry-ruby
       sequel
       slack-ruby-client
       stripe
