@@ -1,11 +1,11 @@
 {
   "data": {
-    "name": "HttpModel",
-    "title": "HTTP Model Endpoint",
+    "name": "OpenAI",
+    "title": "OpenAI Model Endpoint",
     "connector_type": "source",
     "category": "AI Model",
     "documentation_url": "https://docs.mutltiwoven.com",
-    "github_issue_label": "source-http-model",
+    "github_issue_label": "source-open-ai-model",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",

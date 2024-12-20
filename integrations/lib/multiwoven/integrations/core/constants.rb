@@ -63,6 +63,8 @@ module Multiwoven
       # google sheets
       GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/drive"
       GOOGLE_SPREADSHEET_ID_REGEX = %r{/d/([-\w]{20,})/}.freeze
+
+      OPEN_AI_URL = "https://api.openai.com/v1/chat/completions"
     end
   end
 end
