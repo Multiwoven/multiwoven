@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.15.10)
+=======
+    multiwoven-integrations (0.16.2)
+>>>>>>> 85bb939d (chore(CE): add payload limit to databricks model (#745))
       MailchimpMarketing
       activesupport
       async-websocket

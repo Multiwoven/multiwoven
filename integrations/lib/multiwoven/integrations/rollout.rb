@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.15.10"
+=======
+    VERSION = "0.16.2"
+>>>>>>> 85bb939d (chore(CE): add payload limit to databricks model (#745))
 
     ENABLED_SOURCES = %w[
       Snowflake
