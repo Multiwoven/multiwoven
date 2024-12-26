@@ -23,8 +23,8 @@ module CustomPaginationLinks
     {}.tap do |pages|
       pages[:first] = FIRST_PAGE
       pages[:prev] = first_page? ? nil : collection.current_page - FIRST_PAGE
-      pages[:next] = last_page? ? nil : collection.current_page + FIRST_PAGE
-      pages[:last] = collection.total_pages
+      pages[:next] = (!last_page? && collection.total_pages > 1) ? collection.current_page + FIRST_PAGE : nil
+      pages[:last] = [collection.total_pages, FIRST_PAGE].max
     end
   end
 
