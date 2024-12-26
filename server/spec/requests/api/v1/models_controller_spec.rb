@@ -61,8 +61,6 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash[:data].count).to eql(8)
         expect(response_hash.dig(:data, 0, :type)).to eq("models")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/models?page=1&per_page=20")
-<<<<<<< HEAD
-=======
       end
 
       it "returns success and no models when the data is empty" do
@@ -75,7 +73,6 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:links, :last)).to include("http://www.example.com/api/v1/models?page=1")
         expect(response_hash.dig(:links, :next)).to be_nil
         expect(response_hash.dig(:links, :prev)).to be_nil
->>>>>>> ac183819 (chore(CE): list api accept per page (#732))
       end
 
       it "returns success and all mode for viewer role" do
