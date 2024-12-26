@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.15.10"
-=======
-    VERSION = "0.16.0"
->>>>>>> 93d88770 (feat(CE): Open AI ai ml source connector (#736))
+    VERSION = "0.15.11"
 
     ENABLED_SOURCES = %w[
       Snowflake

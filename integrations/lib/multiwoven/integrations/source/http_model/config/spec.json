@@ -19,10 +19,17 @@
         "title": "URL",
         "order": 1
       },
+      "is_stream": {
+        "type": "boolean",
+        "title": "Streaming Enabled",
+        "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
+        "default": false,
+        "order": 2
+      },
       "headers": {
         "title": "HTTP Headers",
         "description": "Custom headers to include in the HTTP request. Useful for authentication, content type specifications, and other request metadata.",
-        "order": 2,
+        "order": 3,
         "additionalProperties": {
           "type": "string"
         },
@@ -42,21 +49,21 @@
             "order": 0
           }
         },
-        "order": 3
+        "order": 4
       },
       "request_format": {
         "title": "Request Format",
         "description": "Sample Request Format",
         "type": "string",
         "x-request-format": true,
-        "order": 4
+        "order": 5
       },
       "response_format": {
         "title": "Response Format",
         "description": "Sample Response Format",
         "type": "string",
         "x-response-format": true,
-        "order": 5
+        "order": 6
       }
     }
   }

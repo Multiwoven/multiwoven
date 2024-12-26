@@ -52,7 +52,9 @@ require_relative "integrations/protocol/protocol"
 require_relative "integrations/core/base_connector"
 require_relative "integrations/core/source_connector"
 require_relative "integrations/core/destination_connector"
+require_relative "integrations/core/http_helper"
 require_relative "integrations/core/http_client"
+require_relative "integrations/core/streaming_http_client"
 require_relative "integrations/core/query_builder"
 
 # Source
