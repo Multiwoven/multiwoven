@@ -63,7 +63,10 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
   end
 
   let(:sync_config) { Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json) }
-
+  let(:sync_config_stream) do
+    sync_config_json[:source][:connection_specification][:is_stream] = true
+    Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
+  end
   before do
     allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
   end
@@ -144,7 +147,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
     context "when the read is successful" do
       let(:response_body) { { "message" => "Hello! how can I help" }.to_json }
       before do
-        response = Net::HTTPSuccess.new("1.1", "200", "Unauthorized")
+        response = Net::HTTPSuccess.new("1.1", "200", "success")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
         http_method = sync_config_json[:source][:connection_specification][:http_method]
@@ -168,7 +171,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       end
     end
 
-    context "when the write operation fails" do
+    context "when the read operation fails" do
       let(:response_body) { { "message" => "failed" }.to_json }
       before do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
@@ -195,6 +198,67 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         )
 
         client.read(sync_config)
+      end
+    end
+  end
+
+  describe "#read with is_stream = true" do
+    context "when the read is successful" do
+      before do
+        payload = sync_config_json[:model][:query]
+        streaming_chunk_first = { "message" => "streaming data 1" }.to_json
+        streaming_chunk_second = { "message" => "streaming data 2" }.to_json
+
+        allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
+          .with(sync_config_json[:source][:connection_specification][:url_host],
+                sync_config_json[:source][:connection_specification][:http_method],
+                payload: JSON.parse(payload),
+                headers: sync_config_json[:source][:connection_specification][:headers],
+                config: sync_config_json[:source][:connection_specification][:config])
+          .and_yield(streaming_chunk_first)
+          .and_yield(streaming_chunk_second)
+
+        response = Net::HTTPSuccess.new("1.1", "200", "success")
+        response.content_type = "application/json"
+      end
+
+      it "streams data and processes chunks" do
+        results = []
+        client.read(sync_config_stream) { |message| results << message }
+        expect(results.first).to be_an(Array)
+        expect(results.first.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(results.first.first.record.data["message"]).to eq("streaming data 1")
+
+        expect(results.last).to be_an(Array)
+        expect(results.last.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(results.last.first.record.data["message"]).to eq("streaming data 2")
+      end
+    end
+
+    context "when streaming fails on a chunk" do
+      let(:streaming_chunk_first) { { "message" => "streaming data chunk 1" }.to_json }
+
+      before do
+        url = sync_config_json[:source][:connection_specification][:url_host]
+        http_method = sync_config_json[:stream][:request_method]
+        headers = sync_config_json[:source][:connection_specification][:headers]
+        config = sync_config_json[:source][:connection_specification][:config]
+        allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
+          .with(url,
+                http_method,
+                payload: JSON.parse(payload.to_json),
+                headers: headers,
+                config: config)
+          .and_yield(streaming_chunk_first)
+          .and_raise(StandardError, "Streaming error on chunk 2")
+      end
+
+      it "handles streaming errors gracefully" do
+        results = []
+        client.read(sync_config_stream) { |message| results << message }
+        expect(results.last).to be_an(Array)
+        expect(results.last.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(results.last.first.record.data["message"]).to eq("streaming data chunk 1")
       end
     end
   end
