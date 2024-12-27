@@ -62,8 +62,12 @@ module Multiwoven::Integrations::Source
 
       def process_response(response)
         if success?(response)
-          data = JSON.parse(response.body)
-          [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
+          begin
+            data = JSON.parse(response.body)
+            [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
+          rescue JSON::ParserError
+            create_log_message("DATABRICKS MODEL:RUN_MODEL", "error", "parsing failed: please send a valid payload")
+          end
         else
           create_log_message("DATABRICKS MODEL:RUN_MODEL", "error", "request failed: #{response.body}")
         end
