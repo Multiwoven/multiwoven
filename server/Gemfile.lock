@@ -1677,11 +1677,7 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
-<<<<<<< HEAD
-    csv (3.3.0)
-=======
     csv (3.3.2)
->>>>>>> 516a1132 (chore(CE): Update server gem 0.16.2 (#749))
     data_migrate (9.4.0)
       activerecord (>= 6.1)
       railties (>= 6.1)
@@ -1944,11 +1940,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.15.10)
-=======
     multiwoven-integrations (0.16.2)
->>>>>>> 516a1132 (chore(CE): Update server gem 0.16.2 (#749))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2179,11 +2171,7 @@ GEM
       faraday-multipart
       gli
       hashie
-<<<<<<< HEAD
-    sorbet-runtime (0.5.11690)
-=======
     sorbet-runtime (0.5.11708)
->>>>>>> 516a1132 (chore(CE): Update server gem 0.16.2 (#749))
     stringio (3.1.0)
     stripe (13.2.0)
     strong_migrations (1.8.0)
@@ -2259,11 +2247,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.15.10)
-=======
   multiwoven-integrations (~> 0.16.2)
->>>>>>> 516a1132 (chore(CE): Update server gem 0.16.2 (#749))
   mysql2
   newrelic_rpm
   parallel
