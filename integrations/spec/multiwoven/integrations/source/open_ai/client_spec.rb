@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
+RSpec.describe Multiwoven::Integrations::Source::OpenAI::Client do
   include WebMock::API
 
   before(:each) do
@@ -9,7 +9,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
 
   let(:client) { described_class.new }
   let(:mock_http_session) { double("Net::Http::Session") }
-
+  let(:api_key) { "test_api_key" }
   let(:payload) do
     {
       queries: "Hello there"
@@ -22,13 +22,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         name: "DestinationConnectorName",
         type: "destination",
         connection_specification: {
-          url_host: "https://your-subdomain",
-          http_method: "POST",
-          headers: {
-            "Accept" => "application/json",
-            "Authorization" => "Bearer test_token",
-            "Content-Type" => "application/json"
-          },
+          api_key: api_key,
           config: {
             timeout: 25
           },
@@ -70,6 +64,14 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
   before do
     allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
   end
+  let(:headers) do
+    {
+      "Accept" => "application/json",
+      "Authorization" => "Bearer #{api_key}",
+      "Content-Type" => "application/json"
+    }
+  end
+  let(:endpoint) { "https://api.openai.com/v1/chat/completions" }
 
   describe "#check_connection" do
     context "when the connection is successful" do
@@ -77,14 +79,11 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       before do
         response = Net::HTTPSuccess.new("1.1", "200", "Unauthorized")
         response.content_type = "application/json"
-        url = sync_config_json[:source][:connection_specification][:url_host]
-        http_method = sync_config_json[:source][:connection_specification][:http_method]
-        headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(url,
-                http_method,
+          .with(endpoint,
+                "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
                 config: config)
@@ -103,13 +102,10 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       before do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
-        url = sync_config_json[:source][:connection_specification][:url_host]
-        http_method = sync_config_json[:source][:connection_specification][:http_method]
-        headers = sync_config_json[:source][:connection_specification][:headers]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(url,
-                http_method,
+          .with(endpoint,
+                "POST",
                 headers: headers)
           .and_return(response)
       end
@@ -137,7 +133,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       allow(client).to receive(:read_json).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
         an_instance_of(StandardError),
-        hash_including(context: "HTTP MODEL:DISCOVER:EXCEPTION", type: "error")
+        hash_including(context: "OPEN AI:DISCOVER:EXCEPTION", type: "error")
       )
       client.discover
     end
@@ -149,14 +145,11 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       before do
         response = Net::HTTPSuccess.new("1.1", "200", "success")
         response.content_type = "application/json"
-        url = sync_config_json[:source][:connection_specification][:url_host]
-        http_method = sync_config_json[:source][:connection_specification][:http_method]
-        headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(url,
-                http_method,
+          .with(endpoint,
+                "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
                 config: config)
@@ -176,14 +169,11 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       before do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
-        url = sync_config_json[:source][:connection_specification][:url_host]
-        http_method = sync_config_json[:source][:connection_specification][:http_method]
-        headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(url,
-                http_method,
+          .with(endpoint,
+                "POST",
                 headers: headers,
                 config: config)
           .and_return(response)
@@ -194,7 +184,7 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         allow(client).to receive(:run_model).and_raise(error_instance)
         expect(client).to receive(:handle_exception).with(
           error_instance,
-          hash_including(context: "HTTP MODEL:READ:EXCEPTION", type: "error")
+          hash_including(context: "OPEN AI:READ:EXCEPTION", type: "error")
         )
 
         client.read(sync_config)
@@ -206,14 +196,18 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
     context "when the read is successful" do
       before do
         payload = sync_config_json[:model][:query]
-        streaming_chunk_first = { "message" => "streaming data 1" }.to_json
-        streaming_chunk_second = { "message" => "streaming data 2" }.to_json
+        streaming_chunk_first = <<~DATA
+          data: {"choices":[{"delta":{"content":"How I "}}]}
+
+          data: {"choices":[{"delta":{"content":"can help "}}]}
+        DATA
+        streaming_chunk_second = "data: {\"choices\":[{\"delta\":{\"content\":\"you\"}}]}\n\n"
 
         allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
-          .with(sync_config_json[:source][:connection_specification][:url_host],
-                sync_config_json[:source][:connection_specification][:http_method],
+          .with(endpoint,
+                "POST",
                 payload: JSON.parse(payload),
-                headers: sync_config_json[:source][:connection_specification][:headers],
+                headers: headers,
                 config: sync_config_json[:source][:connection_specification][:config])
           .and_yield(streaming_chunk_first)
           .and_yield(streaming_chunk_second)
@@ -227,11 +221,15 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         client.read(sync_config_stream) { |message| results << message }
         expect(results.first).to be_an(Array)
         expect(results.first.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(results.first.first.record.data["message"]).to eq("streaming data 1")
+        expect(results.first.first.record.data.dig("choices", 0, "delta", "content")).to eq("How I ")
 
-        expect(results.last).to be_an(Array)
-        expect(results.last.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(results.last.first.record.data["message"]).to eq("streaming data 2")
+        expect(results[1]).to be_an(Array)
+        expect(results[1].first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(results[1].first.record.data.dig("choices", 0, "delta", "content")).to eq("can help ")
+
+        expect(results[2]).to be_an(Array)
+        expect(results[2].first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(results[2].first.record.data.dig("choices", 0, "delta", "content")).to eq("you")
       end
     end
 
@@ -239,13 +237,10 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
       let(:streaming_chunk_first) { { "message" => "streaming data chunk 1" }.to_json }
 
       before do
-        url = sync_config_json[:source][:connection_specification][:url_host]
-        http_method = sync_config_json[:stream][:request_method]
-        headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
-          .with(url,
-                http_method,
+          .with(endpoint,
+                "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
                 config: config)
