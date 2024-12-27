@@ -2,12 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.16.0"
-<<<<<<< HEAD
-    VERSION = "0.15.10"
-=======
     VERSION = "0.16.1"
->>>>>>> ff78e335 (chore(CE): Update HTTP model spec (#737))
 
     ENABLED_SOURCES = %w[
       Snowflake
