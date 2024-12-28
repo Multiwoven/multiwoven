@@ -1,0 +1,16 @@
+{
+    "data": {
+      "name": "Sentry",
+      "title": "Sentry",
+      "connector_type": "destination",
+      "category": "Productivity Tools",
+      "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/sentry",
+      "github_issue_label": "destination-sentry",
+      "icon": "icon.svg",
+      "license": "MIT",
+      "release_stage": "alpha",
+      "support_level": "community",
+      "tags": ["language:ruby", "multiwoven"]
+    }
+  }
+  
