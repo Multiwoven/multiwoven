@@ -63,6 +63,10 @@ module Multiwoven
       # google sheets
       GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/drive"
       GOOGLE_SPREADSHEET_ID_REGEX = %r{/d/([-\w]{20,})/}.freeze
+
+      MIXPANEL_BASE_URL = "https://api.mixpanel.com"
+      MIXPANEL_AUTH_ENDPOINT = "https://api.mixpanel.com/track"
+      
     end
   end
 end
