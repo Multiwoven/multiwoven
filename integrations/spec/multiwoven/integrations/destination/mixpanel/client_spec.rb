@@ -61,83 +61,86 @@ RSpec.describe Multiwoven::Integrations::Destination::Mixpanel::Client do
 
   let(:records) do
     [
-      { id: "123", properties: { name: "John Doe", email: "john@example.com" } },
-      { id: "124", properties: { name: "Jane Doe", email: "jane@example.com" } }
+      { id: "123", name: "All Events", properties: { name: "John Doe", email: "john@example.com" } }
     ]
   end
 
-  describe "#check_connection" do
-    context "when the connection is successful" do
-      before do
-        stub_request(:post, "#{base_url}/track")
-          .to_return(status: 200, body: '', headers: {})
-      end
-
-      it "returns a successful connection status" do
-        allow(client).to receive(:authenticate_client).and_return(true)
-
-        response = client.check_connection(connection_config)
-
-        expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-        expect(response.connection_status.status).to eq("succeeded")
-      end
-    end
-
-    context "when the connection fails" do
-      it "returns a failed connection status with an error message" do
-        allow(client).to receive(:authenticate_client).and_raise(StandardError.new("connection failed"))
-
-        response = client.check_connection(connection_config)
-
-        expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-        expect(response.connection_status.status).to eq("failed")
-      end
-    end
+  let(:profile_body) do
+    [
+      {
+        "$token" => "api_token",
+        "$distinct_id" => "123",
+        "$set" => {
+          "name" => "John Doe",
+          "email" => "john@example.com"
+        }
+      }
+    ].to_json
   end
 
-  # describe "#write" do
-  #   context "when writing user profiles" do
-  #     let(:endpoint) { "#{base_url}/engage#profile-set" }
+  describe "#check_connection" do
+  context 'when connection is valid' do
+    before do
+      stub_request(:post, "#{base_url}/track")
+        .to_return(status: 200, body: { status: 1 }.to_json)
+    end
 
-  #     before do
-  #       stub_request(:post, endpoint)
-  #         .to_return(status: 200, body: '{"status": "ok"}', headers: {})
-  #     end
+    it 'returns a success status' do
+      result = subject.check_connection(connection_config)
+      expect(result.type).to eq('connection_status')
+      expect(result.connection_status.status).to eq('succeeded')
+    end
+    
+  end
 
-  #     it "increments the success count" do
-  #       response = client.write(sync_config, records)
+  context 'when the connection fails' do
+      before do
+        stub_request(:post, "https://api.mixpanel.com/track")
+          .to_return(status: 401, body: 'Unauthorized')
+      end
 
-  #       expect(response.tracking.success).to eq(records.size)
-  #       expect(response.tracking.failed).to eq(0)
-  #       log_message = response.tracking.logs.first
-  #       expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
-  #       expect(log_message.level).to eql("info")
-  #       expect(log_message.message).to include("request")
-  #       expect(log_message.message).to include("response")
-  #     end
-  #   end
+      it 'returns a failed connection status with an error message' do
+        result = subject.check_connection(connection_config)
+        expect(result.type).to eq('connection_status')
+        expect(result.connection_status.status).to eq('failed')
+        expect(result.connection_status.message).to eq('Authentication Error: Invalid API token.')
+      end
+  end
+  end
 
-  #   context "when writing events" do
-  #     let(:endpoint) { "#{base_url}/track" }
-
-  #     before do
-  #       stub_request(:post, endpoint)
-  #         .to_return(status: 400, body: '{"error": "Invalid Request"}', headers: {})
-  #     end
-
-  #     it "increments the failure count" do
-  #       response = client.write(sync_config, records)
-
-  #       expect(response.tracking.failed).to eq(records.size)
-  #       expect(response.tracking.success).to eq(0)
-  #       log_message = response.tracking.logs.first
-  #       expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
-  #       expect(log_message.level).to eql("error")
-  #       expect(log_message.message).to include("request")
-  #       expect(log_message.message).to include("response")
-  #     end
-  #   end
-  # end
+  describe "#write" do
+  context "when writing user profiles" do
+    let(:endpoint) { "#{base_url}/engage" }
+    
+    before do
+      stub_request(:post, endpoint)
+        .with(
+          body: profile_body,
+          headers: {
+            "Accept" => "text/plain",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Content-Type" => "application/json",
+            "Host" => "api.mixpanel.com",
+            "User-Agent" => "Ruby"
+          }
+        )
+        .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+    end
+  
+    it "increments the success count" do
+      response = client.write(sync_config, records)
+  
+      expect(response.tracking.success).to eq(records.size)
+      expect(response.tracking.failed).to eq(0)
+      log_message = response.tracking.logs.first
+      expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+      expect(log_message.level).to eql("info")
+      expect(log_message.message).to include("request")
+      expect(log_message.message).to include("response")
+    end
+  end
+  
+  end
 
   describe "#meta_data" do
     it "serves its GitHub image URL as an icon" do

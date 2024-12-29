@@ -10,7 +10,6 @@ module Multiwoven
       module Mixpanel
         include Multiwoven::Integrations::Core
 
-        BASE_URL = "https://api.mixpanel.com"
         
         class Client < DestinationConnector
           prepend Multiwoven::Integrations::Core::RateLimiter
@@ -85,7 +84,7 @@ module Multiwoven
             
             stream_config = {
               "UserProfiles" => {
-                endpoint: "#{BASE_URL}/engage#profile-set",
+                endpoint: "#{MIXPANEL_BASE_URL}/engage#profile-set",
                 payload: ->(record) {
                   [{
                     "$token" => @api_token,
@@ -95,7 +94,7 @@ module Multiwoven
                 }
               },
               "Events" => {
-                endpoint: "#{BASE_URL}/track",
+                endpoint: "#{MIXPANEL_BASE_URL}/track",
                 payload: ->(record) {
                   [{
                     "event" => record[:name],
@@ -117,18 +116,18 @@ module Multiwoven
 
           def send_request(endpoint, payload)
             url = URI(endpoint)
-
+          
             http = Net::HTTP.new(url.host, url.port)
             http.use_ssl = true
-
+          
             request = Net::HTTP::Post.new(url)
             request["accept"] = 'text/plain'
             request["content-type"] = 'application/json'
-            request.body = payload.map { |item| item.transform_keys(&:to_s) }.to_json
-            
+  
+            formatted_payload = payload.is_a?(Array) ? payload.map { |item| item.transform_keys(&:to_s) } : payload.transform_keys(&:to_s)
+            request.body = formatted_payload.to_json
+          
             response = http.request(request)
-            puts response.read_body
-
             handle_response(response)
           end
 
@@ -152,22 +151,8 @@ module Multiwoven
               "event" => "Test Event",
               "properties" => { "$token" => @api_token }
             }
-            response = send_request("#{BASE_URL}/track", test_payload)
+            response = send_request("#{MIXPANEL_BASE_URL}/track", test_payload)
             raise "Connection failed" unless response["status"] == 1
-          end
-
-          def log_request_response(level, args, response)
-             { level: level, message: "Mixpanel request with #{args}: #{response}" }
-          end
-
-          def tracking_message(success, failure, log_message_array)
-            {
-              sync_id: @sync_config.sync_id,
-              sync_run_id: @sync_config.sync_run_id,
-              success_count: success,
-              failure_count: failure,
-              logs: log_message_array
-            }
           end
 
           def load_catalog
