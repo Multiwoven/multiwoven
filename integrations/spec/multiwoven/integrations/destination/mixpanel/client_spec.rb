@@ -79,67 +79,65 @@ RSpec.describe Multiwoven::Integrations::Destination::Mixpanel::Client do
   end
 
   describe "#check_connection" do
-  context 'when connection is valid' do
-    before do
-      stub_request(:post, "#{base_url}/track")
-        .to_return(status: 200, body: { status: 1 }.to_json)
+    context "when connection is valid" do
+      before do
+        stub_request(:post, "#{base_url}/track")
+          .to_return(status: 200, body: { status: 1 }.to_json)
+      end
+
+      it "returns a success status" do
+        result = subject.check_connection(connection_config)
+        expect(result.type).to eq("connection_status")
+        expect(result.connection_status.status).to eq("succeeded")
+      end
     end
 
-    it 'returns a success status' do
-      result = subject.check_connection(connection_config)
-      expect(result.type).to eq('connection_status')
-      expect(result.connection_status.status).to eq('succeeded')
-    end
-    
-  end
-
-  context 'when the connection fails' do
+    context "when the connection fails" do
       before do
         stub_request(:post, "https://api.mixpanel.com/track")
-          .to_return(status: 401, body: 'Unauthorized')
+          .to_return(status: 401, body: "Unauthorized")
       end
 
-      it 'returns a failed connection status with an error message' do
+      it "returns a failed connection status with an error message" do
         result = subject.check_connection(connection_config)
-        expect(result.type).to eq('connection_status')
-        expect(result.connection_status.status).to eq('failed')
-        expect(result.connection_status.message).to eq('Authentication Error: Invalid API token.')
+        expect(result.type).to eq("connection_status")
+        expect(result.connection_status.status).to eq("failed")
+        expect(result.connection_status.message).to eq("Authentication Error: Invalid API token.")
       end
-  end
+    end
   end
 
   describe "#write" do
-  context "when writing user profiles" do
-    let(:endpoint) { "#{base_url}/engage" }
-    
-    before do
-      stub_request(:post, endpoint)
-        .with(
-          body: profile_body,
-          headers: {
-            "Accept" => "text/plain",
-            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-            "Content-Type" => "application/json",
-            "Host" => "api.mixpanel.com",
-            "User-Agent" => "Ruby"
-          }
-        )
-        .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+    context "when writing user profiles" do
+      let(:endpoint) { "#{base_url}/engage" }
+
+      before do
+        stub_request(:post, endpoint)
+          .with(
+            body: profile_body,
+            headers: {
+              "Accept" => "text/plain",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Content-Type" => "application/json",
+              "Host" => "api.mixpanel.com",
+              "User-Agent" => "Ruby"
+            }
+          )
+          .to_return(status: 200, body: '{"status": "ok"}', headers: {})
+      end
+
+      it "increments the success count" do
+        response = client.write(sync_config, records)
+
+        expect(response.tracking.success).to eq(records.size)
+        expect(response.tracking.failed).to eq(0)
+        log_message = response.tracking.logs.first
+        expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(log_message.level).to eql("info")
+        expect(log_message.message).to include("request")
+        expect(log_message.message).to include("response")
+      end
     end
-  
-    it "increments the success count" do
-      response = client.write(sync_config, records)
-  
-      expect(response.tracking.success).to eq(records.size)
-      expect(response.tracking.failed).to eq(0)
-      log_message = response.tracking.logs.first
-      expect(log_message).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
-      expect(log_message.level).to eql("info")
-      expect(log_message.message).to include("request")
-      expect(log_message.message).to include("response")
-    end
-  end
-  
   end
 
   describe "#meta_data" do
@@ -165,9 +163,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Mixpanel::Client do
       catalog.streams.each do |stream|
         case stream.name
         when "UserProfiles"
-          expect(stream.supported_sync_modes).to eql(["full_refresh", "incremental"])
+          expect(stream.supported_sync_modes).to eql(%w[full_refresh incremental])
         when "Events"
-          expect(stream.supported_sync_modes).to eql(["full_refresh", "incremental"])
+          expect(stream.supported_sync_modes).to eql(%w[full_refresh incremental])
         end
       end
     end

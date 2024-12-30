@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'uri'
-require 'net/http'
-require 'json'
+require "uri"
+require "net/http"
+require "json"
 
 module Multiwoven
   module Integrations
@@ -10,7 +10,6 @@ module Multiwoven
       module Mixpanel
         include Multiwoven::Integrations::Core
 
-        
         class Client < DestinationConnector
           prepend Multiwoven::Integrations::Core::RateLimiter
 
@@ -81,11 +80,10 @@ module Multiwoven
           end
 
           def send_to_mixpanel(record, stream_name)
-            
             stream_config = {
               "UserProfiles" => {
                 endpoint: "#{MIXPANEL_BASE_URL}/engage#profile-set",
-                payload: ->(record) {
+                payload: lambda { |record|
                   [{
                     "$token" => @api_token,
                     "$distinct_id" => record[:id],
@@ -95,7 +93,7 @@ module Multiwoven
               },
               "Events" => {
                 endpoint: "#{MIXPANEL_BASE_URL}/track",
-                payload: ->(record) {
+                payload: lambda { |record|
                   [{
                     "event" => record[:name],
                     "properties" => record[:properties].merge("token" => @api_token)
@@ -103,30 +101,29 @@ module Multiwoven
                 }
               }
             }
-          
+
             config = stream_config[stream_name]
             raise "Unsupported stream: #{stream_name}" unless config
-          
+
             endpoint = config[:endpoint]
             payload = config[:payload].call(record)
-          
+
             send_request(endpoint, payload)
           end
-          
 
           def send_request(endpoint, payload)
             url = URI(endpoint)
-          
+
             http = Net::HTTP.new(url.host, url.port)
             http.use_ssl = true
-          
+
             request = Net::HTTP::Post.new(url)
-            request["accept"] = 'text/plain'
-            request["content-type"] = 'application/json'
-  
+            request["accept"] = "text/plain"
+            request["content-type"] = "application/json"
+
             formatted_payload = payload.is_a?(Array) ? payload.map { |item| item.transform_keys(&:to_s) } : payload.transform_keys(&:to_s)
             request.body = formatted_payload.to_json
-          
+
             response = http.request(request)
             handle_response(response)
           end
