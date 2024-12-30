@@ -177,6 +177,27 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
         expect(records.first.record.data).to eq(JSON.parse(response_body))
       end
     end
+
+    context "when the payload is invalid in read" do
+      let(:response_body) { "{\"key\": invalid_json}" }.to_json
+      before do
+        response = Net::HTTPSuccess.new("1.1", "200", "Unauthorized")
+        response.content_type = "application/json"
+        allow(response).to receive(:body).and_return(response_body)
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with("https://test-host.databricks.com/serving-endpoints/test/invocations",
+                "POST",
+                payload: JSON.parse(payload.to_json),
+                headers: headers)
+          .and_return(response)
+      end
+      it "handles exceptions during reading" do
+        records = client.read(sync_config)
+        expect(records.log).to be_a(Multiwoven::Integrations::Protocol::LogMessage)
+        expect(records.log.message).to eq("parsing failed: please send a valid payload")
+      end
+    end
+
     context "when the read is failed" do
       it "handles exceptions during reading" do
         error_instance = StandardError.new("test error")

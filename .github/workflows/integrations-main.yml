@@ -41,11 +41,26 @@ jobs:
 
       - name: Download and Install Oracle Instant Client
         run: |
+<<<<<<< HEAD
           sudo apt-get install -y libaio1 alien
           wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
           wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
           sudo alien -i --scripts oracle-instantclient*.rpm
           rm -f oracle-instantclient*.rpm
+=======
+            wget http://ftp.debian.org/debian/pool/main/liba/libaio/libaio1_0.3.113-4_amd64.deb
+            sudo dpkg -i libaio1_0.3.113-4_amd64.deb
+            sudo apt-get install -f
+            sudo apt-get install -y alien unixodbc-dev
+            wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
+            wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
+            sudo alien -i --scripts oracle-instantclient*.rpm
+            rm -f oracle-instantclient*.rpm
+            echo "export LD_LIBRARY_PATH=/usr/lib/oracle/19.6/client64/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+            echo "export C_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$C_INCLUDE_PATH" >> $GITHUB_ENV
+            echo "export CPLUS_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
+
+>>>>>>> 9879f3ea (chore(CE): Update Oracle Instant Client Installation (#723))
 
       - name: Install FreeTDS for TinyTDS gem
         run: |

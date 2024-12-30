@@ -6,6 +6,7 @@ class DeviseMailer < Devise::Mailer
   def invitation_instructions(record, token, opts = {})
     @workspace = opts[:workspace]
     @role = opts[:role]
+    @is_verified = opts[:is_verified] || false
     @token = token
     super
   end

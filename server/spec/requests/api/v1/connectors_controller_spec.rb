@@ -33,12 +33,13 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     context "when it is an authenticated user" do
       it "returns success and all connectors admin role" do
         workspace.workspace_users.first.update(role: viewer_role)
-        get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
+        get "/api/v1/connectors?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(connectors.count + 3)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
-        expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
+        expect(response_hash.dig(:links, :first))
+          .to include("http://www.example.com/api/v1/connectors?page=1&per_page=20")
       end
 
       it "returns success and all connectors member role" do
@@ -226,6 +227,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
         expect(audit_log.resource).to eq(request_body.dig(:connector, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{response_hash['data']['id'].to_i}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -251,6 +253,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(response_hash["data"]["id"].to_i)
         expect(audit_log.resource).to eq(request_body.dig(:connector, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{response_hash['data']['id'].to_i}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -317,6 +320,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(connectors.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:connector, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connectors.second.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -340,6 +344,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(connectors.second.id)
         expect(audit_log.resource).to eq(request_body.dig(:connector, :name))
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connectors.second.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -543,6 +548,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(connector.id)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -565,6 +571,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(connector.id)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end
@@ -621,6 +628,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.resource_id).to eq(connector.id)
         expect(audit_log.resource).to eq(connector.name)
         expect(audit_log.workspace_id).to eq(workspace.id)
+        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
         expect(audit_log.created_at).not_to be_nil
         expect(audit_log.updated_at).not_to be_nil
       end

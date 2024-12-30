@@ -67,6 +67,7 @@ module Multiwoven
       MIXPANEL_BASE_URL = "https://api.mixpanel.com"
       MIXPANEL_AUTH_ENDPOINT = "https://api.mixpanel.com/track"
       
+      OPEN_AI_URL = "https://api.openai.com/v1/chat/completions"
     end
   end
 end

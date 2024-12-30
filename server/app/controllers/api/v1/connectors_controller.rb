@@ -6,6 +6,7 @@ module Api
     class ConnectorsController < ApplicationController
       include Connectors
       include AuditLogger
+      include ResourceLinkBuilder
       before_action :set_connector, only: %i[show update destroy discover query_source]
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[query_source]
@@ -19,7 +20,7 @@ module Api
         authorize @connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.send(params[:category].downcase) if params[:category]
-        @connectors = @connectors.page(params[:page] || 1)
+        @connectors = @connectors.page(params[:page] || 1).per(params[:per_page])
         render json: @connectors, status: :ok
       end
 
@@ -161,7 +162,8 @@ module Api
 
       def create_audit_log
         resource_id = @resource_id || params[:id]
-        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = @action == "delete" ? nil : build_link!(resource: @connector, resource_id:)
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def connector_params

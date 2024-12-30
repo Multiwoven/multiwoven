@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.15.10"
+    VERSION = "0.16.2"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -20,6 +20,7 @@ module Multiwoven
       AwsSagemakerModel
       VertexModel
       HttpModel
+      OpenAI
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

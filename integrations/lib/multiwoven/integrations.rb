@@ -52,7 +52,9 @@ require_relative "integrations/protocol/protocol"
 require_relative "integrations/core/base_connector"
 require_relative "integrations/core/source_connector"
 require_relative "integrations/core/destination_connector"
+require_relative "integrations/core/http_helper"
 require_relative "integrations/core/http_client"
+require_relative "integrations/core/streaming_http_client"
 require_relative "integrations/core/query_builder"
 
 # Source
@@ -71,6 +73,7 @@ require_relative "integrations/source/databrics_model/client"
 require_relative "integrations/source/aws_sagemaker_model/client"
 require_relative "integrations/source/google_vertex_model/client"
 require_relative "integrations/source/http_model/client"
+require_relative "integrations/source/open_ai/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

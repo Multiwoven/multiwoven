@@ -5,6 +5,7 @@ module Api
     class ModelsController < ApplicationController
       include Models
       include AuditLogger
+      include ResourceLinkBuilder
       attr_reader :connector, :model
 
       before_action :set_connector, only: %i[create]
@@ -16,9 +17,9 @@ module Api
       after_action :create_audit_log, only: %i[create update destroy]
 
       def index
-        filter = params[:query_type] || "all"
-        @models = current_workspace
-                  .models.send(filter).page(params[:page] || 1)
+        query_type = request.query_parameters["query_type"].try(:split, ",")
+        workspace_models = current_workspace.models.page(params[:page] || 1).per(params[:per_page])
+        @models = query_type ? workspace_models.where(query_type:) : workspace_models
         authorize @models
         render json: @models, status: :ok
       end
@@ -115,7 +116,8 @@ module Api
 
       def create_audit_log
         resource_id = @resource_id || params[:id]
-        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload)
+        resource_link = @action == "delete" ? nil : build_link!(resource: @model, resource_id:)
+        audit!(action: @action, resource_id:, resource: @audit_resource, payload: @payload, resource_link:)
       end
 
       def model_params

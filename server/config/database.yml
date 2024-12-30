@@ -8,18 +8,18 @@ development:
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-  database: multiwoven_server_development
+  database: <%= ENV.fetch("DB_NAME") { "multiwoven_server_development" } %>
 
 test:
   <<: *default
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
-  database: multiwoven_server_test
+  database: <%= ENV.fetch("DB_NAME") { "multiwoven_server_test" } %>
 
 production:
   <<: *default
   host: <%= ENV['DB_HOST'] %> 
   username: <%= ENV['DB_USERNAME'] %> 
   password: <%= ENV['DB_PASSWORD'] %>
-  database: multiwoven_server_production
+  database: <%= ENV.fetch("DB_NAME") { "multiwoven_server_production" } %>

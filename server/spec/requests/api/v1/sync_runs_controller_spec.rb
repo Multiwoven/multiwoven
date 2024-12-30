@@ -38,10 +38,13 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
 
     context "when it is an authenticated user" do
       it "returns success and fetch sync " do
-        get "/api/v1/syncs/#{sync.id}/sync_runs", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:ok)
+        get "/api/v1/syncs/#{sync.id}/sync_runs?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response).to have_http_status(:ok)
         expect(response_hash[:data].size).to eq(2)
+        first_row_date = DateTime.parse(response_hash[:data].first.dig(:attributes, :updated_at))
+        second_row_date = DateTime.parse(response_hash[:data].last.dig(:attributes, :updated_at))
+        expect(first_row_date).to be > second_row_date
         response_hash[:data].each_with_index do |row, _index|
           sync_run = sync_runs.find { |sr| sr.id == row[:id].to_i }
 
@@ -51,7 +54,7 @@ RSpec.describe "Api::V1::SyncRunsController", type: :request do
           expect(row.dig(:attributes, :successful_rows)).to eq(sync_run.successful_rows)
           expect(row.dig(:attributes, :failed_rows)).to eq(sync_run.failed_rows)
           expect(row.dig(:attributes, :status)).to eq(sync_run.status)
-          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs?page=1")
+          expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/syncs/#{sync.id}/sync_runs?page=1&per_page=20")
         end
       end
 

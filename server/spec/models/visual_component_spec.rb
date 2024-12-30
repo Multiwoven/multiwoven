@@ -9,7 +9,8 @@ RSpec.describe VisualComponent, type: :model do
   it { should validate_presence_of(:data_app_id) }
 
   it {
-    should define_enum_for(:component_type).with_values(doughnut: 0, bar: 1, data_table: 2, visual_text: 3, custom: 4)
+    should define_enum_for(:component_type)
+      .with_values(doughnut: 0, bar: 1, data_table: 2, visual_text: 3, custom: 4, chat_bot: 5)
   }
 
   it { should belong_to(:workspace) }
