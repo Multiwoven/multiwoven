@@ -46,6 +46,7 @@ module Multiwoven
       MicrosoftSql
       Mailchimp
       AISDataStore
+      Mixpanel
     ].freeze
   end
 end
