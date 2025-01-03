@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Sftp",
+    "title": "SFTP",
+    "connector_type": "source",
+    "category": "File Storage",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "source-sftp",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
