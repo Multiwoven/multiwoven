@@ -1941,7 +1941,11 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.17.0)
+=======
+    multiwoven-integrations (0.18.1)
+>>>>>>> 0bd18079 (chore(CE): gem update 0.18.1 (#763))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2249,7 +2253,11 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.17.0)
+=======
+  multiwoven-integrations (~> 0.18.1)
+>>>>>>> 0bd18079 (chore(CE): gem update 0.18.1 (#763))
   mysql2
   newrelic_rpm
   parallel
