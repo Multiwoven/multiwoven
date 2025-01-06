@@ -23,22 +23,33 @@ jobs:
       - name: Update package list
         run: sudo apt update
 
+      - name: Install libcurl4-openssl-dev
+        run: sudo apt-get install -y libcurl4-openssl-dev
+
       - name: Download and Extract DuckDB ODBC driver
         run: |
-            wget -O duckdb.zip https://github.com/duckdb/duckdb/releases/download/v1.0.0/libduckdb-linux-amd64.zip
-            unzip duckdb.zip -d libduckdb
-            sudo mv libduckdb/duckdb.* /usr/local/include
-            sudo mv libduckdb/libduckdb.so /usr/local/lib
-            sudo ldconfig /usr/local/lib
+          wget -O duckdb.zip https://github.com/duckdb/duckdb/releases/download/v1.0.0/libduckdb-linux-amd64.zip
+          unzip duckdb.zip -d libduckdb
+          sudo mv libduckdb/duckdb.* /usr/local/include
+          sudo mv libduckdb/libduckdb.so /usr/local/lib
+          sudo ldconfig /usr/local/lib
 
       - name: Download and Install Oracle Instant Client
         run: |
 <<<<<<< HEAD
+<<<<<<< HEAD
           sudo apt-get install -y libaio1 alien
+=======
+          wget http://ftp.debian.org/debian/pool/main/liba/libaio/libaio1_0.3.113-4_amd64.deb
+          sudo dpkg -i libaio1_0.3.113-4_amd64.deb
+          sudo apt-get install -f
+          sudo apt-get install -y alien unixodbc-dev
+>>>>>>> b5402137 (chore(CE): azure blob storage integration (#753))
           wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
           wget http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
           sudo alien -i --scripts oracle-instantclient*.rpm
           rm -f oracle-instantclient*.rpm
+<<<<<<< HEAD
 =======
             wget http://ftp.debian.org/debian/pool/main/liba/libaio/libaio1_0.3.113-4_amd64.deb
             sudo dpkg -i libaio1_0.3.113-4_amd64.deb
@@ -52,6 +63,11 @@ jobs:
             echo "export C_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$C_INCLUDE_PATH" >> $GITHUB_ENV
             echo "export CPLUS_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
 >>>>>>> 9879f3ea (chore(CE): Update Oracle Instant Client Installation (#723))
+=======
+          echo "export LD_LIBRARY_PATH=/usr/lib/oracle/19.6/client64/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "export C_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$C_INCLUDE_PATH" >> $GITHUB_ENV
+          echo "export CPLUS_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
+>>>>>>> b5402137 (chore(CE): azure blob storage integration (#753))
 
       - name: Install FreeTDS for TinyTDS gem
         run: |

@@ -98,6 +98,9 @@ RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
 RUN apt-get update -qq && \
     apt-get install -y unzip 
 
+# Install libcurl4-openssl-dev
+RUN apt-get install -y libcurl4-openssl-dev
+
 RUN apt-get update -qq && \
     apt-get install -y libsasl2-modules-gssapi-mit
 
