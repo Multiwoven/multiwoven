@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.17.0"
+=======
+    VERSION = "0.18.2"
+>>>>>>> 9d2135fb (chore(CE): Update SFTP Source Connector (#757))
 
     ENABLED_SOURCES = %w[
       Snowflake
