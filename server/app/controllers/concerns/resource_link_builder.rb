@@ -16,6 +16,8 @@ module ResourceLinkBuilder
       data_apps_link(resource_id)
     when "Profile", "User"
       members_link
+    when "Alert"
+      alert_link(resource_id)
     else
       reports_link(resource_id)
     end
@@ -65,6 +67,10 @@ module ResourceLinkBuilder
 
   def reports_link(resource_id)
     "/reports/#{resource_id}"
+  end
+
+  def alert_link(resource_id)
+    "/alerts/#{resource_id}"
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 end
