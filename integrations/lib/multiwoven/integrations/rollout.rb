@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.17.0"
+=======
+    VERSION = "0.18.1"
+>>>>>>> 6f67abe5 (fix(CE): stream fetch fix for salesforce (#762))
 
     ENABLED_SOURCES = %w[
       Snowflake

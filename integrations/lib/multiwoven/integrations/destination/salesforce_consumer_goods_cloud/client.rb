@@ -41,6 +41,8 @@ module Multiwoven
             SALESFORCE_OBJECTS.each do |object|
               object_description = @client.describe(object)
               streams << JSON.parse(SchemaHelper.create_json_schema_for_object(object_description).to_json)
+            rescue StandardError
+              next
             end
             catalog.to_multiwoven_message
           rescue StandardError => e
