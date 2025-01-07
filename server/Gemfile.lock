@@ -1770,6 +1770,7 @@ GEM
       hashie
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
+<<<<<<< HEAD
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     faraday-retry (2.2.1)
@@ -1778,6 +1779,14 @@ GEM
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
+=======
+    faraday-net_http (2.1.0)
+    faraday-retry (1.0.3)
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-arm64-darwin)
+    ffi (1.17.1-x86_64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1941,7 +1950,11 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.17.0)
+=======
+    multiwoven-integrations (0.18.2)
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1977,8 +1990,11 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
+<<<<<<< HEAD
     net-http (0.6.0)
       uri
+=======
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
     net-imap (0.4.9.1)
       date
       net-protocol
@@ -2172,7 +2188,11 @@ GEM
       faraday-multipart
       gli
       hashie
+<<<<<<< HEAD
     sorbet-runtime (0.5.11708)
+=======
+    sorbet-runtime (0.5.11718)
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
     stringio (3.1.0)
     stripe (13.3.0)
     strong_migrations (1.8.0)
@@ -2188,6 +2208,8 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2024.2)
+      tzinfo (>= 1.0.0)
     uber (0.1.0)
     unf (0.1.4)
       unf_ext

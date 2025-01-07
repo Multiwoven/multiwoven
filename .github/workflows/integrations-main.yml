@@ -38,6 +38,7 @@ jobs:
             sudo mv libduckdb/duckdb.* /usr/local/include
             sudo mv libduckdb/libduckdb.so /usr/local/lib
             sudo ldconfig /usr/local/lib
+<<<<<<< HEAD
 
       - name: Download and Install Oracle Instant Client
         run: |
@@ -48,6 +49,11 @@ jobs:
           sudo alien -i --scripts oracle-instantclient*.rpm
           rm -f oracle-instantclient*.rpm
 =======
+=======
+      
+      - name: Download and Install Oracle Instant Client
+        run: |
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
             wget http://ftp.debian.org/debian/pool/main/liba/libaio/libaio1_0.3.113-4_amd64.deb
             sudo dpkg -i libaio1_0.3.113-4_amd64.deb
             sudo apt-get install -f
@@ -60,7 +66,10 @@ jobs:
             echo "export C_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$C_INCLUDE_PATH" >> $GITHUB_ENV
             echo "export CPLUS_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
 
+<<<<<<< HEAD
 >>>>>>> 9879f3ea (chore(CE): Update Oracle Instant Client Installation (#723))
+=======
+>>>>>>> fba41703 (fix(CE): revert azure blob changes (#767))
 
       - name: Install FreeTDS for TinyTDS gem
         run: |
