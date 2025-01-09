@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+  </head>
+  <style>
+    .sync-info-key {
+        font-family: Helvetica;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: -0.01em;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        width: 112px;
+        height: 20px;
+        padding: 6px;
+        color: #667085;
+    }
+
+    .sync-info-value {
+        font-family: Helvetica;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 20px;
+        letter-spacing: -0.01em;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        width: 200px;
+        height: 20px;
+        padding: 6px;
+        color:  #101828;
+    }
+  </style>
+  <body style="margin: 0; text-align: center; width: 100vw; padding: 20px">
+    <table style="margin: 0; padding: 0; border-collapse: collapse">
+      <tr>
+        <td valign="middle">
+          <table
+            style="
+              width: 100%;
+              max-width: 600px;
+              background: #f9fafb;
+              padding: 20px;
+              border-radius: 12px;
+              border: 1px #eaecf0 solid;
+            "
+          >
+            <tr>
+              <td style="text-align: center; padding: 12px">
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  background: white;
+                  border-radius: 8px;
+                  border: 1px #eaecf0 solid;
+                  padding: 48px 16px;
+                  text-align: center;
+                "
+              >
+                <h1
+                  style="
+                    color:rgb(167, 41, 41);
+                    font-size: 28px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 700;
+                    line-height: 36px;
+                    margin: 0;
+                  "
+                >
+                 Sync run completed with failed rows 
+                </h1>
+                <p
+                  style="
+                    color: #475467;
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 400;
+                    line-height: 20px;
+                  "
+                >
+                  <%= "Your sync #{@alert_attrs[:name]} completed, but some rows encountered errors" %>
+                </p>
+                <a
+                  style="display: inline-block; text-decoration: none"
+                  href="<%= @sync_run_url %>"
+                >
+                  <button
+                    style="
+                      background: #00249c;
+                      border: none;
+                      border-radius: 6px;
+                      color: white;
+                      font-size: 14px;
+                      font-family: Helvetica, Arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 20px;
+                      padding: 10px 20px;
+                      cursor: pointer;
+                    "
+                  >
+                    View Sync Run
+                  </button>
+                </a>
+                <br />
+                <br />
+                <table
+                    style="
+                      padding: 10px;
+                      float: left;
+                    "
+                    class="sync-info"
+                    >
+                        <tr>
+                            <td class="sync-info-key"> Sync Name</td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:name] %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key"> End Time </td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:end_time].strftime("%a %m, %Y %r") %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key">Duration </td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:duration] %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key"> Sync Id</td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:sync_id] %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key"> Sync Run Id</td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:sync_run_id] %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key"> Results </td>
+                            <td class="sync-info-value"> <%= "#{@alert_attrs[:failed_rows_count]}/#{@alert_attrs[:total_rows_count]} rows failed" %> </td>
+                        </tr>
+                        <tr>
+                            <td class="sync-info-key"> Error </td>
+                            <td class="sync-info-value"> <%= @alert_attrs[:error] %> </td>
+                        </tr>
+                    </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; text-align: left">
+                <p
+                  style="
+                    color: #98a2b3;
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 400;
+                    line-height: 20px;
+                    margin: 0;
+                  "
+                >
+                </p>
+                <p
+                  style="
+                    color: #101828;
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 700;
+                    line-height: 20px;
+                    margin: 0;
+                  "
+                >
+                  <br />Cheers,<br />Team AI Squared
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 12px;
+                  text-align: left;
+                  font-size: 12px;
+                  color: #98a2b3;
+                  font-family: Helvetica, Arial, sans-serif;
+                "
+              >
+                <table>
+                  <p style="margin: 0; display: inline; float: left">
+                    <a
+                      href="#"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Our blog</a
+                    >
+                    |
+                    <a
+                      href="#"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Docs</a
+                    >
+                    |
+                    <a
+                      href="#"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Contact Us</a
+                    >
+                  </p>
+                  <p style="margin: 0; display: inline; float: right">
+                    AI Squared, 1300 I Street NW,
+                  </p>
+                </table>
+                <table style="text-align: end">
+                  <p style="margin: 0; display: inline; float: left">
+                    © 2024 AI Squared. All Rights Reserved.
+                  </p>
+                  <p style="margin: 0; display: inline; float: right">
+                    Suite 400 E, Washington, DC 20005
+                  </p>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

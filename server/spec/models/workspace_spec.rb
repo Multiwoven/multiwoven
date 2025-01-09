@@ -50,4 +50,29 @@ RSpec.describe Workspace, type: :model do
       expect(workspace.api_key).to be_present
     end
   end
+
+  describe "scopes" do
+    describe ".admin_users" do
+      it "returns only admin users" do
+        workspace = create(:workspace)
+        workspace_user_admin = create(:workspace_user, workspace:, user: create(:user), role: create(:role, :admin))
+        create(:workspace_user, workspace:, user: create(:user), role: create(:role, :member))
+        admin_user_emails = workspace.admin_user_emails
+        expect(admin_user_emails).to eq([workspace.workspace_users.first.user.email, workspace_user_admin.user.email])
+      end
+    end
+  end
+
+  describe("active_alerts?") do
+    let(:workspace) { create(:workspace) }
+
+    it "returns false if not alerts are present for the current workspace" do
+      expect(workspace.active_alerts?).to be(false)
+    end
+
+    it "returns true if alerts are present for the current workspace" do
+      create(:alert, workspace:, alert_sync_success: true)
+      expect(workspace.active_alerts?).to be(true)
+    end
+  end
 end

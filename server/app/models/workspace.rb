@@ -38,7 +38,19 @@ class Workspace < ApplicationRecord
   before_validation :generate_slug_and_status, on: :create
   before_update :update_slug, if: :name_changed?
 
+  def active_alerts?
+    alerts.present?
+  end
+
+  def admin_user_emails
+    admin_users.pluck(:email)
+  end
+
   private
+
+  def admin_users
+    workspace_users.admins.joins(:user)
+  end
 
   def generate_slug_and_status
     self.slug ||= name.parameterize if name

@@ -212,4 +212,75 @@ RSpec.describe SyncRun, type: :model do
       expect(SyncRun.sync_run_types).to eq({ "general" => 0, "test" => 1 })
     end
   end
+
+  describe "active_alerts?" do
+    let(:workspace) { create(:workspace) }
+    let(:source) do
+      create(:connector, workspace:, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, workspace:, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, workspace:, connector: destination) }
+    let(:sync) { create(:sync, source:, destination:, workspace:) }
+    let!(:sync_run) { create(:sync_run, sync:, workspace:) }
+
+    it "returns false if not alerts are present for the current workspace" do
+      expect(sync_run.active_alerts?).to be(false)
+    end
+
+    it "returns true if alerts are present for the current workspace" do
+      create(:alert, workspace:, alert_sync_success: true)
+      expect(sync_run.active_alerts?).to be(true)
+    end
+  end
+
+  describe "#queue_sync_alert" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, source:, destination:) }
+    let(:sync_run) { create(:sync_run, sync:, status: :pending) }
+
+    it "calls queue_sync_alert after commit when status changes to failed" do
+      allow(sync_run).to receive(:queue_sync_alert)
+      sync_run.update!(status: :failed)
+      expect(sync_run).to have_received(:queue_sync_alert)
+    end
+
+    it "does not call queue_sync_alert if status does not change" do
+      allow(sync_run).to receive(:queue_sync_alert)
+      sync_run.update!(total_rows: 100)
+      expect(sync_run).not_to have_received(:queue_sync_alert)
+    end
+  end
+
+  describe "#row_failure_percent" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, source:, destination:) }
+    let(:sync_run) { create(:sync_run, sync:, status: :success, total_rows: 100, failed_rows: 30) }
+
+    it "calculates and returns the row failure percentage" do
+      expect(sync_run.row_failure_percent).to eq(30.0)
+    end
+  end
+
+  describe "#duration_in_seconds" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, source:, destination:) }
+    now = Time.zone.now
+    let(:sync_run) { create(:sync_run, sync:, status: :success, finished_at: now, started_at: now - 100.seconds) }
+
+    it "calculates and returns the duration in seconds" do
+      expect(sync_run.duration_in_seconds).to eq(100)
+    end
+  end
 end

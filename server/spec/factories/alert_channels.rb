@@ -3,14 +3,13 @@
 FactoryBot.define do
   factory :alert_channel do
     association :alert
+    association :alert_medium
 
     trait :email do
-      platform { "email" }
       configuration { { extra_email_recipients: ["user1@example.com", "user2@example.com"] } }
     end
 
     trait :slack do
-      platform { "slack" }
       configuration { { slack_email_alias: ["slackemailtemplate@slack.com"] } }
     end
   end
