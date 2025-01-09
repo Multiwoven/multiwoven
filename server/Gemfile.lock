@@ -2249,7 +2249,11 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.17.0)
+=======
+  multiwoven-integrations (~> 0.18.2)
+>>>>>>> 91382e0c (chore(CE): update server gem 0.18.2 (#764))
   mysql2
   newrelic_rpm
   parallel
