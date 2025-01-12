@@ -1,0 +1,59 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/sftp",
+  "stream_type": "dynamic",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SFTP",
+    "required": ["host", "username", "password", "file_path", "format_type" ],
+    "properties": {
+      "host": {
+        "title": "Host",
+        "description": "Hostname of the SFTP server.",
+        "type": "string",
+        "order": 0
+      },
+      "port": {
+        "title": "Port",
+        "description": "Port of the SFTP server.",
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 65536,
+        "default": 22,
+        "order": 1
+      },
+      "username": {
+        "title": "User Name",
+        "description": "Username to use to access the SFTP server.",
+        "type": "string",
+        "order": 2
+      },
+      "password": {
+        "title": "Password",
+        "description": "Password associated with the username.",
+        "type": "string",
+        "multiwoven_secret": true,
+        "order": 3
+      },
+      "file_path": {
+        "title": "File path",
+        "type": "string",
+        "description": "Path to the directory where file is stored.",
+        "order": 4
+      },
+      "file_name": {
+        "title": "File Name",
+        "type": "string",
+        "description": "Name of the file to be written.",
+        "order": 5
+      },
+      "format_type": {
+        "title": "File Format Type",
+        "type": "string",
+        "description": "Format of the data output.",
+        "enum": ["csv"],
+        "default": "csv",
+        "order": 6
+      }
+    }
+  }
+}

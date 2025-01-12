@@ -21,6 +21,7 @@ module Multiwoven
       VertexModel
       HttpModel
       OpenAI
+      Sftp
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
