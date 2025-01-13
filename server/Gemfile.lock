@@ -2245,7 +2245,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-  multiwoven-integrations (~> 0.18.1)
+  multiwoven-integrations (~> 0.18.2)
   mysql2
   newrelic_rpm
   parallel
