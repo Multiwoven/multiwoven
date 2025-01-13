@@ -1771,15 +1771,7 @@ GEM
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
     faraday-net_http (2.1.0)
-    faraday-net_http_persistent (2.0.2)
-      faraday-net_http (< 3)
-      net-http-persistent (~> 4.0)
-    faraday-patron (2.0.1)
-      patron (>= 0.4.2)
-    faraday-rack (1.0.0)
     faraday-retry (1.0.3)
-    faraday_middleware (1.2.1)
-      faraday (~> 1.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-darwin)
@@ -1983,8 +1975,6 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
-    net-http (0.6.0)
-      uri
     net-imap (0.4.9.1)
       date
       net-protocol
@@ -2201,7 +2191,6 @@ GEM
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
-    uri (1.0.2)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
