@@ -1770,16 +1770,6 @@ GEM
       hashie
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
-<<<<<<< HEAD
-    faraday-net_http (3.4.0)
-      net-http (>= 0.5.0)
-    faraday-retry (2.2.1)
-      faraday (~> 2.0)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
-=======
     faraday-net_http (2.1.0)
     faraday-net_http_persistent (2.0.2)
       faraday-net_http (< 3)
@@ -1794,7 +1784,6 @@ GEM
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-darwin)
     ffi (1.17.1-x86_64-linux-gnu)
->>>>>>> ea77fe8c (chore(CE): Update Server Gem 0.18.0 (#761))
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1958,11 +1947,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.17.0)
-=======
     multiwoven-integrations (0.18.1)
->>>>>>> 0bd18079 (chore(CE): gem update 0.18.1 (#763))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2193,12 +2178,8 @@ GEM
       faraday-multipart
       gli
       hashie
-<<<<<<< HEAD
-    sorbet-runtime (0.5.11708)
-=======
       websocket-driver
     sorbet-runtime (0.5.11718)
->>>>>>> ea77fe8c (chore(CE): Update Server Gem 0.18.0 (#761))
     stringio (3.1.0)
     stripe (13.3.0)
     strong_migrations (1.8.0)
@@ -2275,11 +2256,7 @@ DEPENDENCIES
   jwt
   kaminari
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.17.0)
-=======
   multiwoven-integrations (~> 0.18.1)
->>>>>>> 0bd18079 (chore(CE): gem update 0.18.1 (#763))
   mysql2
   newrelic_rpm
   parallel
