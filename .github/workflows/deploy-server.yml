@@ -52,6 +52,7 @@ jobs:
             --set multiwovenConfig.appRevision=$IMAGE_TAG \
             --set multiwovenServer.multiwovenServer.image.repository=$IMAGE_NAME \
             --set multiwovenServer.multiwovenServer.image.tag=$IMAGE_TAG \
+            --set multiwovenSolidWorker.multiwovenSolidWorker.image.tag=$IMAGE_TAG \
             --set multiwovenWorker.multiwovenWorker.image.repository=$IMAGE_NAME \
             --set multiwovenWorker.multiwovenWorker.image.tag=$IMAGE_TAG
 
