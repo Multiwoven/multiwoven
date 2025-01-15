@@ -2,7 +2,8 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.17.1"
+
+    VERSION = "0.18.3"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -47,6 +48,7 @@ module Multiwoven
       Mailchimp
       AISDataStore
       Mixpanel
+      AmazonS3
     ].freeze
   end
 end

@@ -99,6 +99,7 @@ require_relative "integrations/destination/microsoft_sql/client"
 require_relative "integrations/destination/mailchimp/client"
 require_relative "integrations/destination/ais_data_store/client"
 require_relative "integrations/destination/mixpanel/client"
+require_relative "integrations/destination/amazon_s3/client"
 
 module Multiwoven
   module Integrations
