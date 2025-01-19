@@ -16,7 +16,7 @@
       },
       "is_stream": {
         "type": "boolean",
-        "title": "Streaming Enabled",
+        "title": "Enable streaming",
         "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
         "default": false,
         "order": 1

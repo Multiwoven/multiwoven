@@ -1653,6 +1653,8 @@ GEM
     aws-sigv2 (1.2.0)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    azure-blob (0.5.4)
+      rexml
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
@@ -2226,6 +2228,7 @@ DEPENDENCIES
   annotate
   appsignal
   aws-sdk
+  azure-blob
   bootsnap
   bullet
   byebug

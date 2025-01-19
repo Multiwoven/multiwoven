@@ -8,6 +8,7 @@ ruby "3.2.0"
 gem "aasm"
 gem "appsignal"
 gem "aws-sdk"
+gem "azure-blob"
 gem "groupdate"
 gem "interactor", "~> 3.0"
 
