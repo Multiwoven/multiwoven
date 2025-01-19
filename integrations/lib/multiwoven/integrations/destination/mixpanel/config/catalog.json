@@ -1,0 +1,49 @@
+{
+  "request_rate_limit": 6000,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "UserProfiles",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "required": ["id", "properties"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the user profile"
+          },
+          "properties": {
+            "type": "object",
+            "description": "A JSON object containing user profile properties"
+          }
+        }
+      },
+      "response_type": "application/json",
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": false
+    },
+    {
+      "name": "Events",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "required": ["name", "properties"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the event being tracked"
+          },
+          "properties": {
+            "type": "object",
+            "description": "A JSON object containing event properties, including the '$distinct_id' and other metadata"
+          }
+        }
+      },
+      "response_type": "application/json",
+      "supported_sync_modes": ["full_refresh", "incremental"],
+      "source_defined_cursor": false
+    }
+  ]
+}
