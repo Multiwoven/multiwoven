@@ -39,6 +39,7 @@
         "title": "Request Format",
         "description": "Sample Request Format",
         "type": "string",
+        "default": "{\"model\":\"gpt-4o-mini\", \"messages\":[{\"role\": \"user\", \"content\": \"What do you know about APIs?\"}], \"stream\": false}",
         "x-request-format": true,
         "order": 3
       },
@@ -46,6 +47,7 @@
         "title": "Response Format",
         "description": "Sample Response Format",
         "type": "string",
+        "default": "{\"choices\":[{\"index\": 0, \"delta\":{\"role\": \"assistant\", \"content\": \"APIs, or Application Programming Interfaces, are tools that allow different software applications to communicate with each other. They define a set of rules and protocols for building and interacting with software applications.\"}, \"finish_reason\": \"stop\"}]}",
         "x-response-format": true,
         "order": 4
       }

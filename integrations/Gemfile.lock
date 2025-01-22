@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.18.3)
+=======
+    multiwoven-integrations (0.18.5)
+>>>>>>> b3eb0f18 (chore(CE): Add default request and response in connection configuration OpenAI (#805))
       MailchimpMarketing
       activesupport
       async-websocket

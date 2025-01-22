@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.18.3"
+=======
+    VERSION = "0.18.5"
+>>>>>>> b3eb0f18 (chore(CE): Add default request and response in connection configuration OpenAI (#805))
 
     ENABLED_SOURCES = %w[
       Snowflake
