@@ -5,8 +5,9 @@ GIT
     ruby-odbc (0.999992)
 
 PATH
-  remote: 
-    multiwoven-integrations (0.18.4)
+  remote: .
+  specs:
+    multiwoven-integrations (0.18.5)
       MailchimpMarketing
       activesupport
       async-websocket

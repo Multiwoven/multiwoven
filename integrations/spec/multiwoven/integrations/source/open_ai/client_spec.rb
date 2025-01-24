@@ -233,6 +233,30 @@ RSpec.describe Multiwoven::Integrations::Source::OpenAI::Client do
       end
     end
 
+    context "when the read is successful but failed message for open ai" do
+      before do
+        payload = sync_config_json[:model][:query]
+        streaming_chunk_first = "{\"error\":{\"message\":\"Incorrect API key provided: sk-proj\"}}\n\n"
+        allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
+          .with(endpoint,
+                "POST",
+                payload: JSON.parse(payload),
+                headers: headers,
+                config: sync_config_json[:source][:connection_specification][:config])
+          .and_yield(streaming_chunk_first)
+
+        response = Net::HTTPSuccess.new("1.1", "200", "success")
+        response.content_type = "application/json"
+      end
+
+      it "streams data failed" do
+        result = client.read(sync_config_stream)
+        expect(result).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(result.type).to eq("log")
+        expect(result.log.message).to eq("Error: Incorrect API key provided: sk-proj")
+      end
+    end
+
     context "when streaming fails on a chunk" do
       let(:streaming_chunk_first) { { "message" => "streaming data chunk 1" }.to_json }
 
