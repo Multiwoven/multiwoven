@@ -31,6 +31,7 @@ class SyncRun < ApplicationRecord
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run
   after_commit :send_status_email, if: :status_changed_to_failure?
+  after_commit :queue_sync_alert, if: :saved_change_to_status?
 
   scope :active, -> { where(status: %i[pending started querying queued in_progress]) }
 
@@ -118,5 +119,38 @@ class SyncRun < ApplicationRecord
 
   def status_changed_to_failure?
     saved_change_to_status? && (status == "failed")
+  end
+
+  def queue_sync_alert
+    SendSyncAlertsJob.perform_later(sync_run_id: id) if send_alert?
+  end
+
+  def send_sync_alerts
+    workspace.alerts.each do |alert|
+      alert.trigger(self)
+    end
+  end
+
+  def terminal_status?
+    success? || failed? || canceled?
+  end
+
+  def row_failure_percent
+    return 0.0 if total_rows.zero?
+
+    ((failed_rows.to_f / total_rows) * 100).round(2)
+  end
+
+  def duration_in_seconds
+    now = Time.zone.now
+    ((finished_at || now) - (started_at || now)).round
+  end
+
+  delegate :active_alerts?, to: :workspace
+
+  private
+
+  def send_alert?
+    terminal_status? && active_alerts?
   end
 end

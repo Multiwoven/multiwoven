@@ -49,6 +49,7 @@ gem "pg_query"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"
+gem "solid_queue"
 gem "strong_migrations"
 gem "webrick"
 
@@ -70,6 +71,7 @@ group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
   gem "annotate"
+  gem "letter_opener"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
