@@ -32,3 +32,9 @@ local:
 #   service: Mirror
 #   primary: local
 #   mirrors: [ amazon, google, microsoft ]
+
+microsoft:
+  service: AzureBlob
+  storage_account_name: <%= ENV.fetch('STORAGE_ACCOUNT_NAME', nil) %>
+  storage_access_key:  <%= ENV.fetch('STORAGE_ACCESS_KEY', nil) %>
+  container: <%= ENV.fetch("STORAGE_CONTAINER_NAME") { "custom-visual-component-files" } %>

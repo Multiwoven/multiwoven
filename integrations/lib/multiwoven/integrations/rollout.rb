@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.17.0"
+    VERSION = "0.18.4"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -46,6 +46,7 @@ module Multiwoven
       MicrosoftSql
       Mailchimp
       AISDataStore
+      AmazonS3
     ].freeze
   end
 end

@@ -107,9 +107,10 @@ module Multiwoven::Integrations::Source
           next if entry == "[DONE]"
 
           data = parse_json(entry)
+
+          raise StandardError, "Error: #{data["error"]["message"]}" if data["error"] && data["error"]["message"]
+
           yield [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message] if block_given?
-        rescue StandardError => e
-          handle_exception(e, { context: "OPEN AI:PROCESS_STREAMING_RESPONSE:EXCEPTION", type: "error", entry: entry })
         end
       end
     end

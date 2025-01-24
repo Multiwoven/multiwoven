@@ -1653,6 +1653,8 @@ GEM
     aws-sigv2 (1.2.0)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    azure-blob (0.5.4)
+      rexml
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
@@ -1772,14 +1774,12 @@ GEM
       hashie
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.0)
-      net-http (>= 0.5.0)
-    faraday-retry (2.2.1)
-      faraday (~> 2.0)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
+    faraday-net_http (2.1.0)
+    faraday-retry (1.0.3)
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-arm64-darwin)
+    ffi (1.17.1-x86_64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -1803,7 +1803,7 @@ GEM
     gli (2.22.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.82.0)
+    google-apis-bigquery_v2 (0.83.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-apis-core (0.15.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -1948,7 +1948,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.17.0)
+    multiwoven-integrations (0.18.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1984,8 +1984,6 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
-    net-http (0.6.0)
-      uri
     net-imap (0.4.9.1)
       date
       net-protocol
@@ -2090,7 +2088,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.1.0)
-    rchardet (1.8.0)
+    rchardet (1.9.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
     redis (4.8.1)
@@ -2155,8 +2153,8 @@ GEM
     ruby-oci8 (2.2.14)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
-    sequel (5.87.0)
+    rubyzip (2.4.1)
+    sequel (5.88.0)
       bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -2179,9 +2177,6 @@ GEM
       faraday-multipart
       gli
       hashie
-<<<<<<< HEAD
-    sorbet-runtime (0.5.11708)
-=======
       websocket-driver
     solid_queue (0.3.1)
       activejob (>= 7.1)
@@ -2190,7 +2185,6 @@ GEM
       fugit (~> 1.10.1)
       railties (>= 7.1)
     sorbet-runtime (0.5.11718)
->>>>>>> 3d790c13 (feat(CE): Trigger sync alert added (#758))
     stringio (3.1.0)
     stripe (13.3.0)
     strong_migrations (1.8.0)
@@ -2198,7 +2192,7 @@ GEM
     thor (1.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
-    tiny_tds (3.0.0)
+    tiny_tds (3.1.0)
       bigdecimal (~> 3)
     traces (0.14.1)
     trailblazer-option (0.1.2)
@@ -2212,7 +2206,6 @@ GEM
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
-    uri (1.0.2)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -2248,6 +2241,7 @@ DEPENDENCIES
   annotate
   appsignal
   aws-sdk
+  azure-blob
   bootsnap
   bullet
   byebug
@@ -2268,7 +2262,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.17.0)
+  multiwoven-integrations (~> 0.18.2)
   mysql2
   newrelic_rpm
   parallel
