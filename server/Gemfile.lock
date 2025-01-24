@@ -1653,6 +1653,8 @@ GEM
     aws-sigv2 (1.2.0)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    azure-blob (0.5.4)
+      rexml
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
@@ -1665,6 +1667,8 @@ GEM
     byebug (11.1.3)
     case_transform (0.2)
       activesupport
+    childprocess (5.1.0)
+      logger (~> 1.5)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     console (1.29.2)
@@ -1922,6 +1926,11 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
+    launchy (3.0.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     liquid (5.4.0)
     logger (1.6.4)
     loofah (2.22.0)
@@ -2169,6 +2178,12 @@ GEM
       gli
       hashie
       websocket-driver
+    solid_queue (0.3.1)
+      activejob (>= 7.1)
+      activerecord (>= 7.1)
+      concurrent-ruby (~> 1.2.2)
+      fugit (~> 1.10.1)
+      railties (>= 7.1)
     sorbet-runtime (0.5.11718)
     stringio (3.1.0)
     stripe (13.3.0)
@@ -2226,6 +2241,7 @@ DEPENDENCIES
   annotate
   appsignal
   aws-sdk
+  azure-blob
   bootsnap
   bullet
   byebug
@@ -2244,6 +2260,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
+  letter_opener
   liquid
   multiwoven-integrations (~> 0.18.2)
   mysql2
@@ -2265,6 +2282,7 @@ DEPENDENCIES
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter
+  solid_queue
   strong_migrations
   temporal-ruby!
   timecop
