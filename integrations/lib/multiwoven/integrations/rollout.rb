@@ -4,6 +4,7 @@ module Multiwoven
   module Integrations
     VERSION = "0.19.0"
 
+
     ENABLED_SOURCES = %w[
       Snowflake
       Redshift
