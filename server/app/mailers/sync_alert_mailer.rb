@@ -27,6 +27,12 @@ class SyncAlertMailer < ApplicationMailer
   private
 
   def sync_run_host
+<<<<<<< HEAD
     Rails.configuration.action_mailer.default_url_options[:host]
+=======
+    host = ENV["UI_HOST"]
+    host = "https://#{url}" unless ["https://", "http://"].any? { |protocol| host.start_with? protocol }
+    host
+>>>>>>> 470a5cfc (chore(CE): Sync alert bug fixes (#801))
   end
 end

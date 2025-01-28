@@ -51,15 +51,14 @@ RSpec.describe Workspace, type: :model do
     end
   end
 
-  describe "scopes" do
-    describe ".admin_users" do
-      it "returns only admin users" do
-        workspace = create(:workspace)
-        workspace_user_admin = create(:workspace_user, workspace:, user: create(:user), role: create(:role, :admin))
-        create(:workspace_user, workspace:, user: create(:user), role: create(:role, :member))
-        admin_user_emails = workspace.admin_user_emails
-        expect(admin_user_emails).to eq([workspace.workspace_users.first.user.email, workspace_user_admin.user.email])
-      end
+  describe "#verified_admin_user_emails" do
+    it "returns only admin users" do
+      workspace = create(:workspace)
+      workspace_user_admin = create(:workspace_user, workspace:, user: create(:user, confirmed_at: Time.zone.now),
+                                                     role: create(:role, :admin))
+      create(:workspace_user, workspace:, user: create(:user), role: create(:role, :member))
+      verified_admin_user_emails = workspace.verified_admin_user_emails
+      expect(verified_admin_user_emails).to eq([workspace_user_admin.user.email])
     end
   end
 

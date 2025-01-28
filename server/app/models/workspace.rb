@@ -42,8 +42,8 @@ class Workspace < ApplicationRecord
     alerts.present?
   end
 
-  def admin_user_emails
-    admin_users.pluck(:email)
+  def verified_admin_user_emails
+    admin_users.where.not(users: { confirmed_at: nil }).pluck(:email)
   end
 
   private

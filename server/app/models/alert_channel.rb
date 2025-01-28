@@ -25,7 +25,12 @@ class AlertChannel < ApplicationRecord
   end
 
   def email_recipients
+<<<<<<< HEAD
     (configuration[:extra_email_recipients] || []).merge(alert.workspace.admin_user_emails).uniq
+=======
+    ((configuration&.with_indifferent_access&.[](:extra_email_recipients) || []) +
+    alert.workspace.verified_admin_user_emails).uniq
+>>>>>>> 470a5cfc (chore(CE): Sync alert bug fixes (#801))
   end
 
   def slack_recipients
