@@ -115,14 +115,14 @@ GEM
       console (~> 1.29)
       fiber-annotation
       io-event (~> 1.6, >= 1.6.5)
-    async-http (0.86.0)
+    async-http (0.87.0)
       async (>= 2.10.2)
       async-pool (~> 0.9)
       io-endpoint (~> 0.14)
       io-stream (~> 0.6)
       metrics (~> 0.12)
-      protocol-http (~> 0.43)
-      protocol-http1 (>= 0.28.1)
+      protocol-http (~> 0.49)
+      protocol-http1 (~> 0.30)
       protocol-http2 (~> 0.22)
       traces (~> 0.10)
     async-pool (0.10.2)
@@ -1774,8 +1774,10 @@ GEM
       hashie
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
-    faraday-net_http (2.1.0)
-    faraday-retry (1.0.3)
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
+    faraday-retry (2.2.1)
+      faraday (~> 2.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-darwin)
@@ -1800,7 +1802,12 @@ GEM
       addressable (~> 2.8)
       process_executer (~> 1.1)
       rchardet (~> 1.8)
+<<<<<<< HEAD
     gli (2.22.0)
+=======
+    gli (2.22.2)
+      ostruct
+>>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-apis-bigquery_v2 (0.83.0)
@@ -1852,7 +1859,7 @@ GEM
       grpc (~> 1.41)
     googleapis-common-protos-types (1.11.0)
       google-protobuf (~> 3.18)
-    googleauth (1.12.2)
+    googleauth (1.13.1)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
       google-logging-utils (~> 0.1)
@@ -1948,7 +1955,11 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.18.1)
+=======
+    multiwoven-integrations (0.19.0)
+>>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2027,8 +2038,8 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     process_executer (1.2.0)
     protocol-hpack (1.5.1)
-    protocol-http (0.47.1)
-    protocol-http1 (0.28.1)
+    protocol-http (0.49.0)
+    protocol-http1 (0.30.0)
       protocol-http (~> 0.22)
     protocol-http2 (0.22.0)
       protocol-hpack (~> 1.4)
@@ -2184,9 +2195,15 @@ GEM
       concurrent-ruby (~> 1.2.2)
       fugit (~> 1.10.1)
       railties (>= 7.1)
+<<<<<<< HEAD
     sorbet-runtime (0.5.11718)
     stringio (3.1.0)
     stripe (13.3.0)
+=======
+    sorbet-runtime (0.5.11787)
+    stringio (3.1.0)
+    stripe (13.4.1)
+>>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
     thor (1.3.0)
@@ -2262,7 +2279,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.18.2)
+=======
+  multiwoven-integrations (~> 0.19.0)
+>>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
   mysql2
   newrelic_rpm
   parallel
