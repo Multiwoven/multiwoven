@@ -32,6 +32,14 @@ module WorkspaceContracts
         optional(:region).maybe(:string)
       end
     end
+
+    rule(workspace: :name) do
+      if value.present?
+        name_value = value.strip
+        key.failure("cannot contain consecutive hyphens") if name_value.match?(/--/)
+        key.failure("must contain at least one letter") unless name_value.match?(/[a-zA-Z]/)
+      end
+    end
   end
 
   class Destroy < Dry::Validation::Contract
