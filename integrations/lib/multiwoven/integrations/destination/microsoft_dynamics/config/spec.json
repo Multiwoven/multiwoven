@@ -1,0 +1,35 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/destination/microsoft_dynamics",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Microsoft Dynamics",
+    "type": "object",
+    "required": ["instance_url", "tenant_id", "application_id", "client_secret"],
+    "properties": {
+      "instance_url": {
+        "type": "string",
+        "title": "Organization Name",
+        "order": 0
+      },
+      "tenant_id": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Tenant ID",
+        "order": 1
+      },
+      "application_id": {
+        "type": "string",
+        "title": "Application ID",
+        "order": 2
+      },
+      "client_secret": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Client Secret",
+        "order": 3
+      }
+    }
+  }
+}

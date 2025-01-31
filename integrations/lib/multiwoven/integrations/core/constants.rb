@@ -46,6 +46,8 @@ module Multiwoven
       "workbook/worksheets"
       MS_EXCEL_SHEET_RANGE_API = "https://graph.microsoft.com/v1.0/drives/%<drive_id>s/items/%<item_id>s/"\
       "workbook/worksheets/%<sheet_name>s/range(address='A1:Z1')/usedRange?$select=values"
+      MS_DYNAMICS_WHOAMI_API = "https://%<instance_url>s.crm.dynamics.com/api/data/v%<api_version>s/WhoAmI"
+      MS_DYNAMICS_REST_API = "https://%<instance_url>s.crm.dynamics.com/api/data/v%<api_version>s/%<entity>s"
 
       DATABRICKS_HEALTH_URL  = "https://%<databricks_host>s/api/2.0/serving-endpoints/%<endpoint_name>s"
       DATABRICKS_SERVING_URL = "https://%<databricks_host>s/serving-endpoints/%<endpoint_name>s/invocations"

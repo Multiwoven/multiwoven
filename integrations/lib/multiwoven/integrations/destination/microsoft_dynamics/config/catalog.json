@@ -1,0 +1,161 @@
+{
+  "request_rate_limit": 40000,
+  "request_rate_limit_unit": "day",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "accounts",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "telephone1": {
+            "type": "string"
+          },
+          "emailaddress1": {
+            "type": "string",
+            "format": "email"
+          },
+          "websiteurl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "address1_line1": {
+            "type": "string"
+          },
+          "address1_city": {
+            "type": "string"
+          },
+          "address1_stateorprovince": {
+            "type": "string"
+          },
+          "address1_postalcode": {
+            "type": "string"
+          },
+          "industrycode": {
+            "type": "integer"
+          },
+          "revenue": {
+            "type": "number",
+            "format": "float"
+          },
+          "numberofemployees": {
+            "type": "integer"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": false,
+      "source_defined_primary_key": ["account_number"]
+    },
+    {
+      "name": "contacts",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["emailaddress1", "firstname", "lastname"],
+        "properties": {
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "emailaddress1": {
+            "type": "string",
+            "format": "email"
+          },
+          "mobilephone": {
+            "type": "string"
+          },
+          "telephone1": {
+            "type": "string"
+          },
+          "address1_line1": {
+            "type": "string"
+          },
+          "address1_city": {
+            "type": "string"
+          },
+          "address1_stateorprovince": {
+            "type": "string"
+          },
+          "address1_postalcode": {
+            "type": "string"
+          },
+          "jobtitle": {
+            "type": "string"
+          },
+          "parentcustomerid": {
+            "type": "string",
+            "description": "ID of the associated Account"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": false,
+      "source_defined_primary_key": ["emailaddress1"]
+    },
+    {
+      "name": "opportunities",
+      "action": "create",
+      "json_schema": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["name", "customerid", "estimatedvalue"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "customerid": {
+            "type": "string",
+            "description": "ID of the associated Account or Contact"
+          },
+          "estimatedvalue": {
+            "type": "number",
+            "format": "float"
+          },
+          "description": {
+            "type": "string"
+          },
+          "closeprobability": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "estimatedclosedate": {
+            "type": "string",
+            "format": "date"
+          },
+          "actualclosedate": {
+            "type": "string",
+            "format": "date"
+          },
+          "opportunityratingcode": {
+            "type": "string",
+            "enum": ["Hot", "Warm", "Cold"]
+          },
+          "stageid": {
+            "type": "string"
+          },
+          "ownerid": {
+            "type": "string",
+            "description": "ID of the owner (user or team)"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"],
+      "source_defined_cursor": false,
+      "source_defined_primary_key": ["customerid"]
+    }
+  ]
+}
