@@ -1802,12 +1802,8 @@ GEM
       addressable (~> 2.8)
       process_executer (~> 1.1)
       rchardet (~> 1.8)
-<<<<<<< HEAD
-    gli (2.22.0)
-=======
     gli (2.22.2)
       ostruct
->>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-apis-bigquery_v2 (0.83.0)
@@ -1955,11 +1951,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.18.1)
-=======
     multiwoven-integrations (0.19.0)
->>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2195,15 +2187,9 @@ GEM
       concurrent-ruby (~> 1.2.2)
       fugit (~> 1.10.1)
       railties (>= 7.1)
-<<<<<<< HEAD
-    sorbet-runtime (0.5.11718)
-    stringio (3.1.0)
-    stripe (13.3.0)
-=======
     sorbet-runtime (0.5.11787)
     stringio (3.1.0)
     stripe (13.4.1)
->>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
     thor (1.3.0)
@@ -2279,11 +2265,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.18.2)
-=======
   multiwoven-integrations (~> 0.19.0)
->>>>>>> 5b47020d (chore(CE): Update Server Gem 0.19.0 (#819))
   mysql2
   newrelic_rpm
   parallel
