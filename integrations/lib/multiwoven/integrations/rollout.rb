@@ -4,7 +4,6 @@ module Multiwoven
   module Integrations
     VERSION = "0.19.0"
 
-
     ENABLED_SOURCES = %w[
       Snowflake
       Redshift
@@ -49,6 +48,7 @@ module Multiwoven
       AISDataStore
       Mixpanel
       AmazonS3
+      MicrosoftDynamics
     ].freeze
   end
 end
