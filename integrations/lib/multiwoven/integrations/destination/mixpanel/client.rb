@@ -83,20 +83,20 @@ module Multiwoven
             stream_config = {
               "UserProfiles" => {
                 endpoint: "#{MIXPANEL_BASE_URL}/engage#profile-set",
-                payload: lambda { |record|
+                payload: lambda { |profile_record|
                   [{
                     "$token" => @api_token,
-                    "$distinct_id" => record[:id],
-                    "$set" => record[:properties]
+                    "$distinct_id" => profile_record[:id],
+                    "$set" => profile_record[:properties]
                   }]
                 }
               },
               "Events" => {
                 endpoint: "#{MIXPANEL_BASE_URL}/track",
-                payload: lambda { |record|
+                payload: lambda { |event_record|
                   [{
-                    "event" => record[:name],
-                    "properties" => record[:properties].merge("token" => @api_token)
+                    "event" => event_record[:name],
+                    "properties" => event_record[:properties].merge("token" => @api_token)
                   }]
                 }
               }
