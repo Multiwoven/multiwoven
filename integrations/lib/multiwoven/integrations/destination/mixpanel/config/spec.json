@@ -1,0 +1,25 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/destination/mixpanel",
+  "stream_type": "static",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Mixpanel",
+    "type": "object",
+    "required": ["api_token"],
+    "properties": {
+      "api_token": {
+        "description": "API Token",
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "api_token",
+        "order": 0
+      },
+      "project_id": {
+        "description": "Project Id",
+        "type": "string",
+        "title": "project_id",
+        "order": 1
+      }
+    }
+  }
+}
