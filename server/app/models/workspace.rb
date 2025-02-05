@@ -25,6 +25,7 @@ class Workspace < ApplicationRecord
   has_many :audit_logs, dependent: :nullify
   has_many :custom_visual_component_files, dependent: :nullify
   has_many :alerts, dependent: :nullify
+  has_many :message_feedbacks, dependent: :nullify
   belongs_to :organization
 
   STATUS_ACTIVE = "active"
