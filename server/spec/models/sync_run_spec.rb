@@ -283,4 +283,31 @@ RSpec.describe SyncRun, type: :model do
       expect(sync_run.duration_in_seconds).to eq(100)
     end
   end
+
+  describe "#track_usage" do
+    let(:organization) { create(:organization) }
+    let(:workspace) { create(:workspace, organization:) }
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create(:sync, source:, destination:) }
+    let(:plan) { create(:billing_plan) }
+    let(:subscription) { create(:billing_subscription, organization:, plan:, status: 1) }
+    let(:sync_run) { create(:sync_run, workspace:, sync:, successful_rows: 0) }
+
+    it "increments rows_synced when successful_rows changes from 0 to a positive value" do
+      expect(subscription.rows_synced).to eq(1)
+      sync_run.update!(successful_rows: 100)
+      subscription.reload
+      expect(subscription.rows_synced).to eq(101)
+    end
+
+    it "does not increment rows_synced if successful_rows was already positive" do
+      sync_run.update!(successful_rows: 5)
+      expect(subscription).not_to receive(:increment!)
+      sync_run.update!(successful_rows: 10)
+    end
+  end
 end
