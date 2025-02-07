@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_02_07_084006) do
+>>>>>>> 71dfd35b (chore(CE): embedding model changes (#841))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -143,6 +147,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "embedding_models", force: :cascade do |t|
+    t.string "mode", null: false
+    t.integer "status", default: 1
+    t.string "models", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "feedbacks", force: :cascade do |t|
