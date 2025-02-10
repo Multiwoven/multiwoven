@@ -6,8 +6,6 @@ RSpec.describe AlertChannel, type: :model do
   describe "associations" do
     it { should belong_to(:alert) }
   end
-<<<<<<< HEAD
-=======
 
   describe "#recipients" do
     let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
@@ -32,5 +30,4 @@ RSpec.describe AlertChannel, type: :model do
       expect(alert_channel.recipients).to eq(["test@slackai.com"])
     end
   end
->>>>>>> 470a5cfc (chore(CE): Sync alert bug fixes (#801))
 end
