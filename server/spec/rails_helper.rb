@@ -11,6 +11,7 @@ require "support/auth_helper"
 require "temporal/testing"
 require "timecop"
 
+Rails.application.eager_load!
 Temporal::Testing.local!
 # Add additional requires below this line. Rails is not loaded until this point!
 

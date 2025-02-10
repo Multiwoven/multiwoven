@@ -15,4 +15,10 @@ class Organization < ApplicationRecord
   has_many :workspaces, dependent: :destroy
   has_many :workspace_users, through: :workspaces
   has_many :users, through: :workspace_users
+  has_many :subscriptions, class_name: "Billing::Subscription", dependent: :destroy
+  has_one :active_subscription, -> { order(created_at: :desc) },
+          class_name: "Billing::Subscription",
+          foreign_key: "organization_id",
+          inverse_of: :organization,
+          dependent: :destroy
 end
