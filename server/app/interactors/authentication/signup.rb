@@ -38,6 +38,8 @@ module Authentication
       return unless organization.errors.empty?
 
       create_workspace
+
+      create_subscription
     end
 
     def create_organization
@@ -66,6 +68,18 @@ module Authentication
         user:,
         workspace:,
         role: Role.find_by(role_name: "Admin")
+      )
+    end
+
+    def create_subscription
+      plan = Billing::Plan.find_by(name: "Starter")
+      organization.subscriptions.create!(
+        plan_id: plan.id,
+        status: "active"
+      )
+    rescue StandardError => e
+      Rails.logger.error(
+        "Failed to create default subscription for org: #{organization.id} : #{e.message}"
       )
     end
   end
