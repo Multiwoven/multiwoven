@@ -39,6 +39,8 @@ module Multiwoven
         case type
         when "NUMBER"
           "integer"
+        when "vector"
+          "vector"
         else
           "string" # Default type
         end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Feedback, type: :model do
+RSpec.describe MessageFeedback, type: :model do
   describe "associations" do
     it { should belong_to(:data_app) }
     it { should belong_to(:visual_component) }
@@ -15,6 +15,7 @@ RSpec.describe Feedback, type: :model do
     it { should validate_presence_of(:visual_component_id) }
     it { should validate_presence_of(:model_id) }
     it { should validate_presence_of(:feedback_type) }
+    it { should validate_presence_of(:chatbot_interaction) }
   end
 
   describe "enum" do
@@ -38,35 +39,6 @@ RSpec.describe Feedback, type: :model do
         scale_nine: 9,
         scale_ten: 10
       )
-    end
-  end
-
-  describe "#track_usage" do
-    let(:organization) { create(:organization) }
-    let(:workspace) { create(:workspace, organization:) }
-    let(:plan) { create(:billing_plan) }
-    let(:subscription) { create(:billing_subscription, organization:, plan:, status: 1) }
-    let(:feedback) { build(:feedback, workspace:) }
-
-    context "when organization has an active subscription" do
-      before do
-        allow(workspace.organization).to receive(:active_subscription).and_return(subscription)
-      end
-
-      it "increments the feedback count on the subscription" do
-        expect { feedback.save }.to change { subscription.feedback_count }.by(1)
-      end
-    end
-
-    context "when organization has no active subscription" do
-      before do
-        allow(workspace.organization).to receive(:active_subscription).and_return(nil)
-      end
-
-      it "does not increment any feedback count" do
-        expect(subscription).not_to receive(:increment!)
-        feedback.save
-      end
     end
   end
 end

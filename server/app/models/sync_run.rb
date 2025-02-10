@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class SyncRun < ApplicationRecord
   include AASM
   include Discard::Model
@@ -32,6 +33,7 @@ class SyncRun < ApplicationRecord
   after_discard :perform_post_discard_sync_run
   after_commit :send_status_email, if: :status_changed_to_failure?
   after_commit :queue_sync_alert, if: :saved_change_to_status?
+  after_commit :track_usage, if: :saved_change_to_successful_rows?
 
   scope :active, -> { where(status: %i[pending started querying queued in_progress]) }
 
@@ -153,4 +155,14 @@ class SyncRun < ApplicationRecord
   def send_alert?
     terminal_status? && active_alerts?
   end
+
+  def track_usage
+    active_subscription = workspace.organization.active_subscription
+    return unless active_subscription
+
+    # rubocop:disable Rails/SkipsModelValidations
+    active_subscription.increment!(:rows_synced, successful_rows)
+    # rubocop:enable Rails/SkipsModelValidations
+  end
 end
+# rubocop:enable Metrics/ClassLength
