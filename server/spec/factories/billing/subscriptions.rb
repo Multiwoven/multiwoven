@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :billing_subscription, class: "Billing::Subscription" do
     organization { nil }
-    billing_plan { nil }
+    plan { nil }
     status { 1 }
     data_app_sessions { 1 }
     feedback_count { 1 }
