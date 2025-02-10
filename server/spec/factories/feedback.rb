@@ -6,7 +6,6 @@ FactoryBot.define do
     association :visual_component
     association :workspace
     association :model
-    session_id { SecureRandom.hex(10) }
     feedback_type { "thumbs" }
     reaction { "positive" }
   end

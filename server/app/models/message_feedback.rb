@@ -5,7 +5,7 @@ class MessageFeedback < ApplicationRecord
   validates :visual_component_id, presence: true
   validates :model_id, presence: true
   validates :feedback_type, presence: true
-  validates :chatbot_response, presence: true
+  validates :chatbot_interaction, presence: true
 
   belongs_to :data_app
   belongs_to :visual_component

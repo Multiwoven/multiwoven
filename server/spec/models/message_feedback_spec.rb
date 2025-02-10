@@ -15,7 +15,7 @@ RSpec.describe MessageFeedback, type: :model do
     it { should validate_presence_of(:visual_component_id) }
     it { should validate_presence_of(:model_id) }
     it { should validate_presence_of(:feedback_type) }
-    it { should validate_presence_of(:chatbot_response) }
+    it { should validate_presence_of(:chatbot_interaction) }
   end
 
   describe "enum" do
