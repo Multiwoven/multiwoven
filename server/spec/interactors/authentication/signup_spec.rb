@@ -40,6 +40,16 @@ RSpec.describe Authentication::Signup, type: :interactor do
         expect { context }.to change(Workspace, :count).by(1)
       end
 
+      it "creates a subscription for the organization" do
+        create(:billing_plan, name: "Starter")
+        expect { context }.to change(Billing::Subscription, :count).by(1)
+        subscription = Billing::Subscription.last
+
+        expect(subscription.organization).to eq(Organization.last)
+        expect(subscription.plan.name).to eq("Starter")
+        expect(subscription.status).to eq("active")
+      end
+
       it "returns a success message" do
         expect(context.message).to eq("Signup successful! Please check your email to confirm your account.")
       end

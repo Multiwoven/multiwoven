@@ -22,6 +22,8 @@ RSpec.describe Organization, type: :model do
     it { should have_many(:workspaces).dependent(:destroy) }
     it { should have_many(:workspace_users).through(:workspaces) }
     it { should have_many(:users).through(:workspace_users) }
+    it { should have_many(:subscriptions).class_name("Billing::Subscription") }
+    it { should have_one(:active_subscription).class_name("Billing::Subscription") }
   end
 
   describe "association functionality" do
