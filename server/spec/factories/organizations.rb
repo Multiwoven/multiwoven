@@ -3,5 +3,10 @@
 FactoryBot.define do
   factory :organization do
     name { Faker::Company.unique.name }
+
+    after(:create) do |organization|
+      plan = create(:billing_plan)
+      create(:billing_subscription, organization:, plan:, status: 1)
+    end
   end
 end
