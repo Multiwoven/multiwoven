@@ -8,7 +8,7 @@ module Api
       attr_reader :sync
 
       def index
-        sync_runs = @sync.sync_runs.order(started_at: :desc)
+        sync_runs = @sync.sync_runs.order(updated_at: :desc)
         authorize sync_runs
         sync_runs = sync_runs.where(status: params[:status]) if params[:status].present?
         sync_runs = sync_runs.page(params[:page] || 1).per(params[:per_page])

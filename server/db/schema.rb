@@ -10,11 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
-=======
+
 ActiveRecord::Schema[7.1].define(version: 2025_02_05_115448) do
->>>>>>> 1f3c70de (chore(CE): common changes to Message Feedback (#832))
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -161,6 +159,38 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_05_115448) do
     t.integer "feedback_type", default: 0, null: false
     t.string "session_id"
     t.jsonb "additional_remarks"
+  end
+
+  create_table "message_feedbacks", force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "visual_component_id", null: false
+    t.integer "model_id", null: false
+    t.integer "reaction"
+    t.string "feedback_content"
+    t.integer "feedback_type", default: 0, null: false
+    t.json "chatbot_response", null: false
+    t.jsonb "additional_remark"
+    t.datetime "timestamp"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "message_feedbacks", force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "visual_component_id", null: false
+    t.integer "model_id", null: false
+    t.integer "reaction"
+    t.string "feedback_content"
+    t.integer "feedback_type", default: 0, null: false
+    t.json "chatbot_response", null: false
+    t.jsonb "additional_remark"
+    t.datetime "timestamp"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 <<<<<<< HEAD
