@@ -392,7 +392,13 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           model_id: model.id,
           schedule_type: "manual",
           configuration: {
-            "test": "test"
+            "test": "test",
+            "field_type": "vector",
+            "embedding_config": {
+              "mode": "classification",
+              "model": "gpt-3",
+              "api_key": "your-api-key"
+            }
           },
           sync_interval: 10,
           sync_interval_unit: "minutes",
@@ -423,6 +429,15 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :cron_expression)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :cursor_field)).to eq(nil)
         expect(response_hash.dig(:data, :attributes, :current_cursor_field)).to eq(nil)
+
+        expect(response_hash.dig(:data, :attributes, :configuration, :test)).to eq("test")
+        expect(response_hash.dig(:data, :attributes, :configuration, :field_type)).to eq("vector")
+        expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :mode))
+          .to eq(request_body.dig(:sync, :configuration, :embedding_config, :mode))
+        expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :model))
+          .to eq(request_body.dig(:sync, :configuration, :embedding_config, :model))
+        expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :api_key))
+          .to eq(request_body.dig(:sync, :configuration, :embedding_config, :api_key))
 
         audit_log = AuditLog.last
         expect(audit_log).not_to be_nil

@@ -49,15 +49,39 @@ module ReverseEtl
             static_mapping(mapping)
           when "template"
             template_mapping(mapping)
+          when "vector"
+            vector_mapping(mapping)
           end
         end
+      end
+
+      def vector_mapping(mapping)
+        dest_keys = mapping[:to].split(".")
+        source_key = mapping[:from]
+        embedding_config = mapping[:embedding_config]
+        mapped_destination_value = if embedding_config
+                                     ReverseEtl::Transformers::Embeddings::EmbeddingService
+                                       .new(embedding_config:).generate_embedding(record[source_key])
+                                   else
+                                     record[source_key]
+                                   end
+
+        extract_destination_mapping(dest_keys, mapped_destination_value)
       end
 
       def standard_mapping(mapping)
         dest_keys = mapping[:to].split(".")
         source_key = mapping[:from]
+
         mapped_destination_value = record[source_key]
-        extract_destination_mapping(dest_keys, mapped_destination_value)
+
+        sanitized_mapped_value = if mapped_destination_value.is_a?(String)
+                                   mapped_destination_value.gsub("'", "''")
+                                 else
+                                   mapped_destination_value
+                                 end
+
+        extract_destination_mapping(dest_keys, sanitized_mapped_value)
       end
 
       def static_mapping(mapping)
