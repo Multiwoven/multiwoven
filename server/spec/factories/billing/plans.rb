@@ -9,7 +9,7 @@ FactoryBot.define do
     interval { 0 }
     max_data_app_sessions { 1 }
     max_feedback_count { 1 }
-    max_rows_synced_limit { 1 }
+    max_rows_synced { 1 }
     addons { "MyText" }
   end
 end
