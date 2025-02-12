@@ -23,6 +23,7 @@ module Syncs
     def catalog_mapping_types
       {
         standard: "",
+        vector: "",
         static: static_configuration,
         template: {
           variable: template_variables,
