@@ -2036,13 +2036,8 @@ GEM
       protocol-http (~> 0.22)
     protocol-http2 (0.22.1)
       protocol-hpack (~> 1.4)
-<<<<<<< HEAD
-      protocol-http (~> 0.18)
-    protocol-rack (0.11.0)
-=======
       protocol-http (~> 0.47)
     protocol-rack (0.11.1)
->>>>>>> fb25d03a (feat(CE): embedding transformation for vector field (#836))
       protocol-http (~> 0.43)
       rack (>= 1.0)
     protocol-websocket (0.20.1)
