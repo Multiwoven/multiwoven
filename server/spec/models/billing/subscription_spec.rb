@@ -40,4 +40,38 @@ RSpec.describe Billing::Subscription, type: :model do
       expect(subscription.addons_usage).to eq({ "feature1" => true, "feature2" => false })
     end
   end
+
+  describe "next renewal date" do
+    let(:organization) { create(:organization) }
+    let(:plan) { create(:billing_plan, interval: "month") }
+    let(:subscription) { create(:billing_subscription, organization:, created_at:, plan:) }
+
+    context "when plan is monthly" do
+      context "when created on a valid day of month" do
+        let(:created_at) { Time.zone.local(2024, 1, 15) }
+
+        it "returns next renewal date on same day of current month" do
+          travel_to Time.zone.local(2024, 2, 10)
+          expect(subscription.next_renewal_date).to eq(Time.zone.local(2024, 2, 15))
+        end
+      end
+    end
+
+    context "when plan is yearly" do
+      let(:plan) { create(:billing_plan, interval: "year") }
+
+      before do
+        subscription.update(plan:)
+      end
+
+      context "when created on a valid day of month" do
+        let(:created_at) { Time.zone.local(2024, 2, 15) }
+
+        it "returns next renewal date on same day and month" do
+          travel_to Time.zone.local(2025, 1, 10)
+          expect(subscription.next_renewal_date).to eq(Time.zone.local(2025, 2, 15))
+        end
+      end
+    end
+  end
 end

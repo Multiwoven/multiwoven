@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_07_084006) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_11_130824) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,7 +94,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_07_084006) do
     t.integer "interval", default: 0
     t.integer "max_data_app_sessions"
     t.integer "max_feedback_count", default: 0
-    t.integer "max_rows_synced_limit", default: 0
+    t.integer "max_rows_synced", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "addons", default: {}, null: false
