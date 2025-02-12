@@ -1988,6 +1988,8 @@ GEM
       zendesk_api
     mutex_m (0.2.0)
     mysql2 (0.5.6)
+    net-http (0.6.0)
+      uri
     net-imap (0.4.9.1)
       date
       net-protocol
@@ -2014,6 +2016,7 @@ GEM
       bigdecimal (>= 3.0)
     orm_adapter (0.5.0)
     os (1.1.4)
+    ostruct (0.6.1)
     parallel (1.24.0)
     parser (3.3.0.3)
       ast (~> 2.4.1)
@@ -2181,11 +2184,7 @@ GEM
       faraday-multipart
       gli
       hashie
-<<<<<<< HEAD
-      websocket-driver
-=======
       logger
->>>>>>> fb25d03a (feat(CE): embedding transformation for vector field (#836))
     solid_queue (0.3.1)
       activejob (>= 7.1)
       activerecord (>= 7.1)
@@ -2214,6 +2213,7 @@ GEM
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
+    uri (1.0.2)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
