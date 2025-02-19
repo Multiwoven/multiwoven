@@ -24,7 +24,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     end
 
     it "renders the sender email" do
-      expect(mail.from).to eq(["noreply@multiwoven.com"])
+      expect(mail.from).to eq(["ai2-mailer@squared.ai"])
     end
 
     it "contains the inviter's name and workspace name in the body" do

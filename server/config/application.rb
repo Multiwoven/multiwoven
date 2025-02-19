@@ -53,9 +53,11 @@ module MultiwovenServer
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
-    host = ENV.fetch('SMTP_HOST', 'multiwoven.com')
+    host = ENV.fetch('SMTP_HOST', 'squared.ai')
     config.action_mailer.default_url_options = { host: host }
-    config.x.mail_from = "#{ENV.fetch('BRAND_NAME', 'Multiwoven')} <#{ENV.fetch('SMTP_SENDER_EMAIL', 'noreply@multiwoven.com')}>"
+    brand_name = ENV['BRAND_NAME'].presence || 'AI Squared'
+    smtp_sender_email = ENV['SMTP_SENDER_EMAIL'].presence || 'ai2-mailer@squared.ai'
+    config.x.mail_from = "#{brand_name} <#{smtp_sender_email}>"
     config.action_mailer.smtp_settings = {
       address:  ENV['SMTP_ADDRESS'],
       port: ENV.fetch('SMTP_PORT', '587'),
