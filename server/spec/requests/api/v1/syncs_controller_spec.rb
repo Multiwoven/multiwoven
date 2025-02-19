@@ -394,6 +394,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           configuration: {
             "test": "test",
             "field_type": "vector",
+            "hide_embedding": false,
             "embedding_config": {
               "mode": "classification",
               "model": "gpt-3",
@@ -432,6 +433,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
 
         expect(response_hash.dig(:data, :attributes, :configuration, :test)).to eq("test")
         expect(response_hash.dig(:data, :attributes, :configuration, :field_type)).to eq("vector")
+        expect(response_hash.dig(:data, :attributes, :configuration, :hide_embedding)).to eq(false)
         expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :mode))
           .to eq(request_body.dig(:sync, :configuration, :embedding_config, :mode))
         expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :model))
