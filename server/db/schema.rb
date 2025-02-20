@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_02_11_130824) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_02_20_021540) do
+>>>>>>> 2e8bc4f4 (chore(CE): add SSO Configuration to DB (#854))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -344,6 +348,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_130824) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "sso_configurations", force: :cascade do |t|
+    t.integer "organization_id"
+    t.integer "status", default: 1
+    t.string "entity_id"
+    t.string "acs_url"
+    t.string "idp_sso_url"
+    t.string "signing_certificate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sync_records", force: :cascade do |t|
