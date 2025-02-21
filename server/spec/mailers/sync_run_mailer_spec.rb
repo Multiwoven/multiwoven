@@ -22,7 +22,7 @@ RSpec.describe SyncRunMailer, type: :mailer do
     it "renders the headers" do
       expect(mail.subject).to eq("Sync failure")
       expect(mail.to).to eq([recipient])
-      expect(mail.from).to eq(["noreply@multiwoven.com"])
+      expect(mail.from).to eq(["ai2-mailer@squared.ai"])
     end
 
     it "renders the body" do

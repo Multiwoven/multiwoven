@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.19.2)
+    multiwoven-integrations (0.19.3)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -322,8 +322,7 @@ GEM
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
     retriable (3.1.2)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -377,7 +376,6 @@ GEM
       hashie
     sorbet-runtime (0.5.11414)
     stripe (11.4.0)
-    strscan (3.1.0)
     timers (4.3.5)
     tiny_tds (2.1.7)
     tiny_tds (2.1.7-x64-mingw-ucrt)
