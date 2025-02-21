@@ -18,7 +18,6 @@ RSpec.describe SyncAlertMailer, type: :mailer do
     end
     let(:mail) { SyncAlertMailer.with(sync_run_attrs).sync_success_email }
 
-
     before do
       ENV["UI_HOST"] = "https://uihost.com"
       ENV["API_HOST"] = "https://apihost.com"
