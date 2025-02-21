@@ -43,7 +43,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
              params: { name: "test", company_name: "test", email: "test@gmail.com", password: "pass@1235",
                        password_confirmation: "pass@1235" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response_errors[0]["detail"]).not_to be_empty
         expect(response_errors[0]["detail"]).to include("Signup failed: Password Length should be 8-128 characters")
       end
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
              params: { reset_password_token: token, password: "newPassword@123",
                        password_confirmation: "newPassword@123" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         response_json = JSON.parse(response.body)
         expect(response_json["errors"].first["detail"]).to eq("Token has expired.")
         Timecop.return
@@ -153,7 +153,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
              params: { reset_password_token: "wrong", password: "newPassword@123",
                        password_confirmation: "newPassword@123" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response_errors).not_to be_empty
       end
     end
@@ -175,7 +175,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "does not verify the user and returns an error" do
         get :verify_user, params: { confirmation_token: "wrong123" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response_errors).not_to be_empty
       end
     end
@@ -203,7 +203,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "returns an error already confirmed" do
         unverified_user.confirm
         post :resend_verification, params: { email: unverified_user.email }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response_errors[0]["detail"]).to include("Account already confirmed")
       end
     end
@@ -212,7 +212,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it "returns an error" do
         post :resend_verification, params: { email: "nonexistent@example.com" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response_errors).not_to be_empty
         expect(response_errors[0]["detail"]).to include("User not found")
       end

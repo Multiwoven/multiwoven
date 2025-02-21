@@ -44,7 +44,7 @@ module Api
         else
           render_error(
             message: "Sync creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.sync)
           )
         end
@@ -65,7 +65,7 @@ module Api
         else
           render_error(
             message: "Sync update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.sync)
           )
         end
@@ -90,7 +90,7 @@ module Api
         elsif result.failure?
           render_error(
             message: "Unable to fetch sync configurations",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.error)
           )
         end
@@ -103,7 +103,7 @@ module Api
           @audit_resource = @sync.name
           render json: @sync, status: :ok
         else
-          render_error(message: "Sync update failed", status: :unprocessable_entity,
+          render_error(message: "Sync update failed", status: :unprocessable_content,
                        details: format_errors(result.sync))
         end
       end

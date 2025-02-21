@@ -45,7 +45,7 @@ module Api
         else
           render_error(
             message: "Model creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.model)
           )
         end
@@ -66,7 +66,7 @@ module Api
         else
           render_error(
             message: "Model update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.model)
           )
         end
@@ -97,7 +97,7 @@ module Api
 
         render_error(
           message: "Catalog is not present for the connector",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 
@@ -110,7 +110,7 @@ module Api
       rescue StandardError => e
         render_error(
           message: "Query validation failed: #{e.message}",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 

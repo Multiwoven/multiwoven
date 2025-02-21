@@ -39,7 +39,7 @@ RSpec.describe Authentication::ResendVerificationEmail, type: :interactor do
         it "fails the context with an appropriate error" do
           expect(context).to be_failure
           expect(context.error).to eq("Account already confirmed.")
-          expect(context.status).to eq(:unprocessable_entity)
+          expect(context.status).to eq(:unprocessable_content)
         end
       end
     end

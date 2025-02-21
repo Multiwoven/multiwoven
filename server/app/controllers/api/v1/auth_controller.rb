@@ -30,7 +30,7 @@ module Api
         if result.success?
           render json: result.user, status: :created
         else
-          render_error(message: result.errors, status: :unprocessable_entity,
+          render_error(message: result.errors, status: :unprocessable_content,
                        details: nil)
         end
       end
@@ -62,14 +62,14 @@ module Api
       def reset_password
         user = User.with_reset_password_token(params[:reset_password_token])
         if user && !user.reset_password_period_valid?
-          render_error(message: "Token has expired.", status: :unprocessable_entity)
+          render_error(message: "Token has expired.", status: :unprocessable_content)
         elsif user&.reset_password(params[:password], params[:password_confirmation])
           render json: { data: { type: "message",
                                  id: user.id,
                                  attributes: { message: "Password successfully reset." } } },
                  status: :ok
         else
-          render_error(message: "Invalid token or password mismatch.", status: :unprocessable_entity)
+          render_error(message: "Invalid token or password mismatch.", status: :unprocessable_content)
         end
       end
 
@@ -81,7 +81,7 @@ module Api
                                  attributes: { message: "Account verified successfully!" } } },
                  status: :ok
         else
-          render_error(message: "Invalid confirmation code.", status: :unprocessable_entity)
+          render_error(message: "Invalid confirmation code.", status: :unprocessable_content)
         end
       end
 
@@ -93,7 +93,7 @@ module Api
                                  attributes: { message: "Email verification link sent successfully!" } } },
                  status: :ok
         else
-          render_error(message: result.error, status: :unprocessable_entity)
+          render_error(message: result.error, status: :unprocessable_content)
         end
       end
     end
