@@ -87,5 +87,30 @@ FactoryBot.define do
         }
       end
     end
+
+    trait :custom do
+      role_name { "Custom Role" }
+      role_desc { "Viewer role with read-only access" }
+      role_type { 0 }
+      policies do
+        {
+          "permissions" => {
+            "sync" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "user" => { "read" => false, "create" => false, "delete" => false, "update" => false },
+            "model" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "report" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "sync_run" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "connector" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "workspace" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "sync_record" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "connector_definition" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "data_app" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "audit_logs" => { "read" => false, "create" => false, "delete" => false, "update" => false },
+            "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+          }
+        }
+      end
+    end
   end
 end
