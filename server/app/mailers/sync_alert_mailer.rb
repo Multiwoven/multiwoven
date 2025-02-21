@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SyncAlertMailer < ApplicationMailer
-  default from: Rails.configuration.x.mail_from
+  default from: "AI Squared <ai2-mailer@squared.ai>"
 
   def sync_success_email
     @alert_attrs = params
@@ -27,6 +27,8 @@ class SyncAlertMailer < ApplicationMailer
   private
 
   def sync_run_host
-    Rails.configuration.action_mailer.default_url_options[:host]
+    host = ENV["UI_HOST"]
+    host = "https://#{host}" unless ["https://", "http://"].any? { |protocol| host.start_with? protocol }
+    host
   end
 end
