@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,6 +86,34 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
     t.string "resource_link"
   end
 
+  create_table "billing_plans", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "status", default: 0
+    t.float "amount", default: 0.0
+    t.integer "currency", default: 0
+    t.integer "interval", default: 0
+    t.integer "max_data_app_sessions"
+    t.integer "max_feedback_count", default: 0
+    t.integer "max_rows_synced", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "addons", default: {}, null: false
+  end
+
+  create_table "billing_subscriptions", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.bigint "plan_id", null: false
+    t.integer "status", default: 0
+    t.integer "data_app_sessions", default: 0
+    t.integer "feedback_count", default: 0
+    t.integer "rows_synced", default: 0
+    t.jsonb "addons_usage", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_billing_subscriptions_on_organization_id"
+    t.index ["plan_id"], name: "index_billing_subscriptions_on_plan_id"
+  end
+
   create_table "catalogs", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "connector_id"
@@ -145,6 +173,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
+  create_table "embedding_models", force: :cascade do |t|
+    t.string "mode", null: false
+    t.integer "status", default: 1
+    t.string "models", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
@@ -157,6 +193,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
     t.integer "feedback_type", default: 0, null: false
     t.string "session_id"
     t.jsonb "additional_remarks"
+  end
+
+  create_table "message_feedbacks", force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.integer "data_app_id", null: false
+    t.integer "visual_component_id", null: false
+    t.integer "model_id", null: false
+    t.integer "reaction"
+    t.string "feedback_content"
+    t.integer "feedback_type", default: 0, null: false
+    t.json "chatbot_interaction", null: false
+    t.jsonb "additional_remarks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "models", force: :cascade do |t|
@@ -440,6 +490,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_130642) do
   add_foreign_key "alert_channels", "alert_media"
   add_foreign_key "alert_channels", "alerts"
   add_foreign_key "alerts", "workspaces"
+  add_foreign_key "billing_subscriptions", "billing_plans", column: "plan_id"
+  add_foreign_key "billing_subscriptions", "organizations"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

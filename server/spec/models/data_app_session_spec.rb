@@ -51,4 +51,34 @@ RSpec.describe DataAppSession, type: :model do
       expect(session.expired?).to be false
     end
   end
+
+  describe "#track_usage" do
+    let(:organization) { create(:organization) }
+    let(:workspace) { create(:workspace, organization:) }
+    let(:plan) { create(:billing_plan) }
+    let(:subscription) { create(:billing_subscription, organization:, plan:, status: 1) }
+    let!(:data_app) { create(:data_app, workspace:, visual_components_count: 1) }
+    let(:data_app_session) { build(:data_app_session, workspace:, data_app:) }
+
+    context "when organization has an active subscription" do
+      before do
+        allow(workspace.organization).to receive(:active_subscription).and_return(subscription)
+      end
+
+      it "increments the data app session count on the subscription" do
+        expect { data_app_session.save }.to change { subscription.data_app_sessions }.by(1)
+      end
+    end
+
+    context "when organization has no active subscription" do
+      before do
+        allow(workspace.organization).to receive(:active_subscription).and_return(nil)
+      end
+
+      it "does not increment any data app session count" do
+        expect(subscription).not_to receive(:increment!)
+        data_app_session.save
+      end
+    end
+  end
 end

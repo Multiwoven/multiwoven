@@ -35,7 +35,8 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
         "cr_returning_cdemo_sk" => "598680",
         "cr_returning_hdemo_sk" => "2289",
         "cr_refunded_customer_sk" => "62244257",
-        "cr_returning_customer_sk" => "39905396" }
+        "cr_returning_customer_sk" => "39905396",
+        "cr_text_field_sk" => "hello world" }
     end
 
     context "with complex mapping including arrays and nested structures" do
@@ -123,6 +124,41 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
             }
           }
         }
+
+        expect(results).to eq(expected_result)
+      end
+    end
+
+    context "when using vector mapping" do
+      let(:mapping) do
+        [
+          { mapping_type: "vector", from: "cr_text_field_sk", to: "vector_field",
+            embedding_config: { "mode" => "open_ai", "model" => "text-embedding-ada-002", "api_key" => "api_key" } }
+        ]
+      end
+
+      before do
+        allow(ReverseEtl::Transformers::Embeddings::EmbeddingService)
+          .to receive(:new)
+          .and_return(
+            double(
+              "EmbeddingService",
+              generate_embedding: [-0.038116533, 0.0021319648, -0.0045227623, -0.027926695]
+            )
+          )
+      end
+
+      it "applies the embedding transformation when embedding_config is present" do
+        results = extractor.transform(sync, sync_record)
+        expected_result = { "vector_field" => [-0.038116533, 0.0021319648, -0.0045227623, -0.027926695] }
+
+        expect(results).to eq(expected_result)
+      end
+
+      it "falls back to the original value when no embedding_config is present" do
+        mapping[0][:embedding_config] = nil
+        results = extractor.transform(sync, sync_record)
+        expected_result = { "vector_field" => "hello world" }
 
         expect(results).to eq(expected_result)
       end

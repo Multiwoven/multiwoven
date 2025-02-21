@@ -40,4 +40,33 @@ RSpec.describe Feedback, type: :model do
       )
     end
   end
+
+  describe "#track_usage" do
+    let(:organization) { create(:organization) }
+    let(:workspace) { create(:workspace, organization:) }
+    let(:plan) { create(:billing_plan) }
+    let(:subscription) { create(:billing_subscription, organization:, plan:, status: 1) }
+    let(:feedback) { build(:feedback, workspace:) }
+
+    context "when organization has an active subscription" do
+      before do
+        allow(workspace.organization).to receive(:active_subscription).and_return(subscription)
+      end
+
+      it "increments the feedback count on the subscription" do
+        expect { feedback.save }.to change { subscription.feedback_count }.by(1)
+      end
+    end
+
+    context "when organization has no active subscription" do
+      before do
+        allow(workspace.organization).to receive(:active_subscription).and_return(nil)
+      end
+
+      it "does not increment any feedback count" do
+        expect(subscription).not_to receive(:increment!)
+        feedback.save
+      end
+    end
+  end
 end

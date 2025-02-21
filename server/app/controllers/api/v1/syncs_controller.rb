@@ -146,12 +146,17 @@ module Api
                                       :cron_expression,
                                       :stream_name,
                                       :cursor_field,
-                                      configuration: %i[from
-                                                        to
-                                                        mapping_type
-                                                        value
-                                                        value_type
-                                                        template])
+                                      configuration: [
+                                        :from,
+                                        :to,
+                                        :mapping_type,
+                                        :value,
+                                        :value_type,
+                                        :template,
+                                        :field_type,
+                                        :hide_embedding,
+                                        { embedding_config: %i[mode model api_key] }
+                                      ])
 
         # TODO: Need to remove this once we implement template and static mapping in frontend
         if params.to_unsafe_h[:sync][:configuration].is_a?(Hash)

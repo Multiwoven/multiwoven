@@ -147,7 +147,11 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
   describe "#discover" do
     it "discovers schema successfully" do
       allow(PG).to receive(:connect).and_return(pg_connection)
-      discovery_query = "SELECT table_name, column_name, data_type, is_nullable\n" \
+
+      discovery_query = "SELECT table_name, column_name,\n" \
+                      "                 CASE WHEN data_type = 'USER-DEFINED' THEN udt_name ELSE data_type END\n" \
+                      "                 AS data_type,\n" \
+                      "                 is_nullable\n" \
                       "                 FROM information_schema.columns\n" \
                       "                 WHERE table_schema = 'test_schema' AND table_catalog = 'test_database'\n" \
                       "                 ORDER BY table_name, ordinal_position;"
