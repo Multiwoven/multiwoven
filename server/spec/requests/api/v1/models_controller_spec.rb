@@ -267,7 +267,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         # rubocop:enable Rails/SkipsModelValidations
         post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "shouldn't fail model creation for connector without catalog for data sources" do
@@ -533,7 +533,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         put "/api/v1/models/#{models.second.id}", params: request_body.to_json,
                                                   headers: { "Content-Type": "application/json" }
                                                     .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "shouldn't fail model update for connector without catalog for data connector" do
@@ -721,7 +721,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     #   it "renders an error message" do
     #     post "/api/v1/models", params: request_body.to_json, headers: { "Content-Type": "application/json" }
     #       .merge(auth_headers(user))
-    #     expect(response).to have_http_status(:unprocessable_entity)
+    #     expect(response).to have_http_status(:unprocessable_content)
     #     expect(response.body).to include("Query validation failed: Invalid query")
     #   end
     # end
@@ -742,7 +742,7 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
     #   it "renders an error message" do
     #     put "/api/v1/models/#{models.second.id}", params: request_body.to_json, headers:
     #     { "Content-Type": "application/json" }.merge(auth_headers(user))
-    #     expect(response).to have_http_status(:unprocessable_entity)
+    #     expect(response).to have_http_status(:unprocessable_content)
     #     expect(response.body).to include("Query validation failed: Invalid query")
     #   end
     # end

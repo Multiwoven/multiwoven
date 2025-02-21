@@ -46,7 +46,7 @@ module Api
         else
           render_error(
             message: result.error || "Connector creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: result.connector ? format_errors(result.connector) : nil
           )
         end
@@ -67,7 +67,7 @@ module Api
         else
           render_error(
             message: "Connector update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.connector)
           )
         end
@@ -96,7 +96,7 @@ module Api
         else
           render_error(
             message: "Discover catalog failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.catalog)
           )
         end
@@ -119,13 +119,13 @@ module Api
           else
             render_error(
               message: result["error"],
-              status: :unprocessable_entity
+              status: :unprocessable_content
             )
           end
         else
           render_error(
             message: "Connector is not a source",
-            status: :unprocessable_entity
+            status: :unprocessable_content
           )
         end
       end
@@ -147,7 +147,7 @@ module Api
 
         render_error(
           message: "Catalog is not present for the connector",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 
@@ -156,7 +156,7 @@ module Api
       rescue StandardError => e
         render_error(
           message: "Query validation failed: #{e.message}",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 
