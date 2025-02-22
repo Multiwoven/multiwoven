@@ -7,4 +7,23 @@ RSpec.describe Role, type: :model do
     it { should validate_presence_of(:role_name) }
     it { should validate_presence_of(:policies) }
   end
+
+  describe "associations" do
+    it { should belong_to(:organization).optional }
+  end
+
+  describe "validations" do
+    let(:organization) { create(:organization) }
+    let(:role) { create(:role, organization:) }
+
+    it "should not allow duplicate role names within the same organization" do
+      new_role = build(:role, organization:, role_name: role.role_name)
+      expect { new_role.save! }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
+    it "should allow the same role name in different organizations" do
+      new_role = build(:role, role_name: "new_role_name", organization:)
+      expect(new_role.save!).to be_truthy
+    end
+  end
 end
