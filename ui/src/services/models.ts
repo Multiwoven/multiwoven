@@ -6,6 +6,7 @@ import {
 import { apiRequest, multiwovenFetch } from './common';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
 import { ApiResponse } from './common';
+import { buildUrlWithParams } from './utils';
 
 export type APIData = {
   data?: Array<GetAllModelsResponse>;
@@ -63,7 +64,11 @@ export const getAllModels = async ({
 }: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
   multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',
+<<<<<<< HEAD
     url: type ? `/models?query_type=${type}` : '/models',
+=======
+    url: buildUrlWithParams('/models', { page, per_page: perPage, query_type: type }),
+>>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>
