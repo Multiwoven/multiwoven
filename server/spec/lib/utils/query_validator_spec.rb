@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 ## Commenting this out because it's not used anywhere.
 
 # require "rails_helper"
