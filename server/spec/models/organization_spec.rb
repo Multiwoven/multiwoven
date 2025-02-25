@@ -46,5 +46,21 @@ RSpec.describe Organization, type: :model do
     it "includes the correct users through workspace_users" do
       expect(organization.users).to include(user)
     end
+
+    it "includes system roles" do
+      system_role = create(:role, role_type: 1)
+      expect(Role.organization_roles(organization.id)).to include(system_role)
+    end
+
+    it "includes custom roles" do
+      custom_role = create(:role, role_type: 0, organization:)
+      expect(Role.organization_roles(organization.id)).to include(custom_role)
+    end
+
+    it "allows custom roles with different organization id" do
+      new_organization = create(:organization)
+      new_custom_role = create(:role, role_type: 0, organization: new_organization)
+      expect(Role.organization_roles(organization.id)).not_to include(new_custom_role)
+    end
   end
 end

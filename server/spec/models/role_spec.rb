@@ -26,4 +26,20 @@ RSpec.describe Role, type: :model do
       expect(new_role.save!).to be_truthy
     end
   end
+
+  describe "grouped policies" do
+    let(:role) do
+      create(:role,
+             policies: { "permissions" => { "sync" => { "read" => true, "create" => true, "delete" => true,
+                                                        "update" => true } } })
+    end
+
+    it "should correctly group policies" do
+      # rubocop:disable Layout/LineLength
+      expected_output = { "permissions" => { "sync" => { "read" => true, "create" => true, "delete" => true,
+                                                         "update" => true, :group => { name: "Syncs", description: "Manage and access syncs" } } } }
+      # rubocop:enable Layout/LineLength
+      expect(role.grouped_policies).to eq(expected_output)
+    end
+  end
 end
