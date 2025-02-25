@@ -14,11 +14,13 @@
 FactoryBot.define do
   factory :role do
     role_name { "CustomRole" }
+    role_type { 0 }
     policies { { "permissions" => {} } }
 
     trait :admin do
       role_name { "Admin" }
       role_desc { "Administrator role with full access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
@@ -43,6 +45,7 @@ FactoryBot.define do
     trait :member do
       role_name { "Member" }
       role_desc { "Member role with basic access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
@@ -67,6 +70,7 @@ FactoryBot.define do
     trait :viewer do
       role_name { "Viewer" }
       role_desc { "Viewer role with read-only access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
