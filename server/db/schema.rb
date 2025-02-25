@@ -10,11 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
-=======
 ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
->>>>>>> 86d4c3b0 (chore(CE): add role type to role (#868))
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
