@@ -47,4 +47,13 @@ class Role < ApplicationRecord
     raw_policies["permissions"] = updated_permissions
     raw_policies
   end
+
+  def permission_count
+    {
+      read: policies["permissions"].count { |_resource, perms| perms["read"] == true },
+      create: policies["permissions"].count { |_resource, perms| perms["create"] == true },
+      delete: policies["permissions"].count { |_resource, perms| perms["delete"] == true },
+      update: policies["permissions"].count { |_resource, perms| perms["update"] == true }
+    }
+  end
 end
