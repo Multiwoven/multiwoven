@@ -7,8 +7,6 @@ RSpec.describe Role, type: :model do
     it { should validate_presence_of(:role_name) }
     it { should validate_presence_of(:policies) }
   end
-<<<<<<< HEAD
-=======
 
   describe "associations" do
     it { should belong_to(:organization).optional }
@@ -44,5 +42,4 @@ RSpec.describe Role, type: :model do
       expect(role.grouped_policies).to eq(expected_output)
     end
   end
->>>>>>> 52e4e72b (feat(CE): add group meta to resource (#872))
 end

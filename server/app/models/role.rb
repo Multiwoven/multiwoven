@@ -16,8 +16,6 @@ class Role < ApplicationRecord
 
   validates :role_name, presence: true
   validates :policies, presence: true
-<<<<<<< HEAD
-=======
 
   enum role_type: { custom: 0, system: 1 }
 
@@ -49,5 +47,4 @@ class Role < ApplicationRecord
     raw_policies["permissions"] = updated_permissions
     raw_policies
   end
->>>>>>> 52e4e72b (feat(CE): add group meta to resource (#872))
 end
