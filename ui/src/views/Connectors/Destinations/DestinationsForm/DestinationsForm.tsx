@@ -1,14 +1,10 @@
-import SteppedForm from '@/components/SteppedForm';
-import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import SelectDestinations from './SelectDestinations';
 import ConnectorConfigForm from '@/views/Connectors/ConnectorConfigForm';
 import ConnectorConnectionTest from '@/views/Connectors/ConnectorConnectionTest';
 import ConnectorFinaliseForm from '@/views/Connectors/ConnectorFinaliseForm';
+import SteppedFormDrawer from '@/components/SteppedFormDrawer';
 
 const DestinationsForm = (): JSX.Element => {
-  const navigate = useNavigate();
-
   const steps = [
     {
       formKey: 'destination',
@@ -36,18 +32,7 @@ const DestinationsForm = (): JSX.Element => {
     },
   ];
 
-  return (
-    <Drawer isOpen onClose={() => navigate(-1)} placement='right' size='100%'>
-      <DrawerOverlay />
-      <DrawerContent padding='0px'>
-        <DrawerBody padding='0px'>
-          <Box>
-            <SteppedForm steps={steps} />
-          </Box>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  );
+  return <SteppedFormDrawer steps={steps} />;
 };
 
 export default DestinationsForm;
