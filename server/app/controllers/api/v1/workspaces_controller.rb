@@ -35,7 +35,7 @@ module Api
         else
           render_error(
             message: "Workspace creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.workspace)
           )
         end
@@ -50,7 +50,7 @@ module Api
         else
           render_error(
             message: "Workspace update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.workspace)
           )
         end
@@ -64,7 +64,7 @@ module Api
         else
           render_error(
             message: "Workspace delete failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.workspace)
           )
         end

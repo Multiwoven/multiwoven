@@ -37,7 +37,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.4
 
       - name: Update package list
         run: sudo apt update
@@ -64,7 +64,6 @@ jobs:
           echo "export C_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$C_INCLUDE_PATH" >> $GITHUB_ENV
           echo "export CPLUS_INCLUDE_PATH=/usr/include/oracle/19.6/client64:$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
 
-      
       - name: Install FreeTDS for TinyTDS gem
         run: |
           sudo apt-get install libc6-dev
