@@ -25,7 +25,7 @@ module ExceptionHandler
   end
 
   def render_could_not_create_error(message)
-    render json: { error: message }, status: :unprocessable_entity
+    render json: { error: message }, status: :unprocessable_content
   end
 
   def render_unauthorized(message)

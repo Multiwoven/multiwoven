@@ -13,7 +13,7 @@ module Api
         if result.success?
           render json: result.workspace_activity, status: :ok
         else
-          render_error(message: result.error, status: :unprocessable_entity)
+          render_error(message: result.error, status: :unprocessable_content)
         end
       end
 

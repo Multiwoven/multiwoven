@@ -26,7 +26,7 @@ module Api
         else
           render_error(
             message: "Catalog creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.catalog)
           )
         end
@@ -48,7 +48,7 @@ module Api
         else
           render_error(
             message: "Catalog update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.catalog)
           )
         end

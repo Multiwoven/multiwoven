@@ -588,7 +588,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
                                                                                      records: [record1, record2]))
         post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace.id))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, 0, :detail)).to eq("Catalog is not present for the connector")
       end
@@ -647,7 +647,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -679,7 +679,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     #   it "renders an error message" do
     #     post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
     #         { "Content-Type": "application/json" }.merge(auth_headers(user))
-    #     expect(response).to have_http_status(:unprocessable_entity)
+    #     expect(response).to have_http_status(:unprocessable_content)
     #     expect(response.body).to include("Query validation failed: Invalid query")
     #   end
     # end
