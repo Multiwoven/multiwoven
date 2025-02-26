@@ -350,6 +350,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "sso_configurations", force: :cascade do |t|
+    t.integer "organization_id"
+    t.integer "status", default: 1
+    t.string "entity_id"
+    t.string "acs_url"
+    t.string "idp_sso_url"
+    t.string "signing_certificate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sync_records", force: :cascade do |t|
     t.integer "sync_id"
     t.integer "sync_run_id"
