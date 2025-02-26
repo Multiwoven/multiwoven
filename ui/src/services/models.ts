@@ -64,11 +64,7 @@ export const getAllModels = async ({
 }: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
   multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',
-<<<<<<< HEAD
-    url: type ? `/models?query_type=${type}` : '/models',
-=======
-    url: buildUrlWithParams('/models', { page, per_page: perPage, query_type: type }),
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
+    url: buildUrlWithParams('/models', { query_type: type }),
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>

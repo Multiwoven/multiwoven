@@ -14,39 +14,17 @@ import { CustomToastStatus } from '@/components/Toast/index';
 import titleCase from '@/utils/TitleCase';
 import DataTable from '@/components/DataTable';
 import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/ConnectorsListColumns';
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
-=======
-import Pagination from '@/components/EnhancedPagination/Pagination';
-import useFilters from '@/hooks/useFilters';
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
 
 const DestinationsList = (): JSX.Element | null => {
-  const { filters, updateFilters } = useFilters({ page: '1' });
   const showToast = useCustomToast();
-<<<<<<< HEAD
-=======
-  const navigate = useProtectedNavigate();
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
+  const navigate = useNavigate();
 
   const activeWorkspaceId = useStore((state) => state.workspaceId);
-
-<<<<<<< HEAD
-  const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: [...DESTINATIONS_LIST_QUERY_KEY, activeWorkspaceId],
     queryFn: () => getUserConnectors('destination'),
-=======
-  const onPageSelect = (page: number) => {
-    updateFilters({ page: page.toString() });
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: [...DESTINATIONS_LIST_QUERY_KEY, activeWorkspaceId, filters.page ?? '1'],
-    queryFn: () =>
-      getUserConnectors('destination', 'data', filters.page ? Number(filters.page) : 1),
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
@@ -83,38 +61,12 @@ const DestinationsList = (): JSX.Element | null => {
           ctaButtonHeight='40px'
           isCtaVisible
         />
-<<<<<<< HEAD
         <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
           <DataTable
             data={data?.data}
             columns={ConnectorsListColumns}
             onRowClick={(row) => navigate(`/setup/destinations/${row?.original?.id}`)}
           />
-=======
-        <Box display='flex' flexDirection='column' gap='20px'>
-          <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
-            <DataTable
-              data={data?.data}
-              columns={ConnectorsListColumns}
-              onRowClick={(row) =>
-                navigate({
-                  to: `/setup/destinations/${row?.original?.id}`,
-                  location: 'connector',
-                  action: UserActions.Update,
-                })
-              }
-            />
-          </Box>
-          {data?.data && data.data.length > 0 && data.links && (
-            <Box display='flex' justifyContent='center'>
-              <Pagination
-                links={data?.links}
-                currentPage={filters.page ? Number(filters.page) : 1}
-                handlePageChange={onPageSelect}
-              />
-            </Box>
-          )}
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
         </Box>
       </ContentContainer>
     </Box>

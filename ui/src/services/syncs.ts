@@ -9,12 +9,7 @@ import {
   ChangeSyncStatusPayload,
 } from '@/views/Activate/Syncs/types';
 import { multiwovenFetch, ApiResponse, APIRequestMethod } from './common';
-<<<<<<< HEAD
-=======
-import { enterpriseMultiwovenFetch } from '@/enterprise/services/axios';
-import { MessageResponse } from './authentication';
 import { buildUrlWithParams } from './utils';
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
 
 export const getCatalog = (
   connectorId: string,

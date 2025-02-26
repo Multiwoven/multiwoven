@@ -9,28 +9,13 @@ import NoModels from '@/views/Models/NoModels';
 import { useStore } from '@/stores';
 import DataTable from '@/components/DataTable';
 import { Row } from '@tanstack/react-table';
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 import ModelsListTable from '@/views/Models/ModelsList/ModelsListTable';
 
 const ModelsList = (): JSX.Element | null => {
-=======
-import NoAccess from '@/enterprise/views/NoAccess';
-import Pagination from '@/components/EnhancedPagination/Pagination';
-import { useAPIErrorsToast } from '@/hooks/useErrorToast';
-import TabsWrapper from '@/components/TabsWrapper';
-import useFilters from '@/hooks/useFilters';
-
-const ModelsList = (): JSX.Element | null => {
-  const { filters, updateFilters } = useFilters({ page: '1' });
-  const navigate = useProtectedNavigate();
-  const apiErrors = useAPIErrorsToast();
-
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
   const activeWorkspaceId = useStore((state) => state.workspaceId);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   const handleOnRowClick = (row: Row<GetAllModelsResponse>) => {
     navigate(`/define/models/${row.original.id}`);
   };
@@ -38,29 +23,6 @@ const ModelsList = (): JSX.Element | null => {
   const { data, isLoading } = useQuery({
     queryKey: ['models', activeWorkspaceId, 'data'],
     queryFn: () => getAllModels({ type: AllDataModels }),
-=======
-  const onPageSelect = (page: number) => {
-    updateFilters({ page: page.toString() });
-  };
-
-  const [currentTab, setCurrentTab] = useState<string>('ai_ml');
-
-  const handleOnRowClick = (row: Row<GetAllModelsResponse>, modelQueryType: string) => {
-    navigate({
-      to: modelQueryType === 'ai_ml' ? `/define/models/ai/${row.original.id}` : row?.original.id,
-      location: 'model',
-      action: UserActions.Read,
-    });
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['models', activeWorkspaceId, currentTab, filters.page ?? '1'],
-    queryFn: () =>
-      getAllModels({
-        type: currentTab === 'ai_ml' ? 'ai_ml' : AllDataModels,
-        page: filters.page ? Number(filters.page) : 1,
-      }),
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
@@ -78,7 +40,6 @@ const ModelsList = (): JSX.Element | null => {
           isCtaVisible
         />
 
-<<<<<<< HEAD
         {isLoading ? (
           <Loader />
         ) : data?.data && data.data.length > 0 ? (
@@ -90,33 +51,6 @@ const ModelsList = (): JSX.Element | null => {
             <NoModels />
           </Box>
         )}
-=======
-          {isLoading ? (
-            <Loader />
-          ) : data?.data && data.data.length > 0 ? (
-            <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll'>
-              <DataTable
-                columns={currentTab === 'ai_ml' ? AIModelsListTable : ModelsListTable}
-                data={data.data}
-                onRowClick={(row) => handleOnRowClick(row, currentTab)}
-              />
-            </Box>
-          ) : (
-            <Box h='70vh'>
-              <NoModels isAiModel={currentTab === 'ai_ml'} />
-            </Box>
-          )}
-          {data?.data && data.data.length > 0 && data.links && (
-            <Box display='flex' justifyContent='center'>
-              <Pagination
-                links={data?.links}
-                currentPage={filters.page ? Number(filters.page) : 1}
-                handlePageChange={onPageSelect}
-              />
-            </Box>
-          )}
-        </Box>
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
       </ContentContainer>
     </Box>
   );

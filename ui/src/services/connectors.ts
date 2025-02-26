@@ -31,23 +31,13 @@ type ConnectorDefinationApiResponse = {
   };
 };
 
-export const getConnectorsDefintions = async (
-  connectorType: string,
-<<<<<<< HEAD
-): Promise<ConnectorsDefinationApiResponse> => {
-  return apiRequest('/connector_definitions?type=' + connectorType, null);
-};
-=======
-  connectorCategory = 'data',
-): Promise<Connector[]> =>
+export const getConnectorsDefintions = async (connectorType: string): Promise<Connector[]> =>
   multiwovenFetch<null, Connector[]>({
     method: 'get',
     url: buildUrlWithParams('/connector_definitions', {
       type: connectorType,
-      category: connectorCategory,
     }),
   });
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
 
 export const getConnectorDefinition = async (
   connectorType: string,
@@ -94,16 +84,9 @@ export const updateConnector = async (
 export const getUserConnectors = async (connectorType: string): Promise<ConnectorListResponse> => {
   return multiwovenFetch<null, ConnectorListResponse>({
     method: 'get',
-<<<<<<< HEAD
-    url: `/connectors?type=${connectorType}`,
-=======
     url: buildUrlWithParams('/connectors', {
       type: connectorType,
-      category: connectorCategory,
-      page: page,
-      per_page: '10',
     }),
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
     data: null,
   });
 };

@@ -13,35 +13,16 @@ import { useStore } from '@/stores';
 import DataTable from '@/components/DataTable';
 import { SyncsListColumns } from './SyncsListColumns';
 import { Row } from '@tanstack/react-table';
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 
 const SyncsList = (): JSX.Element => {
-  const activeWorkspaceId = useStore((state) => state.workspaceId);
   const navigate = useNavigate();
+
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   const { data, isLoading } = useQuery({
     queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId],
     queryFn: () => fetchSyncs(),
-=======
-import Pagination from '@/components/EnhancedPagination/Pagination';
-import useFilters from '@/hooks/useFilters';
-
-const SyncsList = (): JSX.Element => {
-  const { filters, updateFilters } = useFilters({ page: '1' });
-  const navigate = useProtectedNavigate();
-
-  const activeWorkspaceId = useStore((state) => state.workspaceId);
-  const activeRole = useRoleDataStore((state) => state.activeRole);
-
-  const onPageSelect = (page: number) => {
-    updateFilters({ page: page.toString() });
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId, filters.page],
-    queryFn: () => fetchSyncs(filters.page ? filters.page : '1'),
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
@@ -77,24 +58,8 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor='orange.400'
           isCtaVisible
         />
-<<<<<<< HEAD
         <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
           <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
-=======
-        <Box display='flex' flexDirection='column' gap='20px'>
-          <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
-            <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
-          </Box>
-          {data?.data && data.data.length > 0 && data.links && (
-            <Box display='flex' justifyContent='center'>
-              <Pagination
-                links={data?.links}
-                currentPage={filters.page ? Number(filters.page) : 1}
-                handlePageChange={onPageSelect}
-              />
-            </Box>
-          )}
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
         </Box>
       </ContentContainer>
     </Box>

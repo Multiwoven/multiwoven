@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useMemo, useState, useEffect } from 'react';
-=======
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMemo } from 'react';
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
 import { Box } from '@chakra-ui/react';
 import Loader from '@/components/Loader';
 import Pagination from '@/components/EnhancedPagination';
@@ -21,12 +16,7 @@ const SyncRuns = () => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
   const { filters, updateFilters } = useFilters({ page: '1' });
   const { syncId } = useParams();
-<<<<<<< HEAD
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-=======
-  const navigate = useProtectedNavigate();
->>>>>>> 9bfb0995 (refactor(CE): lists filtering and query params building (#860))
 
   const { data, isLoading } = useSyncRuns(
     syncId as string,
