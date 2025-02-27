@@ -66,6 +66,12 @@ class User < ApplicationRecord
     confirmed_at.present?
   end
 
+  protected
+
+  def confirmation_required?
+    User.email_verification_enabled?
+  end
+
   private
 
   def assign_unique_id
