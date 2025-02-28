@@ -24,8 +24,16 @@ class DataAppSession < ApplicationRecord
 
   def set_times
     self.start_time = Time.zone.now
+    return if chat_bot_session?
+
     session_length_minutes = (ENV["DATA_SESSION_LENGTH_MINUTES"] || 10).to_i # Default to 10 minutes if not set
     self.end_time = start_time + session_length_minutes.minutes
+  end
+
+  # Data app contains only one visual component in case of chat bot
+  def chat_bot_session?
+    visual_components = data_app.visual_components
+    visual_components.present? && visual_components.first&.chat_bot?
   end
 
   def track_usage
