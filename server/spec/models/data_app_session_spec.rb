@@ -9,6 +9,7 @@ RSpec.describe DataAppSession, type: :model do
   describe "associations" do
     it { should belong_to(:data_app) }
     it { should belong_to(:workspace) }
+    it { should have_many(:chat_messages).dependent(:destroy) }
   end
 
   describe "validations" do

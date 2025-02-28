@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
-
+ActiveRecord::Schema[7.1].define(version: 2025_02_26_100529) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -122,6 +121,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
     t.string "catalog_hash"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "data_app_session_id", null: false
+    t.bigint "visual_component_id", null: false
+    t.text "content", null: false
+    t.integer "role", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data_app_session_id", "created_at"], name: "index_chat_messages_on_data_app_session_id_and_created_at"
+    t.index ["data_app_session_id"], name: "index_chat_messages_on_data_app_session_id"
+    t.index ["visual_component_id"], name: "index_chat_messages_on_visual_component_id"
+    t.index ["workspace_id"], name: "index_chat_messages_on_workspace_id"
   end
 
   create_table "connectors", force: :cascade do |t|
@@ -507,6 +520,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
   add_foreign_key "alerts", "workspaces"
   add_foreign_key "billing_subscriptions", "billing_plans", column: "plan_id"
   add_foreign_key "billing_subscriptions", "organizations"
+  add_foreign_key "chat_messages", "data_app_sessions"
+  add_foreign_key "chat_messages", "visual_components"
+  add_foreign_key "chat_messages", "workspaces"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
