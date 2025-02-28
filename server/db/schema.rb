@@ -10,12 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_02_20_191433) do
-
-=======
 ActiveRecord::Schema[7.1].define(version: 2025_02_26_100529) do
->>>>>>> f10b7cd2 (chore(CE): add ChatMessage model (#885))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
