@@ -2169,6 +2169,9 @@ GEM
     ruby-limiter (2.3.0)
     ruby-oci8 (2.2.14)
     ruby-progressbar (1.13.0)
+    ruby-saml (1.17.0)
+      nokogiri (>= 1.13.10)
+      rexml
     rubyzip (2.4.1)
     securerandom (0.4.1)
     sequel (5.89.0)
@@ -2304,6 +2307,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   ruby-odbc!
+  ruby-saml
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter

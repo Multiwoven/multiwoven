@@ -40,6 +40,7 @@ gem "devise"
 gem "devise_invitable"
 gem "devise-jwt"
 gem "pundit"
+gem "ruby-saml"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
