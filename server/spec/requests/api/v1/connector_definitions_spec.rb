@@ -197,7 +197,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
            params: { type: "source", name: "Snowflake", connection_spec: { test: "test" } },
            headers: auth_headers(user, workspace_id)
 
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "returns failure status for a valid connection" do

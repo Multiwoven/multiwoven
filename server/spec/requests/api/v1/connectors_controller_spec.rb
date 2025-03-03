@@ -262,7 +262,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when creation fails" do
@@ -353,7 +353,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         put "/api/v1/connectors/#{connectors.second.id}", params: request_body.to_json, headers:
         { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when update fails" do
@@ -490,7 +490,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns fail viwer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response while delete wrong connector" do
