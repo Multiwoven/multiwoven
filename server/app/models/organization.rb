@@ -22,4 +22,5 @@ class Organization < ApplicationRecord
           inverse_of: :organization,
           dependent: :destroy
   has_many :roles, dependent: :destroy
+  has_many :sso_configurations, dependent: :destroy
 end
