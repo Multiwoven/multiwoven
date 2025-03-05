@@ -166,14 +166,14 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         workspace.workspace_users.first.update(role: member_role)
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "creates a new workspace and returns success for viewer_role" do
         workspace.workspace_users.first.update(role: viewer_role)
         post "/api/v1/workspaces", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when creation fails" do
@@ -223,7 +223,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "updates the workspace and returns success for member_role" do
@@ -231,7 +231,7 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         workspace.workspace_users.first.update(role: member_role)
         put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when wrong workspace_id" do
@@ -266,13 +266,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "returns success and delete workspace for viewer_role" do
         workspace.workspace_users.first.update(role: viewer_role)
         delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns success and delete workspace for member_role" do
         workspace.workspace_users.first.update(role: member_role)
         delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response while delete wrong workspace" do
