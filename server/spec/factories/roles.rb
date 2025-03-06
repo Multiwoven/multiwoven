@@ -13,8 +13,8 @@
 #
 FactoryBot.define do
   factory :role do
-    role_name { "CustomRole" }
-    role_type { 0 }
+    role_name { "System Role" }
+    role_type { 1 }
     policies { { "permissions" => {} } }
 
     trait :admin do
