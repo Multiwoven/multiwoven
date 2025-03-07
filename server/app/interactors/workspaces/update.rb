@@ -8,6 +8,7 @@ module Workspaces
 
     def call
       workspace = Workspace.find_by(id: context.id)
+      workspace.slug = "default" if workspace.slug.empty?
       if workspace&.update(context.workspace_params)
         context.workspace = workspace
       else
