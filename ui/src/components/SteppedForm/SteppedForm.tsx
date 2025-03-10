@@ -143,35 +143,27 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
           borderBottom='1px'
           borderColor='gray.400'
         >
-          <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            maxWidth={maxContentWidth}
-            width='100%'
-          >
-            <ContentContainer>
-              <Box display='flex' justifyContent='space-between' alignItems='center' width='100%'>
-                <Box>
-                  <Text size='xs' color='gray.600' letterSpacing={2.4} fontWeight={700}>
-                    STEP {currentStep + 1} OF {steps.length}
-                  </Text>
-                  <Text
-                    fontWeight={700}
-                    color='black.500'
-                    size='lg'
-                    letterSpacing={-0.18}
-                    marginTop='4px'
-                  >
-                    {stepInfo.name}
-                  </Text>
-                </Box>
-                <Box>
-                  <ExitModal />
-                </Box>
+          <ContentContainer>
+            <Box display='flex' justifyContent='space-between' alignItems='center' width='100%'>
+              <Box>
+                <Text size='xs' color='gray.600' letterSpacing={2.4} fontWeight={700}>
+                  STEP {currentStep + 1} OF {steps.length}
+                </Text>
+                <Text
+                  fontWeight={700}
+                  color='black.500'
+                  size='lg'
+                  letterSpacing={-0.18}
+                  marginTop='4px'
+                >
+                  {stepInfo.name}
+                </Text>
               </Box>
-            </ContentContainer>
-          </Box>
+              <Box>
+                <ExitModal />
+              </Box>
+            </Box>
+          </ContentContainer>
         </Box>
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (

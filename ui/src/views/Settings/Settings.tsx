@@ -30,6 +30,7 @@ const Settings = () => {
   const [activeSection, setActiveSection] = useState<SETTINGS>(SETTINGS.WORKSPACE);
 
   return (
+<<<<<<< HEAD
     <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
@@ -63,6 +64,39 @@ const Settings = () => {
         </Box>
       </ContentContainer>
     </Box>
+=======
+    <ContentContainer>
+      <TopBar name={'Settings'} ctaName='' ctaButtonVariant='solid' />
+      <Box display='flex' flexDirection='column' gap='20px'>
+        <TabsWrapper
+          index={activeTab}
+          onChange={(tabIndex) => handleTabOnChange(tabLocations[tabIndex])}
+        >
+          <TabList gap='8px'>
+            <RoleAccess location='workspace' type='item' action={UserActions.Read}>
+              <TabItem text='Workspace' />
+            </RoleAccess>
+            <RoleAccess location='user' type='item' action={UserActions.Read}>
+              <RoleAccess location='user' type='item' action={UserActions.Create}>
+                <TabItem text='Members' />
+              </RoleAccess>
+            </RoleAccess>
+            <RoleAccess location='user' type='item' action={UserActions.Read}>
+              <TabItem text='Profile' />
+            </RoleAccess>
+
+            <RoleAccess location='audit_logs' type='item' action={UserActions.Read}>
+              <TabItem text='Audit Logs' />
+            </RoleAccess>
+            <RoleAccess location='alerts' type='item' action={UserActions.Read}>
+              <TabItem text='Alerts' />
+            </RoleAccess>
+          </TabList>
+        </TabsWrapper>
+        {children}
+      </Box>
+    </ContentContainer>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
   );
 };
 

@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import SteppedForm from '@/components/SteppedForm';
 import { Stream } from '@/views/Activate/Syncs/types';
 
-import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import SelectModel from './SelectModel';
 import SelectDestination from './SelectDestination';
 import ConfigureSyncs from './ConfigureSyncs';
 import FinaliseSync from './FinaliseSync';
 import { FieldMap as FieldMapType } from '@/views/Activate/Syncs/types';
 import { SchemaMode } from '@/views/Activate/Syncs/types';
+import SteppedFormDrawer from '@/components/SteppedFormDrawer';
 
 const SyncForm = (): JSX.Element => {
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
@@ -18,7 +16,6 @@ const SyncForm = (): JSX.Element => {
   const [selectedSyncMode, setSelectedSyncMode] = useState('');
   const [cursorField, setCursorField] = useState('');
 
-  const navigate = useNavigate();
   const steps = [
     {
       formKey: 'selectModel',
@@ -64,18 +61,7 @@ const SyncForm = (): JSX.Element => {
     },
   ];
 
-  return (
-    <Drawer isOpen onClose={() => navigate(-1)} placement='right' size='100%'>
-      <DrawerOverlay />
-      <DrawerContent padding='0px'>
-        <DrawerBody padding='0px'>
-          <Box>
-            <SteppedForm steps={steps} />
-          </Box>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  );
+  return <SteppedFormDrawer steps={steps} />;
 };
 
 export default SyncForm;

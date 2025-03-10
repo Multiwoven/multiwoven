@@ -123,13 +123,14 @@ const ViewModel = (): JSX.Element => {
   const tableName = prefillValues?.query?.split('FROM')?.[1]?.trim();
 
   return (
-    <Box width='100%' display='flex' justifyContent='center'>
-      <ContentContainer>
-        <TopBar
-          name={prefillValues?.model_name}
-          breadcrumbSteps={EDIT_MODEL_FORM_STEPS}
-          extra={
+    <ContentContainer>
+      <TopBar
+        name={prefillValues?.model_name}
+        breadcrumbSteps={EDIT_MODEL_FORM_STEPS}
+        extra={
+          <Box display='flex' alignItems='center'>
             <Box display='flex' alignItems='center'>
+<<<<<<< HEAD
               <Box display='flex' alignItems='center'>
                 <EntityItem
                   name={data.data?.attributes.connector.connector_name || ''}
@@ -164,10 +165,13 @@ const ViewModel = (): JSX.Element => {
               border='1px'
               borderColor='gray.400'
             >
+=======
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
               <EntityItem
-                name={data.data?.attributes.connector.name || ''}
+                name={data.data?.attributes.connector.connector_name || ''}
                 icon={data.data?.attributes.connector.icon || ''}
               />
+<<<<<<< HEAD
               <Spacer />
               <Button
                 variant='shell'
@@ -231,17 +235,45 @@ const ViewModel = (): JSX.Element => {
                   }}
                 />
               )}
+=======
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
             </Box>
+            <Divider
+              orientation='vertical'
+              height='24px'
+              borderColor='gray.500'
+              opacity='1'
+              marginX='13px'
+            />
+            <Text size='sm' fontWeight='medium'>
+              Last updated :{' '}
+            </Text>
+            <Text size='sm' fontWeight='semibold'>
+              {moment(data.data?.attributes?.updated_at).format('DD/MM/YYYY')}
+            </Text>
+            <RoleAccess
+              location='model'
+              type='item'
+              action={UserActions.Update}
+              orAction={UserActions.Delete}
+            >
+              <ModelActions prefillValues={prefillValues} invalidateQuery={invalidateQuery} />
+            </RoleAccess>
           </Box>
-          <Box
+        }
+      />
+      <VStack gap='16px'>
+        <Box w='full' mx='auto' bgColor='gray.100' rounded='xl'>
+          <Flex
             w='full'
-            mx='auto'
-            bgColor='gray.100'
-            padding='24px'
-            rounded='xl'
+            roundedTop='xl'
+            alignItems='center'
+            bgColor='gray.300'
+            padding='12px 20px'
             border='1px'
             borderColor='gray.400'
           >
+<<<<<<< HEAD
             <Text mb={6} fontWeight='bold'>
               Configure your model
             </Text>
@@ -276,6 +308,138 @@ const ViewModel = (): JSX.Element => {
         </VStack>
       </ContentContainer>
     </Box>
+=======
+            <EntityItem
+              name={data.data?.attributes.connector.name || ''}
+              icon={data.data?.attributes.connector.icon || ''}
+            />
+            <Spacer />
+            {prefillValues?.query_type !== QueryType.TableSelector && (
+              <RoleAccess location='model' type='item' action={UserActions.Update}>
+                <Button
+                  variant='shell'
+                  onClick={() => navigate('edit')}
+                  minWidth='0'
+                  width='auto'
+                  height='32px'
+                  fontSize='12px'
+                  paddingX={3}
+                >
+                  Edit
+                </Button>
+              </RoleAccess>
+            )}
+          </Flex>
+          <Box borderX='1px' borderBottom='1px' roundedBottom='lg' py={2} borderColor='gray.400'>
+            {prefillValues?.query_type === QueryType.TableSelector ? (
+              <Box padding='12px 20px' display='flex' gap='8px'>
+                <Text color='black.200' size='sm' fontWeight='semibold'>
+                  Fetching all rows from the table
+                </Text>
+                <Tag
+                  colorScheme='teal'
+                  size='xs'
+                  bgColor='gray.200'
+                  padding='2px 8px'
+                  fontWeight={600}
+                  borderColor='gray.500'
+                  borderWidth='1px'
+                  borderStyle='solid'
+                  height='22px'
+                  borderRadius='4px'
+                >
+                  <Icon as={FiLayout} color='black.200' height='12px' width='12px' />
+                  <Text size='xs' fontWeight='semibold' color='black.300' marginLeft='4px'>
+                    {tableName}
+                  </Text>
+                </Tag>
+              </Box>
+            ) : (
+              <Editor
+                width='100%'
+                height='280px'
+                language='mysql'
+                defaultLanguage='mysql'
+                defaultValue='Enter your query...'
+                value={prefillValues.query}
+                saveViewState={true}
+                theme='light'
+                options={{
+                  minimap: {
+                    enabled: false,
+                  },
+                  formatOnType: true,
+                  formatOnPaste: true,
+                  autoIndent: 'full',
+                  wordBasedSuggestions: 'currentDocument',
+                  scrollBeyondLastLine: false,
+                  quickSuggestions: true,
+                  tabCompletion: 'on',
+                  contextmenu: true,
+                  readOnly: true,
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+        <Box
+          w='full'
+          mx='auto'
+          bgColor='gray.100'
+          padding='24px'
+          rounded='xl'
+          border='1px'
+          borderColor='gray.400'
+        >
+          <Text mb={6} fontWeight='bold'>
+            Configure your model
+          </Text>
+          <Formik
+            initialValues={{ primaryKey: '' }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => handleModelUpdate(values.primaryKey)}
+          >
+            <Form>
+              <VStack>
+                <FormControl>
+                  <FormLabel htmlFor='primaryKey' fontSize='sm' fontWeight='bold'>
+                    Primary Key
+                  </FormLabel>
+                  <Field
+                    as={Select}
+                    placeholder={prefillValues.primary_key}
+                    name='primaryKey'
+                    bgColor='gray.100'
+                    borderColor='gray.600'
+                    w='lg'
+                    isDisabled
+                  />
+                  <Text color='red.500' fontSize='sm'>
+                    <ErrorMessage name='primaryKey' />
+                  </Text>
+                </FormControl>
+              </VStack>
+            </Form>
+          </Formik>
+        </Box>
+        {prefillValues.query_type === QUERYING_METHODS.Dynamic && (
+          <>
+            <HarvestDynamicModels
+              isEdit
+              key={dynamicVariablesHarvestedMap.length}
+              handleModelSave={(updatedOutputSchema, updatedDynamicVariablesHarvestedMap) =>
+                handleModelUpdate(
+                  prefillValues.primary_key,
+                  updatedOutputSchema,
+                  updatedDynamicVariablesHarvestedMap,
+                )
+              }
+            />
+          </>
+        )}
+      </VStack>
+    </ContentContainer>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
   );
 };
 
