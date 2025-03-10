@@ -218,6 +218,20 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west2")
       end
 
+      it "updates the workspace and returns success if slug is missing" do
+        workspace.slug = ""
+        request_body[:workspace][:name] = "test"
+        put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(workspace.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :name)).to eq("test")
+        expect(response_hash.dig(:data, :attributes, :description)).to eq("workspace description changes")
+        expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west2")
+      end
+
       it "updates the workspace and returns success for viewer_role" do
         request_body[:workspace][:name] = "test"
         workspace.workspace_users.first.update(role: viewer_role)
