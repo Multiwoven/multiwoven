@@ -53,6 +53,9 @@ class AddRoles < ActiveRecord::Migration[7.1]
         }
       ]
     )
+    Role.where(role_name: %w[Admin Viewer Member]).find_each do |role|
+      role.system! if role.respond_to?(:system!)
+    end
   end
 
   def down
