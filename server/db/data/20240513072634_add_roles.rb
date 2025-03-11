@@ -2,60 +2,65 @@
 
 class AddRoles < ActiveRecord::Migration[7.1]
   def up # rubocop:disable Metrics/MethodLength
-    Role.create!(
-      role_name: "Admin",
-      role_desc: "Administrator role with full access",
-      role_type: "system",
-      policies: [
-        {
-          action: "allow",
-          permissions: "*",
-          resources: "*"
-        }
-      ]
-    )
+    role_type_present = Role.column_names.include?("role_type")
 
-    Role.create!(
-      role_name: "Member",
-      role_desc: "Member role with basic access",
-      role_type: "system",
-      policies: [
-        {
-          action: "allow",
-          permissions: "*",
-          resources: %w[
-            connector_definition
-            connector
-            model
-            report
-            sync_record
-            sync_run
-            sync
-            user
-          ]
-        }
-      ]
-    )
-    Role.create!(
-      role_name: "Viewer",
-      role_desc: "Viewer role with read-only access",
-      role_type: "system",
-      policies: [
-        {
-          action: "allow",
-          permissions: ["read"],
-          resources: %w[
-            connector
-            model
-            report
-            sync_record
-            sync_run
-            sync
-            user
-          ]
-        }
-      ]
-    )
+    roles = [
+      {
+        role_name: "Admin",
+        role_desc: "Administrator role with full access",
+        policies: [
+          {
+            action: "allow",
+            permissions: "*",
+            resources: "*"
+          }
+        ]
+      },
+      {
+        role_name: "Member",
+        role_desc: "Member role with basic access",
+        policies: [
+          {
+            action: "allow",
+            permissions: "*",
+            resources: %w[
+              connector_definition
+              connector
+              model
+              report
+              sync_record
+              sync_run
+              sync
+              user
+            ]
+          }
+        ]
+      },
+      {
+        role_name: "Viewer",
+        role_desc: "Viewer role with read-only access",
+        policies: [
+          {
+            action: "allow",
+            permissions: ["read"],
+            resources: %w[
+              connector
+              model
+              report
+              sync_record
+              sync_run
+              sync
+              user
+            ]
+          }
+        ]
+      }
+    ]
+
+    roles.each do |role|
+      role[:role_type] = "system" if role_type_present
+      Role.create!(role)
+    end
   end
 
   def down
