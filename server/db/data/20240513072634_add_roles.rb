@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AddRoles < ActiveRecord::Migration[7.1]
-  def up
+  def up # rubocop:disable Metrics/MethodLength
     Role.create!(
       role_name: "Admin",
       role_desc: "Administrator role with full access",
