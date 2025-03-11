@@ -34,13 +34,10 @@ module Api
         result = Create.call(user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-<<<<<<< HEAD
-=======
           @audit_resource = @workspace.name
           @resource_id = @workspace.id
           @payload = workspace_params
           authorize @workspace
->>>>>>> cd1bbac5 (chore(CE): Add Audit to Workspace Controller (#913))
           render json: result.workspace, status: :created
         else
           render_error(
@@ -56,12 +53,9 @@ module Api
         result = Update.call(id: params[:id], user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
-<<<<<<< HEAD
-=======
           @audit_resource = @workspace.name
           @payload = workspace_params
           authorize @workspace
->>>>>>> cd1bbac5 (chore(CE): Add Audit to Workspace Controller (#913))
           render json: @workspace, status: :ok
         else
           render_error(
