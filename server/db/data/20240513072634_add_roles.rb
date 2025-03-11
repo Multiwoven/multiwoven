@@ -5,6 +5,7 @@ class AddRoles < ActiveRecord::Migration[7.1]
     Role.create!(
       role_name: "Admin",
       role_desc: "Administrator role with full access",
+      role_type: "system",
       policies: [
         {
           action: "allow",
@@ -17,6 +18,7 @@ class AddRoles < ActiveRecord::Migration[7.1]
     Role.create!(
       role_name: "Member",
       role_desc: "Member role with basic access",
+      role_type: "system",
       policies: [
         {
           action: "allow",
@@ -37,6 +39,7 @@ class AddRoles < ActiveRecord::Migration[7.1]
     Role.create!(
       role_name: "Viewer",
       role_desc: "Viewer role with read-only access",
+      role_type: "system",
       policies: [
         {
           action: "allow",
@@ -53,9 +56,6 @@ class AddRoles < ActiveRecord::Migration[7.1]
         }
       ]
     )
-    Role.where(role_name: %w[Admin Viewer Member]).find_each do |role|
-      role.system! if role.respond_to?(:system!)
-    end
   end
 
   def down
