@@ -160,6 +160,18 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
           .to eq(request_body.dig(:workspace, :organization_id))
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("create")
+        expect(audit_log.resource_type).to eq("Workspace")
+        expect(audit_log.resource_id).to eq(response_hash.dig(:data, :id).to_i)
+        expect(audit_log.resource).to eq(response_hash.dig(:data, :attributes, :name))
+        expect(audit_log.workspace_id).to eq(workspace_id)
+        expect(audit_log.resource_link).to eq("/reports/#{response_hash.dig(:data, :id)}")
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "creates a new workspace and returns success for member_role" do
@@ -216,6 +228,44 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :name)).to eq("test")
         expect(response_hash.dig(:data, :attributes, :description)).to eq("workspace description changes")
         expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west2")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Workspace")
+        expect(audit_log.resource_id).to eq(response_hash.dig(:data, :id).to_i)
+        expect(audit_log.resource).to eq(response_hash.dig(:data, :attributes, :name))
+        expect(audit_log.workspace_id).to eq(workspace_id)
+        expect(audit_log.resource_link).to eq("/reports/#{response_hash.dig(:data, :id)}")
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
+      end
+
+      it "updates the workspace and returns success if slug is missing" do
+        workspace.slug = ""
+        request_body[:workspace][:name] = "test"
+        put "/api/v1/workspaces/#{workspace.id}", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :id)).to eq(workspace.id.to_s)
+        expect(response_hash.dig(:data, :attributes, :name)).to eq("test")
+        expect(response_hash.dig(:data, :attributes, :description)).to eq("workspace description changes")
+        expect(response_hash.dig(:data, :attributes, :region)).to eq("us-west2")
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("update")
+        expect(audit_log.resource_type).to eq("Workspace")
+        expect(audit_log.resource_id).to eq(response_hash.dig(:data, :id).to_i)
+        expect(audit_log.resource).to eq(response_hash.dig(:data, :attributes, :name))
+        expect(audit_log.workspace_id).to eq(workspace_id)
+        expect(audit_log.resource_link).to eq("/reports/#{response_hash.dig(:data, :id)}")
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "updates the workspace and returns success for viewer_role" do
@@ -261,6 +311,18 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
       it "returns success and delete workspace" do
         delete "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:no_content)
+
+        audit_log = AuditLog.last
+        expect(audit_log).not_to be_nil
+        expect(audit_log.user_id).to eq(user.id)
+        expect(audit_log.action).to eq("delete")
+        expect(audit_log.resource_type).to eq("Workspace")
+        expect(audit_log.resource_id).to eq(workspace_id)
+        expect(audit_log.resource).to eq(workspace.name)
+        expect(audit_log.workspace_id).to eq(nil)
+        expect(audit_log.resource_link).to eq(nil)
+        expect(audit_log.created_at).not_to be_nil
+        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success and delete workspace for viewer_role" do

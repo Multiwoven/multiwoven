@@ -35,6 +35,7 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:custom_visual_component_files).dependent(:nullify) }
     it { should have_many(:message_feedbacks).dependent(:nullify) }
     it { should have_many(:chat_messages).dependent(:nullify) }
+    it { should have_many(:sso_configurations).through(:organization) }
     it { should belong_to(:organization) }
   end
 

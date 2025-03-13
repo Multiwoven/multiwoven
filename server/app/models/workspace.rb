@@ -29,6 +29,7 @@ class Workspace < ApplicationRecord
   has_many :chat_messages, dependent: :nullify
 
   belongs_to :organization
+  has_many :sso_configurations, through: :organization
 
   STATUS_ACTIVE = "active"
   STATUS_INACTIVE = "inactive"
