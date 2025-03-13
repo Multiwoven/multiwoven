@@ -39,6 +39,7 @@ const SyncsList = (): JSX.Element => {
     return <NoActivations activationType={ActivationType.Sync} />;
 
   return (
+<<<<<<< HEAD
     <Box
       width='100%'
       display='flex'
@@ -57,11 +58,34 @@ const SyncsList = (): JSX.Element => {
           ctaHoverBgColor='orange.400'
           isCtaVisible
         />
+=======
+    <ContentContainer>
+      <TopBar
+        name='Syncs'
+        ctaName='Add Sync'
+        ctaIcon={<FiPlus color='gray.100' />}
+        onCtaClicked={() => navigate({ to: 'new', location: 'sync', action: UserActions.Create })}
+        ctaBgColor='orange.500'
+        ctaColor='gray.900'
+        ctaHoverBgColor='orange.400'
+        isCtaVisible={hasPermission}
+      />
+      <Box display='flex' flexDirection='column' gap='20px'>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
         <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
           <DataTable columns={SyncsListColumns} data={syncList} onRowClick={handleOnSyncClick} />
         </Box>
-      </ContentContainer>
-    </Box>
+        {data?.data && data.data.length > 0 && data.links && (
+          <Box display='flex' justifyContent='center'>
+            <Pagination
+              links={data?.links}
+              currentPage={filters.page ? Number(filters.page) : 1}
+              handlePageChange={onPageSelect}
+            />
+          </Box>
+        )}
+      </Box>
+    </ContentContainer>
   );
 };
 

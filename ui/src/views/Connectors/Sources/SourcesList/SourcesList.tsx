@@ -43,6 +43,7 @@ const SourcesList = (): JSX.Element | null => {
   }
 
   return (
+<<<<<<< HEAD
     <Box width='100%' display='flex' flexDirection='column' alignItems='center'>
       <ContentContainer>
         <TopBar
@@ -62,6 +63,63 @@ const SourcesList = (): JSX.Element | null => {
         </Box>
       </ContentContainer>
     </Box>
+=======
+    <ContentContainer>
+      <TopBar
+        name='Sources'
+        ctaName='Add Source'
+        ctaIcon={<FiPlus color='gray.100' />}
+        onCtaClicked={() =>
+          navigate({
+            to: `new/${activeSourceType}`,
+            location: 'connector',
+            action: UserActions.Create,
+          })
+        }
+        ctaButtonVariant='solid'
+        isCtaVisible={hasPermission}
+      />
+      <Box display='flex' flexDirection='column' gap='20px'>
+        <TabsWrapper>
+          <TabList gap='8px'>
+            <TabItem text='AI/ML Sources' action={() => setActiveSourceType(SourceTypes.AI_ML)} />
+            <TabItem
+              text={SourceTypes.DATA_SOURCE}
+              action={() => setActiveSourceType(SourceTypes.DATA_SOURCE)}
+            />
+          </TabList>
+        </TabsWrapper>
+        {isLoading || activeRole === null ? (
+          <Loader />
+        ) : !data || !data.data || data?.data?.length === 0 ? (
+          <NoConnectors connectorType='source' sourceType={activeSourceType} />
+        ) : (
+          <Box border='1px' borderColor='gray.400' borderRadius={'lg'} overflowX='scroll'>
+            <DataTable
+              data={data?.data}
+              columns={ConnectorsListColumns}
+              onRowClick={(row) =>
+                navigate({
+                  to: `/setup/sources/${activeSourceType}/${row?.original?.id}`,
+                  location: 'connector',
+                  action: UserActions.Update,
+                })
+              }
+            />
+          </Box>
+        )}
+        {data?.data && data.data.length > 0 && data.links && (
+          <Box display='flex' justifyContent='center'>
+            <Pagination
+              links={data?.links}
+              currentPage={filters.page ? Number(filters.page) : 1}
+              handlePageChange={onPageSelect}
+            />
+          </Box>
+        )}
+      </Box>
+    </ContentContainer>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
   );
 };
 

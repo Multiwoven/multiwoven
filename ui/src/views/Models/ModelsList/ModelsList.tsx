@@ -29,6 +29,7 @@ const ModelsList = (): JSX.Element | null => {
   });
 
   return (
+<<<<<<< HEAD
     <Box width='100%' display='flex' flexDirection='column' alignItems='center' height='100%'>
       <ContentContainer>
         <TopBar
@@ -39,10 +40,35 @@ const ModelsList = (): JSX.Element | null => {
           onCtaClicked={() => navigate('new')}
           isCtaVisible
         />
+=======
+    <ContentContainer>
+      <TopBar
+        name={'Models'}
+        ctaName='Add Model'
+        ctaIcon={<FiPlus color='gray.100' />}
+        ctaButtonVariant='solid'
+        onCtaClicked={() =>
+          navigate({
+            to: currentTab === 'data' ? 'new' : '/define/models/ai/new',
+            location: 'model',
+            action: UserActions.Create,
+          })
+        }
+        isCtaVisible={hasPermission}
+      />
+      <Box display='flex' flexDirection='column' gap='20px'>
+        <TabsWrapper>
+          <TabList gap='8px'>
+            <TabItem text='AI/ML Models' action={() => setCurrentTab('ai_ml')} />
+            <TabItem text='Data Models' action={() => setCurrentTab('data')} />
+          </TabList>
+        </TabsWrapper>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
 
         {isLoading ? (
           <Loader />
         ) : data?.data && data.data.length > 0 ? (
+<<<<<<< HEAD
           <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll' mt={'20px'}>
             <DataTable columns={ModelsListTable} data={data.data} onRowClick={handleOnRowClick} />
           </Box>
@@ -53,6 +79,31 @@ const ModelsList = (): JSX.Element | null => {
         )}
       </ContentContainer>
     </Box>
+=======
+          <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll'>
+            <DataTable
+              columns={currentTab === 'ai_ml' ? AIModelsListTable : ModelsListTable}
+              data={data.data}
+              onRowClick={(row) => handleOnRowClick(row, currentTab)}
+            />
+          </Box>
+        ) : (
+          <Box h='70vh'>
+            <NoModels isAiModel={currentTab === 'ai_ml'} />
+          </Box>
+        )}
+        {data?.data && data.data.length > 0 && data.links && (
+          <Box display='flex' justifyContent='center'>
+            <Pagination
+              links={data?.links}
+              currentPage={filters.page ? Number(filters.page) : 1}
+              handlePageChange={onPageSelect}
+            />
+          </Box>
+        )}
+      </Box>
+    </ContentContainer>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
   );
 };
 

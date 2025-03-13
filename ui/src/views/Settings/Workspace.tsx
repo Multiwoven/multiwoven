@@ -92,6 +92,8 @@ const Workspace = () => {
         display='flex'
         flexDirection='column'
         gap='24px'
+        border={'1px solid'}
+        borderColor={'gray.400'}
       >
         <Text size='md' fontWeight='semibold'>
           Edit your workspace details

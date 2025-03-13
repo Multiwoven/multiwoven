@@ -70,6 +70,7 @@ const MainLayout = (): JSX.Element => {
   }
 
   return (
+<<<<<<< HEAD
     <Box display='flex' width={'100%'} overflow='hidden' maxHeight='100vh'>
       <Sidebar />
       <Box
@@ -85,6 +86,26 @@ const MainLayout = (): JSX.Element => {
         backgroundColor='gray.200'
       >
         <Outlet />
+=======
+    <Prefetcher>
+      <Box display='flex' width={'100%'} overflow='hidden' maxHeight='100vh'>
+        <Sidebar />
+        <Box
+          pl={0}
+          width={'100%'}
+          maxW={'100%'}
+          display='flex'
+          flex={1}
+          flexDir='column'
+          alignItems='center'
+          className='flex'
+          overflow='scroll'
+          id={contentContainerId}
+          backgroundColor='gray.200'
+        >
+          <Outlet />
+        </Box>
+>>>>>>> 6e1cfad3 (fix(CE): Content centered at max width)
       </Box>
     </Box>
   );
