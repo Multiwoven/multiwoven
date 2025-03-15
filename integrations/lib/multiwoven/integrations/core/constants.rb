@@ -54,6 +54,7 @@ module Multiwoven
 
       GOOGLE_VERTEX_ENDPOINT_SERVICE_URL = "%<region>s-aiplatform.googleapis.com"
       GOOGLE_VERTEX_MODEL_NAME = "projects/%<project_id>s/locations/%<region>s/endpoints/%<endpoint_id>s"
+      SENTRY_API = "https://%<public_key>:<secret_key>@%<host>/<project_id>"
 
       # HTTP
       HTTP_GET = "GET"
