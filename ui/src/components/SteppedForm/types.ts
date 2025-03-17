@@ -17,6 +17,7 @@ export type Step = {
   isRequireContinueCta: boolean;
   onSubmit?: (args: unknown) => void;
   beforeNextStep?: () => boolean;
+  exitWithoutWarning?: boolean;
 };
 
 export type SteppedForm = {
