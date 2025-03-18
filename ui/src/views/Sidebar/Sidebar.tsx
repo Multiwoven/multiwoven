@@ -11,7 +11,7 @@ import {
   FiUsers,
   FiHome,
 } from 'react-icons/fi';
-import { NavButton } from './navButton';
+import { NavButton } from './NavButton';
 import Profile from './Profile';
 import Workspace from './Workspace/Workspace';
 
@@ -108,7 +108,7 @@ const Sidebar = (): JSX.Element => {
       minWidth='240px'
     >
       <Flex flex='1' bg='bg.surface' maxW={{ base: 'full', sm: 'xs' }} paddingX={4} paddingY={6}>
-        <Stack justify='space-between' spacing='1' width='full'>
+        <Stack justify='space-between' width='full'>
           <Stack spacing='6' shouldWrapChildren>
             <Flex justifyContent='center'>
               <img width={160} src={IconImage} alt='IconImage' />
@@ -120,9 +120,9 @@ const Sidebar = (): JSX.Element => {
           <Stack
             paddingX='6px'
             marginTop='20px'
-            spacing='6'
             shouldWrapChildren
             overflow='hidden auto'
+            height='100%'
             css={{
               '&::-webkit-scrollbar': {
                 width: '2px',
@@ -131,10 +131,12 @@ const Sidebar = (): JSX.Element => {
                 backgroundColor: 'var(--chakra-colors-gray-400)',
               },
             }}
+            justify='space-between'
           >
-            <Workspace />
-            {menus.map(renderMenuSection)}
-            <Box />
+            <Stack spacing='16px'>
+              <Workspace />
+              {menus.map(renderMenuSection)}
+            </Stack>
             <Stack spacing='0'>
               <NavLink to='/settings'>
                 <NavButton label='Settings' icon={FiSettings} />
