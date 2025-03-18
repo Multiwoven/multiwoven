@@ -11,6 +11,7 @@ import {
   FiUsers,
   FiHome,
 } from 'react-icons/fi';
+
 import { NavButton } from './NavButton';
 import Profile from './Profile';
 import Workspace from './Workspace/Workspace';
