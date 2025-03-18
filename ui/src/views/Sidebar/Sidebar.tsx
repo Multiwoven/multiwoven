@@ -12,9 +12,9 @@ import {
   FiHome,
 } from 'react-icons/fi';
 
-import { NavButton } from './NavButton';
 import Profile from './Profile';
 import Workspace from './Workspace/Workspace';
+import NavButton from './NavButton';
 
 type MenuItem = {
   title: string;
