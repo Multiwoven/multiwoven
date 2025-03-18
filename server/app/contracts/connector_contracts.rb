@@ -37,7 +37,7 @@ module ConnectorContracts
 
     rule(connector: %i[connector_type connector_name]) do
       if value.first.downcase == Multiwoven::Integrations::Protocol::ConnectorType["source"]
-        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(value.second)
+        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(value.second) || value.second == "GoogleCloudStorage"
           key.failure("invalid connector source name")
         end
       elsif value.first.downcase == Multiwoven::Integrations::Protocol::ConnectorType["destination"]
@@ -67,7 +67,7 @@ module ConnectorContracts
 
     rule(connector: %i[connector_type connector_name]) do
       if key? && value.first.downcase == Multiwoven::Integrations::Protocol::ConnectorType["source"]
-        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(value.second)
+        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(value.second) || value.second == "GoogleCloudStorage"
           key.failure("invalid connector source name")
         end
       elsif key? && value.first.downcase == Multiwoven::Integrations::Protocol::ConnectorType["destination"]

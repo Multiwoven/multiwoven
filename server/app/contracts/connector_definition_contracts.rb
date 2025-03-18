@@ -42,7 +42,7 @@ module ConnectorDefinitionContracts
 
     rule(:name, :type) do
       if values[:type] == Multiwoven::Integrations::Protocol::ConnectorType["source"]
-        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(values[:name])
+        unless Multiwoven::Integrations::ENABLED_SOURCES.include?(values[:name]) || values[:name] == "GoogleCloudStorage"
           key.failure("invalid connector source name")
         end
       elsif values[:type] == Multiwoven::Integrations::Protocol::ConnectorType["destination"]
