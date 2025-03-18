@@ -170,10 +170,6 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
                   <ExitModal />
                 </Box>
               </Box>
-<<<<<<< HEAD
-            </ContentContainer>
-          </Box>
-=======
               {stepInfo.exitWithoutWarning ? (
                 <Button
                   variant='shell'
@@ -189,9 +185,8 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
                   <ExitModal />
                 </Box>
               )}
-            </Box>
-          </ContentContainer>
->>>>>>> 55b8fd3e (refactor(CE): exit stepped form without warning (#931))
+            </ContentContainer>
+          </Box>
         </Box>
         {stepInfo.component}
         {stepInfo.isRequireContinueCta ? (
