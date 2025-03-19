@@ -72,6 +72,7 @@ module Multiwoven
       GOOGLE_SPREADSHEET_ID_REGEX = %r{/d/([-\w]{20,})/}.freeze
 
       OPEN_AI_URL = "https://api.openai.com/v1/chat/completions"
+      ANTROPIC_URL = "https://api.anthropic.com/v1/messages"
     end
   end
 end
