@@ -54,6 +54,7 @@ module Multiwoven
 
       GOOGLE_VERTEX_ENDPOINT_SERVICE_URL = "%<region>s-aiplatform.googleapis.com"
       GOOGLE_VERTEX_MODEL_NAME = "projects/%<project_id>s/locations/%<region>s/endpoints/%<endpoint_id>s"
+      SENTRY_API = "https://%<public_key>:<secret_key>@%<host>/<project_id>"
 
       WATSONX_HEALTH_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v4/deployments?version=%<version>s"
       WATSONX_PREDICTION_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v4/deployments/%<deployment_id>s/predictions?version=%<version>s"
