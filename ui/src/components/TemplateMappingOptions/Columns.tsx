@@ -9,28 +9,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FiSearch } from 'react-icons/fi';
-import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
 import { useState } from 'react';
 import NoConnectorsFound from '@/assets/images/empty-state-illustration.svg';
-import { OPTION_TYPE } from './TemplateOptions';
-
-type ColumnsProps = {
-  columnOptions: string[];
-  fieldType: 'model' | 'destination';
-  catalogMapping?: SyncsConfigurationForTemplateMapping;
-  showFilter?: boolean;
-  showDescription?: boolean;
-  onSelect?: (args: string) => void;
-  height?: string;
-  templateColumnType?: OPTION_TYPE;
-};
+import { ColumnsProps } from './types';
 
 const Columns = ({
   columnOptions,
-  catalogMapping,
   onSelect,
   fieldType,
-  templateColumnType,
   showFilter = false,
   showDescription = false,
   height = fieldType === 'model' ? '170px' : '225px',
@@ -39,7 +25,7 @@ const Columns = ({
 
   // Filtered column options based on search term
   const filteredColumns = columnOptions.filter((column) =>
-    column.toLowerCase().includes(searchTerm.toLowerCase()),
+    column.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -71,16 +57,12 @@ const Columns = ({
             }}
             cursor='pointer'
             flexDirection='column'
-            onClick={() => onSelect?.(column)}
+            onClick={() => onSelect?.(column.value)}
           >
-            <Text size='sm'>{column}</Text>
+            <Text size='sm'>{column.name}</Text>
             {showDescription && (
               <Text size='xs' color='gray.600' fontWeight={400}>
-                {
-                  catalogMapping?.data?.configurations?.catalog_mapping_types?.template?.[
-                    templateColumnType === OPTION_TYPE.FILTER ? 'filter' : 'variable'
-                  ]?.[column].description
-                }
+                {column.description}
               </Text>
             )}
           </Box>
