@@ -15,6 +15,8 @@
 #  connector_name          :string
 #
 class Connector < ApplicationRecord
+  include Utils::JsonHelpers
+
   validates :workspace_id, presence: true
   validates :connector_type, presence: true
   validates :configuration, presence: true, json: { schema: -> { configuration_schema } }
@@ -77,7 +79,7 @@ class Connector < ApplicationRecord
 
   # TODO: move the method to integration gem
   def execute_query(query, limit: 50)
-    connection_config = configuration.with_indifferent_access
+    connection_config = resolved_configuration.with_indifferent_access
     client = connector_client.new
     db = client.send(:create_connection, connection_config)
     query = query.chomp(";")
@@ -101,7 +103,7 @@ class Connector < ApplicationRecord
     Multiwoven::Integrations::Protocol::Connector.new(
       name: connector_name,
       type: connector_type,
-      connection_specification: configuration,
+      connection_specification: resolved_configuration,
       query_type: connector_query_type
     )
   end
@@ -123,7 +125,7 @@ class Connector < ApplicationRecord
   end
 
   def pull_catalog
-    connector_client.new.discover(configuration).catalog.to_h.with_indifferent_access
+    connector_client.new.discover(resolved_configuration).catalog.to_h.with_indifferent_access
   end
 
   def set_category
@@ -141,5 +143,9 @@ class Connector < ApplicationRecord
 
   def ai_model?
     connector_category == "AI Model"
+  end
+
+  def resolved_configuration
+    resolve_values_from_env(configuration)
   end
 end
