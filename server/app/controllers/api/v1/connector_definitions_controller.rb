@@ -27,6 +27,7 @@ module Api
         connection_spec = params[:connection_spec]
         authorize connection_spec, policy_class: ConnectorDefinitionPolicy
         connection_spec = connection_spec.to_unsafe_h if connection_spec.respond_to?(:to_unsafe_h)
+        connection_spec = resolve_values_from_env(connection_spec)
         connection_status = @connector_client
                             .check_connection(
                               connection_spec
