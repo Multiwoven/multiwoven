@@ -151,6 +151,22 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
       expect(response_hash[:connection_status][:status]).to eql("succeeded")
     end
 
+    it "returns success status for a valid connection with env " do
+      ENV["test"] = "test_credentails"
+      # rubocop:disable Layout/LineLength
+      allow(mock_connector_instance).to receive(:check_connection).with({ test: "test_credentails" }).and_return(connection_status.new(status: "succeeded").to_multiwoven_message)
+      # rubocop:enable Layout/LineLength
+
+      post check_connection_api_v1_connector_definitions_path,
+           params: { type: "source", name: "Snowflake", connection_spec: { test: "ENV[\"test\"]" } },
+           headers: auth_headers(user, workspace_id)
+
+      expect(response).to have_http_status(:ok)
+
+      response_hash = JSON.parse(response.body).with_indifferent_access
+      expect(response_hash[:connection_status][:status]).to eql("succeeded")
+    end
+
     it "returns success status for a valid connection fro member role" do
       workspace.workspace_users.first.update(role: member_role)
       allow(mock_connector_instance).to receive(:check_connection)
