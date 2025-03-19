@@ -36,10 +36,10 @@ module Authentication
           user.lock_access!
           context.fail!(error: "Account is locked due to multiple login attempts. Please retry after sometime")
         else
-          context.fail!(error: "Invalid email or password")
+          context.fail!(error: "Invalid login credentials, please try again")
         end
       else
-        context.fail!(error: "Invalid email or password")
+        context.fail!(error: "Invalid login credentials, please try again")
       end
     end
 
