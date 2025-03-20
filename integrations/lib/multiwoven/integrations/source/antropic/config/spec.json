@@ -1,0 +1,56 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/source/antropic-model",
+  "stream_type": "user_defined",
+  "connector_query_type": "ai_ml",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Antropic Endpoint",
+    "type": "object",
+    "required": ["api_key", "request_format", "response_format"],
+    "properties": {
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 0
+      },
+      "is_stream": {
+        "type": "boolean",
+        "title": "Enable streaming",
+        "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
+        "default": false,
+        "order": 1
+      },
+      "config": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "string",
+            "default": "30",
+            "title": "HTTP Timeout",
+            "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+            "order": 0
+          }
+        },
+        "order": 2
+      },
+      "request_format": {
+        "title": "Request Format",
+        "description": "Sample Request Format",
+        "type": "string",
+        "default": "{\"model\":\"claude-3-7-sonnet-20250219\",\"max_tokens\": 256, \"messages\":[{\"role\": \"user\", \"content\": \"Hi.\"}], \"stream\": false}",
+        "x-request-format": true,
+        "order": 3
+      },
+      "response_format": {
+        "title": "Response Format",
+        "description": "Sample Response Format",
+        "type": "string",
+        "default": "{\"id\":\"msg_0123ABC\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-3-7-sonnet-20250219\",\"content\":[{\"type\":\"text\",\"text\":\"Hello there! How can I assist you today? Whether you have a question, need some information, or just want to chat, I'm here to help. What's on your mind?\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":41}}",
+        "x-response-format": true,
+        "order": 4
+      }
+    }
+  }
+}
