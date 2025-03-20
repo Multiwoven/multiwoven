@@ -76,7 +76,7 @@ require_relative "integrations/source/http_model/client"
 require_relative "integrations/source/open_ai/client"
 require_relative "integrations/source/sftp/client"
 require_relative "integrations/source/watsonx_ai/client"
-require_relative "integrations/source/antropic/client"
+require_relative "integrations/source/anthropic/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
