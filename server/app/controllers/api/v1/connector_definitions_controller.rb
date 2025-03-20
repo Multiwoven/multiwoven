@@ -27,17 +27,12 @@ module Api
         connection_spec = params[:connection_spec]
         authorize connection_spec, policy_class: ConnectorDefinitionPolicy
         connection_spec = connection_spec.to_unsafe_h if connection_spec.respond_to?(:to_unsafe_h)
-
-        begin
-          connection_status = @connector_client
-                              .check_connection(
-                                connection_spec
-                              )
-          @audit_resource = params[:name]
-          render json: connection_status
-        rescue => e
-          render json: { error: e.message }, status: :internal_server_error
-        end
+        connection_status = @connector_client
+                            .check_connection(
+                              connection_spec
+                            )
+        @audit_resource = params[:name]
+        render json: connection_status
       end
 
       private
@@ -49,16 +44,11 @@ module Api
       end
 
       def set_connector_client
-        begin
-          connector_class = Multiwoven::Integrations::Service
+        @connector_client = Multiwoven::Integrations::Service
                             .connector_class(
                               params[:type].camelize,
-                              params[:name]
-                            )
-          @connector_client = connector_class.new
-        rescue => e
-          raise e
-        end
+                              params[:name].camelize
+                            ).new
       end
 
       def create_audit_log

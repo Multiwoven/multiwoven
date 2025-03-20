@@ -9,7 +9,6 @@ gem "aasm"
 gem "appsignal"
 gem "aws-sdk"
 gem "azure-blob"
-gem "google-cloud-storage", "~> 1.44"
 gem "groupdate"
 gem "interactor", "~> 3.0"
 
