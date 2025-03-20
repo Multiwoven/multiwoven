@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 module Multiwoven::Integrations::Source
-  module Antropic
+  module Anthropic
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       API_VERSION = "2023-06-01"
       def check_connection(connection_config)
         connection_config = prepare_config(connection_config)
-        response = make_request(ANTROPIC_URL, HTTP_POST, connection_config[:request_format], connection_config)
+        response = make_request(ANTHROPIC_URL, HTTP_POST, connection_config[:request_format], connection_config)
         success?(response) ? success_status : failure_status(nil)
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:CHECK_CONNECTION:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)
       end
 
@@ -19,7 +19,7 @@ module Multiwoven::Integrations::Source
         catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:DISCOVER:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:DISCOVER:EXCEPTION", type: "error" })
       end
 
       def read(sync_config)
@@ -35,7 +35,7 @@ module Multiwoven::Integrations::Source
           run_model(connection_config, payload)
         end
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:READ:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:READ:EXCEPTION", type: "error" })
       end
 
       private
@@ -49,7 +49,7 @@ module Multiwoven::Integrations::Source
       def parse_json(json_string)
         JSON.parse(json_string)
       rescue JSON::ParserError => e
-        handle_exception(e, { context: "ANTROPIC:PARSE_JSON:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:PARSE_JSON:EXCEPTION", type: "error" })
         {}
       end
 
@@ -74,15 +74,15 @@ module Multiwoven::Integrations::Source
       end
 
       def run_model(connection_config, payload)
-        response = make_request(ANTROPIC_URL, HTTP_POST, payload, connection_config)
+        response = make_request(ANTHROPIC_URL, HTTP_POST, payload, connection_config)
         process_response(response)
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:RUN_MODEL:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:RUN_MODEL:EXCEPTION", type: "error" })
       end
 
       def run_model_stream(connection_config, payload)
         send_streaming_request(
-          url: ANTROPIC_URL,
+          url: ANTHROPIC_URL,
           http_method: HTTP_POST,
           payload: JSON.parse(payload),
           headers: build_headers(connection_config, streaming: true),
@@ -91,7 +91,7 @@ module Multiwoven::Integrations::Source
           process_streaming_response(chunk) { |message| yield message if block_given? }
         end
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
       end
 
       def process_response(response)
@@ -99,10 +99,10 @@ module Multiwoven::Integrations::Source
           data = JSON.parse(response.body)
           [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
         else
-          create_log_message("ANTROPIC:RUN_MODEL", "error", "request failed: #{response.body}")
+          create_log_message("ANTHROPIC:RUN_MODEL", "error", "request failed: #{response.body}")
         end
       rescue StandardError => e
-        handle_exception(e, { context: "ANTROPIC:PROCESS_RESPONSE:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "ANTHROPIC:PROCESS_RESPONSE:EXCEPTION", type: "error" })
       end
 
       def check_chunk_error(chunk)
