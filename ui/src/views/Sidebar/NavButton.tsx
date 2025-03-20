@@ -31,3 +31,5 @@ export const NavButton = (props: NavButtonProps): JSX.Element => {
     </Button>
   );
 };
+
+export default NavButton;
