@@ -132,7 +132,7 @@ const SyncRecords = (): JSX.Element => {
                 <DataTable data={data} columns={allColumns} />
               </Box>
               <Box display='flex' justifyContent='center' pt='20px'>
-                {filteredSyncRunRecords.links ? (
+                {data && data.length > 0 && filteredSyncRunRecords.links ? (
                   <Pagination
                     links={filteredSyncRunRecords?.links}
                     currentPage={currentPage}
