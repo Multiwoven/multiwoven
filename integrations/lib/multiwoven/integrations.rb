@@ -37,6 +37,7 @@ require "aws-sdk-sagemakerruntime"
 require "google/cloud/ai_platform/v1"
 require "grpc"
 require "MailchimpMarketing"
+require "google/cloud/storage"
 
 # Service
 require_relative "integrations/config"
@@ -76,6 +77,7 @@ require_relative "integrations/source/http_model/client"
 require_relative "integrations/source/open_ai/client"
 require_relative "integrations/source/sftp/client"
 require_relative "integrations/source/watsonx_ai/client"
+require_relative "integrations/source/google_cloud_storage/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
@@ -101,6 +103,7 @@ require_relative "integrations/destination/mailchimp/client"
 require_relative "integrations/destination/ais_data_store/client"
 require_relative "integrations/destination/amazon_s3/client"
 require_relative "integrations/destination/microsoft_dynamics/client"
+require_relative "integrations/destination/google_cloud_storage/client"
 
 module Multiwoven
   module Integrations

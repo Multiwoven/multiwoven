@@ -3,7 +3,9 @@
 module Multiwoven::Integrations::Source
   module GoogleCloudStorage
     include Multiwoven::Integrations::Core
-    class Client
+    class Client < SourceConnector
+      INSTALL_HTTPFS_QUERY = "INSTALL httpfs; LOAD httpfs;"
+
       @session_name = ""
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
@@ -49,20 +51,33 @@ module Multiwoven::Integrations::Source
 
       private
 
+      def get_auth_data(connection_config)
+        session = @session_name.gsub(/\s+/, "-")
+        @session_name = ""
+        # Create a credentials hash from the connection config
+        {
+          "type" => "service_account",
+          "project_id" => connection_config[:project_id],
+          "private_key" => connection_config[:private_key].gsub('\n', "\n"),
+          "client_email" => connection_config[:client_email]
+        }
+      end
+
       def create_connection(connection_config)
         # In the case when previewing a query
         @session_name = "preview-#{connection_config[:project_id]}-#{connection_config[:bucket]}" if @session_name.to_s.empty?
+        auth_data = get_auth_data(connection_config)
         conn = DuckDB::Database.open.connect
         # Install and/or Load the HTTPFS extension
         conn.execute(INSTALL_HTTPFS_QUERY)
         
-        # Set up GCS configuration
+        # Set up GCS credentials in DuckDB
         secret_query = "
-              CREATE SECRET gcs_source (
-              TYPE GCS,
-              PROJECT_ID '#{connection_config[:project_id]}',
-              PRIVATE_KEY '#{connection_config[:private_key]}',
-              CLIENT_EMAIL '#{connection_config[:client_email]}'
+          CREATE SECRET gcs_source (
+            TYPE GCS,
+            PROJECT_ID '#{auth_data["project_id"]}',
+            CLIENT_EMAIL '#{auth_data["client_email"]}',
+            PRIVATE_KEY '#{auth_data["private_key"]}'
           );
         "
         get_results(conn, secret_query)
@@ -72,7 +87,7 @@ module Multiwoven::Integrations::Source
       def build_path(connection_config)
         path = connection_config[:path]
         path = "#{path}/" if path.to_s.strip.empty? || path[-1] != "/"
-        "gcs://#{connection_config[:bucket]}#{path}*.#{connection_config[:file_type]}"
+        "gs://#{connection_config[:bucket]}#{path}*.#{connection_config[:file_type]}"
       end
 
       def get_results(conn, query)
@@ -114,7 +129,24 @@ module Multiwoven::Integrations::Source
           "integer"
         when "BOOLEAN"
           "boolean"
+        else
+          "string" # Default to string for unknown types
         end
+      end
+
+      def convert_to_json_schema(columns)
+        properties = {}
+        columns.each do |column|
+          properties[column[:column_name]] = { "type" => column[:type] }
+        end
+        { "type" => "object", "properties" => properties }
+      end
+
+      def batched_query(query, limit, offset)
+        # Add LIMIT and OFFSET clauses if they don't already exist
+        query = query.strip
+        query = query.chomp(";") if query.end_with?(";")
+        "#{query} LIMIT #{limit} OFFSET #{offset}"
       end
     end
   end

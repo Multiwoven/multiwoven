@@ -79,6 +79,8 @@ gem "tiny_tds"
 
 gem "MailchimpMarketing"
 
+gem "google-cloud-storage", "~> 1.44"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

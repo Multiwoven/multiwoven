@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.20.0)
+    multiwoven-integrations (0.22.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -25,6 +25,7 @@ PATH
       google-apis-sheets_v4
       google-cloud-ai_platform-v1
       google-cloud-bigquery
+      google-cloud-storage
       grpc
       hubspot-api-client
       iterable-api-client
@@ -117,6 +118,8 @@ GEM
     csv (3.3.0)
     declarative (0.0.20)
     diff-lcs (1.5.1)
+    digest-crc (0.7.0)
+      rake (>= 12.0.0, < 14.0.0)
     docile (1.4.0)
     drb (2.2.1)
     dry-configurable (1.1.0)
@@ -200,8 +203,12 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
+    google-apis-iamcredentials_v1 (0.22.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-sheets_v4 (0.31.0)
       google-apis-core (>= 0.14.0, < 2.a)
+    google-apis-storage_v1 (0.50.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-ai_platform-v1 (0.50.0)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
@@ -223,6 +230,15 @@ GEM
     google-cloud-location (0.8.1)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
+    google-cloud-storage (1.55.0)
+      addressable (~> 2.8)
+      digest-crc (~> 0.4)
+      google-apis-core (~> 0.13)
+      google-apis-iamcredentials_v1 (~> 0.18)
+      google-apis-storage_v1 (>= 0.42)
+      google-cloud-core (~> 1.6)
+      googleauth (~> 1.9)
+      mini_mime (~> 1.0)
     google-iam-v1 (1.0.1)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
@@ -430,6 +446,7 @@ DEPENDENCIES
   google-apis-sheets_v4
   google-cloud-ai_platform-v1
   google-cloud-bigquery
+  google-cloud-storage (~> 1.44)
   hubspot-api-client (~> 17.2.0)
   iterable-api-client
   multiwoven-integrations!
