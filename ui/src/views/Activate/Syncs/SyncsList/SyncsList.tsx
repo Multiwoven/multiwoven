@@ -16,8 +16,9 @@ import { Row } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 
 const SyncsList = (): JSX.Element => {
-  const activeWorkspaceId = useStore((state) => state.workspaceId);
   const navigate = useNavigate();
+
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   const { data, isLoading } = useQuery({
     queryKey: [...SYNCS_LIST_QUERY_KEY, activeWorkspaceId],
