@@ -47,6 +47,11 @@ jobs:
         run: |
           PREV_DATE=${{ steps.prev-date.outputs.date }}
           git log enterprise/main  --since="$PREV_DATE 00:00" --until="$PREV_DATE 23:59" --grep="(CE)" --format="%H" --no-merges | while read sha; do
+            if [ "$sha" = "231b4fee0e8841f36905665279865b077470a661" ]; then
+              echo "Skipping commit $sha"
+              continue
+            fi
+
             AUTHOR_NAME=$(git log -1 --pretty=format:'%an' $sha)
             AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae' $sha)
             COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' $sha)
