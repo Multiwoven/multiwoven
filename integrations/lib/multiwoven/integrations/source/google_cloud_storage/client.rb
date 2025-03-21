@@ -168,6 +168,14 @@ module Multiwoven::Integrations::Source
         file_type = connection_config["file_type"]
 
         begin
+          # If there's a query in the sync_config, we'll process it
+          if sync_config.model && sync_config.model.query && !sync_config.model.query.empty?
+            conn = create_connection(connection_config)
+            query_string = sync_config.model.query
+            query_string = batched_query(query_string, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
+            return query(conn, query_string)
+          end
+
           require 'google/cloud/storage'
           require 'csv'
 
@@ -195,7 +203,7 @@ module Multiwoven::Integrations::Source
           files = bucket_obj.files(prefix: prefix)
 
           # Filter files by file type
-          files = files.select { |file| file.name.end_with?(".#{file_type}") }
+          files = files.select { |file| file.name.end_with?(".#{file_type}") } if files
 
           # Process each file and collect records
           records = []
@@ -229,6 +237,148 @@ module Multiwoven::Integrations::Source
             sync_run_id: sync_config.sync_run_id
           })
         end
+      end
+
+      def create_connection(config)
+        # For GCS, we'll create a connection configuration that can be used by our query method
+        config = config.with_indifferent_access
+        {
+          project_id: config["project_id"],
+          client_email: config["client_email"],
+          private_key: config["private_key"],
+          bucket: config["bucket"],
+          path: config["path"] || "",
+          file_type: config["file_type"]
+        }
+      end
+
+      def query(conn, query_string)
+        records = get_results(conn, query_string)
+        records.map do |row|
+          RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+        end
+      end
+
+      private
+
+      def get_results(conn, query_string)
+        # Extract connection configuration from conn
+        project_id = conn[:project_id]
+        client_email = conn[:client_email]
+        private_key = conn[:private_key]
+        bucket = conn[:bucket]
+        path = conn[:path] || ""
+        file_type = conn[:file_type]
+
+        require 'google/cloud/storage'
+        require 'csv'
+        require 'duckdb'
+        require 'fileutils'
+        require 'tmpdir'
+
+        # Format the private key properly
+        formatted_key = private_key.gsub('\n', "\n")
+
+        # Create a Google Cloud Storage client
+        storage = Google::Cloud::Storage.new(
+          project_id: project_id,
+          credentials: {
+            type: "service_account",
+            project_id: project_id,
+            private_key: formatted_key,
+            client_email: client_email
+          }
+        )
+
+        # Get the bucket
+        bucket_obj = storage.bucket(bucket)
+
+        # Prepare the path prefix
+        prefix = path.start_with?("/") ? path[1..-1] : path
+
+        # List files in the bucket with the given prefix
+        files = bucket_obj.files(prefix: prefix)
+
+        # Filter files by file type
+        files = files.select { |file| file.name.end_with?(".#{file_type}") } if files
+
+        if !files || files.empty?
+          return []
+        end
+
+        # Create a temporary directory to store downloaded files
+        temp_dir = Dir.mktmpdir("gcs_query")
+        
+        # Download files to the temporary directory
+        temp_files = []
+        files.each do |file|
+          file_path = File.join(temp_dir, File.basename(file.name))
+          file.download(file_path)
+          temp_files << file_path
+        end
+        
+        # Create a DuckDB connection to query the files
+        conn = DuckDB::Database.open.connect
+        
+        # Register the files with DuckDB
+        if file_type == "csv"
+          # Create a view that combines all CSV files
+          temp_files.each_with_index do |file_path, index|
+            table_name = "temp_csv_#{index}"
+            conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
+            
+            # For the first file, create the main view
+            if index == 0
+              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM #{table_name};")
+            else
+              # For subsequent files, append to the main view
+              conn.execute("DROP VIEW gcs_data;")
+              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM temp_csv_0 UNION ALL SELECT * FROM #{table_name};")
+            end
+          end
+        elsif file_type == "parquet"
+          # Create a view that combines all Parquet files
+          temp_files.each_with_index do |file_path, index|
+            table_name = "temp_parquet_#{index}"
+            conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_parquet('#{file_path}');")
+            
+            # For the first file, create the main view
+            if index == 0
+              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM #{table_name};")
+            else
+              # For subsequent files, append to the main view
+              conn.execute("DROP VIEW gcs_data;")
+              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM temp_parquet_0 UNION ALL SELECT * FROM #{table_name};")
+            end
+          end
+        end
+        
+        # Execute the query
+        modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, 'FROM gcs_data')
+        results = conn.query(modified_query)
+        
+        # Convert results to an array of hashes
+        records = []
+        if results && results.columns && !results.columns.empty?
+          keys = results.columns.map(&:name)
+          results.each do |row|
+            records << Hash[keys.zip(row)]
+          end
+        end
+        
+        # Clean up temporary files
+        FileUtils.remove_entry(temp_dir) if Dir.exist?(temp_dir)
+        
+        records
+      rescue StandardError => e
+        handle_exception(e, { context: "GOOGLECLOUDSTORAGE:QUERY:EXCEPTION", type: "error" })
+      end
+
+      def batched_query(query, limit, offset)
+        # Add LIMIT and OFFSET clauses if they don't already exist
+        query = query.strip
+        query = query.chomp(";") if query.end_with?(";")
+        "#{query} LIMIT #{limit} OFFSET #{offset}"
       end
     end
   end
