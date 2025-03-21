@@ -20,8 +20,9 @@ RSpec.describe Multiwoven::Integrations::Destination::GoogleCloudStorage::Client
         "type": "destination",
         "connection_specification": {
           "project_id": "test-project",
+          "client_email": "test@example.com",
+          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
           "bucket": "test-bucket",
-          "credentials_json": "{\"type\":\"service_account\",\"project_id\":\"test-project\"}",
           "path": "data/",
           "file_type": "csv"
         }
@@ -165,6 +166,138 @@ RSpec.describe Multiwoven::Integrations::Destination::GoogleCloudStorage::Client
         
         client.write(s_config, records)
       end
+    end
+  end
+  
+  describe "#create_connection" do
+    it "creates a connection with the correct credentials" do
+      connection_config = sync_config[:destination][:connection_specification]
+      
+      credentials = {
+        "type" => "service_account",
+        "project_id" => "test-project",
+        "client_email" => "test@example.com",
+        "private_key" => "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n"
+      }
+      
+      expect(Google::Cloud::Storage).to receive(:new).with(
+        project_id: "test-project",
+        credentials: credentials
+      )
+      
+      allow(client).to receive(:parse_credentials).and_return(credentials)
+      
+      client.send(:create_connection, connection_config)
+    end
+  end
+  
+  describe "#parse_credentials" do
+    context "when credentials_json is a string" do
+      it "parses the JSON string" do
+        connection_config = {
+          credentials_json: '{"type":"service_account","project_id":"test-project"}'
+        }
+        
+        result = client.send(:parse_credentials, connection_config)
+        
+        expect(result).to be_a(Hash)
+        expect(result["type"]).to eq("service_account")
+        expect(result["project_id"]).to eq("test-project")
+      end
+    end
+    
+    context "when credentials_json is already a hash" do
+      it "returns the hash directly" do
+        connection_config = {
+          credentials_json: { "type" => "service_account", "project_id" => "test-project" }
+        }
+        
+        result = client.send(:parse_credentials, connection_config)
+        
+        expect(result).to be_a(Hash)
+        expect(result["type"]).to eq("service_account")
+        expect(result["project_id"]).to eq("test-project")
+      end
+    end
+  end
+  
+  describe "#generate_file_name" do
+    it "generates the correct file name with path" do
+      connection_config = {
+        path: "data/",
+        file_type: "csv"
+      }
+      
+      allow(Time).to receive_message_chain(:now, :strftime).and_return("20250321-142030")
+      
+      result = client.send(:generate_file_name, connection_config, "test_stream")
+      
+      expect(result).to eq("data/test_stream_20250321-142030.csv")
+    end
+    
+    it "handles empty path" do
+      connection_config = {
+        path: "",
+        file_type: "csv"
+      }
+      
+      allow(Time).to receive_message_chain(:now, :strftime).and_return("20250321-142030")
+      
+      result = client.send(:generate_file_name, connection_config, "test_stream")
+      
+      expect(result).to eq("test_stream_20250321-142030.csv")
+    end
+    
+    it "adds trailing slash to path if missing" do
+      connection_config = {
+        path: "data",
+        file_type: "csv"
+      }
+      
+      allow(Time).to receive_message_chain(:now, :strftime).and_return("20250321-142030")
+      
+      result = client.send(:generate_file_name, connection_config, "test_stream")
+      
+      expect(result).to eq("data/test_stream_20250321-142030.csv")
+    end
+  end
+  
+  describe "#generate_file_content" do
+    it "generates CSV content for csv file type" do
+      file_type = "csv"
+      expected_csv = "id,name\n1,Test 1\n2,Test 2\n"
+      
+      result = client.send(:generate_file_content, records, file_type)
+      
+      expect(result).to eq(expected_csv)
+    end
+    
+    it "generates JSON content for json file type" do
+      file_type = "json"
+      expected_json = JSON.pretty_generate([
+        { "id" => 1, "name" => "Test 1" },
+        { "id" => 2, "name" => "Test 2" }
+      ])
+      
+      result = client.send(:generate_file_content, records, file_type)
+      
+      expect(result).to eq(expected_json)
+    end
+    
+    it "raises an error for unsupported file types" do
+      file_type = "parquet"
+      
+      expect {
+        client.send(:generate_file_content, records, file_type)
+      }.to raise_error("Unsupported file type: parquet")
+    end
+    
+    it "returns empty string for empty records" do
+      empty_records = []
+      
+      result = client.send(:generate_file_content, empty_records, "csv")
+      
+      expect(result).to eq("")
     end
   end
 end
