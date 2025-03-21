@@ -5,14 +5,14 @@
 #   workers:
 #     - queues: "*"
 #       threads: 3
-#       processes: 1
+#       processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
 #       polling_interval: 0.1
-#
+
 # development:
-#  <<: *default
-#
+#   <<: *default
+
 # test:
-#  <<: *default
-#
+#   <<: *default
+
 # production:
-#  <<: *default
+#   <<: *default
