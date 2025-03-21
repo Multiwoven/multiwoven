@@ -11,37 +11,12 @@ module Multiwoven::Integrations::Source
         client_email = connection_config["client_email"]
         private_key = connection_config["private_key"]
         bucket = connection_config["bucket"]
-
-        # Validate required parameters
-        missing_params = []
-        missing_params << "project_id" if project_id.nil? || project_id.strip.empty?
-        missing_params << "client_email" if client_email.nil? || client_email.strip.empty?
-        missing_params << "private_key" if private_key.nil? || private_key.strip.empty?
-        missing_params << "bucket" if bucket.nil? || bucket.strip.empty?
-
-        if missing_params.any?
-          return ConnectionStatus.new(
-            status: ConnectionStatusType["failed"],
-            message: "Missing required parameters: #{missing_params.join(', ')}"
-          ).to_multiwoven_message
-        end
+        path = connection_config["path"] || ""
+        file_type = connection_config["file_type"]
 
         begin
-          require 'google/cloud/storage'
-
-          # Format the private key properly
-          formatted_key = private_key.gsub('\n', "\n")
-
           # Create a Google Cloud Storage client
-          storage = Google::Cloud::Storage.new(
-            project_id: project_id,
-            credentials: {
-              type: "service_account",
-              project_id: project_id,
-              private_key: formatted_key,
-              client_email: client_email
-            }
-          )
+          storage = create_storage_client(project_id, client_email, private_key)
 
           # Check if the bucket exists
           bucket_obj = storage.bucket(bucket)
@@ -50,6 +25,22 @@ module Multiwoven::Integrations::Source
             return ConnectionStatus.new(
               status: ConnectionStatusType["failed"],
               message: "Bucket '#{bucket}' not found or you don't have access to it."
+            ).to_multiwoven_message
+          end
+
+          # Prepare the path prefix
+          prefix = path.start_with?("/") ? path[1..-1] : path
+
+          # List files in the bucket with the given prefix
+          files = bucket_obj.files(prefix: prefix)
+
+          # Filter files by file type
+          files = files.select { |file| file.name.end_with?(".#{file_type}") }
+
+          if files.empty?
+            return ConnectionStatus.new(
+              status: ConnectionStatusType["failed"],
+              message: "No #{file_type} files found in bucket '#{bucket}' with path '#{path}'."
             ).to_multiwoven_message
           end
 
@@ -76,22 +67,10 @@ module Multiwoven::Integrations::Source
         file_type = connection_config["file_type"]
 
         begin
-          require 'google/cloud/storage'
           require 'csv'
 
-          # Format the private key properly
-          formatted_key = private_key.gsub('\n', "\n")
-
           # Create a Google Cloud Storage client
-          storage = Google::Cloud::Storage.new(
-            project_id: project_id,
-            credentials: {
-              type: "service_account",
-              project_id: project_id,
-              private_key: formatted_key,
-              client_email: client_email
-            }
-          )
+          storage = create_storage_client(project_id, client_email, private_key)
 
           # Get the bucket
           bucket_obj = storage.bucket(bucket)
@@ -105,6 +84,7 @@ module Multiwoven::Integrations::Source
           # Filter files by file type
           files = files.select { |file| file.name.end_with?(".#{file_type}") }
 
+          # Return empty catalog if no files are found
           if files.empty?
             return Catalog.new(
               streams: []
@@ -176,22 +156,10 @@ module Multiwoven::Integrations::Source
             return query(conn, query_string)
           end
 
-          require 'google/cloud/storage'
           require 'csv'
 
-          # Format the private key properly
-          formatted_key = private_key.gsub('\n', "\n")
-
           # Create a Google Cloud Storage client
-          storage = Google::Cloud::Storage.new(
-            project_id: project_id,
-            credentials: {
-              type: "service_account",
-              project_id: project_id,
-              private_key: formatted_key,
-              client_email: client_email
-            }
-          )
+          storage = create_storage_client(project_id, client_email, private_key)
 
           # Get the bucket
           bucket_obj = storage.bucket(bucket)
@@ -270,25 +238,13 @@ module Multiwoven::Integrations::Source
         path = conn[:path] || ""
         file_type = conn[:file_type]
 
-        require 'google/cloud/storage'
         require 'csv'
         require 'duckdb'
         require 'fileutils'
         require 'tmpdir'
 
-        # Format the private key properly
-        formatted_key = private_key.gsub('\n', "\n")
-
         # Create a Google Cloud Storage client
-        storage = Google::Cloud::Storage.new(
-          project_id: project_id,
-          credentials: {
-            type: "service_account",
-            project_id: project_id,
-            private_key: formatted_key,
-            client_email: client_email
-          }
-        )
+        storage = create_storage_client(project_id, client_email, private_key)
 
         # Get the bucket
         bucket_obj = storage.bucket(bucket)
@@ -379,6 +335,22 @@ module Multiwoven::Integrations::Source
         query = query.strip
         query = query.chomp(";") if query.end_with?(";")
         "#{query} LIMIT #{limit} OFFSET #{offset}"
+      end
+
+      def create_storage_client(project_id, client_email, private_key)
+        # Format the private key properly
+        formatted_key = private_key.gsub('\n', "\n")
+        
+        # Create a Google Cloud Storage client
+        Google::Cloud::Storage.new(
+          project_id: project_id,
+          credentials: {
+            type: "service_account",
+            project_id: project_id,
+            private_key: formatted_key,
+            client_email: client_email
+          }
+        )
       end
     end
   end
