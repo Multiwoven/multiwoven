@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.21.0"
+    VERSION = "0.22.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -24,6 +24,7 @@ module Multiwoven
       Sftp
       WatsonxAi
       Antropic
+      GoogleCloudStorage
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -50,6 +51,7 @@ module Multiwoven
       AISDataStore
       AmazonS3
       MicrosoftDynamics
+      GoogleCloudStorage
     ].freeze
   end
 end
