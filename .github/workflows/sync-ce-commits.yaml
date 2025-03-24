@@ -1,9 +1,14 @@
 name: Cherry-pick CE commit PR from Enterprise to OSS
 
 on:
-  schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: true
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: true
 
 jobs:
   cherry-pick-ce-commits:
@@ -31,22 +36,18 @@ jobs:
           git remote add enterprise git@github.com:Multiwoven/multiwoven-ee.git
           git fetch enterprise
 
-      - name: Get previous day date
-        id: prev-date
-        run: |
-          PREV_DATE=$(date -d "yesterday" +'%Y-%m-%d')
-          echo "::set-output name=date::$PREV_DATE"
-
       - name: Authenticate GitHub CLI
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      - name: Create PRs for each CE commit
+      - name: Create PRs for each CE commit from specified date range
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PREV_DATE=${{ steps.prev-date.outputs.date }}
-          git log enterprise/main  --since="$PREV_DATE 00:00" --until="$PREV_DATE 23:59" --grep="(CE)" --format="%H" --no-merges | while read sha; do
+          START_DATE=${{ github.event.inputs.start_date }}
+          END_DATE=${{ github.event.inputs.end_date }}
+          echo "Processing commits from $START_DATE to $END_DATE"
+          git log enterprise/main --since="$START_DATE 00:00" --until="$END_DATE 23:59" --grep="(CE)" --format="%H" --no-merges | while read sha; do
             AUTHOR_NAME=$(git log -1 --pretty=format:'%an' $sha)
             AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae' $sha)
             COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' $sha)
@@ -70,22 +71,3 @@ jobs:
             git checkout main
             git branch -D $BRANCH_NAME
           done
-
-  on_failure:
-    environment: staging
-    if: ${{ failure() }}
-    needs: [ cherry-pick-ce-commits ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Report error to AppSignal
-        env:
-          ACTION: Sync Commits
-          APPSIGNAL_PUSH_API_KEY: ${{ secrets.APPSIGNAL_PUSH_API_KEY }}
-          MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          NAME: Sync Commits from EE to CE failed
-        run: |
-          EPOCH=$(date +%s)
-          curl -verbose -H \"Content-Type: application/json\" \
-            -d "{ \"action\": \"$ACTION\", \"timestamp\": $EPOCH, \"namespace\": \"github\", \"error\": { \"name\": $NAME, \"message\": $MESSAGE } }" \
-            -X POST \
-            https://appsignal-endpoint.net/errors?api_key=$APPSIGNAL_PUSH_API_KEY
