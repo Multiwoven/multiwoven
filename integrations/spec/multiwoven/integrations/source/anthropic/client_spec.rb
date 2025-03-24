@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Multiwoven::Integrations::Source::Antropic::Client do
+RSpec.describe Multiwoven::Integrations::Source::Anthropic::Client do
   include WebMock::API
 
   before(:each) do
@@ -143,7 +143,7 @@ RSpec.describe Multiwoven::Integrations::Source::Antropic::Client do
       allow(client).to receive(:read_json).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(
         an_instance_of(StandardError),
-        hash_including(context: "ANTROPIC:DISCOVER:EXCEPTION", type: "error")
+        hash_including(context: "ANTHROPIC:DISCOVER:EXCEPTION", type: "error")
       )
       client.discover
     end
@@ -194,7 +194,7 @@ RSpec.describe Multiwoven::Integrations::Source::Antropic::Client do
         allow(client).to receive(:run_model).and_raise(error_instance)
         expect(client).to receive(:handle_exception).with(
           error_instance,
-          hash_including(context: "ANTROPIC:READ:EXCEPTION", type: "error")
+          hash_including(context: "ANTHROPIC:READ:EXCEPTION", type: "error")
         )
 
         client.read(sync_config)
