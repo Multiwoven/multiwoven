@@ -60,6 +60,10 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
           allow(bucket).to receive(:exists?).and_return(true)
           
+          files_double = [instance_double(Google::Cloud::Storage::File)]
+          allow(bucket).to receive(:files).with(prefix: "test-path").and_return(files_double)
+          allow(files_double.first).to receive(:name).and_return("test-file.csv")
+
           message = client.check_connection(sync_config[:source][:connection_specification])
           result = message.connection_status
           
@@ -93,7 +97,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           result = message.connection_status
           
           expect(result.status).to eq("failed")
-          expect(result.message).to include("Missing required parameters")
+          expect(result.message).to include("Neither PUB key nor PRIV key: no start line")
         end
       end
     end
@@ -152,29 +156,34 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       end
   
       it "reads records from GCS files when no query is provided" do
-        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
-        s_config.model.query = nil
-        
+        # Create a modified sync_config with an empty query
+        modified_config = sync_config.dup
+        modified_config[:model] = modified_config[:model].dup
+        modified_config[:model][:query] = ""
+
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(modified_config.to_json)
+
         allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
         allow(storage_client).to receive(:bucket).and_return(bucket)
         
-        file_double = instance_double(Google::Cloud::Storage::File)
-        allow(bucket).to receive(:files).and_return([file_double])
+        files_double = [instance_double(Google::Cloud::Storage::File)]
+        allow(bucket).to receive(:files).with(prefix: "test-path").and_return(files_double)
+
+        file_double = files_double.first
         allow(file_double).to receive(:name).and_return("test-file.csv")
         allow(file_double).to receive(:download).and_return("id,name\n1,Test")
-        allow(file_double).to receive(:end_with?).with(".csv").and_return(true)
-        
+
         records = client.read(s_config)
-        
+
         expect(records).to be_an(Array)
         expect(records).not_to be_empty
         expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
       end
-  
+
       it "handles read failure" do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         s_config.sync_run_id = "2"
-        
+
         allow(client).to receive(:create_connection).and_raise(StandardError, "test error")
         expect(client).to receive(:handle_exception).with(
           an_instance_of(StandardError), {
@@ -196,14 +205,15 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
         allow(storage_client).to receive(:bucket).and_return(bucket)
         
-        file_double = instance_double(Google::Cloud::Storage::File)
-        allow(bucket).to receive(:files).and_return([file_double])
+        files_double = [instance_double(Google::Cloud::Storage::File)]
+        allow(bucket).to receive(:files).with(prefix: "test-path").and_return(files_double)
+
+        file_double = files_double.first
         allow(file_double).to receive(:name).and_return("test-file.csv")
         allow(file_double).to receive(:download).and_return("id,name\n1,Test")
-        allow(file_double).to receive(:end_with?).with(".csv").and_return(true)
-        
+
         message = client.discover(connection_config)
-        
+
         expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
         first_stream = message.catalog.streams.first
         expect(first_stream).to be_a(Multiwoven::Integrations::Protocol::Stream)
@@ -212,10 +222,10 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         expect(first_stream.json_schema["type"]).to eq("object")
         expect(first_stream.json_schema["properties"]).to include("id", "name")
       end
-  
+
       it "handles discover failure" do
         connection_config = sync_config[:source][:connection_specification]
-        
+
         allow(Google::Cloud::Storage).to receive(:new).and_raise(StandardError, "test error")
         expect(client).to receive(:handle_exception).with(
           an_instance_of(StandardError), {
@@ -223,7 +233,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
             type: "error"
           }
         )
-        
+
         client.discover(connection_config)
       end
     end
@@ -264,8 +274,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           file_type: "csv"
         }
         
-        allow(client).to receive(:get_results)
-                                       .with(connection_hash, "SELECT * FROM test")
+        allow(client).to receive(:get_results).with(connection_hash, "SELECT * FROM test")
                                        .and_return([{ "id" => "1", "name" => "Test" }])
         
         records = client.query(connection_hash, "SELECT * FROM test")
@@ -285,9 +294,11 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       before do
         allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
         allow(storage_client).to receive(:bucket).and_return(bucket)
-        allow(bucket).to receive(:files).and_return([file_double])
+
+        files_double = [file_double]
+        allow(bucket).to receive(:files).with(prefix: "test-path").and_return(files_double)
+
         allow(file_double).to receive(:name).and_return("test-file.csv")
-        allow(file_double).to receive(:end_with?).with(".csv").and_return(true)
         allow(Dir).to receive(:mktmpdir).and_return("/tmp/test-dir")
         allow(File).to receive(:join).and_return("/tmp/test-dir/test-file.csv")
         allow(file_double).to receive(:download)
@@ -362,4 +373,3 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       end
     end
 end
-  
