@@ -23,7 +23,7 @@ module Multiwoven
       OpenAI
       Sftp
       WatsonxAi
-      Antropic
+      Anthropic
       GoogleCloudStorage
     ].freeze
 
