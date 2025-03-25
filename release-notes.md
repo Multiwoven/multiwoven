@@ -12,12 +12,12 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-- *(CE)* Solid Worker Migrations (#940) 
+- *(CE)* Solid Worker Migrations
 - *(CE)* Fix spelling error with Anthropic (#652)
 
 ### 🚜 Refactor
 
-- *(CE)* Audit - better copy for invalid email and password (#926) (#644)
+- *(CE)* Audit - better copy for invalid email and password(#644)
 - *(CE)* Exit stepped form without warning (#648)
 
 ### ⚙️ Miscellaneous Tasks
