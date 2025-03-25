@@ -59,6 +59,13 @@ jobs:
           git tag ${{ steps.versioning.outputs.new_tag }}
           git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/multiwoven/multiwoven --tags
 
+      - name: Trigger Docker Build Workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          event-type: trigger-docker-build
+          client-payload: '{"tag": "${{ steps.versioning.outputs.new_tag }}"}'
+
       - name: Generate a changelog
         uses: orhun/git-cliff-action@main
         id: git-cliff

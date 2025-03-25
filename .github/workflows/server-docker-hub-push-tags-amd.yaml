@@ -2,18 +2,21 @@ name: Build and push Multiwoven server docker image to Docker Hub (AMD)
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Release Workflow"]
-    types:
-      - completed
+    inputs:
+      release_tag:
+        description: "Release tag to build"
+        required: true
+  repository_dispatch:
+    types: [trigger-docker-build]
 
 jobs:
   docker-hub-push-on-merge:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.tag || github.event.inputs.release_tag }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -34,5 +37,5 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: multiwoven/multiwoven-server:${{ github.event.client_payload.tag || github.event.inputs.release_tag }},multiwoven/multiwoven-server:latest
           labels: ${{ steps.meta.outputs.labels }}
