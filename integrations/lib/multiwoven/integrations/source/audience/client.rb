@@ -1,18 +1,33 @@
 # frozen_string_literal: true
 
 module Multiwoven::Integrations::Source
-  module GoogleCloudStorage
+  module Audience
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        # Extract the connection parameters
-        project_id = connection_config["project_id"]
-        client_email = connection_config["client_email"]
-        private_key = connection_config["private_key"]
-        bucket = connection_config["bucket"]
-        path = connection_config["path"] || ""
-        file_type = connection_config["file_type"]
+        # Extract user_id and audience_id from connection_config
+        user_id = connection_config["user_id"]
+        audience_id = connection_config["audience_id"]
+        
+        # Validate required fields
+        if user_id.nil? || user_id.empty? || audience_id.nil? || audience_id.empty?
+          return ConnectionStatus.new(
+            status: ConnectionStatusType["failed"],
+            message: "User ID and Audience ID are required."
+          ).to_multiwoven_message
+        end
+        
+        # Use environment variables for credentials
+        project_id = ENV['AUDIENCE_PROJECT_ID']
+        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
+        private_key = ENV['AUDIENCE_PRIVATE_KEY']
+        bucket = ENV['AUDIENCE_BUCKET']
+        
+        # Generate path based on User ID and Audience ID
+        path = generate_path(user_id, audience_id)
+        # File type is fixed as CSV
+        file_type = "csv"
 
         begin
           # Create a Google Cloud Storage client
@@ -34,37 +49,45 @@ module Multiwoven::Integrations::Source
           # List files in the bucket with the given prefix
           files = bucket_obj.files(prefix: prefix)
 
-          # Filter files by file type
-          files = files.select { |file| file.name.end_with?(".#{file_type}") }
+          # Filter files by file type (CSV)
+          files = files.select { |file| file.name.end_with?(".csv") }
 
           if files.empty?
             return ConnectionStatus.new(
               status: ConnectionStatusType["failed"],
-              message: "No #{file_type} files found in bucket '#{bucket}' with path '#{path}'."
+              message: "No CSV files found for User ID '#{user_id}' and Audience ID '#{audience_id}'."
             ).to_multiwoven_message
           end
 
           # Connection successful
           ConnectionStatus.new(
             status: ConnectionStatusType["succeeded"],
-            message: "Successfully connected to Google Cloud Storage bucket: #{bucket}"
+            message: "Successfully connected to Audience data source for User ID '#{user_id}' and Audience ID '#{audience_id}'"
           ).to_multiwoven_message
         rescue StandardError => e
           ConnectionStatus.new(
             status: ConnectionStatusType["failed"],
-            message: "Failed to connect to Google Cloud Storage: #{e.message}"
+            message: "Failed to connect to Audience data source: #{e.message}"
           ).to_multiwoven_message
         end
       end
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
-        project_id = connection_config["project_id"]
-        client_email = connection_config["client_email"]
-        private_key = connection_config["private_key"]
-        bucket = connection_config["bucket"]
-        path = connection_config["path"] || ""
-        file_type = connection_config["file_type"]
+        # Extract user_id and audience_id from connection_config
+        user_id = connection_config["user_id"]
+        audience_id = connection_config["audience_id"]
+        
+        # Use environment variables for credentials
+        project_id = ENV['AUDIENCE_PROJECT_ID']
+        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
+        private_key = ENV['AUDIENCE_PRIVATE_KEY']
+        bucket = ENV['AUDIENCE_BUCKET']
+        
+        # Generate path based on User ID and Audience ID
+        path = generate_path(user_id, audience_id)
+        # File type is fixed as CSV
+        file_type = "csv"
 
         begin
           require 'csv'
@@ -81,8 +104,8 @@ module Multiwoven::Integrations::Source
           # List files in the bucket with the given prefix
           files = bucket_obj.files(prefix: prefix)
 
-          # Filter files by file type
-          files = files.select { |file| file.name.end_with?(".#{file_type}") }
+          # Filter files by file type (CSV)
+          files = files.select { |file| file.name.end_with?(".csv") }
 
           # Return empty catalog if no files are found
           if files.empty?
@@ -98,34 +121,24 @@ module Multiwoven::Integrations::Source
           columns = []
           json_schema = {}
 
-          if file_type == "csv"
-            csv = CSV.parse(file_content, headers: true)
-            headers = csv.headers
-            
-            # Create a simple schema based on the CSV headers
-            properties = {}
-            headers.each do |header|
-              properties[header] = { "type" => "string" }
-            end
-            
-            json_schema = {
-              "type" => "object",
-              "properties" => properties
-            }
-          elsif file_type == "parquet"
-            # For parquet, we'd need a specialized gem
-            # For now, just create a placeholder schema
-            json_schema = {
-              "type" => "object",
-              "properties" => {
-                "data" => { "type" => "object" }
-              }
-            }
+          # Process CSV file to determine schema
+          csv = CSV.parse(file_content, headers: true)
+          headers = csv.headers
+          
+          # Create a simple schema based on the CSV headers
+          properties = {}
+          headers.each do |header|
+            properties[header] = { "type" => "string" }
           end
+          
+          json_schema = {
+            "type" => "object",
+            "properties" => properties
+          }
 
           streams = [
             Multiwoven::Integrations::Protocol::Stream.new(
-              name: "#{bucket}_#{file_type}_files",
+              name: "audience_data_#{user_id}_#{audience_id}",
               action: StreamAction["fetch"],
               json_schema: json_schema
             )
@@ -134,18 +147,26 @@ module Multiwoven::Integrations::Source
           catalog = Catalog.new(streams: streams)
           catalog.to_multiwoven_message
         rescue StandardError => e
-          handle_exception(e, { context: "GOOGLECLOUDSTORAGE:DISCOVER:EXCEPTION", type: "error" })
+          handle_exception(e, { context: "AUDIENCE:DISCOVER:EXCEPTION", type: "error" })
         end
       end
 
       def read(sync_config)
         connection_config = sync_config.source.connection_specification.with_indifferent_access
-        project_id = connection_config["project_id"]
-        client_email = connection_config["client_email"]
-        private_key = connection_config["private_key"]
-        bucket = connection_config["bucket"]
-        path = connection_config["path"] || ""
-        file_type = connection_config["file_type"]
+        # Extract user_id and audience_id from connection_config
+        user_id = connection_config["user_id"]
+        audience_id = connection_config["audience_id"]
+        
+        # Use environment variables for credentials
+        project_id = ENV['AUDIENCE_PROJECT_ID']
+        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
+        private_key = ENV['AUDIENCE_PRIVATE_KEY']
+        bucket = ENV['AUDIENCE_BUCKET']
+        
+        # Generate path based on User ID and Audience ID
+        path = generate_path(user_id, audience_id)
+        # File type is fixed as CSV
+        file_type = "csv"
 
         begin
           # If there's a query in the sync_config, we'll process it
@@ -170,8 +191,8 @@ module Multiwoven::Integrations::Source
           # List files in the bucket with the given prefix
           files = bucket_obj.files(prefix: prefix)
 
-          # Filter files by file type
-          files = files.select { |file| file.name.end_with?(".#{file_type}") } if files
+          # Filter files by file type (CSV)
+          files = files.select { |file| file.name.end_with?(".csv") } if files
 
           # Process each file and collect records
           records = []
@@ -180,26 +201,19 @@ module Multiwoven::Integrations::Source
             # Download the file content
             file_content = file.download
 
-            # Process the file based on its type
-            if file_type == "csv"
-              CSV.parse(file_content, headers: true).each do |row|
-                records << RecordMessage.new(
-                  data: row.to_h,
-                  emitted_at: Time.now.to_i
-                ).to_multiwoven_message
-              end
-            elsif file_type == "parquet"
-              # We can't process parquet without specialized gems
-              # This is just a placeholder - actual implementation requires additional gems
-              # For now, just log a warning
-              puts "Parquet file processing requires additional gems. Please use CSV format or install necessary parquet gems."
+            # Process the CSV file
+            CSV.parse(file_content, headers: true).each do |row|
+              records << RecordMessage.new(
+                data: row.to_h,
+                emitted_at: Time.now.to_i
+              ).to_multiwoven_message
             end
           end
 
           records
         rescue StandardError => e
           handle_exception(e, {
-            context: "GOOGLECLOUDSTORAGE:READ:EXCEPTION",
+            context: "AUDIENCE:READ:EXCEPTION",
             type: "error",
             sync_id: sync_config.sync_id,
             sync_run_id: sync_config.sync_run_id
@@ -208,15 +222,18 @@ module Multiwoven::Integrations::Source
       end
 
       def create_connection(config)
-        # For GCS, we'll create a connection configuration that can be used by our query method
+        # For Audience, we'll create a connection configuration that can be used by our query method
         config = config.with_indifferent_access
+        user_id = config["user_id"]
+        audience_id = config["audience_id"]
+        
         {
-          project_id: config["project_id"],
-          client_email: config["client_email"],
-          private_key: config["private_key"],
-          bucket: config["bucket"],
-          path: config["path"] || "",
-          file_type: config["file_type"]
+          project_id: ENV['AUDIENCE_PROJECT_ID'],
+          client_email: ENV['AUDIENCE_CLIENT_EMAIL'],
+          private_key: ENV['AUDIENCE_PRIVATE_KEY'],
+          bucket: ENV['AUDIENCE_BUCKET'],
+          path: generate_path(user_id, audience_id),
+          file_type: "csv"
         }
       end
 
@@ -228,6 +245,12 @@ module Multiwoven::Integrations::Source
       end
 
       private
+
+      def generate_path(user_id, audience_id)
+        # Generate a path based on User ID and Audience ID
+        # Format: /{user_id}/{audience_id}
+        "/#{user_id}/#{audience_id}"
+      end
 
       def get_results(conn, query_string)
         # Extract connection configuration from conn
@@ -255,15 +278,15 @@ module Multiwoven::Integrations::Source
         # List files in the bucket with the given prefix
         files = bucket_obj.files(prefix: prefix)
 
-        # Filter files by file type
-        files = files.select { |file| file.name.end_with?(".#{file_type}") } if files
+        # Filter files by file type (CSV)
+        files = files.select { |file| file.name.end_with?(".csv") } if files
 
         if !files || files.empty?
           return []
         end
 
         # Create a temporary directory to store downloaded files
-        temp_dir = Dir.mktmpdir("gcs_query")
+        temp_dir = Dir.mktmpdir("audience_query")
         
         # Download files to the temporary directory
         temp_files = []
@@ -276,41 +299,24 @@ module Multiwoven::Integrations::Source
         # Create a DuckDB connection to query the files
         conn = DuckDB::Database.open.connect
         
-        # Register the files with DuckDB
-        if file_type == "csv"
-          # Create a view that combines all CSV files
-          temp_files.each_with_index do |file_path, index|
-            table_name = "temp_csv_#{index}"
-            conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
-            
-            # For the first file, create the main view
-            if index == 0
-              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM #{table_name};")
-            else
-              # For subsequent files, append to the main view
-              conn.execute("DROP VIEW gcs_data;")
-              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM temp_csv_0 UNION ALL SELECT * FROM #{table_name};")
-            end
-          end
-        elsif file_type == "parquet"
-          # Create a view that combines all Parquet files
-          temp_files.each_with_index do |file_path, index|
-            table_name = "temp_parquet_#{index}"
-            conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_parquet('#{file_path}');")
-            
-            # For the first file, create the main view
-            if index == 0
-              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM #{table_name};")
-            else
-              # For subsequent files, append to the main view
-              conn.execute("DROP VIEW gcs_data;")
-              conn.execute("CREATE VIEW gcs_data AS SELECT * FROM temp_parquet_0 UNION ALL SELECT * FROM #{table_name};")
-            end
+        # Register the CSV files with DuckDB
+        # Create a view that combines all CSV files
+        temp_files.each_with_index do |file_path, index|
+          table_name = "temp_csv_#{index}"
+          conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
+          
+          # For the first file, create the main view
+          if index == 0
+            conn.execute("CREATE VIEW audience_data AS SELECT * FROM #{table_name};")
+          else
+            # For subsequent files, append to the main view
+            conn.execute("DROP VIEW audience_data;")
+            conn.execute("CREATE VIEW audience_data AS SELECT * FROM temp_csv_0 UNION ALL SELECT * FROM #{table_name};")
           end
         end
         
         # Execute the query
-        modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, 'FROM gcs_data')
+        modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, 'FROM audience_data')
         results = conn.query(modified_query)
         
         # Convert results to an array of hashes
@@ -327,7 +333,7 @@ module Multiwoven::Integrations::Source
         
         records
       rescue StandardError => e
-        handle_exception(e, { context: "GOOGLECLOUDSTORAGE:QUERY:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AUDIENCE:QUERY:EXCEPTION", type: "error" })
       end
 
       def batched_query(query, limit, offset)

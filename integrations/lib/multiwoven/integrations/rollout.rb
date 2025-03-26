@@ -24,7 +24,7 @@ module Multiwoven
       Sftp
       WatsonxAi
       Anthropic
-      GoogleCloudStorage
+      Audience
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

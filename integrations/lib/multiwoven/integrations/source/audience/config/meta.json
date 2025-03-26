@@ -1,11 +1,11 @@
 {
   "data": {
-    "name": "GoogleCloudStorage",
-    "title": "Google Cloud Storage",
+    "name": "Audience",
+    "title": "Audience Source Connector",
     "connector_type": "source",
     "category": "Data Lake",
     "documentation_url": "https://docs.mutliwoven.com",
-    "github_issue_label": "source-googlecloudstorage",
+    "github_issue_label": "source-audience",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
