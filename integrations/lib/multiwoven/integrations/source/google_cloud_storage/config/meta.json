@@ -3,7 +3,7 @@
     "name": "GoogleCloudStorage",
     "title": "Google Cloud Storage",
     "connector_type": "source",
-    "category": "Data Lake",
+    "category": "Cloud Storage",
     "documentation_url": "https://docs.mutliwoven.com",
     "github_issue_label": "source-googlecloudstorage",
     "icon": "icon.svg",
