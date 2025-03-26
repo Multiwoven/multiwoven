@@ -56,7 +56,17 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
     describe "#check_connection" do
       context "when the connection is successful" do
         it "returns a succeeded connection status" do
-          allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
+          # Mock the storage client creation with proper credentials
+          expect(Google::Cloud::Storage).to receive(:new).with(
+            project_id: "test-project",
+            credentials: {
+              type: "service_account",
+              project_id: "test-project",
+              private_key: "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
+              client_email: "test@example.com"
+            }
+          ).and_return(storage_client)
+
           allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
           allow(bucket).to receive(:exists?).and_return(true)
           
@@ -89,7 +99,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           incomplete_config = {
             "project_id": "",
             "client_email": "test@example.com",
-            "private_key": "key",
+            "private_key": "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
             "bucket": "test-bucket"
           }
           
@@ -97,7 +107,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           result = message.connection_status
           
           expect(result.status).to eq("failed")
-          expect(result.message).to include("Neither PUB key nor PRIV key: no start line")
+          expect(result.message).to include("Missing required parameters")
         end
       end
     end
@@ -163,7 +173,17 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
 
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(modified_config.to_json)
 
-        allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
+        # Mock the storage client creation with proper credentials
+        expect(Google::Cloud::Storage).to receive(:new).with(
+          project_id: "test-project",
+          credentials: {
+            type: "service_account",
+            project_id: "test-project",
+            private_key: "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
+            client_email: "test@example.com"
+          }
+        ).and_return(storage_client)
+
         allow(storage_client).to receive(:bucket).and_return(bucket)
         
         files_double = [instance_double(Google::Cloud::Storage::File)]
@@ -202,7 +222,17 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       it "discovers schema successfully" do
         connection_config = sync_config[:source][:connection_specification]
         
-        allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
+        # Mock the storage client creation with proper credentials
+        expect(Google::Cloud::Storage).to receive(:new).with(
+          project_id: "test-project",
+          credentials: {
+            type: "service_account",
+            project_id: "test-project",
+            private_key: "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
+            client_email: "test@example.com"
+          }
+        ).and_return(storage_client)
+
         allow(storage_client).to receive(:bucket).and_return(bucket)
         
         files_double = [instance_double(Google::Cloud::Storage::File)]
@@ -292,7 +322,17 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       let(:file_double) { instance_double(Google::Cloud::Storage::File) }
       
       before do
-        allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
+        # Mock the storage client creation with proper credentials
+        expect(Google::Cloud::Storage).to receive(:new).with(
+          project_id: "test-project",
+          credentials: {
+            type: "service_account",
+            project_id: "test-project",
+            private_key: "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n",
+            client_email: "test@example.com"
+          }
+        ).and_return(storage_client)
+
         allow(storage_client).to receive(:bucket).and_return(bucket)
 
         files_double = [file_double]
