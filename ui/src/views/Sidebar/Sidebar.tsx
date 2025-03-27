@@ -1,6 +1,6 @@
 import { Box, Flex, Stack, Text, Divider } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
-import IconImage from '@/assets/images/multiwoven-logo.svg';
+import IconImage from '@/assets/images/audience-logo.svg';
 import {
   FiSettings,
   FiDatabase,
