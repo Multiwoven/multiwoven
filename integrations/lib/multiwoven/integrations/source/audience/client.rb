@@ -5,64 +5,44 @@ module Multiwoven::Integrations::Source
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
       def check_connection(connection_config)
-        connection_config = connection_config.with_indifferent_access
-        # Extract user_id and audience_id from connection_config
-        user_id = connection_config["user_id"]
-        audience_id = connection_config["audience_id"]
+        initialize_client(connection_config)
         
         # Validate required fields
-        if user_id.nil? || user_id.empty? || audience_id.nil? || audience_id.empty?
+        if @user_id.nil? || @user_id.empty? || @audience_id.nil? || @audience_id.empty?
           return ConnectionStatus.new(
             status: ConnectionStatusType["failed"],
             message: "User ID and Audience ID are required."
           ).to_multiwoven_message
         end
         
-        # Use environment variables for credentials
-        project_id = ENV['AUDIENCE_PROJECT_ID']
-        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
-        private_key = ENV['AUDIENCE_PRIVATE_KEY']
-        bucket = ENV['AUDIENCE_BUCKET']
-        
-        # Generate path based on User ID and Audience ID
-        path = generate_path(user_id, audience_id)
-        # File type is fixed as CSV
-        file_type = "csv"
-
         begin
           # Create a Google Cloud Storage client
-          storage = create_storage_client(project_id, client_email, private_key)
+          storage = create_storage_client
 
           # Check if the bucket exists
-          bucket_obj = storage.bucket(bucket)
+          bucket_obj = storage.bucket(@bucket)
 
           if bucket_obj.nil? || !bucket_obj.exists?
             return ConnectionStatus.new(
               status: ConnectionStatusType["failed"],
-              message: "Bucket '#{bucket}' not found or you don't have access to it."
+              message: "Bucket '#{@bucket}' not found or you don't have access to it."
             ).to_multiwoven_message
           end
 
-          # Prepare the path prefix
-          prefix = path.start_with?("/") ? path[1..-1] : path
-
           # List files in the bucket with the given prefix
-          files = bucket_obj.files(prefix: prefix)
-
-          # Filter files by file type (CSV)
-          files = files.select { |file| file.name.end_with?(".csv") }
+          files = list_files(bucket_obj)
 
           if files.empty?
             return ConnectionStatus.new(
               status: ConnectionStatusType["failed"],
-              message: "No CSV files found for User ID '#{user_id}' and Audience ID '#{audience_id}'."
+              message: "No CSV files found for User ID '#{@user_id}' and Audience ID '#{@audience_id}'."
             ).to_multiwoven_message
           end
 
           # Connection successful
           ConnectionStatus.new(
             status: ConnectionStatusType["succeeded"],
-            message: "Successfully connected to Audience data source for User ID '#{user_id}' and Audience ID '#{audience_id}'"
+            message: "Successfully connected to Audience data source for User ID '#{@user_id}' and Audience ID '#{@audience_id}'"
           ).to_multiwoven_message
         rescue StandardError => e
           ConnectionStatus.new(
@@ -73,39 +53,17 @@ module Multiwoven::Integrations::Source
       end
 
       def discover(connection_config)
-        connection_config = connection_config.with_indifferent_access
-        # Extract user_id and audience_id from connection_config
-        user_id = connection_config["user_id"]
-        audience_id = connection_config["audience_id"]
-        
-        # Use environment variables for credentials
-        project_id = ENV['AUDIENCE_PROJECT_ID']
-        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
-        private_key = ENV['AUDIENCE_PRIVATE_KEY']
-        bucket = ENV['AUDIENCE_BUCKET']
-        
-        # Generate path based on User ID and Audience ID
-        path = generate_path(user_id, audience_id)
-        # File type is fixed as CSV
-        file_type = "csv"
+        initialize_client(connection_config)
 
         begin
-          require 'csv'
-
           # Create a Google Cloud Storage client
-          storage = create_storage_client(project_id, client_email, private_key)
+          storage = create_storage_client
 
           # Get the bucket
-          bucket_obj = storage.bucket(bucket)
-
-          # Prepare the path prefix
-          prefix = path.start_with?("/") ? path[1..-1] : path
+          bucket_obj = storage.bucket(@bucket)
 
           # List files in the bucket with the given prefix
-          files = bucket_obj.files(prefix: prefix)
-
-          # Filter files by file type (CSV)
-          files = files.select { |file| file.name.end_with?(".csv") }
+          files = list_files(bucket_obj)
 
           # Return empty catalog if no files are found
           if files.empty?
@@ -117,9 +75,6 @@ module Multiwoven::Integrations::Source
           # Get the latest file to determine schema
           latest_file = get_latest_file(files)
           file_content = latest_file.download
-
-          columns = []
-          json_schema = {}
 
           # Process CSV file to determine schema
           csv = CSV.parse(file_content, headers: true)
@@ -138,7 +93,7 @@ module Multiwoven::Integrations::Source
 
           streams = [
             Multiwoven::Integrations::Protocol::Stream.new(
-              name: "audience_data_#{user_id}_#{audience_id}",
+              name: "audience_data_#{@user_id}_#{@audience_id}",
               action: StreamAction["fetch"],
               json_schema: json_schema
             )
@@ -152,21 +107,8 @@ module Multiwoven::Integrations::Source
       end
 
       def read(sync_config)
-        connection_config = sync_config.source.connection_specification.with_indifferent_access
-        # Extract user_id and audience_id from connection_config
-        user_id = connection_config["user_id"]
-        audience_id = connection_config["audience_id"]
-        
-        # Use environment variables for credentials
-        project_id = ENV['AUDIENCE_PROJECT_ID']
-        client_email = ENV['AUDIENCE_CLIENT_EMAIL']
-        private_key = ENV['AUDIENCE_PRIVATE_KEY']
-        bucket = ENV['AUDIENCE_BUCKET']
-        
-        # Generate path based on User ID and Audience ID
-        path = generate_path(user_id, audience_id)
-        # File type is fixed as CSV
-        file_type = "csv"
+        connection_config = sync_config.source.connection_specification
+        initialize_client(connection_config)
 
         begin
           # If there's a query in the sync_config, we'll process it
@@ -177,33 +119,23 @@ module Multiwoven::Integrations::Source
             return query(conn, query_string)
           end
 
-          require 'csv'
-
           # Create a Google Cloud Storage client
-          storage = create_storage_client(project_id, client_email, private_key)
+          storage = create_storage_client
 
           # Get the bucket
-          bucket_obj = storage.bucket(bucket)
-
-          # Prepare the path prefix
-          prefix = path.start_with?("/") ? path[1..-1] : path
+          bucket_obj = storage.bucket(@bucket)
 
           # List files in the bucket with the given prefix
-          files = bucket_obj.files(prefix: prefix)
-
-          # Filter files by file type (CSV)
-          files = files.select { |file| file.name.end_with?(".csv") } if files
+          files = list_files(bucket_obj)
 
           # Get the latest file based on timestamp in filename
           latest_file = get_latest_file(files)
           
-          # Process only the latest file and collect records
-          records = []
-
           # Download the file content
           file_content = latest_file.download
 
           # Process the CSV file
+          records = []
           CSV.parse(file_content, headers: true).each do |row|
             records << RecordMessage.new(
               data: row.to_h,
@@ -223,23 +155,13 @@ module Multiwoven::Integrations::Source
       end
 
       def create_connection(config)
-        # For Audience, we'll create a connection configuration that can be used by our query method
-        config = config.with_indifferent_access
-        user_id = config["user_id"]
-        audience_id = config["audience_id"]
-        
-        {
-          project_id: ENV['AUDIENCE_PROJECT_ID'],
-          client_email: ENV['AUDIENCE_CLIENT_EMAIL'],
-          private_key: ENV['AUDIENCE_PRIVATE_KEY'],
-          bucket: ENV['AUDIENCE_BUCKET'],
-          path: generate_path(user_id, audience_id),
-          file_type: "csv"
-        }
+        initialize_client(config) if config
+        # Create a DuckDB connection to query the file
+        @duckdb_conn = DuckDB::Database.open.connect
       end
 
       def query(conn, query_string)
-        records = get_results(conn, query_string)
+        records = get_results(query_string)
         records.map do |row|
           RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
         end
@@ -247,10 +169,35 @@ module Multiwoven::Integrations::Source
 
       private
 
+      def initialize_client(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        @user_id = connection_config["user_id"]
+        @audience_id = connection_config["audience_id"]
+        @project_id = ENV['AUDIENCE_PROJECT_ID']
+        @client_email = ENV['AUDIENCE_CLIENT_EMAIL']
+        @private_key = ENV['AUDIENCE_PRIVATE_KEY']
+        @bucket = ENV['AUDIENCE_BUCKET']
+        @path = generate_path(@user_id, @audience_id)
+        @file_type = "csv"
+      end
+
       def generate_path(user_id, audience_id)
         # Generate a path based on User ID and Audience ID
         # Format: /{user_id}/{audience_id}
         "/#{user_id}/#{audience_id}"
+      end
+
+      def list_files(bucket_obj)
+        # Prepare the path prefix
+        prefix = @path.start_with?("/") ? @path[1..-1] : @path
+
+        # List files in the bucket with the given prefix
+        files = bucket_obj.files(prefix: prefix)
+
+        # Filter files by file type
+        files = files.select { |file| file.name.end_with?(".#{@file_type}") } if files
+        
+        files || []
       end
 
       def get_latest_file(files)
@@ -279,36 +226,17 @@ module Multiwoven::Integrations::Source
         latest_file
       end
 
-      def get_results(conn, query_string)
-        # Extract connection configuration from conn
-        project_id = conn[:project_id]
-        client_email = conn[:client_email]
-        private_key = conn[:private_key]
-        bucket = conn[:bucket]
-        path = conn[:path] || ""
-        file_type = conn[:file_type]
-
-        require 'csv'
-        require 'duckdb'
-        require 'fileutils'
-        require 'tmpdir'
-
+      def get_results(query_string)
         # Create a Google Cloud Storage client
-        storage = create_storage_client(project_id, client_email, private_key)
+        storage = create_storage_client
 
         # Get the bucket
-        bucket_obj = storage.bucket(bucket)
-
-        # Prepare the path prefix
-        prefix = path.start_with?("/") ? path[1..-1] : path
+        bucket_obj = storage.bucket(@bucket)
 
         # List files in the bucket with the given prefix
-        files = bucket_obj.files(prefix: prefix)
+        files = list_files(bucket_obj)
 
-        # Filter files by file type (CSV)
-        files = files.select { |file| file.name.end_with?(".csv") } if files
-
-        if !files || files.empty?
+        if files.empty?
           return []
         end
 
@@ -322,8 +250,8 @@ module Multiwoven::Integrations::Source
         file_path = File.join(temp_dir, File.basename(latest_file.name))
         latest_file.download(file_path)
         
-        # Create a DuckDB connection to query the file
-        conn = DuckDB::Database.open.connect
+        # Use the DuckDB connection from create_connection
+        conn = @duckdb_conn
         
         # Register the CSV file with DuckDB
         table_name = "audience_data"
@@ -357,18 +285,18 @@ module Multiwoven::Integrations::Source
         "#{query} LIMIT #{limit} OFFSET #{offset}"
       end
 
-      def create_storage_client(project_id, client_email, private_key)
+      def create_storage_client
         # Format the private key properly
-        formatted_key = private_key.gsub('\n', "\n")
+        formatted_key = @private_key.gsub('\n', "\n")
         
         # Create a Google Cloud Storage client
         Google::Cloud::Storage.new(
-          project_id: project_id,
+          project_id: @project_id,
           credentials: {
             type: "service_account",
-            project_id: project_id,
+            project_id: @project_id,
             private_key: formatted_key,
-            client_email: client_email
+            client_email: @client_email
           }
         )
       end
