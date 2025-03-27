@@ -114,9 +114,9 @@ module Multiwoven::Integrations::Source
             ).to_multiwoven_message
           end
 
-          # Get the first file to determine schema
-          sample_file = files.first
-          file_content = sample_file.download
+          # Get the latest file to determine schema
+          latest_file = get_latest_file(files)
+          file_content = latest_file.download
 
           columns = []
           json_schema = {}
@@ -194,20 +194,21 @@ module Multiwoven::Integrations::Source
           # Filter files by file type (CSV)
           files = files.select { |file| file.name.end_with?(".csv") } if files
 
-          # Process each file and collect records
+          # Get the latest file based on timestamp in filename
+          latest_file = get_latest_file(files)
+          
+          # Process only the latest file and collect records
           records = []
 
-          files.each do |file|
-            # Download the file content
-            file_content = file.download
+          # Download the file content
+          file_content = latest_file.download
 
-            # Process the CSV file
-            CSV.parse(file_content, headers: true).each do |row|
-              records << RecordMessage.new(
-                data: row.to_h,
-                emitted_at: Time.now.to_i
-              ).to_multiwoven_message
-            end
+          # Process the CSV file
+          CSV.parse(file_content, headers: true).each do |row|
+            records << RecordMessage.new(
+              data: row.to_h,
+              emitted_at: Time.now.to_i
+            ).to_multiwoven_message
           end
 
           records
@@ -252,6 +253,32 @@ module Multiwoven::Integrations::Source
         "/#{user_id}/#{audience_id}"
       end
 
+      def get_latest_file(files)
+        # Return nil if no files are provided
+        return nil if files.nil? || files.empty?
+        
+        # Extract timestamp from filename and find the latest file
+        # Expected filename format: something_YYYYMMDD_HHMMSS.csv or something_YYYYMMDD.csv
+        latest_file = files.max_by do |file|
+          filename = File.basename(file.name)
+          # Try to extract timestamp using different patterns
+          timestamp = nil
+          
+          # Try pattern with date and time (YYYYMMDD_HHMMSS)
+          if filename =~ /(\d{8}_\d{6})/
+            timestamp = $1
+          # Try pattern with just date (YYYYMMDD)
+          elsif filename =~ /(\d{8})/
+            timestamp = $1
+          end
+          
+          # If no timestamp found, use the file's updated_at attribute as fallback
+          timestamp || file.updated_at.to_s
+        end
+        
+        latest_file
+      end
+
       def get_results(conn, query_string)
         # Extract connection configuration from conn
         project_id = conn[:project_id]
@@ -285,35 +312,22 @@ module Multiwoven::Integrations::Source
           return []
         end
 
+        # Get the latest file based on timestamp in filename
+        latest_file = get_latest_file(files)
+        
         # Create a temporary directory to store downloaded files
         temp_dir = Dir.mktmpdir("audience_query")
         
-        # Download files to the temporary directory
-        temp_files = []
-        files.each do |file|
-          file_path = File.join(temp_dir, File.basename(file.name))
-          file.download(file_path)
-          temp_files << file_path
-        end
+        # Download only the latest file to the temporary directory
+        file_path = File.join(temp_dir, File.basename(latest_file.name))
+        latest_file.download(file_path)
         
-        # Create a DuckDB connection to query the files
+        # Create a DuckDB connection to query the file
         conn = DuckDB::Database.open.connect
         
-        # Register the CSV files with DuckDB
-        # Create a view that combines all CSV files
-        temp_files.each_with_index do |file_path, index|
-          table_name = "temp_csv_#{index}"
-          conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
-          
-          # For the first file, create the main view
-          if index == 0
-            conn.execute("CREATE VIEW audience_data AS SELECT * FROM #{table_name};")
-          else
-            # For subsequent files, append to the main view
-            conn.execute("DROP VIEW audience_data;")
-            conn.execute("CREATE VIEW audience_data AS SELECT * FROM temp_csv_0 UNION ALL SELECT * FROM #{table_name};")
-          end
-        end
+        # Register the CSV file with DuckDB
+        table_name = "audience_data"
+        conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
         
         # Execute the query
         modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, 'FROM audience_data')
