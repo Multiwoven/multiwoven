@@ -54,6 +54,7 @@ const SyncRuns = () => {
           ) : (
             <DataTable data={data?.data} columns={allColumns} onRowClick={handleOnSyncClick} />
           )}
+<<<<<<< HEAD
           <Box display='flex' flexDirection='row-reverse' pt='10px'>
             <Pagination
               currentPage={currentPage}
@@ -63,6 +64,17 @@ const SyncRuns = () => {
               handlePrevPage={handlePrevPage}
             />
           </Box>
+=======
+          {data?.data && data.data.length > 0 && data.links && (
+            <Box display='flex' justifyContent='center'>
+              <Pagination
+                links={data.links}
+                currentPage={filters.page ? Number(filters.page) : 1}
+                handlePageChange={(page) => updateFilters({ ...filters, page: page.toString() })}
+              />
+            </Box>
+          )}
+>>>>>>> 5498d999 (fix(CE): pagination showing in empty state (#881))
         </Box>
       )}
     </Box>
