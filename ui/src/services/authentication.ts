@@ -1,4 +1,5 @@
 import { ErrorResponse, multiwovenFetch } from './common';
+import { buildUrlWithParams } from './utils';
 
 export type SignUpPayload = {
   email: string;
@@ -103,7 +104,7 @@ export const resetPassword = async (payload: ResetPasswordPayload) =>
 export const verifyUser = async (confirmation_token: string) =>
   multiwovenFetch<string, ApiResponse<MessageResponse>>({
     method: 'get',
-    url: `/verify_user?confirmation_token=${confirmation_token}`,
+    url: buildUrlWithParams('/verify_user', { confirmation_token }),
   });
 
 export const resendUserVerification = async (payload: ForgotPasswordPayload) =>

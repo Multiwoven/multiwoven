@@ -1,4 +1,5 @@
 import { multiwovenFetch } from './common';
+import { buildUrlWithParams } from './utils';
 
 export type ReportObject = {
   time_slice: string;
@@ -27,11 +28,12 @@ export const getReport = async ({
   time_period = 'one_week',
   connector_ids = [],
 }: ReportOptions): Promise<Report> => {
-  const connectorIdsQueryParam = connector_ids.map((id) => `connector_ids[]=${id}`).join('&');
-  const url = `/reports?type=workspace_activity&metric=${metric}&time_period=${time_period}&${connectorIdsQueryParam}`;
-
   return multiwovenFetch<null, Report>({
     method: 'get',
-    url: url,
+    url: buildUrlWithParams(
+      '/reports',
+      { type: 'workspace_activity', metric, time_period, connector_ids },
+      { arrayFormat: 'brackets' },
+    ),
   });
 };
