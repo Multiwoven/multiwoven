@@ -66,6 +66,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "stripe"
   spec.add_runtime_dependency "tiny_tds"
   spec.add_runtime_dependency "zendesk_api"
+  spec.add_runtime_dependency "sentry-ruby"
 
   spec.add_development_dependency "byebug"
   spec.add_development_dependency "rspec"

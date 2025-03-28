@@ -79,6 +79,8 @@ gem "tiny_tds"
 
 gem "MailchimpMarketing"
 
+gem 'sentry-ruby'
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
