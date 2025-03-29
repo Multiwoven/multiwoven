@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="storageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4285F4"/>
+      <stop offset="100%" style="stop-color:#1273DE"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="192" height="192" rx="32" ry="32" fill="url(#storageGradient)"/>
+  
+  <path d="M96 48 L144 80 L144 112 L96 144 L48 112 L48 80 Z" 
+        fill="white" 
+        opacity="0.8"/>
+  
+  <path d="M96 64 L128 84 L128 104 L96 124 L64 104 L64 84 Z" 
+        fill="white"/>
+</svg>
