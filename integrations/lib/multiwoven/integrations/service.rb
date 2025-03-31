@@ -40,14 +40,12 @@ module Multiwoven
 
         def build_connectors(enabled_connectors, type)
           enabled_connectors.map do |connector|
-            begin
-              client = connector_class(type, connector).new
-              client.meta_data[:data][:connector_spec] = client.connector_spec.to_h
-              client.meta_data[:data]
-            rescue StandardError => e
-              logger.error("Error loading connector #{type}/#{connector}: #{e.message}")
-              nil
-            end
+            client = connector_class(type, connector).new
+            client.meta_data[:data][:connector_spec] = client.connector_spec.to_h
+            client.meta_data[:data]
+          rescue StandardError => e
+            logger.error("Error loading connector #{type}/#{connector}: #{e.message}")
+            nil
           end.compact
         end
 

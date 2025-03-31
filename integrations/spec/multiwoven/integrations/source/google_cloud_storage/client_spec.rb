@@ -6,7 +6,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
   let(:bucket) { instance_double(Google::Cloud::Storage::Bucket) }
   let(:duckdb_conn) { instance_double(DuckDB::Connection) }
   let(:query_result) { instance_double("DuckDB::Result") }
-  
+
   let(:connection_config) do
     {
       "project_id" => "test-project",
@@ -70,7 +70,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
     allow(file_double).to receive(:name).and_return("test-path/data.csv")
     allow(file_double).to receive(:download).and_return(file_content)
     allow(file_double).to receive(:download).with(any_args).and_return(nil)
-    
+
     # Initialize client with connection config before each test
     client.send(:initialize_client, connection_config)
   end
@@ -88,7 +88,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         # Call the method
         message = client.check_connection(connection_config)
         result = message.connection_status
-        
+
         # Assertions
         expect(result.status).to eq("succeeded")
         expect(result.message).to include("Successfully connected")
@@ -101,11 +101,11 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         allow(client).to receive(:create_storage_client).and_return(storage_client)
         allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
         allow(bucket).to receive(:exists?).and_return(false)
-        
+
         # Call the method
         message = client.check_connection(connection_config)
         result = message.connection_status
-        
+
         # Assertions
         expect(result.status).to eq("failed")
         expect(result.message).to include("Bucket")
@@ -121,11 +121,11 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         allow(bucket).to receive(:exists?).and_return(true)
         allow(bucket).to receive(:nil?).and_return(false)
         allow(client).to receive(:list_files).with(bucket).and_return([])
-        
+
         # Call the method
         message = client.check_connection(connection_config)
         result = message.connection_status
-        
+
         # Assertions
         expect(result.status).to eq("failed")
         expect(result.message).to include("No csv files found")
@@ -136,11 +136,11 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       it "returns a failed connection status with error message" do
         # Setup mocks to raise an exception
         allow(client).to receive(:create_storage_client).and_raise(StandardError, "Connection failed")
-        
+
         # Call the method
         message = client.check_connection(connection_config)
         result = message.connection_status
-        
+
         # Assertions
         expect(result.status).to eq("failed")
         expect(result.message).to include("Failed to connect")
@@ -156,17 +156,17 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         allow(client).to receive(:create_storage_client).and_return(storage_client)
         allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
         allow(client).to receive(:list_files).with(bucket).and_return(files_array)
-        
+
         # Mock CSV parsing
         csv_double = double("CSV")
-        csv_headers = ["id", "name"]
+        csv_headers = %w[id name]
         allow(CSV).to receive(:parse).and_return(csv_double)
         allow(csv_double).to receive(:headers).and_return(csv_headers)
-        
+
         # Call the method
         message = client.discover(connection_config)
         catalog = message.catalog
-        
+
         # Assertions
         expect(catalog.streams).not_to be_empty
         expect(catalog.streams.first.name).to eq("test-bucket_csv_files")
@@ -180,11 +180,11 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         allow(client).to receive(:create_storage_client).and_return(storage_client)
         allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
         allow(client).to receive(:list_files).with(bucket).and_return([])
-        
+
         # Call the method
         message = client.discover(connection_config)
         catalog = message.catalog
-        
+
         # Assertions
         expect(catalog.streams).to be_empty
       end
@@ -200,7 +200,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
             type: "error"
           }
         )
-        
+
         # Call the method
         client.discover(connection_config)
       end
@@ -212,31 +212,30 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       it "processes the query and returns records" do
         # Setup mocks
         allow(client).to receive(:create_connection).and_return(duckdb_conn)
-        
+
         # Setup expected results from the query
-        query_results = [{"id" => "1", "name" => "Test User"}, {"id" => "2", "name" => "Another User"}]
         allow(client).to receive(:query).with(duckdb_conn, "SELECT * FROM gcs_data").and_return(
           [
             Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: {"id" => "1", "name" => "Test User"},
+              data: { "id" => "1", "name" => "Test User" },
               emitted_at: Time.now.to_i
             ).to_multiwoven_message,
             Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: {"id" => "2", "name" => "Another User"},
+              data: { "id" => "2", "name" => "Another User" },
               emitted_at: Time.now.to_i
             ).to_multiwoven_message
           ]
         )
-        
+
         # Call the method
         records = client.read(sync_config)
-        
+
         # Assertions
         expect(records).to be_an(Array)
         expect(records.size).to eq(2)
         expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-        expect(records.first.record.data).to eq({"id" => "1", "name" => "Test User"})
-        expect(records.last.record.data).to eq({"id" => "2", "name" => "Another User"})
+        expect(records.first.record.data).to eq({ "id" => "1", "name" => "Test User" })
+        expect(records.last.record.data).to eq({ "id" => "2", "name" => "Another User" })
       end
     end
 
@@ -246,28 +245,28 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         sync_config_with_limit = sync_config.dup
         sync_config_with_limit.limit = 10
         sync_config_with_limit.offset = 5
-        
+
         # Setup mocks
         allow(client).to receive(:create_connection).and_return(duckdb_conn)
-        
+
         # Setup expected batched query and results
         batched_query = "SELECT * FROM gcs_data LIMIT 10 OFFSET 5"
         allow(client).to receive(:query).with(duckdb_conn, batched_query).and_return(
           [
             Multiwoven::Integrations::Protocol::RecordMessage.new(
-              data: {"id" => "6", "name" => "User 6"},
+              data: { "id" => "6", "name" => "User 6" },
               emitted_at: Time.now.to_i
             ).to_multiwoven_message
           ]
         )
-        
+
         # Call the method
         records = client.read(sync_config_with_limit)
-        
+
         # Assertions
         expect(records).to be_an(Array)
         expect(records.size).to eq(1)
-        expect(records.first.record.data).to eq({"id" => "6", "name" => "User 6"})
+        expect(records.first.record.data).to eq({ "id" => "6", "name" => "User 6" })
       end
     end
 
@@ -281,26 +280,26 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
           "query_type" => "raw_sql",
           "primary_key" => "id"
         }
-        
+
         # Convert to SyncConfig object
         sync_config_no_query = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_hash_no_query.to_json)
-        
+
         # Setup mocks for reading files directly
         allow(client).to receive(:create_storage_client).and_return(storage_client)
         allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
         allow(client).to receive(:list_files).with(bucket).and_return(files_array)
-        
+
         # Mock CSV parsing with real CSV data
         csv_rows = [
-          {"id" => "1", "name" => "Test User"},
-          {"id" => "2", "name" => "Another User"}
+          { "id" => "1", "name" => "Test User" },
+          { "id" => "2", "name" => "Another User" }
         ]
         csv_mock = csv_rows.map { |row| double(to_h: row) }
         allow(CSV).to receive(:parse).with(anything, headers: true).and_return(csv_mock)
-        
+
         # Call the method
         records = client.read(sync_config_no_query)
-        
+
         # Assertions
         expect(records).to be_an(Array)
         expect(records.size).to eq(2)
@@ -314,7 +313,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
         # Setup sync_config with sync_run_id
         sync_config_with_run_id = sync_config.dup
         sync_config_with_run_id.sync_run_id = "2"
-        
+
         # Setup mocks to raise an exception
         allow(client).to receive(:create_connection).and_raise(StandardError, "test error")
         expect(client).to receive(:handle_exception).with(
@@ -338,10 +337,10 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       duckdb_database = instance_double(DuckDB::Database)
       allow(DuckDB::Database).to receive(:open).and_return(duckdb_database)
       allow(duckdb_database).to receive(:connect).and_return(duckdb_conn)
-      
+
       # Call the method
       result = client.create_connection(connection_config)
-      
+
       # Assertions
       expect(result).to eq(duckdb_conn)
     end
@@ -350,86 +349,86 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
   describe "#query" do
     it "executes a query and returns formatted records" do
       # Setup mocks
-      query_results = [{"id" => "1", "name" => "Test User"}]
-      allow(client).to receive(:get_results).with(duckdb_conn, "SELECT * FROM gcs_data").and_return(query_results)
-      
+      query_results = [{ "id" => "1", "name" => "Test User" }]
+      allow(client).to receive(:results).with(duckdb_conn, "SELECT * FROM gcs_data").and_return(query_results)
+
       # Call the method
       records = client.query(duckdb_conn, "SELECT * FROM gcs_data")
-      
+
       # Assertions
       expect(records).to be_an(Array)
       expect(records.size).to eq(1)
       expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
-      expect(records.first.record.data).to eq({"id" => "1", "name" => "Test User"})
+      expect(records.first.record.data).to eq({ "id" => "1", "name" => "Test User" })
     end
   end
 
-  describe "#get_results" do
+  describe "#results" do
     before do
       # Set up instance variables directly
       client.instance_variable_set(:@bucket, "test-bucket")
       client.instance_variable_set(:@file_type, "csv")
-      
+
       allow(client).to receive(:create_storage_client).and_return(storage_client)
       allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
       allow(client).to receive(:list_files).with(bucket).and_return(files_array)
-      
+
       # Mock Dir and FileUtils
       allow(Dir).to receive(:mktmpdir).and_return("/tmp/gcs_query")
       allow(File).to receive(:join).and_return("/tmp/gcs_query/data.csv")
       allow(File).to receive(:basename).and_return("data.csv")
       allow(Dir).to receive(:exist?).and_return(true)
       allow(FileUtils).to receive(:remove_entry)
-      
+
       # Mock DuckDB connection
       allow(duckdb_conn).to receive(:execute)
       allow(duckdb_conn).to receive(:query).and_return(query_result)
       allow(query_result).to receive(:columns).and_return([
-        double(name: "id"),
-        double(name: "name")
-      ])
+                                                            double(name: "id"),
+                                                            double(name: "name")
+                                                          ])
       allow(query_result).to receive(:each).and_yield(["1", "Test User"])
     end
-    
+
     it "executes a query against downloaded CSV file and returns results" do
       # Call the private method
-      results = client.send(:get_results, duckdb_conn, "SELECT * FROM gcs_data")
-      
+      results = client.send(:results, duckdb_conn, "SELECT * FROM gcs_data")
+
       # Assertions
       expect(results).to be_an(Array)
       expect(results.size).to eq(1)
-      expect(results.first).to eq({"id" => "1", "name" => "Test User"})
+      expect(results.first).to eq({ "id" => "1", "name" => "Test User" })
     end
-    
+
     it "handles empty file list" do
       # Setup mocks for empty file list
       allow(client).to receive(:list_files).with(bucket).and_return([])
-      
+
       # Call the private method
-      results = client.send(:get_results, duckdb_conn, "SELECT * FROM gcs_data")
-      
+      results = client.send(:results, duckdb_conn, "SELECT * FROM gcs_data")
+
       # Assertions
       expect(results).to eq([])
     end
-    
+
     it "handles query exceptions" do
       # Setup mocks to raise an exception
       allow(duckdb_conn).to receive(:execute).and_raise(StandardError, "Query failed")
-      
+
       # Allow handle_exception to accept any StandardError
       expect(client).to receive(:handle_exception) do |exception, options|
         expect(exception).to be_a(StandardError)
         expect(options).to eq({
-          context: "GOOGLECLOUDSTORAGE:QUERY:EXCEPTION",
-          type: "error"
-        })
+                                context: "GOOGLECLOUDSTORAGE:QUERY:EXCEPTION",
+                                type: "error"
+                              })
         # Return an empty array to satisfy the test
         []
       end
-      
+
       # Call the private method
-      result = client.send(:get_results, duckdb_conn, "SELECT * FROM gcs_data")
-      
+      result = client.send(:results, duckdb_conn, "SELECT * FROM gcs_data")
+
       # Assertions
       expect(result).to eq([])
     end
@@ -439,15 +438,15 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
     it "adds LIMIT and OFFSET to a query" do
       # Call the private method
       result = client.send(:batched_query, "SELECT * FROM gcs_data", 10, 5)
-      
+
       # Assertions
       expect(result).to eq("SELECT * FROM gcs_data LIMIT 10 OFFSET 5")
     end
-    
+
     it "removes trailing semicolon before adding LIMIT and OFFSET" do
       # Call the private method
       result = client.send(:batched_query, "SELECT * FROM gcs_data;", 10, 5)
-      
+
       # Assertions
       expect(result).to eq("SELECT * FROM gcs_data LIMIT 10 OFFSET 5")
     end
@@ -459,13 +458,13 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       client.instance_variable_set(:@project_id, "test-project")
       client.instance_variable_set(:@client_email, "test@example.com")
       client.instance_variable_set(:@private_key, "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n")
-      
+
       # Setup mocks
       allow(Google::Cloud::Storage).to receive(:new).and_return(storage_client)
-      
+
       # Call the private method
       result = client.send(:create_storage_client)
-      
+
       # Assertions
       expect(result).to eq(storage_client)
       expect(Google::Cloud::Storage).to have_received(:new).with(
@@ -485,7 +484,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
       # Call the private method with a fresh client to avoid interference from before block
       fresh_client = Multiwoven::Integrations::Source::GoogleCloudStorage::Client.new
       fresh_client.send(:initialize_client, connection_config)
-      
+
       # Assertions
       expect(fresh_client.instance_variable_get(:@project_id)).to eq("test-project")
       expect(fresh_client.instance_variable_get(:@client_email)).to eq("test@example.com")
@@ -496,39 +495,39 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
     end
   end
 
-  describe "#get_bucket" do
+  describe "#bucket" do
     it "gets the bucket using the cached storage client" do
       # Setup mocks
-      allow(client).to receive(:get_storage_client).and_return(storage_client)
+      allow(client).to receive(:storage_client).and_return(storage_client)
       allow(storage_client).to receive(:bucket).with("test-bucket").and_return(bucket)
-      
+
       # Call the private method
-      result = client.send(:get_bucket)
-      
+      result = client.send(:bucket)
+
       # Assertions
       expect(result).to eq(bucket)
     end
   end
 
-  describe "#get_path_prefix" do
+  describe "#path_prefix" do
     it "formats the path prefix correctly when it starts with a slash" do
       # Setup
       client.instance_variable_set(:@path, "/test-path")
-      
+
       # Call the private method
-      result = client.send(:get_path_prefix)
-      
+      result = client.send(:path_prefix)
+
       # Assertions
       expect(result).to eq("test-path")
     end
-    
+
     it "keeps the path prefix as is when it doesn't start with a slash" do
       # Setup
       client.instance_variable_set(:@path, "test-path")
-      
+
       # Call the private method
-      result = client.send(:get_path_prefix)
-      
+      result = client.send(:path_prefix)
+
       # Assertions
       expect(result).to eq("test-path")
     end
@@ -538,77 +537,82 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleCloudStorage::Client do
     it "lists files with the correct prefix and filters by file type" do
       # Setup mocks
       allow(bucket).to receive(:files).with(prefix: "test-path").and_return(files_array)
-      
+
       # Setup client instance variables
       client.instance_variable_set(:@path, "test-path")
       client.instance_variable_set(:@file_type, "csv")
-      
+
       # Call the private method
       result = client.send(:list_files, bucket)
-      
+
       # Assertions
       expect(result).to eq(files_array)
     end
-    
+
     it "handles nil result from bucket.files" do
       # Setup mocks
       allow(bucket).to receive(:files).with(prefix: "test-path").and_return(nil)
-      
+
       # Setup client instance variables
       client.instance_variable_set(:@path, "test-path")
       client.instance_variable_set(:@file_type, "csv")
-      
+
       # Call the private method
       result = client.send(:list_files, bucket)
-      
+
       # Assertions
       expect(result).to eq([])
     end
   end
 
-  describe "#get_schema_from_file" do
+  describe "#schema_from_file" do
     it "creates a schema from CSV file content" do
       # Setup
       client.instance_variable_set(:@file_type, "csv")
-      
-      # Mock CSV parsing
-      csv_double = double("CSV")
-      csv_headers = ["id", "name"]
-      allow(CSV).to receive(:parse).with(file_content, headers: true).and_return(csv_double)
-      allow(csv_double).to receive(:headers).and_return(csv_headers)
-      
+
+      # Mock CSV data
+      file_content = "id,name\n1,Test User"
+      csv_headers = %w[id name]
+      csv_data = [["1", "Test User"]]
+      csv = double("CSV")
+      allow(CSV).to receive(:parse).with(file_content, headers: true).and_return(csv)
+      allow(csv).to receive(:headers).and_return(csv_headers)
+      allow(csv).to receive(:first).and_return(csv_data)
+
       # Call the private method
-      result = client.send(:get_schema_from_file, file_content)
-      
+      result = client.send(:schema_from_file, file_content)
+
       # Assertions
       expect(result).to be_a(Hash)
       expect(result["type"]).to eq("object")
       expect(result["properties"]).to include("id", "name")
-      expect(result["properties"]["id"]).to eq({"type" => "string"})
-      expect(result["properties"]["name"]).to eq({"type" => "string"})
+      expect(result["properties"]["id"]).to eq({ "type" => "string" })
+      expect(result["properties"]["name"]).to eq({ "type" => "string" })
     end
-    
+
     it "creates a placeholder schema for parquet files" do
       # Setup
       client.instance_variable_set(:@file_type, "parquet")
-      
+      file_content = "mock parquet content"
+
       # Call the private method
-      result = client.send(:get_schema_from_file, file_content)
-      
+      result = client.send(:schema_from_file, file_content)
+
       # Assertions
       expect(result).to be_a(Hash)
       expect(result["type"]).to eq("object")
       expect(result["properties"]).to include("data")
-      expect(result["properties"]["data"]).to eq({"type" => "object"})
+      expect(result["properties"]["data"]).to eq({ "type" => "object" })
     end
-    
+
     it "creates an empty schema for unknown file types" do
       # Setup
       client.instance_variable_set(:@file_type, "unknown")
-      
+      file_content = "mock unknown content"
+
       # Call the private method
-      result = client.send(:get_schema_from_file, file_content)
-      
+      result = client.send(:schema_from_file, file_content)
+
       # Assertions
       expect(result).to be_a(Hash)
       expect(result["type"]).to eq("object")
