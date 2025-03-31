@@ -1,0 +1,63 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/googlecloudstorage",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "GoogleCloudStorage",
+    "type": "object",
+    "required": [
+      "project_id",
+      "client_email",
+      "private_key",
+      "bucket",
+      "file_type"
+    ],
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "title": "Project ID",
+        "description": "Google Cloud Project ID",
+        "order": 0
+      },
+      "client_email": {
+        "type": "string",
+        "title": "Client Email",
+        "description": "Service account client email",
+        "order": 1
+      },
+      "private_key": {
+        "type": "string",
+        "title": "Private Key",
+        "description": "Service account private key",
+        "multiwoven_secret": true,
+        "order": 2
+      },
+      "bucket": {
+        "description": "Bucket Name",
+        "type": "string",
+        "title": "Bucket",
+        "order": 3
+      },
+      "path": {
+        "description": "Path to csv or parquet files",
+        "examples": [
+          "/path/to/files"
+        ],
+        "type": "string",
+        "title": "Path",
+        "order": 4
+      },
+      "file_type": {
+        "description": "The type of file to read",
+        "type": "string",
+        "title": "File Type",
+        "enum": [
+          "csv",
+          "parquet"
+        ],
+        "order": 5
+      }
+    }
+  }
+}

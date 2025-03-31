@@ -49,6 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "google-apis-sheets_v4"
   spec.add_runtime_dependency "google-cloud-ai_platform-v1"
   spec.add_runtime_dependency "google-cloud-bigquery"
+  spec.add_runtime_dependency "google-cloud-storage"
   spec.add_runtime_dependency "grpc"
   spec.add_runtime_dependency "hubspot-api-client"
   spec.add_runtime_dependency "iterable-api-client"

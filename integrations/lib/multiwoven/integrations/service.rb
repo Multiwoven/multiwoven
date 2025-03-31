@@ -43,7 +43,10 @@ module Multiwoven
             client = connector_class(type, connector).new
             client.meta_data[:data][:connector_spec] = client.connector_spec.to_h
             client.meta_data[:data]
-          end
+          rescue StandardError => e
+            logger.error("Error loading connector #{type}/#{connector}: #{e.message}")
+            nil
+          end.compact
         end
 
         def default_logger

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "GoogleCloudStorage",
+    "title": "Google Cloud Storage",
+    "connector_type": "source",
+    "category": "Cloud Storage",
+    "documentation_url": "https://docs.mutliwoven.com",
+    "github_issue_label": "source-googlecloudstorage",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
