@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { getConnectorDefinition } from '@/services/connectors';
 import { useContext } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 
 import FormFooter from '@/components/FormFooter';
 
@@ -56,6 +56,19 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
             uiSchema={generatedSchema}
             onSubmit={(formData: FormData) => handleFormSubmit(formData)}
           >
+          <>
+          {/*{renderFacebookButton()}*/}
+           <Button 
+        // leftIcon={<FaFacebook />}
+        colorScheme="facebook"
+        // isLoading={isConnectingFacebook}
+        loadingText="Connecting..."
+        // onClick={handleFacebookConnect}
+        mb={4}
+        mt={4}
+      >
+        Connect Facebook
+      </Button>
             <FormFooter
               ctaName='Continue'
               ctaType='submit'
@@ -63,6 +76,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
               isDocumentsSectionRequired
               isBackRequired
             />
+            </>
           </JSONSchemaForm>
         </Box>
       </ContentContainer>
