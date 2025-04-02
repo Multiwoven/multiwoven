@@ -44,6 +44,8 @@ class User < ApplicationRecord
   has_many :workspaces, through: :workspace_users
   has_many :roles, through: :workspace_users
 
+  validates :eula_accepted, inclusion: { in: [true, false] }
+
   # Checks if email verification is enabled
   # Note: Checking for 'false' instead of 'true' ensures backward compatibility
   # with existing deployments that don't have this environment variable set.

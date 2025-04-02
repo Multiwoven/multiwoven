@@ -1,4 +1,8 @@
 # Ignore dotenv file
 .env
 /.history
+<<<<<<< HEAD
 .DS_Store
+=======
+.qodo
+>>>>>>> 64226cb6 (chore(CE): Add EULA to db (#966))
