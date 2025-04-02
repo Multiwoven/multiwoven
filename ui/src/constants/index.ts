@@ -1,1 +1,1 @@
-export const BRAND_NAME = 'Multiwoven';
+export const BRAND_NAME = 'audience sync';

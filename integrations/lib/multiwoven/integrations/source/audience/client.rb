@@ -184,7 +184,7 @@ module Multiwoven::Integrations::Source
       def generate_path(user_id, audience_id)
         # Generate a path based on User ID and Audience ID
         # Format: /{user_id}/{audience_id}
-        "/#{user_id}/#{audience_id}"
+        "csv/#{user_id}/#{audience_id}"
       end
 
       def list_files(bucket_obj)
