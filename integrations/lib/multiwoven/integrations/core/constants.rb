@@ -55,6 +55,11 @@ module Multiwoven
       GOOGLE_VERTEX_ENDPOINT_SERVICE_URL = "%<region>s-aiplatform.googleapis.com"
       GOOGLE_VERTEX_MODEL_NAME = "projects/%<project_id>s/locations/%<region>s/endpoints/%<endpoint_id>s"
 
+      WATSONX_HEALTH_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v4/deployments?version=%<version>s"
+      WATSONX_PREDICTION_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v4/deployments/%<deployment_id>s/predictions?version=%<version>s"
+      WATSONX_GENERATION_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v1/deployments/%<deployment_id>s/text/generation?version=%<version>s"
+      WATSONX_STREAM_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v1/deployments/%<deployment_id>s/text/generation_stream?version=%<version>s"
+
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"
@@ -67,6 +72,7 @@ module Multiwoven
       GOOGLE_SPREADSHEET_ID_REGEX = %r{/d/([-\w]{20,})/}.freeze
 
       OPEN_AI_URL = "https://api.openai.com/v1/chat/completions"
+      ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
     end
   end
 end

@@ -14,7 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.19.3"
+gem "multiwoven-integrations", "~> 0.21.2"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -40,6 +40,7 @@ gem "devise"
 gem "devise_invitable"
 gem "devise-jwt"
 gem "pundit"
+gem "ruby-saml"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time

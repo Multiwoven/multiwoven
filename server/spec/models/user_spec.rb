@@ -191,4 +191,15 @@ RSpec.describe User, type: :model do
       expect(user).to be_expired
     end
   end
+
+  describe "#confirmation_required?" do
+    it "returns the result of User.email_verification_enabled?" do
+      user = User.new
+      expect(User).to receive(:email_verification_enabled?).and_return(true)
+      expect(user.send(:confirmation_required?)).to be true
+
+      expect(User).to receive(:email_verification_enabled?).and_return(false)
+      expect(user.send(:confirmation_required?)).to be false
+    end
+  end
 end

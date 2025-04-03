@@ -295,7 +295,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         user.workspace_users.first.update(role: viewer_role)
         post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, 0, :detail)).to eq("You are not authorized to do this action")
       end
@@ -487,7 +487,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         request_body[:sync][:sync_interval] = 30
         put "/api/v1/syncs/#{syncs.first.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when wrong sync_id" do
@@ -690,7 +690,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "returns success and delete sync for viewer role" do
         user.workspace_users.first.update(role: viewer_role)
         delete "/api/v1/syncs/#{syncs.first.id}", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response while delete wrong sync" do

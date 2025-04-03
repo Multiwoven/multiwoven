@@ -4,11 +4,13 @@ require "rails_helper"
 
 RSpec.describe DataAppSession, type: :model do
   let(:workspace) { create(:workspace) }
-  let(:data_app) { create(:data_app, workspace:) }
+  let(:data_app) { create(:data_app, workspace:, visual_components_count: 0) }
+  let!(:visual_component) { create(:visual_component, data_app:, workspace:) }
 
   describe "associations" do
     it { should belong_to(:data_app) }
     it { should belong_to(:workspace) }
+    it { should have_many(:chat_messages).dependent(:destroy) }
   end
 
   describe "validations" do
@@ -22,10 +24,15 @@ RSpec.describe DataAppSession, type: :model do
 
   describe "callbacks" do
     it "sets the start_time and end_time before creation" do
-      session = DataAppSession.new(workspace:, data_app:, session_id: "session_abc")
+      session = build(:data_app_session, workspace:, data_app:, session_id: "session_abc")
       session.save
       expect(session.start_time).to be_present
-      expect(session.end_time).to eq(session.start_time + 10.minutes)
+
+      if session.data_app.visual_components.first.chat_bot?
+        expect(session.end_time).to be_nil
+      else
+        expect(session.end_time).to eq(session.start_time + 10.minutes)
+      end
     end
   end
 
@@ -34,6 +41,7 @@ RSpec.describe DataAppSession, type: :model do
       active_session = create(:data_app_session, workspace:, data_app:)
       expired_session = create(:data_app_session, workspace:, data_app:)
       expired_session.update(end_time: 1.minute.ago)
+
       expect(DataAppSession.active).to include(active_session)
       expect(DataAppSession.active).not_to include(expired_session)
     end
@@ -49,6 +57,13 @@ RSpec.describe DataAppSession, type: :model do
     it "returns false if the session is active" do
       session = create(:data_app_session, workspace:, data_app:)
       expect(session.expired?).to be false
+    end
+
+    it "returns false if the session is a chatbot session with no end_time" do
+      visual_component.update(component_type: "chat_bot")
+      session = create(:data_app_session, workspace:, data_app:, end_time: nil)
+      expect(session.expired?).to be false
+      expect(session.end_time).to be_nil
     end
   end
 

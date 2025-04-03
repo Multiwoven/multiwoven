@@ -34,7 +34,7 @@ module Utils
       },
       "Workspace Management" => {
         resources: %i[user audit_logs workspace],
-        description: "Manage and access workspaces, members, roles and audit logs"
+        description: "Manage and access workspaces, members, and audit logs"
       }
     }.freeze
   end

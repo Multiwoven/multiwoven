@@ -58,7 +58,7 @@ RSpec.describe Authentication::Login, type: :interactor do
       end
 
       it "provides an error message" do
-        expect(context.error).to eq("Invalid email or password")
+        expect(context.error).to eq("Invalid login credentials, please try again")
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Authentication::Login, type: :interactor do
       end
 
       it "provides an error message" do
-        expect(context.error).to eq("Invalid email or password")
+        expect(context.error).to eq("Invalid login credentials, please try again")
       end
 
       it "increments the failed_attempts count" do

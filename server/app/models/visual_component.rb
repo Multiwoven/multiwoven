@@ -13,4 +13,5 @@ class VisualComponent < ApplicationRecord
   belongs_to :model
 
   has_many :feedbacks, dependent: :destroy
+  has_many :chat_messages, dependent: :destroy
 end
