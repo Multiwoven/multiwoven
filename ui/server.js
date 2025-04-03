@@ -6,14 +6,15 @@ const app = express();
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// API endpoints
 app.get('/env', (req, res) => {
   res.json({
     VITE_API_HOST: process.env.VITE_API_HOST,
   });
 });
 
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
+// Last middleware to handle all other requests - this avoids using path-to-regexp's pattern matching
+app.use((req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   fs.readFile(indexPath, 'utf8', (err, data) => {
     if (err) {
