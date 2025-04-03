@@ -15,7 +15,10 @@ module Multiwoven::Integrations::Source
       end
 
       def discover(connection_config)
+<<<<<<< HEAD
         connection_config = connection_config.with_indifferent_access
+=======
+>>>>>>> 150cb776 (feat(CE): add WatsonX.Data source connector (#972))
         query = "SELECT table_name, column_name,
                   data_type,
                   is_nullable

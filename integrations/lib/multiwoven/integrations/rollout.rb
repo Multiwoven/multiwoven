@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.22.1"
+=======
+    VERSION = "0.22.0"
+>>>>>>> 150cb776 (feat(CE): add WatsonX.Data source connector (#972))
 
     ENABLED_SOURCES = %w[
       Snowflake
