@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.22.1)
+=======
+    multiwoven-integrations (0.22.0)
+>>>>>>> 150cb776 (feat(CE): add WatsonX.Data source connector (#972))
       MailchimpMarketing
       activesupport
       async-websocket
