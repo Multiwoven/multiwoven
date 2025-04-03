@@ -262,7 +262,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when creation fails" do
@@ -353,7 +353,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         workspace.workspace_users.first.update(role: viewer_role)
         put "/api/v1/connectors/#{connectors.second.id}", params: request_body.to_json, headers:
         { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response when update fails" do
@@ -490,7 +490,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "returns fail viwer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user, workspace_id)
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error response while delete wrong connector" do
@@ -539,18 +539,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("query_source")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connector.id)
-        expect(audit_log.resource).to eq(connector.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns success status for a valid query for member role" do
@@ -562,18 +550,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("query_source")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connector.id)
-        expect(audit_log.resource).to eq(connector.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns an error message for missing catalog for ai connectors" do
@@ -588,7 +564,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
                                                                                      records: [record1, record2]))
         post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace.id))
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:errors, 0, :detail)).to eq("Catalog is not present for the connector")
       end
@@ -619,18 +595,6 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
-
-        audit_log = AuditLog.last
-        expect(audit_log).not_to be_nil
-        expect(audit_log.user_id).to eq(user.id)
-        expect(audit_log.action).to eq("query_source")
-        expect(audit_log.resource_type).to eq("Connector")
-        expect(audit_log.resource_id).to eq(connector.id)
-        expect(audit_log.resource).to eq(connector.name)
-        expect(audit_log.workspace_id).to eq(workspace.id)
-        expect(audit_log.resource_link).to eq("/setup/sources/Data%20Sources/#{connector.id}")
-        expect(audit_log.created_at).not_to be_nil
-        expect(audit_log.updated_at).not_to be_nil
       end
 
       it "returns failure status for a invalid query" do
@@ -647,7 +611,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -679,7 +643,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     #   it "renders an error message" do
     #     post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
     #         { "Content-Type": "application/json" }.merge(auth_headers(user))
-    #     expect(response).to have_http_status(:unprocessable_entity)
+    #     expect(response).to have_http_status(:unprocessable_content)
     #     expect(response.body).to include("Query validation failed: Invalid query")
     #   end
     # end

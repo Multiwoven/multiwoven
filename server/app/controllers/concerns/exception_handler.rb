@@ -8,8 +8,7 @@ module ExceptionHandler
   rescue ActiveRecord::RecordNotFound => e
     render_not_found_error(e.message)
   rescue Pundit::NotAuthorizedError
-    # TODO: Add logs
-    render_unauthorized("You are not authorized to do this action")
+    render_forbidden_error("You are not authorized to do this action")
   rescue ActionController::ParameterMissing => e
     render_could_not_create_error(e.message)
   rescue JSON::ParserError, ActionDispatch::Http::Parameters::ParseError => e
@@ -25,13 +24,20 @@ module ExceptionHandler
   end
 
   def render_could_not_create_error(message)
-    render json: { error: message }, status: :unprocessable_entity
+    render json: { error: message }, status: :unprocessable_content
   end
 
   def render_unauthorized(message)
     render_error(
       message:,
       status: :unauthorized
+    )
+  end
+
+  def render_forbidden_error(message)
+    render_error(
+      message:,
+      status: :forbidden
     )
   end
 

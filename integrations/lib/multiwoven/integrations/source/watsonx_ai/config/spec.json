@@ -1,0 +1,74 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/source/watsonx-ai-endpoint",
+  "stream_type": "user_defined",
+  "connector_query_type": "ai_ml",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "WatsonX AI Endpoint",
+    "type": "object",
+    "required": ["api_key", "region", "deployment_id", "request_format", "response_format"],
+    "properties": {
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 0
+      },
+      "is_stream": {
+        "type": "boolean",
+        "title": "Enable streaming",
+        "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
+        "default": false,
+        "order": 1
+      },
+      "region": {
+        "description": "WatsonX AI region",
+        "type": "string",
+        "title": "Region",
+        "order": 2
+      },
+      "deployment_id": {
+        "description": "WatsonX AI online deployment id",
+        "type": "string",
+        "title": "Deployment ID",
+        "multiwoven_secret": true,
+        "order": 3
+      },
+      "config": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "string",
+            "default": "30",
+            "title": "HTTP Timeout",
+            "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+            "order": 0
+          }
+        },
+        "order": 4
+      },
+      "request_format": {
+        "title": "Request Format",
+        "description": "Sample request format",
+        "type": "string",
+        "order": 5
+      },
+      "response_format": {
+        "title": "Response Format",
+        "description": "Sample response format",
+        "type": "string",
+        "x-response-format": true,
+        "order": 6
+      },
+      "model_type": {
+        "title": "Model Type",
+        "type": "string",
+        "description": "Deployed model type.",
+        "enum": ["Machine learning model", "Prompt template"],
+        "default": "Machine learning model",
+        "order": 7
+      }
+    }
+  }
+}

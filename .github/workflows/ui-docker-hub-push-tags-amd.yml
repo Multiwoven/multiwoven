@@ -1,17 +1,25 @@
-name: Build and push Multiwoven UI docker image to Docker Hub (amd64)
+name: Build and push Multiwoven CE UI docker image to Docker Hub (amd64)
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - v*
+    inputs:
+      release_tag:
+        description: "Release tag to build"
+        required: true
+  repository_dispatch:
+    types: [trigger-image-push]
 
 jobs:
   docker-hub-push-on-merge:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.event.client_payload.tag || github.event.inputs.release_tag }}
+      RUN_LOGS_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -32,5 +40,24 @@ jobs:
           context: ./ui
           file: ./ui/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: multiwoven/multiwoven-ui:${{ env.RELEASE_TAG }},multiwoven/multiwoven-ui:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Slack success notification
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": ":white_check_mark: *multiwoven-ce UI image build & push succeeded!*\n• Tag: `'"$RELEASE_TAG"'`\n• Triggered by: `${{ github.actor }}`\n• Logs_url: '"$RUN_LOGS_URL"'"
+          }' \
+          ${{ secrets.RELEASE_SLACK_WEBHOOK_URL }}
+
+      - name: Slack failure notification
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": ":x: *multiwoven-ce UI build & push failed!*\n• Tag: `'"$RELEASE_TAG"'`\n• Triggered by: `${{ github.actor }}`\n• Logs_url: '"$RUN_LOGS_URL"'"
+          }' \
+          ${{ secrets.RELEASE_SLACK_WEBHOOK_URL }}
+

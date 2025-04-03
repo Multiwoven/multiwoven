@@ -22,6 +22,7 @@ FactoryBot.define do
 
     after(:create) do |workspace|
       create(:workspace_user, workspace:, user: create(:user), role: create(:role, :admin))
+      create(:sso_configuration, organization: workspace.organization)
     end
   end
 end

@@ -13,12 +13,14 @@
 #
 FactoryBot.define do
   factory :role do
-    role_name { "CustomRole" }
+    role_name { "System Role" }
+    role_type { 1 }
     policies { { "permissions" => {} } }
 
     trait :admin do
       role_name { "Admin" }
       role_desc { "Administrator role with full access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
@@ -34,7 +36,8 @@ FactoryBot.define do
             "data_app" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "audit_logs" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "alerts" => { "read" => true, "create" => true, "delete" => true, "update" => true },
-            "billing" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+            "billing" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "sso": { "create": true, "read": true, "update": true, "delete": true }
           }
         }
       end
@@ -43,6 +46,7 @@ FactoryBot.define do
     trait :member do
       role_name { "Member" }
       role_desc { "Member role with basic access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
@@ -58,7 +62,8 @@ FactoryBot.define do
             "data_app" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "audit_logs" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "alerts" => { "read" => true, "create" => true, "delete" => true, "update" => true },
-            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "sso": { "create" => false, "read" => false, "update" => false, "delete" => false }
           }
         }
       end
@@ -67,6 +72,7 @@ FactoryBot.define do
     trait :viewer do
       role_name { "Viewer" }
       role_desc { "Viewer role with read-only access" }
+      role_type { 1 }
       policies do
         {
           "permissions" => {
@@ -82,7 +88,34 @@ FactoryBot.define do
             "data_app" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "audit_logs" => { "read" => false, "create" => false, "delete" => false, "update" => false },
             "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
-            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "sso": { "create" => false, "read" => false, "update" => false, "delete" => false }
+          }
+        }
+      end
+    end
+
+    trait :custom do
+      role_name { "Custom Role" }
+      role_desc { "Viewer role with read-only access" }
+      role_type { 0 }
+      policies do
+        {
+          "permissions" => {
+            "sync" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "user" => { "read" => false, "create" => false, "delete" => false, "update" => false },
+            "model" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "report" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "sync_run" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "connector" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "workspace" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "sync_record" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "connector_definition" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "data_app" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "audit_logs" => { "read" => false, "create" => false, "delete" => false, "update" => false },
+            "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
+            "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "sso": { "create" => false, "read" => false, "update" => false, "delete" => false }
           }
         }
       end

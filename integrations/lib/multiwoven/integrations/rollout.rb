@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.19.3"
+    VERSION = "0.21.2"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -22,6 +22,8 @@ module Multiwoven
       HttpModel
       OpenAI
       Sftp
+      WatsonxAi
+      Anthropic
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

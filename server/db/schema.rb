@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_19_092940) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -121,6 +121,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
     t.string "catalog_hash"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "data_app_session_id", null: false
+    t.bigint "visual_component_id", null: false
+    t.text "content", null: false
+    t.integer "role", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data_app_session_id", "created_at"], name: "index_chat_messages_on_data_app_session_id_and_created_at"
+    t.index ["data_app_session_id"], name: "index_chat_messages_on_data_app_session_id"
+    t.index ["visual_component_id"], name: "index_chat_messages_on_visual_component_id"
+    t.index ["workspace_id"], name: "index_chat_messages_on_workspace_id"
   end
 
   create_table "connectors", force: :cascade do |t|
@@ -241,6 +255,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
     t.jsonb "policies", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role_type", default: 0, null: false
+    t.integer "organization_id"
+    t.index ["organization_id", "role_name"], name: "index_roles_on_organization_id_and_role_name", unique: true, where: "(organization_id IS NOT NULL)"
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -302,7 +319,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
     t.string "hostname"
     t.text "metadata"
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.index ["last_heartbeat_at"], name: "index_solid_queue_processes_on_last_heartbeat_at"
+    t.index ["name", "supervisor_id"], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
     t.index ["supervisor_id"], name: "index_solid_queue_processes_on_supervisor_id"
   end
 
@@ -325,6 +344,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
     t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
   end
 
+  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "schedule", null: false
+    t.string "command", limit: 2048
+    t.string "class_name"
+    t.text "arguments"
+    t.string "queue_name"
+    t.integer "priority", default: 0
+    t.boolean "static", default: true, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
+    t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
+  end
+
   create_table "solid_queue_scheduled_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
     t.string "queue_name", null: false
@@ -344,6 +379,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "sso_configurations", force: :cascade do |t|
+    t.integer "organization_id"
+    t.integer "status", default: 1
+    t.string "entity_id"
+    t.string "acs_url"
+    t.string "idp_sso_url"
+    t.string "signing_certificate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sync_records", force: :cascade do |t|
@@ -492,6 +538,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_180054) do
   add_foreign_key "alerts", "workspaces"
   add_foreign_key "billing_subscriptions", "billing_plans", column: "plan_id"
   add_foreign_key "billing_subscriptions", "organizations"
+  add_foreign_key "chat_messages", "data_app_sessions"
+  add_foreign_key "chat_messages", "visual_components"
+  add_foreign_key "chat_messages", "workspaces"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

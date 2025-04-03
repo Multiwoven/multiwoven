@@ -13,7 +13,7 @@ module Api
       # TODO: Enable this for ai_ml sources
       before_action :validate_catalog, only: %i[query_source]
       after_action :event_logger
-      after_action :create_audit_log, only: %i[create update destroy query_source]
+      after_action :create_audit_log, only: %i[create update destroy]
 
       def index
         @connectors = current_workspace.connectors
@@ -26,7 +26,6 @@ module Api
 
       def show
         authorize @connector
-        @audit_resource = @connector.name
         render json: @connector, status: :ok
       end
 
@@ -46,7 +45,7 @@ module Api
         else
           render_error(
             message: result.error || "Connector creation failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: result.connector ? format_errors(result.connector) : nil
           )
         end
@@ -67,7 +66,7 @@ module Api
         else
           render_error(
             message: "Connector update failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.connector)
           )
         end
@@ -90,13 +89,11 @@ module Api
 
         if result.success?
           @catalog = result.catalog
-          @audit_resource = @connector.name
-          @payload = @catalog
           render json: @catalog, status: :ok
         else
           render_error(
             message: "Discover catalog failed",
-            status: :unprocessable_entity,
+            status: :unprocessable_content,
             details: format_errors(result.catalog)
           )
         end
@@ -113,19 +110,17 @@ module Api
 
           if result.success?
             @records = result.records.map(&:record).map(&:data)
-            @audit_resource = @connector.name
-            @payload = @records
             render json: { data: @records }, status: :ok
           else
             render_error(
               message: result["error"],
-              status: :unprocessable_entity
+              status: :unprocessable_content
             )
           end
         else
           render_error(
             message: "Connector is not a source",
-            status: :unprocessable_entity
+            status: :unprocessable_content
           )
         end
       end
@@ -147,7 +142,7 @@ module Api
 
         render_error(
           message: "Catalog is not present for the connector",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 
@@ -156,7 +151,7 @@ module Api
       rescue StandardError => e
         render_error(
           message: "Query validation failed: #{e.message}",
-          status: :unprocessable_entity
+          status: :unprocessable_content
         )
       end
 

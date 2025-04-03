@@ -60,7 +60,7 @@ RSpec.describe Connector, type: :model do
       expect(protocol_connector).to be_a(Multiwoven::Integrations::Protocol::Connector)
       expect(protocol_connector.name).to eq(connector.connector_name)
       expect(protocol_connector.type).to eq(connector.connector_type)
-      expect(protocol_connector.connection_specification).to eq(connector.configuration)
+      expect(protocol_connector.connection_specification).to eq(connector.resolved_configuration)
     end
   end
 
@@ -211,6 +211,53 @@ RSpec.describe Connector, type: :model do
       result = Connector.data
       expect(result).to include(data_connector)
       expect(result).not_to include(non_data_connector)
+    end
+  end
+
+  describe "#resolved_configuration" do
+    let(:workspace) { create(:workspace) }
+
+    context "when configuration has no ENV variables" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               configuration: { host: "example.com", port: 5432 })
+      end
+
+      it "returns the original configuration" do
+        expect(connector.resolved_configuration).to eq(connector.configuration)
+      end
+    end
+
+    context "when configuration contains ENV variables" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               configuration: {
+                 host: "ENV[\"DB_HOST\"]",
+                 password: "ENV[\"DB_PASSWORD\"]",
+                 port: 5432
+               })
+      end
+
+      before do
+        ENV["DB_HOST"] = "production.example.com"
+        ENV["DB_PASSWORD"] = "secret123"
+      end
+
+      after do
+        ENV.delete("DB_HOST")
+        ENV.delete("DB_PASSWORD")
+      end
+
+      it "returns configuration with resolved ENV variables" do
+        expected_config = {
+          "host" => "production.example.com",
+          "password" => "secret123",
+          "port" => 5432
+        }
+        expect(connector.resolved_configuration).to eq(expected_config)
+      end
     end
   end
 end

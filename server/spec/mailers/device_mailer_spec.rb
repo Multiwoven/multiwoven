@@ -65,6 +65,7 @@ RSpec.describe DeviseMailer, type: :mailer do
 
     before do
       allow(ENV).to receive(:[]).with("UI_HOST").and_return("https://example.com")
+      allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return("true")
       user.update(reset_password_sent_at: Time.current)
     end
 
@@ -104,6 +105,7 @@ RSpec.describe DeviseMailer, type: :mailer do
 
     before do
       allow(ENV).to receive(:[]).with("UI_HOST").and_return("https://example.com")
+      allow(ENV).to receive(:[]).with("USER_EMAIL_VERIFICATION").and_return("true")
       user.update(confirmation_sent_at: Time.current)
     end
 

@@ -138,7 +138,7 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
 
         post "/api/v1/catalogs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -223,7 +223,7 @@ RSpec.describe "Api::V1::CatalogsController", type: :request do
             params: update_request_body.to_json,
             headers: { "Content-Type": "application/json" }
               .merge(auth_headers(user, workspace_id))
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

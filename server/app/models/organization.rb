@@ -21,4 +21,6 @@ class Organization < ApplicationRecord
           foreign_key: "organization_id",
           inverse_of: :organization,
           dependent: :destroy
+  has_many :roles, dependent: :destroy
+  has_many :sso_configurations, dependent: :destroy
 end

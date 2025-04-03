@@ -32,5 +32,14 @@ RSpec.describe Workspaces::Update, type: :interactor do
         expect(context.workspace.errors[:name]).to include("can't be blank")
       end
     end
+
+    context "when slug is missing and the update is successful" do
+      it "succeeds" do
+        workspace.slug = ""
+        context = Workspaces::Update.call(id: workspace.id, user:, workspace_params: { name: new_name })
+        expect(context).to be_a_success
+        expect(context.workspace.name).to eq(new_name)
+      end
+    end
   end
 end
