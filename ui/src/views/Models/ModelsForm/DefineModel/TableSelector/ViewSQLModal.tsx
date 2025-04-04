@@ -12,8 +12,8 @@ import {
   useDisclosure,
   ModalHeader,
 } from '@chakra-ui/react';
-import { format } from 'sql-formatter';
 import Editor from '@monaco-editor/react';
+import { safeFormatSQL } from '@/utils';
 
 const ViewSQLModal = ({
   tableName,
@@ -69,7 +69,7 @@ const ViewSQLModal = ({
                   height='100px'
                   language='mysql'
                   defaultLanguage='mysql'
-                  value={format(userQuery, { language: 'postgresql' })}
+                  value={safeFormatSQL(userQuery, { language: 'postgresql' })}
                   saveViewState={true}
                   theme='light'
                   options={{
