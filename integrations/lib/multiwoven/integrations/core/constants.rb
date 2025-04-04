@@ -60,6 +60,8 @@ module Multiwoven
       WATSONX_GENERATION_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v1/deployments/%<deployment_id>s/text/generation?version=%<version>s"
       WATSONX_STREAM_DEPLOYMENT_URL = "https://%<region>s.ml.cloud.ibm.com/ml/v1/deployments/%<deployment_id>s/text/generation_stream?version=%<version>s"
 
+      WATSONX_DATA_QUERIES_URL = "https://%<region>s.lakehouse.cloud.ibm.com/lakehouse/api/v2/queries/execute/%<engine_id>s"
+
       # HTTP
       HTTP_GET = "GET"
       HTTP_POST = "POST"
