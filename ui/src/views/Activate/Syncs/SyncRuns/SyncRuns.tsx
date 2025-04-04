@@ -43,7 +43,7 @@ const SyncRuns = () => {
           ) : (
             <DataTable data={data?.data} columns={allColumns} onRowClick={handleOnSyncClick} />
           )}
-          {data?.links && (
+          {data?.data && data.data.length > 0 && data.links && (
             <Box display='flex' justifyContent='center'>
               <Pagination
                 links={data.links}
