@@ -253,12 +253,14 @@ module Multiwoven::Integrations::Source
         # Use the DuckDB connection from create_connection
         conn = @duckdb_conn
         
-        # Register the CSV file with DuckDB
-        table_name = "audience_data"
-        conn.execute("CREATE TABLE #{table_name} AS SELECT * FROM read_csv_auto('#{file_path}');")
+        # Create a safe table name by replacing any non-alphanumeric characters with underscores
+        safe_table_name = "audience_data_#{@user_id.gsub(/[^a-zA-Z0-9]/, '_')}_#{@audience_id.gsub(/[^a-zA-Z0-9]/, '_')}"
         
-        # Execute the query
-        modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, 'FROM audience_data')
+        # Register the CSV file with DuckDB - use all_varchar=1 to prevent type conversion errors
+        conn.execute("CREATE TABLE \"#{safe_table_name}\" AS SELECT * FROM read_csv_auto('#{file_path}', all_varchar=1);")
+        
+        # Execute the query - use double quotes for table names to handle special characters
+        modified_query = query_string.gsub(/FROM\s+[^\s,;()]+/i, "FROM \"#{safe_table_name}\"")
         results = conn.query(modified_query)
         
         # Convert results to an array of hashes
@@ -275,7 +277,8 @@ module Multiwoven::Integrations::Source
         
         records
       rescue StandardError => e
-        handle_exception(e, { context: "AUDIENCE:QUERY:EXCEPTION", type: "error" })
+        # Re-raise the exception to be handled by the query method
+        raise e
       end
 
       def batched_query(query, limit, offset)
