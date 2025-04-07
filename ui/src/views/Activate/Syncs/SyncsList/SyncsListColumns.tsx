@@ -32,6 +32,7 @@ export const SyncsListColumns: ColumnDef<CreateSyncResponse>[] = [
       const activeWorkspaceId = useStore.getState().workspaceId;
       const destination = row.row.original.attributes.destination;
 
+<<<<<<< HEAD
       return +activeWorkspaceId === 18 &&
         destination.connector_name.toLowerCase() === 'postgresql' ? (
         <EntityItem
@@ -41,6 +42,9 @@ export const SyncsListColumns: ColumnDef<CreateSyncResponse>[] = [
       ) : (
         <EntityItem icon={destination.icon} name={destination.connector_name} />
       );
+=======
+      return <EntityItem icon={destination.icon} name={destination.name} />;
+>>>>>>> 67a2fcc2 (refactor(CE): changed destination name in Syncs from Connector Name to Name (#992))
     },
   },
   {
