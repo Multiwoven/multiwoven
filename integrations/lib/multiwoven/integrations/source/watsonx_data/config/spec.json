@@ -1,0 +1,72 @@
+{
+    "documentation_url": "https://docs.multiwoven.com/integrations/source/watsonx-data-endpoint",
+    "stream_type": "dynamic",
+    "connector_query_type": "raw_sql",
+    "connection_specification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WatsonX Data Endpoint",
+      "type": "object",
+      "required": ["api_key","region","engine","engine_id","auth_instance_id","database","schema"],
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "multiwoven_secret": true,
+          "title": "API Key",
+          "order": 0
+        },
+        "region": {
+          "description": "WatsonX Data region",
+          "type": "string",
+          "title": "Region",
+          "order": 1
+        },
+        "engine": {
+          "description": "Which engine is being used? (Presto/Spark)",
+          "type": "string",
+          "title": "Engine",
+          "enum": ["presto"],
+          "default": "presto",
+          "order": 2
+        },
+        "engine_id": {
+          "description": "Engine id",
+          "type": "string",
+          "title": "Engine Id",
+          "order": 3
+        },
+        "auth_instance_id": {
+          "description": "WatsonX Data Instance CRN",
+          "type": "string",
+          "title": "Instance CRN",
+          "order": 4
+        },
+        "database": {
+          "description": "The specific database to connect to.",
+          "type": "string",
+          "title": "Database",
+          "order": 5
+        },
+        "schema": {
+          "description": "The schema within the database.",
+          "type": "string",
+          "title": "Schema",
+          "order": 6
+        },
+        "config": {
+          "title": "",
+          "type": "object",
+          "properties": {
+            "timeout": {
+              "type": "string",
+              "default": "30",
+              "title": "HTTP Timeout",
+              "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+              "order": 0
+            }
+          },
+          "order": 7
+        }
+      }
+    }
+  }
+  

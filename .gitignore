@@ -1,4 +1,7 @@
 # Ignore dotenv file
 .env
 /.history
+docker-compose.override.yml
+.vscode
 .DS_Store
+.qodo

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "multiwoven/integrations"
 require "webmock/rspec"
 
 require "simplecov"
@@ -11,7 +10,15 @@ SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
                                                                   SimpleCov::Formatter::JSONFormatter
                                                                 ])
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/spec/"
+  add_group "Core", "/lib/multiwoven/integrations/core"
+  add_group "Destination", "/lib/multiwoven/integrations/destination"
+  add_group "Protocol", "/lib/multiwoven/integrations/protocol"
+  add_group "Source", "/lib/multiwoven/integrations/source"
+end
+
+require "multiwoven/integrations"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
