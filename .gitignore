@@ -1,8 +1,7 @@
 # Ignore dotenv file
 .env
 /.history
-<<<<<<< HEAD
+docker-compose.override.yml
+.vscode
 .DS_Store
-=======
 .qodo
->>>>>>> 64226cb6 (chore(CE): Add EULA to db (#966))
