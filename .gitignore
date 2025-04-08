@@ -1,11 +1,7 @@
 # Ignore dotenv file
 .env
 /.history
-<<<<<<< HEAD
-.DS_Store
-=======
 docker-compose.override.yml
 .vscode
 .DS_Store
 .qodo
->>>>>>> 150cb776 (feat(CE): add WatsonX.Data source connector (#972))
