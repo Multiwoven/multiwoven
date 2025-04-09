@@ -25,7 +25,7 @@ FROM node:18 as serve-stage
 WORKDIR /app
 
 # Install Express
-RUN npm install express
+RUN npm install express@5.1.0
 
 # Copy built assets from the build stage to the serve directory
 COPY --from=build-stage /app/dist /app/dist
