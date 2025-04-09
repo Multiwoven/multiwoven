@@ -13,7 +13,7 @@ app.get('/env', (req, res) => {
 });
 
 // Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
+app.get(/(.*)/, (req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   fs.readFile(indexPath, 'utf8', (err, data) => {
     if (err) {
