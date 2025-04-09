@@ -1958,7 +1958,7 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.22.0)
+    multiwoven-integrations (0.22.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2290,7 +2290,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.22.0)
+  multiwoven-integrations (~> 0.22.1)
   mysql2
   newrelic_rpm
   parallel
