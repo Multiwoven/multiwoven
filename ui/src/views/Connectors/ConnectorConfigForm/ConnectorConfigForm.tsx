@@ -56,7 +56,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
     script.onload = () => {
       if (window.FB) {
         window.FB.init({
-          appId: '1338072664181075', // Your Facebook App ID
+          appId: import.meta.env.VITE_FACEBOOK_APP_ID, // Your Facebook App ID
           cookie: true,
           xfbml: true,
           version: 'v18.0'
@@ -84,9 +84,8 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   // Function to exchange short-lived token for long-lived token
   const exchangeForLongLivedToken = async (shortLivedToken: string) => {
-    const appId = process.env.FACEBOOK_APP_ID || '1338072664181075';
-    console.log(appId)
-    const appSecret = process.env.FACEBOOK_APP_SECRET || '15a70aa68357c72f5332b48009d2690c';
+    const appId = import.meta.env.VITE_FACEBOOK_APP_ID;
+    const appSecret = import.meta.env.VITE_FACEBOOK_APP_SECRET;
     
     try {
       const response = await fetch(
@@ -272,7 +271,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
                   onClick={handleFacebookConnect}
                   mb={4}
                   mt={4}
-                  size='sm'
+                  size="lg"
                 >
                   Facebook
                 </Button>
