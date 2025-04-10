@@ -11,7 +11,7 @@ RSpec.describe DataApp, type: :model do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:data_app_token) }
     it { should define_enum_for(:status).with_values(inactive: 0, active: 1, draft: 2) }
-    it { should define_enum_for(:rendering_type).with_values(embed: 0, no_code: 1) }
+    it { should define_enum_for(:rendering_type).with_values(embed: 0, no_code: 1, assistant: 2) }
     it { should belong_to(:workspace) }
     it { should have_many(:visual_components).dependent(:destroy) }
     it { should have_many(:models).through(:visual_components) }

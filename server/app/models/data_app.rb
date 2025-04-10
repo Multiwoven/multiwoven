@@ -8,7 +8,7 @@ class DataApp < ApplicationRecord
   validates :data_app_token, presence: true, uniqueness: true
 
   enum :status, %i[inactive active draft]
-  enum :rendering_type, %i[embed no_code]
+  enum :rendering_type, %i[embed no_code assistant]
 
   belongs_to :workspace
   has_many :visual_components, dependent: :destroy
