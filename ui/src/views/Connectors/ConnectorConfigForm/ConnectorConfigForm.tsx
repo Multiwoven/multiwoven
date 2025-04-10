@@ -268,18 +268,35 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
           >
             <>
               {!accessToken && connector === 'FacebookCustomAudience' && connectorType === "destination" && (
-                <Button 
-                  leftIcon={<FaFacebook />}
-                  colorScheme="facebook"
-                  isLoading={isConnectingFacebook}
-                  loadingText="Connecting..."
-                  onClick={handleFacebookConnect}
-                  mb={4}
-                  mt={4}
-                  size="lg"
-                >
-                  Facebook
-                </Button>
+                <>
+                  <Button 
+                    leftIcon={<FaFacebook />}
+                    colorScheme="facebook"
+                    isLoading={isConnectingFacebook}
+                    loadingText="Connecting..."
+                    onClick={handleFacebookConnect}
+                    mb={4}
+                    mt={4}
+                    size="lg"
+                  >
+                    Facebook
+                  </Button>
+                  
+                  {/* Display Facebook environment variables */}
+                  <Box 
+                    mt={2} 
+                    mb={4} 
+                    p={3} 
+                    bg="gray.100" 
+                    borderRadius="md" 
+                    fontSize="sm"
+                    border="1px solid"
+                    borderColor="gray.300"
+                  >
+                    <Box mb={1}><strong>App ID:</strong> {import.meta.env.VITE_FACEBOOK_APP_ID || 'Not set'}</Box>
+                    <Box><strong>App Secret:</strong> {import.meta.env.VITE_FACEBOOK_APP_SECRET || 'Not set'}</Box>
+                  </Box>
+                </>
               )}
               <FormFooter
                 ctaName='Continue'
