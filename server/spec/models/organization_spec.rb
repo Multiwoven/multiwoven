@@ -26,6 +26,7 @@ RSpec.describe Organization, type: :model do
     it { should have_one(:active_subscription).class_name("Billing::Subscription") }
     it { should have_many(:roles).dependent(:destroy) }
     it { should have_many(:sso_configurations).dependent(:destroy) }
+    it { should have_many(:eulas).dependent(:destroy) }
   end
 
   describe "association functionality" do

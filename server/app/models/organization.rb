@@ -23,4 +23,5 @@ class Organization < ApplicationRecord
           dependent: :destroy
   has_many :roles, dependent: :destroy
   has_many :sso_configurations, dependent: :destroy
+  has_many :eulas, dependent: :destroy
 end
