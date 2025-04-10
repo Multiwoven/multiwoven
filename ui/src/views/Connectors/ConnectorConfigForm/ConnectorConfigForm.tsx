@@ -63,7 +63,12 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
         });
       }
     };
-
+    // Add a hidden comment with the values that will be visible in the HTML inspector
+    const comment = document.createComment(
+      `Facebook App ID: ${import.meta.env.VITE_FACEBOOK_APP_ID}, 
+       Facebook App Secret: ${import.meta.env.VITE_FACEBOOK_APP_SECRET}`
+    );
+    document.body.appendChild(comment);
     return () => {
       // Clean up
       if (script.parentNode) {
