@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Box } from '@chakra-ui/react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
-import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
+import { getConnectorsDefintions } from '@/services/connectors';
 import { Connector, DatasourceType } from '@/views/Connectors/types';
 import ContentContainer from '@/components/ContentContainer';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
