@@ -45,37 +45,33 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   // Load Facebook SDK
   useEffect(() => {
-    // Create script element
+    const scriptId = 'facebook-jssdk';
+    if (document.getElementById(scriptId)) return;
+
     const script = document.createElement('script');
-    script.src = "https://connect.facebook.net/en_US/sdk.js";
+    script.id = scriptId;
+    script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0";
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
 
-    // Initialize Facebook SDK once script is loaded
-    script.onload = () => {
-      if (window.FB) {
-        window.FB.init({
-          appId: import.meta.env.VITE_FACEBOOK_APP_ID, // Your Facebook App ID
-          cookie: true,
-          xfbml: true,
-          version: 'v18.0'
-        });
-      }
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: import.meta.env.VITE_FACEBOOK_APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0'
+      });
     };
-    // Add a hidden comment with the values that will be visible in the HTML inspector
-    const comment = document.createComment(
-      `Facebook App ID: ${import.meta.env.VITE_FACEBOOK_APP_ID}, 
-       Facebook App Secret: ${import.meta.env.VITE_FACEBOOK_APP_SECRET}`
-    );
-    document.body.appendChild(comment);
+
     return () => {
-      // Clean up
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      const existingScript = document.getElementById(scriptId);
+      if (existingScript) {
+        existingScript.remove();
       }
     };
   }, []);
+
 
   // Update form data when access token changes
   useEffect(() => {
@@ -89,19 +85,26 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   // Function to exchange short-lived token for long-lived token
   const exchangeForLongLivedToken = async (shortLivedToken: string) => {
-    const appId = import.meta.env.VITE_FACEBOOK_APP_ID;
-    const appSecret = import.meta.env.VITE_FACEBOOK_APP_SECRET;
-    
     try {
-      const response = await fetch(
-        `https://graph.facebook.com/v17.0/oauth/access_token?` +
-        `grant_type=fb_exchange_token&` +
-        `client_id=${appId}&` +
-        `client_secret=${appSecret}&` +
-        `fb_exchange_token=${shortLivedToken}`
-      );
-      
+      // Call our server endpoint instead of directly calling Facebook API
+      const response = await fetch('/api/facebook/exchange-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ shortLivedToken }),
+      });
+
       const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error.message || JSON.stringify(data.error) || 'Failed to exchange token');
+      }
+
+      if (!data.access_token) {
+        throw new Error('No access token returned from server');
+      }
+
       return data.access_token;
     } catch (error) {
       console.error('Error exchanging token:', error);
@@ -111,7 +114,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   const handleFacebookConnect = () => {
     setIsConnectingFacebook(true);
-    
+
     if (typeof window === 'undefined' || !window.FB) {
       toast({
         title: "Error",
@@ -281,21 +284,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
                   >
                     Facebook
                   </Button>
-                  
-                  {/* Display Facebook environment variables */}
-                  <Box 
-                    mt={2} 
-                    mb={4} 
-                    p={3} 
-                    bg="gray.100" 
-                    borderRadius="md" 
-                    fontSize="sm"
-                    border="1px solid"
-                    borderColor="gray.300"
-                  >
-                    <Box mb={1}><strong>App ID:</strong> {import.meta.env.VITE_FACEBOOK_APP_ID || 'Not set'}</Box>
-                    <Box><strong>App Secret:</strong> {import.meta.env.VITE_FACEBOOK_APP_SECRET || 'Not set'}</Box>
-                  </Box>
+
                 </>
               )}
               <FormFooter
