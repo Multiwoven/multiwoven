@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.22.1)
+=======
+    multiwoven-integrations (0.22.3)
+>>>>>>> 72dfc0de (chore(CE): bump version to 0.22.3 (#1012))
       MailchimpMarketing
       activesupport
       async-websocket
