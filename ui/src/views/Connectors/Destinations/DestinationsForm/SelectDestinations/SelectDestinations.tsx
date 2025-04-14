@@ -13,7 +13,7 @@ const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL_DESTINATIONS_CATEGORY);
 
-  const { data } = useQueryWrapper<ConnectorsDefinationApiResponse, Error>(
+  const { data } = useQueryWrapper<Connector[], Error>(
     ['datasources', 'destination'],
     () => getConnectorsDefintions('destination'),
     {
@@ -23,7 +23,7 @@ const SelectDestinations = (): JSX.Element => {
     },
   );
 
-  const connectors = data?.data ?? [];
+  const connectors = data ?? [];
   const destinationCategories = getDestinationCategories(connectors);
 
   const onDestinationSelect = (destination: Connector) => {

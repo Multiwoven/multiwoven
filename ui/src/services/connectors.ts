@@ -31,10 +31,8 @@ type ConnectorDefinationApiResponse = {
   };
 };
 
-export const getConnectorsDefintions = async (
-  connectorType: string,
-): Promise<ConnectorsDefinationApiResponse> =>
-  multiwovenFetch<null, ConnectorsDefinationApiResponse>({
+export const getConnectorsDefintions = async (connectorType: string): Promise<Connector[]> =>
+  multiwovenFetch<null, Connector[]>({
     method: 'get',
     url: buildUrlWithParams('/connector_definitions', {
       type: connectorType,

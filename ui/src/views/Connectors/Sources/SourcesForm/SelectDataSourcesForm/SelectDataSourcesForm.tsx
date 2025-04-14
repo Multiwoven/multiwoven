@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Box } from '@chakra-ui/react';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
-import { DatasourceType } from '@/views/Connectors/types';
+import { Connector, DatasourceType } from '@/views/Connectors/types';
 import ContentContainer from '@/components/ContentContainer';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import EntityItem from '@/components/EntityItem';
@@ -10,7 +10,7 @@ import EntityItem from '@/components/EntityItem';
 const SelectDataSourcesForm = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
 
-  const { data } = useQueryWrapper<ConnectorsDefinationApiResponse, Error>(
+  const { data } = useQueryWrapper<Connector[], Error>(
     ['datasources', 'source'],
     () => getConnectorsDefintions('source'),
     {
@@ -20,7 +20,7 @@ const SelectDataSourcesForm = (): JSX.Element => {
     },
   );
 
-  const datasources = data?.data ?? [];
+  const datasources = data ?? [];
 
   const handleOnClick = (datasource: DatasourceType) => {
     if (stepInfo?.formKey) {
