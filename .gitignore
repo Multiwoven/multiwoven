@@ -2,3 +2,5 @@
 .env
 /.history
 .DS_Store
+**/*.key
+**/*.pem
