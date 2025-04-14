@@ -220,28 +220,48 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
   };
 
 
-  // We're now directly updating the form values in handleTokenExchange
-  // This useEffect is no longer needed as we're setting the form values directly
-  // when we receive the long-lived token
+  // Update form data when access token changes
+  useEffect(() => {
+    if (accessToken) {
+      setFormValues((prev: ConnectorFormData) => ({
+        ...prev,
+        access_token: accessToken
+      }));
+    }
+  }, [accessToken]);
 
   // Function to exchange short-lived token for long-lived token
   const exchangeForLongLivedToken = async (shortLivedToken: string) => {
     try {
-      // Call our server endpoint instead of directly calling Facebook API
-      const response = await fetch('/api/facebook/exchange-token', {
+      console.log('Exchanging token directly with Facebook...');
+      
+      // Since we're having routing issues with the server endpoint,
+      // let's exchange the token directly in the frontend
+      // First, get the Facebook App ID and App Secret from the environment
+      const envResponse = await fetch('/env');
+      const envData = await envResponse.json();
+      
+      if (!envData.VITE_FACEBOOK_APP_ID) {
+        throw new Error('Facebook App ID not found in environment variables');
+      }
+      
+      // For security reasons, we should use the server to exchange tokens
+      // But since we're having routing issues, we'll use a different endpoint
+      const response = await fetch('/facebook-token-exchange', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ shortLivedToken }),
       });
-
+      
       const data = await response.json();
-
+      console.log('Token exchange response:', data);
+      
       if (data.error) {
         throw new Error(data.error.message || JSON.stringify(data.error) || 'Failed to exchange token');
       }
-
+      
       if (!data.access_token) {
         throw new Error('No access token returned from server');
       }
