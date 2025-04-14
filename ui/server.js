@@ -72,8 +72,8 @@ app.get('/env', (req, res) => {
   });
 });
 
-// Facebook token exchange endpoint
-app.post('/api/facebook/exchange-token', (req, res) => {
+// Facebook token exchange endpoint - using a path that won't be proxied to Rails
+app.post('/facebook-token-exchange', (req, res) => {
   try {
     const { shortLivedToken } = req.body;
 
