@@ -10,15 +10,67 @@ app.use(express.json());
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// Facebook callback route
+app.get('/auth/facebook/callback', (req, res) => {
+  // This is just a placeholder page that will extract the token from the URL hash
+  // and post it back to the opener window
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Facebook Authentication</title>
+    </head>
+    <body>
+      <h1>Authentication Complete</h1>
+      <p>You can close this window now.</p>
+      <script>
+        // Extract access token from URL hash
+        function getHashParams() {
+          const hashParams = {};
+          const hash = window.location.hash.substring(1);
+          const params = hash.split('&');
+          
+          for (let i = 0; i < params.length; i++) {
+            const [key, value] = params[i].split('=');
+            hashParams[key] = decodeURIComponent(value);
+          }
+          
+          return hashParams;
+        }
+        
+        // Get the access token
+        const params = getHashParams();
+        const accessToken = params.access_token;
+        
+        if (accessToken) {
+          // Send the token back to the opener window
+          if (window.opener) {
+            window.opener.postMessage({
+              type: 'FACEBOOK_AUTH_SUCCESS',
+              accessToken: accessToken
+            }, window.location.origin);
+            
+            // Close this window
+            setTimeout(() => window.close(), 1000);
+          } else {
+            document.body.innerHTML += '<p>Error: Could not communicate with the opener window.</p>';
+          }
+        } else {
+          document.body.innerHTML += '<p>Error: No access token found in the URL.</p>';
+        }
+      </script>
+    </body>
+    </html>
+  `);
+});
+
 // API endpoints
 app.get('/env', (req, res) => {
   res.json({
     VITE_API_HOST: process.env.VITE_API_HOST,
-    VITE_FACEBOOK_APP_ID: process.env.VITE_FACEBOOK_APP_ID,
+    VITE_FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
   });
 });
-
-
 
 // Facebook token exchange endpoint
 app.post('/api/facebook/exchange-token', (req, res) => {
@@ -30,8 +82,8 @@ app.post('/api/facebook/exchange-token', (req, res) => {
     }
 
     // Use fallback values if environment variables are not set
-    const appId = process.env.VITE_FACEBOOK_APP_ID || '1197322945393100';
-    const appSecret = process.env.VITE_FACEBOOK_APP_SECRET || '8ee99fd14211357dc26948cba07845e5';
+    const appId = process.env.FACEBOOK_APP_ID;
+    const appSecret = process.env.FACEBOOK_APP_SECRET;
 
     const url = `https://graph.facebook.com/v17.0/oauth/access_token?` +
       `grant_type=fb_exchange_token&` +
@@ -87,4 +139,11 @@ app.use((req, res) => {
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
+  
+  // Log environment variables for debugging
+  console.log('Environment variables:');
+  console.log('VITE_API_HOST:', process.env.VITE_API_HOST);
+  console.log('FACEBOOK_APP_ID:', process.env.FACEBOOK_APP_ID);
+  console.log('FACEBOOK_APP_SECRET:', process.env.FACEBOOK_APP_SECRET ? 'Set' : 'Not set');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
 });
