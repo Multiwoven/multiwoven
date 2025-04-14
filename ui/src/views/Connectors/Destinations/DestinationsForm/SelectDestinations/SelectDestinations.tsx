@@ -1,4 +1,4 @@
-import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
+import { getConnectorsDefintions } from '@/services/connectors';
 import { getDestinationCategories } from '@/views/Connectors/helpers';
 import { useContext, useState } from 'react';
 import { Box, Grid, Text, Wrap } from '@chakra-ui/react';
