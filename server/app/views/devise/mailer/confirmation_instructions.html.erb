@@ -2,170 +2,165 @@
 <% query_params = { email:@resource.email, confirmation_token: @token } %>
 <% confirmation_url = "#{ENV['UI_HOST']}/verify-user?#{query_params.to_query}" %>
 <html>
-  <body
-    style="
-      margin: 0;
-      text-align: center;
-      height: 100vh;
-      width: 100vw;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    "
-  >
-    <table style="margin: 0; padding: 0; border-collapse: collapse">
-      <tr>
-        <td valign="middle">
-          <table
-            style="
-              width: 100%;
-              max-width: 600px;
-              background: #f9fafb;
-              padding: 20px;
-              border-radius: 12px;
-              border: 1px #eaecf0 solid;
-            "
-          >
-            <tr>
-              <td style="text-align: center; padding: 12px">
-                <img
-                  src="https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png"
-                  style="width: 100%; max-width: 178px"
-                  alt="AI Squared Logo"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td
-                style="
-                  background: white;
-                  border-radius: 8px;
-                  border: 1px #eaecf0 solid;
-                  padding: 48px 16px;
-                  text-align: center;
-                "
-              >
-                <h1
+  <head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+  </head>
+  <body style="margin: 0; text-align: center; padding: 20px">
+    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+      <table style="margin: 0; padding: 0; border-collapse: collapse">
+        <tr>
+          <td valign="middle">
+            <table
+              style="
+                width: 600px;
+                max-width: 600px;
+                background: #f9fafb;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px #eaecf0 solid;
+              "
+            >
+              <tr>
+                <td style="text-align: center; padding: 12px">
+                  <img
+                    src="https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png"
+                    style="width: 100%; max-width: 178px"
+                    alt="AI Squared Logo"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
                   style="
-                    color: #101828;
-                    font-size: 28px;
-                    font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 700;
-                    line-height: 36px;
-                    margin: 0;
+                    background: white;
+                    border-radius: 8px;
+                    border: 1px #eaecf0 solid;
+                    padding: 48px 16px;
+                    text-align: center;
                   "
                 >
-                  Verify your email
-                </h1>
-                <p
-                  style="
-                    color: #475467;
-                    font-size: 14px;
-                    font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 400;
-                    line-height: 20px;
-                  "
-                >
-                  To complete signup and start using AI Squared, just click the verification button below.
-                </p>
-                <a
-                  href="<%= confirmation_url %>"
-                  style="display: inline-block; text-decoration: none"
-                >
-                  <button
+                  <h1
                     style="
-                      background: #00249c;
-                      border: none;
-                      border-radius: 6px;
-                      color: white;
+                      color: #101828;
+                      font-size: 28px;
+                      font-family: Helvetica, Arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 36px;
+                      margin: 0;
+                    "
+                  >
+                    Verify your email
+                  </h1>
+                  <p
+                    style="
+                      color: #475467;
+                      font-size: 14px;
+                      font-family: Helvetica, Arial, sans-serif;
+                      font-weight: 400;
+                      line-height: 20px;
+                    "
+                  >
+                    To complete signup and start using AI Squared, just click the verification button below.
+                  </p>
+                  <a
+                    href="<%= confirmation_url %>"
+                    style="display: inline-block; text-decoration: none"
+                  >
+                    <button
+                      style="
+                        background: #00249c;
+                        border: none;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 14px;
+                        font-family: Helvetica, Arial, sans-serif;
+                        font-weight: 700;
+                        line-height: 20px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                      "
+                    >
+                      Verify Email
+                    </button>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; text-align: left">
+                  <p
+                    style="
+                      color: #98a2b3;
+                      font-size: 14px;
+                      font-family: Helvetica, Arial, sans-serif;
+                      font-weight: 400;
+                      line-height: 20px;
+                      margin: 0;
+                    "
+                  >
+                    This link will expire after it is clicked once. Please use it
+                    to verify your email.
+                  </p>
+                  <p
+                    style="
+                      color: #101828;
                       font-size: 14px;
                       font-family: Helvetica, Arial, sans-serif;
                       font-weight: 700;
                       line-height: 20px;
-                      padding: 10px 20px;
-                      cursor: pointer;
+                      margin: 0;
                     "
                   >
-                    Verify Email
-                  </button>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 12px; text-align: left">
-                <p
+                    <br />Cheers,<br />Team AI Squared
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td
                   style="
+                    padding: 12px;
+                    text-align: left;
+                    font-size: 12px;
                     color: #98a2b3;
-                    font-size: 14px;
                     font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 400;
-                    line-height: 20px;
-                    margin: 0;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
                   "
                 >
-                  This link will expire after it is clicked once. Please use it to verify your email.
-                </p>
-                <p
-                  style="
-                    color: #101828;
-                    font-size: 14px;
-                    font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 700;
-                    line-height: 20px;
-                    margin: 0;
-                  "
-                >
-                  <br />Cheers,<br />Team AI Squared
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td
-                style="
-                  padding: 12px;
-                  text-align: left;
-                  font-size: 12px;
-                  color: #98a2b3;
-                  font-family: Helvetica, Arial, sans-serif;
-                  display: flex;
-                  flex-direction: row;
-                  justify-content: space-between;
-                "
-              >
-                <div>
-                  <p style="margin: 0">
-                    <a
-                      href="#"
-                      style="color: #98a2b3; text-decoration: underline"
-                      >Our blog</a
-                    >
-                    |
-                    <a
-                      href="#"
-                      style="color: #98a2b3; text-decoration: underline"
-                      >Docs</a
-                    >
-                    |
-                    <a
-                      href="#"
-                      style="color: #98a2b3; text-decoration: underline"
-                      >Contact Us</a
-                    >
-                  </p>
-                  <p style="margin: 0">
-                    © 2024 AI Squared. All Rights Reserved.
-                  </p>
-                </div>
-                <div style="text-align: end">
-                  <p style="margin: 0">AI Squared, 1300 I Street NW,</p>
-                  <p style="margin: 0">Suite 400 E, Washington, DC 20005</p>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
+                  <div>
+                    <p style="margin: 0">
+                      <a
+                        href="https://blog.squared.ai/"
+                        style="color: #98a2b3; text-decoration: underline"
+                        >Our blog</a
+                      >
+                      |
+                      <a
+                        href="https://docs.squared.ai/"
+                        style="color: #98a2b3; text-decoration: underline"
+                        >Docs</a
+                      >
+                      |
+                      <a
+                        href="https://squared.ai/contact/"
+                        style="color: #98a2b3; text-decoration: underline"
+                        >Contact Us</a
+                      >
+                    </p>
+                    <p style="margin: 0">
+                      © 2025 AI Squared. All Rights Reserved.
+                    </p>
+                  </div>
+                  <div style="text-align: end">
+                    <p style="margin: 0">AI Squared, 1300 I Street NW,</p>
+                    <p style="margin: 0">Suite 400 E, Washington, DC 20005</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>

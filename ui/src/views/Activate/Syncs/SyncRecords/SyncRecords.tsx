@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Image, Tabs, Text } from '@chakra-ui/react';
 
 import { getSyncRecords } from '@/services/syncs';
@@ -21,34 +21,26 @@ import { SyncRecordResponse } from '@/views/Activate/Syncs/types';
 import DataTable from '@/components/DataTable';
 import { SyncRecordsColumns, useDynamicSyncColumns } from './SyncRecordsColumns';
 import Pagination from '@/components/EnhancedPagination';
+import useFilters from '@/hooks/useFilters';
 
 const SyncRecords = (): JSX.Element => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { filters, updateFilters } = useFilters({ page: '1', status: 'success' });
   const { syncId, syncRunId } = useParams();
   const toast = useCustomToast();
-
-  const pageId = searchParams.get('page');
-  const statusTab = searchParams.get('status');
-
-  const [currentPage, setCurrentPage] = useState(Number(pageId) || 1);
-  const [currentStatusTab, setCurrentStatusTab] = useState<SyncRecordStatus>(
-    statusTab === SyncRecordStatus.failed ? SyncRecordStatus.failed : SyncRecordStatus.success,
-  );
 
   const {
     data: filteredSyncRunRecords,
     isLoading: isFilteredSyncRecordsLoading,
     isError: isFilteredSyncRecordsError,
-    refetch: refetchFilteredSyncRecords,
   } = useQueryWrapper<ApiResponse<Array<SyncRecordResponse>>, Error>(
-    ['activate', 'sync-records', syncRunId, currentPage, statusTab],
+    ['activate', 'sync-records', syncRunId, filters.page, filters.status],
     () =>
       getSyncRecords(
         syncId as string,
         syncRunId as string,
-        currentPage.toString(),
+        filters.page,
         true,
-        statusTab || 'success',
+        filters.status ?? 'success',
       ),
     {
       refetchOnMount: false,
@@ -65,10 +57,6 @@ const SyncRecords = (): JSX.Element => {
   );
 
   useEffect(() => {
-    setSearchParams({ page: currentPage.toString(), status: currentStatusTab });
-  }, [currentPage, currentStatusTab, setSearchParams]);
-
-  useEffect(() => {
     if (isFilteredSyncRecordsError) {
       toast({
         title: 'Error',
@@ -82,9 +70,7 @@ const SyncRecords = (): JSX.Element => {
   }, [isFilteredSyncRecordsError, toast]);
 
   const handleStatusTabChange = (status: SyncRecordStatus) => {
-    setCurrentPage(1);
-    setCurrentStatusTab(status);
-    refetchFilteredSyncRecords;
+    updateFilters({ page: '1', status });
   };
 
   return (
@@ -93,10 +79,7 @@ const SyncRecords = (): JSX.Element => {
       <Tabs
         size='md'
         variant='indicator'
-        onChange={(index) =>
-          handleStatusTabChange(index === 0 ? SyncRecordStatus.success : SyncRecordStatus.failed)
-        }
-        index={currentStatusTab === SyncRecordStatus.success ? 0 : 1}
+        index={filters.status === SyncRecordStatus.success.toString() ? 0 : 1}
         background='gray.300'
         padding='4px'
         borderRadius='8px'
@@ -132,11 +115,13 @@ const SyncRecords = (): JSX.Element => {
                 <DataTable data={data} columns={allColumns} />
               </Box>
               <Box display='flex' justifyContent='center' pt='20px'>
-                {filteredSyncRunRecords.links ? (
+                {data && data.length > 0 && filteredSyncRunRecords.links ? (
                   <Pagination
                     links={filteredSyncRunRecords?.links}
-                    currentPage={currentPage}
-                    handlePageChange={setCurrentPage}
+                    currentPage={filters.page ? Number(filters.page) : 1}
+                    handlePageChange={(page) =>
+                      updateFilters({ ...filters, page: page.toString() })
+                    }
                   />
                 ) : (
                   <>Pagination unavailable.</>

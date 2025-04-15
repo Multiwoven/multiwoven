@@ -9,6 +9,7 @@ import {
   ChangeSyncStatusPayload,
 } from '@/views/Activate/Syncs/types';
 import { multiwovenFetch, ApiResponse, APIRequestMethod } from './common';
+import { buildUrlWithParams } from './utils';
 
 export const getCatalog = (
   connectorId: string,
@@ -65,9 +66,11 @@ export const getSyncRecords = (
 ): Promise<ApiResponse<Array<SyncRecordResponse>>> =>
   multiwovenFetch<null, ApiResponse<Array<SyncRecordResponse>>>({
     method: 'get',
-    url: isFiltered
-      ? `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10&status=${status}`
-      : `/syncs/${syncId}/sync_runs/${runId}/sync_records?page=${page}&per_page=10`,
+    url: buildUrlWithParams(`/syncs/${syncId}/sync_runs/${runId}/sync_records`, {
+      page,
+      per_page: '10',
+      status: isFiltered ? status : undefined,
+    }),
   });
 
 export const editSync = (

@@ -9,6 +9,7 @@ import {
 } from '@/views/Connectors/types';
 import { apiRequest, multiwovenFetch } from './common';
 import { RJSFSchema } from '@rjsf/utils';
+import { buildUrlWithParams } from './utils';
 
 export type ConnectorsDefinationApiResponse = {
   success: boolean;
@@ -30,17 +31,22 @@ type ConnectorDefinationApiResponse = {
   };
 };
 
-export const getConnectorsDefintions = async (
-  connectorType: string,
-): Promise<ConnectorsDefinationApiResponse> => {
-  return apiRequest('/connector_definitions?type=' + connectorType, null);
-};
+export const getConnectorsDefintions = async (connectorType: string): Promise<Connector[]> =>
+  multiwovenFetch<null, Connector[]>({
+    method: 'get',
+    url: buildUrlWithParams('/connector_definitions', {
+      type: connectorType,
+    }),
+  });
 
 export const getConnectorDefinition = async (
   connectorType: string,
   connectorName: string,
 ): Promise<ConnectorDefinationApiResponse> => {
-  return apiRequest('/connector_definitions/' + connectorName + '?type=' + connectorType, null);
+  return apiRequest(
+    buildUrlWithParams(`/connector_definitions/${connectorName}`, { type: connectorType }),
+    null,
+  );
 };
 
 export const getConnectionStatus = async (payload: TestConnectionPayload) =>
@@ -78,7 +84,9 @@ export const updateConnector = async (
 export const getUserConnectors = async (connectorType: string): Promise<ConnectorListResponse> => {
   return multiwovenFetch<null, ConnectorListResponse>({
     method: 'get',
-    url: `/connectors?type=${connectorType}`,
+    url: buildUrlWithParams('/connectors', {
+      type: connectorType,
+    }),
     data: null,
   });
 };

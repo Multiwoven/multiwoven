@@ -166,25 +166,22 @@ const SteppedForm = ({ steps }: SteppedFormType): JSX.Element => {
                     {stepInfo.name}
                   </Text>
                 </Box>
-                <Box>
-                  <ExitModal />
-                </Box>
+                {stepInfo.exitWithoutWarning ? (
+                  <Button
+                    variant='shell'
+                    onClick={() => navigate('*')}
+                    paddingX={6}
+                    height='32px'
+                    letterSpacing='-0.12px'
+                  >
+                    Exit
+                  </Button>
+                ) : (
+                  <Box>
+                    <ExitModal />
+                  </Box>
+                )}
               </Box>
-              {stepInfo.exitWithoutWarning ? (
-                <Button
-                  variant='shell'
-                  onClick={() => navigate('*')}
-                  paddingX={6}
-                  height='32px'
-                  letterSpacing='-0.12px'
-                >
-                  Exit
-                </Button>
-              ) : (
-                <Box>
-                  <ExitModal />
-                </Box>
-              )}
             </ContentContainer>
           </Box>
         </Box>
