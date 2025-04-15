@@ -102,7 +102,19 @@ module Multiwoven::Integrations::Source
           catalog = Catalog.new(streams: streams)
           catalog.to_multiwoven_message
         rescue StandardError => e
-          handle_exception(e, { context: "AUDIENCE:DISCOVER:EXCEPTION", type: "error" })
+          # Log the exception
+          Rails.logger.error("AUDIENCE:DISCOVER:EXCEPTION: #{e.message}")
+          Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+
+          # Create a log message
+          log_message = LogMessage.new(
+            level: "error",
+            message: e.message,
+            name: "AUDIENCE:DISCOVER:EXCEPTION"
+          )
+
+          # Return as a MultiwovenMessage
+          log_message.to_multiwoven_message
         end
       end
 
@@ -115,7 +127,8 @@ module Multiwoven::Integrations::Source
           @current_connection_config = connection_config
 
           # If there's a query in the sync_config, we'll process it
-          if sync_config.model && sync_config.model.query && !sync_config.model.query.empty?
+          # Check if query is a string before calling empty? on it
+          if sync_config.model && sync_config.model.query && sync_config.model.query.is_a?(String) && !sync_config.model.query.empty?
             conn = create_connection(connection_config)
             query_string = sync_config.model.query
             query_string = batched_query(query_string, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
@@ -148,12 +161,19 @@ module Multiwoven::Integrations::Source
 
           records
         rescue StandardError => e
-          handle_exception(e, {
-            context: "AUDIENCE:READ:EXCEPTION",
-            type: "error",
-            sync_id: sync_config.sync_id,
-            sync_run_id: sync_config.sync_run_id
-          })
+          # Log the exception
+          Rails.logger.error("AUDIENCE:READ:EXCEPTION: #{e.message}")
+          Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+
+          # Create a log message
+          log_message = LogMessage.new(
+            level: "error",
+            message: e.message,
+            name: "AUDIENCE:READ:EXCEPTION"
+          )
+
+          # Return as a MultiwovenMessage
+          log_message.to_multiwoven_message
         end
       end
 
@@ -233,6 +253,11 @@ module Multiwoven::Integrations::Source
         # If instance variables are nil, reinitialize from stored connection config
         if (@user_id.nil? || @audience_id.nil?) && @current_connection_config
           initialize_client(@current_connection_config)
+          
+          # If still nil after initialization, log an error but continue with default values
+          if @user_id.nil? || @audience_id.nil?
+            Rails.logger.error("Missing required parameters: user_id=#{@user_id.inspect}, audience_id=#{@audience_id.inspect}")
+          end
         end
 
         # Create a Google Cloud Storage client
@@ -262,7 +287,10 @@ module Multiwoven::Integrations::Source
         conn = @duckdb_conn
         
         # Create a safe table name by replacing any non-alphanumeric characters with underscores
-        safe_table_name = "audience_data_#{@user_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')}_#{@audience_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')}"
+        # Add nil checks to prevent 'undefined method `gsub' for nil:NilClass' error
+        user_id_safe = @user_id.nil? ? 'unknown_user' : @user_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')
+        audience_id_safe = @audience_id.nil? ? 'unknown_audience' : @audience_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')
+        safe_table_name = "audience_data_#{user_id_safe}_#{audience_id_safe}"
         
         # Register the CSV file with DuckDB - use all_varchar=1 to prevent type conversion errors
         conn.execute("CREATE TABLE \"#{safe_table_name}\" AS SELECT * FROM read_csv_auto('#{file_path}', all_varchar=1);")
