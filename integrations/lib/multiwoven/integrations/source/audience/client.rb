@@ -111,6 +111,9 @@ module Multiwoven::Integrations::Source
         initialize_client(connection_config)
 
         begin
+          # Store connection config in an instance variable to ensure it's available for all method calls
+          @current_connection_config = connection_config
+
           # If there's a query in the sync_config, we'll process it
           if sync_config.model && sync_config.model.query && !sync_config.model.query.empty?
             conn = create_connection(connection_config)
@@ -227,6 +230,11 @@ module Multiwoven::Integrations::Source
       end
 
       def get_results(query_string)
+        # If instance variables are nil, reinitialize from stored connection config
+        if (@user_id.nil? || @audience_id.nil?) && @current_connection_config
+          initialize_client(@current_connection_config)
+        end
+
         # Create a Google Cloud Storage client
         storage = create_storage_client
 
@@ -254,7 +262,7 @@ module Multiwoven::Integrations::Source
         conn = @duckdb_conn
         
         # Create a safe table name by replacing any non-alphanumeric characters with underscores
-        safe_table_name = "audience_data_#{@user_id.gsub(/[^a-zA-Z0-9]/, '_')}_#{@audience_id.gsub(/[^a-zA-Z0-9]/, '_')}"
+        safe_table_name = "audience_data_#{@user_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')}_#{@audience_id.to_s.gsub(/[^a-zA-Z0-9]/, '_')}"
         
         # Register the CSV file with DuckDB - use all_varchar=1 to prevent type conversion errors
         conn.execute("CREATE TABLE \"#{safe_table_name}\" AS SELECT * FROM read_csv_auto('#{file_path}', all_varchar=1);")
