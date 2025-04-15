@@ -1,6 +1,13 @@
 name: CI - Integrations
+
 on:
   push:
+    branches:
+      - main
+    paths:
+      - "integrations/**"
+
+  pull_request:
     paths:
       - "integrations/**"
 
@@ -62,7 +69,7 @@ jobs:
         working-directory: ./integrations
 
       - name: Run tests with code coverage
-        run: COVERAGE=true bundle exec rspec
+        run: COVERAGE=true bundle exec rake
         working-directory: ./integrations
 
       - name: Install Code Climate Test Reporter

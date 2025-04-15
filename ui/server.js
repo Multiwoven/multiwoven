@@ -123,7 +123,7 @@ app.post('/facebook-token-exchange', (req, res) => {
 });
 
 // Last middleware to handle all other requests - this avoids using path-to-regexp's pattern matching
-app.use((req, res) => {
+app.use(/(.*)/,(req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   fs.readFile(indexPath, 'utf8', (err, data) => {
     if (err) {

@@ -1,4 +1,4 @@
-import { getConnectorsDefintions, ConnectorsDefinationApiResponse } from '@/services/connectors';
+import { getConnectorsDefintions } from '@/services/connectors';
 import { getDestinationCategories } from '@/views/Connectors/helpers';
 import { useContext, useState } from 'react';
 import { Box, Grid, Text, Wrap } from '@chakra-ui/react';
@@ -13,7 +13,7 @@ const SelectDestinations = (): JSX.Element => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL_DESTINATIONS_CATEGORY);
 
-  const { data } = useQueryWrapper<ConnectorsDefinationApiResponse, Error>(
+  const { data } = useQueryWrapper<Connector[], Error>(
     ['datasources', 'destination'],
     () => getConnectorsDefintions('destination'),
     {
@@ -23,7 +23,7 @@ const SelectDestinations = (): JSX.Element => {
     },
   );
 
-  const connectors = data?.data ?? [];
+  const connectors = data ?? [];
   const destinationCategories = getDestinationCategories(connectors);
 
   const onDestinationSelect = (destination: Connector) => {

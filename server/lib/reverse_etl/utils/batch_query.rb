@@ -21,12 +21,20 @@ module ReverseEtl
 
           # Execute the batch query
           result = params[:client].read(params[:sync_config])
-          # Extract the value of the cursor_field column from the last record
-          current_cursor_field_value = extract_last_cursor_field_value(result, params[:sync_config])
-          if current_cursor_field_value && current_cursor_field_value == last_cursor_field_value
+          
+          # Check if result is an error message
+          if result.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage) && result.type == 'log'
+            Rails.logger.error("Error in batch query: #{result.log.message}")
+            # Return empty array to break the loop
             result = []
           else
-            last_cursor_field_value = current_cursor_field_value
+            # Extract the value of the cursor_field column from the last record
+            current_cursor_field_value = extract_last_cursor_field_value(result, params[:sync_config])
+            if current_cursor_field_value && current_cursor_field_value == last_cursor_field_value
+              result = []
+            else
+              last_cursor_field_value = current_cursor_field_value
+            end
           end
           # Increment the offset by the batch size for the next iteration
           current_offset += params[:batch_size]
@@ -40,9 +48,17 @@ module ReverseEtl
       end
 
       def self.extract_last_cursor_field_value(result, sync_config)
-        return nil unless sync_config.cursor_field && !result.empty?
+        # Handle the case when result is a MultiwovenMessage with a LogMessage (error case)
+        return nil if result.nil? || result.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage) && result.type == 'log'
+        
+        # Handle the case when result is an array-like object
+        return nil unless sync_config.cursor_field && result.respond_to?(:empty?) && !result.empty? && result.respond_to?(:last)
 
-        last_record = result.last.record.data
+        # Make sure the last record has a record attribute with data
+        last_item = result.last
+        return nil unless last_item.respond_to?(:record) && last_item.record.respond_to?(:data)
+
+        last_record = last_item.record.data
         last_record[sync_config.cursor_field]
       end
 
