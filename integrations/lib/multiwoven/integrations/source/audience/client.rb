@@ -122,7 +122,7 @@ module Multiwoven::Integrations::Source
         connection_config = sync_config.source.connection_specification
         initialize_client(connection_config)
 
-        begin
+        # begin
           # Store connection config in an instance variable to ensure it's available for all method calls
           @current_connection_config = connection_config
 
@@ -160,21 +160,21 @@ module Multiwoven::Integrations::Source
           end
 
           records
-        rescue StandardError => e
-          # Log the exception
-          Rails.logger.error("AUDIENCE:READ:EXCEPTION: #{e.message}")
-          Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+        # rescue StandardError => e
+        #   # Log the exception
+        #   Rails.logger.error("AUDIENCE:READ:EXCEPTION: #{e.message}")
+        #   Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
 
-          # Create a log message
-          log_message = LogMessage.new(
-            level: "error",
-            message: e.message,
-            name: "AUDIENCE:READ:EXCEPTION"
-          )
+        #   # Create a log message
+        #   log_message = LogMessage.new(
+        #     level: "error",
+        #     message: e.message,
+        #     name: "AUDIENCE:READ:EXCEPTION"
+        #   )
 
-          # Return as a MultiwovenMessage
-          log_message.to_multiwoven_message
-        end
+        #   # Return as a MultiwovenMessage
+        #   log_message.to_multiwoven_message
+        # end
       end
 
       def create_connection(config)
@@ -325,6 +325,14 @@ module Multiwoven::Integrations::Source
       end
 
       def create_storage_client
+        # Check if required credentials are present
+        if @private_key.nil? || @project_id.nil? || @client_email.nil?
+          error_message = "Missing required Google Cloud Storage credentials"
+          Rails.logger.error("AUDIENCE:CREATE_STORAGE_CLIENT:ERROR: #{error_message}")
+          Rails.logger.error("AUDIENCE:ENV_VARS: project_id=#{@project_id.nil? ? 'nil' : 'present'}, client_email=#{@client_email.nil? ? 'nil' : 'present'}, private_key=#{@private_key.nil? ? 'nil' : 'present'}")
+          raise StandardError, error_message
+        end
+        
         # Format the private key properly
         formatted_key = @private_key.gsub('\n', "\n")
         
