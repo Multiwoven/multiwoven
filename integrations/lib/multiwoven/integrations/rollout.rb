@@ -23,6 +23,7 @@ module Multiwoven
       OpenAI
       Sftp
       WatsonxAi
+      WatsonxData
       Anthropic
       Audience
     ].freeze

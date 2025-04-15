@@ -71,6 +71,7 @@ RSpec.describe User, type: :model do
         .is_at_most(Devise.password_length.max)
     }
     it { should validate_uniqueness_of(:email).case_insensitive }
+    it { should validate_inclusion_of(:eula_accepted).in_array([true, false]) }
   end
 
   # Test for associations
