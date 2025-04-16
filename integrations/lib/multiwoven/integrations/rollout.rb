@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.22.1"
+=======
+    VERSION = "0.22.5"
+>>>>>>> 211f03bb (fix(CE): sftp conn replace inner query (#1032))
 
     ENABLED_SOURCES = %w[
       Snowflake

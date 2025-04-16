@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.22.1)
+=======
+    multiwoven-integrations (0.22.5)
+>>>>>>> 211f03bb (fix(CE): sftp conn replace inner query (#1032))
       MailchimpMarketing
       activesupport
       async-websocket
