@@ -35,6 +35,14 @@ module Utils
       "Workspace Management" => {
         resources: %i[user audit_logs workspace],
         description: "Manage and access workspaces, members, and audit logs"
+      },
+      "Organization Management" => {
+        resources: %i[sso eula],
+        description: "Manage organization SSO settings and EULA configurations"
+      },
+      "Assistant" => {
+        resources: %i[assistant],
+        description: "Manage and access the AI assistant and its configurations"
       }
     }.freeze
   end

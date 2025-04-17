@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.22.1"
-=======
     VERSION = "0.22.4"
->>>>>>> bd3ded63 (feat(CE):  support unstructured file in S3 connector (#937))
 
     ENABLED_SOURCES = %w[
       Snowflake

@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.22.1)
-=======
     multiwoven-integrations (0.22.4)
->>>>>>> bd3ded63 (feat(CE):  support unstructured file in S3 connector (#937))
       MailchimpMarketing
       activesupport
       async-websocket
