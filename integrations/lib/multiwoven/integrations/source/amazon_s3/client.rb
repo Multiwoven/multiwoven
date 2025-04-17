@@ -3,14 +3,21 @@
 module Multiwoven::Integrations::Source
   module AmazonS3
     include Multiwoven::Integrations::Core
-    class Client < SourceConnector
+    class Client < UnstructuredSourceConnector
       @session_name = ""
+
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         @session_name = "connection-#{connection_config[:region]}-#{connection_config[:bucket]}"
-        conn = create_connection(connection_config)
-        path = build_path(connection_config)
-        get_results(conn, "DESCRIBE SELECT * FROM '#{path}';")
+
+        if unstructured_data?(connection_config)
+          create_s3_connection(connection_config)
+          @s3_resource.bucket(connection_config[:bucket]).objects.limit(1).first
+        else
+          conn = create_connection(connection_config)
+          path = build_path(connection_config)
+          get_results(conn, "DESCRIBE SELECT * FROM '#{path}';")
+        end
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
@@ -19,12 +26,17 @@ module Multiwoven::Integrations::Source
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
         @session_name = "discover-#{connection_config[:region]}-#{connection_config[:bucket]}"
-        conn = create_connection(connection_config)
-        # If pulling from multiple files, all files must have the same schema
-        path = build_path(connection_config)
-        records = get_results(conn, "DESCRIBE SELECT * FROM '#{path}';")
-        columns = build_discover_columns(records)
-        streams = [Multiwoven::Integrations::Protocol::Stream.new(name: path, action: StreamAction["fetch"], json_schema: convert_to_json_schema(columns))]
+
+        streams = if unstructured_data?(connection_config)
+                    [create_unstructured_stream]
+                  else
+                    conn = create_connection(connection_config)
+                    # If pulling from multiple files, all files must have the same schema
+                    path = build_path(connection_config)
+                    records = get_results(conn, "DESCRIBE SELECT * FROM '#{path}';")
+                    columns = build_discover_columns(records)
+                    [Multiwoven::Integrations::Protocol::Stream.new(name: path, action: StreamAction["fetch"], json_schema: convert_to_json_schema(columns))]
+                  end
         catalog = Catalog.new(streams: streams)
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -34,6 +46,9 @@ module Multiwoven::Integrations::Source
       def read(sync_config)
         connection_config = sync_config.source.connection_specification.with_indifferent_access
         @session_name = "#{sync_config.sync_id}-#{sync_config.source.name}-#{sync_config.destination.name}"
+
+        return handle_unstructured_data(sync_config) if unstructured_data?(connection_config)
+
         conn = create_connection(connection_config)
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
@@ -67,6 +82,19 @@ module Multiwoven::Integrations::Source
             resp.credentials.session_token
           )
         end
+      end
+
+      def create_s3_connection(connection_config)
+        connection_config = connection_config.with_indifferent_access
+
+        # Get authentication credentials
+        auth_data = get_auth_data(connection_config)
+
+        # Create S3 resource for easier operations
+        @s3_resource = Aws::S3::Resource.new(
+          region: connection_config[:region],
+          credentials: auth_data
+        )
       end
 
       def create_connection(connection_config)
@@ -136,6 +164,71 @@ module Multiwoven::Integrations::Source
         when "BOOLEAN"
           "boolean"
         end
+      end
+
+      def handle_unstructured_data(sync_config)
+        connection_config = sync_config.source.connection_specification.with_indifferent_access
+        bucket_name = connection_config[:bucket]
+        command = sync_config.model.query.strip
+        create_s3_connection(connection_config)
+
+        case command
+        when LIST_FILES_CMD
+          list_files_in_folder(bucket_name, connection_config[:path] || "")
+        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
+          # Extract the file path and remove surrounding quotes if present
+          file_path = ::Regexp.last_match(1).strip
+          file_path = file_path.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          download_file_to_local(bucket_name, file_path, sync_config.sync_id)
+        else
+          raise "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
+        end
+      end
+
+      def list_files_in_folder(bucket_name, folder_path)
+        folder_path = folder_path.end_with?("/") ? folder_path : "#{folder_path}/"
+        bucket = @s3_resource.bucket(bucket_name)
+
+        bucket.objects(prefix: folder_path).reject { |object| object.key == folder_path }.map do |object|
+          RecordMessage.new(
+            data: {
+              file_name: File.basename(object.key),
+              file_path: object.key,
+              size: object.content_length,
+              file_type: File.extname(object.key).sub(".", ""),
+              created_date: object.last_modified.to_s,
+              modified_date: object.last_modified.to_s
+            },
+            emitted_at: Time.now.to_i
+          ).to_multiwoven_message
+        end
+      end
+
+      def download_file_to_local(bucket_name, file_path, sync_id)
+        download_path = ENV["FILE_DOWNLOAD_PATH"]
+        file = if download_path
+                 File.join(download_path, "syncs", sync_id, File.basename(file_path))
+               else
+                 Tempfile.new(["s3_file", "syncs", sync_id, File.extname(file_path)]).path
+               end
+
+        object = @s3_resource.bucket(bucket_name).object(file_path)
+        object.get(response_target: file)
+
+        [RecordMessage.new(
+          data: {
+            local_path: file,
+            file_name: File.basename(file_path),
+            file_path: file_path,
+            size: object.content_length,
+            file_type: File.extname(file_path).sub(".", ""),
+            modified_date: object.last_modified.to_s,
+            created_date: object.last_modified.to_s
+          },
+          emitted_at: Time.now.to_i
+        ).to_multiwoven_message]
+      rescue Aws::S3::Errors::NoSuchKey
+        raise "File not found: #{file_path}"
       end
     end
   end
