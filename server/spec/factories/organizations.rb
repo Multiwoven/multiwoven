@@ -7,6 +7,7 @@ FactoryBot.define do
     after(:create) do |organization|
       plan = create(:billing_plan)
       create(:billing_subscription, organization:, plan:, status: 1)
+      create(:eula, organization:, status: 1)
     end
   end
 end
