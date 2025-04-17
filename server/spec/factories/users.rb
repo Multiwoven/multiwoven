@@ -40,5 +40,8 @@ FactoryBot.define do
         user.instance_variable_set(:@raw_invitation_token, raw_token)
       end
     end
+    eula_accepted { true }
+    eula_accepted_at { Time.current }
+    eula_enabled { true }
   end
 end

@@ -87,7 +87,11 @@ module Multiwoven::Integrations::Source
 
       def query(conn, query)
         @sftp.download!(@remote_file_path, @tempfile.path)
-        query = query.gsub(/FROM\s+\S+/i, "FROM read_csv_auto('#{@tempfile.path}')") if query.match?(/\bFROM\b/i)
+        if query.gsub(/FROM\s+\S+/i).count > 1
+          query = query.gsub("FROM #{@remote_file_path}", "FROM read_csv_auto('#{@tempfile.path}')")
+        elsif query.match?(/\bFROM\b/i)
+          query = query.gsub(/FROM\s+\S+/i, "FROM read_csv_auto('#{@tempfile.path}')")
+        end
         records = get_results(conn, query)
         records.map do |row|
           RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
