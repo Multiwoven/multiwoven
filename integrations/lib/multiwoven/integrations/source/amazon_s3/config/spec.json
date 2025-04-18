@@ -19,8 +19,7 @@
         "region",
         "bucket",
         "access_id",
-        "secret_access",
-        "file_type"
+        "secret_access"
       ]
     },
     "else": {
@@ -29,11 +28,21 @@
         "region",
         "bucket",
         "arn",
-        "external_id",
-        "file_type"
+        "external_id"
       ]
     },
     "properties": {
+      "data_type": {
+        "description": "Type of data in the files",
+        "type": "string",
+        "title": "Data Type",
+        "enum": [
+          "structured",
+          "unstructured"
+        ],
+        "default": "structured",
+        "order": 9
+      },
       "auth_type": {
         "title": "Authentication type",
         "type": "string",

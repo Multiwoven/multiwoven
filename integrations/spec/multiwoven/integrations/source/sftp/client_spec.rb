@@ -31,7 +31,7 @@ RSpec.describe Multiwoven::Integrations::Source::Sftp::Client do
       },
       model: {
         name: "ExampleModel",
-        query: "SELECT col1, col2, col3 FROM Test",
+        query: "SELECT col1, col2, col3 FROM /multiwoven/test.csv",
         query_type: "raw_sql",
         primary_key: "id"
       },
@@ -126,7 +126,19 @@ RSpec.describe Multiwoven::Integrations::Source::Sftp::Client do
 
   describe "#read" do
     it "reads records successfully" do
-      allow(mock_duckdb_connection).to receive(:query).and_return(mock_duckdb_result)
+      query = "SELECT col1, col2, col3 FROM read_csv_auto('/mock/path/to/file.csv')"
+      allow(mock_duckdb_connection).to receive(:query).with(query).and_return(mock_duckdb_result)
+      s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      message = client.read(s_config)
+      expect(message).to be_an(Array)
+      expect(message).not_to be_empty
+      expect(message.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+    end
+
+    it "reads records successfully using SQL with multiple FROMs" do
+      query = "SELECT * FROM (SELECT col1, col2, col3 FROM read_csv_auto('/mock/path/to/file.csv')) AS subquery ORDER BY RANDOM()"
+      allow(mock_duckdb_connection).to receive(:query).with(query).and_return(mock_duckdb_result)
+      sync_config["model"]["query"] = "SELECT * FROM (#{sync_config["model"]["query"]}) AS subquery ORDER BY RANDOM()"
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       message = client.read(s_config)
       expect(message).to be_an(Array)

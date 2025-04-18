@@ -10,7 +10,7 @@ module Multiwoven
     SyncStatus = Types::String.enum("started", "running", "complete", "incomplete")
     DestinationSyncMode = Types::String.enum("insert", "upsert")
     ConnectorType = Types::String.enum("source", "destination")
-    ConnectorQueryType = Types::String.enum("raw_sql", "soql", "ai_ml")
+    ConnectorQueryType = Types::String.enum("raw_sql", "soql", "ai_ml", "unstructured")
     ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql", "table_selector", "ai_ml", "dynamic_sql")
     ConnectionStatusType = Types::String.enum("succeeded", "failed")
     StreamType = Types::String.enum("static", "dynamic", "user_defined")

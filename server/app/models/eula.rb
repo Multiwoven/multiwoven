@@ -9,4 +9,17 @@ class Eula < ApplicationRecord
   belongs_to :organization
 
   has_one_attached :file
+
+  after_update :apply_eula_status_to_users, if: :saved_change_to_status?
+
+  private
+
+  def apply_eula_status_to_users
+    # rubocop:disable Rails/SkipsModelValidations
+    organization.users.update_all(
+      eula_enabled: enabled?,
+      updated_at: Time.current
+    )
+    # rubocop:enable Rails/SkipsModelValidations
+  end
 end
