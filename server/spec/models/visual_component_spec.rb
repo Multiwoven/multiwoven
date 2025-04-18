@@ -18,4 +18,5 @@ RSpec.describe VisualComponent, type: :model do
   it { should belong_to(:model) }
   it { should have_many(:feedbacks).dependent(:destroy) }
   it { should have_many(:chat_messages).dependent(:destroy) }
+  it { should have_many(:message_feedbacks).dependent(:destroy) }
 end
