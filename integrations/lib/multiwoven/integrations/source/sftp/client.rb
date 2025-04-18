@@ -88,8 +88,10 @@ module Multiwoven::Integrations::Source
       def query(conn, query)
         @sftp.download!(@remote_file_path, @tempfile.path)
         if query.gsub(/FROM\s+\S+/i).count > 1
-          query = query.gsub("FROM #{@remote_file_path}", "FROM read_csv_auto('#{@tempfile.path}')")
+          # multiple select/from with trailing closing parenthesis (replacing first occurrence in reverse)
+          query = query.reverse.sub(/\S+\s+MORF/i, "FROM read_csv_auto('#{@tempfile.path}'))".reverse).reverse
         elsif query.match?(/\bFROM\b/i)
+          # single select statement
           query = query.gsub(/FROM\s+\S+/i, "FROM read_csv_auto('#{@tempfile.path}')")
         end
         records = get_results(conn, query)
