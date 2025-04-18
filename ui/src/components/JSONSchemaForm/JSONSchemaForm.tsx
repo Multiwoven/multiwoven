@@ -42,8 +42,19 @@ const JSONSchemaForm = ({
       validator={validator}
       templates={templateOverrides}
       formData={formData}
-      onSubmit={({ formData }) => onSubmit(formData)}
-      onChange={({ formData }) => onChange?.(formData)}
+      onSubmit={({ formData }) => {
+        console.log('JSONSchemaForm onSubmit received:', formData);
+        // Convert the form data to a proper object before passing it to onSubmit
+        const processedData = new FormData();
+        // Add all properties from formData to the FormData object
+        if (formData && typeof formData === 'object') {
+          Object.entries(formData).forEach(([key, value]) => {
+            processedData.append(key, value as string);
+          });
+        }
+        onSubmit(processedData);
+      }}
+      onChange={({ formData }) => onChange?.(formData as any)}
     >
       {children}
     </Form>

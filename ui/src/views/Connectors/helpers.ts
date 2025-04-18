@@ -20,12 +20,24 @@ export const getDestinationCategories = (data: Connector[]): string[] => [
   ...new Set(data.map((item) => item.category)),
 ];
 
-export const processFormData = (data: FormData) => {
-  const escapedCharacters = [/\\n/g];
-  let processedString = JSON.stringify(data);
-  escapedCharacters.forEach((character) => {
-    processedString = processedString.replace(character, 'n');
-  });
-
-  return JSON.parse(processedString);
+export const processFormData = (data: any) => {
+  try {
+    // If data is already an object (not FormData), just return it
+    if (!(data instanceof FormData)) {
+      return data;
+    }
+    
+    // Convert FormData to a regular object
+    const formObject: Record<string, any> = {};
+    
+    // Iterate through all entries in the FormData
+    for (const [key, value] of data.entries()) {
+      formObject[key] = value;
+    }
+    
+    return formObject;
+  } catch (error) {
+    // Return an empty object as fallback
+    return {};
+  }
 };
