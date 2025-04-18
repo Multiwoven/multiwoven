@@ -61,9 +61,13 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
       fetch('/env')
         .then(response => response.json())
         .then(data => {
-          console.log('Environment variables from server:', data);
-          if (data.VITE_FACEBOOK_APP_ID) {
+          // Check for both possible environment variable names
+          if (data.FACEBOOK_APP_ID) {
+            setFacebookAppId(data.FACEBOOK_APP_ID);
+          } else if (data.VITE_FACEBOOK_APP_ID) {
             setFacebookAppId(data.VITE_FACEBOOK_APP_ID);
+          } else {
+            console.error('Facebook App ID not found in environment variables');
           }
         })
         .catch(error => {
@@ -74,46 +78,16 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   // Function to exchange short-lived token for long-lived token
   const handleTokenExchange = (accessToken: string) => {
-
-    // Print first 5 and last 5 characters of the token
-    if (accessToken && accessToken.length > 10) {
-      const first5 = accessToken.substring(0, 5);
-      const last5 = accessToken.substring(accessToken.length - 5);
-      console.log(`Exchanging short-lived token for long-lived token...: ${first5}...${last5}`);
-    } else {
-      console.log('*** Token is too short or undefined');
-    }
-    
     exchangeForLongLivedToken(accessToken)
       .then(longLivedToken => {
-        // Print first 5 and last 5 characters of the long-lived token
-        if (longLivedToken && longLivedToken.length > 10) {
-          const first5 = longLivedToken.substring(0, 5);
-          const last5 = longLivedToken.substring(longLivedToken.length - 5);
-          console.log(`Received long-lived token: ${first5}...${last5}`);
-        } else {
-          console.log('*** Long-lived token is too short or undefined');
-        }
-        
         // Set the access token in state
         setAccessToken(longLivedToken);
         
         // Directly update the form values to ensure the token is set in the form field
-        setFormValues((prev: ConnectorFormData) => {
-          const updatedForm = {
-            ...prev,
-            access_token: longLivedToken
-          };
-          // Print first 5 and last 5 characters of the token being set in form
-          if (longLivedToken && longLivedToken.length > 10) {
-            const first5 = longLivedToken.substring(0, 5);
-            const last5 = longLivedToken.substring(longLivedToken.length - 5);
-            console.log(`Set form token: ${first5}...${last5}`);
-          } else {
-            console.log('*** Form token is too short or undefined');
-          }
-          return updatedForm;
-        });
+        setFormValues((prev: ConnectorFormData) => ({
+          ...prev,
+          access_token: longLivedToken
+        }));
         
         toast({
           title: "Success",
@@ -157,11 +131,12 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
     // Use the current origin (including ngrok URLs if applicable)
     const redirectUri = window.location.origin + '/auth/facebook/callback';
     
-    console.log('Using redirect URI:', redirectUri);
-    console.log('Make sure this domain is added to your Facebook App settings');
     
-    // Define the permissions we need
-    const scope = 'public_profile,email';
+    // Define the permissions we need for Facebook Custom Audience
+    // ads_management - Allows you to manage ads
+    // ads_read - Allows you to read ad account data
+    // business_management - Allows access to business accounts
+    const scope = 'public_profile,email,ads_management,ads_read,business_management';
     
     // Create the Facebook OAuth URL
     const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${facebookAppId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=token`;
@@ -186,15 +161,13 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
         throw new Error('Popup blocked');
       }
       
-      // If we got here, popup was opened successfully
-      console.log('Popup opened successfully');
       
       // Set up a listener for the OAuth redirect
       window.addEventListener('message', function(event) {
         if (event.origin !== window.location.origin) return;
         
         if (event.data && event.data.type === 'FACEBOOK_AUTH_SUCCESS' && event.data.accessToken) {
-          console.log('Received access token from popup');
+          
           handleTokenExchange(event.data.accessToken);
         }
       });
@@ -233,20 +206,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
   // Function to exchange short-lived token for long-lived token
   const exchangeForLongLivedToken = async (shortLivedToken: string) => {
     try {
-      console.log('Exchanging token directly with Facebook...');
-      
-      // Since we're having routing issues with the server endpoint,
-      // let's exchange the token directly in the frontend
-      // First, get the Facebook App ID and App Secret from the environment
-      const envResponse = await fetch('/env');
-      const envData = await envResponse.json();
-      
-      if (!envData.VITE_FACEBOOK_APP_ID) {
-        throw new Error('Facebook App ID not found in environment variables');
-      }
-      
-      // For security reasons, we should use the server to exchange tokens
-      // But since we're having routing issues, we'll use a different endpoint
+      // Exchange the token using the server endpoint
       const response = await fetch('/facebook-token-exchange', {
         method: 'POST',
         headers: {
@@ -256,7 +216,6 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
       });
       
       const data = await response.json();
-      console.log('Token exchange response:', data);
       
       if (data.error) {
         throw new Error(data.error.message || JSON.stringify(data.error) || 'Failed to exchange token');
@@ -268,7 +227,6 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
       return data.access_token;
     } catch (error) {
-      console.error('Error exchanging token:', error);
       throw error;
     }
   };
@@ -277,7 +235,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   const handleFacebookConnect = () => {
     setIsConnectingFacebook(true);
-    console.log('Facebook connect clicked, using popup approach');
+    
 
     if (typeof window === 'undefined') {
       toast({
@@ -302,7 +260,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
   const handleFormSubmit = async (submittedFormData: FormData) => {
     try {
       // If we have an access token, add it to the form data
-      if (accessToken) {
+      if (accessToken && submittedFormData instanceof FormData) {
         submittedFormData.append('access_token', accessToken);
       }
       
@@ -338,8 +296,8 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
       } as RJSFSchema
     },
     required: [
-      ...(connectorSchema.required || []),
-      'access_token',
+      // Only include unique values in the required array
+      ...new Set([...(connectorSchema.required || []), 'access_token'])
     ],
   } : connectorSchema;
 

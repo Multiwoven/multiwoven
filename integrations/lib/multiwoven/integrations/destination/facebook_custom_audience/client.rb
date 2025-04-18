@@ -9,19 +9,55 @@ module Multiwoven::Integrations::Destination
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         access_token = connection_config[:access_token]
-        response = Multiwoven::Integrations::Core::HttpClient.request(
-          FACEBOOK_AUDIENCE_GET_ALL_ACCOUNTS,
-          HTTP_GET,
-          headers: auth_headers(access_token)
-        )
-        if success?(response)
-          ad_account_exists?(response, connection_config[:ad_account_id])
-          ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
-        else
-          ConnectionStatus.new(status: ConnectionStatusType["failed"]).to_multiwoven_message
+        ad_account_id = connection_config[:ad_account_id]
+        
+        begin
+          response = Multiwoven::Integrations::Core::HttpClient.request(
+            FACEBOOK_AUDIENCE_GET_ALL_ACCOUNTS,
+            HTTP_GET,
+            headers: auth_headers(access_token)
+          )
+          
+          # Check if response is a Net::HTTPResponse object
+          if response.is_a?(Net::HTTPResponse)
+            if response.is_a?(Net::HTTPSuccess)
+              ad_account_exists?(response, ad_account_id)
+              return ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
+            else
+              error_message = "Facebook API error: #{response.code} - #{response.message}"
+              if response.body
+                begin
+                  error_details = JSON.parse(response.body)
+                  if error_details['error'] && error_details['error']['message']
+                    error_message += ". #{error_details['error']['message']}"
+                  end
+                rescue JSON::ParserError
+                  # If we can't parse the body, just use the status code message
+                end
+              end
+              return ConnectionStatus.new(
+                status: ConnectionStatusType["failed"], 
+                message: error_message
+              ).to_multiwoven_message
+            end
+          else
+            # Handle case where response is not a Net::HTTPResponse
+            if success?(response)
+              ad_account_exists?(response, ad_account_id)
+              return ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
+            else
+              return ConnectionStatus.new(
+                status: ConnectionStatusType["failed"], 
+                message: "Failed to connect to Facebook API"
+              ).to_multiwoven_message
+            end
+          end
+        rescue StandardError => e
+          return ConnectionStatus.new(
+            status: ConnectionStatusType["failed"], 
+            message: "Error connecting to Facebook: #{e.message}"
+          ).to_multiwoven_message
         end
-      rescue StandardError => e
-        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
       end
 
       def discover(_connection_config = nil)
@@ -111,9 +147,18 @@ module Multiwoven::Integrations::Destination
       end
 
       def ad_account_exists?(response, ad_account_id)
-        return if extract_data(response).any? { |ad_account| ad_account["id"] == "act_#{ad_account_id}" }
+        data = extract_data(response)
+        
+        # Try both with and without the 'act_' prefix
+        account_found = data.any? do |ad_account| 
+          ad_account["id"] == "act_#{ad_account_id}" || 
+          ad_account["id"] == ad_account_id ||
+          ad_account["id"].gsub('act_', '') == ad_account_id
+        end
+        
+        return if account_found
 
-        raise ArgumentError, "Ad account not found in business account"
+        raise ArgumentError, "Ad account not found in business account. Available accounts: #{data.map { |a| a['id'] }.join(', ')}"
       end
 
       def extract_data(response)
