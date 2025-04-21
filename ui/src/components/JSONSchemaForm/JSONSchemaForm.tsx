@@ -44,15 +44,10 @@ const JSONSchemaForm = ({
       formData={formData}
       onSubmit={({ formData }) => {
         console.log('JSONSchemaForm onSubmit received:', formData);
-        // Convert the form data to a proper object before passing it to onSubmit
-        const processedData = new FormData();
-        // Add all properties from formData to the FormData object
-        if (formData && typeof formData === 'object') {
-          Object.entries(formData).forEach(([key, value]) => {
-            processedData.append(key, value as string);
-          });
-        }
-        onSubmit(processedData);
+        
+        // Always pass the actual form data object directly
+        // This ensures the complete structure with all properties is preserved
+        onSubmit(formData as any);
       }}
       onChange={({ formData }) => onChange?.(formData as any)}
     >

@@ -77,6 +77,8 @@ module Multiwoven::Integrations::Destination
         url = generate_url(sync_config, connection_config)
         write_success = 0
         write_failure = 0
+        error_details = []
+        
         records.each_slice(MAX_CHUNK_SIZE) do |chunk|
           payload = create_payload(chunk, sync_config.stream.json_schema.with_indifferent_access)
           response = Multiwoven::Integrations::Core::HttpClient.request(
@@ -85,33 +87,71 @@ module Multiwoven::Integrations::Destination
             payload: payload,
             headers: auth_headers(access_token)
           )
+          
           if success?(response)
             write_success += chunk.size
           else
             write_failure += chunk.size
+            # Log the error response from Facebook
+            error_message = extract_error_message(response)
+            Rails.logger.error("FB_AUDIENCE_ERROR: API error for #{chunk.size} records: #{error_message}")
+            
+            # Store error details for tracking
+            error_details << {
+              error_type: 'api_error',
+              error_message: error_message,
+              record_count: chunk.size
+            }
           end
         rescue StandardError => e
-          handle_exception(e, {
-                             context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
-                             type: "error",
-                             sync_id: sync_config.sync_id,
-                             sync_run_id: sync_config.sync_run_id
-                           })
           write_failure += chunk.size
+          error_message = "#{e.class}: #{e.message}"
+          
+          # Log the exception
+          Rails.logger.error("FB_AUDIENCE_ERROR: Exception during processing: #{error_message}")
+          
+          handle_exception(e, {
+            context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
+            type: "error",
+            sync_id: sync_config.sync_id,
+            sync_run_id: sync_config.sync_run_id
+          })
+          
+          # Store error details for tracking
+          error_details << {
+            error_type: 'exception',
+            error_message: error_message,
+            record_count: chunk.size
+          }
         end
 
+        # Create tracking message with error logs if there were failures
         tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
           success: write_success,
           failed: write_failure
         )
+        
+        # Add error logs if available
+        if error_details.any?
+          error_log = { errors: error_details, summary: "#{write_failure} records failed during sync" }
+          log_message = Multiwoven::Integrations::Protocol::LogMessage.new(
+            level: "ERROR",
+            message: error_log.to_json
+          )
+          tracker.logs = [log_message]
+        end
+        
         tracker.to_multiwoven_message
       rescue StandardError => e
+        error_message = "#{e.class}: #{e.message}"
+        Rails.logger.error("FB_AUDIENCE_ERROR: Fatal error: #{error_message}")
+        
         handle_exception(e, {
-                           context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
-                           type: "error",
-                           sync_id: sync_config.sync_id,
-                           sync_run_id: sync_config.sync_run_id
-                         })
+          context: "FACEBOOK:RECORD:WRITE:EXCEPTION",
+          type: "error",
+          sync_id: sync_config.sync_id,
+          sync_run_id: sync_config.sync_run_id
+        })
       end
 
       private
@@ -128,6 +168,27 @@ module Multiwoven::Integrations::Destination
             "data" => data
           }
         }
+      end
+      
+
+      
+      def extract_error_message(response)
+        if response.is_a?(Net::HTTPResponse)
+          if response.body
+            begin
+              error_details = JSON.parse(response.body)
+              if error_details['error'] && error_details['error']['message']
+                return "#{response.code} - #{error_details['error']['message']}"
+              end
+            rescue JSON::ParserError
+              # If we can't parse the body
+            end
+          end
+          return "#{response.code} - #{response.message}"
+        else
+          # For non-Net::HTTPResponse objects
+          return "Unknown error: #{response.inspect}"
+        end
       end
 
       def extract_schema_and_data(records, json_schema)
