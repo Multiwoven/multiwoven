@@ -115,21 +115,17 @@ const EditDestination = (): JSX.Element => {
     }
 
     try {
-      // Check if formData is empty and use existing configuration if available
-      let connectionSpec = formData;
+      // Use the provided form data or fall back to existing configuration if empty
+      const connectionSpec = formData && 
+        typeof formData === 'object' && 
+        Object.keys(formData as object).length > 0 ? 
+        formData : 
+        connectorInfo?.attributes?.configuration;
       
       if (!connectionSpec || 
           (typeof connectionSpec === 'object' && Object.keys(connectionSpec as object).length === 0)) {
-        // Use existing configuration from connector info if available
-        connectionSpec = connectorInfo?.attributes?.configuration || {};
-        
-        // If still empty, show error
-        if (Object.keys(connectionSpec as object).length === 0) {
-          throw new Error('Connection specification cannot be empty');
-        }
+        throw new Error('Connection specification cannot be empty');
       }
-      
-      console.log('Testing connection with spec:', connectionSpec);
       
       const payload: TestConnectionPayload = {
         connection_spec: connectionSpec,
@@ -148,17 +144,17 @@ const EditDestination = (): JSX.Element => {
           position: 'bottom-right',
           isClosable: true,
         });
-        setTestedFormData(connectionSpec);
-        return;
+        // Only set testedFormData if connection is successful
+        setTestedFormData(formData);
+      } else {
+        showToast({
+          status: CustomToastStatus.Error,
+          title: 'Connection failed',
+          description: testingConnectionResponse?.connection_status?.message,
+          position: 'bottom-right',
+          isClosable: true,
+        });
       }
-
-      showToast({
-        status: CustomToastStatus.Error,
-        title: 'Connection failed',
-        description: testingConnectionResponse?.connection_status?.message,
-        position: 'bottom-right',
-        isClosable: true,
-      });
     } catch (e) {
       console.error('Test connection error:', e);
       showToast({
