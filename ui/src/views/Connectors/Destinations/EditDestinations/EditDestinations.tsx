@@ -109,11 +109,30 @@ const EditDestination = (): JSX.Element => {
   const handleOnTestClick = async (formData: unknown) => {
     setIsTestRunning(true);
 
-    if (!connectorInfo?.attributes) return;
+    if (!connectorInfo?.attributes) {
+      setIsTestRunning(false);
+      return;
+    }
 
     try {
+      // Check if formData is empty and use existing configuration if available
+      let connectionSpec = formData;
+      
+      if (!connectionSpec || 
+          (typeof connectionSpec === 'object' && Object.keys(connectionSpec as object).length === 0)) {
+        // Use existing configuration from connector info if available
+        connectionSpec = connectorInfo?.attributes?.configuration || {};
+        
+        // If still empty, show error
+        if (Object.keys(connectionSpec as object).length === 0) {
+          throw new Error('Connection specification cannot be empty');
+        }
+      }
+      
+      console.log('Testing connection with spec:', connectionSpec);
+      
       const payload: TestConnectionPayload = {
-        connection_spec: formData,
+        connection_spec: connectionSpec,
         name: connectorInfo?.attributes?.connector_name,
         type: 'destination',
       };
@@ -129,6 +148,7 @@ const EditDestination = (): JSX.Element => {
           position: 'bottom-right',
           isClosable: true,
         });
+        setTestedFormData(connectionSpec);
         return;
       }
 
@@ -140,16 +160,16 @@ const EditDestination = (): JSX.Element => {
         isClosable: true,
       });
     } catch (e) {
+      console.error('Test connection error:', e);
       showToast({
         status: CustomToastStatus.Error,
         title: 'Connection failed',
-        description: 'Something went wrong!',
+        description: e instanceof Error ? e.message : 'Something went wrong!',
         position: 'bottom-right',
         isClosable: true,
       });
     } finally {
       setIsTestRunning(false);
-      setTestedFormData(formData);
     }
   };
 
