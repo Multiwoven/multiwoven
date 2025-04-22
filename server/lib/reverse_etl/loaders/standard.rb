@@ -27,7 +27,7 @@ module ReverseEtl
 
       def process_individual_records(sync_run, sync, sync_config, activity)
         client = sync.destination.connector_client.new
-        connector_name = sync.destination.connector_name
+        connector_name = sync_config.destination.name
         
         # Track skipped records with reasons
         skipped_records = []
@@ -48,7 +48,7 @@ module ReverseEtl
                 reason = "Missing required fields: #{missing_fields.join(', ')}"
                 Rails.logger.warn("LOADER: Skipping record id=#{sync_record.id}, reason=#{reason}")
                 skipped_records << { id: sync_record.id, reason: reason }
-                sync_record.update(status: 'skipped', logs: { reason: reason })
+                sync_record.update(status: 'failed', logs: { request: reason, level: "error" })
                 next
               end
               
@@ -112,7 +112,7 @@ module ReverseEtl
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
         batch_size = sync_config.stream.batch_size
-        connector_name = sync.destination.connector_name
+        connector_name = sync_config.destination.name
 
         # track sync record status with detailed reasons
         successfull_sync_records = []
@@ -135,7 +135,7 @@ module ReverseEtl
                 reason = "Missing required fields: #{missing_fields.join(', ')}"
                 Rails.logger.warn("LOADER: Skipping record id=#{sync_record.id} in batch #{batch_id}, reason=#{reason}")
                 skipped_sync_records << { id: sync_record.id, reason: reason }
-                sync_record.update(status: 'skipped', logs: { reason: reason })
+                sync_record.update(status: 'failed', logs: { request: reason, level: "error" })
               else
                 valid_records << sync_record
               end
@@ -199,22 +199,11 @@ module ReverseEtl
         failed_sync_records.each do |record_info|
           sync_record = sync_run.sync_records.find_by(id: record_info[:id])
           if sync_record
-            sync_record.update(logs: { error: record_info[:reason] })
+            sync_record.update(logs: { request: record_info[:reason], level: "error" })
           end
         end
         
-        # Log summary of skipped and failed records
-        if skipped_sync_records.any?
-          Rails.logger.warn("LOADER: Skipped #{skipped_sync_records.size} records for sync_id=#{sync.id}, sync_run_id=#{sync_run.id}")
-          Rails.logger.warn("LOADER: Skipped records summary: #{skipped_sync_records.group_by { |r| r[:reason] }.transform_values(&:count)}")
-        end
-        
-        if failed_sync_records.any?
-          Rails.logger.error("LOADER: Failed #{failed_sync_records.size} records for sync_id=#{sync.id}, sync_run_id=#{sync_run.id}")
-          # Group failures by reason and count them
-          failure_summary = failed_sync_records.group_by { |r| r[:reason].to_s.truncate(100) }.transform_values(&:count)
-          Rails.logger.error("LOADER: Failed records summary: #{failure_summary}")
-        end
+
         
         heartbeat(activity, sync_run)
       end
@@ -301,9 +290,9 @@ module ReverseEtl
         required_fields = []
         
         # For Facebook Custom Audience, we need at least one identifier
-        if sync_config.destination.connector_name == 'FacebookCustomAudience'
+        if sync_config.destination.name == 'FacebookCustomAudience'
           identifiers = ['EMAIL', 'PHONE', 'EXTERN_ID', 'MADID', 'PAGEUID']
-          record_data = sync_record.record_data
+          record_data = sync_record.record
           
           # Check if at least one identifier is present
           has_identifier = identifiers.any? { |id| record_data[id].present? }
@@ -354,7 +343,7 @@ module ReverseEtl
         # Update remaining pending records as skipped
         remaining_pending = sync_run.sync_records.pending
         if remaining_pending.any?
-          remaining_pending.update_all(status: "skipped", logs: { reason: "Record was skipped during processing" }) # rubocop:disable Rails/SkipsModelValidations
+          remaining_pending.update_all(status: "failed", logs: { request: "Record was skipped during processing", level: "error" }) # rubocop:disable Rails/SkipsModelValidations
         end
       end
 
