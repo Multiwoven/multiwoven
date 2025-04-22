@@ -42,69 +42,27 @@ module ReverseEtl
           Rails.logger.info("LOADER: Processing batch of #{sync_records.size} records with concurrency=#{concurrency}")
 
           Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
-            begin
-              # Check if record has all required fields before transformation
-              if missing_fields = missing_required_fields(sync_record, sync_config)
-                reason = "Missing required fields: #{missing_fields.join(', ')}"
-                Rails.logger.warn("LOADER: Skipping record id=#{sync_record.id}, reason=#{reason}")
-                skipped_records << { id: sync_record.id, reason: reason }
-                sync_record.update(status: 'failed', logs: { request: reason, level: "error" })
-                next
-              end
-              
-              transformer = Transformers::UserMapping.new
-              record = transformer.transform(sync, sync_record)
-              
-              Rails.logger.info("LOADER: Processing record id=#{sync_record.id} for sync_id=#{sync.id} sync_run_id=#{sync_run.id}")
-              report = handle_response(client.write(sync_config, [record], sync_record.action), sync_run)
-              
-              # Check if the record was processed successfully or has detailed error logs
-              update_sync_record_logs_and_status(report, sync_record)
-              
-              # Track failed records with reasons from the report
-              if sync_record.status == 'failed'
-                error_details = get_sync_records_logs(report) || { reason: "Unknown failure reason" }
-                failed_records << { id: sync_record.id, reason: error_details }
-                Rails.logger.error("LOADER: Record id=#{sync_record.id} failed: #{error_details.to_json}")
-              end
-            rescue Activities::LoaderActivity::FullRefreshFailed
-              raise
-            rescue StandardError => e
-              error_message = e.message
-              stack_trace = Rails.backtrace_cleaner.clean(e.backtrace)
-              
-              Rails.logger.error({
-                error_message: error_message,
-                sync_run_id: sync_run.id,
-                sync_id: sync_run.sync_id,
-                record_id: sync_record.id,
-                stack_trace: stack_trace
-              }.to_json)
-              
-              # Update the record status and logs
-              sync_record.update(status: 'failed', logs: { 
-                error_message: error_message,
-                stack_trace: stack_trace.first(5)
-              })
-              
-              failed_records << { id: sync_record.id, reason: error_message }
-            end
+            transformer = Transformers::UserMapping.new
+            record = transformer.transform(sync, sync_record)
+            Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{record}"
+            report = handle_response(client.write(sync_config, [record], sync_record.action), sync_run)
+            update_sync_record_logs_and_status(report, sync_record)
+          rescue Activities::LoaderActivity::FullRefreshFailed
+            raise
+          rescue StandardError => e
+            # Utils::ExceptionReporter.report(e, {
+            #                                   sync_run_id: sync_run.id,
+            #                                   sync_id: sync.id
+            #                                 })
+            Rails.logger.error({
+              error_message: e.message,
+              sync_run_id: sync_run.id,
+              sync_id: sync_run.sync_id,
+              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace)
+            }.to_s)
           end
 
           heartbeat(activity, sync_run)
-        end
-        
-        # Log summary of skipped and failed records
-        if skipped_records.any?
-          Rails.logger.warn("LOADER: Skipped #{skipped_records.size} records for sync_id=#{sync.id}, sync_run_id=#{sync_run.id}")
-          Rails.logger.warn("LOADER: Skipped records summary: #{skipped_records.group_by { |r| r[:reason] }.transform_values(&:count)}")
-        end
-        
-        if failed_records.any?
-          Rails.logger.error("LOADER: Failed #{failed_records.size} records for sync_id=#{sync.id}, sync_run_id=#{sync_run.id}")
-          # Group failures by reason and count them
-          failure_summary = failed_records.group_by { |r| r[:reason].to_s.truncate(100) }.transform_values(&:count)
-          Rails.logger.error("LOADER: Failed records summary: #{failure_summary}")
         end
       end
 
@@ -123,88 +81,21 @@ module ReverseEtl
 
         Parallel.each(sync_run.sync_records.pending.find_in_batches(batch_size:),
                       in_threads: THREAD_COUNT) do |sync_records|
-          begin
-            batch_id = SecureRandom.uuid[0..7] # Generate a short ID to track this batch in logs
-            
-            Rails.logger.info("LOADER: Processing batch #{batch_id} with #{sync_records.size} records for sync_id=#{sync.id}")
-            
-            # Filter out records missing required fields
-            valid_records = []
-            sync_records.each do |sync_record|
-              if missing_fields = missing_required_fields(sync_record, sync_config)
-                reason = "Missing required fields: #{missing_fields.join(', ')}"
-                Rails.logger.warn("LOADER: Skipping record id=#{sync_record.id} in batch #{batch_id}, reason=#{reason}")
-                skipped_sync_records << { id: sync_record.id, reason: reason }
-                sync_record.update(status: 'failed', logs: { request: reason, level: "error" })
-              else
-                valid_records << sync_record
-              end
-            end
-            
-            # Skip empty batches
-            if valid_records.empty?
-              Rails.logger.warn("LOADER: Batch #{batch_id} has no valid records after filtering, skipping")
-              next
-            end
-            
-            transformed_records = valid_records.map { |sync_record| transformer.transform(sync, sync_record) }
-            
-            Rails.logger.info("LOADER: Sending batch #{batch_id} with #{transformed_records.size} records to destination")
+            transformed_records = sync_records.map { |sync_record| transformer.transform(sync, sync_record) }
             report = handle_response(client.write(sync_config, transformed_records), sync_run)
-            
-            # Extract detailed error information from the report if available
-            error_details = get_batch_error_details(report)
-            
             if report.tracking.success.zero?
-              Rails.logger.error("LOADER: Batch #{batch_id} failed completely: #{error_details}")
-              failed_sync_records.concat(valid_records.map { |record| { id: record.id, reason: error_details } })
-            elsif report.tracking.success < transformed_records.size
-              # Some records succeeded, some failed
-              success_count = report.tracking.success
-              fail_count = report.tracking.failed
-              
-              Rails.logger.warn("LOADER: Batch #{batch_id} partially succeeded: #{success_count} success, #{fail_count} failed")
-              
-              # Since we don't know which specific records failed, we'll mark the first success_count as successful
-              # and the rest as failed
-              successfull_sync_records.concat(valid_records[0...success_count].map { |record| record.id })
-              failed_sync_records.concat(valid_records[success_count..-1].map { |record| { id: record.id, reason: error_details } })
+              failed_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
             else
-              Rails.logger.info("LOADER: Batch #{batch_id} succeeded completely with #{transformed_records.size} records")
-              successfull_sync_records.concat(valid_records.map { |record| record.id })
+              successfull_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
             end
           rescue Activities::LoaderActivity::FullRefreshFailed
             raise
-          rescue StandardError => e
-            error_message = "#{e.class}: #{e.message}"
-            stack_trace = Rails.backtrace_cleaner.clean(e.backtrace)
-            
-            Rails.logger.error({
-              error_message: error_message,
-              sync_run_id: sync_run.id,
-              sync_id: sync_run.sync_id,
-              batch_size: sync_records.size,
-              stack_trace: stack_trace
-            }.to_json)
-            
-            # Mark all records in the batch as failed
-            failed_sync_records.concat(sync_records.map { |record| { id: record.id, reason: error_message } })
+          rescue StandardError
+            # Utils::ExceptionReporter.report(e, {
+            #                                   sync_run_id: sync_run.id
+            #                                 })
           end
-        end
-        
-        # Update record statuses with their respective reasons
-        update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records.map { |r| r[:id] })
-        
-        # Update logs for failed records with their specific reasons
-        failed_sync_records.each do |record_info|
-          sync_record = sync_run.sync_records.find_by(id: record_info[:id])
-          if sync_record
-            sync_record.update(logs: { request: record_info[:reason], level: "error" })
-          end
-        end
-        
-
-        
+        update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         heartbeat(activity, sync_run)
       end
 
@@ -213,23 +104,7 @@ module ReverseEtl
                                          report.type == "tracking" &&
                                          report.tracking.is_a?(Multiwoven::Integrations::Protocol::TrackingMessage)
         raise_non_retryable_error(report, sync_run) unless is_multiwoven_tracking_message
-        
-        # Log summary of success and failures from the report
-        if report.tracking.failed > 0
-          Rails.logger.error("SYNC_ERROR: Report shows #{report.tracking.failed} failed records out of #{report.tracking.success + report.tracking.failed} total")
-          
-          # Log detailed error information if available
-          if report.tracking.respond_to?(:logs) && report.tracking.logs&.first&.message.present?
-            begin
-              error_details = JSON.parse(report.tracking.logs.first.message)
-              Rails.logger.error("SYNC_ERROR: Details: #{error_details}")
-            rescue JSON::ParserError
-              # If we can't parse the error details, just log the raw message
-              Rails.logger.error("SYNC_ERROR: Raw error: #{report.tracking.logs.first.message}")
-            end
-          end
-        end
-        
+
         report
       end
 
@@ -266,60 +141,6 @@ module ReverseEtl
           Rails.logger.error("LOADER: Failed to parse logs JSON: #{e.message}")
           { error: "Failed to parse error details: #{report.tracking.logs.first.message}" }
         end
-      end
-      
-      def get_batch_error_details(report)
-        if report.tracking.respond_to?(:logs) && report.tracking.logs&.first&.message.present?
-          begin
-            error_data = JSON.parse(report.tracking.logs.first.message)
-            if error_data.is_a?(Hash) && error_data['errors'].is_a?(Array) && error_data['errors'].any?
-              # Group errors by type and message for a summary
-              error_groups = error_data['errors'].group_by { |e| [e['error_type'], e['error_message']] }
-              return error_groups.map { |(type, msg), errors| "#{type}: #{msg} (#{errors.size} records)" }.join("; ")
-            end
-            return error_data.to_s
-          rescue JSON::ParserError
-            return report.tracking.logs.first.message.to_s
-          end
-        end
-        "Unknown error"
-      end
-      
-      def missing_required_fields(sync_record, sync_config)
-        # Get required fields from the schema
-        required_fields = []
-        
-        # For Facebook Custom Audience, we need at least one identifier
-        if sync_config.destination.name == 'FacebookCustomAudience'
-          identifiers = ['EMAIL', 'PHONE', 'EXTERN_ID', 'MADID', 'PAGEUID']
-          record_data = sync_record.record
-          
-          # Check if at least one identifier is present
-          has_identifier = identifiers.any? { |id| record_data[id].present? }
-          return ['at least one identifier (EMAIL, PHONE, EXTERN_ID, MADID, PAGEUID)'] unless has_identifier
-          
-          # Check email format if present
-          if record_data['EMAIL'].present? && !valid_email?(record_data['EMAIL'])
-            return ['valid EMAIL format']
-          end
-          
-          # Check phone format if present
-          if record_data['PHONE'].present? && !valid_phone?(record_data['PHONE'])
-            return ['valid PHONE format']
-          end
-        end
-        
-        # No missing required fields
-        nil
-      end
-      
-      def valid_email?(email)
-        email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-      end
-      
-      def valid_phone?(phone)
-        # Basic phone validation - adjust as needed
-        phone.to_s.gsub(/[^0-9]/, '').length >= 10
       end
 
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)

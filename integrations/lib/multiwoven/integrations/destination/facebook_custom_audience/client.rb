@@ -87,7 +87,6 @@ module Multiwoven::Integrations::Destination
             payload: payload,
             headers: auth_headers(access_token)
           )
-          
           if success?(response)
             write_success += chunk.size
           else
