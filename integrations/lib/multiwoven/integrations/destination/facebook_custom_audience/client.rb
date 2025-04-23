@@ -87,7 +87,6 @@ module Multiwoven::Integrations::Destination
             payload: payload,
             headers: auth_headers(access_token)
           )
-          
           if success?(response)
             write_success += chunk.size
           else
@@ -195,14 +194,26 @@ module Multiwoven::Integrations::Destination
         schema_properties = json_schema[:properties]
         schema = records.first.keys.map(&:to_s).map(&:upcase)
         data = []
-        records.each do |record|
+        skipped_rows = []
+        required_keys = schema_properties.select { |_k, v| v["x-hashRequired"] }.keys
+        records.each_with_index do |record, idx|
           encrypted_data_array = []
-          record.with_indifferent_access.each do |key, value|
+          record_hash = record.with_indifferent_access
+          missing_fields = required_keys.select { |rk| record_hash[rk.downcase].blank? && record_hash[rk].blank? }
+          if missing_fields.any?
+            reason = "Missing required fields: #{missing_fields.join(", ")}"
+            skipped_rows << { row_index: idx, row: record, reason: reason }
+            Rails.logger.info("FB_AUDIENCE_SKIPPED_ROW: index=#{idx}, reason=#{reason}, row=#{record}")
+          end
+          record_hash.each do |key, value|
             schema_key = key.upcase
             encrypted_value = schema_properties[schema_key] && schema_properties[schema_key]["x-hashRequired"] ? Digest::SHA256.hexdigest(value.to_s) : value
             encrypted_data_array << encrypted_value
           end
           data << encrypted_data_array
+        end
+        if skipped_rows.any?
+          Rails.logger.info("FB_AUDIENCE_SKIPPED_SUMMARY: #{skipped_rows.size} rows with missing required fields. Details: #{skipped_rows.map { |r| { index: r[:row_index], reason: r[:reason] } }.to_json}")
         end
         [schema, data]
       end
