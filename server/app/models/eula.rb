@@ -9,8 +9,6 @@ class Eula < ApplicationRecord
   belongs_to :organization
 
   has_one_attached :file
-<<<<<<< HEAD
-=======
 
   after_update :apply_eula_status_to_users, if: :saved_change_to_status?
 
@@ -26,5 +24,4 @@ class Eula < ApplicationRecord
     )
     # rubocop:enable Rails/SkipsModelValidations
   end
->>>>>>> 8c5654b5 (fix(CE):  add reset to eula_accept and eula_accepted_at in eula model (#1031))
 end
