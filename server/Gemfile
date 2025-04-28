@@ -14,7 +14,11 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.22.1"
+=======
+gem "multiwoven-integrations", "~> 0.22.6"
+>>>>>>> e39f8919 (chore(CE): update integrations gem to 0.22.6 (#1060))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
