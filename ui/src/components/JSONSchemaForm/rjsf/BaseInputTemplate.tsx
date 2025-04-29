@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Textarea,
 } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -52,10 +53,40 @@ export default function BaseInputTemplate<
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const chakraProps = getChakra({ uiSchema: uiSchema as ChakraUiSchema });
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onBlur(id, value);
-  const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) => onFocus(id, value);
+  // Create a mock input event from a value
+  const createInputEvent = (value: string): ChangeEvent<HTMLInputElement> => ({
+    target: { value } as HTMLInputElement,
+    currentTarget: { value } as HTMLInputElement,
+  } as ChangeEvent<HTMLInputElement>);
+
+  // Create type-safe handlers for input
+  const handleInputEvents = {
+    onChange: (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      if (onChangeOverride) {
+        onChangeOverride(e);
+      } else {
+        onChange(value === '' ? options.emptyValue : value);
+      }
+    },
+    onBlur: (e: FocusEvent<HTMLInputElement>) => onBlur(id, e.target.value),
+    onFocus: (e: FocusEvent<HTMLInputElement>) => onFocus(id, e.target.value),
+  };
+
+  // Create type-safe handlers for textarea
+  const handleTextareaEvents = {
+    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value;
+      if (onChangeOverride) {
+        // Create a mock input event for onChangeOverride
+        onChangeOverride(createInputEvent(value));
+      } else {
+        onChange(value === '' ? options.emptyValue : value);
+      }
+    },
+    onBlur: (e: FocusEvent<HTMLTextAreaElement>) => onBlur(id, e.target.value),
+    onFocus: (e: FocusEvent<HTMLTextAreaElement>) => onFocus(id, e.target.value),
+  };
 
   const DescriptionFieldTemplate = getTemplate('DescriptionFieldTemplate', registry, uiSchema);
   const displayLabel = registry.schemaUtils.getDisplayLabel(
@@ -109,32 +140,50 @@ export default function BaseInputTemplate<
       </div>
 
       <div>
-        <InputGroup>
-          <Input
+        {(schema.type === 'string' && (schema.format === 'private-key' || id.endsWith('private_key'))) ? (
+          <Textarea
             id={id}
             name={id}
             value={value || value === 0 ? value : ''}
-            onChange={onChangeOverride || _onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
+            onChange={handleTextareaEvents.onChange}
+            onBlur={handleTextareaEvents.onBlur}
+            onFocus={handleTextareaEvents.onFocus}
             autoFocus={autofocus}
             placeholder={placeholder}
             {...inputProps}
-            type={inputProps.type === 'text' ? 'text' : isOpen ? 'text' : 'password'}
-            list={schema.examples ? examplesId<T>(id) : undefined}
-            aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+            rows={5}
+            whiteSpace="pre"
+            bg="white"
+            fontFamily="mono"
           />
-          {inputProps.type !== 'text' ? (
-            <InputRightElement>
-              <IconButton
-                variant='text'
-                aria-label={isOpen ? 'Mask password' : 'Reveal password'}
-                icon={isOpen ? <FiEyeOff /> : <FiEye />}
-                onClick={onClickReveal}
-              />
-            </InputRightElement>
-          ) : null}
-        </InputGroup>
+        ) : (
+          <InputGroup>
+            <Input
+              id={id}
+              name={id}
+              value={value || value === 0 ? value : ''}
+              onChange={handleInputEvents.onChange}
+              onBlur={handleInputEvents.onBlur}
+              onFocus={handleInputEvents.onFocus}
+              autoFocus={autofocus}
+              placeholder={placeholder}
+              {...inputProps}
+              type={inputProps.type === 'text' ? 'text' : isOpen ? 'text' : 'password'}
+              list={schema.examples ? examplesId<T>(id) : undefined}
+              aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+            />
+            {inputProps.type !== 'text' ? (
+              <InputRightElement>
+                <IconButton
+                  variant='text'
+                  aria-label={isOpen ? 'Mask password' : 'Reveal password'}
+                  icon={isOpen ? <FiEyeOff /> : <FiEye />}
+                  onClick={onClickReveal}
+                />
+              </InputRightElement>
+            ) : null}
+          </InputGroup>
+        )}
         {Array.isArray(schema.examples) ? (
           <datalist id={examplesId<T>(id)}>
             {(schema.examples as string[])
