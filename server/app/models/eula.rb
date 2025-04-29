@@ -18,7 +18,9 @@ class Eula < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     organization.users.update_all(
       eula_enabled: enabled?,
-      updated_at: Time.current
+      updated_at: Time.current,
+      eula_accepted: false,
+      eula_accepted_at: nil
     )
     # rubocop:enable Rails/SkipsModelValidations
   end

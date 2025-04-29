@@ -31,7 +31,10 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
           token: "test_token",
           endpoint: "test",
           request_format: "{}",
-          response_format: "{}"
+          response_format: "{}",
+          config: {
+            timeout: 30
+          }
         }
       },
       destination: {
@@ -167,7 +170,10 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
           .with("https://test-host.databricks.com/serving-endpoints/test/invocations",
                 "POST",
                 payload: JSON.parse(payload.to_json),
-                headers: headers)
+                headers: headers,
+                config: {
+                  timeout: 30
+                })
           .and_return(response)
       end
       it "successfully reads records" do
@@ -188,7 +194,10 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
           .with("https://test-host.databricks.com/serving-endpoints/test/invocations",
                 "POST",
                 payload: JSON.parse(payload.to_json),
-                headers: headers)
+                headers: headers,
+                config: {
+                  timeout: 30
+                })
           .and_return(response)
       end
       it "handles exceptions during reading" do
