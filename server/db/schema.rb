@@ -400,6 +400,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_15_181231) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sync_files", force: :cascade do |t|
+    t.string "file_name"
+    t.string "file_path"
+    t.integer "size"
+    t.datetime "file_created_date"
+    t.datetime "file_modified_date"
+    t.integer "workspace_id"
+    t.integer "sync_id"
+    t.integer "sync_run_id"
+    t.integer "status"
+    t.jsonb "metadata"
+    t.string "file_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sync_id"], name: "index_sync_files_on_sync_id"
+    t.index ["sync_run_id"], name: "index_sync_files_on_sync_run_id"
+    t.index ["workspace_id"], name: "index_sync_files_on_workspace_id"
+  end
+
   create_table "sync_records", force: :cascade do |t|
     t.integer "sync_id"
     t.integer "sync_run_id"

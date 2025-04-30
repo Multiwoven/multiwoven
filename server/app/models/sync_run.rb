@@ -28,6 +28,7 @@ class SyncRun < ApplicationRecord
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
   has_many :sync_records, dependent: :nullify
+  has_many :sync_files, dependent: :destroy
 
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run

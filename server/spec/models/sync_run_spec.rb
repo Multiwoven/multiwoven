@@ -17,7 +17,7 @@ RSpec.describe SyncRun, type: :model do
 
   it { should belong_to(:sync) }
   it { should have_many(:sync_records) }
-
+  it { should have_many(:sync_files) }
   describe "enum for status" do
     it {
       should define_enum_for(:status).with_values(%i[pending started querying queued in_progress success paused failed
