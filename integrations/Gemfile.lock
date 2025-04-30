@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.22.6)
+=======
+    multiwoven-integrations (0.23.1)
+>>>>>>> 85077411 (chore(CE): add unstructured and vector_search in ModelQueryType (#1065))
       MailchimpMarketing
       activesupport
       async-websocket

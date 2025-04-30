@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.22.6"
+=======
+    VERSION = "0.23.1"
+>>>>>>> 85077411 (chore(CE): add unstructured and vector_search in ModelQueryType (#1065))
 
     ENABLED_SOURCES = %w[
       Snowflake
