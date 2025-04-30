@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.22.6)
+=======
+    multiwoven-integrations (0.23.2)
+>>>>>>> 314fa99a (fix(CE): Remove inference profile from Bedrock (#1068))
       MailchimpMarketing
       activesupport
       async-websocket
