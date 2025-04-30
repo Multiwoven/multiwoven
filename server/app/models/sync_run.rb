@@ -103,6 +103,11 @@ class SyncRun < ApplicationRecord
     sync.complete!
   end
 
+  def update_failure!
+    failed!
+    sync.failed!
+  end
+
   def send_status_email
     return unless notification_email_enabled?
 
@@ -121,6 +126,12 @@ class SyncRun < ApplicationRecord
 
   def status_changed_to_failure?
     saved_change_to_status? && (status == "failed")
+  end
+
+  def update_status_post_workflow
+    return if terminal_status?
+
+    update_failure!
   end
 
   def queue_sync_alert

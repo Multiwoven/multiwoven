@@ -11,10 +11,13 @@ RSpec.describe Activities::CreateSyncRunActivity do
     let!(:catalog) { create(:catalog, connector: destination) }
     let!(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
     let(:mock_context) { double("context") }
+    let(:metadata) { double("metadata") }
     let(:activity) { Activities::CreateSyncRunActivity.new(mock_context) }
 
     context "when no pending SyncRun exists" do
       it "creates a new SyncRun with type general and pending status" do
+        allow(metadata).to receive(:workflow_run_id).and_return(1)
+        allow(mock_context).to receive(:metadata).and_return(metadata)
         expect do
           sync_run_id = activity.execute(sync.id, "general")
           sync_run = SyncRun.find(sync_run_id)
@@ -30,6 +33,8 @@ RSpec.describe Activities::CreateSyncRunActivity do
 
       it "creates a new SyncRun with type test and pending status" do
         expect do
+          allow(metadata).to receive(:workflow_run_id).and_return(1)
+          allow(mock_context).to receive(:metadata).and_return(metadata)
           sync_run_id = activity.execute(sync.id, "test")
           sync_run = SyncRun.find(sync_run_id)
           expect(sync_run).to have_state(:pending)
@@ -49,6 +54,8 @@ RSpec.describe Activities::CreateSyncRunActivity do
       end
 
       it "create a new SyncRun" do
+        allow(metadata).to receive(:workflow_run_id).and_return(1)
+        allow(mock_context).to receive(:metadata).and_return(metadata)
         expect do
           sync_run_id = activity.execute(sync.id, "general")
           sync_run = SyncRun.find(sync_run_id)

@@ -158,6 +158,60 @@ RSpec.describe SyncRun, type: :model do
     end
   end
 
+  describe "#terminal_status?" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:sync) { create(:sync, source:, destination:) }
+    let!(:sync_run_success) { create(:sync_run, sync:, status: "success") }
+    let!(:sync_run_pending) { create(:sync_run, sync:, status: "pending") }
+
+    it "returns true if sync run is in terminal status" do
+      expect(sync_run_success.terminal_status?).to be(true)
+      expect(sync_run_pending.terminal_status?).to be(false)
+    end
+  end
+
+  describe "#update_failure" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:sync) { create(:sync, source:, destination:, status: "pending") }
+    let!(:sync_run_pending) { create(:sync_run, sync:, status: "pending") }
+
+    it "updates sync_run status and sync status to failure" do
+      sync_run_pending.update_failure!
+      expect(sync_run_pending.status).to eq("failed")
+      expect(sync.status).to eq("failed")
+    end
+  end
+
+  describe "#update_status_post_workflow" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:sync) { create(:sync, source:, destination:, status: "pending") }
+    let!(:sync_run_pending) { create(:sync_run, sync:, status: "pending") }
+    let!(:sync_run_success) { create(:sync_run, sync:, status: "success") }
+
+    it "updates sync_run status and sync status to failure after workflow if not in terminal state" do
+      sync_run_pending.update_status_post_workflow
+      expect(sync_run_pending.status).to eq("failed")
+      expect(sync.status).to eq("failed")
+    end
+
+    it "does not updates sync_run status and sync status if in terminal state" do
+      sync_run_success.update_status_post_workflow
+      expect(sync_run_success.status).to eq("success")
+    end
+  end
+
   describe "#send_status_email" do
     let(:source) do
       create(:connector, connector_type: "source", connector_name: "Snowflake")
