@@ -164,11 +164,9 @@ module Multiwoven::Integrations::Source
           # Check file size and compression
           file_size_mb = latest_file.size.to_f / (1024 * 1024)
           is_compressed = latest_file.content_encoding == "gzip"
-          Rails.logger.info("AUDIENCE:DEBUG: File size: #{file_size_mb.round(2)} MB, Compressed: #{is_compressed}")
 
           # Use DuckDB to read the file directly from GCS
           gcs_url = "gcs://#{@bucket}/#{latest_file.name}"
-          Rails.logger.info("AUDIENCE:DEBUG: Reading file directly from GCS: #{gcs_url}")
 
           # Create a simple query if none was provided
           query_string = "SELECT * FROM read_csv_auto('#{gcs_url}', compression='auto')"
@@ -310,12 +308,8 @@ module Multiwoven::Integrations::Source
           file_size_mb = latest_file.size.to_f / (1024 * 1024)
           is_compressed = latest_file.content_encoding == "gzip"
 
-          # Log file details
-          Rails.logger.info("AUDIENCE:DEBUG: File size: #{file_size_mb.round(2)} MB, Compressed: #{is_compressed}")
-          
           # If file is too large for preview, add a small LIMIT to the query
           if file_size_mb > 50 && !query_string.to_s.downcase.include?("limit")
-            Rails.logger.info("AUDIENCE:DEBUG: Adding LIMIT 100 to query for large file")
             query_string = query_string.to_s.strip
             query_string += " LIMIT 100" unless query_string.empty?
           end
@@ -323,8 +317,6 @@ module Multiwoven::Integrations::Source
           conn = create_connection(@current_connection_config)
 
           gcs_url = "gcs://#{@bucket}/#{latest_file.name}"
-          Rails.logger.info("AUDIENCE:DEBUG: Attempting DuckDB read_csv_auto with GCS URL: #{gcs_url}")
-          Rails.logger.info("AUDIENCE:DEBUG: Using credentials - KEY_ID: #{@key_id ? @key_id[0..5] + '...' : 'nil'}, SECRET: #{@key_secret ? 'present' : 'nil'}")
 
           # Initialize results variable outside the timeout block
           results = nil
@@ -332,8 +324,6 @@ module Multiwoven::Integrations::Source
           # Set a timeout for the query
           begin
             Timeout.timeout(180) do  
-              Rails.logger.info("AUDIENCE:DEBUG: Starting DuckDB query execution")
-              
               # Standard approach - similar to Amazon S3 connector
               # Prepare the query based on whether one was provided
               final_query = if query_string.to_s.strip.empty?
@@ -352,13 +342,11 @@ module Multiwoven::Integrations::Source
                 final_query += " LIMIT 1000"
               end
               
-              Rails.logger.info("AUDIENCE:DEBUG: Executing query: #{final_query}")
               # Assign to the results variable that's in the outer scope
               results = conn.query(final_query) 
             end
 
             # Now results is accessible here
-            Rails.logger.info("AUDIENCE:DEBUG: DuckDB query completed successfully with #{results ? results.count : 0} rows")
           rescue Timeout::Error => timeout_error
             Rails.logger.error("AUDIENCE:TIMEOUT: DuckDB query timed out after 180 seconds")
             return LogMessage.new(
