@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_15_181231) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_24_010113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -435,6 +435,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_15_181231) do
     t.datetime "discarded_at"
     t.integer "skipped_rows", default: 0
     t.integer "sync_run_type", default: 0
+    t.string "workflow_run_id"
     t.index ["discarded_at"], name: "index_sync_runs_on_discarded_at"
   end
 

@@ -15,6 +15,7 @@ module Activities
         run.destination_id = sync.destination_id
         run.model_id = sync.model_id
         run.sync_run_type = sync_run_type
+        run.workflow_run_id = activity.send(:metadata).workflow_run_id
       end
       sync_run.save! if sync_run.new_record?
       sync_run.id
