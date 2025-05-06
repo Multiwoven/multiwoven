@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This migration comes from acts_as_taggable_on_engine (originally 3)
-class AddTaggingsCounterCacheToTags < ActiveRecord::Migration[6.0]
+class AddTaggingsCounterCacheToTags < ActiveRecord::Migration[7.1]
   def self.up
     add_column ActsAsTaggableOn.tags_table, :taggings_count, :integer, default: 0
 

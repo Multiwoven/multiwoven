@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This migration comes from acts_as_taggable_on_engine (originally 1)
-class ActsAsTaggableOnMigration < ActiveRecord::Migration[6.0]
+class ActsAsTaggableOnMigration < ActiveRecord::Migration[7.1]
   def self.up
     create_table ActsAsTaggableOn.tags_table do |t|
       t.string :name

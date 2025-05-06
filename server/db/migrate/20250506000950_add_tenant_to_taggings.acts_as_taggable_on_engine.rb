@@ -2,10 +2,11 @@
 
 # This migration comes from acts_as_taggable_on_engine (originally 7)
 class AddTenantToTaggings < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def self.up
     add_column ActsAsTaggableOn.taggings_table, :tenant, :string, limit: 128
-    add_index ActsAsTaggableOn.taggings_table, :tenant, algorithm: :concurrently
-      unless index_exists? ActsAsTaggableOn.taggings_table, :tenant
+    add_index ActsAsTaggableOn.taggings_table, :tenant, algorithm: :concurrently unless index_exists? ActsAsTaggableOn.taggings_table, :tenant
   end
 
   def self.down
