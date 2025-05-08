@@ -28,7 +28,7 @@ RSpec.describe SyncRunMailer, type: :mailer do
     it "renders the body" do
       expect(mail.body.encoded).to match(sync.source.name)
       expect(mail.body.encoded).to match(sync.destination.name)
-      host = Rails.configuration.action_mailer.default_url_options[:host]
+      host = ENV["UI_HOST"]
       url = "#{host}/activate/syncs/#{sync.id}/run/#{sync_run.id}"
       expect(mail.body.encoded).to match(url)
     end
