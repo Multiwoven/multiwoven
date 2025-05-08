@@ -97,6 +97,11 @@ Sync your data with destinations like Salesforce, HubSpot, Slack, and more.
 
 ## Table of Contents
 
+- [Why Multiwoven?](#why-multiwoven)
+  - [Connect to sources](#connect-to-sources)
+  - [Prepare your data](#prepare-your-data)
+  - [Sync with destinations](#sync-with-destinations)
+- [Table of Contents](#table-of-contents)
 - [Getting Started](#getting-started)
   - [Local Setup](#local-setup)
   - [Self-hosted Options](#self-hosted-options)
@@ -110,11 +115,14 @@ Sync your data with destinations like Salesforce, HubSpot, Slack, and more.
     - [Collaboration](#collaboration)
     - [Analytics](#analytics)
     - [Others](#others)
+- [Managing Connectors](#managing-connectors)
+  - [Adding a Connector](#adding-a-connector)
+  - [Updating a Connector](#updating-a-connector)
 - [Contributing](#contributing)
 - [Need Help?](#need-help)
-  - [Development Status: Under Active Development](#️-development-status-under-active-development)
-- [License](#license)
+  - [⚠️ Development Status: Under Active Development](#️-development-status-under-active-development)
 - [Contributors](#contributors)
+- [License](#license)
 
 ## Getting Started
 
@@ -245,6 +253,42 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 #### Others
 
 🧵...Weaving in more connectors to support a wide range of destinations.
+
+## Managing Connectors
+
+In Multiwoven, connectors allow you to sync data between your warehouse and external tools. Follow these steps to add or update connectors.
+
+### Adding a Connector
+
+1. **Select a Data Source/Destinations:**  
+   Go to the **Connectors** section and choose the source or destination you want to add (e.g., Databricks, Salesforce).
+
+2. **Enter Credential Details:**  
+   Provide the required credentials like API keys or database connection strings.
+
+3. **Test the Connection:**  
+   Click the **Test Connection** button to ensure the credentials are valid and the connection works.
+
+4. **Save the Source:**  
+   Once the connection test is successful, click **Save** to finalize the setup.
+
+---
+
+### Updating a Connector
+
+1. **Select the Data Source/Destinations:**  
+   Find the existing connector in the **Connectors** section and open its configuration.
+
+2. **Update Credential Details:**  
+   Modify any outdated or incorrect credentials.
+
+3. **Test the Connection:**  
+   Verify the updated credentials by clicking **Test Connection**.
+
+4. **Save the Changes:**  
+   Click **Save the Changes** to store the updated configuration.
+
+By following these steps, you can easily add or update connectors, ensuring smooth data syncing across platforms.
 
 ## Contributing
 
