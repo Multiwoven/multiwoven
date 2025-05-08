@@ -227,8 +227,6 @@ const FinaliseSync = (): JSX.Element => {
                           fontWeight='medium'
                           size='sm'
                         >
-                          <option value='minutes'>Minute(s)</option>
-                          <option value='hours'>Hour(s)</option>
                           <option value='days'>Day(s)</option>
                           <option value='weeks'>Week(s)</option>
                         </Select>
