@@ -123,12 +123,23 @@ const ViewModel = (): JSX.Element => {
   const tableName = prefillValues?.query?.split('FROM')?.[1]?.trim();
 
   return (
+<<<<<<< HEAD
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <TopBar
           name={prefillValues?.model_name}
           breadcrumbSteps={EDIT_MODEL_FORM_STEPS}
           extra={
+=======
+    <ContentContainer>
+      <TopBar
+        name={prefillValues?.model_name}
+        nameTooltip={prefillValues?.model_description}
+        nameTooltipVisible={!!prefillValues?.model_description}
+        breadcrumbSteps={EDIT_MODEL_FORM_STEPS}
+        extra={
+          <Box display='flex' alignItems='center'>
+>>>>>>> d2c965ab (feat(CE): added tooltip to titlebar)
             <Box display='flex' alignItems='center'>
               <Box display='flex' alignItems='center'>
                 <EntityItem
