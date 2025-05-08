@@ -106,6 +106,9 @@ GEM
       mutex_m
       securerandom (>= 0.3)
       tzinfo (~> 2.0)
+    acts-as-taggable-on (12.0.0)
+      activerecord (>= 7.1, < 8.1)
+      zeitwerk (>= 2.4, < 3.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     annotate (3.2.0)
@@ -1958,7 +1961,7 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.22.6)
+    multiwoven-integrations (0.23.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1996,7 +1999,7 @@ GEM
     mysql2 (0.5.6)
     net-http (0.6.0)
       uri
-    net-imap (0.5.6)
+    net-imap (0.5.8)
       date
       net-protocol
     net-pop (0.1.2)
@@ -2010,13 +2013,13 @@ GEM
     net-ssh (7.3.0)
     newrelic_rpm (9.7.0)
     nio4r (2.7.4)
-    nokogiri (1.18.5-aarch64-linux-gnu)
+    nokogiri (1.18.8-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.5-arm64-darwin)
+    nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.5-x86_64-darwin)
+    nokogiri (1.18.8-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.5-x86_64-linux-gnu)
+    nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -2231,7 +2234,7 @@ GEM
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
-    uri (1.0.2)
+    uri (1.0.3)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -2266,6 +2269,7 @@ DEPENDENCIES
   aasm
   active_model_serializers (~> 0.10.0)
   activerecord_json_validator (~> 2.1.0)
+  acts-as-taggable-on (~> 12.0)
   annotate
   appsignal
   aws-sdk
@@ -2290,7 +2294,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.22.6)
+  multiwoven-integrations (~> 0.23.1)
   mysql2
   newrelic_rpm
   parallel

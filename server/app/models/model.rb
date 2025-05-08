@@ -19,12 +19,18 @@ class Model < ApplicationRecord
   DYNAMIC_SQL_CONFIG_JSON_SCHEMA = Rails.root.join(
     "app/models/schema_validations/models/configuration_dynamic_sql.json"
   )
+  UNSTRUCTURED_CONFIG_JSON_SCHEMA = Rails.root.join(
+    "app/models/schema_validations/models/configuration_unstructured.json"
+  )
+  VECTOR_SEARCH_CONFIG_JSON_SCHEMA = Rails.root.join(
+    "app/models/schema_validations/models/configuration_vector_search.json"
+  )
 
   validates :workspace_id, presence: true
   validates :connector_id, presence: true
   validates :name, presence: true
 
-  enum :query_type, %i[raw_sql dbt soql table_selector ai_ml dynamic_sql]
+  enum :query_type, %i[raw_sql dbt soql table_selector ai_ml dynamic_sql unstructured vector_search]
 
   validates :query, presence: true, if: :requires_query?
   # Havesting configuration
@@ -41,6 +47,8 @@ class Model < ApplicationRecord
 
   scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector dynamic_sql]) }
   scope :ai_ml, -> { where(query_type: :ai_ml) }
+  scope :unstructured, -> { where(query_type: :unstructured) }
+  scope :vector_search, -> { where(query_type: :vector_search) }
 
   default_scope { order(updated_at: :desc) }
 
@@ -58,7 +66,7 @@ class Model < ApplicationRecord
   end
 
   def requires_configuration?
-    %w[ai_ml dynamic_sql].include?(query_type)
+    %w[ai_ml dynamic_sql unstructured vector_search].include?(query_type)
   end
 
   def json_schema
@@ -72,6 +80,10 @@ class Model < ApplicationRecord
       AI_ML_CONFIG_JSON_SCHEMA
     elsif dynamic_sql?
       DYNAMIC_SQL_CONFIG_JSON_SCHEMA
+    elsif unstructured?
+      UNSTRUCTURED_CONFIG_JSON_SCHEMA
+    elsif vector_search?
+      VECTOR_SEARCH_CONFIG_JSON_SCHEMA
     end
   end
 end
