@@ -1,10 +1,16 @@
-# frozen_string_literal: tr
+# frozen_string_literal: true
 
 require Rails.root.join("lib/utils/exception_reporter")
 
 Multiwoven::Integrations::Service.new do |config|
   config.logger = Rails.logger
   config.exception_reporter = Utils::ExceptionReporter
+end
+
+# Override Temporal.warn to silence deprecation warnings
+def Temporal.warn(msg)
+  # Only log if it's not the deprecation warning
+  Rails.logger.warn(msg) unless msg.include?('deprecated without a substitution')
 end
 
 module TemporalService
