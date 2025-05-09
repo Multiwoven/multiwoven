@@ -14,11 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-<<<<<<< HEAD
-gem "multiwoven-integrations", "~> 0.22.6"
-=======
 gem "multiwoven-integrations", "~> 0.23.2"
->>>>>>> 8d80de56 (chore(CE): Update Server Gem 0.23.2 (#1069))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -47,6 +43,7 @@ gem "pundit"
 gem "ruby-saml"
 # Utilities
 gem "activerecord_json_validator", "~> 2.1.0"
+gem "acts-as-taggable-on", "~> 12.0"
 gem "bootsnap", require: false # Reduces boot time
 gem "counter_culture", "~> 3.3"
 gem "fugit"

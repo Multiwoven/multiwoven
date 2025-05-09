@@ -41,4 +41,20 @@ RSpec.describe MessageFeedback, type: :model do
       )
     end
   end
+
+  describe ":tags of type acts_on_taggable_on" do
+    let(:organization) { create(:organization) }
+    let(:workspace) { create(:workspace, organization:) }
+    let(:feedback) { build(:feedback, workspace:) }
+
+    it "does not exist in model class" do
+      expect(Feedback.column_names.include?(:tags)).to be_falsey
+    end
+    it "does not exist in model instance" do
+      expect(feedback.has_attribute?(:tags)).to be_falsey
+    end
+    it "exists in model instance as tag_list" do
+      expect(feedback.has_attribute?(:tag_list)).to be_truthy
+    end
+  end
 end
