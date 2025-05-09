@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.22.6"
-=======
     VERSION = "0.23.2"
->>>>>>> 314fa99a (fix(CE): Remove inference profile from Bedrock (#1068))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -29,6 +25,7 @@ module Multiwoven
       WatsonxAi
       WatsonxData
       Anthropic
+      AwsBedrockModel
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

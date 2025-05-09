@@ -73,18 +73,6 @@ module Multiwoven
           expect(instance.connector_query_type).to eq("ai_ml")
           expect(instance.stream_type).to eq("user_defined")
         end
-
-        it "creates an instance from JSON connector_query_type unstructured" do
-          json_data[:connector_query_type] = "unstructured"
-          json_data[:stream_type] = "static"
-          instance = ConnectorSpecification.from_json(json_data.to_json)
-          expect(instance).to be_a(ConnectorSpecification)
-          expect(instance.connection_specification).to eq(key: "value")
-          expect(instance.supports_normalization).to eq(true)
-          expect(instance.supported_destination_sync_modes).to eq(["insert"])
-          expect(instance.connector_query_type).to eq("unstructured")
-          expect(instance.stream_type).to eq("static")
-        end
       end
 
       describe "#to_multiwoven_message" do
@@ -399,6 +387,14 @@ module Multiwoven
         it "has a query_type 'dynamic_sql'" do
           model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "dynamic_sql", primary_key: "id")
           expect("dynamic_sql").to include(model.query_type)
+        end
+        it "has a query_type 'unstructured'" do
+          model = Model.new(name: "Test", query: "", query_type: "unstructured", primary_key: "id")
+          expect("unstructured").to include(model.query_type)
+        end
+        it "has a query_type 'vector_search'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "vector_search", primary_key: "id")
+          expect("vector_search").to include(model.query_type)
         end
       end
     end

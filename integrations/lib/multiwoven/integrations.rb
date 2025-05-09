@@ -37,6 +37,7 @@ require "aws-sdk-sagemakerruntime"
 require "google/cloud/ai_platform/v1"
 require "grpc"
 require "MailchimpMarketing"
+require "aws-sdk-bedrockruntime"
 
 # Service
 require_relative "integrations/config"
@@ -79,6 +80,7 @@ require_relative "integrations/source/sftp/client"
 require_relative "integrations/source/watsonx_ai/client"
 require_relative "integrations/source/watsonx_data/client"
 require_relative "integrations/source/anthropic/client"
+require_relative "integrations/source/aws_bedrock_model/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

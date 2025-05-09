@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.22.6)
-=======
     multiwoven-integrations (0.23.2)
->>>>>>> 314fa99a (fix(CE): Remove inference profile from Bedrock (#1068))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -78,6 +74,9 @@ GEM
     aws-eventstream (1.3.0)
     aws-partitions (1.931.0)
     aws-sdk-athena (1.83.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-bedrockruntime (1.9.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-cloudwatchlogs (1.82.0)
@@ -419,6 +418,7 @@ DEPENDENCIES
   activesupport
   async-websocket (~> 0.8.0)
   aws-sdk-athena
+  aws-sdk-bedrockruntime
   aws-sdk-s3
   aws-sdk-sagemaker
   aws-sdk-sagemakerruntime
