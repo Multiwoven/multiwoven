@@ -35,7 +35,7 @@
       "data_type": {
         "description": "Type of data in the files",
         "type": "string",
-        "title": "Data Type",
+        "title": "Data Format Type",
         "enum": [
           "structured",
           "unstructured"

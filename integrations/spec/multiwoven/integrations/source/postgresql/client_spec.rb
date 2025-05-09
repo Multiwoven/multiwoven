@@ -8,6 +8,7 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
         "name": "PostgresqlSourceConnector",
         "type": "source",
         "connection_specification": {
+          "data_type": "structured",
           "credentials": {
             "auth_type": "username/password",
             "username": ENV["POSTGRESQL_USERNAME"],
