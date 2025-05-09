@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         member do
           get :discover
           post :query_source
+          post :execute_model
         end
       end
       resources :catalogs, only: %i[create update]

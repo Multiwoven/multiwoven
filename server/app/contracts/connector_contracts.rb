@@ -96,4 +96,17 @@ module ConnectorContracts
       required(:query).filled(:string)
     end
   end
+
+  class ExecuteModel < Dry::Validation::Contract
+    params do
+      required(:id).filled(:integer)
+      required(:payload).filled(:string)
+    end
+
+    rule(:payload) do
+      JSON.parse(value)
+    rescue JSON::ParserError
+      key.failure("must be a valid JSON string")
+    end
+  end
 end

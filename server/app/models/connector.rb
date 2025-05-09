@@ -91,6 +91,12 @@ class Connector < ApplicationRecord
     client.send(:query, db, final_query)
   end
 
+  def generate_response(payload)
+    connection_config = resolved_configuration.with_indifferent_access
+    client = connector_client.new
+    client.send(:run_model, connection_config, JSON.parse(payload))
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(
