@@ -1,0 +1,45 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/destination/pinecone_db",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Pinecone DB",
+    "type": "object",
+    "required": ["api_key", "region", "index_name", "model", "namespace"],
+    "properties": {
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "description": "Your secret Pinecone API key used to authenticate requests.",
+        "order": 0
+      },
+      "region": {
+        "type": "string",
+        "title": "Region",
+        "description": "The Pinecone region where your index is hosted (e.g., 'us-east-1').",
+        "order": 1
+      },
+      "index_name": {
+        "type": "string",
+        "title": "Index Name",
+        "description": "The name of the Pinecone index where vectors will be written.",
+        "order": 2
+      },
+      "model": {
+        "type": "string",
+        "title": "Model",
+        "enum": ["multilingual-e5-large", "llama-text-embed-v2", "pinecone-sparse-english-v0"],
+        "description": "The embedding model used to convert text into vector representations.",
+        "order": 3
+      },
+      "namespace": {
+        "type": "string",
+        "title": "Namespace",
+        "description": "The namespace within the index for logical separation of data.",
+        "order": 4
+      }
+    }    
+  }
+}
