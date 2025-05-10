@@ -88,6 +88,8 @@ RSpec.describe "ModelContracts" do
             connector_id: 1,
             name: "Model Name",
             query_type: "unstructured",
+            primary_key: "",
+            query: "",
             configuration: {
               "harvesters" => [],
               "embedding_config" => {
@@ -404,6 +406,24 @@ RSpec.describe "ModelContracts" do
             query: "SELECT * FROM updated_table;",
             query_type: "soql",
             primary_key: "updated_id"
+          }
+        }
+      end
+
+      it "passes validation" do
+        expect(contract.call(valid_inputs)).to be_success
+      end
+    end
+
+    context "with valid unstructured inputs" do
+      let(:valid_inputs) do
+        {
+          id: 1,
+          model: {
+            name: "Updated Model Name",
+            query: "",
+            query_type: "unstructured",
+            primary_key: ""
           }
         }
       end

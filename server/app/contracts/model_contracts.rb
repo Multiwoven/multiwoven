@@ -18,9 +18,9 @@ module ModelContracts
       required(:model).hash do
         required(:connector_id).filled(:integer)
         required(:name).filled(:string)
-        optional(:query).filled(:string)
+        optional(:query).maybe(:string)
         required(:query_type).filled(:string)
-        optional(:primary_key).filled(:string)
+        optional(:primary_key).maybe(:string)
         optional(:configuration).filled(:hash)
       end
     end
@@ -82,9 +82,9 @@ module ModelContracts
       required(:model).hash do
         optional(:connector_id).filled(:integer)
         optional(:name).filled(:string)
-        optional(:query).filled(:string)
+        optional(:query).maybe(:string)
         optional(:query_type).filled(:string)
-        optional(:primary_key).filled(:string)
+        optional(:primary_key).maybe(:string)
         optional(:configuration).filled(:hash)
       end
     end
