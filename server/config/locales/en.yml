@@ -29,3 +29,13 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "Email can't be blank"
+              invalid: "Email is invalid"
+              taken: "There's already an account with this email address. Use a different email or Sign In with this address"
+              format: "%{message}"

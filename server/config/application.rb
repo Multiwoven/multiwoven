@@ -66,5 +66,6 @@ module MultiwovenServer
       password: ENV['SMTP_PASSWORD'],
       enable_starttls_auto: true
     }
+    config.active_model.i18n_customize_full_message = true
   end
 end
