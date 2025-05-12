@@ -182,3 +182,37 @@ describe ConnectorContracts::Update do
     end
   end
 end
+
+describe ConnectorContracts::ExecuteModel do
+  subject(:contract) { described_class.new }
+
+  context "when payload contains valid payload" do
+    let(:valid_inputs) do
+      {
+        id: 1,
+        payload: '{"model":"gpt-4o-mini",' \
+                 '"messages":[{"role":"user","content":"Hi"}],' \
+                 '"stream":false}'
+      }
+    end
+
+    it "passes validation" do
+      expect(contract.call(valid_inputs)).to be_success
+    end
+  end
+
+  context "when payload contains invalid payload" do
+    let(:valid_inputs) do
+      {
+        id: 1,
+        payload: "Hello"
+      }
+    end
+
+    it "fail validation" do
+      result = contract.call(valid_inputs)
+      expect(result).to_not be_success
+      expect(result.errors[:payload]).to include("must be a valid JSON string")
+    end
+  end
+end

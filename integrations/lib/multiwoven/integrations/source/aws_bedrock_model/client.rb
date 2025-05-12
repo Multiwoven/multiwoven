@@ -63,8 +63,7 @@ module Multiwoven::Integrations::Source
           model_id: model,
           content_type: "application/json",
           accept: "application/json",
-          body: payload,
-          inference_profile: connection_config[:inference_profile]
+          body: payload
         )
         process_response(response)
       rescue StandardError => e
