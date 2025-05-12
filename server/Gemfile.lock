@@ -1893,6 +1893,10 @@ GEM
     hana (1.3.7)
     hashie (5.0.0)
     htmlentities (4.3.4)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     hubspot-api-client (19.0.0)
       json (~> 2.1, >= 2.1.0)
@@ -1960,8 +1964,10 @@ GEM
     minitest (5.25.4)
     msgpack (1.8.0)
     multi_json (1.15.0)
+    multi_xml (0.7.2)
+      bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.23.2)
+    multiwoven-integrations (0.24.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2033,6 +2039,16 @@ GEM
     pg (1.5.4)
     pg_query (5.0.0)
       google-protobuf (>= 3.22.3)
+<<<<<<< HEAD
+=======
+    pinecone (1.1.0)
+      dry-struct (~> 1.6.0)
+      dry-validation (~> 1.10.0)
+      httparty (~> 0.22.0)
+    power_point_pptx (0.1.0)
+      nokogiri (~> 1.13, >= 1.13.0)
+      rubyzip (~> 2.0)
+>>>>>>> 3538ebb0 (chore(CE): Update Server Gem 0.24.0 (#1091))
     pp (0.6.2)
       prettyprint
     premailer (1.23.0)
@@ -2294,12 +2310,17 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.23.2)
+  multiwoven-integrations (~> 0.24.0)
   mysql2
   newrelic_rpm
   parallel
   pg (~> 1.1)
   pg_query
+<<<<<<< HEAD
+=======
+  pinecone
+  power_point_pptx
+>>>>>>> 3538ebb0 (chore(CE): Update Server Gem 0.24.0 (#1091))
   premailer-rails
   puma (>= 5.0)
   pundit
