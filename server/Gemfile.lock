@@ -1961,7 +1961,11 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.23.2)
+=======
+    multiwoven-integrations (0.24.1)
+>>>>>>> cb55c77f (chore(CE): update gem 0.24.1 (#1095))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2294,7 +2298,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.23.2)
+=======
+  multiwoven-integrations (~> 0.24.1)
+>>>>>>> cb55c77f (chore(CE): update gem 0.24.1 (#1095))
   mysql2
   newrelic_rpm
   parallel
