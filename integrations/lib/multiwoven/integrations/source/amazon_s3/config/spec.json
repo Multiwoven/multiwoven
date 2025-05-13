@@ -36,9 +36,9 @@
         "description": "Type of data in the files",
         "type": "string",
         "title": "Data Format Type",
-        "enum": [
-          "structured",
-          "unstructured"
+        "oneOf": [
+          { "const": "structured", "title": "Tables & Records (Structured)" },
+          { "const": "unstructured", "title": "Documents & Files (Unstructured)" }
         ],
         "default": "structured",
         "order": 9
