@@ -25,6 +25,7 @@ module Activities
 
       workflow_id = "#{source_connector_name}-#{destination_connector_name}-syncid-#{sync_id}"
 
+      # Schedule the sync with the user-configured schedule for future runs
       Temporal.schedule_workflow(
         Workflows::SyncWorkflow, sync.schedule_cron_expression,
         sync.id,
@@ -32,6 +33,17 @@ module Activities
           workflow_id:
         }
       )
+
+      # If this is the first run, execute the sync immediately
+      if !sync.sync_runs.any?
+        Rails.logger.info("Executing first sync run immediately for sync_id: #{sync.id}")
+        # Start the workflow immediately for the first run
+        Temporal.start_workflow(
+          Workflows::SyncWorkflow,
+          sync.id,
+          options: { workflow_id: "immediate-#{workflow_id}" }
+        )
+      end
 
       sync.update!(workflow_id:)
     end
