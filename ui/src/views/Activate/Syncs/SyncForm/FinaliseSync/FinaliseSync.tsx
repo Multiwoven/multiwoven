@@ -36,7 +36,7 @@ const FinaliseSync = (): JSX.Element => {
       description: '',
       sync_mode: 'full_refresh',
       sync_interval: 0,
-      sync_interval_unit: 'minutes',
+      sync_interval_unit: 'days',
       schedule_type: 'interval',
       cron_expression: '',
     },

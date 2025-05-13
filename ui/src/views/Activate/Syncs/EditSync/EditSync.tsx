@@ -108,7 +108,7 @@ const EditSync = (): JSX.Element | null => {
     initialValues: {
       sync_mode: 'full_refresh',
       sync_interval: 0,
-      sync_interval_unit: 'minutes',
+      sync_interval_unit: 'days',
       schedule_type: 'interval',
       cron_expression: '',
     },
@@ -158,7 +158,7 @@ const EditSync = (): JSX.Element | null => {
     if (syncFetchResponse) {
       formik.setValues({
         sync_interval: syncData?.sync_interval ?? 0,
-        sync_interval_unit: syncData?.sync_interval_unit ?? 'minutes',
+        sync_interval_unit: syncData?.sync_interval_unit ?? 'days',
         sync_mode: syncData?.sync_mode ?? 'full_refresh',
         schedule_type: syncData?.schedule_type ?? 'interval',
         cron_expression: syncData?.cron_expression ?? '',
