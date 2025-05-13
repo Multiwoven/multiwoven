@@ -103,14 +103,10 @@ class Sync < ApplicationRecord
   def schedule_cron_expression
     return cron_expression if cron_expression?
     
-    if self.sync_runs.any?
-      # Normal scheduling based on user configuration
-      generate_cron_from_interval
-    else
-      # Special case: first sync run uses 1-minute interval for faster initial sync
-      Rails.logger.info("First sync run for sync_id: #{id}, using 1-minute interval")
-      "*/1 * * * *"
-    end
+    # Always use the user-configured interval
+    # The first sync will be triggered immediately by the workflow
+    # and subsequent syncs will follow this schedule
+    generate_cron_from_interval
   end
 
   def generate_cron_from_interval

@@ -117,7 +117,7 @@ export type CreateSyncResponse = {
     status: string;
     stream_name: string;
     sync_interval: number;
-    sync_interval_unit: 'minutes';
+    sync_interval_unit: 'days';
     sync_mode: 'full_refresh';
     cursor_field: string;
     source: {
@@ -149,7 +149,7 @@ export type FinalizeSyncFormFields = {
   description?: string;
   sync_mode: 'full_refresh';
   sync_interval: number;
-  sync_interval_unit: 'minutes';
+  sync_interval_unit: 'days';
   schedule_type: string;
   cron_expression: '';
 };
