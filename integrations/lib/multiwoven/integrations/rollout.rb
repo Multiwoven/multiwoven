@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.23.2"
-=======
     VERSION = "0.24.1"
->>>>>>> c6425373 (chore(CE): Data Format Type title names (#1094))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -56,6 +52,7 @@ module Multiwoven
       AISDataStore
       AmazonS3
       MicrosoftDynamics
+      PineconeDB
     ].freeze
   end
 end
