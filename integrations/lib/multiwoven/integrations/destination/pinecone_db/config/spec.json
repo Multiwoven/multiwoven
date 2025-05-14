@@ -6,7 +6,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Pinecone DB",
     "type": "object",
-    "required": ["api_key", "region", "index_name", "model", "namespace"],
+    "required": ["api_key", "region", "index_name"],
     "properties": {
       "api_key": {
         "type": "string",
@@ -26,19 +26,6 @@
         "title": "Index Name",
         "description": "The name of the Pinecone index where vectors will be written.",
         "order": 2
-      },
-      "model": {
-        "type": "string",
-        "title": "Model",
-        "enum": ["multilingual-e5-large", "llama-text-embed-v2", "pinecone-sparse-english-v0"],
-        "description": "The embedding model used to convert text into vector representations.",
-        "order": 3
-      },
-      "namespace": {
-        "type": "string",
-        "title": "Namespace",
-        "description": "The namespace within the index for logical separation of data.",
-        "order": 4
       }
     }    
   }
