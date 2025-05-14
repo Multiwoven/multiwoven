@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthErrorResponse, SignInPayload, signIn } from '@/services/authentication';
 import Cookies from 'js-cookie';
@@ -19,6 +19,16 @@ const SignIn = (): JSX.Element => {
     mutationFn: (values: SignInPayload) => signIn(values),
     mutationKey: ['signIn'],
   });
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn-staging.delivr.ai/pixels/029f53be-f456-4466-a62d-b876ca6ec235/p.js';
+    script.async = true;
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const handleSubmit = async (values: SignInPayload) => {
     setSubmitting(true);
