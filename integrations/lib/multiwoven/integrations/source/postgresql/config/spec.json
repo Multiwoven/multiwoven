@@ -12,9 +12,15 @@
         "description": "Type of data in the database",
         "type": "string",
         "title": "Data Format Type",
-        "enum": [
-          "structured",
-          "vector"
+        "oneOf": [
+          {
+            "const": "structured",
+            "title": "Tables & Records (Structured)"
+          },
+          {
+            "const": "vector",
+            "title": "Tables & Records containing Vector fields"
+          }
         ],
         "default": "structured",
         "order": 0
