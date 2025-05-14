@@ -2039,16 +2039,10 @@ GEM
     pg (1.5.4)
     pg_query (5.0.0)
       google-protobuf (>= 3.22.3)
-<<<<<<< HEAD
-=======
     pinecone (1.1.0)
       dry-struct (~> 1.6.0)
       dry-validation (~> 1.10.0)
       httparty (~> 0.22.0)
-    power_point_pptx (0.1.0)
-      nokogiri (~> 1.13, >= 1.13.0)
-      rubyzip (~> 2.0)
->>>>>>> 3538ebb0 (chore(CE): Update Server Gem 0.24.0 (#1091))
     pp (0.6.2)
       prettyprint
     premailer (1.23.0)
@@ -2316,11 +2310,7 @@ DEPENDENCIES
   parallel
   pg (~> 1.1)
   pg_query
-<<<<<<< HEAD
-=======
   pinecone
-  power_point_pptx
->>>>>>> 3538ebb0 (chore(CE): Update Server Gem 0.24.0 (#1091))
   premailer-rails
   puma (>= 5.0)
   pundit
