@@ -104,3 +104,5 @@ end
 
 # NOTE: Removed unused or commented-out gems for better readability.
 gem "premailer-rails"
+
+gem "prometheus-client", "~> 4.2"
