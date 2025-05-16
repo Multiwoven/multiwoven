@@ -55,10 +55,8 @@
                 <p style="color: #475467; font-size: 14px; font-weight: 400; margin-bottom: 20px;">
                   <%= "Your sync #{@alert_attrs[:name]} finished at #{@alert_attrs[:end_time]}" %>
                 </p>
-                <a href="<%= @sync_run_url %>" style="text-decoration: none;">
-                  <button style="background: #00249c; color: white; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; padding: 10px 20px; cursor: pointer;">
-                    View Sync Run
-                  </button>
+                <a href="<%= @sync_run_url %>" style="background: #00249c; color: white; font-size: 14px; font-weight: 700; border-radius: 6px; padding: 10px 20px; display: inline-block; text-decoration: none;"> 
+                  View Sync Run 
                 </a>
 
                 <table class="info-table">

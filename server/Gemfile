@@ -14,11 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-<<<<<<< HEAD
-gem "multiwoven-integrations", "~> 0.23.2"
-=======
 gem "multiwoven-integrations", "~> 0.24.1"
->>>>>>> cb55c77f (chore(CE): update gem 0.24.1 (#1095))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -26,6 +22,7 @@ gem "data_migrate"
 gem "mysql2"
 gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database
+gem "pinecone"
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem
 
