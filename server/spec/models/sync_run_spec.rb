@@ -201,8 +201,10 @@ RSpec.describe SyncRun, type: :model do
     let!(:sync_run_success) { create(:sync_run, sync:, status: "success") }
 
     it "updates sync_run status and sync status to failure after workflow if not in terminal state" do
+      sync_run_pending.finished_at = nil
       sync_run_pending.update_status_post_workflow
       expect(sync_run_pending.status).to eq("failed")
+      expect(sync_run_pending.finished_at).not_to be_nil
       expect(sync.status).to eq("failed")
     end
 

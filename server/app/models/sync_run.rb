@@ -132,6 +132,7 @@ class SyncRun < ApplicationRecord
   def update_status_post_workflow
     return if terminal_status?
 
+    update!(finished_at: Time.zone.now)
     update_failure!
   end
 
