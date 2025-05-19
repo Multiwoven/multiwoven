@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.24.2"
+=======
+    VERSION = "0.26.0"
+>>>>>>> a3c222f3 (feat(CE): add qdrant destination connector (#1093))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -52,6 +56,7 @@ module Multiwoven
       AISDataStore
       AmazonS3
       MicrosoftDynamics
+      Qdrant
       PineconeDB
     ].freeze
   end

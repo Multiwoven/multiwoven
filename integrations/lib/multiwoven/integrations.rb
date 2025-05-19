@@ -107,6 +107,7 @@ require_relative "integrations/destination/mailchimp/client"
 require_relative "integrations/destination/ais_data_store/client"
 require_relative "integrations/destination/amazon_s3/client"
 require_relative "integrations/destination/microsoft_dynamics/client"
+require_relative "integrations/destination/qdrant/client"
 require_relative "integrations/destination/pinecone_db/client"
 
 module Multiwoven
