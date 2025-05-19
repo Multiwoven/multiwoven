@@ -139,6 +139,7 @@ module Api
                               .permit(:source_id,
                                       :destination_id,
                                       :model_id,
+                                      :name,
                                       :schedule_type,
                                       :sync_interval,
                                       :sync_mode,
