@@ -81,11 +81,13 @@ export const updateConnector = async (
     data: payload,
   });
 
-export const getUserConnectors = async (connectorType: string): Promise<ConnectorListResponse> => {
+export const getUserConnectors = async (connectorType: string, page?: string, perPage?: string): Promise<ConnectorListResponse> => {
   return multiwovenFetch<null, ConnectorListResponse>({
     method: 'get',
     url: buildUrlWithParams('/connectors', {
       type: connectorType,
+      page: page,
+      per_page: perPage
     }),
     data: null,
   });

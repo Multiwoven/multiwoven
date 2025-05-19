@@ -106,6 +106,7 @@ const EditSync = (): JSX.Element | null => {
 
   const formik: FormikProps<FinalizeSyncFormFields> = useFormik({
     initialValues: {
+      name: syncData?.name || '',
       sync_mode: 'full_refresh',
       sync_interval: 0,
       sync_interval_unit: 'days',
@@ -157,6 +158,7 @@ const EditSync = (): JSX.Element | null => {
   useEffect(() => {
     if (syncFetchResponse) {
       formik.setValues({
+        name: syncData?.name ?? '',
         sync_interval: syncData?.sync_interval ?? 0,
         sync_interval_unit: syncData?.sync_interval_unit ?? 'days',
         sync_mode: syncData?.sync_mode ?? 'full_refresh',

@@ -83,6 +83,7 @@ export type ConfigSync = {
 };
 
 export interface SyncEntity extends ConfigSync {
+  name: string;
   sync_mode: string;
   sync_interval: number;
   sync_interval_unit: string;
@@ -146,6 +147,7 @@ export type SyncColumnEntity = {
 };
 
 export type FinalizeSyncFormFields = {
+  name: string;
   description?: string;
   sync_mode: 'full_refresh';
   sync_interval: number;
