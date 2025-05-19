@@ -13,13 +13,16 @@ import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/
 import DataTable from '@/components/DataTable';
 import { useNavigate } from 'react-router-dom';
 import useCustomToast from '@/hooks/useCustomToast';
-
+import Pagination from '@/components/EnhancedPagination/Pagination';
+import useFilters from '@/hooks/useFilters';
 const SourcesList = (): JSX.Element | null => {
   const showToast = useCustomToast();
   const navigate = useNavigate();
+  const { filters, updateFilters } = useFilters({ page: '1' });
+  
   const { data, isLoading } = useQuery({
-    queryKey: SOURCES_LIST_QUERY_KEY,
-    queryFn: () => getUserConnectors('Source'),
+    queryKey: [...SOURCES_LIST_QUERY_KEY, filters.page],
+    queryFn: () => getUserConnectors('Source', filters.page as string, '10'),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
@@ -60,6 +63,15 @@ const SourcesList = (): JSX.Element | null => {
             onRowClick={(row) => navigate(`/setup/sources/${row?.original?.id}`)}
           />
         </Box>
+        {data?.links && data.data && data.data.length > 0 && (
+          <Box display='flex' justifyContent='center' mt='20px'>
+            <Pagination
+              links={data.links}
+              currentPage={filters.page ? Number(filters.page) : 1}
+              handlePageChange={(page) => updateFilters({ ...filters, page: page.toString() })}
+            />
+          </Box>
+        )}
       </ContentContainer>
     </Box>
   );
