@@ -1967,11 +1967,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.24.0)
-=======
     multiwoven-integrations (0.24.2)
->>>>>>> cebeab69 (chore(CE): Update Server Gem: 0.24.2 (#1101))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2059,6 +2055,8 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prettyprint (0.2.0)
     process_executer (1.2.0)
+    prometheus-client (4.2.4)
+      base64
     protocol-hpack (1.5.1)
     protocol-http (0.49.0)
     protocol-http1 (0.30.0)
@@ -2308,11 +2306,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.24.0)
-=======
   multiwoven-integrations (~> 0.24.2)
->>>>>>> cebeab69 (chore(CE): Update Server Gem: 0.24.2 (#1101))
   mysql2
   newrelic_rpm
   parallel
@@ -2320,6 +2314,7 @@ DEPENDENCIES
   pg_query
   pinecone
   premailer-rails
+  prometheus-client (~> 4.2)
   puma (>= 5.0)
   pundit
   rack-cors
