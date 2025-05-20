@@ -26,6 +26,7 @@ module Multiwoven
       WatsonxData
       Anthropic
       AwsBedrockModel
+      GenericOpenAI
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

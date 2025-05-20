@@ -82,6 +82,7 @@ require_relative "integrations/source/watsonx_ai/client"
 require_relative "integrations/source/watsonx_data/client"
 require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/aws_bedrock_model/client"
+require_relative "integrations/source/generic_open_ai/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
