@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/destination/microsoft_dynamics",
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/microsoft_dynamics",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {

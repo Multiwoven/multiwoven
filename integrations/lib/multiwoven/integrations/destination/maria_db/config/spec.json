@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/mariadb",
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/maria_db",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {

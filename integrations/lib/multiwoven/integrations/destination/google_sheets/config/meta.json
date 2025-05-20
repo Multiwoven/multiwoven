@@ -4,7 +4,7 @@
     "title": "Google Sheets",
     "connector_type": "destination",
     "category": "Productivity Tools",
-    "documentation_url": "https://docs.multiwoven.com/destinations/productivity-tools/google-sheets-service-account",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/google-sheets",
     "github_issue_label": "destination-google-sheets",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "Google BigQuery",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/bquery",
     "github_issue_label": "source-bigquery",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "HubSpot CRM",
     "connector_type": "destination",
     "category": "CRM",
-    "documentation_url": "https://docs.multiwoven.com/destinations/crm/hubspot",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/hubspot",
     "github_issue_label": "destination-hubspot-crm",
     "icon": "icon.svg",
     "license": "MIT",

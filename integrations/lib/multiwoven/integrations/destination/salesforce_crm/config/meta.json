@@ -4,7 +4,7 @@
     "title": "Salesforce CRM",
     "connector_type": "destination",
     "category": "CRM",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/salesforce",
     "github_issue_label": "destination-salesforce-crm",
     "icon": "icon.svg",
     "license": "MIT",

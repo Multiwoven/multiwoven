@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/sources/bigquery",
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/bquery",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {

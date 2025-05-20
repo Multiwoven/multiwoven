@@ -4,7 +4,7 @@
     "title": "PostgreSQL",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/postgresql",
     "github_issue_label": "destination-postgresql",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "Databricks Data Warehouse",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.multiwoven.com/destinations/databricks_lakehouse",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/analytics/databricks_lakehouse",
     "github_issue_label": "destination-databricks-lakehouse",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "http",
     "connector_type": "destination",
     "category": "HTTP",
-    "documentation_url": "https://docs.multiwoven.com/destinations/http",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/http/http",
     "github_issue_label": "destination-http",
     "icon": "icon.svg",
     "license": "MIT",

@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/source/http-model-endpoint",
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/http-model-endpoint",
   "stream_type": "user_defined",
   "connector_query_type": "ai_ml",
   "connection_specification": {

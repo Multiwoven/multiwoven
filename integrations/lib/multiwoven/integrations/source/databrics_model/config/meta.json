@@ -4,7 +4,7 @@
       "title": "Databricks Model",
       "connector_type": "source",
       "category": "AI Model",
-      "documentation_url": "https://docs.mutliwoven.com",
+      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks-model",
       "github_issue_label": "source-databricks-foundation",
       "icon": "icon.svg",
       "license": "MIT",
