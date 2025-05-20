@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.25.0"
+    VERSION = "0.26.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -53,6 +53,7 @@ module Multiwoven
       AISDataStore
       AmazonS3
       MicrosoftDynamics
+      Qdrant
       PineconeDB
     ].freeze
   end

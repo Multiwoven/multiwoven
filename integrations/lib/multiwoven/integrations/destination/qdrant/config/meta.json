@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Qdrant",
+    "title": "Qdrant",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/qdrant",
+    "github_issue_label": "destination-qdrant",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]        
+  }
+}
