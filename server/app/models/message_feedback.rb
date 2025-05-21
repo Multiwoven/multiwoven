@@ -9,6 +9,8 @@ class MessageFeedback < ApplicationRecord
   validates :feedback_type, presence: true
   validates :chatbot_interaction, presence: true
 
+  counter_culture %i[visual_component data_app]
+
   belongs_to :data_app
   belongs_to :visual_component
   belongs_to :model
