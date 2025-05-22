@@ -52,6 +52,8 @@ export const AllDataModels = 'raw_sql,dbt,soql,table_selector';
 
 export type GetAllModelsProps = {
   type: string;
+  page?: string;
+  perPage?: string;
 };
 
 export const getModelPreview = async (query: string, connector_id: string): Promise<any> => {
@@ -61,10 +63,16 @@ export const getModelPreview = async (query: string, connector_id: string): Prom
 
 export const getAllModels = async ({
   type = AllDataModels,
+  page,
+  perPage
 }: GetAllModelsProps): Promise<ApiResponse<GetAllModelsResponse[]>> =>
   multiwovenFetch<null, ApiResponse<GetAllModelsResponse[]>>({
     method: 'get',
-    url: buildUrlWithParams('/models', { query_type: type }),
+    url: buildUrlWithParams('/models', { 
+      query_type: type,
+      page: page,
+      per_page: perPage
+    }),
   });
 
 export const getModelPreviewById = async (query: string, id: string) =>

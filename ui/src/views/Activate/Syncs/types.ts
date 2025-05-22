@@ -83,6 +83,7 @@ export type ConfigSync = {
 };
 
 export interface SyncEntity extends ConfigSync {
+  name: string;
   sync_mode: string;
   sync_interval: number;
   sync_interval_unit: string;
@@ -117,7 +118,7 @@ export type CreateSyncResponse = {
     status: string;
     stream_name: string;
     sync_interval: number;
-    sync_interval_unit: 'minutes';
+    sync_interval_unit: 'days';
     sync_mode: 'full_refresh';
     cursor_field: string;
     source: {
@@ -146,10 +147,11 @@ export type SyncColumnEntity = {
 };
 
 export type FinalizeSyncFormFields = {
+  name: string;
   description?: string;
   sync_mode: 'full_refresh';
   sync_interval: number;
-  sync_interval_unit: 'minutes';
+  sync_interval_unit: 'days';
   schedule_type: string;
   cron_expression: '';
 };

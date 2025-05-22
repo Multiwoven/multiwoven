@@ -79,6 +79,8 @@ gem "tiny_tds"
 
 gem "MailchimpMarketing"
 
+gem "google-cloud-storage", "~> 1.44"
+
 gem "aws-sdk-bedrockruntime"
 
 gem "pinecone"

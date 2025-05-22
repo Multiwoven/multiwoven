@@ -80,13 +80,21 @@ module Multiwoven
           def send_data_to_hubspot(stream_name, record = {})
             args = build_args(@action, stream_name, record)
             hubspot_stream = @client.crm.send(stream_name)
-            hubspot_data = { simple_public_object_input_for_create: args }
-            response = hubspot_stream.basic_api.send(@action, hubspot_data)
+            # Different payload based on action
+            if @action == "create"
+              hubspot_data = { simple_public_object_input_for_create: { properties: args } }
+              response = hubspot_stream.basic_api.create(hubspot_data)
+            elsif @action == "update"
+              hubspot_data = { simple_public_object_input: { properties: args } }
+              response = hubspot_stream.basic_api.update(record[:id], hubspot_data)
+            else
+              # Handle other actions
+            end
             [args, response]
           end
 
           def build_args(action, stream_name, record)
-            case action
+            case action.to_sym  # Convert string to symbol
             when :upsert
               [stream_name, record[:external_key], record]
             when :destroy

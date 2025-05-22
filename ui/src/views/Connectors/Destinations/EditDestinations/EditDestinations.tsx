@@ -109,11 +109,26 @@ const EditDestination = (): JSX.Element => {
   const handleOnTestClick = async (formData: unknown) => {
     setIsTestRunning(true);
 
-    if (!connectorInfo?.attributes) return;
+    if (!connectorInfo?.attributes) {
+      setIsTestRunning(false);
+      return;
+    }
 
     try {
+      // Use the provided form data or fall back to existing configuration if empty
+      const connectionSpec = formData && 
+        typeof formData === 'object' && 
+        Object.keys(formData as object).length > 0 ? 
+        formData : 
+        connectorInfo?.attributes?.configuration;
+      
+      if (!connectionSpec || 
+          (typeof connectionSpec === 'object' && Object.keys(connectionSpec as object).length === 0)) {
+        throw new Error('Connection specification cannot be empty');
+      }
+      
       const payload: TestConnectionPayload = {
-        connection_spec: formData,
+        connection_spec: connectionSpec,
         name: connectorInfo?.attributes?.connector_name,
         type: 'destination',
       };
@@ -129,27 +144,28 @@ const EditDestination = (): JSX.Element => {
           position: 'bottom-right',
           isClosable: true,
         });
-        return;
+        // Only set testedFormData if connection is successful
+        setTestedFormData(formData);
+      } else {
+        showToast({
+          status: CustomToastStatus.Error,
+          title: 'Connection failed',
+          description: testingConnectionResponse?.connection_status?.message,
+          position: 'bottom-right',
+          isClosable: true,
+        });
       }
-
-      showToast({
-        status: CustomToastStatus.Error,
-        title: 'Connection failed',
-        description: testingConnectionResponse?.connection_status?.message,
-        position: 'bottom-right',
-        isClosable: true,
-      });
     } catch (e) {
+      console.error('Test connection error:', e);
       showToast({
         status: CustomToastStatus.Error,
         title: 'Connection failed',
-        description: 'Something went wrong!',
+        description: e instanceof Error ? e.message : 'Something went wrong!',
         position: 'bottom-right',
         isClosable: true,
       });
     } finally {
       setIsTestRunning(false);
-      setTestedFormData(formData);
     }
   };
 

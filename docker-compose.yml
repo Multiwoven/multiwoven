@@ -71,6 +71,8 @@ services:
       - redis
       - temporal
     env_file: .env
+    volumes:
+      - ./integrations:/integrations
   multiwoven-ui:
     build:
       context: ./ui
@@ -79,6 +81,7 @@ services:
       - "8000:8000"
     depends_on:
       - multiwoven-server
+    env_file: .env
   # This section is for the Temporal Worker
   multiwoven-worker:
     build:
@@ -89,6 +92,8 @@ services:
       - redis
       - temporal
     env_file: .env
+    volumes:
+      - ./integrations:/integrations
     command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
 # Volumes for the database and redis
 volumes:

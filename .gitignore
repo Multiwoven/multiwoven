@@ -5,3 +5,5 @@ docker-compose.override.yml
 .vscode
 .DS_Store
 .qodo
+**/*.key
+**/*.pem

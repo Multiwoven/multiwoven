@@ -1,0 +1,10 @@
+version: "3"
+services:
+  multiwoven-server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+  multiwoven-worker:
+    build:
+      context: .
+      dockerfile: server/Dockerfile

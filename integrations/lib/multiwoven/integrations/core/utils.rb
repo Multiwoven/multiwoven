@@ -85,7 +85,14 @@ module Multiwoven
 
       def extract_data(record_object, properties)
         data_attributes = record_object.with_indifferent_access
-        data_attributes.select { |key, _| properties.key?(key.to_sym) }
+        # Transform to HubSpot's expected format
+        properties_hash = {}
+        data_attributes.each do |key, value|
+          if properties.key?(key.to_sym)
+            properties_hash[key] = value
+          end
+        end
+        properties_hash
       end
 
       def success?(response)

@@ -19,6 +19,32 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
       <Text fontWeight='semibold' mb='6' size='md'>
         Finalise setting for this sync
       </Text>
+      
+      <Box display='flex' alignItems='center' marginBottom='8px'>
+        <Text size='sm' fontWeight='semibold'>
+          Name
+        </Text>
+        <Text size='xs' color='gray.600' ml={1} fontWeight={400}>
+          (Required)
+        </Text>
+      </Box>
+
+      <Input
+        name='name'
+        value={formik.values.name}
+        onChange={(e) => {
+          // Prevent spaces at the beginning of the name
+          const value = e.target.value;
+          if (value === ' ' || value.startsWith(' ')) {
+            e.target.value = value.trimStart();
+          }
+          formik.handleChange(e);
+        }}
+        placeholder='Enter a name for this sync'
+        background='gray.100'
+        marginBottom='16px'
+        isRequired
+      />
       <Box display='flex' flexDir={{ base: 'column', md: 'row' }} justifyContent='space-between'>
         <Box>
           <Text mb='4' fontWeight='semibold' size='sm'>
@@ -136,8 +162,6 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
                     fontWeight='medium'
                     size='sm'
                   >
-                    <option value='minutes'>Minute(s)</option>
-                    <option value='hours'>Hour(s)</option>
                     <option value='days'>Day(s)</option>
                     <option value='weeks'>Week(s)</option>
                   </Select>

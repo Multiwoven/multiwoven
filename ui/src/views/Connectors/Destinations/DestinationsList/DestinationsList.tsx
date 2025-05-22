@@ -15,16 +15,18 @@ import titleCase from '@/utils/TitleCase';
 import DataTable from '@/components/DataTable';
 import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/ConnectorsListColumns';
 import { useNavigate } from 'react-router-dom';
-
+import Pagination from '@/components/EnhancedPagination/Pagination';
+import useFilters from '@/hooks/useFilters';
 const DestinationsList = (): JSX.Element | null => {
   const showToast = useCustomToast();
   const navigate = useNavigate();
+  const { filters, updateFilters } = useFilters({ page: '1' });
 
   const activeWorkspaceId = useStore((state) => state.workspaceId);
 
   const { data, isLoading } = useQuery({
-    queryKey: [...DESTINATIONS_LIST_QUERY_KEY, activeWorkspaceId],
-    queryFn: () => getUserConnectors('destination'),
+    queryKey: [...DESTINATIONS_LIST_QUERY_KEY, activeWorkspaceId, filters.page],
+    queryFn: () => getUserConnectors('destination', filters.page as string, '10'),
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     enabled: activeWorkspaceId > 0,
@@ -68,6 +70,15 @@ const DestinationsList = (): JSX.Element | null => {
             onRowClick={(row) => navigate(`/setup/destinations/${row?.original?.id}`)}
           />
         </Box>
+        {data?.links && data.data && data.data.length > 0 && (
+          <Box display='flex' justifyContent='center' mt='20px'>
+            <Pagination
+              links={data.links}
+              currentPage={filters.page ? Number(filters.page) : 1}
+              handlePageChange={(page) => updateFilters({ ...filters, page: page.toString() })}
+            />
+          </Box>
+        )}
       </ContentContainer>
     </Box>
   );

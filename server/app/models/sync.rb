@@ -103,7 +103,14 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def schedule_cron_expression
     return cron_expression if cron_expression?
+    
+    # Always use the user-configured interval
+    # The first sync will be triggered immediately by the workflow
+    # and subsequent syncs will follow this schedule
+    generate_cron_from_interval
+  end
 
+  def generate_cron_from_interval
     case sync_interval_unit.downcase
     when "minutes"
       # Every X minutes: */X * * * *

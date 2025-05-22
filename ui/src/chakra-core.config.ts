@@ -291,7 +291,7 @@ export const defaultExtension = {
   fontWeights: {
     semiBold: 600,
   },
-  brandName: 'Multiwoven',
+  brandName: 'audiencesync',
   logoUrl: '',
   termsOfServiceUrl: 'https://multiwoven.com/terms-of-service',
   privacyPolicyUrl: 'https://multiwoven.com/privacy-policy',

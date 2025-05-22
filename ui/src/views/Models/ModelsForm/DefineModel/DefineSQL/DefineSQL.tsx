@@ -9,7 +9,7 @@ import { ConvertModelPreviewToTableData } from '@/utils/ConvertToTableData';
 import GenerateTable from '@/components/Table/Table';
 import { TableDataType } from '@/components/Table/types';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
-import { extractData } from '@/utils';
+import { extractData, safeFormatSQL } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { DefineSQLProps } from './types';
 import { UpdateModelPayload } from '@/views/Models/ViewModel/types';
@@ -17,7 +17,6 @@ import ContentContainer from '@/components/ContentContainer';
 import FormFooter from '@/components/FormFooter';
 import { CustomToastStatus } from '@/components/Toast/index';
 import useCustomToast from '@/hooks/useCustomToast';
-import { format } from 'sql-formatter';
 import { autocompleteEntries } from './autocomplete';
 import ModelQueryResults from '../ModelQueryResults';
 import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
@@ -236,7 +235,14 @@ const DefineSQL = ({
                     height='32px'
                     paddingX={3}
                     isDisabled={!runQuery}
-                    onClick={() => setUserQuery(format(userQuery))}
+                    onClick={() => {
+                      try {
+                        setUserQuery(safeFormatSQL(userQuery));
+                      } catch (error) {
+                        console.error('SQL formatting error:', error);
+                        errorToast('Unable to format SQL query. The query may contain invalid SQL syntax.', true, null, true);
+                      }
+                    }}
                   >
                     <Image src={StarsImage} w={6} mr={2} /> Beautify
                   </Button>
@@ -262,8 +268,8 @@ const DefineSQL = ({
                     minimap: {
                       enabled: false,
                     },
-                    formatOnType: true,
-                    formatOnPaste: true,
+                    formatOnType: false,
+                    formatOnPaste: false,
                     autoIndent: 'full',
                     wordBasedSuggestions: 'currentDocument',
                     quickSuggestions: true,

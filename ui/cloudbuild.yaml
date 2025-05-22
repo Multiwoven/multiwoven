@@ -1,0 +1,34 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/multiwoven-ui:$REVISION_ID'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/multiwoven-ui:$_TAG'
+      - '-f'
+      - './ui/Dockerfile'
+      - './ui'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/multiwoven-ui:$REVISION_ID'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/multiwoven-ui:$_TAG'
+
+  - name: "gcr.io/cloud-builders/kubectl"
+    args: ["rollout", "restart", "deployment/multiwoven-ui"]
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=us-east1"
+      - "CLOUDSDK_CONTAINER_CLUSTER=$_CONTAINER_CLUSTER"
+
+images:
+  - 'gcr.io/$PROJECT_ID/multiwoven-ui:$REVISION_ID'
+  - 'gcr.io/$PROJECT_ID/multiwoven-ui:$_TAG'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

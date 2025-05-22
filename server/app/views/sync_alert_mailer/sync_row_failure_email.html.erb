@@ -65,9 +65,9 @@
             <tr>
               <td align="center" style="padding: 12px;">
                 <img
-                  src="https://res.cloudinary.com/dspflukeu/image/upload/v1746630317/Multiwoven/ais-logo_fyn2uv.png"
-                  style="max-width: 178px;"
-                  alt="AI Squared Logo"
+                  src="<%= ENV['API_HOST'] %>/audience-logo.svg"
+                  style="width: 100%; max-width: 178px"
+                  alt="Audiencelab Logo"
                 />
               </td>
             </tr>
@@ -117,14 +117,73 @@
             </tr>
 
             <tr>
-              <td class="footer">
-                <div style="margin-bottom: 8px;">
-                  <a href="#" style="color: #98a2b3; text-decoration: underline;">Our Blog</a> |
-                  <a href="#" style="color: #98a2b3; text-decoration: underline;">Docs</a> |
-                  <a href="#" style="color: #98a2b3; text-decoration: underline;">Contact Us</a>
-                </div>
-                <div>AI Squared, 1300 I Street NW, Suite 400 E, Washington, DC 20005</div>
-                <div>© <%= Time.current.year %> AI Squared. All Rights Reserved.</div>
+              <td style="padding: 12px; text-align: left">
+                <p
+                  style="
+                    color: #98a2b3;
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 400;
+                    line-height: 20px;
+                    margin: 0;
+                  "
+                >
+                </p>
+                <p
+                  style="
+                    color: #101828;
+                    font-size: 14px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-weight: 700;
+                    line-height: 20px;
+                    margin: 0;
+                  "
+                >
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 12px;
+                  text-align: left;
+                  font-size: 12px;
+                  color: #98a2b3;
+                  font-family: Helvetica, Arial, sans-serif;
+                "
+              >
+                <table>
+                  <p style="margin: 0; display: inline; float: left">
+                    <a
+                      href="https://audiencelab.io/category/resources/workshop/"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Our blog</a
+                    >
+                    |
+                    <a
+                      href="https://docs.audiencelab.io/"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Docs</a
+                    >
+                    |
+                    <a
+                      href="https://audiencelab.io/"
+                      style="color: #98a2b3; text-decoration: underline"
+                      >Contact Us</a
+                    >
+                  </p>
+                  <p style="margin: 0; display: inline; float: right">
+                    Audiencelab, 1207 Delaware Ave #390 Wilmington,
+                  </p>
+                </table>
+                <table style="text-align: end">
+                  <p style="margin: 0; display: inline; float: left">
+                    © <%= Time.current.year %> Audiencelab. All Rights Reserved.
+                  </p>
+                  <p style="margin: 0; display: inline; float: right">
+                     DE 19806, Wilmington, Delaware 19806
+                  </p>
+                </table>
               </td>
             </tr>
           </table>

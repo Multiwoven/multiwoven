@@ -109,8 +109,18 @@ module Api
           )
 
           if result.success?
-            @records = result.records.map(&:record).map(&:data)
-            render json: { data: @records }, status: :ok
+            # Check if records is an error message or actual records
+            if result.records.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage) && result.records.log.present?
+              # Handle error case - return the error message
+              render_error(
+                message: result.records.log.message,
+                status: :unprocessable_content
+              )
+            else
+              # Normal case - process records
+              @records = result.records.map(&:record).map(&:data)
+              render json: { data: @records }, status: :ok
+            end
           else
             render_error(
               message: result["error"],

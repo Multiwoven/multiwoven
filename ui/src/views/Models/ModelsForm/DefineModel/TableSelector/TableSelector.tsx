@@ -25,7 +25,7 @@ import SearchBar from '@/components/SearchBar/SearchBar';
 import { useAPIErrorsToast, useErrorToast } from '@/hooks/useErrorToast';
 import RefreshModelCatalog from '../RefreshModelCatalog';
 
-const generateQuery = (table: string) => `SELECT * FROM ${table}`;
+const generateQuery = (table: string) => `SELECT * FROM "${table}"`;
 
 const TableSelector = ({
   hasPrefilledValues = false,

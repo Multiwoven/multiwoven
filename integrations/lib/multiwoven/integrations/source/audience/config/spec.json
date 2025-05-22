@@ -1,0 +1,28 @@
+{
+  "documentation_url": "https://docs.multiwoven.com/integrations/sources/audience",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Audience Source Connector",
+    "type": "object",
+    "required": [
+      "user_id",
+      "audience_id"
+    ],
+    "properties": {
+      "user_id": {
+        "description": "User ID for the audience data",
+        "type": "string",
+        "title": "User ID",
+        "order": 0
+      },
+      "audience_id": {
+        "description": "Audience ID for the data source",
+        "type": "string",
+        "title": "Audience ID",
+        "order": 1
+      }
+    }
+  }
+}

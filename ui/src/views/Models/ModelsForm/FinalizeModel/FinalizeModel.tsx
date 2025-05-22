@@ -82,13 +82,38 @@ const FinalizeModel = (): JSX.Element => {
         });
         navigate('/define/models');
       } else {
-        throw new Error();
+        throw createConnectorResponse?.errors || new Error('Failed to create model');
       }
-    } catch {
+    } catch (error) {
+      let errorMessage = 'Something went wrong while creating Model.';
+
+      // Simple error handling for API errors
+      if (error && typeof error === 'object') {
+        const errorObj = error as Record<string, any>;
+        if (errorObj.model && typeof errorObj.model === 'object') {
+          // Handle specific case where error is { model: {...} }
+          const modelErrors = [];
+          const modelObj = errorObj.model as Record<string, any>;
+          for (const key in modelObj) {
+            modelErrors.push(`${key}: ${modelObj[key]}`);
+          }
+          errorMessage = modelErrors.join(', ');
+        } else {
+          // Try to create a readable message from the error object
+          const errorParts = [];
+          for (const key in errorObj) {
+            errorParts.push(`${key}: ${JSON.stringify(errorObj[key])}`);
+          }
+          if (errorParts.length > 0) {
+            errorMessage = errorParts.join(', ');
+          }
+        }
+      }
+
       showToast({
         status: CustomToastStatus.Error,
         title: 'An error occurred.',
-        description: 'Something went wrong while creating Model.',
+        description: errorMessage,
         position: 'bottom-right',
         isClosable: true,
       });
