@@ -4,7 +4,7 @@
     "title": "AWS Sagemaker Model",
     "connector_type": "source",
     "category": "AI Model",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/aws_sagemaker-model",
     "github_issue_label": "source-aws-sagemaker-model",
     "icon": "icon.svg",
     "license": "MIT",

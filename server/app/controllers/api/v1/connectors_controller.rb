@@ -7,11 +7,11 @@ module Api
       include Connectors
       include AuditLogger
       include ResourceLinkBuilder
-      before_action :set_connector, only: %i[show update destroy discover query_source]
+      before_action :set_connector, only: %i[show update destroy discover query_source execute_model]
       # TODO: Enable this once we have query validation implemented for all the connectors
       # before_action :validate_query, only: %i[query_source]
       # TODO: Enable this for ai_ml sources
-      before_action :validate_catalog, only: %i[query_source]
+      before_action :validate_catalog, only: %i[query_source execute_model]
       after_action :event_logger
       after_action :create_audit_log, only: %i[create update destroy]
 
@@ -121,6 +121,31 @@ module Api
               @records = result.records.map(&:record).map(&:data)
               render json: { data: @records }, status: :ok
             end
+          else
+            render_error(
+              message: result["error"],
+              status: :unprocessable_content
+            )
+          end
+        else
+          render_error(
+            message: "Connector is not a source",
+            status: :unprocessable_content
+          )
+        end
+      end
+
+      def execute_model
+        authorize @connector
+        if @connector.source?
+          result = ExecuteModel.call(
+            connector: @connector,
+            payload: params[:payload]
+          )
+
+          if result.success?
+            @records = result.records.map(&:record).map(&:data)
+            render json: { data: @records }, status: :ok
           else
             render_error(
               message: result["error"],

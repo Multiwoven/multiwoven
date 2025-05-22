@@ -4,7 +4,7 @@
     "title": "PostgreSQL",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/postgresql",
     "github_issue_label": "source-postgresql",
     "icon": "icon.svg",
     "license": "MIT",

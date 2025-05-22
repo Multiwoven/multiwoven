@@ -4,7 +4,7 @@
     "title": "Microsoft Excel",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/microsoft_excel",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/microsoft-excel",
     "github_issue_label": "destination-microsoft-excel",
     "icon": "icon.svg",
     "license": "MIT",

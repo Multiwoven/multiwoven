@@ -4,7 +4,7 @@
     "title": "AIS Data Store",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/ais_data_store",
     "github_issue_label": "destination-ais-data-store",
     "icon": "icon.svg",
     "license": "MIT",

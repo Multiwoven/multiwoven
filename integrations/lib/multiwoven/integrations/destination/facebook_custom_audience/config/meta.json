@@ -4,7 +4,7 @@
     "title": "Facebook Custom Audiences",
     "connector_type": "destination",
     "category": "Ad-Tech",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/adtech/facebook-ads",
     "github_issue_label": "destination-facebook",
     "icon": "icon.svg",
     "license": "MIT",

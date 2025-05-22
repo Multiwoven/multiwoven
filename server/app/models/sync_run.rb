@@ -28,6 +28,7 @@ class SyncRun < ApplicationRecord
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
   has_many :sync_records, dependent: :nullify
+  has_many :sync_files, dependent: :destroy
 
   after_initialize :set_defaults, if: :new_record?
   after_discard :perform_post_discard_sync_run
@@ -103,6 +104,11 @@ class SyncRun < ApplicationRecord
     sync.complete!
   end
 
+  def update_failure!
+    failed!
+    sync.failed!
+  end
+
   def send_status_email
     return unless notification_email_enabled?
 
@@ -121,6 +127,13 @@ class SyncRun < ApplicationRecord
 
   def status_changed_to_failure?
     saved_change_to_status? && (status == "failed")
+  end
+
+  def update_status_post_workflow
+    return if terminal_status?
+
+    update!(finished_at: Time.zone.now)
+    update_failure!
   end
 
   def queue_sync_alert

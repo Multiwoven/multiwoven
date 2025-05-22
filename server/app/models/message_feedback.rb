@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class MessageFeedback < ApplicationRecord
+  acts_as_taggable_on :tags
+
   validates :data_app_id, presence: true
   validates :visual_component_id, presence: true
   validates :model_id, presence: true
   validates :feedback_type, presence: true
   validates :chatbot_interaction, presence: true
+
+  counter_culture %i[visual_component data_app]
 
   belongs_to :data_app
   belongs_to :visual_component

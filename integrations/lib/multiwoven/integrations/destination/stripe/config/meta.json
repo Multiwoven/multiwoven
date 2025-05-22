@@ -4,7 +4,7 @@
     "title": "Stripe",
     "connector_type": "destination",
     "category": "Payments",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/payment/stripe",
     "github_issue_label": "destination-stripe",
     "icon": "icon.svg",
     "license": "MIT",

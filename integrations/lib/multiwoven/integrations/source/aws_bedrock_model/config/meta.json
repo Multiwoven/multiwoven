@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "AwsBedrockModel",
+    "title": "AWS Bedrock Model",
+    "connector_type": "source",
+    "category": "AI Model",
+    "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/aws_bedrock-model",
+    "github_issue_label": "source-aws-bedrock-model",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

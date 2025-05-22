@@ -21,7 +21,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
-class Sync < ApplicationRecord
+class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include AASM
   include Discard::Model
 
@@ -48,6 +48,7 @@ class Sync < ApplicationRecord
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
   has_many :sync_runs, dependent: :destroy
+  has_many :sync_files, dependent: :destroy
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?

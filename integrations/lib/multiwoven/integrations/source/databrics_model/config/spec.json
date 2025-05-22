@@ -1,5 +1,5 @@
 {
-    "documentation_url": "https://docs.multiwoven.com/integrations/sources/databricks",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks-model",
     "stream_type": "user_defined",
     "connector_query_type": "ai_ml",
     "connection_specification": {
@@ -29,19 +29,33 @@
           "type": "string",
           "order": 2
         },
+        "config": {
+          "title": "",
+          "type": "object",
+          "properties": {
+            "timeout": {
+              "type": "string",
+              "default": "30",
+              "title": "HTTP Timeout",
+              "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+              "order": 0
+            }
+          },
+          "order": 3
+        },
         "request_format": {
           "title": "Request Format",
           "description": "Sample Request Format",
           "type": "string",
           "x-request-format": true,
-          "order": 3
+          "order": 4
         },
         "response_format": {
           "title": "Response Format",
           "description": "Sample Response Format",
           "type": "string",
           "x-response-format": true,
-          "order": 4
+          "order": 5
         }
       }
     }

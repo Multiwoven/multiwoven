@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "json_schema": { "type": "object" },
+    "embedding_config": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["api_key", "model"]
+    },
+    "chunk_config": {
+      "type": "object",
+      "properties": {
+        "chunk_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "chunk_overlap": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["chunk_size", "chunk_overlap"]
+    }
+  },
+  "required": ["embedding_config", "chunk_config"]
+}

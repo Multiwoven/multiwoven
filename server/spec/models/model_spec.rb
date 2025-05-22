@@ -73,10 +73,24 @@ RSpec.describe Model, type: :model do
           query_type: :dynamic_sql, connector_id: source.id,
           workspace_id: source.workspace_id
         )
+        unstructured_model = Model.new(
+          name: "test_model",
+          query_type: :unstructured, connector_id: source.id,
+          workspace_id: source.workspace_id
+        )
+        vector_search_model = Model.new(
+          name: "test_model",
+          query_type: :vector_search, connector_id: source.id,
+          workspace_id: source.workspace_id
+        )
         ai_ml_model.configuration = nil
         dynamic_sql_model.configuration = nil
+        unstructured_model.configuration = nil
+        vector_search_model.configuration = nil
         expect(ai_ml_model).not_to be_valid
         expect(dynamic_sql_model).not_to be_valid
+        expect(unstructured_model).not_to be_valid
+        expect(vector_search_model).not_to be_valid
       end
 
       context "validates json schema of configuration" do
@@ -119,6 +133,128 @@ RSpec.describe Model, type: :model do
               configuration: { "harvesters": [], "json_schema": {} }
             )
             expect(dynamic_sql_model).to be_valid
+          end
+        end
+
+        context "validates json schema of unstructured models" do
+          it "returns invalid for unstructured models without valid configuration" do
+            unstructured_model = Model.new(
+              name: "test_model",
+              query_type: :unstructured, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "embedding_config" => {
+                  "api_key" => "test-api-key",
+                  "model" => "text-embedding-ada-002"
+                },
+                "chunk_config" => {
+                  "chunk_size" => 1000,
+                  "chunk_overlap" => 200
+                }
+              }
+            )
+            expect(unstructured_model).to be_valid
+          end
+
+          it "returns invalid for unstructured models without embedding_config" do
+            unstructured_model = Model.new(
+              name: "test_model",
+              query_type: :unstructured, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "harvesters" => [],
+                "chunk_config" => {
+                  "chunk_size" => 1000,
+                  "chunk_overlap" => 200
+                }
+              }
+            )
+            expect(unstructured_model).not_to be_valid
+          end
+
+          it "returns invalid for unstructured models without chunk_config" do
+            unstructured_model = Model.new(
+              name: "test_model",
+              query_type: :unstructured, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "harvesters" => [],
+                "embedding_config" => {
+                  "api_key" => "test-api-key",
+                  "model" => "text-embedding-ada-002"
+                }
+              }
+            )
+            expect(unstructured_model).not_to be_valid
+          end
+
+          it "returns valid for unstructured models with valid configuration" do
+            unstructured_model = Model.new(
+              name: "test_model",
+              query_type: :unstructured, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "embedding_config" => {
+                  "api_key" => "test-api-key",
+                  "model" => "text-embedding-ada-002"
+                },
+                "chunk_config" => {
+                  "chunk_size" => 1000,
+                  "chunk_overlap" => 200
+                }
+              }
+            )
+            expect(unstructured_model).to be_valid
+          end
+        end
+
+        context "validates json schema of vector_search models" do
+          it "returns invalid for vector_search models without embedding_config" do
+            vector_search_model = Model.new(
+              name: "test_model",
+              query_type: :vector_search, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "chunk_config" => {
+                  "chunk_size" => 1000,
+                  "chunk_overlap" => 200
+                }
+              }
+            )
+            expect(vector_search_model).not_to be_valid
+          end
+
+          it "returns invalid for vector_search models without chunk_config" do
+            vector_search_model = Model.new(
+              name: "test_model",
+              query_type: :vector_search, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "harvesters" => [],
+                "embedding_config" => {
+                  "api_key" => "test-api-key",
+                  "model" => "text-embedding-ada-002"
+                }
+              }
+            )
+            expect(vector_search_model).not_to be_valid
+          end
+
+          it "returns valid for vector_search models with valid configuration" do
+            vector_search_model = Model.new(
+              name: "test_model",
+              query_type: :vector_search, connector_id: source.id,
+              workspace_id: source.workspace_id,
+              configuration: {
+                "harvesters" => [],
+                "json_schema" => {},
+                "embedding_config" => {
+                  "api_key" => "test-api-key",
+                  "model" => "text-embedding-ada-002"
+                }
+              }
+            )
+            expect(vector_search_model).to be_valid
           end
         end
       end
@@ -181,7 +317,7 @@ RSpec.describe Model, type: :model do
   describe "query_type" do
     it "defines query_type enum with specified values" do
       expect(Model.query_types).to eq({ "raw_sql" => 0, "dbt" => 1, "soql" => 2, "table_selector" => 3, "ai_ml" => 4,
-                                        "dynamic_sql" => 5 })
+                                        "dynamic_sql" => 5, "unstructured" => 6, "vector_search" => 7 })
     end
   end
 

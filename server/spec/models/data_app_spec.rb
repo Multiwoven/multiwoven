@@ -17,6 +17,8 @@ RSpec.describe DataApp, type: :model do
     it { should have_many(:models).through(:visual_components) }
     it { should have_many(:data_app_sessions).dependent(:destroy) }
     it { should have_many(:feedbacks).through(:visual_components) }
+    it { should have_many(:chat_messages).through(:visual_components) }
+    it { should have_many(:message_feedbacks).through(:visual_components) }
 
     it "has a counter cache for sessions and feedbacks" do
       data_app = create(:data_app)
@@ -30,12 +32,28 @@ RSpec.describe DataApp, type: :model do
       end.to change { data_app.reload.feedbacks_count }.by(1)
 
       expect do
+        create(:chat_message, visual_component: data_app.visual_components.first)
+      end.to change { data_app.reload.chat_messages_count }.by(1)
+
+      expect do
+        create(:message_feedback, visual_component: data_app.visual_components.first)
+      end.to change { data_app.reload.message_feedbacks_count }.by(1)
+
+      expect do
         data_app.data_app_sessions.first.destroy
       end.to change { data_app.reload.data_app_sessions_count }.by(-1)
 
       expect do
         data_app.visual_components.first.feedbacks.first.destroy
       end.to change { data_app.reload.feedbacks_count }.by(-1)
+
+      expect do
+        data_app.visual_components.first.chat_messages.first.destroy
+      end.to change { data_app.reload.chat_messages_count }.by(-1)
+
+      expect do
+        data_app.visual_components.first.message_feedbacks.first.destroy
+      end.to change { data_app.reload.message_feedbacks_count }.by(-1)
     end
   end
 

@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/microsoft_excel",
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/microsoft-excel",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {

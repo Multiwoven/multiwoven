@@ -1,0 +1,58 @@
+{
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/aws_bedrock-model",
+  "stream_type": "user_defined",
+  "connector_query_type": "ai_ml",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AWS Bedrock Model",
+    "type": "object",
+    "required": ["access_key", "secret_access_key", "region", "model_id", "request_format", "response_format"],
+    "properties": {
+      "access_key": {
+        "description": "The AWS Access Key ID to use for authentication",
+        "type": "string",
+        "title": "Personal Access Key",
+        "order": 0
+      },
+      "secret_access_key": {
+        "description": "The AWS Secret Access Key to use for authentication",
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Secret Access Key",
+        "order": 1
+      },
+      "region": {
+        "description": "AWS region",
+        "type": "string",
+        "title": "Region",
+        "order": 2
+      },
+      "model_id": {
+        "description": "Your select Model ID from AWS Bedrock",
+        "type": "string",
+        "title": "Model ID",
+        "order": 3
+      },
+      "inference_profile": {
+        "description": "Inference Profile ARN for Model in AWS Bedrock (ignore if model does not have one)",
+        "type": "string",
+        "title": "Inference Profile ARN",
+        "order": 4
+      },
+      "request_format": {
+        "description": "Sample Request Format",
+        "type": "string",
+        "title": "Request Format",
+        "x-request-format": true,
+        "order": 5
+      },
+      "response_format": {
+        "description": "Sample Response Format",
+        "type": "string",
+        "title": "Response Format",
+        "x-response-format": true,
+        "order": 6
+      }
+    }
+  }
+}

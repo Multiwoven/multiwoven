@@ -15,6 +15,8 @@ class DataApp < ApplicationRecord
   has_many :models, through: :visual_components
   has_many :feedbacks, through: :visual_components
   has_many :data_app_sessions, dependent: :destroy
+  has_many :chat_messages, through: :visual_components
+  has_many :message_feedbacks, through: :visual_components
 
   after_initialize :set_default_status, if: :new_record?
 

@@ -4,7 +4,7 @@
     "title": "Microsoft SQL",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/ms_sql",
     "github_issue_label": "destination-mssql",
     "icon": "icon.svg",
     "license": "MIT",

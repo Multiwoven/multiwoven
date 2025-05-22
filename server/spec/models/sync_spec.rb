@@ -37,6 +37,7 @@ RSpec.describe Sync, type: :model do
   it { should belong_to(:destination).class_name("Connector") }
   it { should belong_to(:model) }
   it { should have_many(:sync_runs).dependent(:destroy) }
+  it { should have_many(:sync_files).dependent(:destroy) }
 
   context "when schedule_type is interval" do
     before { allow(subject).to receive(:interval?).and_return(true) }

@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "harvesters": { "type": "array" },
+    "json_schema": { "type": "object" },
+    "embedding_config": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["api_key", "model"]
+    }
+  },
+  "required": ["harvesters", "json_schema", "embedding_config"]
+}

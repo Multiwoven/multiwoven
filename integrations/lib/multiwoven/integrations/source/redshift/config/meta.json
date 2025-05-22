@@ -4,7 +4,7 @@
     "title": "Amazon Redshift",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/redshift",
     "github_issue_label": "source-redshift",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "Snowflake",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/snowflake",
     "github_issue_label": "source-snowflake",
     "icon": "icon.svg",
     "license": "MIT",

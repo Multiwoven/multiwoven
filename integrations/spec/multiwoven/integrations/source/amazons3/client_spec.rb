@@ -56,6 +56,24 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
   let(:sts_client) { instance_double(Aws::STS::Client) }
   let(:conn) { instance_double(DuckDB::Connection) }
 
+  let(:unstructured_config) do
+    {
+      "auth_type": "user",
+      "region": "us-east-1",
+      "bucket": "unstructured-bucket",
+      "access_id": "accessid",
+      "secret_access": "secretaccess",
+      "data_type": "unstructured",
+      "path": "test/",
+      "arn": "",
+      "external_id": ""
+    }
+  end
+
+  let(:s3_resource) { instance_double(Aws::S3::Resource) }
+  let(:s3_bucket) { instance_double(Aws::S3::Bucket) }
+  let(:s3_objects) { instance_double(Aws::S3::ObjectSummary) }
+
   describe "#check_connection" do
     before do
       stub_request(:get, "https://ai2-model-staging.s3.amazonaws.com/?location").to_return(status: 200, body: "", headers: {})
@@ -94,6 +112,35 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         result = message.connection_status
         expect(result.status).to eq("failed")
         expect(result.message).to include("Connection failed")
+      end
+    end
+
+    context "when checking unstructured data connection" do
+      let(:s3_object_collection) { instance_double(Aws::S3::ObjectSummary::Collection) }
+
+      before do
+        allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
+        allow(s3_resource).to receive(:bucket).and_return(s3_bucket)
+        allow(s3_bucket).to receive(:objects).and_return(s3_object_collection)
+        allow(s3_object_collection).to receive(:limit).with(1).and_return(s3_object_collection)
+        allow(s3_object_collection).to receive(:first).and_return(s3_objects)
+      end
+
+      it "returns a succeeded connection status for unstructured data" do
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        message = client.check_connection(unstructured_config)
+        result = message.connection_status
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
+      end
+
+      it "returns a failed connection status when unstructured data access fails" do
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow(s3_bucket).to receive(:objects).and_raise(StandardError, "Access Denied")
+        message = client.check_connection(unstructured_config)
+        result = message.connection_status
+        expect(result.status).to eq("failed")
+        expect(result.message).to include("Access Denied")
       end
     end
   end
@@ -176,6 +223,137 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       )
       client.read(s_config)
     end
+
+    context "when reading unstructured data" do
+      let(:unstructured_sync_config) do
+        {
+          "source": {
+            "name": "AmazonS3",
+            "type": "source",
+            "connection_specification": unstructured_config
+          },
+          "destination": sync_config[:destination],
+          "model": {
+            "name": "List Files",
+            "query": "list_files",
+            "query_type": "raw_sql",
+            "primary_key": "file_path"
+          },
+          "stream": {
+            "name": "unstructured_files",
+            "action": "fetch",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "file_name": { "type": "string" },
+                "file_path": { "type": "string" },
+                "size": { "type": "integer" },
+                "created_date": { "type": "string" },
+                "modified_date": { "type": "string" }
+              }
+            }
+          },
+          "sync_id": "1",
+          "sync_run_id": "123",
+          "sync_mode": "incremental",
+          "cursor_field": "",
+          "destination_sync_mode": "upsert"
+        }
+      end
+
+      before do
+        allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
+        allow(s3_resource).to receive(:bucket).and_return(s3_bucket)
+        allow(client).to receive(:unstructured_data?).and_return(true)
+      end
+
+      it "lists files successfully" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+        allow(s3_bucket).to receive(:objects).and_return([s3_objects])
+        allow(s3_objects).to receive(:key).and_return("test/file.pdf")
+        allow(s3_objects).to receive(:content_length).and_return(1024)
+        allow(s3_objects).to receive(:last_modified).and_return(Time.now)
+
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:file_name]).to eq("file.pdf")
+        expect(records.first.record.data[:file_path]).to eq("test/file.pdf")
+        expect(records.first.record.data[:size]).to eq(1024)
+      end
+
+      it "downloads file to temp path when FILE_DOWNLOAD_PATH is not set" do
+        unstructured_sync_config[:model][:query] = 'download_file "test/file.pdf"'
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+
+        temp_file = instance_double(Tempfile, path: "/tmp/s3_file/sync_runs/123/file.pdf")
+        allow(Tempfile).to receive(:new).and_return(temp_file)
+
+        s3_object = instance_double(Aws::S3::Object)
+        allow(s3_bucket).to receive(:object).and_return(s3_object)
+        allow(s3_object).to receive(:get)
+        allow(s3_object).to receive(:content_length).and_return(1024)
+        allow(s3_object).to receive(:last_modified).and_return(Time.now)
+
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:local_path]).to eq("/tmp/s3_file/sync_runs/123/file.pdf")
+        expect(records.first.record.data[:file_type]).to eq("pdf")
+      end
+
+      context "when FILE_DOWNLOAD_PATH is set" do
+        it "downloads file to custom path with sync_runs directory" do
+          # Stub all ENV calls with a default value
+          allow(ENV).to receive(:[]).and_return(nil)
+          # Then specifically allow FILE_DOWNLOAD_PATH
+          allow(ENV).to receive(:[]).with("FILE_DOWNLOAD_PATH").and_return("/custom/download/path")
+
+          unstructured_sync_config[:model][:query] = 'download_file "test/file.pdf"'
+          s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+
+          s3_object = instance_double(Aws::S3::Object)
+          allow(s3_bucket).to receive(:object).and_return(s3_object)
+          allow(s3_object).to receive(:get)
+          allow(s3_object).to receive(:content_length).and_return(1024)
+          allow(s3_object).to receive(:last_modified).and_return(Time.now)
+
+          records = client.read(s_config)
+          expect(records).to be_an(Array)
+          expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(records.first.record.data[:local_path]).to eq("/custom/download/path/syncs/1/file.pdf")
+          expect(records.first.record.data[:file_type]).to eq("pdf")
+        end
+      end
+
+      it "handles file not found error" do
+        unstructured_sync_config[:model][:query] = 'download_file "test/nonexistent.pdf"'
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+
+        s3_object = instance_double(Aws::S3::Object)
+        allow(s3_bucket).to receive(:object).and_return(s3_object)
+        allow(s3_object).to receive(:get).and_raise(Aws::S3::Errors::NoSuchKey.new(nil, nil))
+
+        result = client.read(s_config)
+        expect(result).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(result.type).to eq("log")
+        expect(result.log.level).to eq("error")
+        expect(result.log.message).to eq("File not found: test/nonexistent.pdf")
+        expect(result.log.name).to eq("AMAZONS3:READ:EXCEPTION")
+      end
+
+      it "handles invalid command" do
+        unstructured_sync_config[:model][:query] = "invalid_command"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+
+        result = client.read(s_config)
+        expect(result).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(result.type).to eq("log")
+        expect(result.log.level).to eq("error")
+        expect(result.log.message).to eq("Invalid command. Supported commands: list_files, download_file <file_path>")
+        expect(result.log.name).to eq("AMAZONS3:READ:EXCEPTION")
+      end
+    end
   end
 
   describe "#discover" do
@@ -227,6 +405,16 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         }
       )
       client.discover(sync_config[:source][:connection_specification])
+    end
+
+    context "when discovering unstructured data" do
+      it "returns unstructured stream for unstructured data" do
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        message = client.discover(unstructured_config)
+        expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.streams).to be_an(Array)
+        expect(message.catalog.streams.first).to be_a(Multiwoven::Integrations::Protocol::Stream)
+      end
     end
   end
 

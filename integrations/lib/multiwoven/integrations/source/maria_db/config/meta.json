@@ -4,7 +4,7 @@
     "title": "Maria DB",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.squared.ai/guides/data-integration/sources/mariadb",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/maria_db",
     "github_issue_label": "source-maria-db",
     "icon": "icon.svg",
     "license": "MIT",

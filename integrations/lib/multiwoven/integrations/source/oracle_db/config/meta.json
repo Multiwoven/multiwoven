@@ -4,7 +4,7 @@
     "title": "Oracle DB",
     "connector_type": "source",
     "category": "Database",
-    "documentation_url": "https://docs.squared.ai/guides/data-integration/source/oracle",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/oracle",
     "github_issue_label": "source-oracle",
     "icon": "icon.svg",
     "license": "MIT",

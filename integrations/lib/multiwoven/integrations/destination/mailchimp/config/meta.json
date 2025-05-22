@@ -4,7 +4,7 @@
     "title": "Mailchimp",
     "connector_type": "destination",
     "category": "Marketing Automation",
-    "documentation_url": "https://docs.multiwoven.com/destinations/crm/mailchimp",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/marketing-automation/mailchimp",
     "github_issue_label": "destination-mailchimp",
     "icon": "icon.svg",
     "license": "MIT",
