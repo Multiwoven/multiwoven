@@ -5,7 +5,7 @@
     "connector_type": "destination",
     "connector_sub_type": "api",
     "category": "Retail",
-    "documentation_url": "https://docs.multiwoven.com/destinations/retail/salesforce_consumer_goods_cloud",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/retail/salesforce-consumer-goods-cloud",
     "github_issue_label": "destination-salesforce-consumer-goods-cloud",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
       "title": "Databricks Data Warehouse",
       "connector_type": "source",
       "category": "Data Warehouse",
-      "documentation_url": "https://docs.mutliwoven.com",
+      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks",
       "github_issue_label": "source-databricks",
       "icon": "icon.svg",
       "license": "MIT",

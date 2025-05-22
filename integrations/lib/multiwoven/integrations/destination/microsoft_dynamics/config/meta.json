@@ -4,7 +4,7 @@
     "title": "Microsoft Dynamics",
     "connector_type": "destination",
     "category": "CRM",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/microsoft_dynamics",
     "github_issue_label": "destination-microsoft-dynamics",
     "icon": "icon.svg",
     "license": "MIT",

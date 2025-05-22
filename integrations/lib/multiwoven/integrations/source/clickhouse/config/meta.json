@@ -4,7 +4,7 @@
     "title": "ClickHouse",
     "connector_type": "source",
     "category": "Data Warehouse",
-    "documentation_url": "https://docs.multiwoven.com/integrations/sources/clickhouse",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/clickhouse",
     "github_issue_label": "source-clickhouse",
     "icon": "icon.svg",
     "license": "MIT",

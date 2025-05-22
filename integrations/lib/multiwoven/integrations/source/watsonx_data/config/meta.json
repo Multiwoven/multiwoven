@@ -4,7 +4,7 @@
       "title": "WatsonX Data Endpoint",
       "connector_type": "source",
       "category": "Data Warehouse",
-      "documentation_url": "https://docs.mutltiwoven.com",
+      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/watsonx_data",
       "github_issue_label": "source-watsonx-data-endpoint",
       "icon": "icon.svg",
       "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "Klaviyo",
     "connector_type": "destination",
     "category": "Marketing Automation",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/marketing-automation/klaviyo",
     "github_issue_label": "destination-klaviyo",
     "icon": "icon.svg",
     "license": "MIT",

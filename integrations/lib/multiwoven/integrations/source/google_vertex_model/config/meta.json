@@ -4,7 +4,7 @@
     "title": "Google Vertex",
     "connector_type": "source",
     "category": "AI Model",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/google_vertex-model",
     "github_issue_label": "source-vertex",
     "icon": "icon.svg",
     "license": "MIT",

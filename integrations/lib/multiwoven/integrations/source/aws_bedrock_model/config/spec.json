@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/activation/ai-ml-sources/aws_bedrock-model",
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/aws_bedrock-model",
   "stream_type": "user_defined",
   "connector_query_type": "ai_ml",
   "connection_specification": {
