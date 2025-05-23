@@ -5,6 +5,9 @@ class AddMissingUniqueIndices < ActiveRecord::Migration[7.1]
   disable_ddl_transaction!
   
   def self.up
+    # Increase statement timeout to avoid lock timeout issues
+    execute('SET statement_timeout = 300000') # 5 minutes
+
     add_index ActsAsTaggableOn.tags_table, :name, unique: true, algorithm: :concurrently
 
     remove_index ActsAsTaggableOn.taggings_table, :tag_id if index_exists?(ActsAsTaggableOn.taggings_table, :tag_id)
