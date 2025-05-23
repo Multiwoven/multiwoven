@@ -5,6 +5,7 @@ class AddMissingUniqueIndices < ActiveRecord::Migration[7.1]
   disable_ddl_transaction!
   
   def self.up
+    remove_index ActsAsTaggableOn.tags_table, name: 'index_tags_on_name'
     add_index ActsAsTaggableOn.tags_table, :name, unique: true, algorithm: :concurrently
 
     remove_index ActsAsTaggableOn.taggings_table, :tag_id if index_exists?(ActsAsTaggableOn.taggings_table, :tag_id)
