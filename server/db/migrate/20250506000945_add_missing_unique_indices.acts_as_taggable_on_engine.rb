@@ -6,7 +6,7 @@ class AddMissingUniqueIndices < ActiveRecord::Migration[7.1]
   
   def self.up
     # Increase statement timeout to avoid lock timeout issues
-    execute('SET statement_timeout = 300000') # 5 minutes
+    safety_assured { execute('SET statement_timeout = 300000') } # 5 minutes
 
     add_index ActsAsTaggableOn.tags_table, :name, unique: true, algorithm: :concurrently
 
