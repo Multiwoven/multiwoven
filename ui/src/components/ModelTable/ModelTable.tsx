@@ -9,29 +9,33 @@ import { ApiResponse } from '@/services/common';
 
 type ModelTableProps = {
   handleOnRowClick: (args: unknown) => void;
+  models?: GetAllModelsResponse[];
 };
 
-const ModelTable = ({ handleOnRowClick }: ModelTableProps): JSX.Element => {
+const ModelTable = ({ handleOnRowClick, models }: ModelTableProps): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
 
+  // If models are not provided as props, fetch them
   const { data } = useQueryWrapper<ApiResponse<GetAllModelsResponse[]>, Error>(
     ['models', activeWorkspaceId],
     () => getAllModels({ type: AllDataModels }),
     {
       refetchOnMount: true,
       refetchOnWindowFocus: false,
+      enabled: !models, // Only fetch if models are not provided
     },
   );
 
-  const models = data?.data;
+  const modelData = models || data?.data;
 
-  if (!models) {
+  if (!modelData) {
     return <Loader />;
   }
 
-  if (models.length === 0) return <NoModels />;
+  if (modelData.length === 0) return <NoModels />;
 
-  const values = ConvertToTableData(addIconDataToArray(models), [
+
+  const values = ConvertToTableData(addIconDataToArray(modelData), [
     { name: 'Name', key: 'name', showIcon: true },
     { name: 'Query Type', key: 'query_type' },
     { name: 'Updated At', key: 'updated_at' },
