@@ -7,7 +7,13 @@
 class ChangeCollationForTagNames < ActiveRecord::Migration[7.1]
   def up
     if ActsAsTaggableOn::Utils.using_mysql?
-      execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_bin;")
+      safety_assured { execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_bin;") }
+    end
+  end
+
+  def down
+    if ActsAsTaggableOn::Utils.using_mysql?
+      safety_assured { execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci;") }
     end
   end
 end
