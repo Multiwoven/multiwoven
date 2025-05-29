@@ -502,6 +502,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
   describe "POST /api/v1/connectors/id/query_source" do
     let(:connector) { create(:connector, connector_type: "source", workspace:, connector_name: "AmazonS3") }
+    let!(:ai_ml_connector) { create(:connector, connector_type: "source", workspace:, connector_category: "AI Model") }
     let(:query) { "SELECT * FROM table_name" }
     let(:limit) { 50 }
     let(:record1) do
@@ -513,14 +514,43 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
                                                             emitted_at: DateTime.now.to_i).to_multiwoven_message
     end
 
+    let(:record3) do
+      Multiwoven::Integrations::Protocol::RecordMessage.new(
+        data: {
+          "id" => "chatcmpl-1",
+          "object" => "chat.completion",
+          "model" => "gpt-4o-mini",
+          "choices" => [
+            {
+              "index" => 0,
+              "message" => {
+                "role" => "assistant",
+                "content" => "Hello!"
+              }
+            }
+          ]
+        },
+        emitted_at: Time.current.to_i
+      ).to_multiwoven_message
+    end
+
     let(:request_body) do
       {
         query: "SELECT * FROM table_name"
       }
     end
 
+    let(:ai_ml_request_body) do
+      {
+        payload: '{"model":"gpt-4o-mini",' \
+                 '"messages":[{"role":"user","content":"Hi"}],' \
+                 '"stream":false}'
+      }
+    end
+
     before do
       create(:catalog, connector_id: connector.id, workspace:)
+      create(:catalog, connector_id: ai_ml_connector.id, workspace:)
     end
 
     context "when it is an unauthenticated user" do
@@ -539,6 +569,16 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
+      end
+
+      it "returns success status for a valid query" do
+        allow(Connectors::ExecuteModel).to receive(:call)
+          .and_return(double(:context, success?: true, records: [record3]))
+        post "/api/v1/connectors/#{ai_ml_connector.id}/execute_model", params: ai_ml_request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:data]).to eq([record3.record.data])
       end
 
       it "returns success status for a valid query for member role" do

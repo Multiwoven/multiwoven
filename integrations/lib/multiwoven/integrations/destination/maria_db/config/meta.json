@@ -4,7 +4,7 @@
     "title": "Maria DB",
     "connector_type": "destination",
     "category": "Database",
-    "documentation_url": "https://docs.squared.ai/guides/data-integration/destination/mariadb",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/maria_db",
     "github_issue_label": "destination-maria-db",
     "icon": "icon.svg",
     "license": "MIT",

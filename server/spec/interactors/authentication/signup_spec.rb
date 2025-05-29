@@ -153,6 +153,24 @@ RSpec.describe Authentication::Signup, type: :interactor do
         end
       end
 
+      context "when provided with an existing email address" do
+        let!(:existing_user) { create(:user, email: "user@example.com") }
+        let(:params) do
+          {
+            name: "User",
+            email: "user@example.com",
+            password: "Password@123",
+            password_confirmation: "Password@123"
+          }
+        end
+
+        it "fails" do
+          expect(context).to be_failure
+          expect(context.errors).to include("There's already an account with this email address. " \
+            "Use a different email or Sign In with this address")
+        end
+      end
+
       context "when provided with an existing company name" do
         let!(:existing_organization) { create(:organization, name: "Existing Company") }
         let(:params) do

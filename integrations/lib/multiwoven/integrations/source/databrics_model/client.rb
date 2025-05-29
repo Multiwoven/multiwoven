@@ -54,7 +54,14 @@ module Multiwoven::Integrations::Source
 
         url = build_url(DATABRICKS_SERVING_URL, connection_config)
         token = connection_config[:token]
-        response = send_request(url, token, payload)
+
+        response = send_request(
+          url: url,
+          http_method: HTTP_POST,
+          payload: payload,
+          headers: auth_headers(token),
+          config: connection_config[:config]
+        )
         process_response(response)
       rescue StandardError => e
         handle_exception(e, context: "DATABRICKS MODEL:RUN_MODEL:EXCEPTION", type: "error")
@@ -76,15 +83,6 @@ module Multiwoven::Integrations::Source
       def build_url(url, connection_config)
         format(url, databricks_host: connection_config[:databricks_host],
                     endpoint_name: connection_config[:endpoint])
-      end
-
-      def send_request(url, token, payload)
-        Multiwoven::Integrations::Core::HttpClient.request(
-          url,
-          HTTP_POST,
-          payload: payload,
-          headers: auth_headers(token)
-        )
       end
     end
   end

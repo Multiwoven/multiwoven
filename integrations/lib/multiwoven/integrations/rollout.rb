@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.22.0"
+    VERSION = "0.27.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -26,6 +26,8 @@ module Multiwoven
       WatsonxData
       Anthropic
       Audience
+      AwsBedrockModel
+      GenericOpenAI
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -52,6 +54,8 @@ module Multiwoven
       AISDataStore
       AmazonS3
       MicrosoftDynamics
+      Qdrant
+      PineconeDB
     ].freeze
   end
 end

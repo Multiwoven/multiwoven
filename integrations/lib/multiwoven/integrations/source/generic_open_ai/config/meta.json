@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "GenericOpenAI",
+    "title": "Generic OpenAI Spec Endpoint",
+    "connector_type": "source",
+    "category": "AI Model",
+    "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/generic_open_ai-endpoint",
+    "github_issue_label": "source-generic-open-ai-model",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

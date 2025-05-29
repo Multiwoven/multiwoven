@@ -1,13 +1,30 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/sources/postgresql",
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/postgresql",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Postgresql",
     "type": "object",
-    "required": ["host", "port", "database", "schema"],
+    "required": ["data_type", "host", "port", "database", "schema"],
     "properties": {
+      "data_type": {
+        "description": "Type of data in the database",
+        "type": "string",
+        "title": "Data Format Type",
+        "oneOf": [
+          {
+            "const": "structured",
+            "title": "Tables & Records (Structured)"
+          },
+          {
+            "const": "vector",
+            "title": "Tables & Records containing Vector fields"
+          }
+        ],
+        "default": "structured",
+        "order": 0
+      },
       "credentials": {
         "title": "",
         "type": "object",
@@ -34,35 +51,35 @@
             "order": 2
           }
         },
-        "order": 0
+        "order": 1
       },
       "host": {
         "description": "The hostname or IP address of your PostgreSQL server.",
         "examples": ["127.0.0.1"],
         "type": "string",
         "title": "Host",
-        "order": 1
+        "order": 2
       },
       "port": {
         "description": "The port number for your PostgreSQL server, which defaults to 5432, may vary based on your configuration. ",
         "examples": ["5432"],
         "type": "string",
         "title": "Port",
-        "order": 2
+        "order": 3
       },
       "database": {
         "description": "The specific PostgreSQL database to connect to.",
         "examples": ["POSTGRESQL_DB"],
         "type": "string",
         "title": "Database",
-        "order": 3
+        "order": 4
       },
       "schema": {
         "description": "The schema within the PostgreSQL database.",
         "examples": ["POSTGRESQL_SCHEMA"],
         "type": "string",
         "title": "Schema",
-        "order": 4
+        "order": 5
       }
     }
   }

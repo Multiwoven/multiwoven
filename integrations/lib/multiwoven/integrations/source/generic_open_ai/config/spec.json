@@ -1,0 +1,63 @@
+{
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/generic_open_ai-endpoint",
+  "stream_type": "user_defined",
+  "connector_query_type": "ai_ml",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Generic Open AI Spec Endpoint",
+    "type": "object",
+    "required": ["url", "api_key", "request_format", "response_format"],
+    "properties": {
+      "url": {
+        "type": "string",
+        "title": "Endpoint URL",
+        "description": "The URL of the endpoint that follows the OpenAI API spec.",
+        "default": "https://api.openai.com/v1/chat/completions",
+        "order": 0
+      },
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 1
+      },
+      "is_stream": {
+        "type": "boolean",
+        "title": "Enable streaming",
+        "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
+        "default": false,
+        "order": 1
+      },
+      "config": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "string",
+            "default": "30",
+            "title": "HTTP Timeout",
+            "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+            "order": 0
+          }
+        },
+        "order": 2
+      },
+      "request_format": {
+        "title": "Request Format",
+        "description": "Sample Request Format",
+        "type": "string",
+        "default": "{\"model\":\"gpt-4o-mini\", \"messages\":[{\"role\": \"user\", \"content\": \"What do you know about APIs?\"}], \"stream\": false}",
+        "x-request-format": true,
+        "order": 3
+      },
+      "response_format": {
+        "title": "Response Format",
+        "description": "Sample Response Format",
+        "type": "string",
+        "default": "{\"choices\":[{\"index\": 0, \"delta\":{\"role\": \"assistant\", \"content\": \"APIs, or Application Programming Interfaces, are tools that allow different software applications to communicate with each other. They define a set of rules and protocols for building and interacting with software applications.\"}, \"finish_reason\": \"stop\"}]}",
+        "x-response-format": true,
+        "order": 4
+      }
+    }
+  }
+}

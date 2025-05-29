@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/destinations/productivity-tools/google-sheets-service-account",
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/google-sheets",
   "stream_type": "dynamic",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",

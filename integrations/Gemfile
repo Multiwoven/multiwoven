@@ -81,6 +81,10 @@ gem "MailchimpMarketing"
 
 gem "google-cloud-storage", "~> 1.44"
 
+gem "aws-sdk-bedrockruntime"
+
+gem "pinecone"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

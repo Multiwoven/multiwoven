@@ -4,7 +4,7 @@
     "title": "SFTP",
     "connector_type": "source",
     "category": "File Storage",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/sftp",
     "github_issue_label": "source-sftp",
     "icon": "icon.svg",
     "license": "MIT",

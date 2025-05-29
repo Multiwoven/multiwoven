@@ -4,7 +4,7 @@
     "title": "Airtable",
     "connector_type": "destination",
     "category": "Productivity Tools",
-    "documentation_url": "https://docs.multiwoven.com/destinations/productivity-tools/airtable",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/airtable",
     "github_issue_label": "destination-airtable",
     "icon": "icon.svg",
     "license": "MIT",

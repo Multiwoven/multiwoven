@@ -28,4 +28,8 @@ class ConnectorPolicy < ApplicationPolicy
   def query_source?
     permitted?(:read, :connector)
   end
+
+  def execute_model?
+    permitted?(:read, :connector)
+  end
 end

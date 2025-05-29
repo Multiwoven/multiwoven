@@ -4,7 +4,7 @@
     "title": "WatsonX AI Model Endpoint",
     "connector_type": "source",
     "category": "AI Model",
-    "documentation_url": "https://docs.mutltiwoven.com",
+    "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/watsonx_ai-model",
     "github_issue_label": "source-watsonx-ai-model",
     "icon": "icon.svg",
     "license": "MIT",

@@ -4,7 +4,7 @@
     "title": "Slack",
     "connector_type": "destination",
     "category": "Team Collaboration",
-    "documentation_url": "https://docs.mutliwoven.com",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/team-collaboration/slack",
     "github_issue_label": "destination-slack",
     "icon": "icon.svg",
     "license": "MIT",

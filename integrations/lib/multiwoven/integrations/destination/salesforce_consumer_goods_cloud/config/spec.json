@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/destinations/retail/salesforce_consumer_goods_cloud",
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/retail/salesforce-consumer-goods-cloud",
   "stream_type": "static",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",

@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/sources/amazons3",
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/amazon_s3",
   "stream_type": "dynamic",
   "connector_query_type": "raw_sql",
   "connection_specification": {
@@ -19,8 +19,7 @@
         "region",
         "bucket",
         "access_id",
-        "secret_access",
-        "file_type"
+        "secret_access"
       ]
     },
     "else": {
@@ -29,11 +28,21 @@
         "region",
         "bucket",
         "arn",
-        "external_id",
-        "file_type"
+        "external_id"
       ]
     },
     "properties": {
+      "data_type": {
+        "description": "Type of data in the files",
+        "type": "string",
+        "title": "Data Format Type",
+        "oneOf": [
+          { "const": "structured", "title": "Tables & Records (Structured)" },
+          { "const": "unstructured", "title": "Documents & Files (Unstructured)" }
+        ],
+        "default": "structured",
+        "order": 9
+      },
       "auth_type": {
         "title": "Authentication type",
         "type": "string",

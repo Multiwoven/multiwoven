@@ -75,6 +75,14 @@ module Multiwoven
 
       OPEN_AI_URL = "https://api.openai.com/v1/chat/completions"
       ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+
+      # Bedrock Models
+      MISTRAL_AI_MODEL = %w[
+        mistral.mistral-large-2402-v1:0
+        mistral.mistral-7b-instruct-v0:2
+        mistral.mixtral-8x7b-instruct-v0:1
+        mistral.mistral-small-2402-v1:0
+      ].freeze
     end
   end
 end

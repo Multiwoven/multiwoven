@@ -30,7 +30,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "contains the inviter's name and workspace name in the body" do
       expect(mail.body.encoded)
         .to match("#{inviter.name} has invited you to use AI Squared with them, " \
-          "in a workspace called #{workspace.name}")
+          "in a company called #{workspace.organization.name}")
     end
 
     it "contains the correct sign-up link" do
@@ -39,6 +39,7 @@ RSpec.describe DeviseMailer, type: :mailer do
         ["invited", true],
         ["invited_by", inviter.name],
         ["invited_user", resource.email],
+        ["organization_name", workspace.organization.name],
         ["workspace_id", workspace.id],
         ["workspace_name", workspace.name]
       ]

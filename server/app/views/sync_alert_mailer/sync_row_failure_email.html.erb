@@ -1,151 +1,121 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-  </head>
-  <style>
-    .sync-info-key {
-        font-family: Helvetica;
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      .sync-info-label {
+        color: #667085;
         font-size: 16px;
         font-weight: 400;
-        line-height: 20px;
-        letter-spacing: -0.01em;
-        text-align: left;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
-        width: 112px;
-        height: 20px;
         padding: 6px;
-        color: #667085;
-    }
+        text-align: left;
+      }
 
-    .sync-info-value {
-        font-family: Helvetica;
+      .sync-info-value {
+        color: #101828;
         font-size: 16px;
         font-weight: 700;
-        line-height: 20px;
-        letter-spacing: -0.01em;
-        text-align: left;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
-        width: 200px;
-        height: 20px;
         padding: 6px;
-        color:  #101828;
-    }
-  </style>
-  <body style="margin: 0; text-align: center; width: 100vw; padding: 20px">
-    <table style="margin: 0; padding: 0; border-collapse: collapse">
+        text-align: left;
+      }
+
+      .info-table {
+        width: 100%;
+        margin-top: 20px;
+        border-spacing: 0;
+      }
+
+      .button {
+        background: #00249c;
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #98a2b3;
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .footer a {
+        color: #98a2b3;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width: 100%; border-collapse: collapse;">
       <tr>
-        <td valign="middle">
-          <table
-            style="
-              width: 100%;
-              max-width: 600px;
-              background: #f9fafb;
-              padding: 20px;
-              border-radius: 12px;
-              border: 1px #eaecf0 solid;
-            "
-          >
+        <td align="center">
+          <table style="width: 100%; max-width: 600px; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #eaecf0;">
             <tr>
-              <td style="text-align: center; padding: 12px">
+              <td align="center" style="padding: 12px;">
+                <img
+                  src="<%= ENV['API_HOST'] %>/audience-logo.svg"
+                  style="width: 100%; max-width: 178px"
+                  alt="Audiencelab Logo"
+                />
               </td>
             </tr>
             <tr>
-              <td
-                style="
-                  background: white;
-                  border-radius: 8px;
-                  border: 1px #eaecf0 solid;
-                  padding: 48px 16px;
-                  text-align: center;
-                "
-              >
-                <h1
-                  style="
-                    color:rgb(167, 41, 41);
-                    font-size: 28px;
-                    font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 700;
-                    line-height: 36px;
-                    margin: 0;
-                  "
-                >
-                 Sync run completed with failed rows 
+              <td style="background: white; border-radius: 8px; border: 1px solid #eaecf0; padding: 48px 16px; text-align: center;">
+                <h1 style="color: rgb(167, 41, 41); font-size: 28px; font-weight: 700; margin: 0 0 16px;">
+                  Sync Run Completed with Failed Rows
                 </h1>
-                <p
-                  style="
-                    color: #475467;
-                    font-size: 14px;
-                    font-family: Helvetica, Arial, sans-serif;
-                    font-weight: 400;
-                    line-height: 20px;
-                  "
-                >
-                  <%= "Your sync #{@alert_attrs[:name]} completed, but some rows encountered errors" %>
+                <p style="color: #475467; font-size: 14px; font-weight: 400; margin-bottom: 20px;">
+                  <%= "Your sync #{@alert_attrs[:name]} completed, but some rows encountered errors." %>
                 </p>
-                <a
-                  style="display: inline-block; text-decoration: none"
-                  href="<%= @sync_run_url %>"
-                >
-                  <button
-                    style="
-                      background: #00249c;
-                      border: none;
-                      border-radius: 6px;
-                      color: white;
-                      font-size: 14px;
-                      font-family: Helvetica, Arial, sans-serif;
-                      font-weight: 700;
-                      line-height: 20px;
-                      padding: 10px 20px;
-                      cursor: pointer;
-                    "
-                  >
-                    View Sync Run
-                  </button>
+                <a href="<%= @sync_run_url %>" style="background: #00249c; color: white; font-size: 14px; font-weight: 700; border-radius: 6px; padding: 10px 20px; display: inline-block; text-decoration: none;"> 
+                  View Sync Run 
                 </a>
-                <br />
-                <br />
-                <table
-                    style="
-                      padding: 10px;
-                      float: left;
-                    "
-                    class="sync-info"
-                    >
-                        <tr>
-                            <td class="sync-info-key"> Sync Name</td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:name] %> </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key"> End Time </td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:end_time].strftime("%a %m, %Y %r") %> </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key">Duration </td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:duration] %> Seconds </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key"> Sync Id</td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:sync_id] %> </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key"> Sync Run Id</td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:sync_run_id] %> </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key"> Results </td>
-                            <td class="sync-info-value"> <%= "#{@alert_attrs[:failed_rows_count]}/#{@alert_attrs[:total_rows_count]} rows failed" %> </td>
-                        </tr>
-                        <tr>
-                            <td class="sync-info-key"> Error </td>
-                            <td class="sync-info-value"> <%= @alert_attrs[:error] %> </td>
-                        </tr>
-                    </table>
+
+                <table class="info-table">
+                  <tr>
+                    <td class="sync-info-label">Sync Name</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:name] %></td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">End Time</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:end_time].strftime("%a %b %d, %Y %I:%M %p") %></td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">Duration</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:duration] %> Seconds</td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">Sync ID</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:sync_id] %></td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">Sync Run ID</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:sync_run_id] %></td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">Results</td>
+                    <td class="sync-info-value"><%= "#{@alert_attrs[:failed_rows_count]}/#{@alert_attrs[:total_rows_count]} rows failed" %></td>
+                  </tr>
+                  <tr>
+                    <td class="sync-info-label">Error</td>
+                    <td class="sync-info-value"><%= @alert_attrs[:error] %></td>
+                  </tr>
+                </table>
               </td>
             </tr>
+
             <tr>
               <td style="padding: 12px; text-align: left">
                 <p
@@ -208,7 +178,7 @@
                 </table>
                 <table style="text-align: end">
                   <p style="margin: 0; display: inline; float: left">
-                    © 2025 Audiencelab. All Rights Reserved.
+                    © <%= Time.current.year %> Audiencelab. All Rights Reserved.
                   </p>
                   <p style="margin: 0; display: inline; float: right">
                      DE 19806, Wilmington, Delaware 19806

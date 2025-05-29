@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Feedback < ApplicationRecord
+  acts_as_taggable_on :tags
+
   validates :data_app_id, presence: true
   validates :visual_component_id, presence: true
   validates :model_id, presence: true

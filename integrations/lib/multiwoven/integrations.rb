@@ -38,6 +38,8 @@ require "google/cloud/ai_platform/v1"
 require "grpc"
 require "MailchimpMarketing"
 require "google/cloud/storage"
+require "aws-sdk-bedrockruntime"
+require "pinecone"
 
 # Service
 require_relative "integrations/config"
@@ -57,6 +59,7 @@ require_relative "integrations/core/http_helper"
 require_relative "integrations/core/http_client"
 require_relative "integrations/core/streaming_http_client"
 require_relative "integrations/core/query_builder"
+require_relative "integrations/core/unstructured_source_connector"
 
 # Source
 require_relative "integrations/source/snowflake/client"
@@ -80,6 +83,8 @@ require_relative "integrations/source/watsonx_ai/client"
 require_relative "integrations/source/watsonx_data/client"
 require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/audience/client"
+require_relative "integrations/source/aws_bedrock_model/client"
+require_relative "integrations/source/generic_open_ai/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
@@ -105,6 +110,8 @@ require_relative "integrations/destination/mailchimp/client"
 require_relative "integrations/destination/ais_data_store/client"
 require_relative "integrations/destination/amazon_s3/client"
 require_relative "integrations/destination/microsoft_dynamics/client"
+require_relative "integrations/destination/qdrant/client"
+require_relative "integrations/destination/pinecone_db/client"
 
 module Multiwoven
   module Integrations

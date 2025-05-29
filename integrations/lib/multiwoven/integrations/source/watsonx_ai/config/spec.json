@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/source/watsonx-ai-endpoint",
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/watsonx_ai-model",
   "stream_type": "user_defined",
   "connector_query_type": "ai_ml",
   "connection_specification": {

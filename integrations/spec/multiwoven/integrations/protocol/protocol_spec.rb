@@ -388,6 +388,14 @@ module Multiwoven
           model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "dynamic_sql", primary_key: "id")
           expect("dynamic_sql").to include(model.query_type)
         end
+        it "has a query_type 'unstructured'" do
+          model = Model.new(name: "Test", query: "", query_type: "unstructured", primary_key: "id")
+          expect("unstructured").to include(model.query_type)
+        end
+        it "has a query_type 'vector_search'" do
+          model = Model.new(name: "Test", query: "SELECT * FROM table", query_type: "vector_search", primary_key: "id")
+          expect("vector_search").to include(model.query_type)
+        end
       end
     end
 

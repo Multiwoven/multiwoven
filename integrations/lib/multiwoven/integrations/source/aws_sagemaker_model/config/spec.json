@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.multiwoven.com/integrations/sources/aws_sagemaker-model",
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/aws_sagemaker-model",
   "stream_type": "user_defined",
   "connector_query_type": "ai_ml",
   "connection_specification": {

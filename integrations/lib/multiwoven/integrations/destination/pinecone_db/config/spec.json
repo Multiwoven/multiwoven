@@ -1,0 +1,32 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/oracle",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Pinecone DB",
+    "type": "object",
+    "required": ["api_key", "region", "index_name"],
+    "properties": {
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "description": "Your secret Pinecone API key used to authenticate requests.",
+        "order": 0
+      },
+      "region": {
+        "type": "string",
+        "title": "Region",
+        "description": "The Pinecone region where your index is hosted (e.g., 'us-east-1').",
+        "order": 1
+      },
+      "index_name": {
+        "type": "string",
+        "title": "Index Name",
+        "description": "The name of the Pinecone index where vectors will be written.",
+        "order": 2
+      }
+    }    
+  }
+}

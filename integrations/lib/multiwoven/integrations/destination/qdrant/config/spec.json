@@ -1,0 +1,23 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/qdrant",
+  "stream_type": "dynamic",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Qdrant",
+    "type": "object",
+    "required": ["api_url", "api_key"],
+    "properties": {
+      "api_url": {
+        "type": "string",
+        "title": "API Url",
+        "order": 0
+      },
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 1
+      }
+    }
+  }
+}
