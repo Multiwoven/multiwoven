@@ -6,14 +6,30 @@
 
 class ChangeCollationForTagNames < ActiveRecord::Migration[7.1]
   def up
-    if ActsAsTaggableOn::Utils.using_mysql?
-      safety_assured { execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_bin;") }
+    # Only apply on MySQL and only if the tags table exists
+    if ActsAsTaggableOn::Utils.using_mysql? && ActiveRecord::Base.connection.table_exists?(ActsAsTaggableOn.tags_table)
+      # Check if the name column exists before modifying it
+      if ActiveRecord::Base.connection.column_exists?(ActsAsTaggableOn.tags_table, :name)
+        safety_assured { 
+          # Increase statement timeout to avoid lock timeout issues
+          execute('SET statement_timeout = 300000') # 5 minutes
+          execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_bin;") 
+        }
+      end
     end
   end
 
   def down
-    if ActsAsTaggableOn::Utils.using_mysql?
-      safety_assured { execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci;") }
+    # Only apply on MySQL and only if the tags table exists
+    if ActsAsTaggableOn::Utils.using_mysql? && ActiveRecord::Base.connection.table_exists?(ActsAsTaggableOn.tags_table)
+      # Check if the name column exists before modifying it
+      if ActiveRecord::Base.connection.column_exists?(ActsAsTaggableOn.tags_table, :name)
+        safety_assured { 
+          # Increase statement timeout to avoid lock timeout issues
+          execute('SET statement_timeout = 300000') # 5 minutes
+          execute("ALTER TABLE #{ActsAsTaggableOn.tags_table} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci;") 
+        }
+      end
     end
   end
 end
