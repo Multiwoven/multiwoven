@@ -1,6 +1,3 @@
-# frozen_string_literal: true
-
-# This migration comes from acts_as_taggable_on_engine (originally 2)
 class AddMissingUniqueIndices < ActiveRecord::Migration[7.1]
   disable_ddl_transaction!
   
