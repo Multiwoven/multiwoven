@@ -19,6 +19,7 @@ FactoryBot.define do
     slug { Faker::Beer.name }
     status { "active" }
     api_key { Faker::Config.random }
+    workspace_logo_filename { "sample_file.svg" }
 
     after(:create) do |workspace|
       create(:workspace_user, workspace:, user: create(:user), role: create(:role, :admin))

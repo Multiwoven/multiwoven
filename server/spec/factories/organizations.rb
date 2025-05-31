@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :organization do
     name { Faker::Company.unique.name }
+    organization_logo_filename { "sample_file.svg" }
 
     after(:create) do |organization|
       plan = create(:billing_plan)
