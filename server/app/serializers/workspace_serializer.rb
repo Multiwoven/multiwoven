@@ -28,4 +28,21 @@ class WorkspaceSerializer < ActiveModel::Serializer
   def members_count
     object.users.count
   end
+<<<<<<< HEAD
+=======
+
+  def workspace_logo_url
+    return nil unless object.file.attached?
+
+    blob = object.file.blob
+    "#{ENV['API_HOST']}/rails/active_storage/blobs/#{blob.signed_id}/#{blob.filename}"
+  end
+
+  def organization_logo_url
+    return nil unless object.organization.file.attached?
+
+    blob = object.organization.file.blob
+    "#{ENV['API_HOST']}/rails/active_storage/blobs/#{blob.signed_id}/#{blob.filename}"
+  end
+>>>>>>> 32749a63 (chore(CE): Quick fix for Logo (#1139))
 end

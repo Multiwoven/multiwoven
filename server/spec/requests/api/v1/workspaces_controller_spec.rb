@@ -79,6 +79,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+<<<<<<< HEAD
+=======
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url))
+          .not_to eq(response_hash.dig(:data, :attributes, :workspace_logo_url))
+>>>>>>> 32749a63 (chore(CE): Quick fix for Logo (#1139))
       end
 
       it "returns success and get workspace by id for workspace header 0" do
@@ -93,6 +100,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+<<<<<<< HEAD
+=======
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url))
+          .not_to eq(response_hash.dig(:data, :attributes, :workspace_logo_url))
+>>>>>>> 32749a63 (chore(CE): Quick fix for Logo (#1139))
       end
 
       it "returns success and get workspace by id for member role" do
@@ -107,6 +121,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+<<<<<<< HEAD
+=======
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url))
+          .not_to eq(response_hash.dig(:data, :attributes, :workspace_logo_url))
+>>>>>>> 32749a63 (chore(CE): Quick fix for Logo (#1139))
       end
 
       it "returns success and get workspace by id " do
@@ -120,6 +141,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+<<<<<<< HEAD
+=======
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url))
+          .not_to eq(response_hash.dig(:data, :attributes, :workspace_logo_url))
+>>>>>>> 32749a63 (chore(CE): Quick fix for Logo (#1139))
       end
     end
   end
