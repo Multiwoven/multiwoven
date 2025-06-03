@@ -324,23 +324,36 @@ module Multiwoven::Integrations::Source
           # Set a timeout for the query
           begin
             Timeout.timeout(180) do  
-              # Standard approach - similar to Amazon S3 connector
-              # Prepare the query based on whether one was provided
+              # First, let's install and load required extensions for GCS access
+              conn.execute("INSTALL httpfs; LOAD httpfs;")
+              
+              # Prepare the query with explicit type handling for phone columns
+              # We'll force the problematic columns to be VARCHAR and use a larger sample size
+              types_param = "types={'SKIPTRACE_B2B_PHONE': 'VARCHAR', 'PHONE': 'VARCHAR', 'MOBILE': 'VARCHAR', 'HOME_PHONE': 'VARCHAR', 'WORK_PHONE': 'VARCHAR'}"
+              compression_param = is_compressed ? "compression='auto'" : ""
+              all_varchar_param = "ALL_VARCHAR=TRUE"
+              sample_size_param = "sample_size=-1"  # Use all rows for sampling
+              ignore_errors_param = "ignore_errors=true"
+              
+              # Combine all parameters
+              csv_params = [compression_param, all_varchar_param, sample_size_param, types_param, ignore_errors_param].reject(&:empty?).join(", ")
+              
+              # Prepare the final query
               final_query = if query_string.to_s.strip.empty?
-                # If no query provided, use a standard query with compression handling
-                compression_param = is_compressed ? "compression='auto'" : ""
-                "SELECT * FROM read_csv_auto('#{gcs_url}', #{compression_param})"
+                # If no query provided, use a standard query with all our parameters
+                "SELECT * FROM read_csv_auto('#{gcs_url}', #{csv_params})"
               else
-                # If query exists, replace the FROM clause
-                compression_param = is_compressed ? "compression='auto'" : ""
-                # Replace the FROM clause with the GCS URL
-                query_string.gsub(/FROM\s+[^\s,;()]+/i, "FROM read_csv_auto('#{gcs_url}', #{compression_param})")
+                # If query exists, replace the FROM clause with our enhanced CSV reader
+                query_string.gsub(/FROM\s+[^\s,;()]+/i, "FROM read_csv_auto('#{gcs_url}', #{csv_params})")
               end
               
               # Add LIMIT if not already present and this is a preview query
               if !final_query.downcase.include?("limit") && query_string.to_s.include?("LIMIT")
                 final_query += " LIMIT 1000"
               end
+              
+              # Log the query for debugging
+              Rails.logger.info("AUDIENCE: Executing DuckDB query: #{final_query}")
               
               # Assign to the results variable that's in the outer scope
               results = conn.query(final_query) 
