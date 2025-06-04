@@ -43,7 +43,7 @@ RSpec.describe Billing::Subscription, type: :model do
 
   describe "next renewal date" do
     let(:organization) { create(:organization) }
-    let(:plan) { create(:billing_plan, interval: "month") }
+    let(:plan) { create(:billing_plan, interval: "monthly") }
     let(:subscription) { create(:billing_subscription, organization:, created_at:, plan:) }
 
     context "when plan is monthly" do

@@ -6,7 +6,7 @@ module Billing
 
     enum status: { inactive: 0, active: 1 }
     enum currency: { usd: 0 }
-    enum interval: { month: 0, year: 1 }
+    enum interval: { monthly: 0, year: 1 }
 
     has_many :subscriptions, dependent: :nullify
   end
