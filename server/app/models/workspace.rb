@@ -30,6 +30,7 @@ class Workspace < ApplicationRecord
 
   belongs_to :organization
   has_many :sso_configurations, through: :organization
+  has_one_attached :file
 
   STATUS_ACTIVE = "active"
   STATUS_INACTIVE = "inactive"
