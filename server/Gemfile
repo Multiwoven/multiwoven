@@ -14,7 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.26.0"
+gem "multiwoven-integrations", "~> 0.27.0"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -40,6 +40,7 @@ gem "rack-cors"
 gem "devise"
 gem "devise_invitable"
 gem "devise-jwt"
+gem "intuit-oauth"
 gem "pundit"
 gem "ruby-saml"
 # Utilities
