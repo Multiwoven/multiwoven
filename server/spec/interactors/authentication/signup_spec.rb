@@ -7,6 +7,9 @@ RSpec.describe Authentication::Signup, type: :interactor do
 
   describe ".call" do
     context "when provided with valid user attributes" do
+      before do
+        ENV["USER_EMAIL_VERIFICATION"] = "true"
+      end
       let(:params) do
         {
           name: "Test User",
