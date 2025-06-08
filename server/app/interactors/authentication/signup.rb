@@ -8,6 +8,9 @@ module Authentication
       ActiveRecord::Base.transaction do
         create_new_user
         create_organization_and_workspace
+
+        user.skip_confirmation! unless User.email_verification_enabled?
+
         save_user
         if user.persisted?
           user.send_confirmation_instructions if User.email_verification_enabled?
