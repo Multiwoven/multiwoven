@@ -9,6 +9,20 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
   let(:viewer_role) { create(:role, :viewer) }
   let(:member_role) { create(:role, :member) }
 
+  let(:png_file) do
+    Tempfile.new(["test_file", ".png"]).tap do |f|
+      f.write("test")
+      f.rewind
+    end
+  end
+  let(:uploaded_file) do
+    ActionDispatch::Http::UploadedFile.new(
+      tempfile: png_file,
+      filename: "test_file.png",
+      content_type: "image/png"
+    )
+  end
+
   before do
     user.confirm
   end
@@ -68,6 +82,8 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
 
     context "when it is an authenticated user fo" do
       it "returns success and get workspace by id for viewer_role" do
+        workspace.file.attach(uploaded_file)
+        workspace.organization.file.attach(uploaded_file)
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
@@ -79,9 +95,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
       end
 
       it "returns success and get workspace by id for workspace header 0" do
+        workspace.file.attach(uploaded_file)
+        workspace.organization.file.attach(uploaded_file)
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, 0)
         expect(response).to have_http_status(:ok)
@@ -93,9 +113,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
       end
 
       it "returns success and get workspace by id for member role" do
+        workspace.file.attach(uploaded_file)
+        workspace.organization.file.attach(uploaded_file)
         workspace.workspace_users.first.update(role: member_role)
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
@@ -107,9 +131,13 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
       end
 
       it "returns success and get workspace by id " do
+        workspace.file.attach(uploaded_file)
+        workspace.organization.file.attach(uploaded_file)
         get "/api/v1/workspaces/#{workspace.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
@@ -120,6 +148,8 @@ RSpec.describe "Api::V1::WorkspacesController", type: :request do
         expect(response_hash.dig(:data, :attributes, :organization_name)).to eq(workspace.organization.name)
         expect(response_hash.dig(:data, :attributes, :members_count))
           .to eq(workspace.users.count)
+        expect(response_hash.dig(:data, :attributes, :workspace_logo_url)).not_to be_nil
+        expect(response_hash.dig(:data, :attributes, :organization_logo_url)).not_to be_nil
       end
     end
   end
