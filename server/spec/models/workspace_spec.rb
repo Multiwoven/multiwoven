@@ -37,6 +37,7 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:chat_messages).dependent(:nullify) }
     it { should have_many(:sso_configurations).through(:organization) }
     it { should belong_to(:organization) }
+    it { should have_many(:workflows).dependent(:nullify) }
   end
 
   context "before_validation callbacks" do
