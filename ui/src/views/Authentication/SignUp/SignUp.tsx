@@ -40,7 +40,42 @@ const SignUp = (): JSX.Element => {
 
         navigate(`/sign-up/success?email=${values.email}`);
       } else {
+<<<<<<< HEAD
         apiErrorToast(result.errors || []);
+=======
+        const result = await mutateAsync(values);
+
+        if (result.data?.attributes) {
+          showToast({
+            title: 'Account created.',
+            status: CustomToastStatus.Success,
+            duration: 3000,
+            isClosable: true,
+            position: 'bottom-right',
+          });
+          Mixpanel.track(EVENTS.SIGNUP_SUCCESS, {
+            company_name: values.company_name,
+            name: values.name,
+            email: values.email,
+          });
+          if (result.data?.attributes.email_verification_enabled) {
+            navigate('/sign-up/success?email=' + values.email);
+          } else {
+            navigate('/sign-in');
+          }
+        } else {
+          result.errors?.forEach((error: ErrorResponse) => {
+            showToast({
+              duration: 5000,
+              isClosable: true,
+              position: 'bottom-right',
+              colorScheme: 'red',
+              status: CustomToastStatus.Warning,
+              title: titleCase(error.detail),
+            });
+          });
+        }
+>>>>>>> a04cb081 (feat(CE): redirect to login if email verification is disabled (#1147))
       }
     } catch (error) {
       errorToast('An error occured. Please try again later.', true, null, true);
