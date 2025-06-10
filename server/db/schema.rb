@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema[7.1].define(version: 2025_05_19_183855) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_29_125449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -251,6 +250,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_19_183855) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "organization_logo_filename"
   end
 
   create_table "resources", force: :cascade do |t|
@@ -593,6 +593,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_19_183855) do
     t.bigint "organization_id"
     t.text "description"
     t.string "region"
+    t.string "workspace_logo_filename"
     t.index ["organization_id"], name: "index_workspaces_on_organization_id"
   end
 

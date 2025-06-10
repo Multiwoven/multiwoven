@@ -13,6 +13,8 @@ module ReverseEtl
         when :raw_sql
           if sync_config.source.name == "Bigquery"
             "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RAND()"
+          elsif sync_config.source.name == "IntuitQuickBooks"
+            existing_query
           else
             "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RANDOM()"
           end

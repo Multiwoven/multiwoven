@@ -8,6 +8,7 @@ module ReverseEtl
       let(:existing_query) { "SELECT * FROM table" }
       let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
       let(:source_bigquery) { create(:connector, connector_type: "source", connector_name: "Bigquery") }
+      let(:source_intuitquickbooks) { create(:connector, connector_type: "source", connector_name: "IntuitQuickBooks") }
       let(:source_salesforce) do
         create(:connector, connector_type: "source", connector_name: "SalesforceConsumerGoodsCloud")
       end
@@ -31,7 +32,7 @@ module ReverseEtl
           end
         end
 
-        context "when query_type is raw_sql" do
+        context "when query_type is raw_sql and source is BigQuery" do
           let(:sync) do
             create(:sync, model:, source: source_bigquery, destination:)
           end
@@ -41,6 +42,20 @@ module ReverseEtl
             query = described_class.build_random_record_query(sync_config)
 
             expected_query = "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RAND()"
+            expect(query).to eq(expected_query)
+          end
+        end
+
+        context "when query_type is raw_sql and source is Intuit QuickBooks" do
+          let(:sync) do
+            create(:sync, model:, source: source_intuitquickbooks, destination:)
+          end
+          let(:sync_config) { sync.to_protocol }
+
+          it "returns the query" do
+            query = described_class.build_random_record_query(sync_config)
+
+            expected_query = existing_query
             expect(query).to eq(expected_query)
           end
         end
