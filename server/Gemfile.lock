@@ -1906,6 +1906,10 @@ GEM
     ice_nine (0.11.2)
     inflection (1.0.0)
     interactor (3.1.2)
+    intuit-oauth (1.0.3)
+      httparty (>= 0.16.3)
+      json (>= 1.8.0)
+      rsa-pem-from-mod-exp (~> 0.1.0)
     io-console (0.8.0)
     io-endpoint (0.15.0)
     io-event (1.9.0)
@@ -1967,7 +1971,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.26.0)
+    multiwoven-integrations (0.27.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2143,6 +2147,7 @@ GEM
       jwt (>= 1.5.6)
     retriable (3.1.2)
     rexml (3.4.1)
+    rsa-pem-from-mod-exp (0.1.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -2301,12 +2306,13 @@ DEPENDENCIES
   fugit
   groupdate
   interactor (~> 3.0)
+  intuit-oauth
   jbuilder
   jwt
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.26.0)
+  multiwoven-integrations (~> 0.27.0)
   mysql2
   newrelic_rpm
   parallel

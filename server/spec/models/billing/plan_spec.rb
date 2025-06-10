@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Billing::Plan, type: :model do
   it "has a valid factory" do
-    plan = Billing::Plan.new(name: "Basic Plan", status: :active, currency: :usd, interval: :month, addons: {})
+    plan = Billing::Plan.new(name: "Basic Plan", status: :active, currency: :usd, interval: :monthly, addons: {})
     expect(plan).to be_valid
   end
 
@@ -26,7 +26,7 @@ RSpec.describe Billing::Plan, type: :model do
     end
 
     it "defines the correct interval values" do
-      expect(Billing::Plan.intervals).to eq({ "month" => 0, "year" => 1 })
+      expect(Billing::Plan.intervals).to eq({ "monthly" => 0, "year" => 1 })
     end
   end
 
