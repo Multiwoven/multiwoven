@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_05_29_125449) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
+>>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -571,6 +575,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_29_125449) do
     t.integer "session_count", default: 0
   end
 
+<<<<<<< HEAD
+=======
+  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "status"
+    t.integer "trigger_type"
+    t.jsonb "configuration", default: {}
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
+  end
+
+>>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
   create_table "workspace_users", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "workspace_id"

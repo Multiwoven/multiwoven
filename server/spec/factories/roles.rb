@@ -92,7 +92,13 @@ FactoryBot.define do
             "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+<<<<<<< HEAD
             "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+=======
+            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false }
+>>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
           }
         }
       end
@@ -119,7 +125,9 @@ FactoryBot.define do
             "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
-            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false }
           }
         }
       end
