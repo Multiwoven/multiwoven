@@ -37,9 +37,9 @@ class WorkspaceSerializer < ActiveModel::Serializer
   end
 
   def organization_logo_url
-    return nil unless object.file.attached?
+    return nil unless object.organization.file.attached?
 
-    blob = object.file.blob
+    blob = object.organization.file.blob
     "#{ENV['API_HOST']}/rails/active_storage/blobs/#{blob.signed_id}/#{blob.filename}"
   end
 end
