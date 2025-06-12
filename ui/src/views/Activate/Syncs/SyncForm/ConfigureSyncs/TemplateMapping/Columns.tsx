@@ -23,6 +23,8 @@ type ColumnsProps = {
   onSelect?: (args: string) => void;
   height?: string;
   templateColumnType?: OPTION_TYPE;
+  // New prop for displaying static value
+  staticValue?: string | boolean;
 };
 
 const Columns = ({
@@ -34,11 +36,40 @@ const Columns = ({
   showFilter = false,
   showDescription = false,
   height = fieldType === 'model' ? '170px' : '225px',
+  staticValue,
 }: ColumnsProps): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
+  // Enhanced columns - start with the original column options
+  let enhancedColumns = [...columnOptions];
+  
+  // Get stored static value (only for use on destination side)
+  let storedStaticValue;
+  try {
+    storedStaticValue = localStorage.getItem('current_static_value');
+  } catch (e) {
+    // Silent error handling
+  }
+  
+  // For the destination (HubSpot) dropdown only
+  if (fieldType === 'destination') {
+    // First try the direct prop - highest priority
+    if (staticValue !== undefined && staticValue !== '' && staticValue !== null) {
+      const valueAsString = typeof staticValue === 'string' ? staticValue : String(staticValue);
+      if (!enhancedColumns.includes(valueAsString)) {
+        enhancedColumns.push(valueAsString);
+      }
+    } 
+    // Then try localStorage as a fallback for destination side only
+    else if (storedStaticValue && storedStaticValue !== 'null' && storedStaticValue !== 'undefined') {
+      if (!enhancedColumns.includes(storedStaticValue)) {
+        enhancedColumns.push(storedStaticValue);
+      }
+    }
+  }
+  
   // Filtered column options based on search term
-  const filteredColumns = columnOptions.filter((column) =>
+  const filteredColumns = enhancedColumns.filter((column) =>
     column.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -59,6 +90,7 @@ const Columns = ({
         </InputGroup>
       )}
       <Box height={height} overflowY='auto'>
+
         {filteredColumns.map((column, index) => (
           <Box
             key={index}

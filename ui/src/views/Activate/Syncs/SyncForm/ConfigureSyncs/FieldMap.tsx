@@ -15,7 +15,7 @@ type FieldMapProps = {
   value?: string;
   disabledOptions?: string[];
   isDisabled: boolean;
-  onChange: (id: number, type: 'model' | 'destination' | 'custom', value: string) => void;
+  onChange: (id: number, type: 'model' | 'destination' | 'custom', value: string, mappingType?: OPTION_TYPE) => void;
   selectedConfigOptions?: FieldMapType[] | null;
 };
 
