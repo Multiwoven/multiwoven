@@ -1,5 +1,5 @@
 import { Stack, RadioGroup, Radio, Box, Divider, Text, Input } from '@chakra-ui/react';
-import { useState, SetStateAction, Dispatch } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 
 type StaticOptionsProps = {
   staticValues: string[];
@@ -19,9 +19,28 @@ const StaticOptions = ({
   selectedStaticOptionValue,
   setSelectedStaticOptionValue,
 }: StaticOptionsProps): JSX.Element => {
+  // Manage static option value state
+  // Initialize the selectedStaticValue based on the current type of selectedStaticOptionValue
+  const getInitialStaticType = () => {
+    if (typeof selectedStaticOptionValue === 'boolean') return STATIC_OPTION_TYPE.BOOLEAN;
+    if (selectedStaticOptionValue === 'null') return STATIC_OPTION_TYPE.NULL;
+    if (!isNaN(Number(selectedStaticOptionValue)) && selectedStaticOptionValue !== '') return STATIC_OPTION_TYPE.NUMBER;
+    return STATIC_OPTION_TYPE.STRING;
+  };
+  
   const [selectedStaticValue, setSelectedStaticValue] = useState<STATIC_OPTION_TYPE | string>(
-    STATIC_OPTION_TYPE.STRING,
+    getInitialStaticType()
   );
+
+  // Store the static value in localStorage whenever it changes for persistence
+  useEffect(() => {
+    try {
+      const valueToStore = selectedStaticOptionValue?.toString() || '';
+      localStorage.setItem('current_static_value', valueToStore);
+    } catch (e) {
+      // Silent error handling
+    }
+  }, [selectedStaticOptionValue]);
 
   return (
     <Stack gap='20px' height='100%' direction='row'>

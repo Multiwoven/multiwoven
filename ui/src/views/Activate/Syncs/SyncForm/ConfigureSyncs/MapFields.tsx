@@ -87,11 +87,13 @@ const MapFields = ({
         to: value,
       };
     } else {
+      // For model-side mapping (Audience)
       fieldsClone[id] = {
         ...fieldsClone[id],
         from: value,
         mapping_type: mappingType,
       };
+      
     }
 
     setFields(fieldsClone);
