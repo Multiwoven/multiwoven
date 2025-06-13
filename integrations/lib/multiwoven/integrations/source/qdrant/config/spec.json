@@ -1,0 +1,29 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/source/data-sources/qdrant",
+  "stream_type": "user_defined",
+  "connector_query_type": "vector_search",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Qdrant",
+    "type": "object",
+    "required": ["host", "api_key", "collection_name"],
+    "properties": {
+      "host": {
+        "type": "string",
+        "title": "API Url",
+        "order": 0
+      },
+      "api_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "API Key",
+        "order": 1
+      },
+      "collection_name": {
+        "type": "string",
+        "title": "Collection Name",
+        "order": 2
+      }
+    }
+  }
+}
