@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.27.1"
+=======
+    VERSION = "0.29.0"
+>>>>>>> 6f4ce207 (feat(CE): Add Qdrant Source Connector (#1154))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -28,6 +32,11 @@ module Multiwoven
       AwsBedrockModel
       GenericOpenAI
       IntuitQuickBooks
+<<<<<<< HEAD
+=======
+      PineconeDB
+      Qdrant
+>>>>>>> 6f4ce207 (feat(CE): Add Qdrant Source Connector (#1154))
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

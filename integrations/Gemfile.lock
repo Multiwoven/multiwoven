@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.27.1)
+=======
+    multiwoven-integrations (0.29.0)
+>>>>>>> 6f4ce207 (feat(CE): Add Qdrant Source Connector (#1154))
       MailchimpMarketing
       activesupport
       async-websocket

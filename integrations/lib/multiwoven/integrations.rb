@@ -86,6 +86,11 @@ require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/aws_bedrock_model/client"
 require_relative "integrations/source/generic_open_ai/client"
 require_relative "integrations/source/intuit_quick_books/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/pinecone_db/client"
+require_relative "integrations/source/qdrant/client"
+>>>>>>> 6f4ce207 (feat(CE): Add Qdrant Source Connector (#1154))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
