@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "PineconeDB",
+    "title": "Pinecone DB",
+    "connector_type": "source",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/source/data-sources/pinecone_db",
+    "github_issue_label": "source-pinecone-db",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
