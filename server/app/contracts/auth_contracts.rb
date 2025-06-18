@@ -73,4 +73,12 @@ module AuthContracts
       key.failure("has invalid email format") unless /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i.match?(value)
     end
   end
+
+  class SimulateRequest < Dry::Validation::Contract
+    params do
+      required(:token).filled(:string)
+      optional(:authToken).maybe(:string)
+      optional(:auth).maybe(:hash)
+    end
+  end
 end

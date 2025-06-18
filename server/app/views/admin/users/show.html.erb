@@ -1,0 +1,181 @@
+<% content_for :title, "User Details" %>
+
+<div class="container-fluid">
+  <% if @success_message %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= @success_message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% if @error_message %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= @error_message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <%= link_to "← Back to Users", admin_users_path, class: "btn btn-outline-secondary" %>
+        <div>
+          <%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">User Profile</h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <div class="avatar bg-light-primary p-4 rounded-circle mx-auto mb-3" style="width: 100px; height: 100px;">
+              <span class="display-4"><%= @user.name&.first&.upcase || @user.email.first.upcase %></span>
+            </div>
+            <h4><%= @user.name || "No Name" %></h4>
+            <p class="text-muted"><%= @user.email %></p>
+            <span class="badge <%= @user.status == 'active' ? 'bg-success' : @user.status == 'invited' ? 'bg-warning' : 'bg-danger' %>">
+              <%= @user.status.to_s.capitalize %>
+            </span>
+          </div>
+          
+          <hr>
+          
+          <div class="user-info">
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>User ID:</strong>
+              </div>
+              <div class="col-7">
+                <%= @user.id %>
+              </div>
+            </div>
+            
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>Created:</strong>
+              </div>
+              <div class="col-7">
+                <%= @user.created_at.strftime('%b %d, %Y %H:%M') %>
+              </div>
+            </div>
+            
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>Last Updated:</strong>
+              </div>
+              <div class="col-7">
+                <%= @user.updated_at.strftime('%b %d, %Y %H:%M') %>
+              </div>
+            </div>
+            
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>Email Verified:</strong>
+              </div>
+              <div class="col-7">
+                <% if @user.confirmed_at.present? %>
+                  <span class="badge bg-success">Yes</span>
+                <% else %>
+                  <span class="badge bg-danger">No</span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>EULA Accepted:</strong>
+              </div>
+              <div class="col-7">
+                <% if @user.eula_accepted %>
+                  <span class="badge bg-success">Yes</span>
+                <% else %>
+                  <span class="badge bg-danger">No</span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="mb-3 row">
+              <div class="col-5">
+                <strong>Simulate Req Token:</strong>
+              </div>
+              <div class="col-7">
+                <% if @user.simulate_req_token.present? %>
+                  <code class="text-break"><%= @user.simulate_req_token %></code>
+                  <button class="btn btn-sm btn-outline-secondary mt-1" onclick="copyToClipboard('<%= @user.simulate_req_token %>')">Copy</button>
+                <% else %>
+                  <span class="text-muted">Not set</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Workspaces</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Workspace</th>
+                  <th>Role</th>
+                  <th>Joined Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if @user.workspace_users.any? %>
+                  <% @user.workspace_users.each do |workspace_user| %>
+                    <tr>
+                      <td><%= workspace_user.workspace.name %></td>
+                      <td><%= workspace_user.role&.role_name || "No Role" %></td>
+                      <td><%= workspace_user.created_at.strftime('%b %d, %Y') %></td>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td colspan="3" class="text-center">User is not a member of any workspace</td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+  
+  // Show a temporary success message
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.classList.remove('btn-outline-secondary');
+  btn.classList.add('btn-success');
+  
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.classList.remove('btn-success');
+    btn.classList.add('btn-outline-secondary');
+  }, 2000);
+}
+</script>
