@@ -38,6 +38,11 @@ export type AuthResponse = {
   errors?: AuthErrorResponse[];
 };
 
+export type SimulateRequestPayload = {
+  token: string;
+  authToken?: string;
+};
+
 export type ApiResponse<T> = {
   data?: T;
   status: number;
@@ -110,6 +115,16 @@ export const verifyUser = async (confirmation_token: string) =>
 export const resendUserVerification = async (payload: ForgotPasswordPayload) =>
   multiwovenFetch<ForgotPasswordPayload, ApiResponse<MessageResponse>>({
     method: 'post',
-    url: `/resend_verification`,
+    url: '/resend_verification',
     data: payload,
+  });
+
+export const simulateRequest = async (payload: SimulateRequestPayload) =>
+  multiwovenFetch<SimulateRequestPayload, ApiResponse<SignInResponse>>({
+    method: 'post',
+    url: '/simulate_request',
+    data: {
+      token: payload.token,
+      authToken: payload.authToken
+    },
   });
