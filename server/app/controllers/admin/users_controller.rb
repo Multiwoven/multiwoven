@@ -15,7 +15,7 @@ module Admin
       end
       
       # Pagination
-      @users = @users.page(params[:page]).per(5)
+      @users = @users.page(params[:page]).per(50)
     end
 
     def show
