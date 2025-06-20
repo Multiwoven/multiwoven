@@ -10,7 +10,9 @@ AllCops:
   TargetRubyVersion: 3.2
   Exclude:
     - 'db/migrate/**/*.rb'
+    - 'db/data/**/*.rb'
     - 'db/schema.rb'
+    - 'db/data_schema.rb'
     - 'vendor/**/*'
     - 'config/**/*'
     - 'log/**/*'
