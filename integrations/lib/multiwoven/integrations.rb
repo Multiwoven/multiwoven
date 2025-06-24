@@ -60,6 +60,7 @@ require_relative "integrations/core/http_client"
 require_relative "integrations/core/streaming_http_client"
 require_relative "integrations/core/query_builder"
 require_relative "integrations/core/unstructured_source_connector"
+require_relative "integrations/core/vector_source_connector"
 
 # Source
 require_relative "integrations/source/snowflake/client"

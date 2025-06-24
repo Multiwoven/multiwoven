@@ -12,7 +12,7 @@ module Api
 
       def index
         result = ListAll.call(user: current_user)
-        @workspaces = result.workspaces
+        @workspaces = result.workspaces.order(created_at: :asc)
         render json: @workspaces, status: :ok
       end
 
