@@ -18,13 +18,10 @@ module ResourceLinkBuilder
       members_link
     when "Alert"
       alert_link(resource_id)
-<<<<<<< HEAD
-=======
     when "Role"
       roles_link
     when "Workflow"
       workflow_link(resource_id)
->>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
     else
       reports_link(resource_id)
     end
@@ -79,8 +76,6 @@ module ResourceLinkBuilder
   def alert_link(resource_id)
     "/alerts/#{resource_id}"
   end
-<<<<<<< HEAD
-=======
 
   def roles_link
     "/organization/roles"
@@ -89,6 +84,5 @@ module ResourceLinkBuilder
   def workflow_link(resource_id)
     "/workflows/list/#{resource_id}"
   end
->>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
   # rubocop:enable Metrics/CyclomaticComplexity
 end
