@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,12 +140,14 @@
   create_table "components", id: :string, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.uuid "workflow_id", null: false
-    t.string "name", null: false
     t.integer "component_type", null: false
     t.jsonb "configuration", null: false
     t.jsonb "position", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.jsonb "data", default: {}, null: false
+    t.integer "component_category", default: 0, null: false
   end
 
   create_table "connectors", force: :cascade do |t|
