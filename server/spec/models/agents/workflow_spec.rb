@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe Agents::Workflow, type: :model do
   describe "associations" do
     it { should belong_to(:workspace) }
+    it { should have_many(:components).dependent(:destroy) }
+    it { should have_many(:edges).dependent(:destroy) }
   end
 
   describe "enums" do

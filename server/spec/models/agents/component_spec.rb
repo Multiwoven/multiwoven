@@ -12,10 +12,11 @@ RSpec.describe Agents::Component, type: :model do
     it {
       should define_enum_for(:component_type).with_values(
         chat_input: 0,
-        prompt_template: 1,
-        sql_db: 2,
-        vector_db: 3,
-        model_inference: 4
+        chat_output: 1,
+        data_storage: 2,
+        llm_model: 3,
+        prompt_template: 4,
+        vector_store: 5
       )
     }
   end

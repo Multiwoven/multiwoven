@@ -3,6 +3,8 @@
 module Agents
   class Workflow < ApplicationRecord
     belongs_to :workspace
+    has_many :components, dependent: :destroy
+    has_many :edges, dependent: :destroy
 
     enum status: { draft: 0, published: 1 }
     enum trigger_type: { interactive: 0, scheduled: 1, api_trigger: 2 }
