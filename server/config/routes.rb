@@ -39,7 +39,9 @@ Rails.application.routes.draw do
       post "simulate_request", to: "auth#simulate_request"
 
       # Workspace Routes
-      resources :workspaces
+      resources :workspaces do
+        resources :members, controller: 'workspace_members', only: [:index, :create]
+      end
       resources :connectors do
         member do
           get :discover

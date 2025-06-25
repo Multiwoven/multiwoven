@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { MAIN_PAGE_ROUTES, AUTH_ROUTES } from '@/routes';
+import { MAIN_PAGE_ROUTES, AUTH_ROUTES, WORKSPACE_ROUTES } from '@/routes';
 import MainLayout from '@/views/MainLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageNotFound from '@/views/PageNotFound';
@@ -80,6 +80,9 @@ const App = (): JSX.Element => {
             ))}
           </Route>
 
+          {WORKSPACE_ROUTES.map(({ url, component, name }) => (
+            <Route path={url} key={name} element={<Protected>{component}</Protected>} />
+          ))}
           <Route path='*' element={<PageNotFound />} />
         </Routes>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
