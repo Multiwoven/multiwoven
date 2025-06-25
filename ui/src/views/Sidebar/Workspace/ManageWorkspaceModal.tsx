@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { FiSettings } from 'react-icons/fi';
 import WorkspaceList from './WorkspaceList';
 import CreateWorkspace from './CreateWorkspace';
+import AddMember from './AddMember';
 import { WorkspaceAPIResponse } from '@/services/settings';
 import { UseQueryResult } from '@tanstack/react-query';
 
 enum WORKSPACE_STATE {
   LIST = 'list',
   NEW = 'new',
+  ADD_MEMBER = 'add_member',
 }
 
 const ManageWorkspaceModal = ({
@@ -20,6 +22,7 @@ const ManageWorkspaceModal = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeState, setActiveState] = useState(WORKSPACE_STATE.LIST);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>('');
 
   const organizationName = workspaces?.data?.[0]?.attributes?.organization_name || '';
   const organizationId = workspaces?.data?.[0]?.attributes?.organization_id || 0;
@@ -57,6 +60,10 @@ const ManageWorkspaceModal = ({
             setIsModalOpen={setIsModalOpen}
             handleCreateNewWorkspace={() => setActiveState(WORKSPACE_STATE.NEW)}
             workspaceDetails={workspaces}
+            handleAddMember={(workspaceId) => {
+              setSelectedWorkspaceId(workspaceId);
+              setActiveState(WORKSPACE_STATE.ADD_MEMBER);
+            }}
           />
         )}
         {activeState === WORKSPACE_STATE.NEW && (
@@ -69,6 +76,16 @@ const ManageWorkspaceModal = ({
               refetchWorkspace();
             }}
             handleCancelClick={() => setActiveState(WORKSPACE_STATE.LIST)}
+          />
+        )}
+        {activeState === WORKSPACE_STATE.ADD_MEMBER && (
+          <AddMember
+            onCancel={() => setActiveState(WORKSPACE_STATE.LIST)}
+            workspaceId={selectedWorkspaceId}
+            onSuccess={() => {
+              // Refresh the workspace data
+              refetchWorkspace();
+            }}
           />
         )}
       </Modal>
