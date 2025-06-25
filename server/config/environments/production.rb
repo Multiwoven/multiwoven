@@ -30,7 +30,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
+<<<<<<< HEAD
   config.active_storage.service = :local
+=======
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE") { "microsoft" }.to_sym
+>>>>>>> e4f56f49 (chore(CE): enable s3 bucket for storage (#1175))
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
