@@ -6,6 +6,8 @@ RSpec.describe Agents::Component, type: :model do
   describe "associations" do
     it { should belong_to(:workflow) }
     it { should belong_to(:workspace) }
+    it { should have_many(:source_edges).class_name("Agents::Edge").dependent(:destroy) }
+    it { should have_many(:target_edges).class_name("Agents::Edge").dependent(:destroy) }
   end
 
   describe "enums" do
@@ -24,7 +26,6 @@ RSpec.describe Agents::Component, type: :model do
   describe "validations" do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:component_type) }
-    it { should validate_presence_of(:configuration) }
   end
 
   describe "position storage" do

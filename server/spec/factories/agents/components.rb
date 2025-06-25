@@ -9,5 +9,9 @@ FactoryBot.define do
     component_type { :chat_input }
     configuration { { "key" => "value" } }
     position { { "x" => 100, "y" => 100 } }
+    data do
+      { "category" => "input_output",
+        "component": "chat_input" }
+    end
   end
 end

@@ -11,13 +11,17 @@ RSpec.describe Agents::Workflow, type: :model do
 
   describe "enums" do
     it { should define_enum_for(:status).with_values(draft: 0, published: 1) }
-    it { should define_enum_for(:trigger_type).with_values(interactive: 0, scheduled: 1, api_trigger: 2) }
+    it {
+      should define_enum_for(:trigger_type).with_values(website_chatbot: 0, chat_assistant: 1, scheduled: 2,
+                                                        api_trigger: 3)
+    }
   end
 
   describe "validations" do
     subject { build(:workflow) }
 
     it { should validate_presence_of(:name) }
+    it { should validate_uniqueness_of(:name).scoped_to(:workspace_id).case_insensitive }
     it { should validate_uniqueness_of(:token).allow_nil }
   end
 

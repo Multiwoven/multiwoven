@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_02_100811) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,12 +140,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_02_100811) do
   create_table "components", id: :string, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.uuid "workflow_id", null: false
-    t.string "name", null: false
     t.integer "component_type", null: false
     t.jsonb "configuration", null: false
     t.jsonb "position", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.jsonb "data", default: {}, null: false
+    t.integer "component_category", default: 0, null: false
   end
 
   create_table "connectors", force: :cascade do |t|
@@ -603,6 +605,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_02_100811) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "status"
+    t.integer "trigger_type"
+    t.jsonb "configuration", default: {}
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
   create_table "workspace_users", force: :cascade do |t|

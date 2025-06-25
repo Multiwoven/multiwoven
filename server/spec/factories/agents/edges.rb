@@ -2,8 +2,9 @@
 
 FactoryBot.define do
   factory :edge, class: "Agents::Edge" do
-    association :workflow, factory: :workflow
-    association :workspace, factory: :workspace
+    id { SecureRandom.uuid }
+    workflow
+    workspace
     association :source_component, factory: :component
     association :target_component, factory: :component
 

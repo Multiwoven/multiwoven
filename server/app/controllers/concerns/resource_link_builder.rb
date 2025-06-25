@@ -18,6 +18,10 @@ module ResourceLinkBuilder
       members_link
     when "Alert"
       alert_link(resource_id)
+    when "Role"
+      roles_link
+    when "Workflow"
+      workflow_link(resource_id)
     else
       reports_link(resource_id)
     end
@@ -71,6 +75,14 @@ module ResourceLinkBuilder
 
   def alert_link(resource_id)
     "/alerts/#{resource_id}"
+  end
+
+  def roles_link
+    "/organization/roles"
+  end
+
+  def workflow_link(resource_id)
+    "/workflows/list/#{resource_id}"
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 end
