@@ -38,7 +38,9 @@ FactoryBot.define do
             "alerts" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "billing" => { "create" => true, "read" => true, "update" => true, "delete" => true },
             "sso" => { "create" => true, "read" => true, "update" => true, "delete" => true },
-            "eula" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+            "eula" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "assistant" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true }
           }
         }
       end
@@ -65,7 +67,9 @@ FactoryBot.define do
             "alerts" => { "read" => true, "create" => true, "delete" => true, "update" => true },
             "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
-            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false }
+            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+            "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true }
           }
         }
       end
@@ -92,13 +96,9 @@ FactoryBot.define do
             "alerts" => { "read" => true, "create" => false, "delete" => false, "update" => false },
             "billing" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
-<<<<<<< HEAD
-            "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false }
-=======
             "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false }
->>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
           }
         }
       end
