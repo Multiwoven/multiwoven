@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Qdrant",
+    "title": "Qdrant",
+    "connector_type": "source",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/source/data-sources/qdrant",
+    "github_issue_label": "source-qdrant",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]        
+  }
+}
