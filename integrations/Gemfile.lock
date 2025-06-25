@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.0)
+=======
+    multiwoven-integrations (0.30.0)
+>>>>>>> c194e6e3 (feat(CE): Add Firecrawl Source Connector (#1167))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -315,6 +319,14 @@ GEM
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.2.3)
+    nokogiri (1.18.8-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.8-x64-mingw-ucrt)
+      racc (~> 1.4)
+    nokogiri (1.18.8-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.8-x86_64-linux-gnu)
+      racc (~> 1.4)
     os (1.1.4)
     parallel (1.24.0)
     parser (3.3.1.0)
@@ -461,6 +473,7 @@ DEPENDENCIES
   multiwoven-integrations!
   mysql2
   net-sftp
+  nokogiri
   pg
   pinecone
   rake (~> 13.0)
