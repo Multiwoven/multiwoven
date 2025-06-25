@@ -10,11 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_05_29_125449) do
-=======
-ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
->>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -141,6 +136,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
     t.index ["workspace_id"], name: "index_chat_messages_on_workspace_id"
   end
 
+  create_table "components", id: :string, force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.uuid "workflow_id", null: false
+    t.string "name", null: false
+    t.integer "component_type", null: false
+    t.jsonb "configuration", null: false
+    t.jsonb "position", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "connectors", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "connector_type"
@@ -191,6 +197,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "edges", force: :cascade do |t|
+    t.uuid "workflow_id", null: false
+    t.integer "workspace_id", null: false
+    t.string "source_component_id", null: false
+    t.string "target_component_id", null: false
+    t.jsonb "source_handle", null: false
+    t.jsonb "target_handle", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "embedding_models", force: :cascade do |t|
@@ -575,8 +592,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
     t.integer "session_count", default: 0
   end
 
-<<<<<<< HEAD
-=======
+  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "workspace_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.integer "status"
+    t.integer "trigger_type"
+    t.jsonb "configuration", default: {}
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.string "name", null: false
@@ -590,7 +617,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
->>>>>>> 0c68e718 (chore(CE): unique index for workflow name (#1158))
   create_table "workspace_users", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "workspace_id"
@@ -627,6 +653,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
   add_foreign_key "chat_messages", "data_app_sessions"
   add_foreign_key "chat_messages", "visual_components"
   add_foreign_key "chat_messages", "workspaces"
+  add_foreign_key "components", "workflows", validate: false
+  add_foreign_key "components", "workspaces", validate: false
+  add_foreign_key "edges", "components", column: "source_component_id", validate: false
+  add_foreign_key "edges", "components", column: "target_component_id", validate: false
+  add_foreign_key "edges", "workflows", validate: false
+  add_foreign_key "edges", "workspaces", validate: false
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
@@ -634,6 +666,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_11_091441) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+  add_foreign_key "workflows", "workspaces", validate: false
   add_foreign_key "workspace_users", "roles"
   add_foreign_key "workspace_users", "users"
   add_foreign_key "workspace_users", "workspaces", on_delete: :nullify
