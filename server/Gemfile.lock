@@ -1971,7 +1971,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.27.0)
+    multiwoven-integrations (0.29.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2083,7 +2083,11 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
+<<<<<<< HEAD
     rack (3.1.12)
+=======
+    rack (3.1.16)
+>>>>>>> 0e2e0303 (chore(CE): Update Server Gem 0.29.0 (#1160))
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.0)
@@ -2312,7 +2316,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.27.0)
+  multiwoven-integrations (~> 0.29.0)
   mysql2
   newrelic_rpm
   parallel
