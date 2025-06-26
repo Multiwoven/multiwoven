@@ -22,6 +22,7 @@ module Admin
       # Transfer any messages from session to instance variables for display
       @error_message = session.delete(:error_message)
       @success_message = session.delete(:success_message)
+      @workspace_user_counts = WorkspaceUser.where(workspace_id: @user.workspace_users.select(:workspace_id)).group(:workspace_id).count
     end
 
     def edit

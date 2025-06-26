@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     post 'update/password' => 'settings#update_password', as: 'update_password'
     get 'users/reset_password/:id', to: 'users#reset_password', as: 'users_reset_password'
     post 'user/update/password/:id', to: 'users#update_password', as: 'user_update_password'
+    resources :workspace_members, only: [:create]
   end
 
   # API routes

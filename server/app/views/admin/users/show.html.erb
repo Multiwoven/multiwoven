@@ -1,161 +1,199 @@
 <% content_for :title, "User Details" %>
-
 <div class="container-fluid">
-  <% if @success_message %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+   <% if @success_message %>
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
       <%= @success_message %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-
-  <% if @error_message %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+   </div>
+   <% end %>
+   <% if @alert_message %>
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= @success_message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   <% end %>
+   <% if @error_message %>
+   <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <%= @error_message %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <div class="d-flex justify-content-between align-items-center">
-        <%= link_to "← Back to Users", admin_users_path, class: "btn btn-outline-secondary" %>
-        <div>
-          <%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-primary" %>
-        </div>
+   </div>
+   <% end %>
+   <div class="row mb-3">
+      <div class="col-md-12">
+         <div class="d-flex justify-content-between align-items-center">
+            <%= link_to "← Back to Users", admin_users_path, class: "btn btn-outline-secondary" %>
+            <div>
+               <%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-primary" %>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title mb-0">User Profile</h5>
-        </div>
-        <div class="card-body">
-          <div class="text-center mb-4">
-            <div class="avatar bg-light-primary p-4 rounded-circle mx-auto mb-3" style="width: 100px; height: 100px;">
-              <span class="display-4"><%= @user.name&.first&.upcase || @user.email.first.upcase %></span>
+   </div>
+   <div class="row">
+      <div class="col-md-4">
+         <div class="card">
+            <div class="card-header">
+               <h5 class="card-title mb-0">User Profile</h5>
             </div>
-            <h4><%= @user.name || "No Name" %></h4>
-            <p class="text-muted"><%= @user.email %></p>
-            <span class="badge <%= @user.status == 'active' ? 'bg-success' : @user.status == 'invited' ? 'bg-warning' : 'bg-danger' %>">
-              <%= @user.status.to_s.capitalize %>
-            </span>
-          </div>
-          
-          <hr>
-          
-          <div class="user-info">
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>User ID:</strong>
-              </div>
-              <div class="col-7">
-                <%= @user.id %>
-              </div>
+            <div class="card-body">
+               <div class="text-center mb-4">
+                  <div class="avatar bg-light-primary p-4 rounded-circle mx-auto mb-3" style="width: 100px; height: 100px;">
+                     <span class="display-4"><%= @user.name&.first&.upcase || @user.email.first.upcase %></span>
+                  </div>
+                  <h4><%= @user.name || "No Name" %></h4>
+                  <p class="text-muted"><%= @user.email %></p>
+                  <span class="badge <%= @user.status == 'active' ? 'bg-success' : @user.status == 'invited' ? 'bg-warning' : 'bg-danger' %>">
+                  <%= @user.status.to_s.capitalize %>
+                  </span>
+               </div>
+               <hr>
+               <div class="user-info">
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>User ID:</strong>
+                     </div>
+                     <div class="col-7">
+                        <%= @user.id %>
+                     </div>
+                  </div>
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>Created:</strong>
+                     </div>
+                     <div class="col-7">
+                        <%= @user.created_at.strftime('%b %d, %Y %H:%M') %>
+                     </div>
+                  </div>
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>Last Updated:</strong>
+                     </div>
+                     <div class="col-7">
+                        <%= @user.updated_at.strftime('%b %d, %Y %H:%M') %>
+                     </div>
+                  </div>
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>Email Verified:</strong>
+                     </div>
+                     <div class="col-7">
+                        <% if @user.confirmed_at.present? %>
+                        <span class="badge bg-success">Yes</span>
+                        <% else %>
+                        <span class="badge bg-danger">No</span>
+                        <% end %>
+                     </div>
+                  </div>
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>EULA Accepted:</strong>
+                     </div>
+                     <div class="col-7">
+                        <% if @user.eula_accepted %>
+                        <span class="badge bg-success">Yes</span>
+                        <% else %>
+                        <span class="badge bg-danger">No</span>
+                        <% end %>
+                     </div>
+                  </div>
+                  <div class="mb-3 row">
+                     <div class="col-5">
+                        <strong>Simulate Req Token:</strong>
+                     </div>
+                     <div class="col-7">
+                        <% if @user.simulate_req_token.present? %>
+                        <code class="text-break"><%= @user.simulate_req_token %></code>
+                        <button class="btn btn-sm btn-outline-secondary mt-1" onclick="copyToClipboard('<%= @user.simulate_req_token %>')">Copy</button>
+                        <% else %>
+                        <span class="text-muted">Not set</span>
+                        <% end %>
+                     </div>
+                  </div>
+               </div>
             </div>
-            
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>Created:</strong>
-              </div>
-              <div class="col-7">
-                <%= @user.created_at.strftime('%b %d, %Y %H:%M') %>
-              </div>
-            </div>
-            
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>Last Updated:</strong>
-              </div>
-              <div class="col-7">
-                <%= @user.updated_at.strftime('%b %d, %Y %H:%M') %>
-              </div>
-            </div>
-            
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>Email Verified:</strong>
-              </div>
-              <div class="col-7">
-                <% if @user.confirmed_at.present? %>
-                  <span class="badge bg-success">Yes</span>
-                <% else %>
-                  <span class="badge bg-danger">No</span>
-                <% end %>
-              </div>
-            </div>
-            
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>EULA Accepted:</strong>
-              </div>
-              <div class="col-7">
-                <% if @user.eula_accepted %>
-                  <span class="badge bg-success">Yes</span>
-                <% else %>
-                  <span class="badge bg-danger">No</span>
-                <% end %>
-              </div>
-            </div>
-            
-            <div class="mb-3 row">
-              <div class="col-5">
-                <strong>Simulate Req Token:</strong>
-              </div>
-              <div class="col-7">
-                <% if @user.simulate_req_token.present? %>
-                  <code class="text-break"><%= @user.simulate_req_token %></code>
-                  <button class="btn btn-sm btn-outline-secondary mt-1" onclick="copyToClipboard('<%= @user.simulate_req_token %>')">Copy</button>
-                <% else %>
-                  <span class="text-muted">Not set</span>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
+         </div>
       </div>
-    </div>
-    
-    <div class="col-md-8">
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="card-title mb-0">Workspaces</h5>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>Workspace</th>
-                  <th>Role</th>
-                  <th>Joined Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% if @user.workspace_users.any? %>
-                  <% @user.workspace_users.each do |workspace_user| %>
-                    <tr>
-                      <td><%= workspace_user.workspace.name %></td>
-                      <td><%= workspace_user.role&.role_name || "No Role" %></td>
-                      <td><%= workspace_user.created_at.strftime('%b %d, %Y') %></td>
-                    </tr>
-                  <% end %>
-                <% else %>
-                  <tr>
-                    <td colspan="3" class="text-center">User is not a member of any workspace</td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="col-md-8">
+         <div class="card mb-4">
+            <div class="card-header">
+               <h5 class="card-title mb-0">Workspaces</h5>
+            </div>
+            <div class="card-body">
+               <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                     <thead>
+                        <tr>
+                           <th>Workspace</th>
+                           <th>Role</th>
+                           <th>Joined Date</th>
+                           <th>Members</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <% if @user.workspace_users.any? %>
+                        <% @user.workspace_users.each do |workspace_user| %>
+                        <tr>
+                           <td><%= workspace_user.workspace.name %></td>
+                           <td><%= workspace_user.role&.role_name || "No Role" %></td>
+                           <td><%= workspace_user.created_at.strftime('%b %d, %Y') %></td>
+                           <td><%= @workspace_user_counts[workspace_user.workspace_id] %> members</td>
+                           <td>
+                              <a href="#" class="ml-2 text-blue-600 underline"
+                                 onclick="showEmailModal('modal-<%= workspace_user.workspace.id %>')">View</a>
+                              <button onclick="openModal(<%= workspace_user.workspace.id %>)"
+                                 class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Add Member</button>
+                           </td>
+                        </tr>
+                        <div id="modal-<%= workspace_user.workspace.id %>"
+                           class="email-modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+                           <div class="bg-white p-6 rounded shadow-lg w-1/3">
+                              <h2 class="text-lg font-semibold mb-4">Workspace: <%= workspace_user.workspace.name %></h2>
+                              <div class="space-y-2">
+                                 <% workspace_user.workspace.users.each do |u| %>
+                                 <div class="flex justify-between bg-gray-100 p-2 rounded">
+                                    <div class="text-gray-800 font-medium"><%= u.name.present? ? u.name : "N/A" %></div>
+                                    <div class="text-gray-600 text-sm break-all"><%= u.email %></div>
+                                 </div>
+                                 <% end %>
+                              </div>
+                              <button onclick="closeAllModals()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                              Close
+                              </button>
+                           </div>
+                        </div>
+                        <% end %>
+                        <% else %>
+                        <tr>
+                           <td colspan="3" class="text-center">User is not a member of any workspace</td>
+                        </tr>
+                        <% end %>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+      <div id="emailModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+         <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <!-- Close button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold">
+            &times;
+            </button>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Add Member to Workspace</h2>
+            <%= form_with url: admin_workspace_members_path, method: :post, local: true do |f| %>
+            <%= hidden_field_tag :workspace_id, nil, id: "workspace_id_field" %>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+            <%= email_field_tag :email, nil, placeholder: "Enter user email", class: "w-full border border-gray-300 rounded-md px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+            <div class="flex justify-end space-x-2">
+               <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Cancel</button>
+               <%= submit_tag "Add Member", class: "px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800" %>
+            </div>
+            <% end %>
+         </div>
+      </div>
+   </div>
 </div>
-
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
 function copyToClipboard(text) {
   const textarea = document.createElement('textarea');
@@ -164,18 +202,30 @@ function copyToClipboard(text) {
   textarea.select();
   document.execCommand('copy');
   document.body.removeChild(textarea);
-  
   // Show a temporary success message
   const btn = event.target;
   const originalText = btn.textContent;
   btn.textContent = 'Copied!';
   btn.classList.remove('btn-outline-secondary');
   btn.classList.add('btn-success');
-  
   setTimeout(() => {
     btn.textContent = originalText;
     btn.classList.remove('btn-success');
     btn.classList.add('btn-outline-secondary');
   }, 2000);
 }
+  function openModal(workspaceId) {
+    document.getElementById('emailModal').classList.remove('hidden');
+    document.getElementById('workspace_id_field').value = workspaceId;
+  }
+  function closeModal() {
+    document.getElementById('emailModal').classList.add('hidden');
+  }
+  function showEmailModal(id) {
+    document.querySelectorAll('.email-modal').forEach(m => m.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+  function closeAllModals() {
+    document.querySelectorAll('.email-modal').forEach(m => m.classList.add('hidden'));
+  }
 </script>
