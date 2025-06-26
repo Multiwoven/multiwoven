@@ -85,6 +85,8 @@ gem "pinecone"
 
 gem "intuit-oauth"
 
+gem "nokogiri"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

@@ -91,6 +91,13 @@ module Multiwoven
 
       # Qdrant
       QDRANT_SEARCH_URL = "%<host>s/collections/%<collection_name>s/points/search"
+
+      # Firecrawl
+      FIRECRAWL_CRAWL_URL = "https://api.firecrawl.dev/v1/crawl"
+      FIRECRAWL_SCRAPE_URL = "https://api.firecrawl.dev/v1/scrape"
+      FIRECRAWL_CRAWL_ACTIVE_URL = "https://api.firecrawl.dev/v1/crawl/active"
+      FIRECRAWL_GET_CRAWL_URL = "https://api.firecrawl.dev/v1/crawl/%<id>s"
+      FIRECRAWL_REQUEST_RATE_LIMIT = 5
     end
   end
 end
