@@ -4,6 +4,7 @@ import EditModelModal from './EditModelModal';
 import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import DeleteModelModal from './DeleteModelModal';
 
+<<<<<<< HEAD
 const ModelActions = ({ prefillValues }: { prefillValues: PrefillValue }) => (
   <>
     <Popover closeOnEsc>
@@ -32,6 +33,25 @@ const ModelActions = ({ prefillValues }: { prefillValues: PrefillValue }) => (
       </PopoverContent>
     </Popover>
   </>
+=======
+const ModelActions = ({
+  prefillValues,
+  invalidateQuery,
+}: {
+  prefillValues: PrefillValue;
+  invalidateQuery: () => void;
+}) => (
+  <HorizontalMenuActions backgroundColor='gray.200' contentMargin='12px' borderColor='gray.400'>
+    <>
+      <RoleAccess location='model' type='item' action={UserActions.Update}>
+        <EditModelModal prefillValues={prefillValues} invalidateQuery={invalidateQuery} />
+      </RoleAccess>
+      <RoleAccess location='model' type='item' action={UserActions.Delete}>
+        <DeleteModelModal />
+      </RoleAccess>
+    </>
+  </HorizontalMenuActions>
+>>>>>>> 11791c77 (feat(CE): added Edit Details Modal (#791))
 );
 
 export default ModelActions;
