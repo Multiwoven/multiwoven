@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.29.0"
+=======
+    VERSION = "0.30.2"
+>>>>>>> ac078611 (chore(CE): Optimize Firecrawl client (#1198))
 
     ENABLED_SOURCES = %w[
       Snowflake
