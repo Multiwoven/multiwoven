@@ -1,12 +1,12 @@
 {
     "data": {
-      "name": "Databricks",
-      "title": "Databricks Data Warehouse",
+      "name": "Firecrawl",
+      "title": "Firecrawl",
       "connector_type": "source",
       "category": "Data Warehouse",
-      "sub_category": "Relational Database",
-      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks",
-      "github_issue_label": "source-databricks",
+      "sub_category": "Web Scraper",
+      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/firecrawl",
+      "github_issue_label": "source-firecrawl",
       "icon": "icon.svg",
       "license": "MIT",
       "release_stage": "alpha",

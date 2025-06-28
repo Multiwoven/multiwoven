@@ -4,6 +4,7 @@
     "title": "Amazon Redshift",
     "connector_type": "source",
     "category": "Data Warehouse",
+    "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/redshift",
     "github_issue_label": "source-redshift",
     "icon": "icon.svg",

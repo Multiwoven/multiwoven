@@ -4,6 +4,7 @@
     "title": "ClickHouse",
     "connector_type": "source",
     "category": "Data Warehouse",
+    "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/clickhouse",
     "github_issue_label": "source-clickhouse",
     "icon": "icon.svg",

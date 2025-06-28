@@ -4,6 +4,7 @@
     "title": "Snowflake",
     "connector_type": "source",
     "category": "Data Warehouse",
+    "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/snowflake",
     "github_issue_label": "source-snowflake",
     "icon": "icon.svg",

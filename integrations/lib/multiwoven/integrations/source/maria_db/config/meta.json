@@ -4,6 +4,7 @@
     "title": "Maria DB",
     "connector_type": "source",
     "category": "Data Warehouse",
+    "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/maria_db",
     "github_issue_label": "source-maria-db",
     "icon": "icon.svg",

@@ -6,6 +6,7 @@
     "connector_sub_type": "api",
     "direct_query_support": true,
     "category": "Retail",
+    "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/salesforce-consumer-goods-cloud",
     "github_issue_label": "source-salesforce-consumer-goods",
     "icon": "icon.svg",
