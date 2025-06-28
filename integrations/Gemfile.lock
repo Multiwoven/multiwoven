@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.0)
+=======
+    multiwoven-integrations (0.30.2)
+>>>>>>> ac078611 (chore(CE): Optimize Firecrawl client (#1198))
       MailchimpMarketing
       activesupport
       async-websocket
