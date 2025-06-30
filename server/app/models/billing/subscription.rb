@@ -23,7 +23,7 @@ module Billing
       return nil unless created_at
 
       case plan.interval
-      when "month"
+      when "monthly"
         current_time = Time.current
         begin
           current_time.change(day: created_at.day)

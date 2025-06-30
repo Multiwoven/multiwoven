@@ -27,9 +27,11 @@ class Workspace < ApplicationRecord
   has_many :alerts, dependent: :nullify
   has_many :message_feedbacks, dependent: :nullify
   has_many :chat_messages, dependent: :nullify
+  has_many :workflows, class_name: "Agents::Workflow", dependent: :nullify
 
   belongs_to :organization
   has_many :sso_configurations, through: :organization
+  has_one_attached :file
 
   STATUS_ACTIVE = "active"
   STATUS_INACTIVE = "inactive"

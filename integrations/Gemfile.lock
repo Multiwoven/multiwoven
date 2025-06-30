@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.27.0)
+    multiwoven-integrations (0.30.0)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -307,6 +307,10 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     inflection (1.0.0)
+    intuit-oauth (1.0.3)
+      httparty (>= 0.16.3)
+      json (>= 1.8.0)
+      rsa-pem-from-mod-exp (~> 0.1.0)
     io-event (1.5.1)
     iterable-api-client (0.6.2)
       multi_json (~> 1.15.0)
@@ -358,6 +362,7 @@ GEM
       jwt (>= 1.5.6)
     retriable (3.1.2)
     rexml (3.4.0)
+    rsa-pem-from-mod-exp (0.1.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -442,6 +447,7 @@ PLATFORMS
   arm64-darwin-23
   arm64-darwin-24
   x64-mingw-ucrt
+  x86_64-darwin-21
   x86_64-darwin-23
   x86_64-linux
 
@@ -468,6 +474,7 @@ DEPENDENCIES
   google-cloud-bigquery
   google-cloud-storage (~> 1.44)
   hubspot-api-client (~> 17.2.0)
+  intuit-oauth
   iterable-api-client
   multiwoven-integrations!
   mysql2

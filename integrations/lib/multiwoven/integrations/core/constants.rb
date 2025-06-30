@@ -83,6 +83,14 @@ module Multiwoven
         mistral.mixtral-8x7b-instruct-v0:1
         mistral.mistral-small-2402-v1:0
       ].freeze
+
+      # Intuit QuickBooks
+      QUICKBOOKS_SANDBOX_QUERY_URL = "https://sandbox-quickbooks.api.intuit.com/v3/company/%<realm_id>s/query?query=%<query>s"
+      QUICKBOOKS_PRODUCTION_QUERY_URL = "https://quickbooks.api.intuit.com/v3/company/%<realm_id>s/query?query=%<query>s"
+      QUICKBOOKS_REDIRECT_URL = "https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl"
+
+      # Qdrant
+      QDRANT_SEARCH_URL = "%<host>s/collections/%<collection_name>s/points/search"
     end
   end
 end
