@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.29.0"
+=======
+    VERSION = "0.30.3"
+>>>>>>> 5b219ec5 (chore(CE): Add to query for Firecrawl (#1201))
 
     ENABLED_SOURCES = %w[
       Snowflake
