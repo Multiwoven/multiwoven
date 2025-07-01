@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_27_000141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,12 +140,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
   create_table "components", id: :string, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.uuid "workflow_id", null: false
+    t.string "name"
     t.integer "component_type", null: false
     t.jsonb "configuration", null: false
     t.jsonb "position", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
     t.jsonb "data", default: {}, null: false
     t.integer "component_category", default: 0, null: false
   end
@@ -161,6 +161,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
     t.string "connector_name"
     t.string "description"
     t.string "connector_category", default: "data", null: false
+    t.string "connector_sub_category", default: "database", null: false
   end
 
   create_table "custom_visual_component_files", force: :cascade do |t|
