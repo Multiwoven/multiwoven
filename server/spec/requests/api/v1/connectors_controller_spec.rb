@@ -17,6 +17,10 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
   let!(:data_connector) { create(:connector, workspace:, connector_category: "Data Warehouse") }
   let!(:ai_ml_connector) { create(:connector, workspace:, connector_category: "AI Model") }
   let!(:other_connector) { create(:connector, workspace:, connector_category: "CRM") }
+  let!(:ai_ml_service_connector) { create(:connector, workspace:, connector_sub_category: "AI_ML Service") }
+  let!(:llm_connector) { create(:connector, workspace:, connector_sub_category: "LLM") }
+  let!(:vector_connector) { create(:connector, workspace:, connector_sub_category: "Vector Database") }
+  let!(:web_connector) { create(:connector, workspace:, connector_sub_category: "Web Scraper") }
 
   before do
     user.confirm
@@ -36,7 +40,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?page=1&per_page=20", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count + 3)
+        expect(response_hash[:data].count).to eql(connectors.count + 7)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first))
           .to include("http://www.example.com/api/v1/connectors?page=1&per_page=20")
@@ -47,7 +51,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count + 3)
+        expect(response_hash[:data].count).to eql(connectors.count + 7)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -57,7 +61,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count + 3)
+        expect(response_hash[:data].count).to eql(connectors.count + 7)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -67,7 +71,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(connectors.count + 3)
+        expect(response_hash[:data].count).to eql(connectors.count + 7)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
       end
@@ -86,7 +90,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=destination", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(4)
+        expect(response_hash[:data].count).to eql(8)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
@@ -108,6 +112,69 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
       it "returns only ai_ml connectors for source" do
         get "/api/v1/connectors?type=source&&category=ai_ml", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(0)
+      end
+
+      it "returns only database connectors" do
+        get "/api/v1/connectors?sub_category=database", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).not_to include(ai_ml_service_connector.id.to_s)
+      end
+
+      it "returns only ai_ml_service connectors" do
+        get "/api/v1/connectors?sub_category=ai_ml_service", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).to eql([ai_ml_service_connector.id.to_s])
+      end
+
+      it "returns only ai_ml_service connectors for source" do
+        get "/api/v1/connectors?type=source&&sub_category=ai_ml_service", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(0)
+      end
+
+      it "returns only llm connectors" do
+        get "/api/v1/connectors?sub_category=llm", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).to eql([llm_connector.id.to_s])
+      end
+
+      it "returns only llm connectors for source" do
+        get "/api/v1/connectors?type=source&&sub_category=llm", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(0)
+      end
+
+      it "returns only web connectors" do
+        get "/api/v1/connectors?sub_category=web", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).to eql([web_connector.id.to_s])
+      end
+
+      it "returns only web connectors for source" do
+        get "/api/v1/connectors?type=source&&sub_category=web", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(0)
+      end
+
+      it "returns only vector connectors" do
+        get "/api/v1/connectors?sub_category=vector", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].map { |connector| connector["id"] }).to eql([vector_connector.id.to_s])
+      end
+
+      it "returns only vector connectors for source" do
+        get "/api/v1/connectors?type=source&&sub_category=vector", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
         expect(result["data"].count).to eql(0)

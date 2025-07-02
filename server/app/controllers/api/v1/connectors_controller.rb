@@ -20,6 +20,7 @@ module Api
         authorize @connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.send(params[:category].downcase) if params[:category]
+        @connectors = @connectors.send(params[:sub_category].downcase) if params[:sub_category]
         @connectors = @connectors.page(params[:page] || 1).per(params[:per_page])
         render json: @connectors, status: :ok
       end

@@ -214,6 +214,97 @@ RSpec.describe Connector, type: :model do
     end
   end
 
+  describe "#set_sub_category" do
+    let(:workspace) { create(:workspace) }
+    let(:connector) do
+      create(:connector,
+             workspace:)
+    end
+
+    context "populate sub_category from connector meta data" do
+      it "sets the connector_sub_category based on the meta_data" do
+        connector.run_callbacks(:save) { true }
+        expect(connector.connector_sub_category).to eq("Relational Database")
+      end
+    end
+
+    context "catagory is set by user" do
+      it "does not change the connector_sub_category" do
+        connector.update!(connector_sub_category: "user_input_category")
+        expect(connector.connector_sub_category).to eq("user_input_category")
+      end
+    end
+  end
+
+  describe ".ai_ml_service" do
+    let!(:ai_ml_connector) do
+      create(:connector, connector_category: "AI Model", connector_sub_category: "AI_ML Service")
+    end
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in AI_ML_SERVICE_CATEGORIES" do
+      result = Connector.ai_ml_service
+      expect(result).to include(ai_ml_connector)
+      expect(result).not_to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".llm" do
+    let!(:ai_ml_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "LLM") }
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in LLM_CATEGORIES" do
+      result = Connector.llm
+      expect(result).to include(ai_ml_connector)
+      expect(result).not_to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".database" do
+    let!(:ai_ml_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "LLM") }
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in DATABASE_CATEGORIES" do
+      result = Connector.database
+      expect(result).not_to include(ai_ml_connector)
+      expect(result).to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".web" do
+    let!(:web_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "Web Scraper") }
+    let!(:non_web_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in WEB_CATEGORIES" do
+      result = Connector.web
+      expect(result).to include(web_connector)
+      expect(result).not_to include(non_web_connector)
+    end
+  end
+
+  describe ".vector" do
+    let!(:vector_connector) do
+      create(:connector, connector_category: "AI Model", connector_sub_category: "Vector Database")
+    end
+    let!(:non_vector_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in VECTOR_CATEGORIES" do
+      result = Connector.vector
+      expect(result).to include(vector_connector)
+      expect(result).not_to include(non_vector_connector)
+    end
+  end
+
   describe "#resolved_configuration" do
     let(:workspace) { create(:workspace) }
 

@@ -23,6 +23,7 @@ FactoryBot.define do
     end
     name { Faker::Name.name }
     connector_name { "Klaviyo" }
+    connector_sub_category { "Relational Database" }
 
     to_create { |instance| instance.save(validate: false) }
   end
