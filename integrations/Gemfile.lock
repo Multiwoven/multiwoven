@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.0)
+=======
+    multiwoven-integrations (0.30.4)
+>>>>>>> c76441a8 (chore(CE): Add connector_instance to protocol (#1211))
       MailchimpMarketing
       activesupport
       async-websocket
