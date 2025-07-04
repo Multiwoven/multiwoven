@@ -20,12 +20,18 @@ FROM base as build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential autoconf automake libtool git libpq-dev libvips pkg-config m4 perl libltdl-dev curl git wget unzip default-libmysqlclient-dev
 
+# Create a directory for the integrations gem
+RUN mkdir -p /integrations
+
+# Copy the integrations directory into the container
+COPY integrations/ /integrations/
+
 # Copy and run the Oracle Instant Client installation script
-COPY getoracleinstantclient.sh .
+COPY server/getoracleinstantclient.sh .
 RUN chmod +x getoracleinstantclient.sh && ./getoracleinstantclient.sh
 
-COPY getduckdb.sh .
-COPY gethttpfsextension.sh .
+COPY server/getduckdb.sh .
+COPY server/gethttpfsextension.sh .
 
 # Make the scripts executable
 RUN chmod +x getduckdb.sh gethttpfsextension.sh 
@@ -114,13 +120,14 @@ RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
 WORKDIR /rails
 
 # Install application gems
-COPY Gemfile Gemfile.lock ./
+COPY server/Gemfile server/Gemfile.lock ./
+
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
 # Copy application code
-COPY . .
+COPY server/ .
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/

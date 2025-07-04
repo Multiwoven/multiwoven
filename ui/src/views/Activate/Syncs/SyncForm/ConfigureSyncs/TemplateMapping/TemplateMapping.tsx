@@ -69,7 +69,7 @@ const TemplateMapping = ({
   fieldType,
   mappingType,
 }: TemplateMappingProps): JSX.Element => {
-  const [activeTab, setActiveTab] = useState(OPTION_TYPE.STANDARD);
+  const [activeTab, setActiveTab] = useState(mappingType || OPTION_TYPE.STANDARD);
 
   // pre-defined value incase of edit
   const [selectedTemplate, setSelectedTemplate] = useState(
@@ -81,6 +81,8 @@ const TemplateMapping = ({
   const [selectedStaticOptionValue, setSelectedStaticOptionValue] = useState<string | boolean>(
     mappingType === OPTION_TYPE.STATIC ? selectedConfig : '',
   );
+  
+
 
   const { data } = useQueryWrapper<SyncsConfigurationForTemplateMapping, Error>(
     ['syncsConfiguration'],
@@ -106,10 +108,14 @@ const TemplateMapping = ({
   const applyConfigs = () => {
     if (activeTab === OPTION_TYPE.TEMPLATE) {
       handleUpdateConfig(mappingId, fieldType, selectedTemplate, activeTab);
-      setIsPopOverOpen(false);
+    } else if (activeTab === OPTION_TYPE.STATIC) {
+      // Ensure static value is properly converted to string before updating config
+      const staticValue = selectedStaticOptionValue?.toString() || '';
+      handleUpdateConfig(mappingId, fieldType, staticValue, activeTab);
     } else {
-      handleUpdateConfig(mappingId, fieldType, selectedStaticOptionValue.toString(), activeTab);
+      handleUpdateConfig(mappingId, fieldType, selectedConfig, activeTab);
     }
+    // Always close the popover after applying changes
     setIsPopOverOpen(false);
   };
 
@@ -194,6 +200,7 @@ const TemplateMapping = ({
                     setIsPopOverOpen(false);
                   }}
                   fieldType={fieldType}
+                  staticValue={selectedStaticOptionValue}
                 />
               )}
               {activeTab === OPTION_TYPE.STATIC && (

@@ -9,8 +9,8 @@ export const SignUpAuthView = ({
   handleSubmit,
   submitting,
   initialValues,
-  privacyPolicyUrl,
-  termsOfServiceUrl,
+  // privacyPolicyUrl,
+  // termsOfServiceUrl,
   isCompanyNameDisabled,
   isEmailDisabled,
 }: SignUpAuthViewProps) => (
@@ -79,7 +79,7 @@ export const SignUpAuthView = ({
                 touched={touched}
                 errors={errors}
               />
-              <HStack spacing={1}>
+              {/*<HStack spacing={1}>
                 <Text color='black.200' size='xs' fontWeight='regular'>
                   By creating an account, I agree to the{' '}
                 </Text>
@@ -96,7 +96,7 @@ export const SignUpAuthView = ({
                     Privacy Policy
                   </Text>
                 </Link>
-              </HStack>
+              </HStack>*/}
             </Stack>
             <Stack spacing='6'>
               <Button

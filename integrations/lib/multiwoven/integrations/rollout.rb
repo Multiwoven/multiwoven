@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.29.0"
+    VERSION = "0.30.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -25,6 +25,7 @@ module Multiwoven
       WatsonxAi
       WatsonxData
       Anthropic
+      Audience
       AwsBedrockModel
       GenericOpenAI
       IntuitQuickBooks

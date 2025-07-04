@@ -13,6 +13,45 @@ GIT
       grpc
       oj
 
+PATH
+  remote: ../integrations
+  specs:
+    multiwoven-integrations (0.30.0)
+      MailchimpMarketing
+      activesupport
+      async-websocket
+      aws-sdk-athena
+      aws-sdk-cloudwatchlogs
+      aws-sdk-s3
+      aws-sdk-sts
+      aws-sigv4
+      csv
+      dry-schema
+      dry-struct
+      dry-types
+      duckdb
+      git
+      google-apis-sheets_v4
+      google-cloud-ai_platform-v1
+      google-cloud-bigquery
+      google-cloud-storage
+      grpc
+      hubspot-api-client
+      iterable-api-client
+      net-sftp
+      pg
+      rake
+      restforce
+      ruby-limiter
+      ruby-oci8
+      ruby-odbc
+      rubyzip
+      sequel
+      slack-ruby-client
+      stripe
+      tiny_tds
+      zendesk_api
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -1708,6 +1747,8 @@ GEM
       actionmailer (>= 5.0)
       devise (>= 4.6)
     diff-lcs (1.5.0)
+    digest-crc (0.7.0)
+      rake (>= 12.0.0, < 14.0.0)
     discard (1.3.0)
       activerecord (>= 4.2, < 8)
     docile (1.4.0)
@@ -1825,7 +1866,11 @@ GEM
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
+    google-apis-iamcredentials_v1 (0.22.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-sheets_v4 (0.39.0)
+      google-apis-core (>= 0.15.0, < 2.a)
+    google-apis-storage_v1 (0.50.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-ai_platform-v1 (1.0.0)
       gapic-common (>= 0.25.0, < 2.a)
@@ -1849,6 +1894,15 @@ GEM
     google-cloud-location (0.10.0)
       gapic-common (>= 0.25.0, < 2.a)
       google-cloud-errors (~> 1.0)
+    google-cloud-storage (1.55.0)
+      addressable (~> 2.8)
+      digest-crc (~> 0.4)
+      google-apis-core (~> 0.13)
+      google-apis-iamcredentials_v1 (~> 0.18)
+      google-apis-storage_v1 (>= 0.42)
+      google-cloud-core (~> 1.6)
+      googleauth (~> 1.9)
+      mini_mime (~> 1.0)
     google-iam-v1 (1.3.0)
       gapic-common (>= 0.25.0, < 2.a)
       google-cloud-errors (~> 1.0)
@@ -1971,40 +2025,6 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.27.0)
-      MailchimpMarketing
-      activesupport
-      async-websocket
-      aws-sdk-athena
-      aws-sdk-cloudwatchlogs
-      aws-sdk-s3
-      aws-sdk-sts
-      aws-sigv4
-      csv
-      dry-schema
-      dry-struct
-      dry-types
-      duckdb
-      git
-      google-apis-sheets_v4
-      google-cloud-ai_platform-v1
-      google-cloud-bigquery
-      grpc
-      hubspot-api-client
-      iterable-api-client
-      net-sftp
-      pg
-      rake
-      restforce
-      ruby-limiter
-      ruby-oci8
-      ruby-odbc
-      rubyzip
-      sequel
-      slack-ruby-client
-      stripe
-      tiny_tds
-      zendesk_api
     mutex_m (0.3.0)
     mysql2 (0.5.6)
     net-http (0.6.0)
@@ -2280,6 +2300,7 @@ PLATFORMS
   arm64-darwin-23
   arm64-darwin-24
   x86_64-darwin-23
+  x86_64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
@@ -2312,7 +2333,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.27.0)
+  multiwoven-integrations (~> 0.30.0)!
   mysql2
   newrelic_rpm
   parallel

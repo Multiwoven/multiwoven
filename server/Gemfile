@@ -13,11 +13,8 @@ gem "groupdate"
 gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
-
-gem "multiwoven-integrations", "~> 0.27.0"
-
+gem "multiwoven-integrations", "~> 0.30.0", path: "../integrations"
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
-
 gem "data_migrate"
 gem "mysql2"
 gem "parallel"

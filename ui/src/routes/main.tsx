@@ -15,6 +15,7 @@ const SetupDefine = lazy(() => import('@/views/Define/SetupDefine'));
 const SetupActivate = lazy(() => import('@/views/Activate/SetupActivate'));
 
 const Settings = lazy(() => import('@/views/Settings'));
+const SimulateRequest = lazy(() => import('@/views/SimulateRequest'));
 
 type MAIN_PAGE_ROUTES_ITEM = {
   name: string;
@@ -87,6 +88,15 @@ export const MAIN_PAGE_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
 ];
 
 export const AUTH_ROUTES: MAIN_PAGE_ROUTES_ITEM[] = [
+  {
+    name: 'Simulate Request',
+    url: '/users/simulate',
+    component: (
+      <SuspenseWithLoader redirectRoute='/users/simulate'>
+        <SimulateRequest />
+      </SuspenseWithLoader>
+    ),
+  },
   {
     name: 'Sign In',
     url: '/sign-in',

@@ -1,11 +1,11 @@
 import { Box, Flex, Stack, Text, Divider } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
-import IconImage from '@/assets/images/multiwoven-logo.svg';
+import IconImage from '@/assets/images/audience-logo.svg';
 import {
-  FiSettings,
+  // FiSettings,
   FiDatabase,
   FiTable,
-  FiBookOpen,
+  // FiBookOpen,
   FiGrid,
   FiRefreshCcw,
   FiUsers,
@@ -138,14 +138,14 @@ const Sidebar = (): JSX.Element => {
               <Workspace />
               {menus.map(renderMenuSection)}
             </Stack>
-            <Stack spacing='0'>
+            {/*<Stack spacing='0'>
               <NavLink to='/settings'>
                 <NavButton label='Settings' icon={FiSettings} />
               </NavLink>
               <NavLink to='https://docs.squared.ai/guides/core-concepts'>
                 <NavButton label='Documentation' icon={FiBookOpen} />
               </NavLink>
-            </Stack>
+            </Stack>*/}
           </Stack>
           <SideBarFooter />
         </Stack>

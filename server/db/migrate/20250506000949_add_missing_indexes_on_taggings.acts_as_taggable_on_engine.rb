@@ -21,8 +21,11 @@ class AddMissingIndexesOnTaggings < ActiveRecord::Migration[7.1]
     unless index_exists? ActsAsTaggableOn.taggings_table, %i[taggable_id taggable_type tagger_id context],
                          name: 'taggings_idy'
       safety_assured do
+        # Increase statement timeout to avoid lock timeout issues
+        execute('SET statement_timeout = 300000') # 5 minutes
+        
         add_index ActsAsTaggableOn.taggings_table, %i[taggable_id taggable_type tagger_id context],
-                  name: 'taggings_idy'
+                  name: 'taggings_idy', algorithm: :concurrently
       end
     end
   end

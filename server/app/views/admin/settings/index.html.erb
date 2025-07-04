@@ -1,0 +1,36 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <% if @error_message %>
+        <div class="alert alert-danger text-center"><%= @error_message %></div>
+      <% end %>
+      <% if @success_message %>
+        <div class="alert alert-success text-center"><%= @success_message %></div>
+      <% end %>
+      <div class="card shadow-lg">
+        <div class="card-header bg-warning text-dark text-center">
+          <h5>Change Password</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with url: admin_update_password_path, method: :patch, local: true do %>
+            <div class="mb-3">
+              <%= label_tag :old_password, "Old Password", class: "form-label" %>
+              <%= password_field_tag :old_password, nil, class: "form-control", required: true %>
+            </div>
+            <div class="mb-3">
+              <%= label_tag :new_password, "New Password", class: "form-label" %>
+              <%= password_field_tag :new_password, nil, class: "form-control", required: true %>
+            </div>
+            <div class="mb-3">
+              <%= label_tag :password_confirmation, "Confirm Password", class: "form-label" %>
+              <%= password_field_tag :password_confirmation, nil, class: "form-control", required: true %>
+            </div>
+            <div class="d-flex justify-content-end">
+              <%= submit_tag "Submit", class: "btn btn-success px-4" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

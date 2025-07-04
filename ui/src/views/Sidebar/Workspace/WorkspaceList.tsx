@@ -10,6 +10,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { FiChevronRight, FiBriefcase } from 'react-icons/fi';
+// Removed navigation import as we'll handle adding member inline
 import { Dispatch, SetStateAction } from 'react';
 import { WorkspaceAPIResponse } from '@/services/settings';
 
@@ -18,6 +19,7 @@ interface WorkspacListProps {
   handleCreateNewWorkspace: () => void;
   workspaceDetails: WorkspaceAPIResponse;
   organizationName: string;
+  handleAddMember: (workspaceId: string) => void;
 }
 
 const WorkspaceList = ({
@@ -25,6 +27,7 @@ const WorkspaceList = ({
   handleCreateNewWorkspace,
   workspaceDetails,
   organizationName,
+  handleAddMember,
 }: WorkspacListProps) => {
   return (
     <ModalContent>
@@ -79,7 +82,12 @@ const WorkspaceList = ({
                 <Text size='xs' fontWeight={500}>
                   {`${workspace?.attributes?.members_count} members`}
                 </Text>
-                <Box color='gray.600'>
+                <Box 
+                  color='gray.600' 
+                  cursor='pointer' 
+                  onClick={() => handleAddMember(String(workspace?.id))}
+                  title="Add member to workspace"
+                >
                   <FiChevronRight />
                 </Box>
               </Box>

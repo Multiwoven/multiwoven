@@ -25,13 +25,18 @@ class ApplicationController < ActionController::API
   end
 
   def current_workspace
+    # Skip workspace validation for auth endpoints
+    return nil if controller_name == 'auth' && ['simulate_request'].include?(action_name)
+    
     workspace_id = request.headers["Workspace-Id"]
+    return nil unless current_user && workspace_id
+    
     @current_workspace = current_user.workspaces.find_by(id: workspace_id)
     @current_workspace || raise(StandardError, "Workspace not found")
   end
 
   def current_organization
-    @current_organization ||= current_workspace.organization
+    @current_organization ||= current_workspace&.organization
   end
 
   protected

@@ -42,8 +42,11 @@ const JSONSchemaForm = ({
       validator={validator}
       templates={templateOverrides}
       formData={formData}
-      onSubmit={({ formData }) => onSubmit(formData)}
-      onChange={({ formData }) => onChange?.(formData)}
+      onSubmit={({ formData }) => {
+        console.log('JSONSchemaForm onSubmit received:', formData);
+        onSubmit(formData);
+      }}
+      onChange={({ formData }) => onChange?.(formData as any)}
     >
       {children}
     </Form>

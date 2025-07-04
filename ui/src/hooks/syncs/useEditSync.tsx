@@ -32,6 +32,7 @@ const useEditSync = (
             configuration,
             destination_id: destinationId,
             model_id: modelId,
+            name: data.name || syncData?.name || '',
             schedule_type: data.schedule_type,
             source_id: sourceId,
             stream_name: syncData?.stream_name as string,

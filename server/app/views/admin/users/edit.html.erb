@@ -1,0 +1,55 @@
+<% content_for :title, "Edit User" %>
+
+<div class="container-fluid">
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <%= link_to "← Back to User", admin_user_path(@user), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Edit User: <%= @user.email %></h5>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @user, url: admin_user_path(@user), method: :patch, local: true do |f| %>
+            <% if @user.errors.any? %>
+              <div class="alert alert-danger">
+                <h4>The following errors prevented the user from being saved:</h4>
+                <ul>
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= f.label :name, class: "form-label" %>
+              <%= f.text_field :name, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label" %>
+              <%= f.email_field :email, class: "form-control" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :status, class: "form-label" %>
+              <%= f.select :status, User.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "form-select" %>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <%= link_to "Cancel", admin_user_path(@user), class: "btn btn-outline-secondary me-md-2" %>
+              <%= f.submit "Update User", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

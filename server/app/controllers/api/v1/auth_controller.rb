@@ -45,6 +45,41 @@ module Api
         end
       end
 
+      # Override current_workspace method for this action to prevent workspace validation errors
+      def current_workspace
+        # For simulate_request, we don't validate workspace
+        # This returns nil but doesn't raise an error
+        @current_workspace = nil
+      end
+      
+      def simulate_request
+        # Clear any existing sessions before simulating a new login
+        sign_out(current_user) if user_signed_in?
+        
+        # Process the simulate login request
+        result = Authentication::SimulateLogin.call(params:)
+        
+        if result.success?
+          # Return the JWT token for authentication
+          render json: {
+            data: {
+              type: "token",
+              id: result.token,
+              attributes: {
+                token: result.token,
+                user: {
+                  id: result.user.id,
+                  email: result.user.email,
+                  name: result.user.name
+                }
+              }
+            }
+          }, status: :ok
+        else
+          render_error(message: result.error, status: :unauthorized)
+        end
+      end
+
       def forgot_password
         user = User.find_by(email: params[:email])
 

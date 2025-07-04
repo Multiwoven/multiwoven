@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Audience Lab Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .sidebar {
+        min-height: 100vh;
+        background-color: #343A40;
+      }
+      .sidebar a {
+        color: rgba(255, 255, 255, 0.8);
+        padding: 10px 15px;
+        display: block;
+        text-decoration: none;
+      }
+      .sidebar a:hover {
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .sidebar a.active {
+        color: #fff;
+        background-color: #0D6EFD;
+      }
+      .admin-header {
+        background-color: #212529;
+        color: white;
+        padding: 15px 0;
+      }
+      .content {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <% if super_admin_signed_in? %>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2 px-0 sidebar d-flex flex-column" style="height: 100vh;">
+            <div class="py-4 px-3 mb-4">
+              <h5 class="text-white">Audience Lab Admin</h5>
+            </div>
+            <ul class="nav flex-column flex-grow-1">
+              <!--  <li class="nav-item">
+                          <%#= link_to "Dashboard", admin_root_path, class: "nav-link #{current_page?(admin_root_path) ? 'active' : ''}" %>
+                        </li>-->
+              <li class="nav-item">
+                <%= link_to "Users", admin_users_path, class: "nav-link #{controller_name == 'users' ? 'active' : ''}" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Settings", admin_setting_index_path, class: "nav-link #{controller_name == 'settings' ? 'active' : ''}" %>
+              </li>
+            </ul>
+              <div class="mt-auto px-3 mb-3">
+              <%= link_to admin_logout_path, data: { turbo_method: :delete }, class: "nav-link d-flex" do %>
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              <% end %>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="admin-header">
+              <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4><%= yield(:title) %></h4>
+                  <div>
+                    <span>Welcome, <%= current_super_admin.name || current_super_admin.email %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="content">
+              <%= yield %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="container mt-4">
+        <%= yield %>
+      </div>
+    <% end %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

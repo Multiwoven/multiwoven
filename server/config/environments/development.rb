@@ -67,7 +67,8 @@ Rails.application.configure do
   config.hosts.clear
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
-  config.action_mailer.delivery_method = :letter_opener
+  # Changed from letter_opener to test to avoid requiring additional gems
+  config.action_mailer.delivery_method = :test
   config.action_mailer.perform_deliveries = true
 
   # Highlight code that enables cache.

@@ -1,7 +1,6 @@
 import { useUiConfig } from '@/utils/hooks';
-import { Box, Button, ButtonGroup, Icon, Text } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, Text } from '@chakra-ui/react'; // Removed `Icon`
 import { useEffect, useState } from 'react';
-import { FiBookOpen, FiSlack } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 
 type FormFooterProps = {
@@ -73,10 +72,7 @@ const FormFooter = ({
             <>
               <Link to='https://docs.squared.ai/guides/core-concepts'>
                 <Box display='flex' alignItems='center' marginRight='20px'>
-                  <Icon as={FiBookOpen} color='gray.600' />
-                  <Text ml={2} size='sm'>
-                    Read Documentation
-                  </Text>
+                  <Text ml={2} size='sm'></Text>
                 </Box>
               </Link>
               <Link
@@ -84,10 +80,7 @@ const FormFooter = ({
                 target='_blank'
               >
                 <Box display='flex' alignItems='center'>
-                  <Icon as={FiSlack} color='gray.600' />
-                  <Text ml={2} size='sm'>
-                    Contact Support
-                  </Text>
+                  <Text ml={2} size='sm'></Text>
                 </Box>
               </Link>
             </>

@@ -13,6 +13,8 @@ import { useContext, useMemo } from 'react';
 import StatusTag from '@/components/StatusTag';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { ConnectorListResponse } from '@/views/Connectors/types';
+import useFilters from '@/hooks/useFilters';
+import Pagination from '@/components/EnhancedPagination';
 
 type TableItem = {
   field: ConnectorTableColumnFields;
@@ -41,10 +43,11 @@ const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
 
 const SelectModelSourceForm = (): JSX.Element | null => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+  const { filters, updateFilters } = useFilters({ page: '1' });
 
   const { data, isLoading } = useQueryWrapper<ConnectorListResponse, Error>(
-    ['models', 'data-source'],
-    () => getUserConnectors('Source'),
+    ['models', 'data-source', filters.page],
+    () => getUserConnectors('Source', filters.page as string, '10'),
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -89,7 +92,18 @@ const SelectModelSourceForm = (): JSX.Element | null => {
         {isLoading || !tableData ? (
           <Loader />
         ) : (
-          <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
+          <>
+            <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
+            {data?.links && data.data && data.data.length > 0 && (
+              <Box display='flex' justifyContent='center' mt='20px'>
+                <Pagination
+                  links={data.links}
+                  currentPage={filters.page ? Number(filters.page) : 1}
+                  handlePageChange={(page) => updateFilters({ ...filters, page: page.toString() })}
+                />
+              </Box>
+            )}
+          </>
         )}
       </ContentContainer>
     </Box>
