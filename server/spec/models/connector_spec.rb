@@ -117,6 +117,68 @@ RSpec.describe Connector, type: :model do
     end
   end
 
+  describe "#execute_search" do
+    let(:workspace) { create(:workspace) } # Assuming you have factories set up for workspace
+    let(:connector) do
+      create(
+        :connector,
+        connector_type: "source",
+        connector_name: "PineconeDB",
+        configuration: {
+          region: "us-east-1",
+          api_key: "fake_api_key",
+          index_name: "test",
+          namespace: "test_vectors"
+        }
+      )
+    end
+
+    let(:client_instance) { Multiwoven::Integrations::Source::PineconeDB::Client.new }
+
+    let(:pinecone_client) { double("Pinecone::Client") }
+    let(:pinecone_index) { double("Pinecone::Index") }
+    let(:pinecone_response) do
+      double("Pinecone::Response", body: {
+        matches: [
+          {
+            score: 0.95,
+            metadata: { name: "John Doe" }
+          }
+        ]
+      }.to_json)
+    end
+
+    let(:query_result) { { "score" => 0.95, "metadata" => { "name" => "John Doe" } } }
+
+    before do
+      allow(Multiwoven::Integrations::Source::PineconeDB::Client).to receive(:new) do
+        instance = Multiwoven::Integrations::Source::PineconeDB::Client.allocate
+        instance.instance_variable_set(:@index_name, "test")
+        instance.instance_variable_set(:@namespace, "test_vectors")
+        instance
+      end
+
+      allow_any_instance_of(Multiwoven::Integrations::Source::PineconeDB::Client)
+        .to receive(:create_connection)
+        .and_return(pinecone_client)
+
+      allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
+      allow(pinecone_index).to receive(:query).and_return(pinecone_response)
+
+      allow(connector).to receive(:connector_client)
+        .and_return(Multiwoven::Integrations::Source::PineconeDB::Client)
+    end
+
+    context "when vector and limit" do
+      it "executes the vector search" do
+        vector = [0.1, 0.2, 0.3]
+        limit = 1
+        result = connector.execute_search(vector, limit)
+        expect(result[0].record.data).to eq(query_result)
+      end
+    end
+  end
+
   describe "#default_scope" do
     let(:connector) { create_list(:connector, 4) }
 
