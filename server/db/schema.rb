@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_07_01_125416) do
+>>>>>>> c594e31b (chore(CE): workflow run model changes (#1180))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -595,6 +599,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
     t.integer "session_count", default: 0
   end
 
+  create_table "workflow_runs", force: :cascade do |t|
+    t.uuid "workflow_id", null: false
+    t.bigint "workspace_id", null: false
+    t.string "status", default: "pending", null: false
+    t.jsonb "inputs", default: {}
+    t.jsonb "outputs", default: {}
+    t.text "error_message"
+    t.string "temporal_workflow_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id"], name: "index_workflow_runs_on_workspace_id"
+  end
+
   create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.string "name", null: false
@@ -669,6 +686,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_18_121819) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+  add_foreign_key "workflow_runs", "workspaces"
   add_foreign_key "workflows", "workspaces", validate: false
   add_foreign_key "workspace_users", "roles"
   add_foreign_key "workspace_users", "users"

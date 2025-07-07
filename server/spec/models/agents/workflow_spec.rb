@@ -7,6 +7,7 @@ RSpec.describe Agents::Workflow, type: :model do
     it { should belong_to(:workspace) }
     it { should have_many(:components).dependent(:destroy) }
     it { should have_many(:edges).dependent(:destroy) }
+    it { should have_many(:workflow_runs).dependent(:destroy) }
   end
 
   describe "enums" do
@@ -65,6 +66,31 @@ RSpec.describe Agents::Workflow, type: :model do
       expect(workflow1.token).to be_present
       expect(workflow2.token).to be_present
       expect(workflow1.token).not_to eq(workflow2.token)
+    end
+  end
+
+  describe "workflow runs" do
+    let(:workflow) { create(:workflow) }
+
+    it "can have multiple workflow runs" do
+      run1 = create(:workflow_run, workflow:)
+      run2 = create(:workflow_run, workflow:)
+      run3 = create(:workflow_run, workflow:)
+
+      expect(workflow.workflow_runs).to include(run1, run2, run3)
+      expect(workflow.workflow_runs.count).to eq(3)
+    end
+
+    it "deletes all workflow runs when workflow is deleted" do
+      run1 = create(:workflow_run, workflow:)
+      run2 = create(:workflow_run, workflow:)
+
+      expect do
+        workflow.destroy
+      end.to change { Agents::WorkflowRun.count }.by(-2)
+
+      expect(Agents::WorkflowRun.exists?(run1.id)).to be false
+      expect(Agents::WorkflowRun.exists?(run2.id)).to be false
     end
   end
 end
