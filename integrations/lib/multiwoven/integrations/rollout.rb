@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.29.0"
+=======
+    VERSION = "0.30.5"
+>>>>>>> 70591eb0 (chore(CE): Add markdown_hash to firecrawl (#1213))
 
     ENABLED_SOURCES = %w[
       Snowflake

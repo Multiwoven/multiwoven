@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.0)
+=======
+    multiwoven-integrations (0.30.5)
+>>>>>>> 70591eb0 (chore(CE): Add markdown_hash to firecrawl (#1213))
       MailchimpMarketing
       activesupport
       async-websocket
