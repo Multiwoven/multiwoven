@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.27.1"
-=======
     VERSION = "0.29.1"
->>>>>>> 6fc4a91b (fix(CE): quick fix for qdrant and pinecone spec (#1168))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -32,6 +28,8 @@ module Multiwoven
       AwsBedrockModel
       GenericOpenAI
       IntuitQuickBooks
+      PineconeDB
+      Qdrant
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

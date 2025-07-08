@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.27.1)
-=======
     multiwoven-integrations (0.29.1)
->>>>>>> 6fc4a91b (fix(CE): quick fix for qdrant and pinecone spec (#1168))
       MailchimpMarketing
       activesupport
       async-websocket

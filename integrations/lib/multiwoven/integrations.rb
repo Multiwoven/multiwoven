@@ -86,6 +86,8 @@ require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/aws_bedrock_model/client"
 require_relative "integrations/source/generic_open_ai/client"
 require_relative "integrations/source/intuit_quick_books/client"
+require_relative "integrations/source/pinecone_db/client"
+require_relative "integrations/source/qdrant/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
