@@ -2083,11 +2083,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-<<<<<<< HEAD
-    rack (3.1.12)
-=======
     rack (3.1.16)
->>>>>>> 0e2e0303 (chore(CE): Update Server Gem 0.29.0 (#1160))
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.0)
