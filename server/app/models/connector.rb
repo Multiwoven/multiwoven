@@ -110,7 +110,8 @@ class Connector < ApplicationRecord
       name: connector_name,
       type: connector_type,
       connection_specification: resolved_configuration,
-      query_type: connector_query_type
+      query_type: connector_query_type,
+      connector_instance: self
     )
   end
 
