@@ -5,6 +5,7 @@ module Agents
     belongs_to :workspace
     has_many :edges, dependent: :destroy
     has_many :components, dependent: :destroy
+    has_many :workflow_runs, dependent: :destroy
 
     enum status: { draft: 0, published: 1 }
     enum trigger_type: { website_chatbot: 0, chat_assistant: 1, scheduled: 2, api_trigger: 3 }
@@ -15,6 +16,10 @@ module Agents
     store :configuration, coder: JSON
 
     before_save :generate_token_on_publish
+
+    def build_dag
+      ::Workflow::Dag.new(components, edges)
+    end
 
     private
 
