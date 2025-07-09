@@ -2083,7 +2083,13 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
+<<<<<<< HEAD
     rack (3.1.12)
+=======
+    rack (3.1.16)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
+>>>>>>> e940d8c2 (chore(CE): Add rack attack for rate limiting (#1189))
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.0)
@@ -2323,6 +2329,7 @@ DEPENDENCIES
   prometheus-client (~> 4.2)
   puma (>= 5.0)
   pundit
+  rack-attack
   rack-cors
   rails (~> 7.1.1)
   redis (~> 4.0)
