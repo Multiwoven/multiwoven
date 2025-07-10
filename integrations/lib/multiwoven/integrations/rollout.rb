@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.29.0"
-=======
     VERSION = "0.30.0"
->>>>>>> c194e6e3 (feat(CE): Add Firecrawl Source Connector (#1167))
 
     ENABLED_SOURCES = %w[
       Snowflake

@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.29.0)
-=======
     multiwoven-integrations (0.30.0)
->>>>>>> c194e6e3 (feat(CE): Add Firecrawl Source Connector (#1167))
       MailchimpMarketing
       activesupport
       async-websocket
