@@ -50,6 +50,7 @@ gem "bootsnap", require: false # Reduces boot time
 gem "counter_culture", "~> 3.3"
 gem "fugit"
 gem "pg_query"
+gem "rack-attack"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"
