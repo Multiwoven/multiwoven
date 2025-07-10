@@ -67,5 +67,10 @@ module MultiwovenServer
       enable_starttls_auto: true
     }
     config.active_model.i18n_customize_full_message = true
+
+    # Set default headers for security
+    Rails.application.config.action_dispatch.default_headers.merge!({
+      "X-Frame-Options" => "SAMEORIGIN"
+    })
   end
 end
