@@ -32,7 +32,11 @@ module Activities
     def select_extractor(sync_run)
       return test_sync_extractor if sync_run.test?
 
-      sync_mode_extractor(sync_run.sync.sync_mode.to_sym)
+      if sync_run.sync.source.connector_name == "Firecrawl"
+        ReverseEtl::Extractors::WebScraping.new
+      else
+        sync_mode_extractor(sync_run.sync.sync_mode.to_sym)
+      end
     end
 
     def test_sync_extractor
