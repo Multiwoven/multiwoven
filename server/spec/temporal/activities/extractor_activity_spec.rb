@@ -29,28 +29,20 @@ RSpec.describe Activities::ExtractorActivity do
     end
     let(:extractor_incremental) { instance_double("ReverseEtl::Extractors::IncrementalDelta") }
     let(:extractor_full_refresh) { instance_double("ReverseEtl::Extractors::FullRefresh") }
-<<<<<<< HEAD
-=======
     let(:extractor_test) { instance_double("ReverseEtl::Extractors::TestSyncExtractor") }
     let(:extractor_web_scrape) { instance_double("ReverseEtl::Extractors::WebScraping") }
->>>>>>> 78205203 (chore(CE): Server gem update 0.30.0 (#1179))
     let(:mock_context) { double("context") }
     let(:activity) { Activities::ExtractorActivity.new(mock_context) }
 
     before do
       allow(ReverseEtl::Extractors::IncrementalDelta).to receive(:new).and_return(extractor_incremental)
       allow(ReverseEtl::Extractors::FullRefresh).to receive(:new).and_return(extractor_full_refresh)
-<<<<<<< HEAD
-      allow(extractor_incremental).to receive(:read).with(anything, mock_context)
-      allow(extractor_full_refresh).to receive(:read).with(anything, mock_context)
-=======
       allow(ReverseEtl::Extractors::TestSyncExtractor).to receive(:new).and_return(extractor_test)
       allow(ReverseEtl::Extractors::WebScraping).to receive(:new).and_return(extractor_web_scrape)
       allow(extractor_incremental).to receive(:read).with(anything, mock_context)
       allow(extractor_full_refresh).to receive(:read).with(anything, mock_context)
       allow(extractor_test).to receive(:read).with(anything, mock_context)
       allow(extractor_web_scrape).to receive(:read).with(anything, mock_context)
->>>>>>> 78205203 (chore(CE): Server gem update 0.30.0 (#1179))
     end
 
     it "sync run pending to started" do

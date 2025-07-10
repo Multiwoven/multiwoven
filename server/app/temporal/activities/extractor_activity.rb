@@ -32,9 +32,6 @@ module Activities
     def select_extractor(sync_run)
       return test_sync_extractor if sync_run.test?
 
-<<<<<<< HEAD
-      sync_mode_extractor(sync_run.sync.sync_mode.to_sym)
-=======
       if sync_run.sync.model.unstructured?
         ReverseEtl::Extractors::UnstructuredFileDataExtractor.new
       elsif sync_run.sync.source.connector_name == "Firecrawl"
@@ -42,7 +39,6 @@ module Activities
       else
         sync_mode_extractor(sync_run.sync.sync_mode.to_sym)
       end
->>>>>>> 78205203 (chore(CE): Server gem update 0.30.0 (#1179))
     end
 
     def test_sync_extractor
