@@ -14,7 +14,7 @@ module ReverseEtl
 
         process_result(result, sync_run)
 
-        heartbeat(activity, sync_run)
+        heartbeat(activity, sync_run, nil)
 
         sync_run.queue!
       end

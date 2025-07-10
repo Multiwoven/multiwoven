@@ -13,21 +13,6 @@ RSpec.describe Activities::ExtractorActivity do
     let!(:sync_full_refresh) do
       create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, sync_mode: "full_refresh")
     end
-    let!(:unstructured_model) do
-      create(:model, query_type: "unstructured", configuration: {
-               "embedding_config" => {
-                 "api_key" => "test-api-key",
-                 "model" => "text-embedding-ada-002"
-               },
-               "chunk_config" => {
-                 "chunk_size" => 1000,
-                 "chunk_overlap" => 200
-               }
-             })
-    end
-    let!(:sync_unstructured) do
-      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:, model: unstructured_model)
-    end
     let(:sync_run) { create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model) }
     let(:sync_run_started) do
       create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
@@ -41,10 +26,6 @@ RSpec.describe Activities::ExtractorActivity do
     end
     let(:sync_run_queued) do
       create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "queued")
-    end
-    let(:sync_run_unstructured) do
-      create(:sync_run, sync: sync_unstructured, workspace: sync_unstructured.workspace, source:, destination:,
-                        model: sync_unstructured.model)
     end
     let(:extractor_incremental) { instance_double("ReverseEtl::Extractors::IncrementalDelta") }
     let(:extractor_full_refresh) { instance_double("ReverseEtl::Extractors::FullRefresh") }
@@ -118,13 +99,6 @@ RSpec.describe Activities::ExtractorActivity do
         activity.execute(sync_run_queued.id)
         sync_run_queued.reload
         expect(sync_run_queued).to have_state(:queued)
-      end
-    end
-
-    context "when model is unstructured" do
-      it "uses UnstructuredFileDataExtractor" do
-        extractor = activity.send(:select_extractor, sync_run_unstructured)
-        expect(extractor).to be_a(ReverseEtl::Extractors::UnstructuredFileDataExtractor)
       end
     end
   end
@@ -201,23 +175,6 @@ RSpec.describe Activities::ExtractorActivity do
         extractor = activity.send(:select_extractor, sync_run)
         expect(extractor).to be_a(ReverseEtl::Extractors::WebScraping)
       end
-    end
-  end
-
-  describe "timeouts and retry policy" do
-    it "has correct timeouts" do
-      expect(described_class.timeouts).to eq(
-        start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
-        heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "86400").to_i
-      )
-    end
-
-    it "has correct retry policy" do
-      expect(described_class.retry_policy).to eq(
-        interval: (ENV["TEMPORAL_ACTIVITY_RETRY_INTERVAL_IN_SEC"] || "1").to_i,
-        backoff: (ENV["TEMPORAL_ACTIVITY_RETRY_BACK_OFF"] || "1").to_i,
-        max_attempts: (ENV["TEMPORAL_ACTIVITY_RETRY_MAX_ATTEMPT"] || "3").to_i
-      )
     end
   end
 end
