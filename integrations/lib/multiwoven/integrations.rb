@@ -88,6 +88,11 @@ require_relative "integrations/source/generic_open_ai/client"
 require_relative "integrations/source/intuit_quick_books/client"
 require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/firecrawl/client"
+require_relative "integrations/source/odoo/client"
+>>>>>>> 51bed297 (feat(CE): Odoo source connector (#1222))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
