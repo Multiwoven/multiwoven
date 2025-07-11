@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.29.1"
+=======
+    VERSION = "0.31.2"
+>>>>>>> bf325053 (refactor(CE): Fix AIS Data Store discover method (#1231))
 
     ENABLED_SOURCES = %w[
       Snowflake
