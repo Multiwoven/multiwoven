@@ -147,6 +147,23 @@ class Connector < ApplicationRecord
     Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
   end
 
+<<<<<<< HEAD
+=======
+  def set_sub_category
+    unless connector_sub_category.present? &&
+           connector_sub_category == DEFAULT_CONNECTOR_SUB_CATEGORY &&
+           !will_save_change_to_connector_sub_category?
+      return
+    end
+
+    sub_category_name = connector_client.new.meta_data[:data][:sub_category]
+    sub_category_name = "Vector Database" if resolved_configuration["data_type"] == "vector"
+    self.connector_sub_category = sub_category_name if sub_category_name.present?
+  rescue StandardError => e
+    Rails.logger.error("Failed to set sub category for connector ##{id}: #{e.message}")
+  end
+
+>>>>>>> 31736261 (chore(CE): Add sub_category fix for postgres (#1224))
   def ai_model?
     connector_category == "AI Model"
   end
