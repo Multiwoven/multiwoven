@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.1)
+=======
+    multiwoven-integrations (0.31.1)
+>>>>>>> 65132303 (chore(CE): move require to integrations.rb (#1226))
       MailchimpMarketing
       activesupport
       async-websocket

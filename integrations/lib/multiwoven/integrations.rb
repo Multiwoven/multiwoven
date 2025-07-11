@@ -40,6 +40,11 @@ require "MailchimpMarketing"
 require "aws-sdk-bedrockruntime"
 require "pinecone"
 require "intuit-oauth"
+<<<<<<< HEAD
+=======
+require "nokogiri"
+require "xmlrpc/client"
+>>>>>>> 65132303 (chore(CE): move require to integrations.rb (#1226))
 
 # Service
 require_relative "integrations/config"
