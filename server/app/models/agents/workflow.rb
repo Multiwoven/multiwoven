@@ -2,6 +2,8 @@
 
 module Agents
   class Workflow < ApplicationRecord
+    default_scope { order(updated_at: :desc) }
+
     belongs_to :workspace
     has_many :edges, dependent: :destroy
     has_many :components, dependent: :destroy

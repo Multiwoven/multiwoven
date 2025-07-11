@@ -25,6 +25,23 @@ RSpec.describe Agents::Workflow, type: :model do
     it { should validate_uniqueness_of(:token).allow_nil }
   end
 
+  describe "default scope" do
+    let(:workspace) { create(:workspace) }
+    let!(:workflow1) { create(:workflow, workspace:, name: "Workflow 1", updated_at: 1.day.ago) }
+    let!(:workflow2) { create(:workflow, workspace:, name: "Workflow 2", updated_at: 2.days.ago) }
+    let!(:workflow3) { create(:workflow, workspace:, name: "Workflow 3", updated_at: 3.hours.ago) }
+
+    it "orders by updated_at in descending order" do
+      result = Agents::Workflow.all
+      expect(result.to_a).to eq([workflow3, workflow1, workflow2])
+    end
+
+    it "can be overridden with explicit order" do
+      result = Agents::Workflow.unscoped.order(:name)
+      expect(result.map(&:name)).to eq(["Workflow 1", "Workflow 2", "Workflow 3"])
+    end
+  end
+
   describe "configuration storage" do
     let(:workflow) { create(:workflow) }
 
