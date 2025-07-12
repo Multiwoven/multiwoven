@@ -20,7 +20,10 @@ module Multiwoven::Integrations::Destination
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
-        query = "SELECT table_name, column_name, data_type, is_nullable
+        query = "SELECT table_name, column_name,
+                 CASE WHEN data_type = 'USER-DEFINED' THEN udt_name ELSE data_type END
+                 AS data_type,
+                 is_nullable
                  FROM information_schema.columns
                  WHERE table_schema = '#{connection_config[:schema]}' AND table_catalog = '#{connection_config[:database]}'
                  ORDER BY table_name, ordinal_position;"
