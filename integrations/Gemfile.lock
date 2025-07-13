@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.29.1)
+=======
+    multiwoven-integrations (0.32.0)
+>>>>>>> d47c46c4 (feat(CE): Odoo destination connector (#1223))
       MailchimpMarketing
       activesupport
       async-websocket
