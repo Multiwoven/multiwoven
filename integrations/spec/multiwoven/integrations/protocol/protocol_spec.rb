@@ -341,7 +341,7 @@ module Multiwoven
 
     RSpec.describe VectorConfig do
       describe ".from_json" do
-        it "creates an instance from JSON" do
+        it "creates an instance from JSON when vector is array" do
           json_data = {
             "source": {
               "name": "example_source",
@@ -358,6 +358,26 @@ module Multiwoven
           expect(vector_search_config.source).to be_a(Connector)
           expect(vector_search_config.source.name).to eq("example_source")
           expect(vector_search_config.vector).to eq([0.1, 0.2, 0.3])
+          expect(vector_search_config.limit).to eq(10)
+        end
+
+        it "creates an instance from JSON when vector is string" do
+          json_data = {
+            "source": {
+              "name": "example_source",
+              "type": "source",
+              "connection_specification": { "key": "value" }
+            },
+            "vector": "SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'",
+            "limit": 10
+          }.to_json
+
+          vector_search_config = described_class.from_json(json_data)
+
+          expect(vector_search_config).to be_a(described_class)
+          expect(vector_search_config.source).to be_a(Connector)
+          expect(vector_search_config.source.name).to eq("example_source")
+          expect(vector_search_config.vector).to eq("SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'")
           expect(vector_search_config.limit).to eq(10)
         end
       end

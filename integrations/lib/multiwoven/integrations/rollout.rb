@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.30.1"
+=======
+    VERSION = "0.32.1"
+>>>>>>> c71e8fd4 (chore(CE): Add vector search to postgres (#1233))
 
     ENABLED_SOURCES = %w[
       Snowflake

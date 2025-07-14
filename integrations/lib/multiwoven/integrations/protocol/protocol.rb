@@ -181,7 +181,7 @@ module Multiwoven
 
     class VectorConfig < ProtocolModel
       attribute :source, Connector
-      attribute :vector, Types::Array.of(Types::Float)
+      attribute :vector, Types::Array.of(Types::Float) | Types::String
       attribute :limit, Types::Integer.default(1)
     end
 
