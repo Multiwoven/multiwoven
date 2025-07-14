@@ -14,6 +14,7 @@
 #  updated_at              :datetime         not null
 #  connector_name          :string
 #
+# rubocop:disable Metrics/ClassLength
 class Connector < ApplicationRecord
   include Utils::JsonHelpers
 
@@ -41,7 +42,11 @@ class Connector < ApplicationRecord
   before_save :set_category
   before_update :set_category, if: :will_save_change_to_connector_name?
 
+  before_save :set_sub_category
+  before_update :set_sub_category, if: :will_save_change_to_connector_name?
+
   DEFAULT_CONNECTOR_CATEGORY = "data"
+  DEFAULT_CONNECTOR_SUB_CATEGORY = "database"
 
   # TODO: Move this to integrations gem
   DATA_CATEGORIES = [
@@ -65,8 +70,35 @@ class Connector < ApplicationRecord
     "AI Model"
   ].freeze
 
+  LLM_SUB_CATEGORIES = [
+    "LLM"
+  ].freeze
+
+  DATABASE_SUB_CATEGORIES = [
+    "Relational Database",
+    "database"
+  ].freeze
+
+  WEB_SUB_CATEGORIES = [
+    "Web Scraper"
+  ].freeze
+
+  AI_ML_SERVICE_SUB_CATEGORIES = [
+    "AI_ML Service"
+  ].freeze
+
+  VECTOR_SUB_CATEGORIES = [
+    "Vector Database"
+  ].freeze
+
   scope :ai_ml, -> { where(connector_category: AI_ML_CATEGORIES) }
   scope :data, -> { where(connector_category: DATA_CATEGORIES) }
+
+  scope :llm, -> { where(connector_sub_category: LLM_SUB_CATEGORIES) }
+  scope :database, -> { where(connector_sub_category: DATABASE_SUB_CATEGORIES) }
+  scope :web, -> { where(connector_sub_category: WEB_SUB_CATEGORIES) }
+  scope :ai_ml_service, -> { where(connector_sub_category: AI_ML_SERVICE_SUB_CATEGORIES) }
+  scope :vector, -> { where(connector_sub_category: VECTOR_SUB_CATEGORIES) }
 
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
@@ -147,6 +179,19 @@ class Connector < ApplicationRecord
     Rails.logger.error("Failed to set category for connector ##{id}: #{e.message}")
   end
 
+  def set_sub_category
+    unless connector_sub_category.present? &&
+           connector_sub_category == DEFAULT_CONNECTOR_SUB_CATEGORY &&
+           !will_save_change_to_connector_sub_category?
+      return
+    end
+
+    sub_category_name = connector_client.new.meta_data[:data][:sub_category]
+    self.connector_sub_category = sub_category_name if sub_category_name.present?
+  rescue StandardError => e
+    Rails.logger.error("Failed to set sub category for connector ##{id}: #{e.message}")
+  end
+
   def ai_model?
     connector_category == "AI Model"
   end
@@ -155,3 +200,4 @@ class Connector < ApplicationRecord
     resolve_values_from_env(configuration)
   end
 end
+# rubocop:enable Metrics/ClassLength
