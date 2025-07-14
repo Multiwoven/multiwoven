@@ -18,12 +18,9 @@ module Multiwoven::Integrations::Source
         failure_status(e)
       end
 
-      def discover(connection_config)
-        connection_config = connection_config.with_indifferent_access
-        create_connection(connection_config)
-        response = execute_scrape(FIRECRAWL_SCRAPE_URL)
-        results = JSON.parse(response.body)
-        catalog = Catalog.new(streams: create_streams(results))
+      def discover(_connection_config = nil)
+        catalog_json = read_json(CATALOG_SPEC_PATH)
+        catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
         handle_exception(e, { context: "FIRECRAWL:DISCOVER:EXCEPTION", type: "error" })
@@ -32,9 +29,8 @@ module Multiwoven::Integrations::Source
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
-        query = sync_config.model.query
         url = create_connection(connection_config)
-        query(url, query)
+        query(url, nil, nil)
       rescue StandardError => e
         handle_exception(e, {
                            context: "FIRECRAWL:READ:EXCEPTION",
@@ -62,7 +58,15 @@ module Multiwoven::Integrations::Source
         FIRECRAWL_CRAWL_URL
       end
 
-      def query(url, _query)
+      def query(url, _query, limit = 1)
+        if limit.present?
+          if @config["includePaths"]&.any?
+            path = @config["includePaths"].first
+            @config["url"] = URI.join(@config["url"], path).to_s
+          end
+          @config.delete("includePaths")
+          @config[:limit] = limit
+        end
         request = execute_crawl(url)
         request = JSON.parse(request.body)
         crawl_url = get_request_url(request)
@@ -84,16 +88,6 @@ module Multiwoven::Integrations::Source
           url: url,
           http_method: HTTP_POST,
           payload: JSON.parse(@config.to_json),
-          headers: auth_headers(@api_key),
-          config: {}
-        )
-      end
-
-      def execute_scrape(url)
-        send_request(
-          url: url,
-          http_method: HTTP_POST,
-          payload: JSON.parse({ "url": @base_url }.to_json),
           headers: auth_headers(@api_key),
           config: {}
         )
@@ -146,37 +140,6 @@ module Multiwoven::Integrations::Source
 
           sleep(FIRECRAWL_REQUEST_RATE_LIMIT)
         end
-      end
-
-      def create_streams(records)
-        group_by_table(records).map do |r|
-          Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], action: StreamAction["fetch"], json_schema: convert_to_json_schema(r[:columns]))
-        end
-      end
-
-      def group_by_table(response)
-        columns = response["data"].map do |key, value|
-          {
-            column_name: key,
-            data_type: "string",
-            is_nullable: value.nil?
-          }
-        end
-
-        if response["data"]["metadata"]["url"]
-          columns << {
-            column_name: "url",
-            data_type: "string",
-            is_nullable: response["data"]["metadata"]["url"].nil?
-          }
-        end
-
-        [
-          {
-            tablename: "scrape",
-            columns: columns
-          }
-        ]
       end
 
       def build_url(url, id)
