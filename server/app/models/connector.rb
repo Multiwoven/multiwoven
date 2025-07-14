@@ -199,5 +199,45 @@ class Connector < ApplicationRecord
   def resolved_configuration
     resolve_values_from_env(configuration)
   end
+
+  def masked_configuration
+    spec = connector_client.new.connector_spec[:connection_specification].with_indifferent_access
+    secret_keys = extract_secret_keys(spec)
+    mask_secret_values(configuration.deep_dup, secret_keys)
+  end
+
+  private
+
+  def extract_secret_keys(schema, keys = [])
+    return keys unless schema.is_a?(Hash)
+
+    properties = schema[:properties]
+    if properties.is_a?(Hash)
+      properties.each do |key, subschema|
+        keys << key.to_s if subschema[:multiwoven_secret] || subschema["multiwoven_secret"]
+        extract_secret_keys(subschema, keys)
+      end
+    end
+
+    keys
+  end
+
+  def mask_secret_values(config, secret_keys)
+    case config
+    when Hash
+      config.each_with_object({}) do |(key, value), result|
+        result[key] =
+          if secret_keys.include?(key.to_s)
+            "*************"
+          else
+            mask_secret_values(value, secret_keys)
+          end
+      end
+    when Array
+      config.map { |item| mask_secret_values(item, secret_keys) }
+    else
+      config
+    end
+  end
 end
 # rubocop:enable Metrics/ClassLength
