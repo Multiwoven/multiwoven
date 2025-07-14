@@ -4,12 +4,8 @@
     "title": "Qdrant",
     "connector_type": "source",
     "category": "Database",
-<<<<<<< HEAD
-    "documentation_url": "https://docs.squared.ai/guides/source/data-sources/qdrant",
-=======
     "sub_category": "Vector Database",
     "documentation_url": "https://docs.squared.ai/activation/vector_search/qdrant",
->>>>>>> fe252bc1 (chore(CE): Add sub_category to the meta for each connector (#1195))
     "github_issue_label": "source-qdrant",
     "icon": "icon.svg",
     "license": "MIT",

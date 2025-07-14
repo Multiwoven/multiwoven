@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.29.0"
-=======
     VERSION = "0.30.1"
->>>>>>> fe252bc1 (chore(CE): Add sub_category to the meta for each connector (#1195))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +30,7 @@ module Multiwoven
       IntuitQuickBooks
       PineconeDB
       Qdrant
+      Firecrawl
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
