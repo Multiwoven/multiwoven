@@ -4,7 +4,7 @@
     "title": "Qdrant",
     "connector_type": "source",
     "category": "Database",
-    "documentation_url": "https://docs.squared.ai/guides/source/data-sources/qdrant",
+    "documentation_url": "https://docs.squared.ai/activation/vector_search/qdrant",
     "github_issue_label": "source-qdrant",
     "icon": "icon.svg",
     "license": "MIT",
