@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.30.1)
+=======
+    multiwoven-integrations (0.32.1)
+>>>>>>> c71e8fd4 (chore(CE): Add vector search to postgres (#1233))
       MailchimpMarketing
       activesupport
       async-websocket
