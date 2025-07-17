@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_06_27_000141) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_07_17_004726) do
+>>>>>>> 20a2663e (chore(CE): Revert adding template to workflow in DB (#1250))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
