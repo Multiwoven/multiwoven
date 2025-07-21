@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.30.1)
+=======
+    multiwoven-integrations (0.32.2)
+>>>>>>> 7e9d87d1 (chore(CE): reformat private_key in big query client for connection (#1240))
       MailchimpMarketing
       activesupport
       async-websocket
