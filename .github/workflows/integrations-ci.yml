@@ -84,4 +84,4 @@ jobs:
         with:
           oidc: true
           files: ./integrations/coverage/.resultset.json
-          tage: integrations
+          tag: integrations

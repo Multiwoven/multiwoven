@@ -95,10 +95,6 @@ jobs:
         run: bundle exec rspec
         working-directory: ./server
 
-      - name: Run Tests
-        run: timeout 15m bundle exec rspec --format documentation --profile 10
-        working-directory: ./server
-
       - name: Upload coverage to Qlty.sh
         if: github.event_name == 'push'
         uses: qltysh/qlty-action/coverage@v1
