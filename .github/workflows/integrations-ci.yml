@@ -14,8 +14,8 @@ on:
       - "integrations/**"
 
 permissions:
-    contents: read
-    id-token: write
+  contents: read
+  id-token: write
 
 env:
   CI: true

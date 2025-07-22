@@ -12,8 +12,8 @@ on:
       - "server/**"
 
 permissions:
-    contents: read
-    id-token: write #important
+  contents: read
+  id-token: write #important
 
 env:
   DB_HOST: localhost

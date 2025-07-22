@@ -12,8 +12,8 @@ on:
       - "ui/**"
 
 permissions:
-    contents: read
-    id-token: write
+  contents: read
+  id-token: write
 
 jobs:
   build:
