@@ -11,6 +11,10 @@ on:
     paths:
       - "ui/**"
 
+permissions:
+    contents: read
+    id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,16 +35,10 @@ jobs:
         run: npm test -- --coverage
         working-directory: ./ui
 
-      - name: Upload coverage to Code Climate
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID_UI }}
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
-          if [ -f coverage/lcov.info ]; then
-            ./cc-test-reporter after-build --exit-code $? --coverage-input-type lcov
-          else
-            echo "Coverage report not found."
-          fi
-        working-directory: ./ui
+      - name: Upload UI coverage to Qlty.sh
+        # if: github.event_name == 'push'
+        uses: qltysh/qlty-action/coverage@v1
+        with:
+          oidc: true
+          files: ./ui/coverage/lcov.info
+          tag: frontend

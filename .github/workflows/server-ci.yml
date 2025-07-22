@@ -11,6 +11,10 @@ on:
     paths:
       - "server/**"
 
+permissions:
+    contents: read
+    id-token: write
+
 env:
   DB_HOST: localhost
   DB_USERNAME: postgres
@@ -91,18 +95,14 @@ jobs:
         run: bundle exec rspec
         working-directory: ./server
 
-      - name: Install cc-test-reporter
-        if: github.event_name == 'push'
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
+      - name: Run Tests
+        run: timeout 15m bundle exec rspec --format documentation --profile 10
         working-directory: ./server
 
-      - name: Upload Coverage to Code Climate
+      - name: Upload coverage to Qlty.sh
         if: github.event_name == 'push'
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID_SERVER }}
-        run: |
-          ./cc-test-reporter before-build
-          ./cc-test-reporter after-build --exit-code $?
-        working-directory: ./server
+        uses: qltysh/qlty-action/coverage@v1
+        with:
+          oidc: true
+          files: ./server/coverage/.resultset.json
+          tag: server
