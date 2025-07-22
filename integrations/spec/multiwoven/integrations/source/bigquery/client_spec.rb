@@ -10,7 +10,9 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do
         "connection_specification": {
           "project_id": "project",
           "dataset_id": "profile",
-          "credentials_json": "sample_json"
+          "credentials_json": {
+            "private_key": "sample_json \\nwith new line"
+          }
         }
       },
       "destination": {

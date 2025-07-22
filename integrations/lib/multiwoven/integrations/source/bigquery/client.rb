@@ -73,6 +73,10 @@ module Multiwoven::Integrations::Source
       end
 
       def create_connection(connection_config)
+        credentials = connection_config["credentials_json"]
+
+        credentials["private_key"] = credentials["private_key"].gsub("\\n", "\n") if credentials["private_key"].include?("\\n")
+
         Google::Cloud::Bigquery.new(
           project: connection_config["project_id"],
           credentials: connection_config["credentials_json"]
