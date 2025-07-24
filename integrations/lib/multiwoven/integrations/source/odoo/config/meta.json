@@ -1,12 +1,11 @@
 {
   "data": {
-    "name": "PineconeDB",
-    "title": "Pinecone DB",
+    "name": "Odoo",
+    "title": "Odoo",
     "connector_type": "source",
     "category": "Database",
-    "sub_category": "Vector Database",
-    "documentation_url": "https://docs.squared.ai/activation/vector_search/pinecone_db",
-    "github_issue_label": "source-pinecone-db",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/odoo",
+    "github_issue_label": "source-odoo",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
