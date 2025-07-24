@@ -1,0 +1,26 @@
+{
+  "request_rate_limit": 15,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 5,
+  "streams": [
+    {
+      "name": "scrape",
+      "action": "fetch",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "markdown": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "supported_sync_modes": ["incremental"]
+    }
+  ]
+}
