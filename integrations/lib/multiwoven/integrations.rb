@@ -42,7 +42,6 @@ require "pinecone"
 require "intuit-oauth"
 require "nokogiri"
 require "xmlrpc/client"
-require "nokogiri"
 
 # Service
 require_relative "integrations/config"
