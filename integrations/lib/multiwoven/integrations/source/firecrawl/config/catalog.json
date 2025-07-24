@@ -17,6 +17,9 @@
           },
           "url": {
             "type": "string"
+          },
+          "markdown_hash": {
+            "type": "string"
           }
         }
       },

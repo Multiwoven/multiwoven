@@ -77,7 +77,8 @@ module Multiwoven::Integrations::Source
           data = {
             "metadata": metadata_json,
             "markdown": row["markdown"],
-            "url": metadata_url
+            "url": metadata_url,
+            "markdown_hash": Digest::MD5.hexdigest(row["markdown"]) # Placeholder for webscraping extractor use
           }
           RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message
         end
