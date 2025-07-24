@@ -4,6 +4,7 @@
     "title": "Pinecone DB",
     "connector_type": "source",
     "category": "Database",
+    "sub_category": "Vector Database",
     "documentation_url": "https://docs.squared.ai/activation/vector_search/pinecone_db",
     "github_issue_label": "source-pinecone-db",
     "icon": "icon.svg",
