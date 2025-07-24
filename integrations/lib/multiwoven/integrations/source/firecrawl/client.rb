@@ -30,7 +30,7 @@ module Multiwoven::Integrations::Source
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
         url = create_connection(connection_config)
-        query(url, nil)
+        query(url, nil, nil)
       rescue StandardError => e
         handle_exception(e, {
                            context: "FIRECRAWL:READ:EXCEPTION",
@@ -58,15 +58,14 @@ module Multiwoven::Integrations::Source
         FIRECRAWL_CRAWL_URL
       end
 
-      def query(url, query)
-        has_limit = query.match(/LIMIT\s+(\d+)\s*$/i) if query.present?
-        if has_limit.present?
+      def query(url, _query, limit = 1)
+        if limit.present?
           if @config["includePaths"]&.any?
             path = @config["includePaths"].first
             @config["url"] = URI.join(@config["url"], path).to_s
           end
           @config.delete("includePaths")
-          @config[:limit] = has_limit[1].to_i
+          @config[:limit] = limit
         end
         request = execute_crawl(url)
         request = JSON.parse(request.body)
