@@ -471,6 +471,18 @@ module Multiwoven
           expect(connector.query_type).to eq("ai_ml")
           expect(connector.connection_specification).to eq(key: "value")
         end
+
+        it "creates a connector_instance" do
+          json_data[:connector_instance] = "Random_connector_instance"
+
+          connector = Connector.from_json(json_data.to_json)
+          expect(connector).to be_a(described_class)
+          expect(connector.name).to eq("example_connector")
+          expect(connector.type).to eq("source")
+          expect(connector.query_type).to eq("ai_ml")
+          expect(connector.connection_specification).to eq(key: "value")
+          expect(connector.connector_instance).to eq("Random_connector_instance")
+        end
       end
     end
 
