@@ -40,11 +40,9 @@ require "MailchimpMarketing"
 require "aws-sdk-bedrockruntime"
 require "pinecone"
 require "intuit-oauth"
-<<<<<<< HEAD
-=======
 require "nokogiri"
 require "xmlrpc/client"
->>>>>>> 65132303 (chore(CE): move require to integrations.rb (#1226))
+require "nokogiri"
 
 # Service
 require_relative "integrations/config"
@@ -93,6 +91,8 @@ require_relative "integrations/source/generic_open_ai/client"
 require_relative "integrations/source/intuit_quick_books/client"
 require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"
+require_relative "integrations/source/firecrawl/client"
+require_relative "integrations/source/odoo/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

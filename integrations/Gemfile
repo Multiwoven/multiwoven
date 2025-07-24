@@ -85,16 +85,17 @@ gem "pinecone"
 
 gem "intuit-oauth"
 
-<<<<<<< HEAD
-=======
 gem "nokogiri"
 
 gem "xmlrpc", "~> 0.3.3"
 
 gem "builder", "~> 3.3"
 
->>>>>>> 65132303 (chore(CE): move require to integrations.rb (#1226))
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
 end
+
+gem "xmlrpc", "~> 0.3.3"
+
+gem "builder", "~> 3.3"

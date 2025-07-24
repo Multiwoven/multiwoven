@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.29.1"
-=======
     VERSION = "0.31.1"
->>>>>>> 65132303 (chore(CE): move require to integrations.rb (#1226))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +30,8 @@ module Multiwoven
       IntuitQuickBooks
       PineconeDB
       Qdrant
+      Firecrawl
+      Odoo
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
