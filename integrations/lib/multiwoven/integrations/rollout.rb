@@ -60,6 +60,7 @@ module Multiwoven
       MicrosoftDynamics
       Qdrant
       PineconeDB
+      Odoo
     ].freeze
   end
 end
