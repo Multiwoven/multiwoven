@@ -1,5 +1,5 @@
 {
-  "documentation_url": "https://docs.squared.ai/guides/source/data-sources/qdrant",
+  "documentation_url": "https://docs.squared.ai/activation/vector_search/qdrant",
   "stream_type": "user_defined",
   "connector_query_type": "vector_search",
   "connection_specification": {
@@ -10,7 +10,7 @@
     "properties": {
       "host": {
         "type": "string",
-        "title": "API Url",
+        "title": "Host",
         "order": 0
       },
       "api_key": {
