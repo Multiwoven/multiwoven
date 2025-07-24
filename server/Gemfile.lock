@@ -1971,11 +1971,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.30.0)
-=======
     multiwoven-integrations (0.32.1)
->>>>>>> 64480ddd (chore(CE): Update Server Gem 0.32.1 (#1236))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2269,6 +2265,8 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    xmlrpc (0.3.3)
+      webrick
     zeitwerk (2.7.2)
     zendesk_api (3.1.1)
       faraday (> 2.0.0)
@@ -2316,11 +2314,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.30.0)
-=======
   multiwoven-integrations (~> 0.32.1)
->>>>>>> 64480ddd (chore(CE): Update Server Gem 0.32.1 (#1236))
   mysql2
   newrelic_rpm
   parallel
@@ -2349,6 +2343,7 @@ DEPENDENCIES
   timecop
   tzinfo-data
   webrick
+  xmlrpc (~> 0.3.3)
 
 RUBY VERSION
    ruby 3.2.4p170
