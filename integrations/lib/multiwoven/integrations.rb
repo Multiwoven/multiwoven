@@ -41,6 +41,7 @@ require "aws-sdk-bedrockruntime"
 require "pinecone"
 require "intuit-oauth"
 require "nokogiri"
+require "xmlrpc/client"
 
 # Service
 require_relative "integrations/config"

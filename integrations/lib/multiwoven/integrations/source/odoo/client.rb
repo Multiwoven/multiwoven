@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "xmlrpc/client"
-
 module Multiwoven::Integrations::Source
   module Odoo
     include Multiwoven::Integrations::Core
