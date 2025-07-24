@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.29.0"
-=======
     VERSION = "0.30.4"
->>>>>>> c76441a8 (chore(CE): Add connector_instance to protocol (#1211))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +30,7 @@ module Multiwoven
       IntuitQuickBooks
       PineconeDB
       Qdrant
+      Firecrawl
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
