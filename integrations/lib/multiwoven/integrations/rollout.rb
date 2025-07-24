@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.29.1"
-=======
     VERSION = "0.32.0"
->>>>>>> d47c46c4 (feat(CE): Odoo destination connector (#1223))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +30,8 @@ module Multiwoven
       IntuitQuickBooks
       PineconeDB
       Qdrant
+      Firecrawl
+      Odoo
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
