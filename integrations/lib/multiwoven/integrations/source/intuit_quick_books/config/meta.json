@@ -4,6 +4,7 @@
       "title": "Intuit QuickBooks",
       "connector_type": "source",
       "category": "Data Warehouse",
+      "sub_category": "Relational Database",
       "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/intuit_quickbooks",
       "github_issue_label": "source-intuit-quickbooks",
       "icon": "icon.svg",
