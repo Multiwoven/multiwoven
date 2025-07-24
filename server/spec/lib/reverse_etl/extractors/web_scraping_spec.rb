@@ -15,43 +15,18 @@ RSpec.describe ReverseEtl::Extractors::WebScraping do
   let(:client) { instance_double(Multiwoven::Integrations::Source::Snowflake::Client) }
   let(:record1) do
     Multiwoven::Integrations::Protocol::RecordMessage.new(
-      data: {
-        markdown: "Some content",
-        markdown_hash: "chunk-1",
-        metadata: "{\"meta\": \"data\", \"url\": \"Test.com\"}",
-        url: "Test.com"
-      },
+      data: { "id" => 1, "email" => "test1@mail.com", "first_name" => "John", "Last Name" => "Doe" },
       emitted_at: DateTime.now.to_i
     ).to_multiwoven_message
   end
-  let(:chunk_processor) { instance_double("ReverseEtl::Processors::Text::ChunkProcessor") }
-  let(:chunked_records) do
-    [
-      {
-        element_id: "chunk-1",
-        text: "Some extracted content"
-      }
-    ]
-  end
-
-  let(:chunked_records2) do
-    [
-      {
-        element_id: "chunk-1",
-        text: "Some New extracted content"
-      }
-    ]
-  end
 
   before do
-    sync.model.update(primary_key: "markdown_hash", query: "SELECT * FROM web_scraping_data")
+    sync.model.update(primary_key: "id")
     allow_any_instance_of(described_class).to receive(:setup_source_client).and_return(client)
     allow(client).to receive(:read).and_return([record1])
     allow(sync_run1.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
     allow(activity).to receive(:heartbeat).and_return(activity)
     allow(activity).to receive(:cancel_requested).and_return(false)
-    allow(ReverseEtl::Processors::Text::ChunkProcessor).to receive(:new).and_return(chunk_processor)
-    allow(chunk_processor).to receive(:process).and_return(chunked_records)
   end
 
   describe "#read" do
@@ -80,31 +55,16 @@ RSpec.describe ReverseEtl::Extractors::WebScraping do
         expect(sync_run1.total_query_rows).to eq(1)
         expect(sync_run1.skipped_rows).to eq(0)
 
-        data = {
-          markdown: chunked_records[0][:text],
-          markdown_hash: chunked_records[0][:element_id],
-          metadata: record1.record.data[:metadata],
-          url: JSON.parse(record1.record.data[:metadata])["url"]
-        }
-
-        initial_sync_record = sync_run1.sync_records.find_by(primary_key: record1.record.data[:markdown_hash])
-        expect(initial_sync_record.fingerprint).to eq(subject.send(:generate_fingerprint, data))
+        initial_sync_record = sync_run1.sync_records.find_by(primary_key: record1.record.data["id"])
+        expect(initial_sync_record.fingerprint).to eq(subject.send(:generate_fingerprint, record1.record.data))
         expect(initial_sync_record.action).to eq("destination_insert")
 
         modified_record1 = Multiwoven::Integrations::Protocol::RecordMessage.new(
-          data: record1.record.data.merge({ markdown: "new_value" }),
+          data: record1.record.data.merge({ "modified_field" => "new_value" }),
           emitted_at: DateTime.now.to_i
         ).to_multiwoven_message
 
         allow(client).to receive(:read).and_return([modified_record1])
-        allow(chunk_processor).to receive(:process).and_return(chunked_records2)
-
-        data2 = {
-          markdown: chunked_records2[0][:text],
-          markdown_hash: chunked_records2[0][:element_id],
-          metadata: modified_record1.record.data[:metadata],
-          url: JSON.parse(modified_record1.record.data[:metadata])["url"]
-        }
 
         # Second sync run
         sync_run2 = create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model,
@@ -118,10 +78,10 @@ RSpec.describe ReverseEtl::Extractors::WebScraping do
         expect(sync_run2.total_query_rows).to eq(1)
         expect(sync_run2.skipped_rows).to eq(0)
 
-        updated_sync_record = sync_run2.sync_records.find_by(primary_key: record1.record.data[:markdown_hash])
+        updated_sync_record = sync_run2.sync_records.find_by(primary_key: record1.record.data["id"])
         expect(updated_sync_record.fingerprint).not_to eq(initial_sync_record.fingerprint)
         expect(updated_sync_record.action).to eq("destination_update")
-        expect(updated_sync_record.record).to eq(data2.with_indifferent_access)
+        expect(updated_sync_record.record).to eq(modified_record1.record.data)
       end
 
       it "handles heartbeat timeout and updates sync run state" do
