@@ -107,3 +107,5 @@ end
 gem "premailer-rails"
 
 gem "prometheus-client", "~> 4.2"
+
+gem "xmlrpc", "~> 0.3.3"

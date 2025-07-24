@@ -13,6 +13,10 @@ on:
     paths:
       - "integrations/**"
 
+permissions:
+  contents: read
+  id-token: write
+
 env:
   CI: true
 jobs:
@@ -74,16 +78,10 @@ jobs:
         run: COVERAGE=true bundle exec rake
         working-directory: ./integrations
 
-      - name: Install Code Climate Test Reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-        working-directory: ./integrations
-
-      - name: Push coverage data to Code Climate
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID_INTEGRATIONS }}
-        run: |
-          ./cc-test-reporter before-build
-          ./cc-test-reporter after-build --exit-code $?
-        working-directory: ./integrations
+      - name: Upload coverage to Qlty.sh
+        if: github.event_name == 'push'
+        uses: qltysh/qlty-action/coverage@v1
+        with:
+          oidc: true
+          files: ./integrations/coverage/.resultset.json
+          tag: integrations
