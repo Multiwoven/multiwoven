@@ -150,11 +150,14 @@ RSpec.describe Multiwoven::Integrations::Source::Odoo::Client do
       before do
         stub_request(:post, object_endpoint)
           .with({
-                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName><params><param><value><string>database</string></value>"\
-                  "</param><param><value><i4>1</i4></value></param><param><value><string>password</string></value></param><param><value><string>account</string>"\
-                  "</value></param><param><value><string>search_read</string></value></param><param><value><array><data/></array></value></param><param><value>"\
-                  "<struct><member><name>limit</name><value><i4>50</i4></value></member><member><name>fields</name><value><array><data/></array></value></member>"\
-                  "</struct></value></param></params></methodCall>\n"
+                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName><params><param>"\
+                  "<value><string>database</string></value></param><param><value><i4>1</i4></value></param><param>"\
+                  "<value><string>password</string></value></param><param><value><string>account</string></value>"\
+                  "</param><param><value><string>search_read</string></value></param><param><value><array><data/>"\
+                  "</array></value></param><param><value><struct><member><name>limit</name><value><i4>50</i4></value>"\
+                  "</member><member><name>offset</name><value><i4>0</i4></value></member><member><name>order</name><value>"\
+                  "<string>id DESC</string></value></member><member><name>fields</name><value><array><data/></array></value>"\
+                  "</member></struct></value></param></params></methodCall>\n"
                 })
           .to_return(status: 200, body: XMLRPC::Create.new.methodResponse(true, records))
       end
@@ -166,11 +169,15 @@ RSpec.describe Multiwoven::Integrations::Source::Odoo::Client do
       before do
         stub_request(:post, object_endpoint)
           .with({
-                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName><params><param><value><string>database</string></value></param><param>"\
-                  "<value><i4>1</i4></value></param><param><value><string>password</string></value></param><param><value><string>account</string></value></param><param>"\
-                  "<value><string>search_read</string></value></param><param><value><array><data/></array></value></param><param><value><struct><member><name>limit</name>"\
-                  "<value><i4>50</i4></value></member><member><name>fields</name><value><array><data><value><string>id</string></value><value><string>name</string></value>"\
-                  "</data></array></value></member></struct></value></param></params></methodCall>\n"
+                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName>"\
+                  "<params><param><value><string>database</string></value></param><param><value><i4>1</i4>"\
+                  "</value></param><param><value><string>password</string></value></param><param><value>"\
+                  "<string>account</string></value></param><param><value><string>search_read</string></value>"\
+                  "</param><param><value><array><data/></array></value></param><param><value><struct><member>"\
+                  "<name>limit</name><value><i4>50</i4></value></member><member><name>offset</name><value>"\
+                  "<i4>0</i4></value></member><member><name>order</name><value><string>id DESC</string></value>"\
+                  "</member><member><name>fields</name><value><array><data><value><string>id</string></value><value" + ">"\
+                  "<string>name</string></value></data></array></value></member></struct></value></param></params></methodCall>\n"
                 })
           .to_return(status: 200, body: XMLRPC::Create.new.methodResponse(true, records))
       end

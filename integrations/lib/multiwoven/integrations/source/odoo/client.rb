@@ -32,6 +32,7 @@ module Multiwoven::Integrations::Source
         connection_config = sync_config.source.connection_specification.with_indifferent_access
         create_connection(connection_config)
         query = sync_config.model.query
+        query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
         query(connection_config, query)
       rescue StandardError => e
         handle_exception(e, {
@@ -79,9 +80,14 @@ module Multiwoven::Integrations::Source
 
       def query(connection, query)
         limit = 0
-        limit = query.match(/LIMIT (\d+)/)[1].to_i if query.include? "LIMIT"
+        offset = 0
+        order = "id DESC"
 
-        model = query.gsub(/LIMIT\s+\d+/i, "").gsub(/SELECT (.*) FROM/, "").strip
+        limit = query.match(/LIMIT (\d+)/)[1].to_i if query.include? "LIMIT"
+        offset = query.match(/OFFSET (\d+)/)[1].to_i if query.include? "OFFSET"
+        order = query.match(/ORDER BY (.*) LIMIT/)[1] if query.include? "ORDER BY"
+        model = query.match(/FROM ([aA-zZ.aA-zZ]*)/i)[1]
+
         columns = if query.include? "SELECT *"
                     []
                   else
@@ -89,9 +95,9 @@ module Multiwoven::Integrations::Source
                   end
 
         records = @client.execute_kw(connection[:database], @uid, connection[:password],
-                                     model, "search_read", [], { limit: limit, 'fields': columns })
+                                     model, "search_read", [], { limit: limit,
+                                                                 offset: offset, order: order, 'fields': columns })
         records.map do |row|
-          puts row
           RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
         end
       end
