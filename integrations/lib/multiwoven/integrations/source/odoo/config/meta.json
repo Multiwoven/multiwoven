@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Odoo",
+    "title": "Odoo",
+    "connector_type": "source",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/odoo",
+    "github_issue_label": "source-odoo",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
