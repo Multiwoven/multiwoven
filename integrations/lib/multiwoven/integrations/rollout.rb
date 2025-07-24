@@ -31,6 +31,7 @@ module Multiwoven
       PineconeDB
       Qdrant
       Firecrawl
+      Odoo
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
