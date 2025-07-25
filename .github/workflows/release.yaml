@@ -16,16 +16,24 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_body: ${{ steps.git-cliff.outputs.content }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.AISQUARED_CI_BOT_APP_ID }}
+          private_key: ${{ secrets.AISQUARED_CI_BOT_PRIVATE_KEY }}
+          repository: Multiwoven/multiwoven
+
       - name: Calculate new version
         id: versioning
         run: |
-          # This script assumes tags are in the format vMajor.Minor.Patch
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           echo "Latest tag: $LATEST_TAG"
           IFS='.' read -ra VERSION <<< "${LATEST_TAG//v/}"
@@ -53,16 +61,18 @@ jobs:
           echo "::set-output name=new_tag::$NEW_TAG"
 
       - name: Create and push tag
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           git config user.name developer-united
           git config user.email developer@multiwoven.com
           git tag ${{ steps.versioning.outputs.new_tag }}
-          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/multiwoven/multiwoven --tags
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/multiwoven/multiwoven --tags
 
       - name: Trigger Server and UI image push
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           event-type: trigger-image-push
           client-payload: '{"tag": "${{ steps.versioning.outputs.new_tag }}"}'
 
@@ -79,18 +89,20 @@ jobs:
         run: echo "${{ steps.git-cliff.outputs.content }}" > release-notes.md
 
       - name: Create a new branch and push release-notes.md
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           git config user.name github-actions
           git config user.email developer@multiwoven.com
           git checkout -b release-changes-${{ steps.versioning.outputs.new_tag }}
           git add release-notes.md
           git commit -m "Multiwoven release ${{ steps.versioning.outputs.new_tag }}"
-          git push --set-upstream origin release-changes-${{ steps.versioning.outputs.new_tag }}
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/multiwoven/multiwoven HEAD:release-changes-${{ steps.versioning.outputs.new_tag }}
 
       - name: Create Pull Request
         uses: repo-sync/pull-request@v2
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ steps.generate_token.outputs.token }}
           pr_title: "Multiwoven release ${{ steps.versioning.outputs.new_tag }}"
           pr_body: "This PR updates the release-notes.md for the upcoming release. Please review and merge to trigger the release."
           source_branch: "release-changes-${{ steps.versioning.outputs.new_tag }}"
