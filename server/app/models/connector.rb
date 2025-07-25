@@ -129,6 +129,16 @@ class Connector < ApplicationRecord
     client.send(:run_model, connection_config, JSON.parse(payload))
   end
 
+  def execute_search(vector, limit)
+    vector_search_config = Multiwoven::Integrations::Protocol::VectorConfig.new(
+      source: to_protocol,
+      vector:,
+      limit:
+    )
+    client = connector_client.new
+    client.send(:search, vector_search_config)
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(
