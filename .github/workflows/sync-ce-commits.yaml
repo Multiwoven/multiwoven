@@ -45,12 +45,6 @@ jobs:
           private_key: ${{ secrets.AISQUARED_CI_BOT_PRIVATE_KEY }}
           repository: Multiwoven/multiwoven
 
-      - name: Authenticate GitHub CLI with App Token
-        env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
-
       - name: Create PRs for each CE commit
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
