@@ -5,6 +5,10 @@ on:
     - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   cherry-pick-ce-commits:
     runs-on: ubuntu-latest
