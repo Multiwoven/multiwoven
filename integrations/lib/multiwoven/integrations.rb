@@ -42,6 +42,9 @@ require "pinecone"
 require "intuit-oauth"
 require "nokogiri"
 require "xmlrpc/client"
+require "googleauth"
+require "google/apis/drive_v3"
+require "aws-sdk-textract"
 
 # Service
 require_relative "integrations/config"
@@ -92,6 +95,7 @@ require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"
 require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
+require_relative "integrations/source/google_drive/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
