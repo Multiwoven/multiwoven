@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.32.0)
+=======
+    multiwoven-integrations (0.33.1)
+>>>>>>> b489b049 (fix(CE): file name incorrectly assigned file id (#1284))
       MailchimpMarketing
       activesupport
       async-websocket

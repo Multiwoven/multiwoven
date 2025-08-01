@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.32.0"
+=======
+    VERSION = "0.33.1"
+>>>>>>> b489b049 (fix(CE): file name incorrectly assigned file id (#1284))
 
     ENABLED_SOURCES = %w[
       Snowflake
