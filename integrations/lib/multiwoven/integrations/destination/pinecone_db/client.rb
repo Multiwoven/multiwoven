@@ -104,15 +104,15 @@ module Multiwoven::Integrations::Destination
       end
 
       def parse_meta_data(vector_meta_data)
-        return {} if vector_meta_data.nil?
+        return {} unless vector_meta_data.is_a?(String)
 
-        metadata = vector_meta_data.to_s
-        metadata = metadata.gsub(/([{,]\s*)([A-Za-z_]\w*)(\s*:)/, '\1"\2"\3')
-        metadata = metadata.gsub(/:\s*([A-Za-z_]\w*)/, ': "\1"')
+        metadata = {}
+        # Use regex to parse the metadata string into a hash
+        vector_meta_data.scan(/([A-Za-z]+):\s*(.*?)(?=(?:\n?[A-Za-z]+:)|\z)/m).each do |key, value|
+          metadata[key.strip] = value.strip
+        end
 
-        JSON.parse(metadata)
-      rescue JSON::ParserError
-        {}
+        metadata
       end
 
       def send_to_pinecone(pinecone_index, record)
