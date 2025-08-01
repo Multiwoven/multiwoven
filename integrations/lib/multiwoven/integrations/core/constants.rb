@@ -98,6 +98,22 @@ module Multiwoven
       FIRECRAWL_CRAWL_ACTIVE_URL = "https://api.firecrawl.dev/v1/crawl/active"
       FIRECRAWL_GET_CRAWL_URL = "https://api.firecrawl.dev/v1/crawl/%<id>s"
       FIRECRAWL_REQUEST_RATE_LIMIT = 5
+
+      # Amazon Textract (analyze_expense) fields
+      TEXTRACT_SUMMARY_FIELDS = {
+        "invoice_number" => "INVOICE_RECEIPT_ID",
+        "invoice_date" => "INVOICE_RECEIPT_DATE",
+        "purchase_order" => "PO_NUMBER",
+        "invoice_total" => "TOTAL",
+        "vendor_name" => "VENDOR_NAME"
+      }.freeze
+      TEXTRACT_LINE_ITEMS_FIELDS = {
+        "item_number" => "PRODUCT_CODE",
+        "item_description" => "ITEM",
+        "item_quantity" => "QUANTITY",
+        "item_price" => "UNIT_PRICE",
+        "line_total" => "PRICE"
+      }.freeze
     end
   end
 end

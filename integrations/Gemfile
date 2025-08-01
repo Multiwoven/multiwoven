@@ -95,3 +95,9 @@ group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
 end
+
+gem "googleauth", "~> 1.11"
+
+gem "google-apis-drive_v3", "~> 0.67.0"
+
+gem "aws-sdk-textract", "~> 1.58"
