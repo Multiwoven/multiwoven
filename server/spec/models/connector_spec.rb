@@ -214,8 +214,6 @@ RSpec.describe Connector, type: :model do
     end
   end
 
-<<<<<<< HEAD
-=======
   describe "#set_sub_category" do
     let(:workspace) { create(:workspace) }
     let(:connector) do
@@ -318,7 +316,6 @@ RSpec.describe Connector, type: :model do
     end
   end
 
->>>>>>> 31736261 (chore(CE): Add sub_category fix for postgres (#1224))
   describe "#resolved_configuration" do
     let(:workspace) { create(:workspace) }
 

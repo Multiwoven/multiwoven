@@ -5,6 +5,10 @@ on:
     - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   cherry-pick-ce-commits:
     runs-on: ubuntu-latest
@@ -37,13 +41,17 @@ jobs:
           PREV_DATE=$(date -d "yesterday" +'%Y-%m-%d')
           echo "::set-output name=date::$PREV_DATE"
 
-      - name: Authenticate GitHub CLI
-        run: |
-          echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.AISQUARED_CI_BOT_APP_ID }}
+          private_key: ${{ secrets.AISQUARED_CI_BOT_PRIVATE_KEY }}
+          repository: Multiwoven/multiwoven
 
       - name: Create PRs for each CE commit
         env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           PREV_DATE=${{ steps.prev-date.outputs.date }}
           git log enterprise/main  --since="$PREV_DATE 00:00" --until="$PREV_DATE 23:59" --grep="(CE)" --format="%H" --no-merges | while read sha; do

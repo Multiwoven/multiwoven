@@ -44,6 +44,7 @@ module Multiwoven::Integrations::Source
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
+        @connector_instance = sync_config&.source&.connector_instance
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
         access_token = create_connection(connection_config)
@@ -114,9 +115,8 @@ module Multiwoven::Integrations::Source
       end
 
       def create_connection(connection_config)
-        cache = defined?(Rails) && Rails.respond_to?(:cache) ? Rails.cache : ActiveSupport::Cache::MemoryStore.new
         load_connection_config(connection_config)
-        get_access_token(cache)
+        refresh_access_token
       end
 
       def load_connection_config(connection_config)
@@ -124,25 +124,23 @@ module Multiwoven::Integrations::Source
         @client_secret = connection_config[:client_secret]
         @realm_id = connection_config[:realm_id]
         @environment = connection_config[:environment]
-        @refresh_token = connection_config[:refresh_token]
-      end
-
-      def get_access_token(cache)
-        cache_key = "intuit_quickbooks_#{@client_id}_#{@client_secret}_#{@realm_id}}"
-        cached_token = cache.read(cache_key)
-        if cached_token
-          cached_token
-        else
-          new_token = refresh_access_token
-          # max expiration is 3 minutes. No way to make it higher
-          cache.write(cache_key, new_token, expires_in: 180)
-          new_token
-        end
+        @refresh_token = if @connector_instance&.configuration
+                           @connector_instance.configuration["refresh_token"]
+                         else
+                           connection_config[:refresh_token]
+                         end
       end
 
       def refresh_access_token
         oauth2_client = IntuitOAuth::Client.new(@client_id, @client_secret, QUICKBOOKS_REDIRECT_URL, @environment)
-        oauth2_client.token.refresh_tokens(@refresh_token).access_token
+        response = oauth2_client.token.refresh_tokens(@refresh_token)
+        if @connector_instance&.configuration
+          config = @connector_instance.configuration
+          config = {} unless config.is_a?(Hash)
+          new_config = config.merge("refresh_token" => response.refresh_token)
+          @connector_instance.update!(configuration: new_config)
+        end
+        response.access_token
       end
 
       def create_streams(records)
