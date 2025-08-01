@@ -1,0 +1,17 @@
+{
+    "data": {
+      "name": "Firecrawl",
+      "title": "Firecrawl",
+      "connector_type": "source",
+      "category": "Data Warehouse",
+      "sub_category": "Web Scraper",
+      "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/firecrawl",
+      "github_issue_label": "source-firecrawl",
+      "icon": "icon.svg",
+      "license": "MIT",
+      "release_stage": "alpha",
+      "support_level": "community",
+      "tags": ["language:ruby", "multiwoven"]
+    }
+  }
+  

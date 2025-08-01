@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.29.0"
+    VERSION = "0.32.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -30,6 +30,8 @@ module Multiwoven
       IntuitQuickBooks
       PineconeDB
       Qdrant
+      Firecrawl
+      Odoo
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -58,6 +60,7 @@ module Multiwoven
       MicrosoftDynamics
       Qdrant
       PineconeDB
+      Odoo
     ].freeze
   end
 end
