@@ -14,7 +14,11 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.32.0"
+=======
+gem "multiwoven-integrations", "~> 0.33.1"
+>>>>>>> 3cf00a54 (chore(CE): update server gem to 0.33.0 (#1281))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -109,3 +113,5 @@ gem "premailer-rails"
 gem "prometheus-client", "~> 4.2"
 
 gem "xmlrpc", "~> 0.3.3"
+
+gem "google-apis-drive_v3", "~> 0.68.0"
