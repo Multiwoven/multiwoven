@@ -1,5 +1,7 @@
-## [0.72.0] - 2025-07-29
+## [0.73.0] - 2025-08-01
 
-### 🚀 Features
+### ⚙️ Miscellaneous Tasks
 
-- *(CE)* Add permissions to release and sync ce workflows (#818)
+- *(CE)* Securing cross domain access (#793)
+- *(CE)* Add prevention for clickjacking (#792)
+- *(CE)* Add execute_search to connector for vector (#787)
