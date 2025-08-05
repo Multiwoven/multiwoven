@@ -6,6 +6,7 @@ FactoryBot.define do
     name { "Test Workflow" }
     description { "A test workflow" }
     status { :draft }
+    workflow_type { :runtime }
     trigger_type { :website_chatbot }
     configuration { { "api_key" => "sk-xxx", "endpoint" => "https://api.example.com" } }
   end
