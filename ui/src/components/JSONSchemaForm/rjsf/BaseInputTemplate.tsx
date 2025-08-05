@@ -123,6 +123,15 @@ export default function BaseInputTemplate<
             type={inputProps.type === 'text' ? 'text' : isOpen ? 'text' : 'password'}
             list={schema.examples ? examplesId<T>(id) : undefined}
             aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+<<<<<<< HEAD
+=======
+            sx={{
+              '&::-webkit-calendar-picker-indicator': {
+                display: 'none !important',
+              },
+            }}
+            fontSize='sm'
+>>>>>>> a030d9bb (refactor(CE): changed font size in JSON Form (#1287))
           />
           {inputProps.type !== 'text' ? (
             <InputRightElement>
