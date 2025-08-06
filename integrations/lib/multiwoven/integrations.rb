@@ -40,6 +40,8 @@ require "MailchimpMarketing"
 require "aws-sdk-bedrockruntime"
 require "pinecone"
 require "intuit-oauth"
+require "nokogiri"
+require "xmlrpc/client"
 
 # Service
 require_relative "integrations/config"
@@ -88,6 +90,8 @@ require_relative "integrations/source/generic_open_ai/client"
 require_relative "integrations/source/intuit_quick_books/client"
 require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"
+require_relative "integrations/source/firecrawl/client"
+require_relative "integrations/source/odoo/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
@@ -115,6 +119,7 @@ require_relative "integrations/destination/amazon_s3/client"
 require_relative "integrations/destination/microsoft_dynamics/client"
 require_relative "integrations/destination/qdrant/client"
 require_relative "integrations/destination/pinecone_db/client"
+require_relative "integrations/destination/odoo/client"
 
 module Multiwoven
   module Integrations

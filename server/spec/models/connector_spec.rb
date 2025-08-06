@@ -117,6 +117,68 @@ RSpec.describe Connector, type: :model do
     end
   end
 
+  describe "#execute_search" do
+    let(:workspace) { create(:workspace) } # Assuming you have factories set up for workspace
+    let(:connector) do
+      create(
+        :connector,
+        connector_type: "source",
+        connector_name: "PineconeDB",
+        configuration: {
+          region: "us-east-1",
+          api_key: "fake_api_key",
+          index_name: "test",
+          namespace: "test_vectors"
+        }
+      )
+    end
+
+    let(:client_instance) { Multiwoven::Integrations::Source::PineconeDB::Client.new }
+
+    let(:pinecone_client) { double("Pinecone::Client") }
+    let(:pinecone_index) { double("Pinecone::Index") }
+    let(:pinecone_response) do
+      double("Pinecone::Response", body: {
+        matches: [
+          {
+            score: 0.95,
+            metadata: { name: "John Doe" }
+          }
+        ]
+      }.to_json)
+    end
+
+    let(:query_result) { { "score" => 0.95, "metadata" => { "name" => "John Doe" } } }
+
+    before do
+      allow(Multiwoven::Integrations::Source::PineconeDB::Client).to receive(:new) do
+        instance = Multiwoven::Integrations::Source::PineconeDB::Client.allocate
+        instance.instance_variable_set(:@index_name, "test")
+        instance.instance_variable_set(:@namespace, "test_vectors")
+        instance
+      end
+
+      allow_any_instance_of(Multiwoven::Integrations::Source::PineconeDB::Client)
+        .to receive(:create_connection)
+        .and_return(pinecone_client)
+
+      allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
+      allow(pinecone_index).to receive(:query).and_return(pinecone_response)
+
+      allow(connector).to receive(:connector_client)
+        .and_return(Multiwoven::Integrations::Source::PineconeDB::Client)
+    end
+
+    context "when vector and limit" do
+      it "executes the vector search" do
+        vector = [0.1, 0.2, 0.3]
+        limit = 1
+        result = connector.execute_search(vector, limit)
+        expect(result[0].record.data).to eq(query_result)
+      end
+    end
+  end
+
   describe "#default_scope" do
     let(:connector) { create_list(:connector, 4) }
 
@@ -211,6 +273,97 @@ RSpec.describe Connector, type: :model do
       result = Connector.data
       expect(result).to include(data_connector)
       expect(result).not_to include(non_data_connector)
+    end
+  end
+
+  describe "#set_sub_category" do
+    let(:workspace) { create(:workspace) }
+    let(:connector) do
+      create(:connector,
+             workspace:)
+    end
+
+    context "populate sub_category from connector meta data" do
+      it "sets the connector_sub_category based on the meta_data" do
+        connector.run_callbacks(:save) { true }
+        expect(connector.connector_sub_category).to eq("Relational Database")
+      end
+    end
+
+    context "catagory is set by user" do
+      it "does not change the connector_sub_category" do
+        connector.update!(connector_sub_category: "user_input_category")
+        expect(connector.connector_sub_category).to eq("user_input_category")
+      end
+    end
+  end
+
+  describe ".ai_ml_service" do
+    let!(:ai_ml_connector) do
+      create(:connector, connector_category: "AI Model", connector_sub_category: "AI_ML Service")
+    end
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in AI_ML_SERVICE_CATEGORIES" do
+      result = Connector.ai_ml_service
+      expect(result).to include(ai_ml_connector)
+      expect(result).not_to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".llm" do
+    let!(:ai_ml_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "LLM") }
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in LLM_CATEGORIES" do
+      result = Connector.llm
+      expect(result).to include(ai_ml_connector)
+      expect(result).not_to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".database" do
+    let!(:ai_ml_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "LLM") }
+    let!(:non_ai_ml_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in DATABASE_CATEGORIES" do
+      result = Connector.database
+      expect(result).not_to include(ai_ml_connector)
+      expect(result).to include(non_ai_ml_connector)
+    end
+  end
+
+  describe ".web" do
+    let!(:web_connector) { create(:connector, connector_category: "AI Model", connector_sub_category: "Web Scraper") }
+    let!(:non_web_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in WEB_CATEGORIES" do
+      result = Connector.web
+      expect(result).to include(web_connector)
+      expect(result).not_to include(non_web_connector)
+    end
+  end
+
+  describe ".vector" do
+    let!(:vector_connector) do
+      create(:connector, connector_category: "AI Model", connector_sub_category: "Vector Database")
+    end
+    let!(:non_vector_connector) do
+      create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
+    end
+
+    it "returns connectors with connector_sub_category in VECTOR_CATEGORIES" do
+      result = Connector.vector
+      expect(result).to include(vector_connector)
+      expect(result).not_to include(non_vector_connector)
     end
   end
 
