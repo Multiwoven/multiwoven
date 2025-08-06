@@ -65,6 +65,19 @@ module Multiwoven::Integrations::Source
         db&.close
       end
 
+      def search(vector_search_config)
+        connection_config = vector_search_config.source.connection_specification
+        connection_config = connection_config.with_indifferent_access
+        query = "#{vector_search_config[:vector]} LIMIT #{vector_search_config[:limit]}"
+        db = create_connection(connection_config)
+        query(db, query)
+      rescue StandardError => e
+        handle_exception(e, {
+                           context: "POSTGRESQL:SEARCH:EXCEPTION",
+                           type: "error"
+                         })
+      end
+
       private
 
       def query(connection, query)

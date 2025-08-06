@@ -51,6 +51,28 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
     }
   end
 
+  let(:vector_sync_config_json) do
+    {
+      source: {
+        name: "PineconeDB",
+        type: "source",
+        connection_specification: {
+          host: "test.pg.com",
+          port: "8080",
+          database: "test_database",
+          schema: "test_schema",
+          credentials: {
+            auth_type: "username/password",
+            username: ENV["POSTGRESQL_USERNAME"],
+            password: ENV["POSTGRESQL_PASSWORD"]
+          }
+        }
+      },
+      vector: "SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'",
+      limit: 2
+    }
+  end
+
   let(:pg_connection) { instance_double(PG::Connection) }
   let(:pg_result) { instance_double(PG::Result) }
 
@@ -141,6 +163,43 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
           }
         )
         client.read(s_config)
+      end
+    end
+  end
+
+  describe "#search" do
+    context "when vector searching records from a vector Postgresql database" do
+      it "search records successfully" do
+        s_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(vector_sync_config_json.to_json)
+        allow(PG).to receive(:connect).and_return(pg_connection)
+
+        allow(pg_connection).to receive(:exec).with("SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]' LIMIT 2").and_return(
+          [
+            Multiwoven::Integrations::Protocol::RecordMessage.new(
+              data: { id: "1", content: "A", score: "0.2" }, emitted_at: Time.now.to_i
+            ).to_multiwoven_message,
+            Multiwoven::Integrations::Protocol::RecordMessage.new(
+              data: { id: "2", content: "B", score: "0.4" }, emitted_at: Time.now.to_i
+            ).to_multiwoven_message
+          ]
+        )
+        allow(pg_connection).to receive(:close).and_return(true)
+        records = client.search(s_config)
+        expect(records).to be_an(Array)
+        expect(records).not_to be_empty
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      end
+
+      it "search records failure" do
+        s_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(vector_sync_config_json.to_json)
+        allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
+        expect(client).to receive(:handle_exception).with(
+          an_instance_of(StandardError), {
+            context: "POSTGRESQL:SEARCH:EXCEPTION",
+            type: "error"
+          }
+        )
+        client.search(s_config)
       end
     end
   end
