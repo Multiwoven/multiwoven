@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.31.3"
+    VERSION = "0.32.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -60,6 +60,7 @@ module Multiwoven
       MicrosoftDynamics
       Qdrant
       PineconeDB
+      Odoo
     ].freeze
   end
 end

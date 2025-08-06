@@ -37,7 +37,8 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:chat_messages).dependent(:nullify) }
     it { should have_many(:sso_configurations).through(:organization) }
     it { should belong_to(:organization) }
-    it { should have_many(:workflows).dependent(:nullify) }
+    it { should have_many(:workflows).dependent(:destroy) }
+    it { should have_many(:workflow_runs).dependent(:destroy) }
   end
 
   context "before_validation callbacks" do
@@ -76,6 +77,35 @@ RSpec.describe Workspace, type: :model do
     it "returns true if alerts are present for the current workspace" do
       create(:alert, workspace:, alert_sync_success: true)
       expect(workspace.active_alerts?).to be(true)
+    end
+  end
+
+  describe "workflow runs" do
+    let(:workspace) { create(:workspace) }
+    let(:workflow) { create(:workflow, workspace:) }
+
+    it "can have multiple workflow runs" do
+      run1 = create(:workflow_run, workspace:, workflow:)
+      run2 = create(:workflow_run, workspace:, workflow:)
+      run3 = create(:workflow_run, workspace:, workflow:)
+
+      expect(workspace.workflow_runs).to include(run1, run2, run3)
+      expect(workspace.workflow_runs.count).to eq(3)
+    end
+
+    it "destroys workflows and their workflow runs when workspace is deleted" do
+      run1 = create(:workflow_run, workspace:, workflow:)
+      run2 = create(:workflow_run, workspace:, workflow:)
+
+      # Delete the workspace
+      workspace.destroy
+
+      # Workflows should be destroyed
+      expect(Agents::Workflow.exists?(workflow.id)).to be false
+
+      # Workflow runs should also be destroyed (due to workflow's dependent: :destroy)
+      expect(Agents::WorkflowRun.exists?(run1.id)).to be false
+      expect(Agents::WorkflowRun.exists?(run2.id)).to be false
     end
   end
 end
