@@ -1971,7 +1971,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.32.0)
+=======
+    multiwoven-integrations (0.33.2)
+>>>>>>> 4342416c (chore(CE): upgrade integrations gem (#1293))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2314,7 +2318,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.32.0)
+=======
+  multiwoven-integrations (~> 0.33.2)
+>>>>>>> 4342416c (chore(CE): upgrade integrations gem (#1293))
   mysql2
   newrelic_rpm
   parallel
