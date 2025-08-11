@@ -20,6 +20,11 @@ module Activities
         successful_rows:,
         failed_rows:
       )
+      Rails.logger.info({
+        message: "ReporterActivity::execute status before sync_run.update_success",
+        sync_run_id: sync_run.id,
+        status: sync_run.status
+      }.to_s)
       sync_run.update_success
     end
 
