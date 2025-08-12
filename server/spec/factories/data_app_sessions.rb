@@ -5,5 +5,6 @@ FactoryBot.define do
     session_id { SecureRandom.hex(10) }
     data_app
     workspace
+    title { "Session Title" }
   end
 end
