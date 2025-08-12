@@ -356,6 +356,16 @@ RSpec.describe Connector, type: :model do
     let!(:vector_connector) do
       create(:connector, connector_category: "AI Model", connector_sub_category: "Vector Database")
     end
+    let!(:vector_postgres_connector) do
+      create(
+        :connector,
+        connector_type: "source",
+        connector_name: "Postgres",
+        configuration: { "data_type": "vector" },
+        connector_category: "data",
+        connector_sub_category: "Vector Database"
+      )
+    end
     let!(:non_vector_connector) do
       create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
     end
@@ -363,6 +373,7 @@ RSpec.describe Connector, type: :model do
     it "returns connectors with connector_sub_category in VECTOR_CATEGORIES" do
       result = Connector.vector
       expect(result).to include(vector_connector)
+      expect(result).to include(vector_postgres_connector)
       expect(result).not_to include(non_vector_connector)
     end
   end
