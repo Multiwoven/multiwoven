@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.32.0"
+=======
+    VERSION = "0.33.3"
+>>>>>>> 0e2e2941 (fix(CE): missing exception from returned data (#1299))
 
     ENABLED_SOURCES = %w[
       Snowflake
