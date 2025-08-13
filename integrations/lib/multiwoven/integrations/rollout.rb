@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.32.0"
-=======
     VERSION = "0.33.2"
->>>>>>> 53d010c3 (fix(CE): missing vendor name in field list for google drive connector (#1292))
 
     ENABLED_SOURCES = %w[
       Snowflake

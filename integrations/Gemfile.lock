@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.32.0)
-=======
     multiwoven-integrations (0.33.2)
->>>>>>> 53d010c3 (fix(CE): missing vendor name in field list for google drive connector (#1292))
       MailchimpMarketing
       activesupport
       async-websocket
