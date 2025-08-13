@@ -12,7 +12,11 @@ import {
   Input,
   Button,
 } from '@chakra-ui/react';
+<<<<<<< HEAD
 import Columns from './Columns';
+=======
+import Columns from '@/components/TemplateMappingOptions/Columns';
+>>>>>>> bd5b0ef5 (fix(CE): imports)
 import { useState } from 'react';
 import { getSyncsConfiguration } from '@/services/syncs';
 import StaticOptions from './StaticOptions';
@@ -114,11 +118,7 @@ const TemplateMapping = ({
   };
 
   return (
-    <Popover
-      placement='bottom-start'
-      isOpen={isPopOverOpen}
-      onClose={() => setIsPopOverOpen(false)}
-    >
+    <Popover placement='auto' isOpen={isPopOverOpen} onClose={() => setIsPopOverOpen(false)}>
       <PopoverTrigger>
         <Input
           placeholder={`Select a field from ${entityName}`}
