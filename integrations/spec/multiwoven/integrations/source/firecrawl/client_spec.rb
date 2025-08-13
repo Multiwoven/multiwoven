@@ -182,7 +182,7 @@ RSpec.describe Multiwoven::Integrations::Source::Firecrawl::Client do
       expect(first_stream.name).to eq("scrape")
       expect(first_stream.json_schema).to be_an(Hash)
       expect(first_stream.json_schema["type"]).to eq("object")
-      expect(first_stream.json_schema["properties"]).to eq({ "metadata" => { "type" => "string" }, "markdown" => { "type" => "string" }, "url" => { "type" => "string" } })
+      expect(first_stream.json_schema["properties"]).to eq({ "metadata" => { "type" => "string" }, "markdown" => { "type" => "string" }, "url" => { "type" => "string" }, "markdown_hash" => { "type" => "string" } })
     end
   end
 

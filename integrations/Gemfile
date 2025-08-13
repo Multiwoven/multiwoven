@@ -87,6 +87,10 @@ gem "intuit-oauth"
 
 gem "nokogiri"
 
+gem "xmlrpc", "~> 0.3.3"
+
+gem "builder", "~> 3.3"
+
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false

@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.30.1"
-=======
     VERSION = "0.32.2"
->>>>>>> 7e9d87d1 (chore(CE): reformat private_key in big query client for connection (#1240))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -35,6 +31,7 @@ module Multiwoven
       PineconeDB
       Qdrant
       Firecrawl
+      Odoo
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -63,6 +60,7 @@ module Multiwoven
       MicrosoftDynamics
       Qdrant
       PineconeDB
+      Odoo
     ].freeze
   end
 end
