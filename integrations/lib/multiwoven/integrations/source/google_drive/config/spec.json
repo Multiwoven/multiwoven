@@ -1,0 +1,120 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/google_drive",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "GoogleDrive",
+    "type": "object",
+    "required": ["credentials_json"],
+    "properties": {
+      "credentials_json": {
+        "type": "object",
+        "description": "You can get the keys from the Google Cloud web console. First, go to the IAM page and select Service Accounts from the left menu. Next, locate your service account in the list, click on its Keys tab, and then click Add Key. Lastly, click Create new key and select JSON.",
+        "title": "",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["service_account"]
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "private_key_id": {
+            "type": "string",
+            "multiwoven_secret": true
+          },
+          "private_key": {
+            "type": "string",
+            "multiwoven_secret": true
+          },
+          "client_email": {
+            "type": "string",
+            "format": "email"
+          },
+          "client_id": {
+            "type": "string",
+            "multiwoven_secret": true
+          },
+          "auth_uri": {
+            "type": "string"
+          },
+          "token_uri": {
+            "type": "string"
+          },
+          "auth_provider_x509_cert_url": {
+            "type": "string"
+          },
+          "client_x509_cert_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "universe_domain": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "project_id",
+          "private_key_id",
+          "private_key",
+          "client_email",
+          "client_id",
+          "auth_uri",
+          "token_uri",
+          "auth_provider_x509_cert_url",
+          "client_x509_cert_url",
+          "universe_domain"
+        ]
+      },
+      "options": {
+        "type": "object",
+        "description": "When the subfolders option is set to true, files will be read from the subfolders of the root or specified folder.",
+        "title": "Options",
+        "required": ["document_type"],
+        "properties": {
+          "folder": {
+            "type": "string",
+            "description": "When specified, reads files contained in the folder.",
+            "title": "Folder"
+          },
+          "subfolders": {
+            "type": "boolean",
+            "default": false,
+            "title": "Read from subfolders"
+          },
+          "file_type": {
+            "description": "The type of file to read",
+            "type": "string",
+            "title": "File Type",
+            "enum": [
+              "application/pdf"
+            ]
+          },
+          "document_type": {
+            "type": "string",
+            "enum": [ "invoices" ]
+          },
+          "fields": {
+            "type": "array",
+            "description": "Leave blank to extract all fields.",
+            "items": {
+              "type": "string",
+              "anyOf": [
+                { "const": "id", "title": "File Id" },
+                { "const": "file_name", "title": "File Name" },
+                { "const": "exception", "title": "Parsing Exception" },
+                { "const": "invoice_number", "title": "Invoice/Receipt Number" },
+                { "const": "invoice_date", "title": "Invoice/Receipt Date" },
+                { "const": "invoice_total", "title": "Invoice/Receipt Total" },
+                { "const": "purchase_order", "title": "Purchase Order Number" },
+                { "const": "line_items", "title": "Invoice Line Items (Code, Description, Quantity, Unit Price, Total Price)"}
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
