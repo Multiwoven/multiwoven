@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_06_27_000141) do
-=======
 ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
->>>>>>> c54fbbf0 (chore(CE): Add Workflow Log in Database (#1272))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -600,18 +596,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
     t.integer "session_count", default: 0
   end
 
-<<<<<<< HEAD
-  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "workspace_id", null: false
-    t.string "name", null: false
-    t.text "description"
-    t.integer "status"
-    t.integer "trigger_type"
-    t.jsonb "configuration", default: {}
-    t.string "token"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-=======
   create_table "workflow_logs", force: :cascade do |t|
     t.string "workflow_id", null: false
     t.integer "workflow_run_id", null: false
@@ -635,7 +619,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
     t.datetime "updated_at", null: false
     t.datetime "finished_at"
     t.index ["workspace_id"], name: "index_workflow_runs_on_workspace_id"
->>>>>>> c54fbbf0 (chore(CE): Add Workflow Log in Database (#1272))
   end
 
   create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -648,6 +631,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "workflow_type", default: 0, null: false
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
@@ -700,6 +684,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+  add_foreign_key "workflow_runs", "workspaces"
   add_foreign_key "workflows", "workspaces", validate: false
   add_foreign_key "workspace_users", "roles"
   add_foreign_key "workspace_users", "users"
