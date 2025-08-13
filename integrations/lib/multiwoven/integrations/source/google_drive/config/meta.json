@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "GoogleDrive",
+    "title": "Google Drive",
+    "connector_type": "source",
+    "category": "File Storage",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/google_drive",
+    "github_issue_label": "source-google-drive",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
