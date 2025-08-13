@@ -1971,11 +1971,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.32.0)
-=======
     multiwoven-integrations (0.32.3)
->>>>>>> 00559e6b (chore(CE): Server gem update 0.32.3 (#1270))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2088,6 +2084,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.16)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.0)
@@ -2318,11 +2316,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.32.0)
-=======
   multiwoven-integrations (~> 0.32.3)
->>>>>>> 00559e6b (chore(CE): Server gem update 0.32.3 (#1270))
   mysql2
   newrelic_rpm
   parallel
@@ -2333,6 +2327,7 @@ DEPENDENCIES
   prometheus-client (~> 4.2)
   puma (>= 5.0)
   pundit
+  rack-attack
   rack-cors
   rails (~> 7.1.1)
   redis (~> 4.0)
