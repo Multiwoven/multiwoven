@@ -108,7 +108,8 @@
                 { "const": "invoice_date", "title": "Invoice/Receipt Date" },
                 { "const": "invoice_total", "title": "Invoice/Receipt Total" },
                 { "const": "purchase_order", "title": "Purchase Order Number" },
-                { "const": "line_items", "title": "Invoice Line Items (Code, Description, Quantity, Unit Price, Total Price)"}
+                { "const": "line_items", "title": "Invoice Line Items (Code, Description, Quantity, Unit Price, Total Price)"},
+                { "const": "vendor_name", "title": "Vendor Name" }
               ]
             },
             "uniqueItems": true
