@@ -16,6 +16,26 @@ RSpec.describe Agents::Workflow, type: :model do
       should define_enum_for(:trigger_type).with_values(website_chatbot: 0, chat_assistant: 1, scheduled: 2,
                                                         api_trigger: 3)
     }
+    it { should define_enum_for(:workflow_type).with_values(runtime: 0, template: 1) }
+  end
+
+  describe "scopes" do
+    let!(:runtime_workflow) { create(:workflow, workflow_type: 0) }
+    let!(:template_workflow) { create(:workflow, workflow_type: 1) }
+
+    describe ".runtime" do
+      it "returns workflows as runtime" do
+        expect(Agents::Workflow.all).to include(runtime_workflow)
+        expect(Agents::Workflow.all).not_to include(template_workflow)
+      end
+    end
+
+    describe ".template" do
+      it "returns workflows as template" do
+        expect(Agents::Workflow.unscoped.template).to include(template_workflow)
+        expect(Agents::Workflow.unscoped.template).not_to include(runtime_workflow)
+      end
+    end
   end
 
   describe "validations" do
