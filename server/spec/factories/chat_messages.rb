@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :chat_message do
     content { "MyText" }
     role { 0 }
-    title { "MyTitle" }
 
     association :workspace
     association :data_app_session

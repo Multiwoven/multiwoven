@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_06_031347) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,7 +131,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_06_031347) do
     t.integer "role", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "title"
     t.index ["data_app_session_id", "created_at"], name: "index_chat_messages_on_data_app_session_id_and_created_at"
     t.index ["data_app_session_id"], name: "index_chat_messages_on_data_app_session_id"
     t.index ["visual_component_id"], name: "index_chat_messages_on_visual_component_id"
@@ -180,6 +179,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_06_031347) do
     t.datetime "end_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title"
     t.index ["data_app_id"], name: "index_data_app_sessions_on_data_app_id"
     t.index ["session_id"], name: "index_data_app_sessions_on_session_id", unique: true
   end
