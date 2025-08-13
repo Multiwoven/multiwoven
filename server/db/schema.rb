@@ -631,7 +631,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_142637) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "workflow_type", default: 0, null: false
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
