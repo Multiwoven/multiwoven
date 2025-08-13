@@ -14,11 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-<<<<<<< HEAD
-gem "multiwoven-integrations", "~> 0.32.0"
-=======
 gem "multiwoven-integrations", "~> 0.33.2"
->>>>>>> 4342416c (chore(CE): upgrade integrations gem (#1293))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -54,6 +50,7 @@ gem "bootsnap", require: false # Reduces boot time
 gem "counter_culture", "~> 3.3"
 gem "fugit"
 gem "pg_query"
+gem "rack-attack"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"

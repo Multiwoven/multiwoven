@@ -198,6 +198,7 @@ class Connector < ApplicationRecord
     end
 
     sub_category_name = connector_client.new.meta_data[:data][:sub_category]
+    sub_category_name = "Vector Database" if resolved_configuration["data_type"] == "vector"
     self.connector_sub_category = sub_category_name if sub_category_name.present?
   rescue StandardError => e
     Rails.logger.error("Failed to set sub category for connector ##{id}: #{e.message}")
