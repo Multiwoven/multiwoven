@@ -22,37 +22,13 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
   <a href="https://github.com/Multiwoven/multiwoven/actions/workflows/ui-ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Multiwoven/multiwoven/ui-ci.yml?branch=main&style=for-the-badge&label=ui-build" alt="ui-ci"></a>
 </p>
 
-<table align="center">
-  <tbody>
-    <tr>
-      <td>multiwoven-integrations</td>
-      <td>
-        <a href="https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/maintainability"><img src="https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/maintainability" /></a>
-      </td>
-      <td>
-        <a href="https://codeclimate.com/repos/657d0a2a60265a2f2155ffca/test_coverage"><img src="https://api.codeclimate.com/v1/badges/d841270f1f7a966043c1/test_coverage" /></a>
-      </td>
-    </tr>
-    <tr>
-      <td>multiwoven-server</td>
-      <td>
-        <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability" /></a>
-      </td>
-      <td>
-        <a href="https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage"><img src="https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage" /></a>
-      </td>
-    </tr>
-    <tr>
-      <td>multiwoven-ui</td>
-      <td>
-        <a href="https://codeclimate.com/repos/658845e86ce9037ff3f7115b/maintainability"><img src="https://api.codeclimate.com/v1/badges/ac28cea2714ae9868d9e/maintainability" /></a>
-      </td>
-      <td>
-        <a href="https://codeclimate.com/repos/658845e86ce9037ff3f7115b/test_coverage"><img src="https://api.codeclimate.com/v1/badges/ac28cea2714ae9868d9e/test_coverage" /></a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<p align="center">
+  <a href="https://qlty.sh/gh/Multiwoven/projects/multiwoven">
+    <img src="https://qlty.sh/badges/133d1667-dc6e-4ede-8601-3120be5f175e/maintainability.svg" alt="Maintainability" /></a>
+  <a href="https://qlty.sh/gh/Multiwoven/projects/multiwoven">
+    <img src="https://qlty.sh/badges/133d1667-dc6e-4ede-8601-3120be5f175e/coverage.svg" alt="Code Coverage" /></a>
+  </a>
+</p>
 
 <p align="center">
     <br />
@@ -157,7 +133,7 @@ cp .env ui/.env
 5. **Setup git hooks:**
 
 ```bash
-./git-hooks/setup-hooks.sh 
+./git-hooks/setup-hooks.sh
 ```
 
 6. **Start the services:**

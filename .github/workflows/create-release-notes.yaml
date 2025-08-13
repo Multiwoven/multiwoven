@@ -5,15 +5,27 @@ on:
     branches:
       - "main"
 
+permissions:
+  contents: write
+
 jobs:
   release-on-merge:
     runs-on: ubuntu-latest
     if: ${{ github.event.commits && contains(github.event.commits[0].message, 'Multiwoven release ') && contains(github.ref, 'refs/heads/main') }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Important to fetch all history for tags
+
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.AISQUARED_CI_BOT_APP_ID }}
+          private_key: ${{ secrets.AISQUARED_CI_BOT_PRIVATE_KEY }}
+          repository: Multiwoven/multiwoven
 
       - name: Get the latest tag
         id: latest-tag
@@ -22,7 +34,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           tag: ${{ env.LATEST_TAG }}
           name: Release ${{ env.LATEST_TAG }}
           bodyFile: release-notes.md
