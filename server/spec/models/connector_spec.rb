@@ -356,6 +356,16 @@ RSpec.describe Connector, type: :model do
     let!(:vector_connector) do
       create(:connector, connector_category: "AI Model", connector_sub_category: "Vector Database")
     end
+    let!(:vector_postgres_connector) do
+      create(
+        :connector,
+        connector_type: "source",
+        connector_name: "Postgres",
+        configuration: { "data_type": "vector" },
+        connector_category: "data",
+        connector_sub_category: "Vector Database"
+      )
+    end
     let!(:non_vector_connector) do
       create(:connector, connector_category: "Data Warehouse", connector_sub_category: "Relational Database")
     end
@@ -363,6 +373,7 @@ RSpec.describe Connector, type: :model do
     it "returns connectors with connector_sub_category in VECTOR_CATEGORIES" do
       result = Connector.vector
       expect(result).to include(vector_connector)
+      expect(result).to include(vector_postgres_connector)
       expect(result).not_to include(non_vector_connector)
     end
   end
@@ -410,6 +421,269 @@ RSpec.describe Connector, type: :model do
           "port" => 5432
         }
         expect(connector.resolved_configuration).to eq(expected_config)
+      end
+    end
+  end
+
+  let(:workspace) { create(:workspace) }
+  let(:connector) { create(:connector, workspace:) }
+
+  describe "#masked_configuration" do
+    let(:mock_client) { double("connector_client") }
+    let(:mock_spec) do
+      {
+        connection_specification: {
+          properties: {
+            host: { type: "string", title: "Host" },
+            credentials: {
+              type: "object",
+              properties: {
+                username: { type: "string", title: "Username" },
+                password: { type: "string", title: "Password", multiwoven_secret: true }
+              }
+            },
+            api_key: { type: "string", title: "API Key", multiwoven_secret: true }
+          }
+        }
+      }
+    end
+
+    before do
+      allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      allow(mock_client).to receive(:connector_spec).and_return(mock_spec)
+    end
+
+    context "when configuration has secrets" do
+      let(:configuration) do
+        {
+          "host" => "example.com",
+          "credentials" => {
+            "username" => "user",
+            "password" => "secret123"
+          },
+          "api_key" => "key123"
+        }
+      end
+
+      before do
+        connector.configuration = configuration
+      end
+
+      it "masks secret values with asterisks" do
+        result = connector.masked_configuration
+
+        expect(result["host"]).to eq("example.com")
+        expect(result["credentials"]["username"]).to eq("user")
+        expect(result["credentials"]["password"]).to eq("*************")
+        expect(result["api_key"]).to eq("*************")
+      end
+
+      it "does not modify the original configuration" do
+        original_config = connector.configuration.deep_dup
+        connector.masked_configuration
+
+        expect(connector.configuration).to eq(original_config)
+      end
+    end
+
+    context "when configuration has no secrets" do
+      let(:configuration) do
+        {
+          "host" => "example.com",
+          "port" => "5432",
+          "database" => "test_db"
+        }
+      end
+
+      before do
+        connector.configuration = configuration
+      end
+
+      it "returns configuration unchanged" do
+        result = connector.masked_configuration
+
+        expect(result).to eq(configuration)
+      end
+    end
+
+    context "when configuration has nested objects without secrets" do
+      let(:configuration) do
+        {
+          "host" => "example.com",
+          "options" => {
+            "timeout" => 30,
+            "retries" => 3
+          }
+        }
+      end
+
+      before do
+        connector.configuration = configuration
+      end
+
+      it "preserves nested structure" do
+        result = connector.masked_configuration
+
+        expect(result["host"]).to eq("example.com")
+        expect(result["options"]["timeout"]).to eq(30)
+        expect(result["options"]["retries"]).to eq(3)
+      end
+    end
+
+    context "when configuration has arrays" do
+      let(:configuration) do
+        {
+          "hosts" => %w[host1 host2],
+          "credentials" => {
+            "username" => "user",
+            "password" => "secret123"
+          }
+        }
+      end
+
+      before do
+        connector.configuration = configuration
+      end
+
+      it "preserves arrays and masks secrets" do
+        result = connector.masked_configuration
+
+        expect(result["hosts"]).to eq(%w[host1 host2])
+        expect(result["credentials"]["username"]).to eq("user")
+        expect(result["credentials"]["password"]).to eq("*************")
+      end
+    end
+  end
+
+  describe "#extract_secret_keys" do
+    let(:schema) do
+      {
+        properties: {
+          host: { type: "string" },
+          credentials: {
+            type: "object",
+            properties: {
+              username: { type: "string" },
+              password: { type: "string", multiwoven_secret: true }
+            }
+          },
+          api_key: { type: "string", multiwoven_secret: true },
+          nested: {
+            type: "object",
+            properties: {
+              secret: { type: "string", multiwoven_secret: true },
+              normal: { type: "string" }
+            }
+          }
+        }
+      }
+    end
+
+    it "extracts all secret keys from schema" do
+      result = connector.send(:extract_secret_keys, schema)
+
+      expect(result).to contain_exactly("password", "api_key", "secret")
+    end
+
+    context "when schema has no secrets" do
+      let(:schema) do
+        {
+          properties: {
+            host: { type: "string" },
+            port: { type: "number" }
+          }
+        }
+      end
+
+      it "returns empty array" do
+        result = connector.send(:extract_secret_keys, schema)
+
+        expect(result).to be_empty
+      end
+    end
+
+    context "when schema is not a hash" do
+      it "returns empty array" do
+        result = connector.send(:extract_secret_keys, "not a hash")
+
+        expect(result).to be_empty
+      end
+    end
+
+    context "when schema has no properties" do
+      let(:schema) { { type: "object" } }
+
+      it "returns empty array" do
+        result = connector.send(:extract_secret_keys, schema)
+
+        expect(result).to be_empty
+      end
+    end
+  end
+
+  describe "#mask_secret_values" do
+    let(:secret_keys) { %w[password api_key] }
+
+    context "when config is a hash" do
+      let(:config) do
+        {
+          "host" => "example.com",
+          "password" => "secret123",
+          "credentials" => {
+            "username" => "user",
+            "password" => "secret456"
+          }
+        }
+      end
+
+      it "masks secret values and preserves structure" do
+        result = connector.send(:mask_secret_values, config, secret_keys)
+
+        expect(result["host"]).to eq("example.com")
+        expect(result["password"]).to eq("*************")
+        expect(result["credentials"]["username"]).to eq("user")
+        expect(result["credentials"]["password"]).to eq("*************")
+      end
+    end
+
+    context "when config is an array" do
+      let(:config) do
+        [
+          { "name" => "item1", "password" => "secret1" },
+          { "name" => "item2", "api_key" => "key2" }
+        ]
+      end
+
+      it "masks secrets in array items" do
+        result = connector.send(:mask_secret_values, config, secret_keys)
+
+        expect(result[0]["name"]).to eq("item1")
+        expect(result[0]["password"]).to eq("*************")
+        expect(result[1]["name"]).to eq("item2")
+        expect(result[1]["api_key"]).to eq("*************")
+      end
+    end
+
+    context "when config is not a hash or array" do
+      it "returns config unchanged" do
+        result = connector.send(:mask_secret_values, "string_value", secret_keys)
+
+        expect(result).to eq("string_value")
+      end
+    end
+
+    context "when no secrets match" do
+      let(:config) do
+        {
+          "host" => "example.com",
+          "port" => "5432"
+        }
+      end
+
+      it "returns config unchanged" do
+        result = connector.send(:mask_secret_values, config, secret_keys)
+
+        expect(result).to eq(config)
       end
     end
   end

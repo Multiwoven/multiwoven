@@ -1,5 +1,7 @@
-## [0.72.0] - 2025-07-29
+## [0.74.0] - 2025-08-06
 
-### 🚀 Features
+### ⚙️ Miscellaneous Tasks
 
-- *(CE)* Add permissions to release and sync ce workflows (#818)
+- *(CE)* Workflow run model changes
+- *(CE)* Workflow scope updated_at desc (#799)
+- *(CE)* Mask connector credentials (#804)
