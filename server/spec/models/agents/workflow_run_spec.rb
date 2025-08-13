@@ -6,6 +6,7 @@ RSpec.describe Agents::WorkflowRun, type: :model do
   describe "associations" do
     it { should belong_to(:workflow).class_name("Agents::Workflow") }
     it { should belong_to(:workspace) }
+    it { should have_one(:workflow_log).class_name("Agents::WorkflowLog").dependent(:destroy) }
   end
 
   describe "validations" do
