@@ -1825,6 +1825,8 @@ GEM
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
+    google-apis-drive_v3 (0.68.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-sheets_v4 (0.39.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-ai_platform-v1 (1.0.0)
@@ -1971,7 +1973,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.32.0)
+    multiwoven-integrations (0.33.2)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2023,13 +2025,13 @@ GEM
     net-ssh (7.3.0)
     newrelic_rpm (9.7.0)
     nio4r (2.7.4)
-    nokogiri (1.18.8-aarch64-linux-gnu)
+    nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.8-arm64-darwin)
+    nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-darwin)
+    nokogiri (1.18.9-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-linux-gnu)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -2084,6 +2086,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.16)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.0)
@@ -2189,7 +2193,8 @@ GEM
     ruby-limiter (2.3.0)
     ruby-oci8 (2.2.14)
     ruby-progressbar (1.13.0)
-    ruby-saml (1.18.0)
+    ruby-rc4 (0.1.5)
+    ruby-saml (1.18.1)
       nokogiri (>= 1.13.10)
       rexml
     rubyzip (2.4.1)
@@ -2218,19 +2223,19 @@ GEM
       gli
       hashie
       logger
-    solid_queue (1.1.3)
+    solid_queue (1.2.1)
       activejob (>= 7.1)
       activerecord (>= 7.1)
       concurrent-ruby (>= 1.3.1)
       fugit (~> 1.11.0)
       railties (>= 7.1)
-      thor (~> 1.3.1)
+      thor (>= 1.3.1)
     sorbet-runtime (0.5.11823)
     stringio (3.1.5)
     stripe (13.4.1)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
-    thor (1.3.2)
+    thor (1.4.0)
     timecop (0.9.8)
     timeout (0.4.3)
     tiny_tds (3.2.0)
@@ -2306,6 +2311,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fugit
+  google-apis-drive_v3 (~> 0.68.0)
   groupdate
   interactor (~> 3.0)
   intuit-oauth
@@ -2314,7 +2320,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.32.0)
+  multiwoven-integrations (~> 0.33.2)
   mysql2
   newrelic_rpm
   parallel
@@ -2325,6 +2331,7 @@ DEPENDENCIES
   prometheus-client (~> 4.2)
   puma (>= 5.0)
   pundit
+  rack-attack
   rack-cors
   rails (~> 7.1.1)
   redis (~> 4.0)

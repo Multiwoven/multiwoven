@@ -14,7 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.32.0"
+gem "multiwoven-integrations", "~> 0.33.2"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -50,6 +50,7 @@ gem "bootsnap", require: false # Reduces boot time
 gem "counter_culture", "~> 3.3"
 gem "fugit"
 gem "pg_query"
+gem "rack-attack"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
 gem "newrelic_rpm"
@@ -109,3 +110,5 @@ gem "premailer-rails"
 gem "prometheus-client", "~> 4.2"
 
 gem "xmlrpc", "~> 0.3.3"
+
+gem "google-apis-drive_v3", "~> 0.68.0"

@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2025_07_01_125416) do
-=======
 ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
->>>>>>> 4115190b (chore(CE): Move title to Data App Session DB (#1302))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -601,6 +597,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.integer "session_count", default: 0
   end
 
+  create_table "workflow_logs", force: :cascade do |t|
+    t.string "workflow_id", null: false
+    t.integer "workflow_run_id", null: false
+    t.string "input", null: false
+    t.string "output"
+    t.jsonb "logs", default: {}
+    t.integer "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "workflow_runs", force: :cascade do |t|
     t.uuid "workflow_id", null: false
     t.bigint "workspace_id", null: false
@@ -611,19 +618,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.string "temporal_workflow_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "finished_at"
     t.index ["workspace_id"], name: "index_workflow_runs_on_workspace_id"
-  end
-
-  create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "workspace_id", null: false
-    t.string "name", null: false
-    t.text "description"
-    t.integer "status"
-    t.integer "trigger_type"
-    t.jsonb "configuration", default: {}
-    t.string "token"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
