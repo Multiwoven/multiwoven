@@ -32,6 +32,7 @@ module Multiwoven
       Qdrant
       Firecrawl
       Odoo
+      GoogleDrive
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
