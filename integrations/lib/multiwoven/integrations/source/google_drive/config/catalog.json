@@ -1,0 +1,63 @@
+{
+  "request_rate_limit": 6000,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": [
+    {
+      "name": "invoices",
+      "action": "fetch",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "vendor_name": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string"
+          },
+          "invoice_number": {
+            "type": "string"
+          },
+          "purchase_order": {
+            "type": "string"
+          },
+          "invoice_date": {
+            "type": "string"
+          },
+          "invoice_total": {
+            "type": "string"
+          },
+          "line_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_number": {
+                  "type": "string"
+                },
+                "item_description": {
+                  "type": "string"
+                },
+                "item_quantity": {
+                  "type": "string"
+                },
+                "item_price": {
+                  "type": "string"
+                },
+                "line_total": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

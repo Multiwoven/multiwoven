@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.32.3)
+    multiwoven-integrations (0.33.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -102,6 +102,9 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sdk-sts (1.11.0)
       aws-sdk-core (~> 3, >= 3.110.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-textract (1.58.0)
+      aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -210,6 +213,8 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
+    google-apis-drive_v3 (0.67.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-sheets_v4 (0.31.0)
       google-apis-core (>= 0.14.0, < 2.a)
     google-cloud-ai_platform-v1 (0.50.0)
@@ -456,6 +461,7 @@ DEPENDENCIES
   aws-sdk-sagemaker
   aws-sdk-sagemakerruntime
   aws-sdk-sts
+  aws-sdk-textract (~> 1.58)
   builder (~> 3.3)
   byebug
   csv
@@ -465,9 +471,11 @@ DEPENDENCIES
   duckdb
   faraday
   git
+  google-apis-drive_v3 (~> 0.67.0)
   google-apis-sheets_v4
   google-cloud-ai_platform-v1
   google-cloud-bigquery
+  googleauth (~> 1.11)
   hubspot-api-client (~> 17.2.0)
   intuit-oauth
   iterable-api-client
