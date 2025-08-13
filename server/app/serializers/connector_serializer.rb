@@ -13,4 +13,8 @@ class ConnectorSerializer < ActiveModel::Serializer
   def connector_definition_icon
     object.connector_definition[:data][:icon]
   end
+
+  def configuration
+    object.masked_configuration
+  end
 end
