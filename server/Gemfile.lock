@@ -1825,6 +1825,8 @@ GEM
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
+    google-apis-drive_v3 (0.68.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-apis-sheets_v4 (0.39.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-ai_platform-v1 (1.0.0)
@@ -1971,7 +1973,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.32.3)
+    multiwoven-integrations (0.33.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2023,13 +2025,13 @@ GEM
     net-ssh (7.3.0)
     newrelic_rpm (9.7.0)
     nio4r (2.7.4)
-    nokogiri (1.18.8-aarch64-linux-gnu)
+    nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.8-arm64-darwin)
+    nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-darwin)
+    nokogiri (1.18.9-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-linux-gnu)
+    nokogiri (1.18.9-x86_64-linux-gnu)
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -2191,7 +2193,8 @@ GEM
     ruby-limiter (2.3.0)
     ruby-oci8 (2.2.14)
     ruby-progressbar (1.13.0)
-    ruby-saml (1.18.0)
+    ruby-rc4 (0.1.5)
+    ruby-saml (1.18.1)
       nokogiri (>= 1.13.10)
       rexml
     rubyzip (2.4.1)
@@ -2308,6 +2311,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fugit
+  google-apis-drive_v3 (~> 0.68.0)
   groupdate
   interactor (~> 3.0)
   intuit-oauth
@@ -2316,7 +2320,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.32.3)
+  multiwoven-integrations (~> 0.33.1)
   mysql2
   newrelic_rpm
   parallel
