@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.32.0"
-=======
     VERSION = "0.33.0"
->>>>>>> 35e94da7 (feat(CE): google drive source connector (#1251))
 
     ENABLED_SOURCES = %w[
       Snowflake

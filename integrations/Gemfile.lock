@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.32.0)
-=======
     multiwoven-integrations (0.33.0)
->>>>>>> 35e94da7 (feat(CE): google drive source connector (#1251))
       MailchimpMarketing
       activesupport
       async-websocket
