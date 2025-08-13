@@ -206,6 +206,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         expect(records).to be_an(Array)
         expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
         expect(records.first.record.data[:id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("existing_file.csv")
         expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
         expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
       end
@@ -230,6 +231,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         expect(records).to be_an(Array)
         expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
         expect(records.first.record.data[:id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
         expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
         expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
       end
@@ -254,6 +256,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         expect(records).to be_an(Array)
         expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
         expect(records.first.record.data[:id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
         expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
         expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
       end

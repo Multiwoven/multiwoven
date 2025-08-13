@@ -161,7 +161,7 @@ module Multiwoven::Integrations::Source
         columns.each { |column| invoice[column] = "" if TEXTRACT_SUMMARY_FIELDS.key?(column) }
         invoice["line_items"] = [] if columns.any?("line_items")
         invoice["id"] = file.id if columns.any?("id")
-        invoice["file_name"] = file.id if columns.any?("file_name")
+        invoice["file_name"] = file.name if columns.any?("file_name")
         invoice["exception"] = "" if columns.any?("exception")
         invoice
       end
