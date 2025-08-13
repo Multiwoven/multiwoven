@@ -129,6 +129,16 @@ class Connector < ApplicationRecord
     client.send(:run_model, connection_config, JSON.parse(payload))
   end
 
+  def execute_search(vector, limit)
+    vector_search_config = Multiwoven::Integrations::Protocol::VectorConfig.new(
+      source: to_protocol,
+      vector:,
+      limit:
+    )
+    client = connector_client.new
+    client.send(:search, vector_search_config)
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(
@@ -142,7 +152,8 @@ class Connector < ApplicationRecord
       name: connector_name,
       type: connector_type,
       connection_specification: resolved_configuration,
-      query_type: connector_query_type
+      query_type: connector_query_type,
+      connector_instance: self
     )
   end
 
@@ -187,6 +198,7 @@ class Connector < ApplicationRecord
     end
 
     sub_category_name = connector_client.new.meta_data[:data][:sub_category]
+    sub_category_name = "Vector Database" if resolved_configuration["data_type"] == "vector"
     self.connector_sub_category = sub_category_name if sub_category_name.present?
   rescue StandardError => e
     Rails.logger.error("Failed to set sub category for connector ##{id}: #{e.message}")
@@ -198,6 +210,46 @@ class Connector < ApplicationRecord
 
   def resolved_configuration
     resolve_values_from_env(configuration)
+  end
+
+  def masked_configuration
+    spec = connector_client.new.connector_spec[:connection_specification].with_indifferent_access
+    secret_keys = extract_secret_keys(spec)
+    mask_secret_values(configuration.deep_dup, secret_keys)
+  end
+
+  private
+
+  def extract_secret_keys(schema, keys = [])
+    return keys unless schema.is_a?(Hash)
+
+    properties = schema[:properties]
+    if properties.is_a?(Hash)
+      properties.each do |key, subschema|
+        keys << key.to_s if subschema[:multiwoven_secret] || subschema["multiwoven_secret"]
+        extract_secret_keys(subschema, keys)
+      end
+    end
+
+    keys
+  end
+
+  def mask_secret_values(config, secret_keys)
+    case config
+    when Hash
+      config.each_with_object({}) do |(key, value), result|
+        result[key] =
+          if secret_keys.include?(key.to_s)
+            "*************"
+          else
+            mask_secret_values(value, secret_keys)
+          end
+      end
+    when Array
+      config.map { |item| mask_secret_values(item, secret_keys) }
+    else
+      config
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength
