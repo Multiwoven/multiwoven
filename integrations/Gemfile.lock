@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.32.0)
-=======
     multiwoven-integrations (0.32.3)
->>>>>>> 4fcc8a8f (chore(CE): Update Metadata in pinecone db Destination (#1269))
       MailchimpMarketing
       activesupport
       async-websocket

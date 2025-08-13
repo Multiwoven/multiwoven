@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.32.0"
-=======
     VERSION = "0.32.3"
->>>>>>> 4fcc8a8f (chore(CE): Update Metadata in pinecone db Destination (#1269))
 
     ENABLED_SOURCES = %w[
       Snowflake
