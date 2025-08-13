@@ -76,13 +76,12 @@ module Multiwoven::Integrations::Source
             analysis = textract.analyze_expense(document: { bytes: byte_stream.read })
             invoice = extract_invoice_data(invoice, analysis)
           rescue Aws::Textract::Errors::UnsupportedDocumentException => e
-            invoice[:exception] = "Document format not supported." if invoice.key?(:exception)
+            invoice["exception"] = e.message if invoice.key?("exception")
             handle_exception(e, {
                                context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
                                type: "error"
                              })
           rescue StandardError => e
-            invoice[:exception] = e.message if invoice.key?(:exception)
             handle_exception(e, {
                                context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
                                type: "error"
@@ -145,7 +144,7 @@ module Multiwoven::Integrations::Source
 
       def select_columns(query)
         columns = query.match(/SELECT (.*) FROM/)[1]
-        all_columns = %w[line_items id file_name] + TEXTRACT_SUMMARY_FIELDS.keys
+        all_columns = %w[line_items id file_name exception] + TEXTRACT_SUMMARY_FIELDS.keys
         @options[:fields] = all_columns if @options[:fields].empty?
 
         return @options[:fields] if columns.include?("*")
