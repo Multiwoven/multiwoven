@@ -38,7 +38,23 @@ RSpec.describe Multiwoven::Integrations::Destination::Odoo::Client do
         request_method: "POST",
         request_rate_limit: 4,
         rate_limit_unit_seconds: 1,
-        json_schema: {}
+        json_schema: {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "foreign_id": {
+              "type": "many2one"
+            },
+            "ids": {
+              "type": "one2many"
+            }
+          }
+        }
       },
       sync_mode: "incremental",
       destination_sync_mode: "insert",
@@ -142,7 +158,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Odoo::Client do
       [
         {
           id: 1,
-          name: "record"
+          name: "record",
+          foreign_id: "2",
+          ids: "[[0,0,{\"name\": \"thing\"}]]"
         }
       ]
     end
@@ -150,11 +168,20 @@ RSpec.describe Multiwoven::Integrations::Destination::Odoo::Client do
       before do
         stub_request(:post, object_endpoint)
           .with({
-                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName><params><param><value><string>database</string>"\
-                  "</value></param><param><value><i4>1</i4></value></param><param><value><string>password</string></value></param><param><value>"\
-                  "<string>account</string></value></param><param><value><string>create</string></value></param><param><value><array><data><value>"\
-                  "<struct><member><name>id</name><value><i4>1</i4></value></member><member><name>name</name><value><string>record</string></value>"\
-                  "</member></struct></value></data></array></value></param></params></methodCall>\n"
+                  body: "<?xml version=\"1.0\" ?><methodCall><methodName>execute_kw</methodName><params>"\
+                  "<param><value><string>database</string></value></param>"\
+                  "<param><value><i4>1</i4></value></param>"\
+                  "<param><value><string>password</string></value></param>"\
+                  "<param><value><string>account</string></value></param>"\
+                  "<param><value><string>create</string></value></param>"\
+                  "<param><value><array><data><value><struct>"\
+                  "<member><name>id</name><value><i4>1</i4></value></member>"\
+                  "<member><name>name</name><value><string>record</string></value></member>"\
+                  "<member><name>foreign_id</name><value><i4>2</i4></value></member>"\
+                  "<member><name>ids</name><value><array><data><value><array><data><value><i4>0</i4></value>"\
+                  "<value><i4>0</i4></value><value><struct><member><name>name</name><value><string>thing</string></value>"\
+                  "</member></struct></value></data></array></value></data></array></value></member>"\
+                  "</struct></value></data></array></value></param></params></methodCall>\n"
                 })
           .to_return(status: 200, body: XMLRPC::Create.new.methodResponse(true, records))
       end
