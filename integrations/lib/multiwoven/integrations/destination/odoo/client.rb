@@ -40,6 +40,7 @@ module Multiwoven::Integrations::Destination
         records.each do |record|
           logger.debug("ODOO:WRITE:#{model} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
+            record = format_record(record, sync_config.stream.json_schema)
             response = @client.execute_kw(connection_config[:database], @uid, connection_config[:password],
                                           model, "create", [record])
             write_success += 1
@@ -66,6 +67,17 @@ module Multiwoven::Integrations::Destination
       end
 
       private
+
+      def format_record(record, json_schema)
+        json_schema = json_schema.with_indifferent_access
+        properties = json_schema["properties"]
+        record.each_key do |key|
+          data_type = properties[key]["type"]
+          record[key] = record[key].to_i if data_type == "many2one"
+          record[key] = JSON.parse(record[key]) if data_type == "one2many"
+        end
+        record
+      end
 
       def create_streams(connection_config, models)
         models.map do |model|
