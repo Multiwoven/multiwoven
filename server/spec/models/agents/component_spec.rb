@@ -18,7 +18,8 @@ RSpec.describe Agents::Component, type: :model do
         data_storage: 2,
         llm_model: 3,
         prompt_template: 4,
-        vector_store: 5
+        vector_store: 5,
+        python_custom: 6
       )
     }
   end
