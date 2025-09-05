@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_13_130124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -277,6 +277,27 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "organization_logo_filename"
+  end
+
+  create_table "remote_code_executions", force: :cascade do |t|
+    t.integer "workflow_run_id"
+    t.integer "workspace_id", null: false
+    t.string "component_id"
+    t.integer "provider"
+    t.integer "mode"
+    t.integer "status"
+    t.text "output"
+    t.text "error_message"
+    t.text "stdout"
+    t.integer "execution_time_ms"
+    t.integer "memory_used_mb"
+    t.integer "cpu_time_ms"
+    t.integer "billed_duration_ms"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "invocation_id", limit: 100
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "resources", force: :cascade do |t|
