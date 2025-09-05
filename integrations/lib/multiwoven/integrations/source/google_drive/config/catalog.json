@@ -55,6 +55,9 @@
                 }
               }
             }
+          },
+          "results": {
+            "type": "object"
           }
         }
       }
