@@ -144,7 +144,7 @@ module Multiwoven::Integrations::Source
 
       def select_columns(query)
         columns = query.match(/SELECT (.*) FROM/)[1]
-        all_columns = %w[line_items id file_name exception] + TEXTRACT_SUMMARY_FIELDS.keys
+        all_columns = %w[line_items id file_name exception results] + TEXTRACT_SUMMARY_FIELDS.keys
         @options[:fields] = all_columns if @options[:fields].empty?
 
         return @options[:fields] if columns.include?("*")
@@ -162,6 +162,7 @@ module Multiwoven::Integrations::Source
         invoice["id"] = file.id if columns.any?("id")
         invoice["file_name"] = file.name if columns.any?("file_name")
         invoice["exception"] = "" if columns.any?("exception")
+        invoice["results"] = {} if columns.any?("results")
         invoice
       end
 
@@ -202,6 +203,7 @@ module Multiwoven::Integrations::Source
           end
         end
         invoice["line_items"] = invoice["line_items"].to_json
+        invoice["results"] = results.to_json if invoice.key?("results")
         invoice.transform_keys(&:to_sym)
       end
 

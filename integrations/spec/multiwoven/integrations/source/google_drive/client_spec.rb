@@ -73,7 +73,8 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
       "line_items" => { "items" => { "properties" => { "item_description" => { "type" => "string" }, "item_number" => { "type" => "string" }, "item_price" => { "type" => "string" }, "item_quantity" => { "type" => "string" }, "line_total" => { "type" => "string" } }, "type" => "object" },
                         "type" => "array" },
       "purchase_order" => { "type" => "string" },
-      "vendor_name" => { "type" => "string" }
+      "vendor_name" => { "type" => "string" },
+      "results" => { "type" => "object" }
     }
   end
 
