@@ -140,12 +140,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
   create_table "components", id: :string, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.uuid "workflow_id", null: false
-    t.string "name"
     t.integer "component_type", null: false
     t.jsonb "configuration", null: false
     t.jsonb "position", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.jsonb "data", default: {}, null: false
     t.integer "component_category", default: 0, null: false
   end
@@ -519,7 +519,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.string "tagger_type"
     t.bigint "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at", precision: nil
+    t.datetime "created_at"
     t.string "tenant", limit: 128
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
@@ -527,11 +527,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.index ["taggable_id", "taggable_type", "context"], name: "taggings_taggable_context_idx"
     t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
     t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
-    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable_type_and_taggable_id"
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable"
     t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
     t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
-    t.index ["tagger_type", "tagger_id"], name: "index_taggings_on_tagger_type_and_tagger_id"
+    t.index ["tagger_type", "tagger_id"], name: "index_taggings_on_tagger"
     t.index ["tenant"], name: "index_taggings_on_tenant"
   end
 
@@ -589,12 +589,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_12_205822) do
     t.string "name"
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
-    t.integer "model_id", null: false
+    t.integer "model_id"
     t.jsonb "properties"
     t.jsonb "feedback_config"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "session_count", default: 0
+    t.string "configurable_type"
+    t.string "configurable_id"
+    t.index ["configurable_type", "configurable_id"], name: "index_visual_components_on_configurable"
   end
 
   create_table "workflow_logs", force: :cascade do |t|

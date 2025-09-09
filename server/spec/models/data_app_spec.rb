@@ -14,7 +14,6 @@ RSpec.describe DataApp, type: :model do
     it { should define_enum_for(:rendering_type).with_values(embed: 0, no_code: 1, assistant: 2) }
     it { should belong_to(:workspace) }
     it { should have_many(:visual_components).dependent(:destroy) }
-    it { should have_many(:models).through(:visual_components) }
     it { should have_many(:data_app_sessions).dependent(:destroy) }
     it { should have_many(:feedbacks).through(:visual_components) }
     it { should have_many(:chat_messages).through(:visual_components) }

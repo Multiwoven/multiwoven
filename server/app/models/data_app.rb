@@ -12,13 +12,21 @@ class DataApp < ApplicationRecord
 
   belongs_to :workspace
   has_many :visual_components, dependent: :destroy
-  has_many :models, through: :visual_components
   has_many :feedbacks, through: :visual_components
   has_many :data_app_sessions, dependent: :destroy
   has_many :chat_messages, through: :visual_components
   has_many :message_feedbacks, through: :visual_components
 
   after_initialize :set_default_status, if: :new_record?
+
+  scope :by_configurable, lambda { |config|
+                            if config.present?
+                              type = config == "workflow" ? "Agents::Workflow" : "Model"
+                              where(id: VisualComponent.where(configurable_type: type).select(:data_app_id))
+                            else
+                              all
+                            end
+                          }
 
   private
 
