@@ -43,7 +43,7 @@ class Model < ApplicationRecord
   belongs_to :connector
 
   has_many :syncs, dependent: :destroy
-  has_many :visual_components, dependent: :destroy
+  has_many :visual_components, as: :configurable, dependent: :destroy
 
   scope :data, -> { where(query_type: %i[raw_sql dbt soql table_selector dynamic_sql]) }
   scope :ai_ml, -> { where(query_type: :ai_ml) }
@@ -55,9 +55,9 @@ class Model < ApplicationRecord
   def to_protocol
     Multiwoven::Integrations::Protocol::Model.new(
       name:,
-      query:,
+      query: query || "",
       query_type:,
-      primary_key:
+      primary_key: primary_key || ""
     )
   end
 

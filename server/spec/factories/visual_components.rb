@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :visual_component do
     component_type { "doughnut" }
     name { "Sales Chart" }
-    model_id { "1" }
     properties do
       {
         color: "blue"
@@ -15,7 +14,7 @@ FactoryBot.define do
         enabled: true
       }
     end
-    association :model
+    association :configurable, factory: :model
     association :workspace
     association :data_app
   end
