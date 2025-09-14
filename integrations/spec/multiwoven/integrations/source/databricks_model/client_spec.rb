@@ -171,9 +171,9 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
                 "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
-                config: {
+                options: { config: {
                   timeout: 30
-                })
+                } })
           .and_return(response)
       end
       it "successfully reads records" do
@@ -195,9 +195,9 @@ RSpec.describe Multiwoven::Integrations::Source::DatabricksModel::Client do
                 "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
-                config: {
+                options: { config: {
                   timeout: 30
-                })
+                } })
           .and_return(response)
       end
       it "handles exceptions during reading" do

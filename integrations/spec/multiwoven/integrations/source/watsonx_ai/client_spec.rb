@@ -111,7 +111,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxAi::Client do
 
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(health_endpoint, "GET", payload: {}, headers: headers, config: config)
+          .with(health_endpoint, "GET", payload: {}, headers: headers, options: { config: config })
           .and_return(response)
       end
 
@@ -207,7 +207,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxAi::Client do
 
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(prediction_endpoint, "POST", payload: JSON.parse(payload.to_json), headers: headers, config: config)
+          .with(prediction_endpoint, "POST", payload: JSON.parse(payload.to_json), headers: headers, options: { config: config })
           .and_return(response)
       end
       it "reads records successfully" do
