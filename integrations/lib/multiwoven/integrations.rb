@@ -45,6 +45,7 @@ require "xmlrpc/client"
 require "googleauth"
 require "google/apis/drive_v3"
 require "aws-sdk-textract"
+require "jsonpath"
 
 # Service
 require_relative "integrations/config"
@@ -96,6 +97,7 @@ require_relative "integrations/source/qdrant/client"
 require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
+require_relative "integrations/source/http/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

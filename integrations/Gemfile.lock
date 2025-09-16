@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.33.5)
+=======
+    multiwoven-integrations (0.34.0)
+>>>>>>> 75091e93 (feat(CE): Add HTTP Source Connector (#1315))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -307,6 +311,8 @@ GEM
       sorbet-runtime
     jmespath (1.6.2)
     json (2.7.2)
+    jsonpath (1.1.5)
+      multi_json
     jwt (2.8.1)
       base64
     language_server-protocol (3.17.0.3)
@@ -479,6 +485,7 @@ DEPENDENCIES
   hubspot-api-client (~> 17.2.0)
   intuit-oauth
   iterable-api-client
+  jsonpath
   multiwoven-integrations!
   mysql2
   net-sftp
