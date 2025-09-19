@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.33.5"
+=======
+    VERSION = "0.34.1"
+>>>>>>> 27b112ca (fix(CE): add increment_strategy check to HTTP Client (#1351))
 
     ENABLED_SOURCES = %w[
       Snowflake
