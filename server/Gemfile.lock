@@ -1940,6 +1940,8 @@ GEM
       simpleidn (~> 0.2)
       uri_template (~> 0.7)
     jsonapi-renderer (0.2.2)
+    jsonpath (1.1.5)
+      multi_json
     jwt (2.7.1)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -1978,7 +1980,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-    multiwoven-integrations (0.33.5)
+    multiwoven-integrations (0.34.1)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2322,11 +2324,12 @@ DEPENDENCIES
   interactor (~> 3.0)
   intuit-oauth
   jbuilder
+  jsonpath
   jwt
   kaminari
   letter_opener
   liquid
-  multiwoven-integrations (~> 0.33.5)
+  multiwoven-integrations (~> 0.34.1)
   mysql2
   newrelic_rpm
   parallel

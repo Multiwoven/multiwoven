@@ -2,6 +2,7 @@
 
 module ReverseEtl
   module Extractors
+    # rubocop:disable Metrics/ClassLength
     class Base
       DEFAULT_OFFSET = 0
       DEFAULT_BATCH_SIZE = (ENV["SYNC_EXTRACTOR_BATCH_SIZE"] || "10000").to_i
@@ -41,13 +42,46 @@ module ReverseEtl
       def batch_params(client, sync_run)
         sync_config = sync_run.sync.to_protocol
         sync_config.sync_run_id = sync_run.id.to_s
-        {
-          offset: sync_run.current_offset || DEFAULT_OFFSET,
-          limit: DEFAULT_LIMT,
-          batch_size: DEFAULT_BATCH_SIZE,
-          sync_config:,
-          client:
-        }
+        if sync_config.increment_strategy_config.present?
+          build_http_params(client, sync_run, sync_config)
+        else
+          {
+            offset: sync_run.current_offset || DEFAULT_OFFSET,
+            limit: DEFAULT_LIMT,
+            batch_size: DEFAULT_BATCH_SIZE,
+            sync_config:,
+            client:
+          }
+        end
+      end
+
+      def build_http_params(client, sync_run, sync_config)
+        increment_strategy_config = sync_config.increment_strategy_config
+        if increment_strategy_config.increment_strategy == "page"
+          {
+            increment_strategy_config.limit_variable => increment_strategy_config.limit,
+            increment_strategy_config.offset_variable => offset_value(sync_run, increment_strategy_config),
+            batch_size: 1,
+            sync_config:,
+            client:
+          }
+        elsif increment_strategy_config.increment_strategy == "offset"
+          {
+            limit: increment_strategy_config.limit || DEFAULT_LIMT,
+            offset: increment_strategy_config.offset || DEFAULT_OFFSET,
+            batch_size: increment_strategy_config.limit || DEFAULT_BATCH_SIZE,
+            sync_config:,
+            client:
+          }
+        end
+      end
+
+      def offset_value(sync_run, increment_strategy_config)
+        if sync_run.current_offset.nil? || sync_run.current_offset.zero?
+          increment_strategy_config.offset
+        else
+          sync_run.current_offset
+        end
       end
 
       def log_sync_run_error(sync_run)
@@ -130,5 +164,6 @@ module ReverseEtl
         false
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end
