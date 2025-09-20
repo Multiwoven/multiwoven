@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.33.5)
+=======
+    multiwoven-integrations (0.34.2)
+>>>>>>> 07421ddb (fix(CE): Pinecone fix for __default__ namespaces (#1355))
       MailchimpMarketing
       activesupport
       async-websocket
