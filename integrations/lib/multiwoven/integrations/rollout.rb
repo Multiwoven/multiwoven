@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.33.5"
+=======
+    VERSION = "0.34.4"
+>>>>>>> 9a9c73aa (fix(CE): Quick fix for pinecone write (#1359))
 
     ENABLED_SOURCES = %w[
       Snowflake

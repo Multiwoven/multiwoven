@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.33.5)
+=======
+    multiwoven-integrations (0.34.4)
+>>>>>>> 9a9c73aa (fix(CE): Quick fix for pinecone write (#1359))
       MailchimpMarketing
       activesupport
       async-websocket
