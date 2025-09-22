@@ -80,41 +80,58 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
 
   let(:google_drive_service) { instance_double(Google::Apis::DriveV3::DriveService) }
   let(:amazon_textract) { Aws::Textract::Client.new(stub_responses: true) }
+  let(:s3) { Aws::S3::Client.new(stub_responses: true) }
+  let(:pdf_reader) { instance_double(PDF::Reader) }
+
+  let(:expense_documents) do
+    [Aws::Textract::Types::ExpenseDocument.new(
+      summary_fields: [
+        Aws::Textract::Types::ExpenseField.new(
+          type: Aws::Textract::Types::ExpenseType.new(text: "VENDOR_NAME"),
+          value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Vendor, Inc.")
+        )
+      ],
+      line_item_groups: [
+        Aws::Textract::Types::LineItemGroup.new(
+          line_items: [
+            Aws::Textract::Types::LineItemFields.new(
+              line_item_expense_fields: [
+                Aws::Textract::Types::ExpenseField.new(
+                  type: Aws::Textract::Types::ExpenseType.new(text: "PRODUCT_CODE"),
+                  value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Product 0001")
+                )
+              ]
+            )
+          ]
+        )
+      ]
+    )]
+  end
 
   let(:analyze_expense_response) do
     Aws::Textract::Types::AnalyzeExpenseResponse.new(
-      expense_documents: [Aws::Textract::Types::ExpenseDocument.new(
-        summary_fields: [
-          Aws::Textract::Types::ExpenseField.new(
-            type: Aws::Textract::Types::ExpenseType.new(text: "VENDOR_NAME"),
-            value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Vendor, Inc.")
-          )
-        ],
-        line_item_groups: [
-          Aws::Textract::Types::LineItemGroup.new(
-            line_items: [
-              Aws::Textract::Types::LineItemFields.new(
-                line_item_expense_fields: [
-                  Aws::Textract::Types::ExpenseField.new(
-                    type: Aws::Textract::Types::ExpenseType.new(text: "PRODUCT_CODE"),
-                    value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Product 0001")
-                  )
-                ]
-              )
-            ]
-          )
-        ]
-      )]
+      expense_documents: expense_documents
     )
   end
-
+  let(:start_expense_analysis_response) do
+    Aws::Textract::Types::StartExpenseAnalysisResponse.new(
+      job_id: "1"
+    )
+  end
+  let(:get_expense_analysis_response) do
+    Aws::Textract::Types::GetExpenseAnalysisResponse.new(
+      job_status: "SUCCEEDED",
+      expense_documents: expense_documents
+    )
+  end
   let(:expense_file) { Google::Apis::DriveV3::File.new(id: "1", name: "expense_file.pdf") }
   let(:specified_folder) { Google::Apis::DriveV3::File.new(id: "2", name: "folder") }
 
   before do
     client.instance_variable_set(:@options, connection_config[:options])
     allow(client).to receive(:create_connection).and_return(google_drive_service)
-    allow(client).to receive(:create_aws_connection).and_return(amazon_textract)
+    allow(client).to receive(:create_aws_textract_connection).and_return(amazon_textract)
+    allow(client).to receive(:create_aws_s3_connection).and_return(s3)
   end
 
   describe "#check_connection" do
@@ -201,7 +218,10 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
           .and_return(Google::Apis::DriveV3::FileList.new(files: [existing_file]))
         allow(google_drive_service).to receive(:get_file)
           .and_return(existing_file)
+        allow(PDF::Reader).to receive(:new).and_return(pdf_reader)
+        allow(pdf_reader).to receive(:page_count).and_return(1)
       end
+
       it "returns records succesfully for table selector" do
         records = client.read(sync_config)
         expect(records).to be_an(Array)
@@ -261,6 +281,35 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
         expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
       end
+
+      it "returns records successfully for multi-page PDF" do
+        options = connection_config[:options]
+        options[:subfolders] = true
+        client.instance_variable_set(:@options, options)
+
+        allow(google_drive_service).to receive(:list_files)
+          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
+                  q: "mimeType = 'application/vnd.google-apps.folder'" })
+          .and_return(Google::Apis::DriveV3::FileList.new(files: [specified_folder]))
+
+        allow(google_drive_service).to receive(:list_files)
+          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
+                  q: "mimeType != 'application/vnd.google-apps.folder' and ('2' in parents)", page_size: 50 })
+          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
+        allow(pdf_reader).to receive(:page_count).and_return(2)
+        allow(s3).to receive(:put_object).and_return(nil)
+        allow(amazon_textract).to receive(:start_expense_analysis).and_return(start_expense_analysis_response)
+        allow(amazon_textract).to receive(:get_expense_analysis).and_return(get_expense_analysis_response)
+
+        records = client.read(sync_config)
+
+        expect(records).to be_an(Array)
+        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+        expect(records.first.record.data[:id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
+        expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
+        expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
+      end
     end
 
     context "when read is unsuccesful" do
@@ -289,6 +338,8 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
           .and_return(expense_file)
         allow(amazon_textract).to receive(:analyze_expense)
           .and_raise(amazon_textract_exception)
+        allow(PDF::Reader).to receive(:new).and_return(pdf_reader)
+        allow(pdf_reader).to receive(:page_count).and_return(1)
         expect(client).to receive(:handle_exception).with(
           amazon_textract_exception,
           {

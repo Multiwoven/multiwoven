@@ -91,6 +91,13 @@ gem "xmlrpc", "~> 0.3.3"
 
 gem "builder", "~> 3.3"
 
+<<<<<<< HEAD
+=======
+gem "jsonpath"
+
+gem "pdf-reader"
+
+>>>>>>> 40d81b9c (feat(CE): add support for multi-page PDFs (#1357))
 group :development, :test do
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
