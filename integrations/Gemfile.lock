@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.33.5)
+    multiwoven-integrations (0.34.4)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -45,6 +45,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (2.0.1)
     MailchimpMarketing (3.0.80)
       excon (>= 0.76.0, < 1)
       json (~> 2.1, >= 2.1.0)
@@ -60,6 +61,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    afm (1.0.0)
     ast (2.4.2)
     async (2.11.0)
       console (~> 1.25, >= 1.25.2)
@@ -284,6 +286,7 @@ GEM
       googleapis-common-protos (~> 1.4)
       grpc (~> 1.41)
     hashdiff (1.1.0)
+    hashery (2.1.2)
     hashie (5.0.0)
     httparty (0.22.0)
       csv
@@ -307,6 +310,8 @@ GEM
       sorbet-runtime
     jmespath (1.6.2)
     json (2.7.2)
+    jsonpath (1.1.5)
+      multi_json
     jwt (2.8.1)
       base64
     language_server-protocol (3.17.0.3)
@@ -334,6 +339,12 @@ GEM
     parser (3.3.1.0)
       ast (~> 2.4.1)
       racc
+    pdf-reader (2.15.0)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (>= 0.2.1, < 2)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pg (1.5.6)
     pg (1.5.6-x64-mingw-ucrt)
     pinecone (1.1.0)
@@ -391,6 +402,7 @@ GEM
     ruby-oci8 (2.2.12)
     ruby-oci8 (2.2.12-x64-mingw-ucrt)
     ruby-progressbar (1.13.0)
+    ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sequel (5.80.0)
@@ -418,6 +430,8 @@ GEM
     tiny_tds (2.1.7)
     tiny_tds (2.1.7-x64-mingw-ucrt)
     trailblazer-option (0.1.2)
+    ttfunk (1.8.0)
+      bigdecimal (~> 3.1)
     typhoeus (1.4.1)
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
@@ -479,10 +493,12 @@ DEPENDENCIES
   hubspot-api-client (~> 17.2.0)
   intuit-oauth
   iterable-api-client
+  jsonpath
   multiwoven-integrations!
   mysql2
   net-sftp
   nokogiri
+  pdf-reader
   pg
   pinecone
   rake (~> 13.0)

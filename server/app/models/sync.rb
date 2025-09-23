@@ -93,8 +93,26 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
       destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"],
       cursor_field:,
       current_cursor_field:,
-      sync_id: id.to_s
+      sync_id: id.to_s,
+      increment_strategy_config:
     )
+  end
+
+  def increment_strategy_config
+    increment_type = source.configuration["increment_type"]
+    return nil if source.configuration["increment_type"].nil?
+
+    offset = source.configuration["page_start"].to_i
+    limit = source.configuration["page_size"].to_i
+
+    increment_strategy_config = Multiwoven::Integrations::Protocol::IncrementStrategyConfig.new(
+      increment_strategy: increment_type.downcase
+    )
+    increment_strategy_config.offset = increment_type == "Page" ? offset.nonzero? || 1 : offset
+    increment_strategy_config.limit = increment_type == "Page" ? limit.nonzero? || 10 : limit
+    increment_strategy_config.offset_variable = source.configuration["offset_param"]
+    increment_strategy_config.limit_variable = source.configuration["limit_param"]
+    increment_strategy_config
   end
 
   def set_defaults

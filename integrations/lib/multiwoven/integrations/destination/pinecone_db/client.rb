@@ -78,8 +78,12 @@ module Multiwoven::Integrations::Destination
 
         records.each do |record_object|
           record = extract_data(record_object, properties)
-          @namespace = stream.name
-          args = [@index_name, @namespace, record]
+          @namespace = if stream.name == "__default__"
+                         ""
+                       else
+                         stream.name
+                       end
+          args = [@index_name, stream.name, record]
           begin
             pinecone_index = @pinecone.index(@index_name)
             response = send_to_pinecone(pinecone_index, record)
@@ -137,6 +141,7 @@ module Multiwoven::Integrations::Destination
 
       def group_by_table(records)
         records.map do |table_name|
+          table_name = "__default__" if table_name.empty?
           {
             tablename: table_name,
             columns: PINECONE_OBJECTS.map do |column|

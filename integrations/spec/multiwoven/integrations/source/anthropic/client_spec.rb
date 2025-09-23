@@ -96,7 +96,7 @@ RSpec.describe Multiwoven::Integrations::Source::Anthropic::Client do
                 "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
-                config: config)
+                options: { config: config })
           .and_return(response)
       end
 
@@ -162,7 +162,7 @@ RSpec.describe Multiwoven::Integrations::Source::Anthropic::Client do
                 "POST",
                 payload: JSON.parse(payload.to_json),
                 headers: headers,
-                config: config)
+                options: { config: config })
           .and_return(response)
       end
 

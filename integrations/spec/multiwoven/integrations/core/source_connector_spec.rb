@@ -62,7 +62,8 @@ module Multiwoven
             http_method: "GET",
             payload: { key: "value" },
             headers: { "Content-Type" => "application/json" },
-            config: { timeout: 30 }
+            config: { timeout: 30 },
+            params: { page: 1, per_page: 10 }
           }
 
           expect(HttpClient).to receive(:request).with(
@@ -70,7 +71,7 @@ module Multiwoven
             options[:http_method],
             payload: options[:payload],
             headers: options[:headers],
-            config: options[:config]
+            options: { config: options[:config], params: options[:params] }
           )
 
           connector.send(:send_request, options)
