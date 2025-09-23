@@ -35,7 +35,7 @@ module Multiwoven::Integrations::Source
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
         records = query(client, query)
-        analyze_expenses(client, records)
+        process_files(client, records)
       rescue StandardError => e
         handle_exception(e, {
                            context: "GOOGLE_DRIVE:READ:EXCEPTION",
@@ -64,16 +64,24 @@ module Multiwoven::Integrations::Source
       end
 
       # Reads files from Google Drive and sends them to Amazon Textract for analysis
-      def analyze_expenses(client, records)
-        textract = create_aws_connection
+      def process_files(client, records)
+        textract = create_aws_textract_connection
         results = []
         records.each do |record|
           invoice = record.record.data
           begin
-            byte_stream = StringIO.new
-            client.get_file(invoice["id"], download_dest: byte_stream)
-            byte_stream.rewind
-            analysis = textract.analyze_expense(document: { bytes: byte_stream.read })
+            temp_file = Tempfile.new(invoice["file_name"])
+            client.get_file(invoice["id"], download_dest: temp_file.path)
+
+            reader = PDF::Reader.new(temp_file)
+            page_count = reader.page_count
+
+            analysis = if page_count > 1
+                         start_expense_analysis(invoice["file_name"], temp_file)
+                       else
+                         [textract.analyze_expense(document: { bytes: File.binread(temp_file.path) })]
+                       end
+
             invoice = extract_invoice_data(invoice, analysis)
           rescue Aws::Textract::Errors::UnsupportedDocumentException => e
             invoice["exception"] = e.message if invoice.key?("exception")
@@ -90,6 +98,50 @@ module Multiwoven::Integrations::Source
           results.append(RecordMessage.new(data: invoice, emitted_at: Time.now.to_i).to_multiwoven_message)
         end
         results
+      end
+
+      def start_expense_analysis(file_name, temp_file)
+        bucket_name = ENV["TEXTRACT_BUCKET_NAME"]
+        s3_client = create_aws_s3_connection
+        textract = create_aws_textract_connection
+
+        s3_client.put_object(
+          bucket: bucket_name,
+          key: file_name,
+          body: temp_file
+        )
+
+        resp = textract.start_expense_analysis(
+          document_location: {
+            s3_object: {
+              bucket: bucket_name,
+              name: file_name
+            }
+          }
+        )
+
+        job_id = resp.job_id
+        all_pages = []
+        next_token = nil
+
+        loop do
+          result = textract.get_expense_analysis(
+            job_id: job_id,
+            next_token: next_token
+          )
+
+          status = result.job_status
+          if status == "SUCCEEDED"
+            all_pages << result
+            next_token = result.next_token
+            break unless next_token
+          elsif %w[FAILED PARTIAL_SUCCESS].include?(status)
+            raise "Textract job ended with status: #{status}"
+          else
+            sleep 2 # still IN_PROGRESS; wait briefly and try again
+          end
+        end
+        all_pages
       end
 
       def build_query(client)
@@ -177,34 +229,58 @@ module Multiwoven::Integrations::Source
         client
       end
 
-      def create_aws_connection
-        region = ENV["AWS_REGION"]
+      # TODO: Refactor (extract) code for Amazon Textract
+      def create_aws_credentials
         access_key_id = ENV["AWS_ACCESS_KEY_ID"]
         secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
-        credentials = Aws::Credentials.new(access_key_id, secret_access_key)
+        Aws::Credentials.new(access_key_id, secret_access_key)
+      end
+
+      def create_aws_textract_connection
+        region = ENV["AWS_REGION"]
+        credentials = create_aws_credentials
         Aws::Textract::Client.new(region: region, credentials: credentials)
       end
 
-      def extract_invoice_data(invoice, results)
-        expense_document = results.expense_documents[0]
-        (invoice.keys & TEXTRACT_SUMMARY_FIELDS.keys).each do |key|
-          invoice[key] = extract_field_value(expense_document.summary_fields, TEXTRACT_SUMMARY_FIELDS[key])
-        end
+      def create_aws_s3_connection
+        region = ENV["AWS_REGION"]
+        credentials = create_aws_credentials
+        Aws::S3::Client.new(region: region, credentials: credentials)
+      end
 
+      def extract_invoice_data(invoice, results)
+        invoice = extract_summary_fields(invoice, results)
+        invoice = extract_line_items(invoice, results)
+        invoice["results"] = results.to_json if invoice.key?("results")
+        invoice.transform_keys(&:to_sym)
+      end
+
+      def extract_summary_fields(invoice, results)
+        document = results[0].expense_documents[0]
+        (invoice.keys & TEXTRACT_SUMMARY_FIELDS.keys).each do |key|
+          invoice[key] = extract_field_value(document.summary_fields, TEXTRACT_SUMMARY_FIELDS[key])
+        end
+        invoice
+      end
+
+      def extract_line_items(invoice, results)
         if invoice.key?("line_items")
-          expense_document.line_item_groups.each do |line_item_group|
-            line_item_group.line_items.each do |line_item|
-              extracted_line_item = {}
-              TEXTRACT_LINE_ITEMS_FIELDS.each_key do |key|
-                extracted_line_item[key] = extract_field_value(line_item.line_item_expense_fields, TEXTRACT_LINE_ITEMS_FIELDS[key])
+          results.each do |result|
+            result.expense_documents.each do |expense_document|
+              expense_document.line_item_groups.each do |line_item_group|
+                line_item_group.line_items.each do |line_item|
+                  extracted_line_item = {}
+                  TEXTRACT_LINE_ITEMS_FIELDS.each_key do |key|
+                    extracted_line_item[key] = extract_field_value(line_item.line_item_expense_fields, TEXTRACT_LINE_ITEMS_FIELDS[key])
+                  end
+                  invoice["line_items"] << extracted_line_item
+                end
               end
-              invoice["line_items"] << extracted_line_item
             end
           end
         end
         invoice["line_items"] = invoice["line_items"].to_json
-        invoice["results"] = results.to_json if invoice.key?("results")
-        invoice.transform_keys(&:to_sym)
+        invoice
       end
 
       def extract_field_value(fields, selector)

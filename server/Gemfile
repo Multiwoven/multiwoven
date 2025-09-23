@@ -14,7 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", "~> 0.33.5"
+gem "multiwoven-integrations", "~> 0.34.4"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -53,6 +53,7 @@ gem "pg_query"
 gem "rack-attack"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
+gem "jsonpath"
 gem "newrelic_rpm"
 gem "solid_queue"
 gem "strong_migrations"
@@ -112,3 +113,5 @@ gem "prometheus-client", "~> 4.2"
 gem "xmlrpc", "~> 0.3.3"
 
 gem "google-apis-drive_v3", "~> 0.68.0"
+
+gem "pdf-reader", "~> 2.15"
