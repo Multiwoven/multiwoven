@@ -56,7 +56,7 @@ module Multiwoven::Integrations::Source
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
         connection_config = create_connection(connection_config)
-        if sync_config.increment_strategy_config
+        if sync_config.increment_strategy_config.increment_strategy == "page"
           @limit = sync_config.increment_strategy_config.limit
           @offset = sync_config.increment_strategy_config.offset
         else
