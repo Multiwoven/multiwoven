@@ -1940,6 +1940,8 @@ GEM
       simpleidn (~> 0.2)
       uri_template (~> 0.7)
     jsonapi-renderer (0.2.2)
+    jsonpath (1.1.5)
+      multi_json
     jwt (2.7.1)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -1978,11 +1980,7 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
-<<<<<<< HEAD
-    multiwoven-integrations (0.33.5)
-=======
     multiwoven-integrations (0.34.4)
->>>>>>> 6da26b88 (chore(CE): Server Update 0.34.4 (#1360))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2326,15 +2324,12 @@ DEPENDENCIES
   interactor (~> 3.0)
   intuit-oauth
   jbuilder
+  jsonpath
   jwt
   kaminari
   letter_opener
   liquid
-<<<<<<< HEAD
-  multiwoven-integrations (~> 0.33.5)
-=======
   multiwoven-integrations (~> 0.34.4)
->>>>>>> 6da26b88 (chore(CE): Server Update 0.34.4 (#1360))
   mysql2
   newrelic_rpm
   parallel

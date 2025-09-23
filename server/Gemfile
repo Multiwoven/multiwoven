@@ -14,11 +14,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-<<<<<<< HEAD
-gem "multiwoven-integrations", "~> 0.33.5"
-=======
 gem "multiwoven-integrations", "~> 0.34.4"
->>>>>>> 6da26b88 (chore(CE): Server Update 0.34.4 (#1360))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -57,6 +53,7 @@ gem "pg_query"
 gem "rack-attack"
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 # Third-Party Tools for Monitoring, Error Reporting, etc.
+gem "jsonpath"
 gem "newrelic_rpm"
 gem "solid_queue"
 gem "strong_migrations"

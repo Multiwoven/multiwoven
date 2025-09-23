@@ -137,6 +137,7 @@ module Multiwoven::Integrations::Destination
 
       def group_by_table(records)
         records.map do |table_name|
+          table_name = "__default__" if table_name.empty?
           {
             tablename: table_name,
             columns: PINECONE_OBJECTS.map do |column|
