@@ -113,3 +113,5 @@ gem "prometheus-client", "~> 4.2"
 gem "xmlrpc", "~> 0.3.3"
 
 gem "google-apis-drive_v3", "~> 0.68.0"
+
+gem "pdf-reader", "~> 2.15"
