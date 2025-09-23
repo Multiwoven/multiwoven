@@ -165,6 +165,12 @@ module Multiwoven
       end
     end
 
+    class IncrementStrategyConfig < ProtocolModel
+      attr_accessor :offset, :limit, :offset_variable, :limit_variable
+
+      attribute :increment_strategy, Types::String.default("page")
+    end
+
     class SyncConfig < ProtocolModel
       attr_accessor :offset, :limit, :sync_run_id
 
@@ -178,6 +184,8 @@ module Multiwoven
       attribute :destination_sync_mode, DestinationSyncMode
       # reference ids
       attribute :sync_id, Types::String.default("unknown")
+      # increment strategy
+      attribute? :increment_strategy_config, IncrementStrategyConfig.optional
     end
 
     class VectorConfig < ProtocolModel
