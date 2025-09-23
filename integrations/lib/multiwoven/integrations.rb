@@ -46,6 +46,7 @@ require "googleauth"
 require "google/apis/drive_v3"
 require "aws-sdk-textract"
 require "jsonpath"
+require "pdf/reader"
 
 # Service
 require_relative "integrations/config"
