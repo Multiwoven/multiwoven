@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.33.5"
-=======
     VERSION = "0.34.2"
->>>>>>> 07421ddb (fix(CE): Pinecone fix for __default__ namespaces (#1355))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -37,6 +33,7 @@ module Multiwoven
       Firecrawl
       Odoo
       GoogleDrive
+      Http
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
