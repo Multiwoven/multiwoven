@@ -81,6 +81,37 @@ RSpec.describe Sync, type: :model do
       expect(protocol.current_cursor_field).to eq("2024-01-20")
       expect(protocol.sync_id).to eq(sync.id.to_s)
     end
+
+    it "returns increment strategy config protocol" do
+      sync.source.configuration["increment_type"] = "Page"
+      sync.source.configuration["page_start"] = "1"
+      sync.source.configuration["page_size"] = "10"
+      sync.source.configuration["offset_param"] = "page"
+      sync.source.configuration["limit_param"] = "per_page"
+      sync.save
+      protocol = sync.to_protocol
+      expect(protocol.increment_strategy_config).to be_a(Multiwoven::Integrations::Protocol::IncrementStrategyConfig)
+      expect(protocol.increment_strategy_config.increment_strategy).to eq("page")
+      expect(protocol.increment_strategy_config.offset_variable).to eq("page")
+      expect(protocol.increment_strategy_config.limit_variable).to eq("per_page")
+      expect(protocol.increment_strategy_config.offset).to eq(1)
+      expect(protocol.increment_strategy_config.limit).to eq(10)
+    end
+
+    it "returns increment strategy config protocol" do
+      sync.source.configuration["increment_type"] = "Offset"
+      sync.source.configuration["page_start"] = "1"
+      sync.source.configuration["page_size"] = "10"
+      sync.source.configuration["offset_param"] = "offset"
+      sync.source.configuration["limit_param"] = "limit"
+      sync.save
+      protocol = sync.to_protocol
+      expect(protocol.increment_strategy_config.increment_strategy).to eq("offset")
+      expect(protocol.increment_strategy_config.offset_variable).to eq("offset")
+      expect(protocol.increment_strategy_config.limit_variable).to eq("limit")
+      expect(protocol.increment_strategy_config.offset).to eq(1)
+      expect(protocol.increment_strategy_config.limit).to eq(10)
+    end
   end
 
   describe "#schedule_cron_expression" do
