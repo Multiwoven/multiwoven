@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.33.5"
-=======
     VERSION = "0.34.0"
->>>>>>> 75091e93 (feat(CE): Add HTTP Source Connector (#1315))
 
     ENABLED_SOURCES = %w[
       Snowflake

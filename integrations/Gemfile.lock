@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.33.5)
-=======
     multiwoven-integrations (0.34.0)
->>>>>>> 75091e93 (feat(CE): Add HTTP Source Connector (#1315))
       MailchimpMarketing
       activesupport
       async-websocket

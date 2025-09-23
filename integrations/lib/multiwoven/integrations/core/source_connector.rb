@@ -41,12 +41,16 @@ module Multiwoven
       end
 
       def send_request(options = {})
+        args = {
+          config: options[:config]
+        }
+        args[:params] = options[:params] if options.key?(:params)
         Multiwoven::Integrations::Core::HttpClient.request(
           options[:url],
           options[:http_method],
           payload: options[:payload],
           headers: options[:headers],
-          config: options[:config]
+          options: args
         )
       end
 
