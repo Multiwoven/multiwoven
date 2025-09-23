@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Multiwoven
+  # rubocop:disable Metrics/ModuleLength
   module Integrations::Protocol
     RSpec.describe ConnectionStatus do
       describe ".from_json" do
@@ -337,6 +338,83 @@ module Multiwoven
           expect(sync_config.limit).to eq("20")
         end
       end
+
+      describe ".from_json" do
+        it "creates an instance from JSON when increment_strategy is page" do
+          page_json_data = {
+            "increment_strategy": "page",
+            "offset": 1,
+            "limit": 10,
+            "offset_variable": "page",
+            "limit_variable": "per_page"
+          }.to_json
+
+          json_data = {
+            "source": {
+              "name": "example_source",
+              "type": "source",
+              "connection_specification": { "key": "value" }
+            },
+            "destination": {
+              "name": "example_destination",
+              "type": "destination",
+              "connection_specification": { "key": "value" }
+            },
+            "model": {
+              "name": "example_model",
+              "query": "SELECT * FROM customers",
+              "query_type": "raw_sql",
+              "primary_key": "id"
+            },
+            "stream": {
+              "name": "example_stream", "action": "create",
+              "json_schema": { "field1": "type1" },
+              "supported_sync_modes": %w[full_refresh incremental],
+              "source_defined_cursor": true,
+              "default_cursor_field": ["field1"],
+              "source_defined_primary_key": [["field1"], ["field2"]],
+              "namespace": "exampleNamespace",
+              "url": "https://api.example.com/data",
+              "request_method": "GET"
+            },
+            "sync_mode": "full_refresh",
+            "destination_sync_mode": "insert",
+            "cursor_field": "example_cursor_field",
+            "current_cursor_field": "current",
+            "sync_id": "sync_id",
+            "increment_strategy_config": IncrementStrategyConfig.from_json(page_json_data)
+          }.to_json
+
+          sync_config = described_class.from_json(json_data)
+
+          expect(sync_config).to be_a(described_class)
+          expect(sync_config).to be_a(described_class)
+          expect(sync_config.source).to be_a(Connector)
+          expect(sync_config.source.name).to eq("example_source")
+          expect(sync_config.destination).to be_a(Connector)
+          expect(sync_config.destination.name).to eq("example_destination")
+          expect(sync_config.model).to be_a(Model)
+          expect(sync_config.model.name).to eq("example_model")
+          expect(sync_config.sync_mode).to eq("full_refresh")
+          expect(sync_config.destination_sync_mode).to eq("insert")
+          expect(sync_config.cursor_field).to eq("example_cursor_field")
+          expect(sync_config.current_cursor_field).to eq("current")
+          expect(sync_config.sync_id).to eq("sync_id")
+          expect(sync_config.increment_strategy_config.increment_strategy).to eq("page")
+          sync_config.increment_strategy_config.offset_variable = "page"
+          sync_config.increment_strategy_config.limit_variable = "per_page"
+          expect(sync_config.increment_strategy_config.offset_variable).to eq("page")
+          expect(sync_config.increment_strategy_config.limit_variable).to eq("per_page")
+          sync_config.increment_strategy_config.offset = 1
+          sync_config.increment_strategy_config.limit = 10
+          expect(sync_config.increment_strategy_config.offset).to eq(1)
+          expect(sync_config.increment_strategy_config.limit).to eq(10)
+          sync_config.increment_strategy_config.offset = 2
+          sync_config.increment_strategy_config.limit = 20
+          expect(sync_config.increment_strategy_config.offset).to eq(2)
+          expect(sync_config.increment_strategy_config.limit).to eq(20)
+        end
+      end
     end
 
     RSpec.describe VectorConfig do
@@ -379,6 +457,31 @@ module Multiwoven
           expect(vector_search_config.source.name).to eq("example_source")
           expect(vector_search_config.vector).to eq("SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'")
           expect(vector_search_config.limit).to eq(10)
+        end
+      end
+    end
+
+    RSpec.describe IncrementStrategyConfig do
+      describe ".from_json" do
+        it "creates an instance from JSON when increment_strategy is page" do
+          json_data = {
+            "increment_strategy": "page",
+            "offset": 1,
+            "limit": 10
+          }.to_json
+
+          increment_strategy_config = described_class.from_json(json_data)
+
+          expect(increment_strategy_config).to be_a(described_class)
+          expect(increment_strategy_config.increment_strategy).to eq("page")
+          increment_strategy_config.offset = 1
+          increment_strategy_config.limit = 10
+          expect(increment_strategy_config.offset).to eq(1)
+          expect(increment_strategy_config.limit).to eq(10)
+          increment_strategy_config.offset = 2
+          increment_strategy_config.limit = 20
+          expect(increment_strategy_config.offset).to eq(2)
+          expect(increment_strategy_config.limit).to eq(20)
         end
       end
     end
@@ -578,4 +681,5 @@ module Multiwoven
       end
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end

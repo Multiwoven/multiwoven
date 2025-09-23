@@ -17,6 +17,10 @@ RSpec.describe Multiwoven::Integrations::Core::RateLimiter do
       define_method(:write) do |sync_config, _records, _action = "destination_insert"|
         Multiwoven::Integrations::Service.logger.info("write called: stream_name: #{sync_config.stream.name}")
       end
+
+      define_method(:read) do |sync_config|
+        Multiwoven::Integrations::Service.logger.info("read called: stream_name: #{sync_config.stream.name}")
+      end
     end.new
   end
 
@@ -40,6 +44,29 @@ RSpec.describe Multiwoven::Integrations::Core::RateLimiter do
       expect(Multiwoven::Integrations::Service.logger).to receive(:info).with(expected_message).exactly(10).times
       expect(Multiwoven::Integrations::Service.logger).to receive(:info).with(match(/Hit the limit for stream/)).exactly(2).times
       10.times { limiter_class.write(sync_config, records) }
+    end
+  end
+
+  describe "#read" do
+    it "should set the @queue and call super on calling read" do
+      expected_message = "read called: stream_name: #{sync_config.stream.name}"
+      expect(Multiwoven::Integrations::Service.logger).to receive(:info).with(expected_message)
+
+      limiter_class.read(sync_config)
+
+      queue = limiter_class.instance_variable_get(:@queue)
+      expect(queue).not_to be_nil
+      expect(queue).to be_a(Limiter::RateQueue)
+
+      expect(queue.instance_variable_get(:@size)).to eq(stream.request_rate_limit)
+      expect(queue.instance_variable_get(:@interval)).to eq(stream.rate_limit_unit_seconds)
+    end
+
+    it "should set the @queue once and call super N times on calling read N times" do
+      expected_message = "read called: stream_name: #{sync_config.stream.name}"
+      expect(Multiwoven::Integrations::Service.logger).to receive(:info).with(expected_message).exactly(10).times
+      expect(Multiwoven::Integrations::Service.logger).to receive(:info).with(match(/Hit the limit for stream/)).exactly(2).times
+      10.times { limiter_class.read(sync_config) }
     end
   end
 end

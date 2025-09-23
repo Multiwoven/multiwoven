@@ -72,7 +72,7 @@ RSpec.describe Multiwoven::Integrations::Source::Firecrawl::Client do
                 "GET",
                 payload: {},
                 headers: headers,
-                config: {})
+                options: { config: {} })
           .and_return(response)
       end
 
@@ -117,14 +117,14 @@ RSpec.describe Multiwoven::Integrations::Source::Firecrawl::Client do
                 "POST",
                 payload: JSON.parse(data_config),
                 headers: headers,
-                config: {})
+                options: { config: {} })
           .and_return(response)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(get_crawl_endpoint,
                 "GET",
                 payload: {},
                 headers: headers,
-                config: {})
+                options: { config: {} })
           .and_return(crawl_result_response)
       end
 
