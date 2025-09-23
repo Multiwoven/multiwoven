@@ -1,0 +1,117 @@
+{
+  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/http-model-endpoint",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "HTTP",
+    "type": "object",
+    "required": ["increment_type","base_url", "http_method"],
+    "properties": {
+      "increment_type": {
+        "type": "string",
+        "title": "Increment Type",
+        "enum": ["Page", "Offset"],
+        "default": "Page",
+        "order": 0
+      },
+      "http_method": {
+        "type": "string",
+        "title": "HTTP Method",
+        "enum": ["POST", "GET"],
+        "order": 1
+      },
+      "base_url": {
+        "type": "string",
+        "title": "URL",
+        "order": 2
+      },
+      "path": {
+        "type": "string",
+        "title": "Path",
+        "description": "The path to the resource on the server. This is appended to the base URL.",
+        "order": 3,
+        "default": "/"
+      },
+      "headers": {
+        "title": "HTTP Headers",
+        "description": "Custom headers to include in the HTTP request. Useful for authentication, content type specifications, and other request metadata.",
+        "order": 4,
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "config": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "string",
+            "default": "30",
+            "title": "HTTP Timeout",
+            "description": "The maximum time, in seconds, to wait for a response from the server before the request is canceled.",
+            "order": 0
+          }
+        },
+        "order": 5
+      },
+      "request_format":{
+        "title": "Request Format",
+        "description": "Request payload format. This should be a valid JSON string that matches the expected input of the HTTP endpoint.",
+        "type": "string",
+        "x-request-format": true,
+        "order": 6
+      },
+      "sample_query": {
+        "title": "Sample Query",
+        "description": "A sample query to test the connection and retrieve a sample response from the HTTP endpoint. This should be a valid JSON string that matches the expected input of the HTTP endpoint.",
+        "type": "string",
+        "x-request-format": true,
+        "order": 7,
+        "default": "{ \"query\": \"Select * from table\" }"
+      },
+      "parse_response": {
+        "title": "Parse Response",
+        "description": "A JSONPath expression that points to a single record (usually the first row) in the response. The keys of this object are treated as the column names. Example: `$.data[0]`",
+        "type": "string",
+        "x-response-format": true,
+        "order": 8,
+        "default": "$.data[0]"
+      },
+      "params": {
+        "title": "Query Parameters",
+        "description": "Key-value pairs to be included as query parameters in the HTTP request URL.",
+        "order": 9,
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "offset_param": {
+        "type": "string",
+        "title": "Offset Parameter",
+        "description": "The name of the query parameter used to specify the offset for pagination.",
+        "order": 10,
+        "default": "offset"
+      },
+      "limit_param": {
+        "type": "string",
+        "title": "Limit Parameter",
+        "description": "The name of the query parameter used to specify the limit for pagination.",
+        "order": 11,
+        "default": "limit"
+      },
+      "page_size": {
+        "type": "string",
+        "title": "Page Size",
+        "description": "The number of records to fetch per page. This value is used in conjunction with the limit parameter for pagination.",
+        "order": 12
+      },
+      "page_start": {
+        "type": "string",
+        "title": "Page Start",
+        "description": "The starting page number for pagination. This value is used to calculate the offset for the initial request.",
+        "order": 13
+      }
+    }
+  }
+}

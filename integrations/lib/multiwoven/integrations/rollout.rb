@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.33.6"
+    VERSION = "0.34.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -33,6 +33,7 @@ module Multiwoven
       Firecrawl
       Odoo
       GoogleDrive
+      Http
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
