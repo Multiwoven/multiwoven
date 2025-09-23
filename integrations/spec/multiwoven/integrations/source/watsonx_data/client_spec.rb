@@ -89,7 +89,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxData::Client do
 
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(query_endpoint, "POST", payload: payload, headers: headers, config: config)
+          .with(query_endpoint, "POST", payload: payload, headers: headers, options: { config: config })
           .and_return(stub_response)
       end
       it "returns a successful connection status" do
@@ -112,7 +112,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxData::Client do
 
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(query_endpoint, "POST", payload: payload, headers: headers, config: config)
+          .with(query_endpoint, "POST", payload: payload, headers: headers, options: { config: config })
       end
 
       it "returns a failed connection status with an error message" do
@@ -158,7 +158,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxData::Client do
 
       config = sync_config_json[:source][:connection_specification][:config]
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-        .with(query_endpoint, "POST", payload: payload, headers: headers, config: config)
+        .with(query_endpoint, "POST", payload: payload, headers: headers, options: { config: config })
         .and_return(stub_response)
     end
 
@@ -215,7 +215,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxData::Client do
 
       config = sync_config_json[:source][:connection_specification][:config]
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-        .with(query_endpoint, "POST", payload: payload, headers: headers, config: config)
+        .with(query_endpoint, "POST", payload: payload, headers: headers, options: { config: config })
         .and_return(stub_response)
     end
 
@@ -237,7 +237,7 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxData::Client do
 
       config = sync_config_json[:source][:connection_specification][:config]
       allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-        .with(query_endpoint, "POST", payload: payload, headers: headers, config: config)
+        .with(query_endpoint, "POST", payload: payload, headers: headers, options: { config: config })
         .and_return(stub_response)
 
       records = client.read(sync_config)
