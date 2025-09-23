@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.33.5)
-=======
     multiwoven-integrations (0.34.3)
->>>>>>> 40d81b9c (feat(CE): add support for multi-page PDFs (#1357))
       MailchimpMarketing
       activesupport
       async-websocket

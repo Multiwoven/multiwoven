@@ -45,11 +45,8 @@ require "xmlrpc/client"
 require "googleauth"
 require "google/apis/drive_v3"
 require "aws-sdk-textract"
-<<<<<<< HEAD
-=======
 require "jsonpath"
 require "pdf/reader"
->>>>>>> 40d81b9c (feat(CE): add support for multi-page PDFs (#1357))
 
 # Service
 require_relative "integrations/config"

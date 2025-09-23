@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.33.5"
-=======
     VERSION = "0.34.3"
->>>>>>> 40d81b9c (feat(CE): add support for multi-page PDFs (#1357))
 
     ENABLED_SOURCES = %w[
       Snowflake
