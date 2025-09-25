@@ -1809,11 +1809,11 @@ GEM
       googleapis-common-protos-types (~> 1.15)
       googleauth (~> 1.12)
       grpc (~> 1.66)
-    git (2.3.3)
+    git (4.0.5)
       activesupport (>= 5.0)
       addressable (~> 2.8)
-      process_executer (~> 1.1)
-      rchardet (~> 1.8)
+      process_executer (~> 4.0)
+      rchardet (~> 1.9)
     gli (2.22.2)
       ostruct
     globalid (1.2.1)
@@ -2072,7 +2072,8 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     prettyprint (0.2.0)
-    process_executer (1.2.0)
+    process_executer (4.0.0)
+      track_open_instances (~> 0.1)
     prometheus-client (4.2.4)
       base64
     protocol-hpack (1.5.1)
@@ -2163,7 +2164,7 @@ GEM
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
     retriable (3.1.2)
-    rexml (3.4.1)
+    rexml (3.4.2)
     rsa-pem-from-mod-exp (0.1.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
@@ -2258,6 +2259,7 @@ GEM
     tiny_tds (3.2.0-x86_64-linux-gnu)
       bigdecimal (~> 3)
     traces (0.15.2)
+    track_open_instances (0.1.15)
     trailblazer-option (0.1.2)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
@@ -2326,6 +2328,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fugit
+  git (~> 4.0)
   google-apis-drive_v3 (~> 0.68.0)
   groupdate
   interactor (~> 3.0)
@@ -2351,7 +2354,11 @@ DEPENDENCIES
   rack-attack
   rack-cors
   rails (~> 7.1.1)
+<<<<<<< HEAD
   redis (~> 4.0)
+=======
+  rexml (~> 3.4.2)
+>>>>>>> d45a4b52 (chore(CE): upgraded gems git and rexml per findings (#1362))
   rspec-rails
   rubocop
   rubocop-performance
