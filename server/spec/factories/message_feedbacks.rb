@@ -5,7 +5,6 @@ FactoryBot.define do
     association :data_app
     association :visual_component
     association :workspace
-    association :model
     feedback_type { "thumbs" }
     reaction { "positive" }
     chatbot_interaction { { user_query: "Hello", chatbot_reply: "Hi! How can I assist you!" } }
