@@ -5,14 +5,12 @@ class Feedback < ApplicationRecord
 
   validates :data_app_id, presence: true
   validates :visual_component_id, presence: true
-  validates :model_id, presence: true
   validates :feedback_type, presence: true
 
   counter_culture %i[visual_component data_app]
 
   belongs_to :data_app
   belongs_to :visual_component
-  belongs_to :model
   belongs_to :workspace
 
   enum feedback_type: { thumbs: 0, scale_input: 1, text_input: 2, dropdown: 3, multiple_choice: 4 }

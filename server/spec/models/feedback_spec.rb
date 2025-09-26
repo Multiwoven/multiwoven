@@ -6,14 +6,12 @@ RSpec.describe Feedback, type: :model do
   describe "associations" do
     it { should belong_to(:data_app) }
     it { should belong_to(:visual_component) }
-    it { should belong_to(:model) }
     it { should belong_to(:workspace) }
   end
 
   describe "validations" do
     it { should validate_presence_of(:data_app_id) }
     it { should validate_presence_of(:visual_component_id) }
-    it { should validate_presence_of(:model_id) }
     it { should validate_presence_of(:feedback_type) }
   end
 
