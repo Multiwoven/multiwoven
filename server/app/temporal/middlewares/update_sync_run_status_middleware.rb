@@ -3,16 +3,6 @@
 module Middlewares
   class UpdateSyncRunStatusMiddleware
     def call(metadata)
-<<<<<<< HEAD
-      yield
-      sync_run = SyncRun.find_by(workflow_run_id: metadata.to_h["workflow_run_id"])
-      Rails.logger.info({
-        message: "UpdateSyncRunStatusMiddleware::call status before sync_run&.update_status_post_workflow",
-        sync_run_id: sync_run.id,
-        status: sync_run.status
-      }.to_s)
-      sync_run&.update_status_post_workflow
-=======
       workflow_class = metadata.to_h["workflow_name"]
 
       if workflow_class == "Workflows::SyncWorkflow"
@@ -29,7 +19,6 @@ module Middlewares
       else
         yield
       end
->>>>>>> 97ea6219 (fix(CE): middleware fix (#1339))
     end
   end
 end
