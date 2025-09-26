@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_13_130124) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_18_110212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -235,7 +235,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_13_130124) do
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
     t.integer "visual_component_id", null: false
-    t.integer "model_id", null: false
     t.integer "reaction"
     t.json "feedback_content"
     t.datetime "created_at", null: false
@@ -249,7 +248,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_13_130124) do
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
     t.integer "visual_component_id", null: false
-    t.integer "model_id", null: false
     t.integer "reaction"
     t.string "feedback_content"
     t.integer "feedback_type", default: 0, null: false
