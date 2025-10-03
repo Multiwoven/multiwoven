@@ -11,6 +11,7 @@ jobs:
   build:
     name: Build + Publish
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     strategy:
       matrix:
         ruby-version: [3.2.0]

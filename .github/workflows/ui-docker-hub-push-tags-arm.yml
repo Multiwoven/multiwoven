@@ -9,6 +9,7 @@ on:
 jobs:
   docker-hub-push-on-merge:
     runs-on: [self-hosted, Linux, ARM64]
+    timeout-minutes: 45
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

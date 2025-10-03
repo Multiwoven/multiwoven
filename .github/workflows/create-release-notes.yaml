@@ -11,6 +11,7 @@ permissions:
 jobs:
   release-on-merge:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     if: ${{ github.event.commits && contains(github.event.commits[0].message, 'Multiwoven release ') && contains(github.ref, 'refs/heads/main') }}
 
     steps:
