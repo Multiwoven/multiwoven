@@ -18,6 +18,7 @@ jobs:
   prepare-changelog:
     name: Prepare changelog
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     outputs:
       release_body: ${{ steps.git-cliff.outputs.content }}
 
@@ -118,6 +119,7 @@ jobs:
     if: ${{ failure() }}
     needs: [ prepare-changelog ]
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Report error to AppSignal
         env:

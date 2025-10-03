@@ -12,6 +12,7 @@ permissions:
 jobs:
   cherry-pick-ce-commits:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout OSS repo
@@ -84,6 +85,7 @@ jobs:
     if: ${{ failure() }}
     needs: [ cherry-pick-ce-commits ]
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Report error to AppSignal
         env:

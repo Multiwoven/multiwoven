@@ -12,6 +12,7 @@ on:
 jobs:
   docker-hub-push-on-merge:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       RELEASE_TAG: ${{ github.event.client_payload.tag || github.event.inputs.release_tag }}
       RUN_LOGS_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -60,4 +61,3 @@ jobs:
             "text": ":x: *multiwoven-ce UI build & push failed!*\n• Tag: `'"$RELEASE_TAG"'`\n• Triggered by: `${{ github.actor }}`\n• Logs_url: '"$RUN_LOGS_URL"'"
           }' \
           ${{ secrets.RELEASE_SLACK_WEBHOOK_URL }}
-
