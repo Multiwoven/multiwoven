@@ -13,6 +13,22 @@ amazon:
   secret_access_key: <%= ENV.fetch('AWS_SECRET_ACCESS_KEY', nil) %>
   region: <%= ENV.fetch('AWS_REGION', 'us-east-1') %>
   bucket: <%= ENV.fetch('AWS_S3_BUCKET', nil) %>
+  # Upload configuration for all encryption scenarios
+  upload:
+    <% sse_type = ENV["S3_SSE_TYPE"]&.strip %>
+    # Only set when valid values are provided:
+    #   AES256   → SSE-S3 encryption
+    #   aws:kms  → AWS-managed or customer-managed KMS key
+    <% if sse_type.present? && sse_type.casecmp("none") != 0 %>
+    server_side_encryption: <%= sse_type %>
+    <% end %>
+
+    # If using customer-managed KMS, provide the full key ARN.
+    # Example: arn:aws:kms:us-east-1:123456789012:key/abcd-ef12-3456-7890
+    <% if sse_type == "aws:kms" && ENV["S3_KMS_KEY_ID"].present? %>
+    ssekms_key_id: <%= ENV["S3_KMS_KEY_ID"] %>
+    <% end %>
+
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS
