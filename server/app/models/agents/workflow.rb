@@ -9,6 +9,7 @@ module Agents
     has_many :components, dependent: :destroy
     has_many :workflow_runs, dependent: :destroy
     has_many :visual_components, as: :configurable, dependent: :destroy
+    has_one :workflow_integration, dependent: :nullify
 
     enum status: { draft: 0, published: 1 }
     enum trigger_type: { website_chatbot: 0, chat_assistant: 1, scheduled: 2, api_trigger: 3 }
