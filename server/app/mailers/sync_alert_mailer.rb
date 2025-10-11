@@ -28,6 +28,8 @@ class SyncAlertMailer < ApplicationMailer
 
   def sync_run_host
     host = ENV["UI_HOST"]
+    return "http://localhost:3000" if host.nil?
+
     host = "https://#{host}" unless ["https://", "http://"].any? { |protocol| host.start_with? protocol }
     host
   end
