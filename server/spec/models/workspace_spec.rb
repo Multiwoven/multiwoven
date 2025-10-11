@@ -39,6 +39,7 @@ RSpec.describe Workspace, type: :model do
     it { should belong_to(:organization) }
     it { should have_many(:workflows).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
+    it { should have_many(:workflow_integrations).dependent(:nullify) }
   end
 
   context "before_validation callbacks" do
