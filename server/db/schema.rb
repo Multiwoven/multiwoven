@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_18_110212) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -619,6 +619,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_18_110212) do
     t.index ["configurable_type", "configurable_id"], name: "index_visual_components_on_configurable"
   end
 
+  create_table "workflow_integrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.jsonb "metadata", null: false
+    t.integer "workspace_id", null: false
+    t.uuid "workflow_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "app_type", null: false
+    t.jsonb "connection_configuration", null: false
+  end
+
   create_table "workflow_logs", force: :cascade do |t|
     t.string "workflow_id", null: false
     t.integer "workflow_run_id", null: false
@@ -706,6 +716,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_18_110212) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+  add_foreign_key "workflow_integrations", "workflows", validate: false
+  add_foreign_key "workflow_integrations", "workspaces", validate: false
   add_foreign_key "workflow_runs", "workspaces"
   add_foreign_key "workflows", "workspaces", validate: false
   add_foreign_key "workspace_users", "roles"

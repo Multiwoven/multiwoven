@@ -1,0 +1,11 @@
+{
+    "client_id": {
+        "type": "string"
+    },
+    "client_secret": {
+        "type": "string"
+    },
+    "signing_signature": {
+        "type": "string"
+    }
+}
