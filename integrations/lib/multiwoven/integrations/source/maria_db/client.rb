@@ -6,10 +6,12 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        create_connection(connection_config)
+        db = create_connection(connection_config)
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
+      ensure
+        db&.disconnect
       end
 
       def discover(connection_config)
@@ -24,6 +26,8 @@ module Multiwoven::Integrations::Source
                            context: "MARIA:DB:DISCOVER:EXCEPTION",
                            type: "error"
                          })
+      ensure
+        db&.disconnect
       end
 
       def read(sync_config)
@@ -39,6 +43,8 @@ module Multiwoven::Integrations::Source
                            sync_id: sync_config.sync_id,
                            sync_run_id: sync_config.sync_run_id
                          })
+      ensure
+        db&.disconnect
       end
 
       private
@@ -50,7 +56,9 @@ module Multiwoven::Integrations::Source
           port: connection_config[:port],
           user: connection_config[:username],
           password: connection_config[:password],
-          database: connection_config[:database]
+          database: connection_config[:database],
+          max_connections: 10,
+          pool_timeout: 10
         )
       end
 
