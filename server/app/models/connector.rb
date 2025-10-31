@@ -99,6 +99,8 @@ class Connector < ApplicationRecord
   scope :web, -> { where(connector_sub_category: WEB_SUB_CATEGORIES) }
   scope :ai_ml_service, -> { where(connector_sub_category: AI_ML_SERVICE_SUB_CATEGORIES) }
   scope :vector, -> { where(connector_sub_category: VECTOR_SUB_CATEGORIES) }
+  scope :in_host, -> { where(in_host: true) }
+  scope :external, -> { where(in_host: false) }
 
   def connector_definition
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
