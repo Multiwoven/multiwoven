@@ -30,7 +30,12 @@ class Workspace < ApplicationRecord
   has_many :workflows, class_name: "Agents::Workflow", dependent: :destroy
   has_many :workflow_runs, class_name: "Agents::WorkflowRun", dependent: :destroy
   has_many :workflow_logs, class_name: "Agents::WorkflowLog", dependent: :nullify
+<<<<<<< HEAD
   has_many :workflow_integrations, dependent: :nullify
+=======
+  has_many :workflow_integrations, class_name: "Agents::WorkflowIntegration", dependent: :nullify
+  has_many :hosted_data_stores, dependent: :nullify
+>>>>>>> a574077d (chore(CE): Add Hosted Database & Hosted Table to DB (#1393))
 
   belongs_to :organization
   has_many :sso_configurations, through: :organization
