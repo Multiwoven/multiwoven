@@ -9,7 +9,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - temporal-pg-data:/var/lib/postgresql
+      - /var/lib/postgresql/data
   temporal:
     container_name: temporal
     depends_on:
