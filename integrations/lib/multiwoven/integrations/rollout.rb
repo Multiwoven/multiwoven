@@ -34,6 +34,7 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+      MysqlDb
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
@@ -63,6 +64,7 @@ module Multiwoven
       Qdrant
       PineconeDB
       Odoo
+      MysqlDb
     ].freeze
   end
 end
