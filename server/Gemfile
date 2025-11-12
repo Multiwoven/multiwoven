@@ -117,3 +117,5 @@ gem "google-apis-drive_v3", "~> 0.68.0"
 gem "rexml", "~> 3.4.2"
 
 gem "git", "~> 4.0"
+
+gem "pdf-reader", "~> 2.15"
