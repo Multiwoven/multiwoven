@@ -81,9 +81,9 @@ RSpec.describe Multiwoven::Integrations::Source::MysqlDb::Client do
     it "reads records successfully" do
       s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
       allow(sequel_client).to receive(:fetch).and_return([
-        { col1: 1, col2: "Row1", col3: "Extra1" },
-        { col1: 2, col2: "Row2", col3: "Extra2" }
-      ])
+                                                           { col1: 1, col2: "Row1", col3: "Extra1" },
+                                                           { col1: 2, col2: "Row2", col3: "Extra2" }
+                                                         ])
       allow(sequel_client).to receive(:disconnect)
       allow(client).to receive(:create_connection).and_return(sequel_client)
 
@@ -118,9 +118,9 @@ RSpec.describe Multiwoven::Integrations::Source::MysqlDb::Client do
       allow(mock_dataset).to receive(:order).and_return(mock_dataset)
       allow(mock_dataset).to receive(:select).and_return(mock_dataset)
       allow(mock_dataset).to receive(:all).and_return([
-        { table_name: "test_table", column_name: "col1", data_type: "int", is_nullable: "YES" },
-        { table_name: "test_table", column_name: "col2", data_type: "varchar", is_nullable: "YES" }
-      ])
+                                                        { table_name: "test_table", column_name: "col1", data_type: "int", is_nullable: "YES" },
+                                                        { table_name: "test_table", column_name: "col2", data_type: "varchar", is_nullable: "YES" }
+                                                      ])
 
       allow(sequel_client).to receive(:[]).with(:information_schema__columns).and_return(mock_dataset)
       allow(sequel_client).to receive(:disconnect)

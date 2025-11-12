@@ -10,16 +10,14 @@ module Multiwoven
     module Source
       module MysqlDb
         class Client < Multiwoven::Integrations::Core::SourceConnector
-
           def check_connection(connection_config)
             db = create_connection(connection_config.with_indifferent_access)
             ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
-          rescue => e
+          rescue StandardError => e
             ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
           ensure
             db&.disconnect
           end
-
 
           def discover(connection_config)
             cfg = connection_config.with_indifferent_access
@@ -33,8 +31,7 @@ module Multiwoven
 
             catalog = Catalog.new(streams: build_streams(results))
             catalog.to_multiwoven_message
-
-          rescue => e
+          rescue StandardError => e
             handle_exception(e, context: "MYSQL:DISCOVER:EXCEPTION", type: "error")
           ensure
             db&.disconnect
@@ -51,14 +48,13 @@ module Multiwoven
             rows.map do |row|
               RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
             end
-
-          rescue => e
+          rescue StandardError => e
             handle_exception(e, {
-              context: "MYSQL:READ:EXCEPTION",
-              type: "error",
-              sync_id: sync_config.sync_id,
-              sync_run_id: sync_config.sync_run_id
-            })
+                               context: "MYSQL:READ:EXCEPTION",
+                               type: "error",
+                               sync_id: sync_config.sync_id,
+                               sync_run_id: sync_config.sync_run_id
+                             })
           ensure
             db&.disconnect
           end
