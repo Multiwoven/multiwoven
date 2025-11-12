@@ -20,7 +20,7 @@ module Multiwoven
             db&.disconnect
           end
 
-          
+
           def discover(connection_config)
             cfg = connection_config.with_indifferent_access
             db = create_connection(cfg)
@@ -40,7 +40,6 @@ module Multiwoven
             db&.disconnect
           end
 
-          
           def read(sync_config)
             cfg = sync_config.source.connection_specification.with_indifferent_access
             db = create_connection(cfg)

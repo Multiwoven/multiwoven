@@ -1,6 +1,6 @@
 {
   "data": {
-    "name": "mysql_db",
+    "name": "Mysql_Db",
     "title": "MySQL",
     "connector_type": "source",
     "version": "0.1.0",
