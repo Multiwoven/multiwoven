@@ -2354,11 +2354,7 @@ DEPENDENCIES
   rack-attack
   rack-cors
   rails (~> 7.1.1)
-<<<<<<< HEAD
-  redis (~> 4.0)
-=======
   rexml (~> 3.4.2)
->>>>>>> d45a4b52 (chore(CE): upgraded gems git and rexml per findings (#1362))
   rspec-rails
   rubocop
   rubocop-performance

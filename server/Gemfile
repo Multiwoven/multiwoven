@@ -114,10 +114,6 @@ gem "xmlrpc", "~> 0.3.3"
 
 gem "google-apis-drive_v3", "~> 0.68.0"
 
-<<<<<<< HEAD
-gem "pdf-reader", "~> 2.15"
-=======
 gem "rexml", "~> 3.4.2"
 
 gem "git", "~> 4.0"
->>>>>>> d45a4b52 (chore(CE): upgraded gems git and rexml per findings (#1362))
