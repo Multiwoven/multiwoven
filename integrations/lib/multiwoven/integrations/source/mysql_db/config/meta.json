@@ -1,0 +1,17 @@
+{
+  "data": {
+    "name": "mysql_db",
+    "title": "MySQL",
+    "connector_type": "source",
+    "version": "0.1.0",
+    "category": "Data Warehouse",
+    "sub_category": "Relational Database",
+    "documentation_url": "https://dev.mysql.com/doc/",
+    "github_issue_label": "source-mysql-db",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven", "database", "sql", "mysql"]
+  }
+}
