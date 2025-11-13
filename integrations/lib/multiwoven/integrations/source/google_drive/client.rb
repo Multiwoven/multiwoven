@@ -231,19 +231,19 @@ module Multiwoven::Integrations::Source
 
       # TODO: Refactor (extract) code for Amazon Textract
       def create_aws_credentials
-        access_key_id = ENV["AWS_ACCESS_KEY_ID"]
-        secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
+        access_key_id = ENV["TEXTRACT_ACCESS_KEY_ID"]
+        secret_access_key = ENV["TEXTRACT_SECRET_ACCESS_KEY"]
         Aws::Credentials.new(access_key_id, secret_access_key)
       end
 
       def create_aws_textract_connection
-        region = ENV["AWS_REGION"]
+        region = ENV["TEXTRACT_REGION"]
         credentials = create_aws_credentials
         Aws::Textract::Client.new(region: region, credentials: credentials)
       end
 
       def create_aws_s3_connection
-        region = ENV["AWS_REGION"]
+        region = ENV["TEXTRACT_REGION"]
         credentials = create_aws_credentials
         Aws::S3::Client.new(region: region, credentials: credentials)
       end
