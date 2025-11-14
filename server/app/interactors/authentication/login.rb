@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-# app/interactors/authentication/login.rb
 module Authentication
   class Login
     include Interactor
 
     def call
+      validate_app_context
+      return if context.failure?
+
       begin
         user = User.find_by(email: context.params[:email])
       rescue StandardError => e
-        Rails.logger.error("Login Interactor Exception: #{e.message}")
+        Rails.logger.error("Login failed: #{e.message}")
         Utils::ExceptionReporter.report(e)
         context.fail!(error: "An error occurred while finding the user.")
         return
@@ -28,6 +30,14 @@ module Authentication
     end
 
     private
+
+    def validate_app_context
+      app_context = context.app_context
+      return if app_context.blank?
+      return if app_context == "embed"
+
+      context.fail!(error: "Invalid X-App-Context value. Only 'embed' is supported.")
+    end
 
     def handle_failed_attempt(user)
       if user
@@ -64,10 +74,25 @@ module Authentication
     end
 
     def issue_token_and_update_user(user)
+      app_context = context.app_context
       token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+
+      # If app_context is present and equals 'embed', add it to the token payload
+      token = add_app_context_to_token(token, app_context) if app_context.present? && app_context == "embed"
+
       user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
       user.update!(jti: payload["jti"])
       context.token = token
+    end
+
+    def add_app_context_to_token(original_token, app_context)
+      secret = Devise::JWT.config.secret
+      algorithm = Devise::JWT.config.algorithm || Warden::JWTAuth.config.algorithm
+      decode_key = Devise::JWT.config.decoding_secret || secret
+
+      decoded_payload = JWT.decode(original_token, decode_key, true, algorithm:)[0]
+      decoded_payload["app_context"] = app_context
+      JWT.encode(decoded_payload, secret, algorithm)
     end
 
     def handle_account_locked
