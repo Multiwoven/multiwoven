@@ -687,4 +687,19 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+
+  describe "scopes" do
+    context "when a connector is in host" do
+      let(:connector) { create(:connector, in_host: true) }
+      it "returns the connector" do
+        expect(Connector.in_host).to include(connector)
+      end
+    end
+    context "when a connector is external" do
+      let(:connector) { create(:connector, in_host: false) }
+      it "returns the connector" do
+        expect(Connector.external).to include(connector)
+      end
+    end
+  end
 end

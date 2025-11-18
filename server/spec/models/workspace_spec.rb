@@ -39,6 +39,11 @@ RSpec.describe Workspace, type: :model do
     it { should belong_to(:organization) }
     it { should have_many(:workflows).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:workflow_integrations).dependent(:nullify) }
+    it { should have_many(:hosted_data_stores).dependent(:nullify) }
+>>>>>>> a574077d (chore(CE): Add Hosted Database & Hosted Table to DB (#1393))
   end
 
   context "before_validation callbacks" do
