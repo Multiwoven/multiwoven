@@ -30,8 +30,11 @@ module Multiwoven
         source_defined_primary_key: [["element_id"]]
       }.freeze
 
-      # Commands for unstructured data operations
+      # Data types
       UNSTRUCTURED = "unstructured"
+      SEMISTRUCTURED = "semistructured"
+
+      # Commands for unstructured & semi-structured data operations
       LIST_FILES_CMD = "list_files"
       DOWNLOAD_FILE_CMD = "download_file"
 
@@ -39,9 +42,22 @@ module Multiwoven
         connection_config["data_type"] == UNSTRUCTURED
       end
 
+      def semistructured_data?(connection_config)
+        connection_config["data_type"] == SEMISTRUCTURED
+      end
+
       def create_unstructured_stream
         Multiwoven::Integrations::Protocol::Stream.new(
           name: UNSTRUCTURED,
+          action: StreamAction["fetch"],
+          json_schema: UNSTRUCTURED_SCHEMA,
+          **UNSTRUCTURED_STREAM_CONFIG
+        )
+      end
+
+      def create_semistructured_stream
+        Multiwoven::Integrations::Protocol::Stream.new(
+          name: SEMISTRUCTURED,
           action: StreamAction["fetch"],
           json_schema: UNSTRUCTURED_SCHEMA,
           **UNSTRUCTURED_STREAM_CONFIG
