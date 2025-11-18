@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :workflow_integration, class: "WorkflowIntegration" do
+  factory :workflow_integration, class: "Agents::WorkflowIntegration" do
     workspace
     workflow
     app_type { 0 }
