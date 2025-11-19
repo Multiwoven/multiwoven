@@ -110,4 +110,163 @@ RSpec.describe Agents::Workflow, type: :model do
       expect(Agents::WorkflowRun.exists?(run2.id)).to be false
     end
   end
+
+  describe "#accessible_by?" do
+    let(:workspace) { create(:workspace) }
+    let(:workflow) { create(:workflow, workspace:) }
+    let(:admin_role) { create(:role, :admin) }
+    let(:member_role) { create(:role, :member) }
+    let(:viewer_role) { create(:role, :viewer) }
+    let(:admin_user) { create(:user, email: "admin@example.com") }
+    let(:member_user) { create(:user, email: "member@example.com") }
+    let(:viewer_user) { create(:user, email: "viewer@example.com") }
+    let(:other_user) { create(:user, email: "other@example.com") }
+
+    before do
+      create(:workspace_user, workspace:, user: admin_user, role: admin_role)
+      create(:workspace_user, workspace:, user: member_user, role: member_role)
+      create(:workspace_user, workspace:, user: viewer_user, role: viewer_role)
+    end
+
+    context "when access_control_enabled is false" do
+      it "returns true for any user" do
+        workflow.update!(access_control_enabled: false)
+        expect(workflow.accessible_by?(admin_user)).to be true
+        expect(workflow.accessible_by?(member_user)).to be true
+        expect(workflow.accessible_by?(other_user)).to be true
+      end
+    end
+
+    context "when access_control_enabled is true" do
+      before do
+        workflow.update!(access_control_enabled: true)
+      end
+
+      context "when both allowed_role_ids and allowed_users are empty" do
+        it "returns true for any user" do
+          workflow.update!(access_control: {})
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+          expect(workflow.accessible_by?(other_user)).to be true
+        end
+      end
+
+      context "when allowed_role_ids is specified" do
+        it "returns true if user's role ID is in allowed_role_ids" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id, member_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+        end
+
+        it "returns false if user's role ID is not in allowed_role_ids" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(member_user)).to be false
+          expect(workflow.accessible_by?(viewer_user)).to be false
+        end
+
+        it "returns false if user has no role in the workspace" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+
+        it "handles string role IDs from frontend correctly" do
+          # Frontend may submit role IDs as strings, which get persisted as strings in JSONB
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id.to_s, member_role.id.to_s]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+          expect(workflow.accessible_by?(viewer_user)).to be false
+        end
+      end
+
+      context "when allowed_users is specified" do
+        it "returns true if user's email is in allowed_users" do
+          workflow.update!(
+            access_control: {
+              "allowed_users" => [admin_user.email, member_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+        end
+
+        it "returns false if user's email is not in allowed_users" do
+          workflow.update!(
+            access_control: {
+              "allowed_users" => [admin_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(member_user)).to be false
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+      end
+
+      context "when both allowed_role_ids and allowed_users are specified" do
+        it "returns true if user matches either role ID or email" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id],
+              "allowed_users" => [member_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true # matches role
+          expect(workflow.accessible_by?(member_user)).to be true # matches email
+        end
+
+        it "returns false if user matches neither role ID nor email" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id],
+              "allowed_users" => [admin_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(viewer_user)).to be false
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+      end
+
+      context "with edge cases" do
+        it "handles nil access_control gracefully" do
+          # access_control has NOT NULL constraint, so we test with empty hash instead
+          workflow.update!(access_control: {})
+          expect(workflow.accessible_by?(admin_user)).to be true
+        end
+
+        it "handles empty arrays in access_control" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [],
+              "allowed_users" => []
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+        end
+
+        it "handles missing keys in access_control hash" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be false
+        end
+      end
+    end
+  end
 end
