@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.5"
+=======
+    VERSION = "0.34.10"
+>>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
 
     ENABLED_SOURCES = %w[
       Snowflake
