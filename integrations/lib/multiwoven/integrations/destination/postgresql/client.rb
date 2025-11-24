@@ -47,7 +47,8 @@ module Multiwoven::Integrations::Destination
 
       def write(sync_config, records, action = "destination_insert")
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
-        table_name = sync_config.stream.name
+        raw_table = sync_config.stream.name
+        table_name = qualify_table(connection_config[:schema], raw_table)
         primary_key = sync_config.model.primary_key
         log_message_array = []
         db = create_connection(connection_config)
@@ -124,6 +125,12 @@ module Multiwoven::Integrations::Destination
             end
           }
         end
+      end
+
+      def qualify_table(schema, table)
+        return table if schema.blank? || schema == "public"
+
+        %("#{schema}"."#{table}")
       end
     end
   end
