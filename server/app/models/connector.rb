@@ -116,6 +116,10 @@ class Connector < ApplicationRecord
     db = client.send(:create_connection, connection_config)
     query = query.chomp(";")
 
+    if connector_name == "Postgresql"
+      query = "SET search_path TO \"#{connection_config[:schema]}\", \"public\"; #{query}"
+    end
+
     # Check if the query already has a LIMIT clause
     has_limit = query.match?(/LIMIT \s*\d+\s*$/i)
     # Append LIMIT only if not already present
@@ -130,6 +134,12 @@ class Connector < ApplicationRecord
   end
 
   def execute_search(vector, limit)
+    connection_config = resolved_configuration.with_indifferent_access
+    if connector_name == "Postgresql"
+      vector = "SET search_path TO \"#{connection_config[:schema]}\", \"public\"; #{vector}::vector"
+
+    end
+
     vector_search_config = Multiwoven::Integrations::Protocol::VectorConfig.new(
       source: to_protocol,
       vector:,
