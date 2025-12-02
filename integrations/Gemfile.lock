@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.34.5)
+=======
+    multiwoven-integrations (0.34.12)
+>>>>>>> 8a646792 (chore(CE): Refactor PostgreSQL Destination Connector (#1492))
       MailchimpMarketing
       activesupport
       async-websocket

@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.5"
+=======
+    VERSION = "0.34.12"
+>>>>>>> 8a646792 (chore(CE): Refactor PostgreSQL Destination Connector (#1492))
 
     ENABLED_SOURCES = %w[
       Snowflake
