@@ -437,6 +437,7 @@ module Multiwoven
           expect(vector_search_config.source.name).to eq("example_source")
           expect(vector_search_config.vector).to eq([0.1, 0.2, 0.3])
           expect(vector_search_config.limit).to eq(10)
+          expect(vector_search_config.filters).to eq([])
         end
 
         it "creates an instance from JSON when vector is string" do
@@ -457,6 +458,52 @@ module Multiwoven
           expect(vector_search_config.source.name).to eq("example_source")
           expect(vector_search_config.vector).to eq("SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'")
           expect(vector_search_config.limit).to eq(10)
+          expect(vector_search_config.filters).to eq([])
+        end
+
+        it "creates an instance from JSON with filters" do
+          json_data = {
+            "source": {
+              "name": "example_source",
+              "type": "source",
+              "connection_specification": { "key": "value" }
+            },
+            "vector": [0.1, 0.2, 0.3],
+            "limit": 10,
+            "filters": [
+              { "field" => "status", "value" => "active" },
+              { "field" => "category", "operator" => "in", "value" => %w[tech science] }
+            ]
+          }.to_json
+
+          vector_search_config = described_class.from_json(json_data)
+
+          expect(vector_search_config).to be_a(described_class)
+          expect(vector_search_config.source).to be_a(Connector)
+          expect(vector_search_config.vector).to eq([0.1, 0.2, 0.3])
+          expect(vector_search_config.limit).to eq(10)
+          expect(vector_search_config.filters).to be_an(Array)
+          expect(vector_search_config.filters.length).to eq(2)
+          expect(vector_search_config.filters[0]).to eq(field: "status", value: "active")
+          expect(vector_search_config.filters[1]).to eq(field: "category", operator: "in", value: %w[tech science])
+        end
+
+        it "creates an instance from JSON with empty filters array" do
+          json_data = {
+            "source": {
+              "name": "example_source",
+              "type": "source",
+              "connection_specification": { "key": "value" }
+            },
+            "vector": [0.1, 0.2, 0.3],
+            "limit": 10,
+            "filters": []
+          }.to_json
+
+          vector_search_config = described_class.from_json(json_data)
+
+          expect(vector_search_config).to be_a(described_class)
+          expect(vector_search_config.filters).to eq([])
         end
       end
     end

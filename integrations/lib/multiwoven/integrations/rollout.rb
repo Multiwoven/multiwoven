@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.5"
+=======
+    VERSION = "0.34.13"
+>>>>>>> 823fb1a4 (chore(CE): filter changes for vector db connectors (#1459))
 
     ENABLED_SOURCES = %w[
       Snowflake
