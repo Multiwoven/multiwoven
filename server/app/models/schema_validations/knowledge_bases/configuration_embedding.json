@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "embedding_provider": {
+            "type": "string",
+            "enum": ["open_ai"]
+        },
+        "embedding_model": {
+            "type": "string",
+            "enum": ["text-embedding-3-small", "text-embedding-3-large", "text-embedding-ada-002"]
+        },
+        "api_key": {
+            "type": "string"
+        },
+        "chunk_size": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "chunk_overlap": {
+            "type": "integer",
+            "minimum": 0
+        }
+    },
+    "required": ["embedding_provider", "embedding_model", "api_key", "chunk_size", "chunk_overlap"]
+}

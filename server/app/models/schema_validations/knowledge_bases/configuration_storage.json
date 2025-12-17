@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "table_name": {
+            "type": "string"
+        },
+        "vector_column_name": {
+            "type": "string"
+        },
+        "text_column_name": {
+            "type": "string"
+        },
+        "metadata_column_name": {
+            "type": "string"
+        }
+    },
+    "required": ["table_name"]
+}
