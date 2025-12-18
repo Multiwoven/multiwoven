@@ -39,6 +39,13 @@ RSpec.describe Workspace, type: :model do
     it { should belong_to(:organization) }
     it { should have_many(:workflows).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:workflow_integrations).dependent(:nullify) }
+    it { should have_many(:hosted_data_stores).dependent(:nullify) }
+    it { should have_many(:knowledge_bases).dependent(:nullify) }
+    it { should have_many(:tools).dependent(:destroy) }
+>>>>>>> 020d6654 (chore(CE): Tool model (#1543))
   end
 
   context "before_validation callbacks" do

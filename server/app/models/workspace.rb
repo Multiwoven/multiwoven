@@ -30,7 +30,14 @@ class Workspace < ApplicationRecord
   has_many :workflows, class_name: "Agents::Workflow", dependent: :destroy
   has_many :workflow_runs, class_name: "Agents::WorkflowRun", dependent: :destroy
   has_many :workflow_logs, class_name: "Agents::WorkflowLog", dependent: :nullify
+<<<<<<< HEAD
   has_many :workflow_integrations, dependent: :nullify
+=======
+  has_many :workflow_integrations, class_name: "Agents::WorkflowIntegration", dependent: :nullify
+  has_many :hosted_data_stores, dependent: :nullify
+  has_many :knowledge_bases, class_name: "KnowledgeBase", dependent: :nullify
+  has_many :tools, class_name: "Agents::Tool", dependent: :destroy
+>>>>>>> 020d6654 (chore(CE): Tool model (#1543))
 
   belongs_to :organization
   has_many :sso_configurations, through: :organization

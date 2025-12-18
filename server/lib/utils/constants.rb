@@ -43,6 +43,17 @@ module Utils
       "Assistant" => {
         resources: %i[assistant],
         description: "Manage and access the AI assistant and its configurations"
+<<<<<<< HEAD
+=======
+      },
+      "Workflows" => {
+        resources: %i[workflow],
+        description: "Manage and access workflows"
+      },
+      "Tools" => {
+        resources: %i[tool],
+        description: "Manage and access tools"
+>>>>>>> 020d6654 (chore(CE): Tool model (#1543))
       }
     }.freeze
   end
