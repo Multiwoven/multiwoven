@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_17_235322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -162,6 +162,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.string "description"
     t.string "connector_category", default: "data", null: false
     t.string "connector_sub_category", default: "database", null: false
+    t.boolean "in_host", default: false
   end
 
   create_table "custom_visual_component_files", force: :cascade do |t|
@@ -242,6 +243,33 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.integer "feedback_type", default: 0, null: false
     t.string "session_id"
     t.jsonb "additional_remarks"
+  end
+
+  create_table "hosted_data_store_tables", force: :cascade do |t|
+    t.integer "hosted_data_store_id"
+    t.string "name"
+    t.integer "column_count"
+    t.integer "row_count"
+    t.integer "size"
+    t.integer "sync_enabled"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.jsonb "table_schema", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hosted_data_stores", force: :cascade do |t|
+    t.string "name"
+    t.integer "workspace_id"
+    t.integer "database_type"
+    t.text "description"
+    t.integer "state"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.string "template_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "message_feedbacks", force: :cascade do |t|
@@ -709,6 +737,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "edges", "components", column: "target_component_id", validate: false
   add_foreign_key "edges", "workflows", validate: false
   add_foreign_key "edges", "workspaces", validate: false
+  add_foreign_key "hosted_data_store_tables", "hosted_data_stores", on_delete: :cascade, validate: false
+  add_foreign_key "hosted_data_stores", "workspaces", validate: false
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
