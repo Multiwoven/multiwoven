@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_12_17_135518) do
+>>>>>>> 020d6654 (chore(CE): Tool model (#1543))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -562,6 +566,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "tools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "label"
+    t.text "description"
+    t.integer "tool_type", null: false
+    t.jsonb "configuration", default: {}, null: false
+    t.jsonb "metadata", default: {}
+    t.boolean "enabled", default: true, null: false
+    t.bigint "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tools_on_name"
+    t.index ["tool_type"], name: "index_tools_on_tool_type"
+    t.index ["workspace_id", "name"], name: "index_tools_on_workspace_id_and_name", unique: true
+    t.index ["workspace_id"], name: "index_tools_on_workspace_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -709,6 +730,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "edges", "components", column: "target_component_id", validate: false
   add_foreign_key "edges", "workflows", validate: false
   add_foreign_key "edges", "workspaces", validate: false
+<<<<<<< HEAD
+=======
+  add_foreign_key "hosted_data_store_tables", "hosted_data_stores", on_delete: :cascade, validate: false
+  add_foreign_key "hosted_data_stores", "workspaces", validate: false
+  add_foreign_key "knowledge_base_files", "knowledge_bases", validate: false
+  add_foreign_key "knowledge_bases", "workspaces", validate: false
+>>>>>>> 020d6654 (chore(CE): Tool model (#1543))
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
@@ -716,6 +744,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+  add_foreign_key "tools", "workspaces"
   add_foreign_key "workflow_integrations", "workflows", validate: false
   add_foreign_key "workflow_integrations", "workspaces", validate: false
   add_foreign_key "workflow_runs", "workspaces"

@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "MCP server endpoint URL"
+    },
+    "transport": {
+      "type": "string",
+      "enum": ["sse", "http"],
+      "description": "Transport protocol for MCP communication"
+    },
+    "auth_type": {
+      "type": "string",
+      "enum": ["bearer", "api_key", "basic", "none"],
+      "description": "Authentication type for the MCP server"
+    },
+    "auth_config": {
+      "type": "object",
+      "description": "Authentication configuration based on auth_type",
+      "properties": {
+        "secret": {
+          "type": "string",
+          "description": "Secret/token for authentication (bearer token or API key)"
+        },
+        "header_name": {
+          "type": "string",
+          "description": "Custom header name for API key authentication"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for basic authentication"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for basic authentication"
+        }
+      }
+    },
+    "headers": {
+      "type": "object",
+      "description": "Additional custom headers",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300,
+      "default": 30,
+      "description": "Connection timeout in seconds"
+    }
+  },
+  "required": ["url", "transport", "auth_type"]
+}
+
