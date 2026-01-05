@@ -4,25 +4,36 @@ module Multiwoven::Integrations::Source
   module GoogleDrive
     include Multiwoven::Integrations::Core
 
-    FIELDS = "files(id, name, parents, mimeType), nextPageToken"
+    FIELDS = "files(id, name, parents, mimeType, fileExtension, size, createdTime, modifiedTime), nextPageToken"
     MAX_PER_PAGE = 1000
     MIMETYPE_GOOGLE_DRIVE_FOLDER = "mimeType = 'application/vnd.google-apps.folder'"
 
-    class Client < SourceConnector
+    class Client < UnstructuredSourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        client = create_connection(connection_config)
-        build_query(client)
+
+        if unstructured_data?(connection_config) || semistructured_data?(connection_config)
+          create_drive_connection(connection_config)
+        else
+          create_connection(connection_config)
+        end
         success_status
-      rescue StandardError => e
+      rescue StandardError, NotImplementedError => e
         failure_status(e)
       end
 
-      def discover(_connection_config)
-        catalog_json = read_json(CATALOG_SPEC_PATH)
-        catalog = build_catalog(catalog_json)
+      def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        streams = if unstructured_data?(connection_config)
+                    [create_unstructured_stream]
+                  elsif semistructured_data?(connection_config)
+                    [create_semistructured_stream]
+                  else
+                    raise NotImplementedError, "Discovery failed: Structured data is not supported yet"
+                  end
+        catalog = Catalog.new(streams: streams)
         catalog.to_multiwoven_message
-      rescue StandardError => e
+      rescue StandardError, NotImplementedError => e
         handle_exception(e, {
                            context: "GOOGLE_DRIVE:DISCOVER:EXCEPTION",
                            type: "error"
@@ -31,12 +42,11 @@ module Multiwoven::Integrations::Source
 
       def read(sync_config)
         connection_config = sync_config.source.connection_specification.with_indifferent_access
-        client = create_connection(connection_config)
-        query = sync_config.model.query
-        query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
-        records = query(client, query)
-        process_files(client, records)
-      rescue StandardError => e
+
+        return handle_unstructured_data(sync_config) if unstructured_data?(connection_config) || semistructured_data?(connection_config)
+
+        raise NotImplementedError, "Read failed: Structured data is not supported yet"
+      rescue StandardError, NotImplementedError => e
         handle_exception(e, {
                            context: "GOOGLE_DRIVE:READ:EXCEPTION",
                            type: "error",
@@ -47,126 +57,103 @@ module Multiwoven::Integrations::Source
 
       private
 
-      def query(client, query)
-        limit = 0
-        offset = 0
-        query = query.gsub("\n", " ").gsub(/\s+/, " ")
-        limit = query.match(/LIMIT (\d+)/)[1].to_i if query.include? "LIMIT"
-        offset = query.match(/OFFSET (\d+)/)[1].to_i if query.include? "OFFSET"
-        query = query.match(/\((.*)\) AS/)[1] if query.include? "AS subquery"
-        columns = select_columns(query)
-
-        google_drive_query = build_query(client)
-        files = get_files(client, google_drive_query, limit, offset)
-        files.map do |file|
-          RecordMessage.new(data: prepare_invoice(file, columns), emitted_at: Time.now.to_i).to_multiwoven_message
-        end
+      def create_connection(connection_config)
+        raise NotImplementedError, "Connection failed: Structured data is not supported yet"
       end
 
-      # Reads files from Google Drive and sends them to Amazon Textract for analysis
-      def process_files(client, records)
-        textract = create_aws_textract_connection
-        results = []
-        records.each do |record|
-          invoice = record.record.data
-          begin
-            temp_file = Tempfile.new(invoice["file_name"])
-            client.get_file(invoice["id"], download_dest: temp_file.path)
-
-            reader = PDF::Reader.new(temp_file)
-            page_count = reader.page_count
-
-            analysis = if page_count > 1
-                         start_expense_analysis(invoice["file_name"], temp_file)
-                       else
-                         [textract.analyze_expense(document: { bytes: File.binread(temp_file.path) })]
-                       end
-
-            invoice = extract_invoice_data(invoice, analysis)
-          rescue Aws::Textract::Errors::UnsupportedDocumentException => e
-            invoice["exception"] = e.message if invoice.key?("exception")
-            handle_exception(e, {
-                               context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
-                               type: "error"
-                             })
-          rescue StandardError => e
-            handle_exception(e, {
-                               context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
-                               type: "error"
-                             })
-          end
-          results.append(RecordMessage.new(data: invoice, emitted_at: Time.now.to_i).to_multiwoven_message)
-        end
-        results
-      end
-
-      def start_expense_analysis(file_name, temp_file)
-        bucket_name = ENV["TEXTRACT_BUCKET_NAME"]
-        s3_client = create_aws_s3_connection
-        textract = create_aws_textract_connection
-
-        s3_client.put_object(
-          bucket: bucket_name,
-          key: file_name,
-          body: temp_file
+      def create_drive_connection(connection_config)
+        credentials = connection_config[:credentials_json]
+        @google_drive = Google::Apis::DriveV3::DriveService.new
+        @google_drive.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
+          json_key_io: StringIO.new(credentials.to_json),
+          scope: GOOGLE_SHEETS_SCOPE
         )
-
-        resp = textract.start_expense_analysis(
-          document_location: {
-            s3_object: {
-              bucket: bucket_name,
-              name: file_name
-            }
-          }
-        )
-
-        job_id = resp.job_id
-        all_pages = []
-        next_token = nil
-
-        loop do
-          result = textract.get_expense_analysis(
-            job_id: job_id,
-            next_token: next_token
-          )
-
-          status = result.job_status
-          if status == "SUCCEEDED"
-            all_pages << result
-            next_token = result.next_token
-            break unless next_token
-          elsif %w[FAILED PARTIAL_SUCCESS].include?(status)
-            raise "Textract job ended with status: #{status}"
-          else
-            sleep 2 # still IN_PROGRESS; wait briefly and try again
-          end
-        end
-        all_pages
       end
 
-      def build_query(client)
-        query = "mimeType != 'application/vnd.google-apps.folder'"
+      def handle_unstructured_data(sync_config)
+        connection_config = sync_config.source.connection_specification.with_indifferent_access
+        folder_name = connection_config[:folder_name]
+        command = sync_config.model.query.strip
+        create_drive_connection(connection_config)
 
-        if @options[:folder]
-          folder_query = "#{MIMETYPE_GOOGLE_DRIVE_FOLDER} and (name = '#{@options[:folder]}')"
-          response = client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: folder_query, fields: FIELDS)
-          raise "Specified folder does not exist" if response.files.empty?
-
-          parent_id = response.files.first.id
-          parents_query = "'#{parent_id}' in parents"
+        case command
+        when LIST_FILES_CMD
+          list_files_in_folder(folder_name)
+        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
+          file_name = ::Regexp.last_match(1).strip
+          file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          download_file_to_local(file_name, sync_config.sync_id)
+        else
+          raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
         end
+      end
 
-        if @options[:subfolders]
-          subfolders_query = MIMETYPE_GOOGLE_DRIVE_FOLDER
-          subfolders_query += "and #{parents_query}" if parents_query
-          response = client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: subfolders_query, fields: FIELDS)
-          subfolders_ids = response.files.map { |file| "'#{file.id}'" }
-          parents_query = "(#{subfolders_ids.join(" in parents or ")} in parents)"
+      def list_files_in_folder(folder_name)
+        query = build_query(folder_name)
+        records = get_files(@google_drive, query, 10_000, 0)
+        records.map do |row|
+          RecordMessage.new(
+            data: {
+              element_id: row.id,
+              file_name: row.name,
+              file_path: row.name,
+              size: row.size,
+              file_type: row.file_extension,
+              created_date: row.created_time,
+              modified_date: row.modified_time,
+              text: ""
+            },
+            emitted_at: Time.now.to_i
+          ).to_multiwoven_message
         end
+      end
 
-        query += " and mimeType = '#{@options[:file_type]}'" if @options[:file_type]
-        query += " and #{parents_query}" if parents_query
-        query
+      def download_file_to_local(file_name, sync_id)
+        download_path = ENV["FILE_DOWNLOAD_PATH"]
+        file = if download_path
+                 File.join(download_path, "syncs", sync_id, File.basename(file_name))
+               else
+                 Tempfile.new(["google_drive_file_syncs_#{sync_id}", File.extname(file_name)]).path
+               end
+
+        # Escape single quotes to prevent query injection
+        escaped_name = file_name.gsub("'", "\\\\'")
+        query = "mimeType != 'application/vnd.google-apps.folder' and name = '#{escaped_name}'"
+
+        records = get_files(@google_drive, query, 1, 0)
+        raise StandardError, "File not found." if records.empty?
+
+        @google_drive.get_file(records.first.id, download_dest: file)
+
+        [RecordMessage.new(
+          data: {
+            element_id: records.first.id,
+            local_path: file,
+            file_name: file_name,
+            file_path: file_name,
+            size: records.first.size,
+            file_type: records.first.file_extension,
+            created_date: records.first.created_time,
+            modified_date: records.first.modified_time,
+            text: ""
+          },
+          emitted_at: Time.now.to_i
+        ).to_multiwoven_message]
+      rescue StandardError => e
+        raise StandardError, "Failed to download file #{file_name}: #{e.message}"
+      end
+
+      def build_query(folder_name)
+        raise ArgumentError, "Folder name is required" if folder_name.blank?
+
+        # Escape single quotes to prevent query injection
+        escaped_folder = folder_name.gsub("'", "\\\\'")
+        folder_query = "#{MIMETYPE_GOOGLE_DRIVE_FOLDER} and (name = '#{escaped_folder}')"
+        response = @google_drive.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: folder_query, fields: FIELDS)
+        raise ArgumentError, "Specified folder does not exist" if response.files.empty?
+
+        parent_id = response.files.first.id
+        "'#{parent_id}' in parents"
       end
 
       def get_files(client, query, limit, offset)
@@ -192,100 +179,6 @@ module Multiwoven::Integrations::Source
         end
 
         result
-      end
-
-      def select_columns(query)
-        columns = query.match(/SELECT (.*) FROM/)[1]
-        all_columns = %w[line_items id file_name exception results] + TEXTRACT_SUMMARY_FIELDS.keys
-        @options[:fields] = all_columns if @options[:fields].empty?
-
-        return @options[:fields] if columns.include?("*")
-
-        columns = columns.split(",").map(&:strip)
-        raise "Column(s) #{(columns - all_columns).join(", ")} not valid." if (columns - all_columns).length.positive?
-
-        columns & all_columns
-      end
-
-      def prepare_invoice(file, columns)
-        invoice = {}
-        columns.each { |column| invoice[column] = "" if TEXTRACT_SUMMARY_FIELDS.key?(column) }
-        invoice["line_items"] = [] if columns.any?("line_items")
-        invoice["id"] = file.id if columns.any?("id")
-        invoice["file_name"] = file.name if columns.any?("file_name")
-        invoice["exception"] = "" if columns.any?("exception")
-        invoice["results"] = {} if columns.any?("results")
-        invoice
-      end
-
-      def create_connection(connection_config)
-        @options = connection_config[:options]
-        credentials = connection_config[:credentials_json]
-        client = Google::Apis::DriveV3::DriveService.new
-        client.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
-          json_key_io: StringIO.new(credentials.to_json),
-          scope: GOOGLE_SHEETS_SCOPE
-        )
-        client
-      end
-
-      # TODO: Refactor (extract) code for Amazon Textract
-      def create_aws_credentials
-        access_key_id = ENV["TEXTRACT_ACCESS_KEY_ID"]
-        secret_access_key = ENV["TEXTRACT_SECRET_ACCESS_KEY"]
-        Aws::Credentials.new(access_key_id, secret_access_key)
-      end
-
-      def create_aws_textract_connection
-        region = ENV["TEXTRACT_REGION"]
-        credentials = create_aws_credentials
-        Aws::Textract::Client.new(region: region, credentials: credentials)
-      end
-
-      def create_aws_s3_connection
-        region = ENV["TEXTRACT_REGION"]
-        credentials = create_aws_credentials
-        Aws::S3::Client.new(region: region, credentials: credentials)
-      end
-
-      def extract_invoice_data(invoice, results)
-        invoice = extract_summary_fields(invoice, results)
-        invoice = extract_line_items(invoice, results)
-        invoice["results"] = results.to_json if invoice.key?("results")
-        invoice.transform_keys(&:to_sym)
-      end
-
-      def extract_summary_fields(invoice, results)
-        document = results[0].expense_documents[0]
-        (invoice.keys & TEXTRACT_SUMMARY_FIELDS.keys).each do |key|
-          invoice[key] = extract_field_value(document.summary_fields, TEXTRACT_SUMMARY_FIELDS[key])
-        end
-        invoice
-      end
-
-      def extract_line_items(invoice, results)
-        if invoice.key?("line_items")
-          results.each do |result|
-            result.expense_documents.each do |expense_document|
-              expense_document.line_item_groups.each do |line_item_group|
-                line_item_group.line_items.each do |line_item|
-                  extracted_line_item = {}
-                  TEXTRACT_LINE_ITEMS_FIELDS.each_key do |key|
-                    extracted_line_item[key] = extract_field_value(line_item.line_item_expense_fields, TEXTRACT_LINE_ITEMS_FIELDS[key])
-                  end
-                  invoice["line_items"] << extracted_line_item
-                end
-              end
-            end
-          end
-        end
-        invoice["line_items"] = invoice["line_items"].to_json
-        invoice
-      end
-
-      def extract_field_value(fields, selector)
-        selected_field = fields.select { |field| field.type.text == selector }.first
-        selected_field ? selected_field.value_detection.text : ""
       end
     end
   end

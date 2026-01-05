@@ -3,37 +3,33 @@
 RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   let(:client) { described_class.new }
   let(:fields) { "files(id, name, parents, mimeType), nextPageToken" }
-  let(:error_instance) { StandardError.new("Google Drive source error") }
-  let(:amazon_textract_exception) { Aws::Textract::Errors::UnsupportedDocumentException.new(nil, "Document format not supported.") }
-
-  let(:connection_config) do
+  # let(:error_instance) { StandardError.new("Google Drive source error") }
+  let(:credentials) do
     {
-      credentials_json: {
-        type: "service_account",
-        project_id: "multiwoven",
-        private_key_id: "private_key_id",
-        private_key: "private_key",
-        client_email: "multiwoven@multiwoven.iam.gserviceaccount.com",
-        client_id: "client_id",
-        auth_uri: "https://accounts.google.com/o/oauth2/auth",
-        token_uri: "https://oauth2.googleapis.com/token",
-        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-        client_x509_cert_url: "client_x509_cert_url",
-        universe_domain: "googleapis.com"
-      },
-      options: {
-        subfolders: false,
-        fields: []
-      }
+      type: "service_account",
+      project_id: "multiwoven",
+      private_key_id: "private_key_id",
+      private_key: "private_key",
+      client_email: "multiwoven@multiwoven.iam.gserviceaccount.com",
+      client_id: "client_id",
+      auth_uri: "https://accounts.google.com/o/oauth2/auth",
+      token_uri: "https://oauth2.googleapis.com/token",
+      auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+      client_x509_cert_url: "client_x509_cert_url",
+      universe_domain: "googleapis.com"
     }
   end
 
-  let(:sync_config_json) do
+  let(:sync_config) do
     {
       source: {
         name: "GoogleDrive",
         type: "source",
-        connection_specification: connection_config
+        connection_specification: {
+          data_type: "structured",
+          credentials_json: credentials,
+          folder_name: "test_folder"
+        }
       },
       destination: {
         name: "Sample Destination Connector",
@@ -62,6 +58,22 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
     }
   end
 
+  let(:semistructured_config) do
+    {
+      data_type: "semistructured",
+      credentials_json: credentials,
+      folder_name: "test_folder"
+    }
+  end
+
+  let(:unstructured_config) do
+    {
+      data_type: "unstructured",
+      credentials_json: credentials,
+      folder_name: "test_folder"
+    }
+  end
+
   let(:catalog) do
     {
       "exception" => { "type" => "string" },
@@ -79,288 +91,241 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   end
 
   let(:google_drive_service) { instance_double(Google::Apis::DriveV3::DriveService) }
-  let(:amazon_textract) { Aws::Textract::Client.new(stub_responses: true) }
-  let(:s3) { Aws::S3::Client.new(stub_responses: true) }
-  let(:pdf_reader) { instance_double(PDF::Reader) }
-
-  let(:expense_documents) do
-    [Aws::Textract::Types::ExpenseDocument.new(
-      summary_fields: [
-        Aws::Textract::Types::ExpenseField.new(
-          type: Aws::Textract::Types::ExpenseType.new(text: "VENDOR_NAME"),
-          value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Vendor, Inc.")
-        )
-      ],
-      line_item_groups: [
-        Aws::Textract::Types::LineItemGroup.new(
-          line_items: [
-            Aws::Textract::Types::LineItemFields.new(
-              line_item_expense_fields: [
-                Aws::Textract::Types::ExpenseField.new(
-                  type: Aws::Textract::Types::ExpenseType.new(text: "PRODUCT_CODE"),
-                  value_detection: Aws::Textract::Types::ExpenseDetection.new(text: "Product 0001")
-                )
-              ]
-            )
-          ]
-        )
-      ]
-    )]
-  end
-
-  let(:analyze_expense_response) do
-    Aws::Textract::Types::AnalyzeExpenseResponse.new(
-      expense_documents: expense_documents
-    )
-  end
-  let(:start_expense_analysis_response) do
-    Aws::Textract::Types::StartExpenseAnalysisResponse.new(
-      job_id: "1"
-    )
-  end
-  let(:get_expense_analysis_response) do
-    Aws::Textract::Types::GetExpenseAnalysisResponse.new(
-      job_status: "SUCCEEDED",
-      expense_documents: expense_documents
-    )
-  end
   let(:expense_file) { Google::Apis::DriveV3::File.new(id: "1", name: "expense_file.pdf") }
   let(:specified_folder) { Google::Apis::DriveV3::File.new(id: "2", name: "folder") }
+  let(:file_list) { Google::Apis::DriveV3::FileList.new(files: [expense_file]) }
 
   before do
-    client.instance_variable_set(:@options, connection_config[:options])
-    allow(client).to receive(:create_connection).and_return(google_drive_service)
-    allow(client).to receive(:create_aws_textract_connection).and_return(amazon_textract)
-    allow(client).to receive(:create_aws_s3_connection).and_return(s3)
+    # allow(client).to receive(:create_drive_connection).and_return(google_drive_service)
+    # allow(google_drive_service).to receive(:list_files).and_return(file_list)
   end
 
   describe "#check_connection" do
-    context "when the connection is successful" do
-      before do
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true, page_size: 1, q: "mimeType != 'application/vnd.google-apps.folder'" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
+    before do
+      allow(client).to receive(:create_drive_connection).and_return(google_drive_service)
+    end
+    context "when checking structured data connection" do
+      it "throws a not implemented error" do
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("failed")
+        expect(result.message).to include("Connection failed: Structured data is not supported yet")
       end
-      it "returns a successful connection status" do
-        message = client.check_connection(connection_config)
+    end
+
+    context "when checking unstructured data connection" do
+      it "returns a succeeded connection status" do
+        message = client.check_connection(unstructured_config)
         result = message.connection_status
         expect(result.status).to eq("succeeded")
         expect(result.message).to be_nil
       end
     end
 
-    context "when the specified folder does not exist" do
-      it "returns an unsuccesful connection status" do
-        options = connection_config[:options]
-        options[:folder] = "folder"
-        client.instance_variable_set(:@options, options)
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType = 'application/vnd.google-apps.folder' and (name = 'folder')" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: []))
-
-        message = client.check_connection(connection_config)
+    context "when checking semistructured data connection" do
+      it "returns a succeeded connection status" do
+        message = client.check_connection(semistructured_config)
         result = message.connection_status
-        expect(result.status).to eq("failed")
-        expect(result.message).to eq("Specified folder does not exist")
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
       end
     end
 
-    context "when the connection is unsuccessful" do
-      it "returns an unsucessful connection status" do
-        allow(client).to receive(:create_connection).and_raise(error_instance)
-        message = client.check_connection(connection_config)
+    context "when checking connection fails" do
+      it "returns a failed connection status with an error message" do
+        allow(client).to receive(:create_drive_connection).and_raise(StandardError, "Connection failed")
+        message = client.check_connection(sync_config[:source][:connection_specification])
         result = message.connection_status
         expect(result.status).to eq("failed")
+        expect(result.message).to include("Connection failed")
       end
     end
   end
 
   describe "#discover" do
-    context "when discover is succesful" do
-      it "returns a catalog" do
-        message = client.discover(connection_config)
-        expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
-        first_stream = message.catalog.streams.first
-        expect(first_stream).to be_a(Multiwoven::Integrations::Protocol::Stream)
-        expect(first_stream.name).to eq("invoices")
-        expect(first_stream.json_schema).to be_an(Hash)
-        expect(first_stream.json_schema["type"]).to eq("object")
-        expect(first_stream.json_schema["properties"]).to eq(catalog)
-      end
-    end
-    context "when discover is unsucessful" do
-      it "it handles exceptions during discovery" do
-        allow(client).to receive(:build_catalog).and_raise(error_instance)
+    context "when discovering structured data" do
+      it "throws a not implemented error" do
         expect(client).to receive(:handle_exception).with(
-          error_instance,
+          an_instance_of(NotImplementedError),
           {
             context: "GOOGLE_DRIVE:DISCOVER:EXCEPTION",
             type: "error"
           }
         )
-        client.discover(connection_config)
+        client.discover(sync_config[:source][:connection_specification])
+      end
+    end
+
+    context "when discovering unstructured data" do
+      it "returns a catalog for unstructured data" do
+        message = client.discover(unstructured_config)
+        expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.streams).to be_an(Array)
+        expect(message.catalog.streams.first).to be_a(Multiwoven::Integrations::Protocol::Stream)
+        expect(message.catalog.streams.first.name).to eq("unstructured")
+      end
+    end
+
+    context "when discovering semistructured data" do
+      it "returns a catalog for semistructured data" do
+        message = client.discover(semistructured_config)
+        expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.streams).to be_an(Array)
+        expect(message.catalog.streams.first).to be_a(Multiwoven::Integrations::Protocol::Stream)
+        expect(message.catalog.streams.first.name).to eq("semistructured")
+      end
+    end
+
+    context "when discovering fails" do
+      it "handles exceptions during discovery" do
+        allow(unstructured_config).to receive(:with_indifferent_access).and_raise(StandardError, "Discovery failed")
+        expect(client).to receive(:handle_exception).with(
+          an_instance_of(StandardError),
+          {
+            context: "GOOGLE_DRIVE:DISCOVER:EXCEPTION",
+            type: "error"
+          }
+        )
+        client.discover(unstructured_config)
       end
     end
   end
 
   describe "#read" do
-    let(:sync_config) { Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json) }
     before do
-      allow(amazon_textract).to receive(:analyze_expense).and_return(analyze_expense_response)
+      allow(google_drive_service).to receive(:list_files).and_return(file_list)
+      allow(google_drive_service).to receive(:get_file).and_return(expense_file)
+      allow(Google::Apis::DriveV3::DriveService).to receive(:new).and_return(google_drive_service)
+      allow(Google::Auth::ServiceAccountCredentials).to receive(:make_creds).and_return(nil)
+      allow(google_drive_service).to receive(:authorization=).and_return(nil)
     end
-    context "when read is successful" do
-      before do
-        existing_file = Google::Apis::DriveV3::File.new(id: "1", name: "existing_file.csv")
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true, page_size: 50, q: "mimeType != 'application/vnd.google-apps.folder'" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [existing_file]))
-        allow(google_drive_service).to receive(:get_file)
-          .and_return(existing_file)
-        allow(PDF::Reader).to receive(:new).and_return(pdf_reader)
-        allow(pdf_reader).to receive(:page_count).and_return(1)
-      end
-
-      it "returns records succesfully for table selector" do
-        records = client.read(sync_config)
-        expect(records).to be_an(Array)
-        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(records.first.record.data[:id]).to eq("1")
-        expect(records.first.record.data[:file_name]).to eq("existing_file.csv")
-        expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
-        expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
-      end
-
-      it "returns records succesfully with specified folder" do
-        options = connection_config[:options]
-        options[:folder] = "folder"
-        client.instance_variable_set(:@options, options)
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType = 'application/vnd.google-apps.folder' and (name = 'folder')" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [specified_folder]))
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType != 'application/vnd.google-apps.folder' and '2' in parents", page_size: 50 })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
-
-        records = client.read(sync_config)
-
-        expect(records).to be_an(Array)
-        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(records.first.record.data[:id]).to eq("1")
-        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
-        expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
-        expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
-      end
-
-      it "returns records successfuly with subfolders set to true" do
-        options = connection_config[:options]
-        options[:subfolders] = true
-        client.instance_variable_set(:@options, options)
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType = 'application/vnd.google-apps.folder'" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [specified_folder]))
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType != 'application/vnd.google-apps.folder' and ('2' in parents)", page_size: 50 })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
-
-        records = client.read(sync_config)
-
-        expect(records).to be_an(Array)
-        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(records.first.record.data[:id]).to eq("1")
-        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
-        expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
-        expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
-      end
-
-      it "returns records successfully for multi-page PDF" do
-        options = connection_config[:options]
-        options[:subfolders] = true
-        client.instance_variable_set(:@options, options)
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType = 'application/vnd.google-apps.folder'" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [specified_folder]))
-
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true,
-                  q: "mimeType != 'application/vnd.google-apps.folder' and ('2' in parents)", page_size: 50 })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
-        allow(pdf_reader).to receive(:page_count).and_return(2)
-        allow(s3).to receive(:put_object).and_return(nil)
-        allow(amazon_textract).to receive(:start_expense_analysis).and_return(start_expense_analysis_response)
-        allow(amazon_textract).to receive(:get_expense_analysis).and_return(get_expense_analysis_response)
-
-        records = client.read(sync_config)
-
-        expect(records).to be_an(Array)
-        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
-        expect(records.first.record.data[:id]).to eq("1")
-        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
-        expect(records.first.record.data[:vendor_name]).to eq("Vendor, Inc.")
-        expect(records.first.record.data[:line_items]).to eq("[{\"item_number\":\"Product 0001\",\"item_description\":\"\",\"item_quantity\":\"\",\"item_price\":\"\",\"line_total\":\"\"}]")
-      end
-    end
-
-    context "when read is unsuccesful" do
-      before do
-        allow(google_drive_service).to receive(:list_files)
-          .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true, page_size: 50, q: "mimeType != 'application/vnd.google-apps.folder'" })
-          .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
-      end
-
-      it "handles exception during reading" do
-        allow(client).to receive(:create_connection).and_raise(error_instance)
+    context "when reading structured data" do
+      it "throws a not implemented error" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         expect(client).to receive(:handle_exception).with(
-          error_instance,
+          an_instance_of(NotImplementedError),
           {
             context: "GOOGLE_DRIVE:READ:EXCEPTION",
             type: "error",
-            sync_id: "1",
-            sync_run_id: nil
+            sync_id: s_config.sync_id,
+            sync_run_id: s_config.sync_run_id
           }
         )
-        client.read(sync_config)
+        client.read(s_config)
+      end
+    end
+
+    context "when reading unstructured data" do
+      it "returns records for unstructured data when list_files command is used" do
+        sync_config[:source][:connection_specification] = unstructured_config
+        sync_config[:model][:query] = "list_files"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:element_id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
+      end
+      it "returns records for unstructured data when download_file command is used" do
+        sync_config[:source][:connection_specification] = unstructured_config
+        sync_config[:model][:query] = "download_file expense_file.pdf"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:element_id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
       end
 
-      it "handle unsupported document exception during expense analysis" do
-        allow(google_drive_service).to receive(:get_file)
-          .and_return(expense_file)
-        allow(amazon_textract).to receive(:analyze_expense)
-          .and_raise(amazon_textract_exception)
-        allow(PDF::Reader).to receive(:new).and_return(pdf_reader)
-        allow(pdf_reader).to receive(:page_count).and_return(1)
+      it "raises an error when invalid command is used" do
+        sync_config[:source][:connection_specification] = unstructured_config
+        sync_config[:model][:query] = "invalid_command"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         expect(client).to receive(:handle_exception).with(
-          amazon_textract_exception,
+          an_instance_of(ArgumentError),
           {
-            context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
-            type: "error"
+            context: "GOOGLE_DRIVE:READ:EXCEPTION",
+            type: "error",
+            sync_id: s_config.sync_id,
+            sync_run_id: s_config.sync_run_id
           }
         )
-        client.read(sync_config)
+        client.read(s_config)
       end
+    end
 
-      it "handles unknown exception during expense analysis" do
-        allow(google_drive_service).to receive(:get_file)
-          .and_raise(error_instance)
+    context "when reading semistructured data" do
+      it "returns records for semistructured data when list_files command is used" do
+        sync_config[:source][:connection_specification] = semistructured_config
+        sync_config[:model][:query] = "list_files"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:element_id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
+      end
+      it "returns records for semistructured data when download_file command is used" do
+        sync_config[:source][:connection_specification] = semistructured_config
+        sync_config[:model][:query] = "download_file expense_file.pdf"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(records.first.record.data[:element_id]).to eq("1")
+        expect(records.first.record.data[:file_name]).to eq("expense_file.pdf")
+      end
+      it "raises an error when invalid command is used" do
+        sync_config[:source][:connection_specification] = semistructured_config
+        sync_config[:model][:query] = "invalid_command"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         expect(client).to receive(:handle_exception).with(
-          error_instance,
+          an_instance_of(ArgumentError),
           {
-            context: "GOOGLE_DRIVE:READ:EXTRACT:EXCEPTION",
-            type: "error"
+            context: "GOOGLE_DRIVE:READ:EXCEPTION",
+            type: "error",
+            sync_id: s_config.sync_id,
+            sync_run_id: s_config.sync_run_id
           }
         )
-        client.read(sync_config)
+        client.read(s_config)
+      end
+    end
+
+    context "when FILE_DOWNLOAD_PATH is set" do
+      before do
+        # Stub all ENV calls with a default value
+        allow(ENV).to receive(:[]).and_return(nil)
+        # Then specifically allow FILE_DOWNLOAD_PATH
+        allow(ENV).to receive(:[]).with("FILE_DOWNLOAD_PATH").and_return("/custom/download/path")
+      end
+      it "raises an error for structured data" do
+        sync_config[:model][:query] = "download_file expense_file.pdf"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        expect(client).to receive(:handle_exception).with(
+          an_instance_of(NotImplementedError),
+          {
+            context: "GOOGLE_DRIVE:READ:EXCEPTION",
+            type: "error",
+            sync_id: s_config.sync_id,
+            sync_run_id: s_config.sync_run_id
+          }
+        )
+        client.read(s_config)
+      end
+      it "returns records for unstructured data" do
+        sync_config[:source][:connection_specification] = unstructured_config
+        sync_config[:model][:query] = "download_file expense_file.pdf"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+      end
+      it "returns records for semistructured data" do
+        sync_config[:source][:connection_specification] = semistructured_config
+        sync_config[:model][:query] = "download_file expense_file.pdf"
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
       end
     end
   end

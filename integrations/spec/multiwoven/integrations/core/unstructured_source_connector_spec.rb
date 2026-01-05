@@ -22,11 +22,42 @@ module Multiwoven
         end
       end
 
+      describe "#semistructured_data?" do
+        it "returns true when data_type is semistructured" do
+          connection_config = { "data_type" => "semistructured" }
+          expect(connector.semistructured_data?(connection_config)).to be true
+        end
+
+        it "returns false when data_type is not semistructured" do
+          connection_config = { "data_type" => "structured" }
+          expect(connector.semistructured_data?(connection_config)).to be false
+        end
+
+        it "returns false when data_type is not specified" do
+          connection_config = {}
+          expect(connector.semistructured_data?(connection_config)).to be false
+        end
+      end
+
       describe "#create_unstructured_stream" do
         it "creates a stream with the correct configuration" do
           stream = connector.create_unstructured_stream
 
           expect(stream.name).to eq("unstructured")
+          expect(stream.action.to_s).to eq("fetch")
+          expect(stream.json_schema).to eq(UnstructuredSourceConnector::UNSTRUCTURED_SCHEMA)
+          expect(stream.supported_sync_modes).to eq(["incremental"])
+          expect(stream.source_defined_cursor).to be true
+          expect(stream.default_cursor_field).to eq(["modified_date"])
+          expect(stream.source_defined_primary_key).to eq([["element_id"]])
+        end
+      end
+
+      describe "#create_semistructured_stream" do
+        it "creates a stream with the correct configuration" do
+          stream = connector.create_semistructured_stream
+
+          expect(stream.name).to eq("semistructured")
           expect(stream.action.to_s).to eq("fetch")
           expect(stream.json_schema).to eq(UnstructuredSourceConnector::UNSTRUCTURED_SCHEMA)
           expect(stream.supported_sync_modes).to eq(["incremental"])
