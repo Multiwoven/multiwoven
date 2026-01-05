@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.5"
+=======
+    VERSION = "0.34.8"
+>>>>>>> f144a73a (feat(CE): add semistructured model query type (#1463))
 
     ENABLED_SOURCES = %w[
       Snowflake
