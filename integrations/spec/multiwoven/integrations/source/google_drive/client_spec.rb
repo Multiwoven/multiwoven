@@ -3,10 +3,14 @@
 RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   let(:client) { described_class.new }
   let(:fields) { "files(id, name, parents, mimeType), nextPageToken" }
+<<<<<<< HEAD
   let(:error_instance) { StandardError.new("Google Drive source error") }
   let(:amazon_textract_exception) { Aws::Textract::Errors::UnsupportedDocumentException.new(nil, "Document format not supported.") }
 
   let(:connection_config) do
+=======
+  let(:credentials) do
+>>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
     {
       credentials_json: {
         type: "service_account",
@@ -127,6 +131,7 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   let(:expense_file) { Google::Apis::DriveV3::File.new(id: "1", name: "expense_file.pdf") }
   let(:specified_folder) { Google::Apis::DriveV3::File.new(id: "2", name: "folder") }
 
+<<<<<<< HEAD
   before do
     client.instance_variable_set(:@options, connection_config[:options])
     allow(client).to receive(:create_connection).and_return(google_drive_service)
@@ -140,6 +145,21 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         allow(google_drive_service).to receive(:list_files)
           .with({ fields: fields, include_items_from_all_drives: true, supports_all_drives: true, page_size: 1, q: "mimeType != 'application/vnd.google-apps.folder'" })
           .and_return(Google::Apis::DriveV3::FileList.new(files: [expense_file]))
+=======
+  describe "#check_connection" do
+    before do
+      allow(Google::Apis::DriveV3::DriveService).to receive(:new).and_return(google_drive_service)
+      allow(Google::Auth::ServiceAccountCredentials).to receive(:make_creds).and_return(nil)
+      allow(google_drive_service).to receive(:authorization=).and_return(nil)
+      allow(google_drive_service).to receive(:list_files).and_return(file_list)
+    end
+    context "when checking structured data connection" do
+      it "throws a not implemented error" do
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("failed")
+        expect(result.message).to include("Connection failed: Structured data is not supported yet")
+>>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
       end
       it "returns a successful connection status" do
         message = client.check_connection(connection_config)

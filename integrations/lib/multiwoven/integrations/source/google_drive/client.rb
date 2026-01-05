@@ -11,8 +11,19 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
+<<<<<<< HEAD
         client = create_connection(connection_config)
         build_query(client)
+=======
+
+        if unstructured_data?(connection_config) || semistructured_data?(connection_config)
+          create_drive_connection(connection_config)
+          folder_name = connection_config[:folder_name]
+          build_query(folder_name)
+        else
+          create_connection(connection_config)
+        end
+>>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
         success_status
       rescue StandardError => e
         failure_status(e)
@@ -120,6 +131,7 @@ module Multiwoven::Integrations::Source
           }
         )
 
+<<<<<<< HEAD
         job_id = resp.job_id
         all_pages = []
         next_token = nil
@@ -140,6 +152,18 @@ module Multiwoven::Integrations::Source
           else
             sleep 2 # still IN_PROGRESS; wait briefly and try again
           end
+=======
+        case command
+        when LIST_FILES_CMD
+          list_files_in_folder(folder_name)
+        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
+          file_name = ::Regexp.last_match(1).strip
+          file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
+          download_file_to_local(file_name, sync_config.sync_id)
+        else
+          raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
+>>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
         end
         all_pages
       end
