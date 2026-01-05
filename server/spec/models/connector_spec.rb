@@ -73,9 +73,21 @@ RSpec.describe Connector, type: :model do
              connector_name: "snowflake",
              configuration: { user: "test", password: "password" }) # Adjust attributes as necessary
     end
+    let(:postgres_connector) do
+      create(:connector,
+             workspace:,
+             connector_type: :source,
+             connector_name: "Postgresql",
+             configuration: { schema: "public" })
+    end
     let(:client_double) { instance_double("SomeClient") }
+    let(:postgres_client_class) { class_double("Multiwoven::Integrations::Source::Postgresql::Client") }
+    let(:postgres_client_instance) { instance_double("Multiwoven::Integrations::Source::Postgresql::Client") }
     let(:db_connection) { instance_double("SomeDBConnection") }
+    let(:postgres_db_connection) { instance_double("SomeDBConnection") }
+    let(:postgres_result) { instance_double("PG::Result") }
     let(:query) { "SELECT * FROM users" }
+    let(:postgres_query) { "SELECT * FROM documents'" }
     let(:limited_query) { "#{query} LIMIT 50" }
     let(:query_result) { [{ name: "John Doe" }] }
 
@@ -115,6 +127,33 @@ RSpec.describe Connector, type: :model do
         expect(result).to eq(query_result)
       end
     end
+
+    context "when query is for Postgresql connector" do
+      before do
+        allow(postgres_connector).to receive(:connector_client).and_return(postgres_client_class)
+
+        allow(postgres_client_class).to receive(:new).and_return(postgres_client_instance)
+
+        allow(postgres_client_instance).to receive(:create_connection)
+          .with(postgres_connector.configuration.with_indifferent_access)
+          .and_return(postgres_db_connection)
+
+        allow(postgres_client_instance).to receive(:query)
+          .with(postgres_db_connection, "SET search_path TO \"public\", \"public\"; #{postgres_query} LIMIT 50")
+          .and_return(postgres_result)
+      end
+
+      it "appends a LIMIT clause and executes the query" do
+        expect(postgres_client_instance)
+          .to receive(:query)
+          .with(
+            postgres_db_connection,
+            "SET search_path TO \"public\", \"public\"; #{postgres_query} LIMIT 50"
+          ).and_return(postgres_result)
+        result = postgres_connector.execute_query(postgres_query)
+        expect(result).to eq(postgres_result)
+      end
+    end
   end
 
   describe "#execute_search" do
@@ -133,7 +172,17 @@ RSpec.describe Connector, type: :model do
       )
     end
 
+    let(:postgres_connector) do
+      create(:connector,
+             connector_type: "source",
+             connector_name: "Postgresql",
+             configuration: { schema: "public" })
+    end
+
     let(:client_instance) { Multiwoven::Integrations::Source::PineconeDB::Client.new }
+    let(:postgres_client) { Multiwoven::Integrations::Source::Postgresql::Client.new }
+    let(:postgres_connection) { instance_double("PG::Connection") }
+    let(:postgres_result) { instance_double("PG::Result") }
 
     let(:pinecone_client) { double("Pinecone::Client") }
     let(:pinecone_index) { double("Pinecone::Index") }
@@ -148,33 +197,78 @@ RSpec.describe Connector, type: :model do
       }.to_json)
     end
 
+    let(:postgres_response) do
+      double("PG::Response", body: {
+        records: [
+          {
+            name: "John Doe"
+          }
+        ]
+      }.to_json)
+    end
+
     let(:query_result) { { "score" => 0.95, "metadata" => { "name" => "John Doe" } } }
+    let(:postgres_query_result) { { "name" => "John Doe" } }
 
-    before do
-      allow(Multiwoven::Integrations::Source::PineconeDB::Client).to receive(:new) do
-        instance = Multiwoven::Integrations::Source::PineconeDB::Client.allocate
-        instance.instance_variable_set(:@index_name, "test")
-        instance.instance_variable_set(:@namespace, "test_vectors")
-        instance
-      end
-
-      allow_any_instance_of(Multiwoven::Integrations::Source::PineconeDB::Client)
-        .to receive(:create_connection)
-        .and_return(pinecone_client)
-
-      allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
-      allow(pinecone_index).to receive(:query).and_return(pinecone_response)
-
-      allow(connector).to receive(:connector_client)
-        .and_return(Multiwoven::Integrations::Source::PineconeDB::Client)
+    let(:multiwoven_message) do
+      Multiwoven::Integrations::Protocol::RecordMessage
+        .new(data: postgres_query_result, emitted_at: Time.zone.now.to_i)
+        .to_multiwoven_message
     end
 
     context "when vector and limit" do
+      before do
+        allow(Multiwoven::Integrations::Source::PineconeDB::Client).to receive(:new) do
+          instance = Multiwoven::Integrations::Source::PineconeDB::Client.allocate
+          instance.instance_variable_set(:@index_name, "test")
+          instance.instance_variable_set(:@namespace, "test_vectors")
+          instance
+        end
+
+        allow_any_instance_of(Multiwoven::Integrations::Source::PineconeDB::Client)
+          .to receive(:create_connection)
+          .and_return(pinecone_client)
+
+        allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
+        allow(pinecone_index).to receive(:query).and_return(pinecone_response)
+
+        allow(connector).to receive(:connector_client)
+          .and_return(Multiwoven::Integrations::Source::PineconeDB::Client)
+      end
+
       it "executes the vector search" do
         vector = [0.1, 0.2, 0.3]
         limit = 1
         result = connector.execute_search(vector, limit)
         expect(result[0].record.data).to eq(query_result)
+      end
+    end
+
+    context "when vector and limit for Postgresql connector" do
+      before do
+        allow(Multiwoven::Integrations::Source::Postgresql::Client).to receive(:new) do
+          instance = Multiwoven::Integrations::Source::Postgresql::Client.allocate
+          instance.instance_variable_set(:@schema, "public")
+          instance
+        end
+
+        allow_any_instance_of(Multiwoven::Integrations::Source::Postgresql::Client)
+          .to receive(:create_connection)
+          .and_return(postgres_connection)
+
+        allow(postgres_connection).to receive(:exec).and_yield(postgres_result)
+
+        allow(postgres_result).to receive(:map).and_yield(postgres_query_result).and_return([multiwoven_message])
+
+        allow(postgres_connector).to receive(:connector_client)
+          .and_return(Multiwoven::Integrations::Source::Postgresql::Client)
+      end
+
+      it "executes the vector search" do
+        vector = "SELECT * FROM documents ORDER BY embedding <#> '[0.1, 0.2, 0.3]'"
+        limit = 1
+        result = postgres_connector.execute_search(vector, limit)
+        expect(result[0].record.data).to eq(postgres_query_result)
       end
     end
   end
