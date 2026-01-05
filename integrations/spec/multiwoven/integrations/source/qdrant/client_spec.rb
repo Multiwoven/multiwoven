@@ -146,6 +146,105 @@ RSpec.describe Multiwoven::Integrations::Source::Qdrant::Client do
         expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
         expect(records.first.record.data).to eq(expected_data)
       end
+
+      it "includes filters in the request body when filters are provided" do
+        sync_config_json_with_filters = sync_config_json.merge(
+          filters: [
+            { "field" => "status", "value" => "active" },
+            { "field" => "category", "operator" => "neq", "value" => "archived" }
+          ]
+        )
+        sync_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(sync_config_json_with_filters.to_json)
+
+        stub_request(:post, "http://localhost:63333/collections/test_collection/points/search")
+          .with(
+            body: hash_including(
+              "vector" => [0.1, 0.2, 0.3],
+              "top" => 1,
+              "filter" => hash_including(
+                "must" => array_including(
+                  hash_including("key" => "status", "match" => hash_including("value" => "active"))
+                ),
+                "must_not" => array_including(
+                  hash_including("key" => "category", "match" => hash_including("value" => "archived"))
+                )
+              )
+            ),
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Api-Key" => connection_config[:api_key],
+              "Content-Type" => "application/json",
+              "Host" => "localhost:63333",
+              "User-Agent" => "Ruby"
+            }
+          )
+          .to_return(
+            status: 200,
+            body: {
+              result: [
+                {
+                  id: "1",
+                  payload: { name: "Example", status: "active" },
+                  score: 0.99,
+                  vector: [0.1, 0.2, 0.3]
+                }
+              ]
+            }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        allow(client).to receive(:create_connection) do
+          client.instance_variable_set(:@host, connection_config[:host])
+          client.instance_variable_set(:@api_key, connection_config[:api_key])
+          client.instance_variable_set(:@collection_name, connection_config[:collection_name])
+        end
+
+        records = client.search(sync_config)
+        expect(records).to be_an(Array)
+        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+      end
+
+      it "does not include filter in request body when filters are empty" do
+        sync_config_json_with_empty_filters = sync_config_json.merge(filters: [])
+        sync_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(sync_config_json_with_empty_filters.to_json)
+
+        stub_request(:post, "http://localhost:63333/collections/test_collection/points/search")
+          .with(
+            body: hash_excluding(:filter),
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Api-Key" => connection_config[:api_key],
+              "Content-Type" => "application/json",
+              "Host" => "localhost:63333",
+              "User-Agent" => "Ruby"
+            }
+          )
+          .to_return(
+            status: 200,
+            body: {
+              result: [
+                {
+                  id: "1",
+                  payload: { name: "Example" },
+                  score: 0.99,
+                  vector: [0.1, 0.2, 0.3]
+                }
+              ]
+            }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        allow(client).to receive(:create_connection) do
+          client.instance_variable_set(:@host, connection_config[:host])
+          client.instance_variable_set(:@api_key, connection_config[:api_key])
+          client.instance_variable_set(:@collection_name, connection_config[:collection_name])
+        end
+
+        records = client.search(sync_config)
+        expect(records).to be_an(Array)
+      end
     end
   end
 end

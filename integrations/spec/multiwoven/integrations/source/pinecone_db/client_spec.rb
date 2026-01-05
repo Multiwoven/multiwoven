@@ -113,6 +113,88 @@ RSpec.describe Multiwoven::Integrations::Source::PineconeDB::Client do
         expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
         expect(records.first.record.data).to eq(expected_data)
       end
+
+      it "includes filters in the query when filters are provided" do
+        sync_config_json_with_filters = sync_config_json.merge(
+          filters: [
+            { "field" => "status", "value" => "active" },
+            { "field" => "category", "operator" => "in", "value" => %w[tech science] }
+          ]
+        )
+        sync_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(sync_config_json_with_filters.to_json)
+
+        response_body = {
+          "matches" => [
+            {
+              "id" => "400",
+              "values" => [0.1, 0.2, 0.3],
+              "metadata" => { "source" => "test", "status" => "active", "category" => "tech" }
+            }
+          ]
+        }.to_json
+
+        mock_response = double("PineconeResponse", body: response_body)
+
+        allow(client).to receive(:create_connection).and_return(pinecone_client)
+        allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
+
+        expected_filter = {
+          "status" => "active",
+          "category" => { "$in" => %w[tech science] }
+        }
+
+        expect(pinecone_index).to receive(:query).with(
+          hash_including(
+            vector: [0.1, 0.2, 0.3],
+            namespace: "test_vectors",
+            top_k: 1,
+            include_values: true,
+            include_metadata: true,
+            filter: expected_filter
+          )
+        ).and_return(mock_response)
+
+        client.instance_variable_set(:@index_name, "test")
+        client.instance_variable_set(:@namespace, "test_vectors")
+        client.instance_variable_set(:@api_key, "test_key")
+        client.instance_variable_set(:@region, "us-east-1")
+
+        records = client.search(sync_config)
+        expect(records).to be_an(Array)
+        expect(records.first.record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
+      end
+
+      it "does not include filter in query when filters are empty" do
+        sync_config_json_with_empty_filters = sync_config_json.merge(filters: [])
+        sync_config = Multiwoven::Integrations::Protocol::VectorConfig.from_json(sync_config_json_with_empty_filters.to_json)
+
+        response_body = {
+          "matches" => [
+            {
+              "id" => "400",
+              "values" => [0.1, 0.2, 0.3],
+              "metadata" => { "source" => "test" }
+            }
+          ]
+        }.to_json
+
+        mock_response = double("PineconeResponse", body: response_body)
+
+        allow(client).to receive(:create_connection).and_return(pinecone_client)
+        allow(pinecone_client).to receive(:index).with("test").and_return(pinecone_index)
+
+        expect(pinecone_index).to receive(:query).with(
+          hash_excluding(:filter)
+        ).and_return(mock_response)
+
+        client.instance_variable_set(:@index_name, "test")
+        client.instance_variable_set(:@namespace, "test_vectors")
+        client.instance_variable_set(:@api_key, "test_key")
+        client.instance_variable_set(:@region, "us-east-1")
+
+        records = client.search(sync_config)
+        expect(records).to be_an(Array)
+      end
     end
 
     context "when the search operation fails" do
