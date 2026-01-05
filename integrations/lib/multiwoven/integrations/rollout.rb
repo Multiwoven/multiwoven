@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.5"
+=======
+    VERSION = "0.34.11"
+>>>>>>> f42cf8e0 (fix(CE): next_page_token not cleared, messing with call to get file (#1478))
 
     ENABLED_SOURCES = %w[
       Snowflake

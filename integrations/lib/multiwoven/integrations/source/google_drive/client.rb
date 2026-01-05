@@ -120,6 +120,7 @@ module Multiwoven::Integrations::Source
           }
         )
 
+<<<<<<< HEAD
         job_id = resp.job_id
         all_pages = []
         next_token = nil
@@ -140,6 +141,18 @@ module Multiwoven::Integrations::Source
           else
             sleep 2 # still IN_PROGRESS; wait briefly and try again
           end
+=======
+        case command
+        when LIST_FILES_CMD
+          list_files_in_folder(folder_name)
+        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
+          file_name = ::Regexp.last_match(1).strip
+          file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
+          download_file_to_local(folder_name, file_name, sync_config.sync_id)
+        else
+          raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
+>>>>>>> f42cf8e0 (fix(CE): next_page_token not cleared, messing with call to get file (#1478))
         end
         all_pages
       end
@@ -156,6 +169,7 @@ module Multiwoven::Integrations::Source
           parents_query = "'#{parent_id}' in parents"
         end
 
+<<<<<<< HEAD
         if @options[:subfolders]
           subfolders_query = MIMETYPE_GOOGLE_DRIVE_FOLDER
           subfolders_query += "and #{parents_query}" if parents_query
@@ -167,25 +181,73 @@ module Multiwoven::Integrations::Source
         query += " and mimeType = '#{@options[:file_type]}'" if @options[:file_type]
         query += " and #{parents_query}" if parents_query
         query
+=======
+      def download_file_to_local(folder_name, file_name, sync_id)
+        query = build_query(folder_name)
+        download_path = ENV["FILE_DOWNLOAD_PATH"]
+        file = if download_path
+                 File.join(download_path, "syncs", sync_id, File.basename(file_name))
+               else
+                 Tempfile.new(["google_drive_file_syncs_#{sync_id}", File.extname(file_name)]).path
+               end
+
+        # Escape single quotes to prevent query injection
+        escaped_name = file_name.gsub("'", "\\\\'")
+        query = "#{query} and name = '#{escaped_name}'"
+
+        records = get_files(@google_drive, query, 1, 0)
+        raise StandardError, "File not found." if records.empty?
+
+        @google_drive.get_file(records.first.id, download_dest: file)
+
+        [RecordMessage.new(
+          data: {
+            element_id: records.first.id,
+            local_path: file,
+            file_name: file_name,
+            file_path: file_name,
+            size: records.first.size,
+            file_type: records.first.file_extension,
+            created_date: records.first.created_time,
+            modified_date: records.first.modified_time,
+            text: ""
+          },
+          emitted_at: Time.now.to_i
+        ).to_multiwoven_message]
+      rescue StandardError => e
+        raise StandardError, "Failed to download file #{file_name}: #{e.message}"
       end
 
-      def get_files(client, query, limit, offset)
+      def build_query(folder_name)
+        raise ArgumentError, "Folder name is required" if folder_name.blank?
+
+        # Escape single quotes to prevent query injection
+        escaped_folder = folder_name.gsub("'", "\\\\'")
+        folder_query = "#{MIMETYPE_GOOGLE_DRIVE_FOLDER} and (name = '#{escaped_folder}')"
+        response = @google_drive.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: folder_query, fields: FIELDS)
+        raise ArgumentError, "Specified folder does not exist" if response.files.empty?
+
+        parent_id = response.files.first.id
+        "'#{parent_id}' in parents and mimeType != 'application/vnd.google-apps.folder'"
+>>>>>>> f42cf8e0 (fix(CE): next_page_token not cleared, messing with call to get file (#1478))
+      end
+
+      def get_files(client, query, limit, _offset)
+        next_page_token = nil
         total_fetched = 0
         result = []
 
-        return result if offset.positive? && !@next_page_token
-
         while total_fetched < limit
           batch_limit = [MAX_PER_PAGE, limit - total_fetched].min
-          response = if @next_page_token
-                       client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit, page_token: @next_page_token)
+          response = if next_page_token
+                       client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit, page_token: next_page_token)
                      else
                        client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit)
                      end
           break if response.files.empty?
 
           result.push(*response.files)
-          @next_page_token = response.next_page_token
+          next_page_token = response.next_page_token
           break unless response.next_page_token
 
           total_fetched += response.files.size
