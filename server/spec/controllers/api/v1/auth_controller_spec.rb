@@ -77,6 +77,9 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   describe "POST #login" do
+    let(:password) { "Password@123" }
+    let(:confirmed_user) { create(:user, password:, password_confirmation: password, confirmed_at: Time.current) }
+
     context "with valid parameters" do
       it "logs in a user and returns a token" do
         user.confirm
@@ -84,6 +87,75 @@ RSpec.describe Api::V1::AuthController, type: :controller do
 
         expect(response).to have_http_status(:ok)
         expect(response_data["attributes"]["token"]).not_to be_nil
+      end
+    end
+
+    context "with X-App-Context header" do
+      context "when X-App-Context is 'embed'" do
+        before do
+          request.headers["X-App-Context"] = "embed"
+        end
+
+        it "logs in a user and returns a token with app_context" do
+          post :login, params: { email: confirmed_user.email, password: }
+
+          expect(response).to have_http_status(:ok)
+          token = response_data["attributes"]["token"]
+          expect(token).not_to be_nil
+
+          # Verify token includes app_context
+          secret = Devise::JWT.config.secret
+          decoded = JWT.decode(token, secret, true, algorithm: "HS256")
+          expect(decoded[0]["app_context"]).to eq("embed")
+        end
+
+        it "preserves standard JWT claims in the token" do
+          post :login, params: { email: confirmed_user.email, password: }
+
+          token = response_data["attributes"]["token"]
+          secret = Devise::JWT.config.secret
+          decoded = JWT.decode(token, secret, true, algorithm: "HS256")
+          payload = decoded[0]
+
+          expect(payload["sub"]).to be_present
+          expect(payload["scp"]).to be_present
+          expect(payload["jti"]).to be_present
+          expect(payload["exp"]).to be_present
+        end
+      end
+
+      context "when X-App-Context is not provided" do
+        it "logs in a user and returns a token without app_context" do
+          post :login, params: { email: confirmed_user.email, password: }
+
+          expect(response).to have_http_status(:ok)
+          token = response_data["attributes"]["token"]
+          expect(token).not_to be_nil
+
+          # Verify token does not include app_context
+          secret = Devise::JWT.config.secret
+          decoded = JWT.decode(token, secret, true, algorithm: "HS256")
+          expect(decoded[0]["app_context"]).to be_nil
+        end
+      end
+
+      context "when X-App-Context is empty string" do
+        before do
+          request.headers["X-App-Context"] = ""
+        end
+
+        it "logs in a user and returns a token without app_context" do
+          post :login, params: { email: confirmed_user.email, password: }
+
+          expect(response).to have_http_status(:ok)
+          token = response_data["attributes"]["token"]
+          expect(token).not_to be_nil
+
+          # Verify token does not include app_context
+          secret = Devise::JWT.config.secret
+          decoded = JWT.decode(token, secret, true, algorithm: "HS256")
+          expect(decoded[0]["app_context"]).to be_nil
+        end
       end
     end
 
