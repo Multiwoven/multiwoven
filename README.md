@@ -8,7 +8,6 @@
 Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and <b>RudderStack</b>. It lets you easily sync data from your warehouse to any business tool, unlocking the full potential of your data.
 </p>
 
-
 <p align="center">
 <a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=for-the-badge" alt="GitHub stars"></a>
 <a href="https://github.com/Multiwoven/multiwoven/releases">
@@ -50,7 +49,7 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 Multiwoven simplifies self-hosting a secure, scalable Reverse ETL platform on your cloud infrastructure like AWS, Azure, or GCP. With one-click deployment and customizable connectors, you can easily sync data from your warehouse to business tools.
 
-⭐ *Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.*
+⭐ _Consider giving us a star! Your support helps us continue innovating and adding new, exciting features._
 
 ### Connect to sources
 
@@ -69,7 +68,6 @@ Create models to transform and prepare your data for syncing.
 Sync your data with destinations like Salesforce, HubSpot, Slack, and more.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1716464797/AIS/Destinations_ebpt0n.png "Example Title")
-
 
 ## Table of Contents
 
@@ -148,26 +146,26 @@ UI can be accessed at the PORT 8000 :
 http://localhost:8000
 ```
 
-For more details, check out the local [deployment guide](https://docs.squared.ai/open-source/guides/setup/docker-compose-dev) in the documentation.
+For more details, check out the local [deployment guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose-dev) in the documentation.
 
 ### Self-hosted Options
 
 Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Refer to the deployment guides below to deploy Multiwoven on your preferred cloud provider.
 
-| Provider                          | Documentation                                                               |
-| :-------------------------------- | :-------------------------------------------------------------------------- |
+| Provider                          | Documentation                                                                            |
+| :-------------------------------- | :--------------------------------------------------------------------------------------- |
 | **Docker**                        | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose) |
 | **Helm Charts**                   | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/helm)           |
 | **AWS EC2**                       | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/ec2)            |
-| **AWS ECS**                       | Coming soon.                                                       |
-| **AWS EKS (Kubernetes)**          | Coming soon.                                                      |
-| **Azure VMs**                     | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/avm)                                                       |
+| **AWS ECS**                       | Coming soon.                                                                             |
+| **AWS EKS (Kubernetes)**          | Coming soon.                                                                             |
+| **Azure VMs**                     | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/avm)            |
 | **Azure AKS (Kubernetes)**        | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/aks)            |
-| **Google Cloud GKE (Kubernetes)** | Coming soon.                                                             |
+| **Google Cloud GKE (Kubernetes)** | Coming soon.                                                                             |
 | **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/gce)            |
-| **Digital Ocean Droplets**        | Coming soon.                                                        |
-| **Digital Ocean Kubernetes**      | Coming soon.                                                             |
-| **OpenShift**                     | Coming soon.                                                             |
+| **Digital Ocean Droplets**        | Coming soon.                                                                             |
+| **Digital Ocean Kubernetes**      | Coming soon.                                                                             |
+| **OpenShift**                     | Coming soon.                                                                             |
 
 ## Connectors
 
