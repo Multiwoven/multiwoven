@@ -1,5 +1,1 @@
-## [0.99.0] - 2026-01-27
-
-### ⚙️ Miscellaneous Tasks
-
-- *(CE)* Update links in README (#931)
+## [0.100.0] - 2026-02-03
