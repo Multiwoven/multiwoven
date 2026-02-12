@@ -113,6 +113,20 @@
           "parquet"
         ],
         "order": 8
+      },
+      "endpoint": {
+        "description": "Custom S3-compatible endpoint URL (e.g. http://localhost:9000 for MinIO). Leave empty for AWS S3.",
+        "type": "string",
+        "title": "Custom Endpoint",
+        "examples": ["http://localhost:9000"],
+        "order": 10
+      },
+      "path_style": {
+        "description": "Use path-style bucket URLs. Required for MinIO and some S3-compatible stores when using a custom endpoint.",
+        "type": "boolean",
+        "title": "Path Style",
+        "default": false,
+        "order": 11
       }
     }
   }

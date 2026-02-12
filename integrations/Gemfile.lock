@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.34.15)
+>>>>>>> 9c8bd134b (chore(CE): Enhance S3 Connector to support custom endpoints for MinIO (#1618))
       MailchimpMarketing
       activesupport
       async-websocket
