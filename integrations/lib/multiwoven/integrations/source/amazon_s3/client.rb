@@ -9,7 +9,6 @@ module Multiwoven::Integrations::Source
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         @session_name = "connection-#{connection_config[:region]}-#{connection_config[:bucket]}"
-
         if unstructured_data?(connection_config)
           create_s3_connection(connection_config)
           @s3_resource.bucket(connection_config[:bucket]).objects.limit(1).first
@@ -90,11 +89,18 @@ module Multiwoven::Integrations::Source
         # Get authentication credentials
         auth_data = get_auth_data(connection_config)
 
-        # Create S3 resource for easier operations
-        @s3_resource = Aws::S3::Resource.new(
+        # Build client options; use custom endpoint when provided (e.g. MinIO)
+        s3_options = {
           region: connection_config[:region],
           credentials: auth_data
-        )
+        }
+        endpoint = connection_config[:endpoint].to_s.strip
+        if endpoint.present?
+          s3_options[:endpoint] = endpoint
+          s3_options[:force_path_style] = connection_config[:path_style] == true
+        end
+
+        @s3_resource = Aws::S3::Resource.new(**s3_options)
       end
 
       def create_connection(connection_config)
@@ -104,17 +110,30 @@ module Multiwoven::Integrations::Source
         conn = DuckDB::Database.open.connect
         # Install and/or Load the HTTPFS extension
         conn.execute(INSTALL_HTTPFS_QUERY)
-        # Set up S3 configuration
-        secret_query = "
-              CREATE SECRET amazons3_source (
-              TYPE S3,
-              KEY_ID '#{auth_data.credentials.access_key_id}',
-              SECRET '#{auth_data.credentials.secret_access_key}',
-              REGION '#{connection_config[:region]}',
-              SESSION_TOKEN '#{auth_data.credentials.session_token}'
-          );
-        "
+        # Set up S3 configuration (optional custom endpoint for MinIO / S3-compatible stores)
+        secret_parts = [
+          "TYPE S3",
+          "KEY_ID '#{auth_data.credentials.access_key_id.gsub("'", "''")}'",
+          "SECRET '#{auth_data.credentials.secret_access_key.gsub("'", "''")}'",
+          "REGION '#{connection_config[:region]}'"
+        ]
+        secret_parts << "SESSION_TOKEN '#{auth_data.credentials.session_token.gsub("'", "''")}'" if auth_data.credentials.session_token.present?
+        endpoint = connection_config[:endpoint].to_s.strip
+        if endpoint.present?
+          uri = URI.parse(endpoint)
+
+          # DuckDB expects host:port only
+          duckdb_endpoint = uri.host
+          duckdb_endpoint += ":#{uri.port}" if uri.port
+
+          secret_parts << "ENDPOINT '#{duckdb_endpoint}'"
+
+          # Disable SSL if http
+          secret_parts << "USE_SSL false" if uri.scheme == "http"
+        end
+        secret_query = "CREATE SECRET amazons3_source (#{secret_parts.join(", ")});"
         get_results(conn, secret_query)
+        conn.execute("SET s3_url_style = 'path';") if connection_config[:path_style].present?
         conn
       end
 

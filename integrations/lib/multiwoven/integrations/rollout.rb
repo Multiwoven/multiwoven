@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.6"
+=======
+    VERSION = "0.34.15"
+>>>>>>> 9c8bd134b (chore(CE): Enhance S3 Connector to support custom endpoints for MinIO (#1618))
 
     ENABLED_SOURCES = %w[
       Snowflake
