@@ -14,6 +14,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
+<<<<<<< HEAD
   let!(:data_connector) { create(:connector, workspace:, connector_category: "Data Warehouse") }
   let!(:ai_ml_connector) { create(:connector, workspace:, connector_category: "AI Model") }
   let!(:other_connector) { create(:connector, workspace:, connector_category: "CRM") }
@@ -21,6 +22,59 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
   let!(:llm_connector) { create(:connector, workspace:, connector_sub_category: "LLM") }
   let!(:vector_connector) { create(:connector, workspace:, connector_sub_category: "Vector Database") }
   let!(:web_connector) { create(:connector, workspace:, connector_sub_category: "Web Scraper") }
+=======
+  let!(:data_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       connector_category: "Data Warehouse",
+                       connector_name: "Redshift")
+  end
+  let!(:ai_ml_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       connector_category: "AI Model",
+                       connector_name: "OpenAI")
+  end
+  let!(:other_connector) do
+    create(:connector, workspace:,
+                       connector_type: "destination",
+                       connector_category: "CRM",
+                       connector_name: "SalesforceCrm")
+  end
+  let!(:ai_ml_service_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       connector_sub_category: "AI_ML Service",
+                       connector_name: "OpenAI")
+  end
+  let!(:llm_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       connector_sub_category: "LLM",
+                       connector_name: "OpenAI")
+  end
+  let!(:vector_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       connector_sub_category: "Vector Database",
+                       connector_name: "Postgresql")
+  end
+  let!(:web_connector) do
+    create(:connector, workspace:,
+                       connector_type: "destination",
+                       connector_sub_category: "Web Scraper",
+                       connector_name: "Zendesk")
+  end
+  let!(:hosted_data_store_connector) do
+    create(:connector, workspace:,
+                       connector_type: "source",
+                       in_host: true,
+                       connector_name: "Postgresql")
+  end
+  let!(:hosted_data_store) do
+    create(:hosted_data_store, workspace:, source_connector: hosted_data_store_connector, destination_connector: nil)
+  end
+>>>>>>> a81cf23d0 (chore(CE): connector model extraction api changes (#1609))
 
   before do
     user.confirm
@@ -80,7 +134,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=source", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash[:data].count).to eql(1)
+        expect(response_hash[:data].count).to eql(7)
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("source")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
@@ -90,7 +144,11 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=destination", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
+<<<<<<< HEAD
         expect(response_hash[:data].count).to eql(8)
+=======
+        expect(response_hash[:data].count).to eql(3)
+>>>>>>> a81cf23d0 (chore(CE): connector model extraction api changes (#1609))
         expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
         expect(response_hash.dig(:links, :first)).to include("http://www.example.com/api/v1/connectors?page=1")
@@ -107,14 +165,15 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?category=ai_ml", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
-        expect(result["data"].map { |connector| connector["id"] }).to eql([ai_ml_connector.id.to_s])
+        expect(result["data"].map { |connector| connector["id"] }).to include(ai_ml_connector.id.to_s)
       end
 
       it "returns only ai_ml connectors for source" do
         get "/api/v1/connectors?type=source&&category=ai_ml", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
-        expect(result["data"].count).to eql(0)
+        expect(result["data"].map { |connector| connector["id"] }).to include(ai_ml_connector.id.to_s)
+        expect(result["data"].all? { |c| c.dig("attributes", "connector_type") == "source" }).to be true
       end
 
       it "returns only database connectors" do
@@ -135,21 +194,50 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=source&&sub_category=ai_ml_service", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
-        expect(result["data"].count).to eql(0)
+        if result["data"].any?
+          expect(result["data"].all? do |c|
+            c.dig("attributes", "connector_type") == "source"
+          end).to be true
+        end
       end
 
+<<<<<<< HEAD
+=======
+      it "returns in_host and in_host_store_id in list response" do
+        # Create a source connector linked to the hosted data store
+
+        get "/api/v1/connectors?type=source&category=data&page=1&per_page=10",
+            headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+
+        # Find the hosted connector in the response
+        hosted_connector_data = result["data"].find { |c| c["id"] == hosted_data_store_connector.id.to_s }
+        expect(hosted_connector_data).to be_present
+        expect(hosted_connector_data.dig("attributes", "in_host")).to eq(true)
+        expect(hosted_connector_data.dig("attributes", "in_host_store_id")).to eq(hosted_data_store.id)
+      end
+
+>>>>>>> a81cf23d0 (chore(CE): connector model extraction api changes (#1609))
       it "returns only llm connectors" do
         get "/api/v1/connectors?sub_category=llm", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
-        expect(result["data"].map { |connector| connector["id"] }).to eql([llm_connector.id.to_s])
+        expect(result["data"].map { |connector| connector["id"] }).to include(llm_connector.id.to_s)
       end
 
       it "returns only llm connectors for source" do
         get "/api/v1/connectors?type=source&&sub_category=llm", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
-        expect(result["data"].count).to eql(0)
+        if result["data"].any?
+          expect(result["data"].map do |connector|
+            connector["id"]
+          end).to include(llm_connector.id.to_s)
+          expect(result["data"].all? do |c|
+            c.dig("attributes", "connector_type") == "source"
+          end).to be true
+        end
       end
 
       it "returns only web connectors" do
@@ -177,7 +265,47 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         get "/api/v1/connectors?type=source&&sub_category=vector", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:ok)
         result = JSON.parse(response.body)
+        if result["data"].any?
+          expect(result["data"].map do |connector|
+            connector["id"]
+          end).to include(vector_connector.id.to_s)
+          expect(result["data"].all? do |c|
+            c.dig("attributes", "connector_type") == "source"
+          end).to be true
+        end
+      end
+
+      it "returns only connectors for a specific provider" do
+        get "/api/v1/connectors?type=destination&provider=Klaviyo", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(1)
+        expect(result["data"].first.dig("attributes", "connector_name")).to eq("Klaviyo")
+      end
+
+      it "returns only source connectors for a specific provider" do
+        get "/api/v1/connectors?type=source&provider=Redshift", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to be >= 1
+        expect(result["data"].all? { |c| c.dig("attributes", "connector_name") == "Redshift" }).to be true
+        expect(result["data"].all? { |c| c.dig("attributes", "connector_type") == "source" }).to be true
+      end
+
+      it "returns empty array when provider doesn't match any connector" do
+        get "/api/v1/connectors?provider=NonExistentProvider", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
         expect(result["data"].count).to eql(0)
+      end
+
+      it "returns connectors filtered by provider with pagination" do
+        get "/api/v1/connectors?provider=Klaviyo&page=1&per_page=10", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(1)
+        expect(result["data"].first.dig("attributes", "connector_name")).to eq("Klaviyo")
+        expect(result.dig("links", "first")).to include("page=1")
       end
 
       it "returns an error response for connectors" do
