@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.34.16)
+>>>>>>> 238352aa8 (chore(CE): Remove schemaless catalog from Amazon S3 Connector (#1626))
       MailchimpMarketing
       activesupport
       async-websocket
