@@ -13,9 +13,12 @@ module Multiwoven::Integrations::Destination
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
       end
 
-      def discover(_connection_config = nil)
-        catalog_json = read_json(CATALOG_SPEC_PATH)
-        catalog = build_catalog(catalog_json)
+      def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        conn = create_connection(connection_config)
+        records = discover_columns_from_s3(conn, connection_config)
+        grouped = group_by_table(records, connection_config[:file_name])
+        catalog = Catalog.new(streams: create_streams(grouped))
         catalog.to_multiwoven_message
       rescue StandardError => e
         handle_exception(e, {
@@ -86,6 +89,60 @@ module Multiwoven::Integrations::Destination
       def generate_local_file_name(connection_config)
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
         "#{connection_config[:file_name]}_#{timestamp}.#{connection_config[:format_type]}"
+      end
+
+      def build_discover_prefix(connection_config)
+        file_path = connection_config[:file_path].to_s.strip
+        file_path = "#{file_path}/" if file_path.present? && file_path[-1] != "/"
+        format_type = connection_config[:format_type].to_s.downcase
+        "#{file_path}#{connection_config[:file_name]}.#{format_type}"
+      end
+
+      def discover_columns_from_s3(s3_client, connection_config)
+        bucket = connection_config[:bucket_name]
+        prefix = build_discover_prefix(connection_config)
+        format_type = connection_config[:format_type].to_s.downcase
+
+        response = s3_client.list_objects_v2(bucket: bucket, prefix: prefix, max_keys: 100)
+        raise StandardError, "No files found in the bucket" if response.contents.empty?
+
+        key = response.contents&.find { |obj| obj.key.end_with?(".#{format_type}") }&.key
+        raise StandardError, "No files found in the bucket" if key.nil?
+
+        read_csv_headers(s3_client, bucket, key)
+      end
+
+      def read_csv_headers(s3_client, bucket, key)
+        obj = s3_client.get_object(bucket: bucket, key: key)
+        first_line = obj.body.read.to_s.lines.first
+        return [] if first_line.nil? || first_line.strip.empty?
+
+        CSV.parse_line(first_line.strip)
+      end
+
+      def group_by_table(records, file_name)
+        result = {}
+        records.each do |entry|
+          table_name = file_name
+          column_data = {
+            column_name: entry,
+            type: "string",
+            optional: true
+          }
+          result[table_name] ||= { tablename: table_name, columns: [] }
+          result[table_name][:columns] << column_data
+        end
+        result
+      end
+
+      def create_streams(tables)
+        tables.values.map do |r|
+          Multiwoven::Integrations::Protocol::Stream.new(
+            name: r[:tablename],
+            action: StreamAction["create"],
+            json_schema: convert_to_json_schema(r[:columns])
+          )
+        end
       end
     end
   end
