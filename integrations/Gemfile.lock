@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.34.17)
+>>>>>>> 3fad945c4 (chore(CE): add URL_STYLE 'path' to secret_part in S3 (#1630))
       MailchimpMarketing
       activesupport
       async-websocket
