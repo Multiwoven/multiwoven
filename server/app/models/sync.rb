@@ -54,6 +54,7 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
   after_save :schedule_sync, if: :schedule_sync?
   after_update :terminate_sync, if: :terminate_sync?
   after_discard :perform_post_discard_sync
+  after_create_commit :enable_table
 
   default_scope -> { kept.order(updated_at: :desc) }
 
@@ -170,6 +171,7 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def perform_post_discard_sync
     sync_runs.discard_all
     terminate_sync
+    disable_data_store_table
   rescue StandardError => e
     Utils::ExceptionReporter.report(e, { sync_id: id })
     Rails.logger.error "Failed to Run post delete sync. Error: #{e.message}"
@@ -185,5 +187,57 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
       errors.add(:stream_name,
                  "Add a valid stream_name associated with destination connector")
     end
+  end
+
+  def update_data_store_table_status(status)
+    return unless source.in_host? || destination.in_host?
+
+    hosted_ds = find_hosted_ds
+    return unless hosted_ds
+
+    table_names = resolve_table_names
+
+    table_names.each do |table_name|
+      HostedDataStoreTable.update_status!(
+        hosted_data_store: hosted_ds,
+        table_name:,
+        status:
+      )
+    end
+  end
+
+  def find_hosted_ds
+    if source.in_host?
+      workspace.hosted_data_stores.find_by(source_connector_id: source.id)
+    elsif destination.in_host?
+      workspace.hosted_data_stores.find_by(destination_connector_id: destination.id)
+    end
+  end
+
+  def resolve_table_names
+    return [stream_name] if destination.in_host?
+
+    return unless source.in_host?
+
+    query = model.query
+
+    cleaned_query = query.gsub(/\s+/, " ")
+
+    # Regex to capture table names with optional schema
+    # Matches FROM schema.table, FROM table, JOIN schema.table, JOIN table
+    table_matches = cleaned_query.scan(/\b(?:FROM|JOIN)\s+((?:\w+\.)?\w+)/i)
+
+    raise "Unable to parse table names from query: #{query}" if table_matches.empty?
+
+    # Flatten matches (scan returns array of arrays) and remove duplicates
+    table_matches.flatten.map { |t| t.split(".").last }.uniq
+  end
+
+  def disable_data_store_table
+    update_data_store_table_status(:disabled)
+  end
+
+  def enable_table
+    update_data_store_table_status(:enabled)
   end
 end
