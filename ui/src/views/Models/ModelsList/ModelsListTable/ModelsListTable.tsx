@@ -8,13 +8,18 @@ const ModelsListTable: ColumnDef<GetAllModelsResponse>[] = [
   {
     accessorKey: 'attributes.name',
     header: 'Name',
-    cell: (cell) => {
-      return (
-        <EntityItem
-          icon={cell.row.original.attributes.connector.icon}
-          name={cell.row.original.attributes.name}
-        />
-      );
+    cell: ({ cell }) => (
+      <Text size='sm' fontWeight='semibold'>
+        {cell.getValue() as string}
+      </Text>
+    ),
+  },
+  {
+    accessorKey: 'attributes.connector',
+    header: 'Source',
+    cell: ({ cell }) => {
+      const connector = cell.getValue() as GetAllModelsResponse['attributes']['connector'];
+      return <EntityItem icon={connector.icon} name={connector.name} />;
     },
   },
   {
