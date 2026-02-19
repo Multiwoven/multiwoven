@@ -1,7 +1,8 @@
 import { Box, Stack, TabList, Tab, Text, TabIndicator, Tabs, Textarea } from '@chakra-ui/react';
 
-import { useState, Dispatch, SetStateAction } from 'react';
+import { useState } from 'react';
 import Columns from './Columns';
+<<<<<<< HEAD:ui/src/views/Activate/Syncs/SyncForm/ConfigureSyncs/TemplateMapping/TemplateOptions.tsx
 import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
 
 type TemplateOptionsProps = {
@@ -18,6 +19,10 @@ export enum OPTION_TYPE {
   VARIABLE = 'variable',
   FILTER = 'filter',
 }
+=======
+import TabItem from '@/components/TabItem';
+import { TemplateMappingOptionsProps, OPTION_TYPE } from './types';
+>>>>>>> 46d05ae5 (refactor(CE): template options generic component):ui/src/components/TemplateMappingOptions/TemplateMappingOptions.tsx
 
 const TabName = ({ title, handleActiveTab }: { title: string; handleActiveTab: () => void }) => (
   <Tab
@@ -54,14 +59,13 @@ const replaceLastOccurrence = (inputText: string, searchText: string, replacemen
   }
 };
 
-const TemplateOptions = ({
+const TemplateMappingOptions = ({
   columnOptions,
   filterOptions,
   variableOptions,
-  catalogMapping,
   selectedTemplate,
   setSelectedTemplate,
-}: TemplateOptionsProps): JSX.Element => {
+}: TemplateMappingOptionsProps): JSX.Element => {
   const [activeTab, setActiveTab] = useState(OPTION_TYPE.COLUMNS);
 
   // State to hold selected columns and filters
@@ -186,7 +190,6 @@ const TemplateOptions = ({
           {activeTab === OPTION_TYPE.VARIABLE && (
             <Columns
               columnOptions={variableOptions}
-              catalogMapping={catalogMapping}
               showDescription
               onSelect={(value: string) => setSelectedTemplate(value)}
               height='125px'
@@ -198,7 +201,6 @@ const TemplateOptions = ({
             <Columns
               columnOptions={filterOptions}
               showDescription
-              catalogMapping={catalogMapping}
               onSelect={(value: string) => handleSelection(value, OPTION_TYPE.FILTER)}
               height='125px'
               fieldType='model'
@@ -211,4 +213,4 @@ const TemplateOptions = ({
   );
 };
 
-export default TemplateOptions;
+export default TemplateMappingOptions;

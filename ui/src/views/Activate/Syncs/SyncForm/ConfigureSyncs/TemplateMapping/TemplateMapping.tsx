@@ -12,11 +12,11 @@ import {
   Input,
   Button,
 } from '@chakra-ui/react';
-import Columns from './Columns';
+import Columns from '../../../../../../components/TemplateMappingOptions/Columns';
 import { useState } from 'react';
 import { getSyncsConfiguration } from '@/services/syncs';
 import StaticOptions from './StaticOptions';
-import TemplateOptions from './TemplateOptions';
+import TemplateMappingOptions from '@/components/TemplateMappingOptions';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
 
@@ -97,11 +97,23 @@ const TemplateMapping = ({
 
   const templateFilterOptions = Object.keys(
     data?.data?.configurations?.catalog_mapping_types?.template?.filter || {},
-  );
+  ).map((filter) => ({
+    name: filter,
+    value: filter,
+    description:
+      data?.data?.configurations?.catalog_mapping_types?.template?.filter?.[filter]?.description ||
+      '',
+  }));
 
   const templateVariableOptions = Object.keys(
     data?.data?.configurations?.catalog_mapping_types?.template?.variable || {},
-  );
+  ).map((variable) => ({
+    name: variable,
+    value: variable,
+    description:
+      data?.data?.configurations?.catalog_mapping_types?.template?.variable?.[variable]
+        ?.description || '',
+  }));
 
   const applyConfigs = () => {
     if (activeTab === OPTION_TYPE.TEMPLATE) {
@@ -112,6 +124,12 @@ const TemplateMapping = ({
     }
     setIsPopOverOpen(false);
   };
+
+  const updatedColumnOptions = columnOptions.map((column) => ({
+    name: column,
+    value: column,
+    description: '',
+  }));
 
   return (
     <Popover
@@ -187,7 +205,7 @@ const TemplateMapping = ({
             <Box backgroundColor='gray.100' height='100%'>
               {activeTab === OPTION_TYPE.STANDARD && (
                 <Columns
-                  columnOptions={columnOptions}
+                  columnOptions={updatedColumnOptions}
                   showFilter
                   onSelect={(value) => {
                     handleUpdateConfig(mappingId, fieldType, value, activeTab);
@@ -204,8 +222,8 @@ const TemplateMapping = ({
                 />
               )}
               {activeTab === OPTION_TYPE.TEMPLATE && (
-                <TemplateOptions
-                  columnOptions={columnOptions}
+                <TemplateMappingOptions
+                  columnOptions={updatedColumnOptions}
                   filterOptions={templateFilterOptions}
                   variableOptions={templateVariableOptions}
                   catalogMapping={data}
