@@ -25,14 +25,41 @@ RSpec.describe Utils::PayloadGenerator::DynamicSql do
                      query: "SELECT * FROM public.actor WHERE name=':name' AND age=:age AND gender=':gender'")
     end
 
+    let!(:dynamic_sql_model_not_quoted) do
+      create(:model, query_type: :dynamic_sql, connector: dynamic_sql_connector,
+                     configuration: {
+                       json_schema: {
+                         input: [{ "name" => "name",
+                                   "type" => "string", "value" => "", "value_type" => "dynamic" },
+                                 { "name" => "age",
+                                   "type" => "number", "value" => "22", "value_type" => "static" },
+                                 { "name" => "gender",
+                                   "type" => "string", "value" => "", "value_type" => "dynamic" }],
+                         output: []
+                       },
+                       harvesters: []
+                     },
+                     query: "SELECT * FROM public.actor WHERE name=:name AND age=:age AND gender=:gender")
+    end
+
     let(:harvesters) do
       { "name" => "first_name", "gender" => "female" }
+    end
+
+    let(:harvesters_not_quoted) do
+      { "name" => "last_name", "gender" => "male" }
     end
 
     context "when correct input and harvest values are provided" do
       it "replaces dynamic query values and return raw query" do
         expected_query = "SELECT * FROM public.actor WHERE name='first_name' AND age=22 AND gender='female'"
         generated_query = described_class.generate_query(dynamic_sql_model, harvesters)
+        expect(generated_query).to eq(expected_query)
+      end
+
+      it "replaces dynamic query values and return raw query" do
+        expected_query = "SELECT * FROM public.actor WHERE name='last_name' AND age=22 AND gender='male'"
+        generated_query = described_class.generate_query(dynamic_sql_model_not_quoted, harvesters_not_quoted)
         expect(generated_query).to eq(expected_query)
       end
     end
