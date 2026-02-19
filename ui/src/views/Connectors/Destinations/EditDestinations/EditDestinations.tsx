@@ -11,19 +11,27 @@ import { Box, Button, Divider, Text } from '@chakra-ui/react';
 import TopBar from '@/components/TopBar';
 import ContentContainer from '@/components/ContentContainer';
 import { useEffect, useState } from 'react';
-import { CreateConnectorPayload, TestConnectionPayload } from '../../types';
+import { CreateConnectorPayload, TestConnectionPayload } from '@/views/Connectors/types';
 import { RJSFSchema } from '@rjsf/utils';
 import Loader from '@/components/Loader';
 import { Step } from '@/components/Breadcrumbs/types';
 import EntityItem from '@/components/EntityItem';
 import moment from 'moment';
+<<<<<<< HEAD
 import SourceActions from '../../Sources/EditSource/SourceActions';
 import { CustomToastStatus } from '@/components/Toast/index';
+=======
+
+import { CustomToastStatus } from '@/components/Toast';
+>>>>>>> 11791c77 (feat(CE): added Edit Details Modal (#791))
 import useCustomToast from '@/hooks/useCustomToast';
 import { generateUiSchema } from '@/utils/generateUiSchema';
-import JSONSchemaForm from '../../../../components/JSONSchemaForm';
+import JSONSchemaForm from '@/components/JSONSchemaForm';
 import { useStore } from '@/stores';
 import FormFooter from '@/components/FormFooter';
+import ConnectorActions from '../../ConnectorActions';
+import { useAPIErrorsToast } from '@/hooks/useErrorToast';
+import { useErrorToast } from '@/hooks/useErrorToast';
 
 const EditDestination = (): JSX.Element => {
   const activeWorkspaceId = useStore((state) => state.workspaceId);
@@ -38,6 +46,9 @@ const EditDestination = (): JSX.Element => {
 
   const [isTestRunning, setIsTestRunning] = useState<boolean>(false);
   const [testedFormData, setTestedFormData] = useState<unknown>(null);
+
+  const apiError = useAPIErrorsToast();
+  const errorToast = useErrorToast();
 
   const { data: connectorInfoResponse, isLoading: isConnectorInfoLoading } = useQuery({
     queryKey: CONNECTOR_INFO_KEY,
@@ -153,13 +164,54 @@ const EditDestination = (): JSX.Element => {
     }
   };
 
+  const handleUpdate = async (values: { name: string; description: string }) => {
+    if (!connectorInfo?.attributes || !destinationId) {
+      errorToast(`Something went wrong while updating the destination.`, true, null, true);
+      return;
+    }
+
+    try {
+      const updateConnectorPayload: CreateConnectorPayload = {
+        connector: {
+          configuration: formData,
+          name: values.name ?? connectorInfo?.attributes?.name,
+          connector_type: 'destination',
+          connector_name: connectorInfo?.attributes?.connector_name,
+          description: values.description ?? connectorInfo?.attributes?.description ?? '',
+        },
+      };
+
+      const updateConnectorResponse = await updateConnector(updateConnectorPayload, destinationId);
+
+      if (updateConnectorResponse?.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['connectorInfo', 'destination', destinationId, activeWorkspaceId],
+        });
+
+        showToast({
+          status: CustomToastStatus.Success,
+          title: 'Success!',
+          description: 'Destination details updated successfully!',
+          position: 'bottom-right',
+          isClosable: true,
+        });
+      } else {
+        if (updateConnectorResponse.errors) {
+          apiError(updateConnectorResponse.errors);
+        }
+      }
+    } catch (error) {
+      errorToast(`Something went wrong while updating the destination.`, true, error, true);
+    }
+  };
+
   const EDIT_DESTINATION_STEP: Step[] = [
     {
       name: 'Destinations',
       url: '/setup/destinations',
     },
     {
-      name: connectorName || '',
+      name: connectorInfoResponse?.data?.attributes?.name || '',
       url: '',
     },
   ];
@@ -172,7 +224,7 @@ const EditDestination = (): JSX.Element => {
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
         <TopBar
-          name={connectorName || ''}
+          name={connectorInfoResponse?.data?.attributes?.name || ''}
           breadcrumbSteps={EDIT_DESTINATION_STEP}
           extra={
             <Box display='flex' alignItems='center'>
@@ -195,7 +247,20 @@ const EditDestination = (): JSX.Element => {
               <Text size='sm' fontWeight='semibold'>
                 {moment(connectorInfo?.attributes?.updated_at).format('DD/MM/YYYY')}
               </Text>
+<<<<<<< HEAD
               <SourceActions connectorType='destinations' />
+=======
+              <RoleAccess location='connector' type='item' action={UserActions.Delete}>
+                <ConnectorActions
+                  connectorType='destination'
+                  initialValues={{
+                    name: connectorInfo?.attributes.name ?? '',
+                    description: connectorInfo?.attributes.description ?? '',
+                  }}
+                  onSave={(values) => handleUpdate(values)}
+                />
+              </RoleAccess>
+>>>>>>> 11791c77 (feat(CE): added Edit Details Modal (#791))
             </Box>
           }
         />

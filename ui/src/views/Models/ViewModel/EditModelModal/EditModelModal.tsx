@@ -27,7 +27,13 @@ import useCustomToast from '@/hooks/useCustomToast';
 import { ModelSubmitFormValues, UpdateModelPayload } from '../types';
 import { useState } from 'react';
 
-const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
+const EditModelModal = ({
+  prefillValues,
+  invalidateQuery,
+}: {
+  prefillValues: PrefillValue;
+  invalidateQuery: () => void;
+}): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +64,7 @@ const EditModelModal = (prefillValues: PrefillValue): JSX.Element => {
         position: 'bottom-right',
       });
       setLoading(false);
+      invalidateQuery();
       onClose();
     }
     setLoading(false);
