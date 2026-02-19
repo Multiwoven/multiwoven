@@ -49,11 +49,28 @@ const SelectDestination = ({
           <Loader />
         ) : (
           <>
+<<<<<<< HEAD
             <DestinationsTable
               handleOnRowClick={(data) => handleOnRowClick(data)}
               destinationData={data}
               isLoading={isLoading}
             />
+=======
+            <Box display='flex' flexDirection='column' gap={4}>
+              <SearchBar
+                placeholder='Search by name'
+                borderColor='gray.400'
+                setSearchTerm={setSearchTerm}
+              />
+              <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll'>
+                <DataTable
+                  columns={ConnectorsListColumns}
+                  data={filteredData || []}
+                  onRowClick={handleOnRowClick}
+                />
+              </Box>
+            </Box>
+>>>>>>> dd10f24d (fix(CE): remove show search bar prop)
             <FormFooter ctaName='Continue' ctaType='submit' isBackRequired />
           </>
         )}
