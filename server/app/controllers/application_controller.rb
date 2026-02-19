@@ -3,6 +3,7 @@
 class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
   include ExceptionHandler
+  include EmbeddedContextRestriction
   include ScriptVault::Tracker
   include Pundit::Authorization
   before_action :authenticate_user!
