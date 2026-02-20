@@ -95,6 +95,38 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
       end
     end
 
+    context "when retrying after deployment (total_query_rows resume)" do
+      let(:sync_run_retry) do
+        create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model,
+                          status: "started", total_query_rows: 500_000, current_offset: 500_000)
+      end
+
+      before do
+        allow(sync_run_retry.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
+      end
+
+      it "resumes total_query_rows from DB value instead of resetting to zero" do
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 500_002)
+
+        subject.read(sync_run_retry.id, activity)
+        sync_run_retry.reload
+
+        expect(sync_run_retry.total_query_rows).to eq(500_002)
+        expect(sync_run_retry).to have_state(:queued)
+      end
+
+      it "accumulates total_query_rows across multiple batches on retry" do
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches)
+          .and_yield([record1], 500_001)
+          .and_yield([record2], 500_002)
+
+        subject.read(sync_run_retry.id, activity)
+        sync_run_retry.reload
+
+        expect(sync_run_retry.total_query_rows).to eq(500_002)
+      end
+    end
+
     context "with invalid state" do
       it "creates a new sync record" do
         expect(sync_run_pending).to have_state(:pending)
