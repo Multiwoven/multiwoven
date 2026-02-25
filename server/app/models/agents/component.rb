@@ -10,6 +10,8 @@ module Agents
     has_many :target_edges, class_name: "Agents::Edge", foreign_key: "target_component_id", dependent: :destroy,
                             inverse_of: :target_component
 
+    has_many :llm_usage_logs, dependent: :destroy, inverse_of: :component
+
     enum component_type: { chat_input: 0, chat_output: 1, data_storage: 2, llm_model: 3, prompt_template: 4,
                            vector_store: 5, python_custom: 6 }
 

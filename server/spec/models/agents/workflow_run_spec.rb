@@ -7,6 +7,11 @@ RSpec.describe Agents::WorkflowRun, type: :model do
     it { should belong_to(:workflow).class_name("Agents::Workflow") }
     it { should belong_to(:workspace) }
     it { should have_one(:workflow_log).class_name("Agents::WorkflowLog").dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:llm_routing_logs).dependent(:destroy) }
+    it { should have_many(:llm_usage_logs).dependent(:destroy) }
+>>>>>>> 6f1a6fb16 (chore(CE): Add LLM Usage Log (#1649))
   end
 
   describe "validations" do
@@ -263,6 +268,27 @@ RSpec.describe Agents::WorkflowRun, type: :model do
       workflow_run.save!
 
       expect(workflow_run.reload.temporal_workflow_id).to eq(temporal_id)
+    end
+  end
+
+  describe "tokens used" do
+    let(:workflow_run) { create(:workflow_run) }
+    let(:connector) { create(:connector, workspace: workflow_run.workspace, connector_name: "OpenAI") }
+
+    it "calculates tokens used correctly" do
+      component = create(:component, workflow: workflow_run.workflow, workspace: workflow_run.workspace)
+      workflow_run.llm_usage_logs.create!(
+        workspace: workflow_run.workspace,
+        workflow_run:,
+        component_id: component.id,
+        connector_id: connector.id.to_s,
+        prompt_hash: "test_prompt_hash",
+        estimated_input_tokens: 100,
+        estimated_output_tokens: 200,
+        selected_model: "gpt-4o-mini",
+        provider: "openai"
+      )
+      expect(workflow_run.tokens_used).to eq(300)
     end
   end
 end
