@@ -15,6 +15,7 @@ import { SchemaMode } from '@/views/Activate/Syncs/types';
 import Loader from '@/components/Loader';
 import { useStore } from '@/stores';
 
+<<<<<<< HEAD
 type ConfigureSyncsProps = {
   selectedStream: Stream | null;
   configuration: FieldMapType[] | null;
@@ -43,6 +44,15 @@ const ConfigureSyncs = ({
   const [refresh, setRefresh] = useState(false);
 
   const { forms } = state;
+=======
+const ConfigureSyncs = (): JSX.Element | null => {
+  const { forms, stepInfo, handleMoveForward } = useSteppedForm();
+  const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
+  const [configuration, setConfiguration] = useState<FieldMapType[] | null>(null);
+  const [schemaMode, setSchemaMode] = useState<SchemaMode | null>(null);
+  const [selectedSyncMode, setSelectedSyncMode] = useState('');
+  const [cursorField, setCursorField] = useState('');
+>>>>>>> e567bb959 (chore(CE): test for views/Activate (#1638))
 
   const modelInfo = forms.find((form) => form.stepKey === 'selectModel');
   const selectedModel = modelInfo?.data?.selectModel as ModelEntity;
@@ -98,7 +108,10 @@ const ConfigureSyncs = ({
     return <Loader />;
   }
 
-  if (catalogData?.data?.attributes?.catalog?.schema_mode === SchemaMode.schemaless) {
+  if (
+    catalogData?.data?.attributes?.catalog?.schema_mode === SchemaMode.schemaless &&
+    schemaMode !== SchemaMode.schemaless
+  ) {
     setSchemaMode(SchemaMode.schemaless);
   }
 
