@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.6"
+=======
+    VERSION = "0.34.19"
+>>>>>>> 45e8a7ff4 (chore(CE): rename GenericOpenAI (#1639))
 
     ENABLED_SOURCES = %w[
       Snowflake
