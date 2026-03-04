@@ -109,6 +109,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         s_config.sync_run_id = "33"
         allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(pg_connection).to receive(:close)
+        allow(pg_connection).to receive(:escape_string) { |str| str }
 
         allow(pg_connection).to receive(:exec).and_return(true)
 
@@ -126,6 +128,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         s_config.sync_run_id = "33"
         allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(pg_connection).to receive(:close)
+        allow(pg_connection).to receive(:escape_string) { |str| str }
 
         allow(pg_connection).to receive(:exec).and_return(true)
 
@@ -147,6 +151,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         s_config.sync_run_id = "34"
 
         allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(pg_connection).to receive(:close)
+        allow(pg_connection).to receive(:escape_string) { |str| str }
 
         allow(pg_connection).to receive(:exec).and_raise(StandardError.new("test error"))
 
@@ -158,6 +164,156 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         expect(log_message.level).to eql("error")
         expect(log_message.message).to include("request")
         expect(log_message.message).to include("\"response\":\"test error\"")
+      end
+    end
+  end
+
+  # bulk write specs
+
+  describe "#write (batch)" do
+    before do
+      allow(PG).to receive(:connect).and_return(pg_connection)
+      allow(pg_connection).to receive(:close)
+      allow(pg_connection).to receive(:escape_string) { |str| str }
+    end
+
+    let(:s_config) do
+      config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+      config.sync_run_id = "50"
+      config
+    end
+
+    let(:batch_records) do
+      records.map { |r| r.data.transform_keys(&:to_s) }
+    end
+
+    context "bulk insert" do
+      it "inserts multiple records in a single statement" do
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/INSERT INTO.*VALUES.*,.*/)
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config, batch_records).tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+    end
+
+    context "bulk upsert" do
+      it "generates ON CONFLICT clause for destination_update" do
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/ON CONFLICT.*DO UPDATE SET/)
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config, batch_records, "destination_update").tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+
+      it "generates ON CONFLICT DO NOTHING when update_cols is empty (only primary key)" do
+        records_only_pk = [
+          { "id" => "1" },
+          { "id" => "2" }
+        ]
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/ON CONFLICT.*DO NOTHING/)
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config, records_only_pk, "destination_update").tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+    end
+
+    context "fallback on bulk failure" do
+      it "falls back to individual writes and tracks success" do
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          raise StandardError, "bulk failed" if call_count == 1
+
+          true
+        end
+
+        tracking = subject.write(s_config, batch_records).tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+
+      it "tracks partial failures in individual fallback" do
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          # bulk fails, first individual succeeds, second individual fails
+          raise StandardError, "bulk failed" if call_count == 1
+          raise StandardError, "row failed" if call_count == 3
+
+          true
+        end
+
+        tracking = subject.write(s_config, batch_records).tracking
+        expect(tracking.success).to eql(1)
+        expect(tracking.failed).to eql(1)
+      end
+
+      it "logs info for each successful individual write in fallback" do
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          raise StandardError, "bulk failed" if call_count == 1
+
+          true
+        end
+
+        tracking = subject.write(s_config, batch_records).tracking
+        expect(tracking.success).to eql(2)
+        info_logs = tracking.logs.select { |l| l.level == "info" }
+        expect(info_logs.size).to eql(2)
+        info_logs.each do |log|
+          expect(log.message).to include("request")
+          expect(log.message).to include("response")
+        end
+      end
+    end
+
+    context "records with inconsistent keys" do
+      let(:mixed_records) do
+        [
+          { "email" => "user1@example.com", "user_id" => "1" },
+          { "email" => "user2@example.com", "user_id" => "2", "location" => "NYC" }
+        ]
+      end
+
+      it "includes all columns from the union of record keys" do
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/"email",\s*"user_id",\s*"location"/)
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config, mixed_records).tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+
+      it "uses NULL for missing keys" do
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/NULL/)
+        ).once.and_return(true)
+
+        subject.write(s_config, mixed_records)
+      end
+    end
+
+    context "connection cleanup" do
+      it "closes connection on success" do
+        allow(pg_connection).to receive(:exec).and_return(true)
+        expect(pg_connection).to receive(:close)
+        subject.write(s_config, batch_records)
+      end
+
+      it "closes connection on failure" do
+        allow(pg_connection).to receive(:exec).and_raise(StandardError.new("err"))
+        expect(pg_connection).to receive(:close)
+        subject.write(s_config, batch_records)
       end
     end
   end
