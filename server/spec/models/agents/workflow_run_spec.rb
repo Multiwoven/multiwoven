@@ -7,6 +7,12 @@ RSpec.describe Agents::WorkflowRun, type: :model do
     it { should belong_to(:workflow).class_name("Agents::Workflow") }
     it { should belong_to(:workspace) }
     it { should have_one(:workflow_log).class_name("Agents::WorkflowLog").dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:workflow_approvals).class_name("Agents::WorkflowApproval").dependent(:destroy) }
+    it { should have_many(:llm_routing_logs).dependent(:destroy) }
+    it { should have_many(:llm_usage_logs).dependent(:destroy) }
+>>>>>>> d6dadb6dd (feat(CE): add workflow approval model  (#1708))
   end
 
   describe "validations" do
@@ -25,12 +31,13 @@ RSpec.describe Agents::WorkflowRun, type: :model do
   describe "scopes" do
     let!(:pending_run) { create(:workflow_run, status: "pending") }
     let!(:in_progress_run) { create(:workflow_run, status: "in_progress") }
+    let!(:action_required_run) { create(:workflow_run, status: "action_required") }
     let!(:completed_run) { create(:workflow_run, status: "completed") }
     let!(:failed_run) { create(:workflow_run, status: "failed") }
 
     describe ".active" do
-      it "returns only pending and in_progress runs" do
-        expect(Agents::WorkflowRun.active).to include(pending_run, in_progress_run)
+      it "returns pending, in_progress, and action_required runs" do
+        expect(Agents::WorkflowRun.active).to include(pending_run, in_progress_run, action_required_run)
         expect(Agents::WorkflowRun.active).not_to include(completed_run, failed_run)
       end
     end
@@ -125,9 +132,65 @@ RSpec.describe Agents::WorkflowRun, type: :model do
         expect(workflow_run).to be_cancelled
       end
 
+      it "transitions from action_required to cancelled" do
+        workflow_run.start!
+        workflow_run.pause_for_approval!
+        expect(workflow_run).to be_action_required
+        workflow_run.cancel!
+        expect(workflow_run).to be_cancelled
+      end
+
       it "does not allow transition from terminal states" do
         workflow_run.cancel!
         expect { workflow_run.cancel! }.to raise_error(AASM::InvalidTransition)
+      end
+    end
+
+    describe "pause_for_approval event" do
+      it "transitions from in_progress to action_required" do
+        workflow_run.start!
+        expect(workflow_run).to be_in_progress
+        workflow_run.pause_for_approval!
+        expect(workflow_run).to be_action_required
+      end
+
+      it "does not allow transition from pending" do
+        expect { workflow_run.pause_for_approval! }.to raise_error(AASM::InvalidTransition)
+      end
+
+      it "does not allow transition from completed" do
+        workflow_run.start!
+        workflow_run.complete!
+        expect { workflow_run.pause_for_approval! }.to raise_error(AASM::InvalidTransition)
+      end
+    end
+
+    describe "resume event" do
+      it "transitions from action_required to in_progress" do
+        workflow_run.start!
+        workflow_run.pause_for_approval!
+        expect(workflow_run).to be_action_required
+        workflow_run.resume!
+        expect(workflow_run).to be_in_progress
+      end
+
+      it "does not allow transition from pending" do
+        expect { workflow_run.resume! }.to raise_error(AASM::InvalidTransition)
+      end
+
+      it "does not allow transition from in_progress" do
+        workflow_run.start!
+        expect { workflow_run.resume! }.to raise_error(AASM::InvalidTransition)
+      end
+    end
+
+    describe "fail event from action_required" do
+      it "transitions from action_required to failed" do
+        workflow_run.start!
+        workflow_run.pause_for_approval!
+        expect(workflow_run).to be_action_required
+        workflow_run.fail!
+        expect(workflow_run).to be_failed
       end
     end
   end
