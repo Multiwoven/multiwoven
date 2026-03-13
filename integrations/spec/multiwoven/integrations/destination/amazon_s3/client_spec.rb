@@ -78,19 +78,108 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
 
   describe "#discover" do
     it "returns a catalog" do
+      allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+      allow(s3_client).to receive(:list_objects_v2).and_return(
+        Aws::S3::Types::ListObjectsV2Output.new(
+          contents: [
+            Aws::S3::Types::Object.new(
+              key: "test_file.csv",
+              size: 123,
+              etag: '"abc123"',
+              last_modified: Time.now,
+              storage_class: "STANDARD"
+            )
+          ],
+          key_count: 1,
+          is_truncated: false,
+          name: "my-bucket",
+          prefix: "test_file.csv"
+        )
+      )
+      allow(s3_client).to receive(:get_object).and_return(
+        Aws::S3::Types::GetObjectOutput.new(
+          body: StringIO.new("col1,col2,col3\n1,first,1.1\n2,second,2.2\n3,third,3.3")
+        )
+      )
       message = client.discover(connection_config)
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit).to eql(60)
       expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
-      expect(catalog.schema_mode).to eql("schemaless")
-      expect(catalog.streams[0].name).to eql("create")
-      expect(catalog.streams[0].batch_support).to eql(true)
-      expect(catalog.streams[0].batch_size).to eql(100_000)
-      expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
+      expect(catalog.schema_mode).to eql("schema")
+      expect(catalog.streams[0].name).to eql("test_file")
+      expect(catalog.streams[0].batch_support).to eql(false)
+      expect(catalog.streams[0].batch_size).to eql(1)
+      expect(catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
     end
+<<<<<<< HEAD
+=======
+
+    context "when the discover operation is successful for minIO" do
+      it "returns a succeeded discover status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        allow(s3_client).to receive(:list_objects_v2).and_return(
+          Aws::S3::Types::ListObjectsV2Output.new(
+            contents: [
+              Aws::S3::Types::Object.new(
+                key: "test_file.csv",
+                size: 123,
+                etag: '"abc123"',
+                last_modified: Time.now,
+                storage_class: "STANDARD"
+              )
+            ],
+            key_count: 1,
+            is_truncated: false,
+            name: "my-bucket",
+            prefix: "test_file.csv"
+          )
+        )
+        allow(s3_client).to receive(:get_object).and_return(
+          Aws::S3::Types::GetObjectOutput.new(
+            body: StringIO.new("col1,col2,col3\n1,first,1.1\n2,second,2.2\n3,third,3.3")
+          )
+        )
+        message = client.discover(s_config[:destination][:connection_specification])
+        expect(message.catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.request_rate_limit).to eql(60)
+        expect(message.catalog.request_rate_limit_unit).to eql("minute")
+        expect(message.catalog.request_rate_concurrency).to eql(10)
+        expect(message.catalog.streams.count).to eql(1)
+        expect(message.catalog.schema_mode).to eql("schema")
+        expect(message.catalog.streams[0].name).to eql("test_file")
+        expect(message.catalog.streams[0].batch_support).to eql(false)
+        expect(message.catalog.streams[0].batch_size).to eql(1)
+        expect(message.catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
+      end
+    end
+
+    context "when the discover operation fails for minIO" do
+      it "returns a failed discover status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        allow(s3_client).to receive(:list_objects_v2).and_return(
+          Aws::S3::Types::ListObjectsV2Output.new(
+            contents: []
+          )
+        )
+        expect(client).to receive(:handle_exception).with(
+          an_instance_of(StandardError), {
+            context: "AMAZONS3:DISCOVER:EXCEPTION",
+            type: "error"
+          }
+        )
+        client.discover(s_config[:destination][:connection_specification])
+      end
+    end
+>>>>>>> 238352aa8 (chore(CE): Remove schemaless catalog from Amazon S3 Connector (#1626))
   end
 
   describe "#write" do
