@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.34.19)
+>>>>>>> 45e8a7ff4 (chore(CE): rename GenericOpenAI (#1639))
       MailchimpMarketing
       activesupport
       async-websocket
