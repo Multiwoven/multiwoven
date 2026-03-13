@@ -4,8 +4,6 @@ import {
   TabList,
   Tab,
   Text,
-  TabIndicator,
-  Tabs,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -19,6 +17,7 @@ import StaticOptions from './StaticOptions';
 import TemplateOptions from './TemplateOptions';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
+import TabsWrapper from '@/components/TabsWrapper';
 
 export enum OPTION_TYPE {
   STANDARD = 'standard',
@@ -154,35 +153,22 @@ const TemplateMapping = ({
         >
           <Stack gap='12px' height='100%'>
             {fieldType === 'model' && (
-              <Stack spacing='16'>
-                <Tabs
-                  size='md'
-                  variant='indicator'
-                  background='gray.300'
-                  padding={1}
-                  borderRadius='8px'
-                  borderStyle='solid'
-                  borderWidth='1px'
-                  borderColor='gray.400'
-                  width='fit-content'
-                >
-                  <TabList gap='8px'>
-                    <TabName
-                      title='Column'
-                      handleActiveTab={() => setActiveTab(OPTION_TYPE.STANDARD)}
-                    />
-                    <TabName
-                      title='Static Value'
-                      handleActiveTab={() => setActiveTab(OPTION_TYPE.STATIC)}
-                    />
-                    <TabName
-                      title='Template'
-                      handleActiveTab={() => setActiveTab(OPTION_TYPE.TEMPLATE)}
-                    />
-                  </TabList>
-                  <TabIndicator />
-                </Tabs>
-              </Stack>
+              <TabsWrapper>
+                <TabList gap='8px'>
+                  <TabName
+                    title='Column'
+                    handleActiveTab={() => setActiveTab(OPTION_TYPE.STANDARD)}
+                  />
+                  <TabName
+                    title='Static Value'
+                    handleActiveTab={() => setActiveTab(OPTION_TYPE.STATIC)}
+                  />
+                  <TabName
+                    title='Template'
+                    handleActiveTab={() => setActiveTab(OPTION_TYPE.TEMPLATE)}
+                  />
+                </TabList>
+              </TabsWrapper>
             )}
             <Box backgroundColor='gray.100' height='100%'>
               {activeTab === OPTION_TYPE.STANDARD && (
