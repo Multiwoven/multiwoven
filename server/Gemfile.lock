@@ -2249,7 +2249,15 @@ GEM
     stripe (13.4.1)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
+<<<<<<< HEAD
     thor (1.4.0)
+=======
+    thor (1.3.2)
+    tiktoken_ruby (0.0.15.1-aarch64-linux)
+    tiktoken_ruby (0.0.15.1-arm64-darwin)
+    tiktoken_ruby (0.0.15.1-x86_64-darwin)
+    tiktoken_ruby (0.0.15.1-x86_64-linux)
+>>>>>>> 55e84e1d6 (chore(CE): add tiktoken_ruby to Gemfile (#1680))
     timecop (0.9.8)
     timeout (0.4.3)
     tiny_tds (3.2.0)
@@ -2368,6 +2376,7 @@ DEPENDENCIES
   solid_queue
   strong_migrations
   temporal-ruby!
+  tiktoken_ruby
   timecop
   tzinfo-data
   webrick
