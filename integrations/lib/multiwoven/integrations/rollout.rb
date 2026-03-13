@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.6"
+=======
+    VERSION = "0.34.18"
+>>>>>>> cb46584b6 (chore(CE): Allow Batch Support and Batch Size for S3 (#1632))
 
     ENABLED_SOURCES = %w[
       Snowflake
