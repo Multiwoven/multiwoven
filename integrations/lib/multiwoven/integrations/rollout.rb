@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.6"
+=======
+    VERSION = "0.34.17"
+>>>>>>> 3fad945c4 (chore(CE): add URL_STYLE 'path' to secret_part in S3 (#1630))
 
     ENABLED_SOURCES = %w[
       Snowflake
