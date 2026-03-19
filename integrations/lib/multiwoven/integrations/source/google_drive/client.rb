@@ -11,10 +11,6 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-<<<<<<< HEAD
-        client = create_connection(connection_config)
-        build_query(client)
-=======
 
         if unstructured_data?(connection_config) || semistructured_data?(connection_config)
           create_drive_connection(connection_config)
@@ -23,7 +19,6 @@ module Multiwoven::Integrations::Source
         else
           create_connection(connection_config)
         end
->>>>>>> d59fca3c (fix(CE): handles error when downloading file from drive with backslashes (#1471))
         success_status
       rescue StandardError => e
         failure_status(e)
