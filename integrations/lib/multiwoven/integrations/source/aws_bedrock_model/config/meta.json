@@ -4,7 +4,7 @@
     "title": "AWS Bedrock Model",
     "connector_type": "source",
     "category": "AI Model",
-    "sub_category": "AI_ML Service",
+    "sub_category": "LLM",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/aws_bedrock-model",
     "github_issue_label": "source-aws-bedrock-model",
     "icon": "icon.svg",
