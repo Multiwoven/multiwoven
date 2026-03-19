@@ -8,13 +8,14 @@ RSpec.describe Agents::Workflow, type: :model do
     it { should have_many(:components).dependent(:destroy) }
     it { should have_many(:edges).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
+    it { should have_one(:workflow_integration).dependent(:destroy) }
   end
 
   describe "enums" do
     it { should define_enum_for(:status).with_values(draft: 0, published: 1) }
     it {
       should define_enum_for(:trigger_type).with_values(website_chatbot: 0, chat_assistant: 1, scheduled: 2,
-                                                        api_trigger: 3)
+                                                        api_trigger: 3, slack: 4)
     }
   end
 
