@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.34.5"
-=======
     VERSION = "0.34.7"
->>>>>>> 3b9e2b27 (fix(CE): Change AWS Bedrock sub category (#1439))
 
     ENABLED_SOURCES = %w[
       Snowflake
