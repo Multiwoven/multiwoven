@@ -85,7 +85,7 @@ module Multiwoven::Integrations::Source
           file_name = ::Regexp.last_match(1).strip
           file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
           file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
-          download_file_to_local(file_name, sync_config.sync_id)
+          download_file_to_local(folder_name, file_name, sync_config.sync_id)
         else
           raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
         end
@@ -111,7 +111,8 @@ module Multiwoven::Integrations::Source
         end
       end
 
-      def download_file_to_local(file_name, sync_id)
+      def download_file_to_local(folder_name, file_name, sync_id)
+        query = build_query(folder_name)
         download_path = ENV["FILE_DOWNLOAD_PATH"]
         file = if download_path
                  File.join(download_path, "syncs", sync_id, File.basename(file_name))
@@ -121,7 +122,7 @@ module Multiwoven::Integrations::Source
 
         # Escape single quotes to prevent query injection
         escaped_name = file_name.gsub("'", "\\\\'")
-        query = "mimeType != 'application/vnd.google-apps.folder' and name = '#{escaped_name}'"
+        query = "#{query} and name = '#{escaped_name}'"
 
         records = get_files(@google_drive, query, 1, 0)
         raise StandardError, "File not found." if records.empty?
@@ -156,26 +157,25 @@ module Multiwoven::Integrations::Source
         raise ArgumentError, "Specified folder does not exist" if response.files.empty?
 
         parent_id = response.files.first.id
-        "'#{parent_id}' in parents"
+        "'#{parent_id}' in parents and mimeType != 'application/vnd.google-apps.folder'"
       end
 
-      def get_files(client, query, limit, offset)
+      def get_files(client, query, limit, _offset)
+        next_page_token = nil
         total_fetched = 0
         result = []
 
-        return result if offset.positive? && !@next_page_token
-
         while total_fetched < limit
           batch_limit = [MAX_PER_PAGE, limit - total_fetched].min
-          response = if @next_page_token
-                       client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit, page_token: @next_page_token)
+          response = if next_page_token
+                       client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit, page_token: next_page_token)
                      else
                        client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: query, fields: FIELDS, page_size: batch_limit)
                      end
           break if response.files.empty?
 
           result.push(*response.files)
-          @next_page_token = response.next_page_token
+          next_page_token = response.next_page_token
           break unless response.next_page_token
 
           total_fetched += response.files.size
