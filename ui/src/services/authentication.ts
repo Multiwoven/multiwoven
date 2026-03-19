@@ -69,6 +69,7 @@ export type SignUpResponse = {
     created_at: string;
     email: string;
     name: string;
+    email_verification_enabled: boolean;
   };
   errors?: AuthErrorResponse[];
 };
