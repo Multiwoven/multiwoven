@@ -3,7 +3,6 @@
 RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   let(:client) { described_class.new }
   let(:fields) { "files(id, name, parents, mimeType), nextPageToken" }
-  # let(:error_instance) { StandardError.new("Google Drive source error") }
   let(:credentials) do
     {
       type: "service_account",
@@ -95,14 +94,12 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
   let(:specified_folder) { Google::Apis::DriveV3::File.new(id: "2", name: "folder") }
   let(:file_list) { Google::Apis::DriveV3::FileList.new(files: [expense_file]) }
 
-  before do
-    # allow(client).to receive(:create_drive_connection).and_return(google_drive_service)
-    # allow(google_drive_service).to receive(:list_files).and_return(file_list)
-  end
-
   describe "#check_connection" do
     before do
-      allow(client).to receive(:create_drive_connection).and_return(google_drive_service)
+      allow(Google::Apis::DriveV3::DriveService).to receive(:new).and_return(google_drive_service)
+      allow(Google::Auth::ServiceAccountCredentials).to receive(:make_creds).and_return(nil)
+      allow(google_drive_service).to receive(:authorization=).and_return(nil)
+      allow(google_drive_service).to receive(:list_files).and_return(file_list)
     end
     context "when checking structured data connection" do
       it "throws a not implemented error" do

@@ -14,6 +14,8 @@ module Multiwoven::Integrations::Source
 
         if unstructured_data?(connection_config) || semistructured_data?(connection_config)
           create_drive_connection(connection_config)
+          folder_name = connection_config[:folder_name]
+          build_query(folder_name)
         else
           create_connection(connection_config)
         end
@@ -82,6 +84,7 @@ module Multiwoven::Integrations::Source
         when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
           file_name = ::Regexp.last_match(1).strip
           file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
           download_file_to_local(file_name, sync_config.sync_id)
         else
           raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
