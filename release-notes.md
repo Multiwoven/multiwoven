@@ -1,5 +1,1 @@
-## [0.88.0] - 2025-11-12
-
-### ⚙️ Miscellaneous Tasks
-
-- *(CE)* Upgraded gems git and rexml per findings (#861)
+## [0.105.0] - 2026-03-10

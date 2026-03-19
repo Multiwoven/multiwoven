@@ -8,7 +8,6 @@
 Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and <b>RudderStack</b>. It lets you easily sync data from your warehouse to any business tool, unlocking the full potential of your data.
 </p>
 
-
 <p align="center">
 <a href="https://github.com/Multiwoven/multiwoven/stargazers"><img src="https://img.shields.io/github/stars/Multiwoven/multiwoven?style=for-the-badge" alt="GitHub stars"></a>
 <a href="https://github.com/Multiwoven/multiwoven/releases">
@@ -37,9 +36,9 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
   <br/>
   <a href="https://join.slack.com/t/multiwoven/shared_invite/zt-2bnjye26u-~lu_FFOMLpChOYxvovep7g">Slack</a>
    •
-    <a href="https://squared.ai/multiwoven-reverse-etl">Website</a>
+    <a href="https://aisquared.ai/enterprise">Website</a>
     •
-    <a href="https://blog.squared.ai">Blog</a>
+    <a href="https://aisquared.ai/blog">Blog</a>
    •
     <a href="https://github.com/orgs/Multiwoven/projects/4">Roadmap</a>
   </p>
@@ -50,7 +49,7 @@ Multiwoven is an open-source alternative to <b>HighTouch</b>, <b>Census</b>, and
 
 Multiwoven simplifies self-hosting a secure, scalable Reverse ETL platform on your cloud infrastructure like AWS, Azure, or GCP. With one-click deployment and customizable connectors, you can easily sync data from your warehouse to business tools.
 
-⭐ *Consider giving us a star! Your support helps us continue innovating and adding new, exciting features.*
+⭐ _Consider giving us a star! Your support helps us continue innovating and adding new, exciting features._
 
 ### Connect to sources
 
@@ -69,7 +68,6 @@ Create models to transform and prepare your data for syncing.
 Sync your data with destinations like Salesforce, HubSpot, Slack, and more.
 
 ![Example Image](https://res.cloudinary.com/dspflukeu/image/upload/v1716464797/AIS/Destinations_ebpt0n.png "Example Title")
-
 
 ## Table of Contents
 
@@ -148,26 +146,26 @@ UI can be accessed at the PORT 8000 :
 http://localhost:8000
 ```
 
-For more details, check out the local [deployment guide](https://docs.squared.ai/open-source/guides/setup/docker-compose-dev) in the documentation.
+For more details, check out the local [deployment guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose-dev) in the documentation.
 
 ### Self-hosted Options
 
 Multiwoven can be deployed in a variety of environments, from fully managed cloud services to self-hosted solutions. Refer to the deployment guides below to deploy Multiwoven on your preferred cloud provider.
 
-| Provider                          | Documentation                                                               |
-| :-------------------------------- | :-------------------------------------------------------------------------- |
-| **Docker**                        | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/docker-compose) |
-| **Helm Charts**                   | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/helm)           |
-| **AWS EC2**                       | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/ec2)            |
-| **AWS ECS**                       | Coming soon.                                                       |
-| **AWS EKS (Kubernetes)**          | Coming soon.                                                      |
-| **Azure VMs**                     | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/avm)                                                       |
-| **Azure AKS (Kubernetes)**        | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/aks)            |
-| **Google Cloud GKE (Kubernetes)** | Coming soon.                                                             |
-| **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.squared.ai/open-source/guides/setup/gce)            |
-| **Digital Ocean Droplets**        | Coming soon.                                                        |
-| **Digital Ocean Kubernetes**      | Coming soon.                                                             |
-| **OpenShift**                     | Coming soon.                                                             |
+| Provider                          | Documentation                                                                            |
+| :-------------------------------- | :--------------------------------------------------------------------------------------- |
+| **Docker**                        | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose) |
+| **Helm Charts**                   | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/helm)           |
+| **AWS EC2**                       | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/ec2)            |
+| **AWS ECS**                       | Coming soon.                                                                             |
+| **AWS EKS (Kubernetes)**          | Coming soon.                                                                             |
+| **Azure VMs**                     | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/avm)            |
+| **Azure AKS (Kubernetes)**        | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/aks)            |
+| **Google Cloud GKE (Kubernetes)** | Coming soon.                                                                             |
+| **Google Cloud Compute Engine**   | [Deployment Guide](https://docs.squared.ai/deployment-and-security/setup/gce)            |
+| **Digital Ocean Droplets**        | Coming soon.                                                                             |
+| **Digital Ocean Kubernetes**      | Coming soon.                                                                             |
+| **OpenShift**                     | Coming soon.                                                                             |
 
 ## Connectors
 
@@ -175,46 +173,46 @@ Multiwoven can be deployed in a variety of environments, from fully managed clou
 
 ### Sources
 
-- [x] [Amazon Redshift](https://docs.squared.ai/guides/data-integration/sources/redshift)
-- [x] [Google BigQuery](https://docs.squared.ai/guides/data-integration/sources/bquery)
-- [x] [Snowflake](https://docs.squared.ai/guides/data-integration/sources/snowflake)
-- [x] [Databricks](https://docs.squared.ai/guides/data-integration/sources/databricks)
-- [x] [PostgreSQL](https://docs.squared.ai/guides/data-integration/sources/postgresql)
+- [x] [Amazon Redshift](https://docs.squared.ai/guides/sources/data-sources/redshift)
+- [x] [Google BigQuery](https://docs.squared.ai/guides/sources/data-sources/bquery)
+- [x] [Snowflake](https://docs.squared.ai/guides/sources/data-sources/snowflake)
+- [x] [Databricks](https://docs.squared.ai/guides/sources/data-sources/databricks)
+- [x] [PostgreSQL](https://docs.squared.ai/guides/sources/data-sources/postgresql)
 
 ### Destinations
 
 #### CRM
 
-- [x] [Salesforce](https://docs.squared.ai/guides/data-integration/destinations/crm/salesforce)
+- [x] [Salesforce](https://docs.squared.ai/guides/destinations/retl-destinations/crm/salesforce)
 - [ ] Zoho CRM
-- [x] [HubSpot](https://docs.squared.ai/guides/data-integration/destinations/crm/hubspot)
+- [x] [HubSpot](https://docs.squared.ai/guides/destinations/retl-destinations/crm/hubspot)
 
 #### Marketing Automation
 
-- [x] [Klaviyo](https://docs.squared.ai/guides/data-integration/destinations/marketing-automation/klaviyo)
+- [x] [Klaviyo](https://docs.squared.ai/guides/destinations/retl-destinations/marketing-automation/klaviyo)
 - [ ] Braze
 - [ ] Salesforce Marketing Cloud
 
 #### Customer Support
 
-- [x] [Zendesk](https://docs.squared.ai/guides/data-integration/destinations/customer-support/zendesk)
+- [x] [Zendesk](https://docs.squared.ai/guides/destinations/retl-destinations/customer-support/zendesk)
 - [ ] Freshdesk
 - [ ] Intercom
 
 #### Advertising
 
 - [ ] Google Ads
-- [x] [Facebook Ads](https://docs.squared.ai/guides/data-integration/destinations/adtech/facebook-ads)
+- [x] [Facebook Ads](https://docs.squared.ai/guides/destinations/retl-destinations/adtech/facebook-ads)
 
 #### Collaboration
 
-- [x] [Slack](https://docs.squared.ai/guides/data-integration/destinations/team-collaboration/slack)
-- [x] [Google Sheets](https://docs.squared.ai/guides/data-integration/destinations/productivity-tools/google-sheets)
-- [x] [Airtable](https://docs.squared.ai/guides/data-integration/destinations/productivity-tools/airtable)
+- [x] [Slack](https://docs.squared.ai/guides/destinations/retl-destinations/team-collaboration/slack)
+- [x] [Google Sheets](https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/google-sheets)
+- [x] [Airtable](https://docs.squared.ai/guides/destinations/retl-destinations/productivity-tools/airtable)
 
 #### Analytics
 
-- [x] Google Analytics
+- [ ] Google Analytics
 - [ ] Mixpanel
 - [ ] Amplitude
 
