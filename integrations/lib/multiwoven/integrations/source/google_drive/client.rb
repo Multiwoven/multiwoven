@@ -70,28 +70,6 @@ module Multiwoven::Integrations::Source
           json_key_io: StringIO.new(credentials.to_json),
           scope: GOOGLE_SHEETS_SCOPE
         )
-
-        resp = textract.start_expense_analysis(
-          document_location: {
-            s3_object: {
-              bucket: bucket_name,
-              name: file_name
-            }
-          }
-        )
-
-        case command
-        when LIST_FILES_CMD
-          list_files_in_folder(folder_name)
-        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
-          file_name = ::Regexp.last_match(1).strip
-          file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
-          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
-          download_file_to_local(folder_name, file_name, sync_config.sync_id)
-        else
-          raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
-        end
-        all_pages
       end
 
       def handle_unstructured_data(sync_config)
@@ -107,9 +85,29 @@ module Multiwoven::Integrations::Source
           file_name = ::Regexp.last_match(1).strip
           file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
           file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
-          download_file_to_local(file_name, sync_config.sync_id)
+          download_file_to_local(folder_name, file_name, sync_config.sync_id)
         else
           raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
+        end
+      end
+
+      def list_files_in_folder(folder_name)
+        query = build_query(folder_name)
+        records = get_files(@google_drive, query, 10_000, 0)
+        records.map do |row|
+          RecordMessage.new(
+            data: {
+              element_id: row.id,
+              file_name: row.name,
+              file_path: row.name,
+              size: row.size,
+              file_type: row.file_extension,
+              created_date: row.created_time,
+              modified_date: row.modified_time,
+              text: ""
+            },
+            emitted_at: Time.now.to_i
+          ).to_multiwoven_message
         end
       end
 
