@@ -47,6 +47,10 @@ module Multiwoven::Integrations::Source
           top: vector_search_config[:limit]
         }
 
+        # Add filters if present
+        filters = vector_search_config[:filters] || vector_search_config.filters || []
+        body[:filter] = build_qdrant_filter(filters) if filters.present?
+
         response = Multiwoven::Integrations::Core::HttpClient.request(
           url,
           HTTP_POST,
@@ -80,6 +84,72 @@ module Multiwoven::Integrations::Source
 
       def build_url(url)
         format(url, host: @host, collection_name: @collection_name)
+      end
+
+      def build_qdrant_filter(filters)
+        return nil if filters.blank?
+
+        must_conditions = []
+        must_not_conditions = []
+
+        filters.each do |filter|
+          process_qdrant_filter(filter, must_conditions, must_not_conditions)
+        end
+
+        build_qdrant_filter_hash(must_conditions, must_not_conditions)
+      end
+
+      def process_qdrant_filter(filter, must_conditions, must_not_conditions)
+        field, operator, value = extract_filter_fields(filter)
+        return unless field.present? && value.present?
+
+        condition = build_qdrant_condition(field, operator, value)
+        return unless condition
+
+        add_condition_to_array(condition, operator, must_conditions, must_not_conditions)
+      end
+
+      def extract_filter_fields(filter)
+        [
+          filter[:field] || filter["field"],
+          filter[:operator] || filter["operator"] || "eq",
+          filter[:value] || filter["value"]
+        ]
+      end
+
+      def add_condition_to_array(condition, operator, must_conditions, must_not_conditions)
+        if operator.to_s == "neq"
+          must_not_conditions << condition
+        else
+          must_conditions << condition
+        end
+      end
+
+      def build_qdrant_condition(field, operator, value)
+        case operator.to_s
+        when "eq"
+          { key: field, match: { value: value } }
+        when "neq"
+          { key: field, match: { value: value } }
+        when "gt"
+          { key: field, range: { gt: value } }
+        when "gte"
+          { key: field, range: { gte: value } }
+        when "lt"
+          { key: field, range: { lt: value } }
+        when "lte"
+          { key: field, range: { lte: value } }
+        when "in"
+          { key: field, match: { any: value.is_a?(Array) ? value : [value] } }
+        end
+      end
+
+      def build_qdrant_filter_hash(must_conditions, must_not_conditions)
+        qdrant_filter = {}
+        qdrant_filter[:must] = must_conditions if must_conditions.present?
+        qdrant_filter[:must_not] = must_not_conditions if must_not_conditions.present?
+
+        qdrant_filter.presence
       end
     end
   end

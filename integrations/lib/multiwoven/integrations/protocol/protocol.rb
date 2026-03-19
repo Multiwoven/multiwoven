@@ -192,6 +192,7 @@ module Multiwoven
       attribute :source, Connector
       attribute :vector, Types::Array.of(Types::Float) | Types::String
       attribute :limit, Types::Integer.default(1)
+      attribute? :filters, Types::Array.of(Types::Hash).optional.default([])
     end
 
     class ControlMessage < ProtocolModel
