@@ -70,18 +70,6 @@ module Multiwoven::Integrations::Source
           json_key_io: StringIO.new(credentials.to_json),
           scope: GOOGLE_SHEETS_SCOPE
         )
-        case command
-        when LIST_FILES_CMD
-          list_files_in_folder(folder_name)
-        when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
-          file_name = ::Regexp.last_match(1).strip
-          file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
-          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
-          download_file_to_local(file_name, sync_config.sync_id)
-        else
-          raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
-        end
-        all_pages
       end
 
       def handle_unstructured_data(sync_config)
@@ -96,6 +84,7 @@ module Multiwoven::Integrations::Source
         when /^#{DOWNLOAD_FILE_CMD}\s+(.+)$/
           file_name = ::Regexp.last_match(1).strip
           file_name = file_name.gsub(/^["']|["']$/, "") # Remove leading/trailing quotes
+          file_name = file_name.gsub("\\", "\\\\\\") # Escape backslashes
           download_file_to_local(file_name, sync_config.sync_id)
         else
           raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
