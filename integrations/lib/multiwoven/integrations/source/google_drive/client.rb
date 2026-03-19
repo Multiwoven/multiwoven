@@ -120,28 +120,6 @@ module Multiwoven::Integrations::Source
           }
         )
 
-<<<<<<< HEAD
-        job_id = resp.job_id
-        all_pages = []
-        next_token = nil
-
-        loop do
-          result = textract.get_expense_analysis(
-            job_id: job_id,
-            next_token: next_token
-          )
-
-          status = result.job_status
-          if status == "SUCCEEDED"
-            all_pages << result
-            next_token = result.next_token
-            break unless next_token
-          elsif %w[FAILED PARTIAL_SUCCESS].include?(status)
-            raise "Textract job ended with status: #{status}"
-          else
-            sleep 2 # still IN_PROGRESS; wait briefly and try again
-          end
-=======
         case command
         when LIST_FILES_CMD
           list_files_in_folder(folder_name)
@@ -152,7 +130,6 @@ module Multiwoven::Integrations::Source
           download_file_to_local(folder_name, file_name, sync_config.sync_id)
         else
           raise ArgumentError, "Invalid command. Supported commands: #{LIST_FILES_CMD}, #{DOWNLOAD_FILE_CMD} <file_path>"
->>>>>>> f42cf8e0 (fix(CE): next_page_token not cleared, messing with call to get file (#1478))
         end
         all_pages
       end
@@ -169,19 +146,6 @@ module Multiwoven::Integrations::Source
           parents_query = "'#{parent_id}' in parents"
         end
 
-<<<<<<< HEAD
-        if @options[:subfolders]
-          subfolders_query = MIMETYPE_GOOGLE_DRIVE_FOLDER
-          subfolders_query += "and #{parents_query}" if parents_query
-          response = client.list_files(include_items_from_all_drives: true, supports_all_drives: true, q: subfolders_query, fields: FIELDS)
-          subfolders_ids = response.files.map { |file| "'#{file.id}'" }
-          parents_query = "(#{subfolders_ids.join(" in parents or ")} in parents)"
-        end
-
-        query += " and mimeType = '#{@options[:file_type]}'" if @options[:file_type]
-        query += " and #{parents_query}" if parents_query
-        query
-=======
       def download_file_to_local(folder_name, file_name, sync_id)
         query = build_query(folder_name)
         download_path = ENV["FILE_DOWNLOAD_PATH"]
@@ -229,7 +193,6 @@ module Multiwoven::Integrations::Source
 
         parent_id = response.files.first.id
         "'#{parent_id}' in parents and mimeType != 'application/vnd.google-apps.folder'"
->>>>>>> f42cf8e0 (fix(CE): next_page_token not cleared, messing with call to get file (#1478))
       end
 
       def get_files(client, query, limit, _offset)
