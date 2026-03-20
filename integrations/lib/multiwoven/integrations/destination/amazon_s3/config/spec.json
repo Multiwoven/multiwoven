@@ -4,7 +4,7 @@
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "AmazonS3",
-    "required": ["access_key_id", "secret_access_key", "region", "bucket_name", "file_path", "file_name", "format_type" ],
+    "required": ["access_key_id", "secret_access_key", "region", "bucket_name", "file_name", "format_type" ],
     "properties": {
       "access_key_id": {
         "description": "The AWS Access Key ID to use for authentication.",
