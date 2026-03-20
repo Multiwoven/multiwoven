@@ -45,6 +45,11 @@ module Multiwoven::Integrations::Destination
 
       private
 
+      def path_style_enabled?(connection_config)
+        val = connection_config[:path_style]
+        val == true || val.to_s.casecmp("true").zero?
+      end
+
       def create_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         s3_options = {
@@ -55,7 +60,9 @@ module Multiwoven::Integrations::Destination
         endpoint = connection_config[:endpoint].to_s.strip
         if endpoint.present?
           s3_options[:endpoint] = endpoint
-          s3_options[:force_path_style] = connection_config[:path_style] == true
+          # Path style is required for MinIO/S3-compatible endpoints. Accept both boolean and string
+          # (e.g. from JSON/API) so it works in all environments.
+          s3_options[:force_path_style] = path_style_enabled?(connection_config)
         end
         Aws::S3::Client.new(**s3_options)
       end

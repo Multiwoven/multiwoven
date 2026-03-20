@@ -83,6 +83,11 @@ module Multiwoven::Integrations::Source
         end
       end
 
+      def path_style_enabled?(connection_config)
+        val = connection_config[:path_style]
+        val == true || val.to_s.casecmp("true").zero?
+      end
+
       def create_s3_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
 
@@ -97,7 +102,7 @@ module Multiwoven::Integrations::Source
         endpoint = connection_config[:endpoint].to_s.strip
         if endpoint.present?
           s3_options[:endpoint] = endpoint
-          s3_options[:force_path_style] = connection_config[:path_style] == true
+          s3_options[:force_path_style] = path_style_enabled?(connection_config)
         end
 
         @s3_resource = Aws::S3::Resource.new(**s3_options)
@@ -130,10 +135,15 @@ module Multiwoven::Integrations::Source
 
           # Disable SSL if http
           secret_parts << "USE_SSL false" if uri.scheme == "http"
+
+          # Path-style URLs (endpoint/bucket/key) required for MinIO and S3-compatible stores.
+          # Must be set in the secret; session SET s3_url_style is not applied when using secrets.
+          secret_parts << "URL_STYLE 'path'" if path_style_enabled?(connection_config)
         end
         secret_query = "CREATE SECRET amazons3_source (#{secret_parts.join(", ")});"
         get_results(conn, secret_query)
-        conn.execute("SET s3_url_style = 'path';") if connection_config[:path_style].present?
+        # Session-level fallback for environments where secret URL_STYLE is not honored
+        conn.execute("SET s3_url_style = 'path';") if path_style_enabled?(connection_config)
         conn
       end
 
