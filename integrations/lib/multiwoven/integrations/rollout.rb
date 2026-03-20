@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.34.13"
+=======
+    VERSION = "0.35.1"
+>>>>>>> 566791f46 (chore(CE): updated the documentation link (#1753))
 
     ENABLED_SOURCES = %w[
       Snowflake

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Weaviate",
+    "title": "Weaviate",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/weaviate",
+    "github_issue_label": "destination-weaviate",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]        
+  }
+}
