@@ -85,13 +85,6 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
-<<<<<<< HEAD
-      expect(catalog.schema_mode).to eql("schemaless")
-      expect(catalog.streams[0].name).to eql("create")
-      expect(catalog.streams[0].batch_support).to eql(true)
-      expect(catalog.streams[0].batch_size).to eql(100_000)
-      expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
-=======
       expect(catalog.schema_mode).to eql("schema")
       expect(catalog.streams[0].name).to eql("test_file")
       expect(catalog.streams[0].batch_support).to eql(true)
@@ -160,7 +153,6 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         )
         client.discover(s_config[:destination][:connection_specification])
       end
->>>>>>> cb46584b6 (chore(CE): Allow Batch Support and Batch Size for S3 (#1632))
     end
   end
 

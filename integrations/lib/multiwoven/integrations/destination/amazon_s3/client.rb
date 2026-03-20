@@ -87,8 +87,6 @@ module Multiwoven::Integrations::Destination
         timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
         "#{connection_config[:file_name]}_#{timestamp}.#{connection_config[:format_type]}"
       end
-<<<<<<< HEAD
-=======
 
       def build_discover_prefix(connection_config)
         file_path = connection_config[:file_path].to_s.strip
@@ -145,7 +143,6 @@ module Multiwoven::Integrations::Destination
           )
         end
       end
->>>>>>> cb46584b6 (chore(CE): Allow Batch Support and Batch Size for S3 (#1632))
     end
   end
 end
