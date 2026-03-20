@@ -74,14 +74,62 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(response.connection_status.status).to eq("failed")
       expect(response.connection_status.message).to eq("connection failed")
     end
+
+    context "when the connection is successful for minIO" do
+      it "returns a succeeded connection status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        expect(s3_client).to receive(:head_bucket)
+        message = client.check_connection(sync_config_json[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
+      end
+    end
+
+    context "when the connection fails for minIO" do
+      it "returns a failed connection status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_raise(StandardError.new("connection failed"))
+        message = client.check_connection(sync_config_json[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("failed")
+        expect(result.message).to eq("connection failed")
+      end
+    end
   end
 
   describe "#discover" do
     it "returns a catalog" do
+      allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+      allow(s3_client).to receive(:list_objects_v2).and_return(
+        Aws::S3::Types::ListObjectsV2Output.new(
+          contents: [
+            Aws::S3::Types::Object.new(
+              key: "test_file.csv",
+              size: 123,
+              etag: '"abc123"',
+              last_modified: Time.now,
+              storage_class: "STANDARD"
+            )
+          ],
+          key_count: 1,
+          is_truncated: false,
+          name: "my-bucket",
+          prefix: "test_file.csv"
+        )
+      )
+      allow(s3_client).to receive(:get_object).and_return(
+        Aws::S3::Types::GetObjectOutput.new(
+          body: StringIO.new("col1,col2,col3\n1,first,1.1\n2,second,2.2\n3,third,3.3")
+        )
+      )
       message = client.discover(connection_config)
       catalog = message.catalog
       expect(catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-      expect(catalog.request_rate_limit).to eql(600)
+      expect(catalog.request_rate_limit).to eql(60)
       expect(catalog.request_rate_limit_unit).to eql("minute")
       expect(catalog.request_rate_concurrency).to eql(10)
       expect(catalog.streams.count).to eql(1)
@@ -165,6 +213,19 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         response = client.write(s_config, records)
         expect(response.tracking.success).to eq(records.size)
         expect(response.tracking.failed).to eq(0)
+      end
+    end
+
+    context "when the write operation is successful for minIO" do
+      it "returns a succeeded write status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        allow(s3_client).to receive(:put_object).and_return(true)
+        message = client.write(s_config, records)
+        expect(message.tracking.success).to eq(records.size)
+        expect(message.tracking.failed).to eq(0)
       end
     end
 

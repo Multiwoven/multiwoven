@@ -13,9 +13,12 @@ module Multiwoven::Integrations::Destination
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
       end
 
-      def discover(_connection_config = nil)
-        catalog_json = read_json(CATALOG_SPEC_PATH)
-        catalog = build_catalog(catalog_json)
+      def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        conn = create_connection(connection_config)
+        records = discover_columns_from_s3(conn, connection_config)
+        grouped = group_by_table(records, connection_config[:file_name])
+        catalog = Catalog.new(streams: create_streams(grouped))
         catalog.to_multiwoven_message
       rescue StandardError => e
         handle_exception(e, {
@@ -42,12 +45,26 @@ module Multiwoven::Integrations::Destination
 
       private
 
+      def path_style_enabled?(connection_config)
+        val = connection_config[:path_style]
+        val == true || val.to_s.casecmp("true").zero?
+      end
+
       def create_connection(connection_config)
-        Aws::S3::Client.new(
+        connection_config = connection_config.with_indifferent_access
+        s3_options = {
           region: connection_config[:region],
           access_key_id: connection_config[:access_key_id],
           secret_access_key: connection_config[:secret_access_key]
-        )
+        }
+        endpoint = connection_config[:endpoint].to_s.strip
+        if endpoint.present?
+          s3_options[:endpoint] = endpoint
+          # Path style is required for MinIO/S3-compatible endpoints. Accept both boolean and string
+          # (e.g. from JSON/API) so it works in all environments.
+          s3_options[:force_path_style] = path_style_enabled?(connection_config)
+        end
+        Aws::S3::Client.new(**s3_options)
       end
 
       def upload_csv_content(sync_config, records)
