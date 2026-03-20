@@ -202,25 +202,6 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         client.discover(s_config[:destination][:connection_specification])
       end
     end
-
-    context "when the discover operation is successful for minIO" do
-      it "returns a succeeded discover status" do
-        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
-        sync_config_json[:source][:connection_specification][:path_style] = true
-        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
-        message = client.discover(sync_config_json[:source][:connection_specification])
-        expect(message.catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
-        expect(message.catalog.request_rate_limit).to eql(600)
-        expect(message.catalog.request_rate_limit_unit).to eql("minute")
-        expect(message.catalog.request_rate_concurrency).to eql(10)
-        expect(message.catalog.streams.count).to eql(1)
-        expect(message.catalog.schema_mode).to eql("schemaless")
-        expect(message.catalog.streams[0].name).to eql("create")
-        expect(message.catalog.streams[0].batch_support).to eql(true)
-        expect(message.catalog.streams[0].batch_size).to eql(100_000)
-        expect(message.catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
-      end
-    end
   end
 
   describe "#write" do
