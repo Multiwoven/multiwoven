@@ -11,7 +11,7 @@ module Multiwoven
     DestinationSyncMode = Types::String.enum("insert", "upsert")
     ConnectorType = Types::String.enum("source", "destination")
     ConnectorQueryType = Types::String.enum("raw_sql", "soql", "ai_ml", "vector_search")
-    ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql", "table_selector", "ai_ml", "dynamic_sql", "unstructured", "vector_search")
+    ModelQueryType = Types::String.enum("raw_sql", "dbt", "soql", "table_selector", "ai_ml", "dynamic_sql", "unstructured", "vector_search", "semistructured")
     ConnectionStatusType = Types::String.enum("succeeded", "failed")
     StreamType = Types::String.enum("static", "dynamic", "user_defined")
     StreamAction = Types::String.enum("fetch", "create", "update", "delete")
@@ -192,6 +192,7 @@ module Multiwoven
       attribute :source, Connector
       attribute :vector, Types::Array.of(Types::Float) | Types::String
       attribute :limit, Types::Integer.default(1)
+      attribute? :filters, Types::Array.of(Types::Hash).optional.default([])
     end
 
     class ControlMessage < ProtocolModel
