@@ -9,7 +9,6 @@ module Multiwoven::Integrations::Source
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         @session_name = "connection-#{connection_config[:region]}-#{connection_config[:bucket]}"
-
         if unstructured_data?(connection_config)
           create_s3_connection(connection_config)
           @s3_resource.bucket(connection_config[:bucket]).objects.limit(1).first
@@ -95,13 +94,10 @@ module Multiwoven::Integrations::Source
         # Get authentication credentials
         auth_data = get_auth_data(connection_config)
 
-        # Create S3 resource for easier operations
-        @s3_resource = Aws::S3::Resource.new(
+        # Build client options; use custom endpoint when provided (e.g. MinIO)
+        s3_options = {
           region: connection_config[:region],
           credentials: auth_data
-<<<<<<< HEAD
-        )
-=======
         }
         endpoint = connection_config[:endpoint].to_s.strip
         if endpoint.present?
@@ -110,7 +106,6 @@ module Multiwoven::Integrations::Source
         end
 
         @s3_resource = Aws::S3::Resource.new(**s3_options)
->>>>>>> 3fad945c4 (chore(CE): add URL_STYLE 'path' to secret_part in S3 (#1630))
       end
 
       def create_connection(connection_config)
@@ -120,19 +115,6 @@ module Multiwoven::Integrations::Source
         conn = DuckDB::Database.open.connect
         # Install and/or Load the HTTPFS extension
         conn.execute(INSTALL_HTTPFS_QUERY)
-<<<<<<< HEAD
-        # Set up S3 configuration
-        secret_query = "
-              CREATE SECRET amazons3_source (
-              TYPE S3,
-              KEY_ID '#{auth_data.credentials.access_key_id}',
-              SECRET '#{auth_data.credentials.secret_access_key}',
-              REGION '#{connection_config[:region]}',
-              SESSION_TOKEN '#{auth_data.credentials.session_token}'
-          );
-        "
-        get_results(conn, secret_query)
-=======
         # Set up S3 configuration (optional custom endpoint for MinIO / S3-compatible stores)
         secret_parts = [
           "TYPE S3",
@@ -162,7 +144,6 @@ module Multiwoven::Integrations::Source
         get_results(conn, secret_query)
         # Session-level fallback for environments where secret URL_STYLE is not honored
         conn.execute("SET s3_url_style = 'path';") if path_style_enabled?(connection_config)
->>>>>>> 3fad945c4 (chore(CE): add URL_STYLE 'path' to secret_part in S3 (#1630))
         conn
       end
 
