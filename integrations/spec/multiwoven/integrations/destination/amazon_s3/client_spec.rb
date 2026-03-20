@@ -114,8 +114,6 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(catalog.streams[0].batch_size).to eql(1)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
     end
-<<<<<<< HEAD
-=======
 
     context "when the discover operation is successful for minIO" do
       it "returns a succeeded discover status" do
@@ -179,7 +177,6 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         client.discover(s_config[:destination][:connection_specification])
       end
     end
->>>>>>> 238352aa8 (chore(CE): Remove schemaless catalog from Amazon S3 Connector (#1626))
   end
 
   describe "#write" do

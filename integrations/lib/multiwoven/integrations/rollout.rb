@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.34.6"
-=======
     VERSION = "0.34.16"
->>>>>>> 238352aa8 (chore(CE): Remove schemaless catalog from Amazon S3 Connector (#1626))
 
     ENABLED_SOURCES = %w[
       Snowflake
