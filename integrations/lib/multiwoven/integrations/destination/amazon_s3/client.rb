@@ -43,11 +43,18 @@ module Multiwoven::Integrations::Destination
       private
 
       def create_connection(connection_config)
-        Aws::S3::Client.new(
+        connection_config = connection_config.with_indifferent_access
+        s3_options = {
           region: connection_config[:region],
           access_key_id: connection_config[:access_key_id],
           secret_access_key: connection_config[:secret_access_key]
-        )
+        }
+        endpoint = connection_config[:endpoint].to_s.strip
+        if endpoint.present?
+          s3_options[:endpoint] = endpoint
+          s3_options[:force_path_style] = connection_config[:path_style] == true
+        end
+        Aws::S3::Client.new(**s3_options)
       end
 
       def upload_csv_content(sync_config, records)

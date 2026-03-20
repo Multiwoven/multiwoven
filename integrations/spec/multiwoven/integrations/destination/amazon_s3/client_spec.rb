@@ -74,6 +74,31 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(response.connection_status.status).to eq("failed")
       expect(response.connection_status.message).to eq("connection failed")
     end
+
+    context "when the connection is successful for minIO" do
+      it "returns a succeeded connection status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        expect(s3_client).to receive(:head_bucket)
+        message = client.check_connection(sync_config_json[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
+      end
+    end
+
+    context "when the connection fails for minIO" do
+      it "returns a failed connection status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_raise(StandardError.new("connection failed"))
+        message = client.check_connection(sync_config_json[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("failed")
+        expect(result.message).to eq("connection failed")
+      end
+    end
   end
 
   describe "#discover" do
@@ -91,6 +116,25 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(catalog.streams[0].batch_size).to eql(100_000)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
     end
+
+    context "when the discover operation is successful for minIO" do
+      it "returns a succeeded discover status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        message = client.discover(sync_config_json[:source][:connection_specification])
+        expect(message.catalog).to be_a(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.request_rate_limit).to eql(600)
+        expect(message.catalog.request_rate_limit_unit).to eql("minute")
+        expect(message.catalog.request_rate_concurrency).to eql(10)
+        expect(message.catalog.streams.count).to eql(1)
+        expect(message.catalog.schema_mode).to eql("schemaless")
+        expect(message.catalog.streams[0].name).to eql("create")
+        expect(message.catalog.streams[0].batch_support).to eql(true)
+        expect(message.catalog.streams[0].batch_size).to eql(100_000)
+        expect(message.catalog.streams[0].supported_sync_modes).to eql(%w[full_refresh incremental])
+      end
+    end
   end
 
   describe "#write" do
@@ -102,6 +146,19 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         response = client.write(s_config, records)
         expect(response.tracking.success).to eq(records.size)
         expect(response.tracking.failed).to eq(0)
+      end
+    end
+
+    context "when the write operation is successful for minIO" do
+      it "returns a succeeded write status" do
+        sync_config_json[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config_json[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Destination::AmazonS3::Client).to receive(:create_connection).and_return(s3_client)
+        allow(s3_client).to receive(:put_object).and_return(true)
+        message = client.write(s_config, records)
+        expect(message.tracking.success).to eq(records.size)
+        expect(message.tracking.failed).to eq(0)
       end
     end
 
