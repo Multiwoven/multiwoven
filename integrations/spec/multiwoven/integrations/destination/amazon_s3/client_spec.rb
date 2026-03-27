@@ -135,8 +135,8 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
       expect(catalog.streams.count).to eql(1)
       expect(catalog.schema_mode).to eql("schema")
       expect(catalog.streams[0].name).to eql("test_file")
-      expect(catalog.streams[0].batch_support).to eql(false)
-      expect(catalog.streams[0].batch_size).to eql(1)
+      expect(catalog.streams[0].batch_support).to eql(true)
+      expect(catalog.streams[0].batch_size).to eql(100_000)
       expect(catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
     end
 
@@ -176,8 +176,8 @@ RSpec.describe Multiwoven::Integrations::Destination::AmazonS3::Client do
         expect(message.catalog.streams.count).to eql(1)
         expect(message.catalog.schema_mode).to eql("schema")
         expect(message.catalog.streams[0].name).to eql("test_file")
-        expect(message.catalog.streams[0].batch_support).to eql(false)
-        expect(message.catalog.streams[0].batch_size).to eql(1)
+        expect(message.catalog.streams[0].batch_support).to eql(true)
+        expect(message.catalog.streams[0].batch_size).to eql(100_000)
         expect(message.catalog.streams[0].supported_sync_modes).to eql(%w[incremental])
       end
     end

@@ -154,7 +154,9 @@ module Multiwoven::Integrations::Destination
           Multiwoven::Integrations::Protocol::Stream.new(
             name: r[:tablename],
             action: StreamAction["create"],
-            json_schema: convert_to_json_schema(r[:columns])
+            json_schema: convert_to_json_schema(r[:columns]),
+            batch_support: true,
+            batch_size: 100_000
           )
         end
       end
