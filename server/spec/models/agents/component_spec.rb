@@ -8,6 +8,11 @@ RSpec.describe Agents::Component, type: :model do
     it { should belong_to(:workspace) }
     it { should have_many(:source_edges).class_name("Agents::Edge").dependent(:destroy) }
     it { should have_many(:target_edges).class_name("Agents::Edge").dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:llm_routing_logs).dependent(:destroy) }
+    it { should have_many(:llm_usage_logs).dependent(:destroy) }
+>>>>>>> 6f1a6fb16 (chore(CE): Add LLM Usage Log (#1649))
   end
 
   describe "enums" do
