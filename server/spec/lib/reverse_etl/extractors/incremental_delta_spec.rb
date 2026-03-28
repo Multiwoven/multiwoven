@@ -119,7 +119,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         expect(sync_run1).to have_state(:started)
         allow(activity).to receive(:cancel_requested).and_return(true)
         allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches)
-          .and_yield([record2, record3], 1, "2022-01-06")
+          .and_yield([record1, record2], 1, "2022-01-06")
         expect { subject.read(sync_run1.id, activity) }
           .to raise_error(StandardError, "Cancel activity request received")
         sync_run1.reload

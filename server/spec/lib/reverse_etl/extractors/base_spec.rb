@@ -24,7 +24,7 @@ RSpec.describe ReverseEtl::Extractors::Base do
       sync_config.sync_run_id = sync_run.id
       expected_params = {
         offset: 100,
-        limit: described_class::DEFAULT_LIMT,
+        limit: described_class::DEFAULT_LIMIT,
         batch_size: described_class::DEFAULT_BATCH_SIZE,
         sync_config: sync_run.sync.to_protocol,
         client:
