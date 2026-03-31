@@ -99,8 +99,12 @@ const SideBarFooter = () => (
 const Sidebar = (): JSX.Element => {
   return (
     <Flex
+<<<<<<< HEAD
       position='relative'
       as='section'
+=======
+      data-testid='app-sidebar'
+>>>>>>> f4a938794 (chore(CE): data-testid attributes to the main sidebar and workspace UI  (#1781))
       minH='100vh'
       bg='bg.canvas'
       borderRightWidth='1px'
