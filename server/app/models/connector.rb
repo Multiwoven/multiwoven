@@ -117,7 +117,7 @@ class Connector < ApplicationRecord
     query = query.chomp(";")
 
     # Check if the query already has a LIMIT clause
-    has_limit = query.match?(/LIMIT \s*\d+\s*$/i)
+    has_limit = query.match?(/\bLIMIT\s+\d+/i)
     # Append LIMIT only if not already present
     final_query = has_limit ? query : "#{query} LIMIT #{limit}"
     client.send(:query, db, final_query)
