@@ -127,6 +127,7 @@ require_relative "integrations/destination/microsoft_dynamics/client"
 require_relative "integrations/destination/qdrant/client"
 require_relative "integrations/destination/pinecone_db/client"
 require_relative "integrations/destination/odoo/client"
+require_relative "integrations/destination/weaviate/client"
 
 module Multiwoven
   module Integrations
