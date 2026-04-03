@@ -106,15 +106,19 @@ module Multiwoven::Integrations::Destination
         end
 
         sql = "INSERT INTO #{table_name} (#{col_list}) VALUES #{values_clauses.join(", ")}"
-        sql += build_upsert_clause(columns, primary_key) if action.to_s == "destination_update"
+        if primary_key.present?
+          sql += action.to_s == "destination_insert" ? build_safe_insert_clause(primary_key) : build_upsert_clause(columns, primary_key)
+        end
         db.exec(sql)
       end
 
-      def build_upsert_clause(columns, primary_key)
-        return "" unless primary_key.present?
+      def build_safe_insert_clause(primary_key)
+        " ON CONFLICT (#{quote_ident(primary_key)}) DO NOTHING"
+      end
 
+      def build_upsert_clause(columns, primary_key)
         update_cols = columns.reject { |c| c.to_s == primary_key.to_s }
-        return " ON CONFLICT (#{quote_ident(primary_key)}) DO NOTHING" if update_cols.empty?
+        return build_safe_insert_clause(primary_key) if update_cols.empty?
 
         set_clause = update_cols.map { |c| "#{quote_ident(c)} = EXCLUDED.#{quote_ident(c)}" }.join(", ")
         " ON CONFLICT (#{quote_ident(primary_key)}) DO UPDATE SET #{set_clause}"
