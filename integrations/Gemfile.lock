@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.34.6)
-=======
     multiwoven-integrations (0.34.20)
->>>>>>> 96ce8afbc (chore(CE): Batch support for postgres destination (#1677))
       MailchimpMarketing
       activesupport
       async-websocket

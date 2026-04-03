@@ -2,11 +2,7 @@
 
 module Multiwoven
   module Integrations
-<<<<<<< HEAD
-    VERSION = "0.34.6"
-=======
     VERSION = "0.34.20"
->>>>>>> 96ce8afbc (chore(CE): Batch support for postgres destination (#1677))
 
     ENABLED_SOURCES = %w[
       Snowflake
