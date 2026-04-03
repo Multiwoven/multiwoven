@@ -106,9 +106,8 @@ RSpec.describe Multiwoven::Integrations::Destination::Odoo::Client do
                   "database</string></value></param><param><value><i4>1</i4></value></param><param><value><string>password</string>"\
                   "</value></param><param><value><string>ir.model</string></value></param><param><value><string>search_read</string>"\
                   "</value></param><param><value><array><data><value><array><data><value><array><data><value><string>transient</string>"\
-                  "</value><value><string>=</string></value><value><boolean>0</boolean></value></data></array></value><value>"\
-                  "<array><data><value><string>abstract</string></value><value><string>=</string></value><value><boolean>0</boolean>"\
-                  "</value></data></array></value></data></array></value></data></array></value></param><param><value><struct>"\
+                  "</value><value><string>=</string></value><value><boolean>0</boolean></value></data></array></value>"\
+                  "</data></array></value></data></array></value></param><param><value><struct>"\
                   "<member><name>fields</name><value><array><data><value><string>name</string></value><value><string>model</string>"\
                   "</value></data></array></value></member></struct></value></param></params></methodCall>\n"
                 })
