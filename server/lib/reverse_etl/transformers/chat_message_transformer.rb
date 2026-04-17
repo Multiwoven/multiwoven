@@ -13,8 +13,13 @@ module ReverseEtl
       end
 
       def transform
+        Rails.logger.info("Chat Message Transformer: #{@chat_history.to_json}")
         format(PROMPT_USER_TEMPLATE, format_history, @latest_user_query)
       rescue StandardError => e
+        Rails.logger.info(
+          "Error in Chat Message Transformer, chat_history = #{@chat_history.to_json}, " \
+          "latest_user_query = #{@latest_user_query.to_json} error = #{e.message}"
+        )
         Rails.logger.error({
           error_message: e.message,
           chat_history: @chat_history,
