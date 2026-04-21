@@ -338,6 +338,7 @@ GEM
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.2.3)
+<<<<<<< HEAD
     nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.9-x64-mingw-ucrt)
@@ -345,6 +346,15 @@ GEM
     nokogiri (1.18.9-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.9-x86_64-linux-gnu)
+=======
+    nokogiri (1.19.1-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x64-mingw-ucrt)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x86_64-linux-gnu)
+>>>>>>> d45c6cb32 (fix(CE): nokogiri update (#1688))
       racc (~> 1.4)
     os (1.1.4)
     parallel (1.24.0)
@@ -365,7 +375,7 @@ GEM
       httparty (~> 0.22.0)
     process_executer (1.1.0)
     public_suffix (5.0.5)
-    racc (1.8.0)
+    racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
     rchardet (1.8.0)
@@ -512,7 +522,7 @@ DEPENDENCIES
   multiwoven-integrations!
   mysql2
   net-sftp
-  nokogiri
+  nokogiri (>= 1.19.1)
   pdf-reader
   pg
   pinecone
