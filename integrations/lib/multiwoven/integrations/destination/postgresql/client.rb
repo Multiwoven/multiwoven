@@ -51,8 +51,8 @@ module Multiwoven::Integrations::Destination
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         raw_table = sync_config.stream.name
         table_name = qualify_table(connection_config[:schema], raw_table)
-        primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
+        primary_key = fetch_primary_key(db, connection_config[:schema], raw_table)
 
         write_success = 0
         write_failure = 0
@@ -175,6 +175,23 @@ module Multiwoven::Integrations::Destination
             end
           }
         end
+      end
+
+      def fetch_primary_key(db, schema, table)
+        schema = schema.presence || "public"
+        quoted = "\"#{schema}\".\"#{table}\""
+        result = db.exec(<<~SQL)
+          SELECT a.attname AS column_name
+          FROM pg_index i
+          JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+          WHERE i.indrelid = '#{quoted}'::regclass
+            AND i.indisprimary
+          LIMIT 1
+        SQL
+        result.first&.dig("column_name")
+      rescue StandardError => e
+        logger.warn("POSTGRESQL:FETCH_PRIMARY_KEY:EXCEPTION #{e.message}")
+        nil
       end
 
       def qualify_table(schema, table)
