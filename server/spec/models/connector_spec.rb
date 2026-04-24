@@ -555,74 +555,15 @@ RSpec.describe Connector, type: :model do
     end
   end
 
-  describe "#extract_secret_keys" do
+  describe "#mask_by_keys" do
     let(:schema) do
       {
-        properties: {
-          host: { type: "string" },
-          credentials: {
-            type: "object",
-            properties: {
-              username: { type: "string" },
-              password: { type: "string", multiwoven_secret: true }
-            }
-          },
-          api_key: { type: "string", multiwoven_secret: true },
-          nested: {
-            type: "object",
-            properties: {
-              secret: { type: "string", multiwoven_secret: true },
-              normal: { type: "string" }
-            }
-          }
+        "properties" => {
+          "password" => { "multiwoven_secret" => true },
+          "api_key" => { "multiwoven_secret" => true }
         }
       }
     end
-
-    it "extracts all secret keys from schema" do
-      result = connector.send(:extract_secret_keys, schema)
-
-      expect(result).to contain_exactly("password", "api_key", "secret")
-    end
-
-    context "when schema has no secrets" do
-      let(:schema) do
-        {
-          properties: {
-            host: { type: "string" },
-            port: { type: "number" }
-          }
-        }
-      end
-
-      it "returns empty array" do
-        result = connector.send(:extract_secret_keys, schema)
-
-        expect(result).to be_empty
-      end
-    end
-
-    context "when schema is not a hash" do
-      it "returns empty array" do
-        result = connector.send(:extract_secret_keys, "not a hash")
-
-        expect(result).to be_empty
-      end
-    end
-
-    context "when schema has no properties" do
-      let(:schema) { { type: "object" } }
-
-      it "returns empty array" do
-        result = connector.send(:extract_secret_keys, schema)
-
-        expect(result).to be_empty
-      end
-    end
-  end
-
-  describe "#mask_secret_values" do
-    let(:secret_keys) { %w[password api_key] }
 
     context "when config is a hash" do
       let(:config) do
@@ -637,7 +578,7 @@ RSpec.describe Connector, type: :model do
       end
 
       it "masks secret values and preserves structure" do
-        result = connector.send(:mask_secret_values, config, secret_keys)
+        result = Utils::SecretMasking.mask_by_keys(config, schema)
 
         expect(result["host"]).to eq("example.com")
         expect(result["password"]).to eq("*************")
@@ -655,7 +596,7 @@ RSpec.describe Connector, type: :model do
       end
 
       it "masks secrets in array items" do
-        result = connector.send(:mask_secret_values, config, secret_keys)
+        result = Utils::SecretMasking.mask_by_keys(config, schema)
 
         expect(result[0]["name"]).to eq("item1")
         expect(result[0]["password"]).to eq("*************")
@@ -666,7 +607,7 @@ RSpec.describe Connector, type: :model do
 
     context "when config is not a hash or array" do
       it "returns config unchanged" do
-        result = connector.send(:mask_secret_values, "string_value", secret_keys)
+        result = Utils::SecretMasking.mask_by_keys("string_value", schema)
 
         expect(result).to eq("string_value")
       end
@@ -681,7 +622,7 @@ RSpec.describe Connector, type: :model do
       end
 
       it "returns config unchanged" do
-        result = connector.send(:mask_secret_values, config, secret_keys)
+        result = Utils::SecretMasking.mask_by_keys(config, schema)
 
         expect(result).to eq(config)
       end
