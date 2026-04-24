@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Multiwoven::Integrations do
+  describe "::VERSION" do
+    it "is a valid semantic version string" do
+      expect(Multiwoven::Integrations::VERSION).to match(/\A\d+\.\d+\.\d+\z/)
+    end
+  end
+
   describe "::ENABLED_SOURCES" do
     let(:enabled_sources) { Multiwoven::Integrations::ENABLED_SOURCES }
     let(:enabled_destinations) { Multiwoven::Integrations::ENABLED_DESTINATIONS }
