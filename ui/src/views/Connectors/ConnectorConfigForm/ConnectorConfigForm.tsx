@@ -55,6 +55,8 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
             schema={connectorSchema}
             uiSchema={generatedSchema}
             onSubmit={(formData: FormData) => handleFormSubmit(formData)}
+            connectorId={connector}
+            connectorType={connectorType}
           >
             <FormFooter
               ctaName='Continue'
