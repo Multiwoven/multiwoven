@@ -39,7 +39,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "upsert")
+      def write(sync_config, records, _action = "upsert", _identifier_key = nil)
         @sync_config = sync_config
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         create_connection(connection_config)

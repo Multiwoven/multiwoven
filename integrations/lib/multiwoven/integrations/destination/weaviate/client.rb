@@ -39,7 +39,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "destination_insert")
+      def write(sync_config, records, _action = "destination_insert", _identifier_key = nil)
         write_success = 0
         write_failure = 0
         log_message_array = []
