@@ -24,7 +24,6 @@ import MapCustomFields from '../SyncForm/ConfigureSyncs/MapCustomFields';
 import { useStore } from '@/stores';
 import BaseButton from '@/components/BaseButton';
 import { FiRefreshCcw } from 'react-icons/fi';
-import AlertBox from '@/components/Alerts/Alerts';
 import useEditSync from '@/hooks/syncs/useEditSync';
 import useManualSync from '@/hooks/syncs/useManualSync';
 import useSyncRuns from '@/hooks/syncs/useSyncRuns';
@@ -248,15 +247,6 @@ const EditSync = (): JSX.Element | null => {
             </>
 
             <ScheduleForm formik={formik} isEdit />
-            {formik.values.schedule_type === 'manual' && (
-              <Box marginTop='20px' marginBottom='100px'>
-                <AlertBox
-                  title='Trigger syncs using API keys'
-                  description='You can also trigger this sync using Airflow, Dagster, or Prefect. If you need an API key, please create one in the Settings page.'
-                  status='info'
-                />
-              </Box>
-            )}
           </React.Fragment>
         ) : null}
         <FormFooter
