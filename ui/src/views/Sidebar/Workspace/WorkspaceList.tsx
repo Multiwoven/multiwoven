@@ -27,7 +27,7 @@ const WorkspaceList = ({
   organizationName,
 }: WorkspacListProps) => {
   return (
-    <ModalContent>
+    <ModalContent data-testid='workspace-select-modal'>
       <ModalHeader paddingX='24px' paddingY='20px'>
         <Text fontWeight={700} size='xl' color='black.500' letterSpacing='-0.2px'>
           Select a workspace
@@ -102,6 +102,7 @@ const WorkspaceList = ({
             >
               Cancel
             </Button>
+<<<<<<< HEAD
             <Button
               variant='solid'
               color='white'
@@ -112,6 +113,21 @@ const WorkspaceList = ({
             >
               Create New Workspace
             </Button>
+=======
+            <RoleAccess location='workspace' type='item' action={UserActions.Create}>
+              <Button
+                data-testid='create-new-workspace'
+                variant='solid'
+                color='white'
+                rounded='lg'
+                onClick={handleCreateNewWorkspace}
+                minWidth={0}
+                width='auto'
+              >
+                Create New Workspace
+              </Button>
+            </RoleAccess>
+>>>>>>> f4a938794 (chore(CE): data-testid attributes to the main sidebar and workspace UI  (#1781))
           </Flex>
         </Box>
       </ModalFooter>

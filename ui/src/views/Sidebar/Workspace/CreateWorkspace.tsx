@@ -82,7 +82,7 @@ const CreateWorkspace = ({
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ModalContent>
+      <ModalContent data-testid='create-workspace-modal'>
         <ModalHeader paddingX='24px' paddingY='20px'>
           <Text fontWeight={700} size='xl' color='black.500' letterSpacing='-0.2px'>
             Create a new workspace
@@ -97,6 +97,7 @@ const CreateWorkspace = ({
                 Workspace Name
               </Text>
               <Input
+                data-testid='create-workspace-name-input'
                 backgroundColor='gray.100'
                 onChange={formik.handleChange}
                 value={formik.values.name}
@@ -123,6 +124,7 @@ const CreateWorkspace = ({
               </Box>
 
               <Textarea
+                data-testid='create-workspace-description-input'
                 name='description'
                 value={formik.values.description}
                 placeholder='Enter a description'
@@ -191,6 +193,7 @@ const CreateWorkspace = ({
                 Cancel
               </Button>
               <Button
+                data-testid='create-workspace-submit'
                 variant='solid'
                 color='white'
                 rounded='lg'
