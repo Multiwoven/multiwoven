@@ -7,9 +7,11 @@ module Workspaces
     include Interactor
 
     def call
-      workspace = Workspace.find_by(id: context.id)
+      workspace = context.user.workspaces.find_by(id: context.id)
+      return context.fail!(workspace:) if workspace.blank?
+
       workspace.slug = "default" if workspace.slug.empty?
-      if workspace&.update(context.workspace_params)
+      if workspace.update(context.workspace_params)
         context.workspace = workspace
       else
         context.fail!(workspace:)
