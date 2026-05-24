@@ -12,6 +12,11 @@ module Agents
     belongs_to :workspace
 
     has_one :workflow_log, class_name: "Agents::WorkflowLog", dependent: :destroy
+<<<<<<< HEAD
+=======
+    has_many :llm_routing_logs, dependent: :destroy
+    has_many :llm_usage_logs, dependent: :destroy
+>>>>>>> 6f1a6fb16 (chore(CE): Add LLM Usage Log (#1649))
 
     after_initialize :set_defaults, if: :new_record?
 
@@ -80,6 +85,10 @@ module Agents
     def duration_in_seconds
       now = Time.zone.now
       ((updated_at || now) - (created_at || now)).round
+    end
+
+    def tokens_used
+      llm_usage_logs.sum(:estimated_input_tokens) + llm_usage_logs.sum(:estimated_output_tokens)
     end
   end
 end
