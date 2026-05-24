@@ -77,8 +77,17 @@ module Api
         authorize @connector
         @action = "delete"
         @audit_resource = @connector.name
-        @connector.destroy!
-        head :no_content
+
+        result = DeleteConnector.call(connector: @connector)
+
+        if result.success?
+          head :no_content
+        else
+          render_error(
+            message: result.error,
+            status: :unprocessable_content
+          )
+        end
       end
 
       def discover
