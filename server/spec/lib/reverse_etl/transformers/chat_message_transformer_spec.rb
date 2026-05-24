@@ -32,7 +32,11 @@ RSpec.describe ReverseEtl::Transformers::ChatMessageTransformer, type: :service 
           error_message: "Something went wrong",
           chat_history:,
           latest_user_query:,
+<<<<<<< HEAD
           stack_trace: ["lib/reverse_etl/transformers/chat_message_transformer.rb:16:in `transform'"]
+=======
+          stack_trace: ["lib/reverse_etl/transformers/chat_message_transformer.rb:18:in `transform'"]
+>>>>>>> 105b4c406 (test(CE): enable more logs for error handling (#1763))
         }.to_s)
         expect(transformer.transform).to be_nil
       end
