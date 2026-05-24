@@ -208,7 +208,6 @@ const TemplateMapping = ({
                   columnOptions={columnOptions}
                   filterOptions={templateFilterOptions}
                   variableOptions={templateVariableOptions}
-                  catalogMapping={data}
                   selectedTemplate={selectedTemplate}
                   setSelectedTemplate={setSelectedTemplate}
                 />
