@@ -1,6 +1,5 @@
-import { PrefillValue } from '../ModelsForm/DefineModel/DefineSQL/types';
 import TopBar from '@/components/TopBar/TopBar';
-import { getModelById, putModelById, ModelAPIResponse } from '@/services/models';
+import { putModelById } from '@/services/models';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Step } from '@/components/Breadcrumbs/types';
 
@@ -27,32 +26,28 @@ import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import moment from 'moment';
 import ModelActions from './ModelActions';
-import { CustomToastStatus } from '@/components/Toast/index';
+import { CustomToastStatus } from '@/components/Toast';
 import useCustomToast from '@/hooks/useCustomToast';
+<<<<<<< HEAD
 import useQueryWrapper from '@/hooks/useQueryWrapper';
 import { GetModelByIdResponse } from '@/views/Models/types';
 import { useStore } from '@/stores';
+=======
+
+import RoleAccess from '@/enterprise/components/RoleAccess';
+>>>>>>> 8f1c21c9 (refactor(CE): models creation flow)
 import { FiLayout } from 'react-icons/fi';
 import { QueryType } from '@/views/Models/types';
+import useModelData from '@/hooks/models/useModelData.tsx';
 
 const ViewModel = (): JSX.Element => {
   const params = useParams();
   const showToast = useCustomToast();
   const navigate = useNavigate();
 
-  const activeWorkspaceId = useStore((state) => state.workspaceId);
-
   const model_id = params.id || '';
 
-  const { data, isLoading, isError } = useQueryWrapper<
-    ModelAPIResponse<GetModelByIdResponse>,
-    Error
-  >(['modelByID', activeWorkspaceId, model_id], () => getModelById(model_id || ''), {
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    retryOnMount: true,
-    refetchOnReconnect: true,
-  });
+  const { prefillValues, data, isLoading, isError } = useModelData(model_id);
 
   const validationSchema = Yup.object().shape({
     primaryKey: Yup.string().required('Primary Key is required'),
@@ -67,23 +62,6 @@ const ViewModel = (): JSX.Element => {
   }
 
   if (!data) return <></>;
-
-  const prefillValues: PrefillValue = {
-    connector_id: data?.data?.attributes.connector.id || '',
-    connector_icon: (
-      <EntityItem
-        name={data?.data?.attributes.connector.name || ''}
-        icon={data?.data?.attributes.connector.icon || ''}
-      />
-    ),
-    connector_name: data?.data?.attributes.connector.name || '',
-    model_name: data?.data?.attributes.name || '',
-    model_description: data?.data?.attributes.description || '',
-    primary_key: data?.data?.attributes.primary_key || '',
-    query: data?.data?.attributes.query || '',
-    query_type: data?.data?.attributes.query_type || QueryType.RawSql,
-    model_id: model_id,
-  };
 
   async function handleModelUpdate(primary_key: string) {
     const updatePayload: UpdateModelPayload = {
