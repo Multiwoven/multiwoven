@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2026_03_09_000000) do
+>>>>>>> ef6935014 (feat(CE): add context to prompt (#1700))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +46,74 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+<<<<<<< HEAD
+=======
+  create_table "agentic_coding_apps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_agentic_coding_apps_on_user_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_apps_on_workspace_id"
+  end
+
+  create_table "agentic_coding_deployments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.uuid "agentic_coding_session_id", null: false
+    t.bigint "workspace_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "deploy_url"
+    t.string "deploy_target"
+    t.string "commit_sha"
+    t.string "version_tag"
+    t.jsonb "deploy_metadata"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_deployments_on_agentic_coding_app_id"
+    t.index ["agentic_coding_session_id"], name: "index_agentic_coding_deployments_on_agentic_coding_session_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_deployments_on_workspace_id"
+  end
+
+  create_table "agentic_coding_prompts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.uuid "agentic_coding_session_id", null: false
+    t.integer "role"
+    t.text "content"
+    t.integer "status", default: 0, null: false
+    t.text "response_text"
+    t.string "agent_mode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "context", default: {}, null: false
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_prompts_on_agentic_coding_app_id"
+    t.index ["agentic_coding_session_id"], name: "index_agentic_coding_prompts_on_agentic_coding_session_id"
+  end
+
+  create_table "agentic_coding_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.bigint "workspace_id", null: false
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.integer "status", default: 0, null: false
+    t.string "sandbox_id"
+    t.string "coding_agent_session_id"
+    t.string "preview_url"
+    t.datetime "last_active_at"
+    t.datetime "suspended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "configuration", default: {}
+    t.string "agent_model"
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_sessions_on_agentic_coding_app_id"
+    t.index ["user_id"], name: "index_agentic_coding_sessions_on_user_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_sessions_on_workspace_id"
+  end
+
+>>>>>>> ef6935014 (feat(CE): add context to prompt (#1700))
   create_table "alert_channels", force: :cascade do |t|
     t.bigint "alert_id", null: false
     t.jsonb "configuration"
