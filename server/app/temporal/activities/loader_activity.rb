@@ -4,7 +4,7 @@ module Activities
   class LoaderActivity < Temporal::Activity
     class FullRefreshFailed < Temporal::ActivityException; end
     timeouts(
-      start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
+      start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "864000").to_i,
       heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "420").to_i
     )
     retry_policy(
