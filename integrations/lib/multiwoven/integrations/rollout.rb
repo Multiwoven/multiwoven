@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.36.0"
+>>>>>>> fdfca154d (feat(CE): Add AI Squared Lightning Chat as Source Connector (#1936))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +38,7 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+      Aisquared
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
