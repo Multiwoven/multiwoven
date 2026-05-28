@@ -131,6 +131,7 @@ const FinalizeModel = (): JSX.Element => {
                     borderStyle='solid'
                     borderColor='gray.400'
                     fontSize='sm'
+                    data-testid='finalize-model-name-input'
                   />
                   <Text color='red.500' fontSize='sm'>
                     <ErrorMessage name='modelName' />
