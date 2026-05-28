@@ -29,7 +29,7 @@ module Multiwoven
                              })
           end
 
-          def write(sync_config, records, action = "create")
+          def write(sync_config, records, action = "create", _identifier_key = nil)
             # Currently as we only create a message for each record in slack, we are not using actions.
             # This will be changed in future.
             @sync_config = sync_config

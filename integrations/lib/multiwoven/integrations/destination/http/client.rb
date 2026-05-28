@@ -41,7 +41,7 @@ module Multiwoven
                              })
           end
 
-          def write(sync_config, records, _action = "create")
+          def write(sync_config, records, _action = "create", _identifier_key = nil)
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
             url = connection_config[:destination_url]
             headers = connection_config[:headers]
