@@ -119,7 +119,7 @@ cd multiwoven
 3. **Initialize .env file:**
 
 ```bash
-mv .env.example .env
+cp server/.env.example .env
 ```
 
 4. **Copy .env file to ui folder:**
@@ -137,7 +137,7 @@ cp .env ui/.env
 6. **Start the services:**
 
 ```bash
-docker-compose build && docker-compose up
+docker compose up --build
 ```
 
 UI can be accessed at the PORT 8000 :
@@ -145,6 +145,14 @@ UI can be accessed at the PORT 8000 :
 ```bash
 http://localhost:8000
 ```
+
+The backend API runs on port 3000:
+
+```bash
+http://localhost:3000
+```
+
+If you run only the frontend from `ui/`, you still need the backend running locally on port 3000.
 
 For more details, check out the local [deployment guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose-dev) in the documentation.
 
