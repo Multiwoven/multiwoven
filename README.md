@@ -152,8 +152,6 @@ The backend API runs on port 3000:
 http://localhost:3000
 ```
 
-If you run only the frontend from `ui/`, you still need the backend running locally on port 3000.
-
 For more details, check out the local [deployment guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose-dev) in the documentation.
 
 ### Self-hosted Options
