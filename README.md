@@ -102,7 +102,13 @@ Multiwoven is a monorepo that consists of three main services:
 
 ### Local Setup
 
-To get started with Multiwoven, you can deploy the entire stack using Docker Compose.
+To get started with Multiwoven, run the full stack from the monorepo root with Docker Compose.
+This starts:
+
+- `multiwoven-ui` on `http://localhost:8000`
+- `multiwoven-server` on `http://localhost:3000`
+- `multiwoven-worker`
+- PostgreSQL, Redis, and Temporal
 
 1. **Clone the repository:**
 
@@ -116,13 +122,15 @@ git clone git@github.com:Multiwoven/multiwoven.git
 cd multiwoven
 ```
 
-3. **Initialize .env file:**
+3. **Create the root env file if it does not already exist:**
 
 ```bash
-mv .env.example .env
+cp server/.env.example .env
 ```
 
-4. **Copy .env file to ui folder:**
+If `.env` is already present in the repository, keep it and skip this step.
+
+4. **Copy the env file to the UI folder:**
 
 ```bash
 cp .env ui/.env
@@ -134,17 +142,26 @@ cp .env ui/.env
 ./git-hooks/setup-hooks.sh
 ```
 
-6. **Start the services:**
+6. **Start the full stack:**
 
 ```bash
-docker-compose build && docker-compose up
+docker compose up --build
 ```
 
-UI can be accessed at the PORT 8000 :
+The UI is available at:
 
 ```bash
 http://localhost:8000
 ```
+
+The backend API is available at:
+
+```bash
+http://localhost:3000
+```
+
+If you start only the frontend with `npm run dev` inside `ui/`, it will still expect the backend at `http://localhost:3000`.
+In that case, start the backend separately from `server/` or run the full stack from the repository root.
 
 For more details, check out the local [deployment guide](https://docs.squared.ai/deployment-and-security/setup/docker-compose-dev) in the documentation.
 

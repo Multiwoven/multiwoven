@@ -52,7 +52,8 @@ You will need the following things properly installed on your computer.
 
 ## Local Setup
 
-To deploy the Multiwoven UI locally, follow the steps below:
+To run the Multiwoven UI locally, follow the steps below.
+The UI expects the backend API to be available at `http://localhost:3000`.
 
 1. **Clone the repository:**
 
@@ -72,26 +73,33 @@ cd multiwoven-ui
 npm i
 ```
 
-4. **Initialize .env file:**
+4. **Create the env file if it does not already exist:**
 
 ```bash
-mv .env.example .env
+cp ../server/.env.example .env
 ```
 
-4. **Start the services:**
+If `ui/.env` already exists in the repository, keep it and skip this step.
+
+5. **Start the frontend:**
 
 ```bash
 npm run dev
 ```
 
-5. **Access the application:**
+6. **Access the application:**
 
 ```bash
 http://localhost:8000
 ```
 
-Note: In the env, the base URL for the mutiwoven server is pointing to the staging deployed URL. If you want it to point to the local server, you will have to make sure the multiwoven server is setup locally on your machine.
-Follow the steps [here](https://github.com/Multiwoven/multiwoven-server/tree/main?tab=readme-ov-file#local-setup) to set it up locally.
+Running the UI alone is not enough for a working app.
+You also need a backend server on `http://localhost:3000`.
+
+Use one of these options:
+
+- From the monorepo root, run `docker compose up --build` to start the full stack.
+- From `server/`, follow the server local setup to start the backend separately.
 
 ## Contributing
 
