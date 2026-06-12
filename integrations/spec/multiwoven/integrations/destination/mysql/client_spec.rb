@@ -79,7 +79,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Mysql::Client do
         { table_name: "test_table", column_name: "col2", data_type: "varchar", is_nullable: "YES" },
         { table_name: "test_table", column_name: "col3", data_type: "float", is_nullable: "YES" }
       ]
-      allow(sequel_client).to receive(:fetch).and_return(dataset)
+      allow(sequel_client).to receive(:fetch).and_yield(dataset).and_return(dataset)
       allow(client).to receive(:create_connection).and_return(sequel_client)
 
       message = client.discover(sync_config_json[:destination][:connection_specification])

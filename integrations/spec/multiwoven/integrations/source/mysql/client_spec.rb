@@ -101,7 +101,7 @@ RSpec.describe Multiwoven::Integrations::Source::Mysql::Client do
           { col1: 1, col2: "Third Row Text", col3: "Third Row Additional Text" }
         ]
       )
-      allow(sequel_client).to receive(:fetch).and_return(dataset)
+      expect(sequel_client).to receive(:fetch).with(a_string_including("LIMIT 100").and(a_string_including("OFFSET 1"))).and_return(dataset)
       allow(client).to receive(:create_connection).and_return(sequel_client)
       records = client.read(s_config)
       expect(records).to be_an(Array)
@@ -145,7 +145,7 @@ RSpec.describe Multiwoven::Integrations::Source::Mysql::Client do
       expect(first_stream.name).to eq("test_table")
       expect(first_stream.json_schema).to be_an(Hash)
       expect(first_stream.json_schema["type"]).to eq("object")
-      expect(first_stream.json_schema["properties"]).to eq({ "col1" => { "type" => "string" } })
+      expect(first_stream.json_schema["properties"]).to eq({ "col1" => { "type" => "string" }, "col2" => { "type" => "string" }, "col3" => { "type" => "string" } })
     end
 
     it "discover schema failure" do

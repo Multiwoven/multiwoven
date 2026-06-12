@@ -74,16 +74,15 @@ module Multiwoven::Integrations::Source
 
       def group_by_table(records)
         result = {}
-        records.each_with_index do |entry, index|
+        records.each do |entry|
           table_name = entry[:table_name]
           column_data = {
             column_name: entry[:column_name],
             data_type: entry[:data_type],
             is_nullable: entry[:is_nullable] == "YES"
           }
-          result[index] ||= {}
-          result[index][:tablename] = table_name
-          result[index][:columns] = [column_data]
+          result[table_name] ||= { tablename: table_name, columns: [] }
+          result[table_name][:columns] << column_data
         end
         result
       end
