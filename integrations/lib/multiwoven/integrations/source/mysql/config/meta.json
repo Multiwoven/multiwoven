@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "Mysql",
+    "title": "MySQL",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "sub_category": "Relational Database",
+    "documentation_url": "https://docs.multiwoven.com/guides/sources/mysql",
+    "github_issue_label": "source-mysql",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
