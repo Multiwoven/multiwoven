@@ -149,6 +149,105 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do
     end
   end
 
+  describe "#discover with custom objects" do
+    let(:unique_property) { double(name: "user_uuid", type: "string", has_unique_value: true) }
+    let(:other_property) { double(name: "nom_du_compte", type: "string", has_unique_value: false) }
+    let(:custom_schema) do
+      double(
+        name: "comptes_lpl",
+        object_type_id: "2-12345678",
+        labels: double(singular: "Compte LPL"),
+        required_properties: ["user_uuid"],
+        properties: [unique_property, other_property]
+      )
+    end
+
+    def stub_schemas(schemas)
+      core_api = double
+      allow(core_api).to receive(:get_all).and_return(double(results: schemas))
+      hubspot_client = double
+      allow(hubspot_client).to receive(:crm).and_return(double(schemas: double(core_api: core_api)))
+      allow(::Hubspot::Client).to receive(:new).and_return(hubspot_client)
+    end
+
+    it "appends one stream per custom object carrying object type and external id in json_schema" do
+      stub_schemas([custom_schema])
+
+      catalog = client.discover(connection_config).catalog
+      custom = catalog.streams.find { |stream| stream.name == "comptes_lpl" }
+
+      expect(custom).not_to be_nil
+      expect(custom.json_schema["hubspot_object_type"]).to eq("2-12345678")
+      expect(custom.json_schema["external_id_property"]).to eq("user_uuid")
+      expect(custom.json_schema["properties"]["properties"]["properties"]).to have_key("user_uuid")
+      # standard streams are still present
+      expect(catalog.streams.map(&:name)).to include("contacts")
+    end
+
+    it "still returns the standard streams when schema listing fails" do
+      hubspot_client = double
+      allow(hubspot_client).to receive(:crm).and_raise(StandardError.new("boom"))
+      allow(::Hubspot::Client).to receive(:new).and_return(hubspot_client)
+
+      catalog = client.discover(connection_config).catalog
+      expect(catalog.streams.map(&:name)).to include("contacts")
+    end
+  end
+
+  describe "#write to a custom object" do
+    let(:custom_object_schema) do
+      {
+        "type" => "object",
+        "hubspot_object_type" => "2-12345678",
+        "external_id_property" => "user_uuid",
+        "properties" => {
+          "properties" => {
+            "type" => "object",
+            "properties" => { "user_uuid" => { "type" => "string" }, "nom_du_compte" => { "type" => "string" } }
+          }
+        }
+      }
+    end
+    let(:custom_sync_config_json) do
+      sync_config_json.merge(
+        "stream" => {
+          "name" => "comptes_lpl",
+          "action" => "update",
+          "request_rate_limit" => 4,
+          "rate_limit_unit_seconds" => 1,
+          "json_schema" => custom_object_schema
+        }
+      ).with_indifferent_access
+    end
+    let(:custom_sync_config) do
+      Multiwoven::Integrations::Protocol::SyncConfig.from_json(custom_sync_config_json.to_json)
+    end
+    let(:custom_records) { [{ "properties" => { "user_uuid" => "uuid-1", "nom_du_compte" => "Alice" } }] }
+
+    it "updates an existing record by its external id property" do
+      update = stub_request(:patch, "https://api.hubapi.com/crm/v3/objects/2-12345678/uuid-1?idProperty=user_uuid")
+               .to_return(status: 200, body: "{}", headers: {})
+
+      response = client.write(custom_sync_config, custom_records)
+
+      expect(response.tracking.success).to eq(1)
+      expect(response.tracking.failed).to eq(0)
+      expect(update).to have_been_requested
+    end
+
+    it "creates the record when the external id is not found (404)" do
+      stub_request(:patch, "https://api.hubapi.com/crm/v3/objects/2-12345678/uuid-1?idProperty=user_uuid")
+        .to_return(status: 404, body: "{}", headers: {})
+      create = stub_request(:post, "https://api.hubapi.com/crm/v3/objects/2-12345678")
+               .to_return(status: 201, body: "{}", headers: {})
+
+      response = client.write(custom_sync_config, custom_records)
+
+      expect(response.tracking.success).to eq(1)
+      expect(create).to have_been_requested
+    end
+  end
+
   describe "#meta_data" do
     it "serves it github image url as icon" do
       image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations/lib/multiwoven/integrations/destination/hubspot/icon.svg"
