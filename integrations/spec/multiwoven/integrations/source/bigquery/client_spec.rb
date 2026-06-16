@@ -99,6 +99,45 @@ RSpec.describe Multiwoven::Integrations::Source::Bigquery::Client do
       expect(first_stream.json_schema["properties"]).to eq({ "FullName" => { "type" => "string" } })
     end
 
+    it "skips datasets other than the target without crashing" do
+      other_dataset = instance_double(Google::Cloud::Bigquery::Dataset)
+      allow(other_dataset).to receive(:dataset_id).and_return("not_profile")
+
+      allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery_instance)
+      # Non-target dataset listed first: it must not leak a nil into the records.
+      allow(bigquery_instance).to receive(:datasets).and_return([other_dataset, bigquery_dataset])
+      allow(bigquery_dataset).to receive(:dataset_id).and_return("profile")
+      allow(bigquery_dataset).to receive(:tables).and_return([bigquery_table])
+      allow(bigquery_table).to receive(:table_id).and_return("customer")
+      allow(bigquery_table).to receive(:schema).and_return(bigquery_schema)
+      allow(bigquery_schema).to receive(:fields).and_return([bigquery_field])
+      allow(bigquery_field).to receive(:name).and_return("FullName")
+      allow(bigquery_field).to receive(:type).and_return("string")
+      allow(bigquery_field).to receive(:mode).and_return("NULLABLE")
+
+      message = client.discover(sync_config[:source][:connection_specification].with_indifferent_access)
+      expect(message.catalog.streams.map(&:name)).to eq(["customer"])
+    end
+
+    it "skips tables with a nil schema (e.g. views) without crashing" do
+      view_table = instance_double(Google::Cloud::Bigquery::Table)
+      allow(view_table).to receive(:schema).and_return(nil)
+
+      allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery_instance)
+      allow(bigquery_instance).to receive(:datasets).and_return([bigquery_dataset])
+      allow(bigquery_dataset).to receive(:dataset_id).and_return("profile")
+      allow(bigquery_dataset).to receive(:tables).and_return([view_table, bigquery_table])
+      allow(bigquery_table).to receive(:table_id).and_return("customer")
+      allow(bigquery_table).to receive(:schema).and_return(bigquery_schema)
+      allow(bigquery_schema).to receive(:fields).and_return([bigquery_field])
+      allow(bigquery_field).to receive(:name).and_return("FullName")
+      allow(bigquery_field).to receive(:type).and_return("string")
+      allow(bigquery_field).to receive(:mode).and_return("NULLABLE")
+
+      message = client.discover(sync_config[:source][:connection_specification].with_indifferent_access)
+      expect(message.catalog.streams.map(&:name)).to eq(["customer"])
+    end
+
     it "discover schema failure" do
       allow(client).to receive(:create_connection).and_raise(StandardError.new("test error"))
       expect(client).to receive(:handle_exception).with(

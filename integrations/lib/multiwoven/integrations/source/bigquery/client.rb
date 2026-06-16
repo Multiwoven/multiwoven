@@ -20,10 +20,16 @@ module Multiwoven::Integrations::Source
         bigquery = create_connection(connection_config)
         target_dataset_id = connection_config["dataset_id"]
         records = bigquery.datasets.flat_map do |dataset|
-          next unless dataset.dataset_id == target_dataset_id
+          # Return [] (not nil) for non-target datasets: a nil from flat_map would
+          # leak into `records` and blow up group_by_table with `[] for nil`.
+          next [] unless dataset.dataset_id == target_dataset_id
 
           dataset.tables.flat_map do |table|
-            table.schema.fields.map do |field|
+            # Views / external tables can expose a nil schema — skip them gracefully.
+            fields = table.schema&.fields
+            next [] if fields.nil?
+
+            fields.map do |field|
               {
                 table_name: table.table_id,
                 column_name: field.name,
@@ -32,7 +38,7 @@ module Multiwoven::Integrations::Source
               }
             end
           end
-        end
+        end.compact
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
