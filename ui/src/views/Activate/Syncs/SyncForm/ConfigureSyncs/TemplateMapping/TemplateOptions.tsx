@@ -1,8 +1,9 @@
-import { Box, Stack, TabList, Tab, Text, TabIndicator, Tabs, Textarea } from '@chakra-ui/react';
+import { Box, Stack, TabList, TabIndicator, Tabs, Textarea } from '@chakra-ui/react';
 
 import { useState, Dispatch, SetStateAction } from 'react';
 import Columns from './Columns';
 import { SyncsConfigurationForTemplateMapping } from '@/views/Activate/Syncs/types';
+import TabItem from '@/components/TabItem';
 
 type TemplateOptionsProps = {
   columnOptions: string[];
@@ -18,23 +19,6 @@ export enum OPTION_TYPE {
   VARIABLE = 'variable',
   FILTER = 'filter',
 }
-
-const TabName = ({ title, handleActiveTab }: { title: string; handleActiveTab: () => void }) => (
-  <Tab
-    _selected={{
-      backgroundColor: 'gray.100',
-      borderRadius: '4px',
-      color: 'black.500',
-    }}
-    color='black.200'
-    onClick={handleActiveTab}
-    padding='6px 24px'
-  >
-    <Text size='xs' fontWeight='semibold'>
-      {title}
-    </Text>
-  </Tab>
-);
 
 const replaceLastOccurrence = (inputText: string, searchText: string, replacementText: string) => {
   // Find the last index of the search text in the input string
@@ -159,18 +143,9 @@ const TemplateOptions = ({
           width='fit-content'
         >
           <TabList gap='8px'>
-            <TabName
-              title='Column'
-              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.COLUMNS)}
-            />
-            <TabName
-              title='Variable'
-              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.VARIABLE)}
-            />
-            <TabName
-              title='Filter'
-              handleActiveTab={() => handleActiveTabChange(OPTION_TYPE.FILTER)}
-            />
+            <TabItem text='Column' action={() => handleActiveTabChange(OPTION_TYPE.COLUMNS)} />
+            <TabItem text='Variable' action={() => handleActiveTabChange(OPTION_TYPE.VARIABLE)} />
+            <TabItem text='Filter' action={() => handleActiveTabChange(OPTION_TYPE.FILTER)} />
           </TabList>
           <TabIndicator />
         </Tabs>
