@@ -439,7 +439,7 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :model))
           .to eq(request_body.dig(:sync, :configuration, :embedding_config, :model))
         expect(response_hash.dig(:data, :attributes, :configuration, :embedding_config, :api_key))
-          .to eq(request_body.dig(:sync, :configuration, :embedding_config, :api_key))
+          .to eq("*************")
 
         audit_log = AuditLog.last
         expect(audit_log).not_to be_nil

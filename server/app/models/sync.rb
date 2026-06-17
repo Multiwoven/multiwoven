@@ -22,6 +22,7 @@
 #  updated_at        :datetime         not null
 #
 class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
+  SYNC_CONFIG_JSON_SCHEMA = Rails.root.join("app/models/schema_validations/syncs/configuration_embedding.json")
   include AASM
   include Discard::Model
 
@@ -78,6 +79,13 @@ class Sync < ApplicationRecord # rubocop:disable Metrics/ClassLength
     event :enable do
       transitions from: :disabled, to: :pending
     end
+  end
+
+  def masked_configuration
+    return configuration if configuration.blank?
+
+    schema = JSON.parse(File.read(SYNC_CONFIG_JSON_SCHEMA)).with_indifferent_access
+    Utils::SecretMasking.mask_by_keys(configuration.deep_dup, schema)
   end
 
   def to_protocol

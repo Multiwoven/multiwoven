@@ -73,6 +73,16 @@ class Model < ApplicationRecord
     configuration["json_schema"]
   end
 
+  def masked_configuration
+    return configuration if configuration.blank?
+
+    schema_path = configuration_schema_validation
+    return configuration if schema_path.nil?
+
+    schema = JSON.parse(File.read(schema_path)).with_indifferent_access
+    Utils::SecretMasking.mask_by_keys(configuration.deep_dup, schema)
+  end
+
   private
 
   def configuration_schema_validation
