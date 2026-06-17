@@ -2251,6 +2251,7 @@ GEM
       activerecord (>= 5.2)
     thor (1.4.0)
     timecop (0.9.8)
+<<<<<<< HEAD
     timeout (0.4.3)
     tiny_tds (3.2.0)
       bigdecimal (~> 3)
@@ -2259,6 +2260,20 @@ GEM
     tiny_tds (3.2.0-x86_64-linux-gnu)
       bigdecimal (~> 3)
     traces (0.15.2)
+=======
+    timeout (0.6.1)
+    tiny_tds (3.4.0)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-aarch64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-x86_64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tokenizers (0.6.3-aarch64-linux)
+    tokenizers (0.6.3-arm64-darwin)
+    tokenizers (0.6.3-x86_64-darwin)
+    tokenizers (0.6.3-x86_64-linux)
+    traces (0.18.2)
+>>>>>>> 667262992 (fix(CE): fix the issue for token limit solution for firecrawl (#1772))
     track_open_instances (0.1.15)
     trailblazer-option (0.1.2)
     ttfunk (1.8.0)
@@ -2369,6 +2384,7 @@ DEPENDENCIES
   strong_migrations
   temporal-ruby!
   timecop
+  tokenizers (~> 0.6.3)
   tzinfo-data
   webrick
   xmlrpc (~> 0.3.3)
