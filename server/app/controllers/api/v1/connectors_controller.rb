@@ -16,12 +16,9 @@ module Api
       after_action :create_audit_log, only: %i[create update destroy]
 
       def index
-        @connectors = current_workspace.connectors
-        authorize @connectors
-        @connectors = @connectors.send(params[:type].downcase) if params[:type]
-        @connectors = @connectors.send(params[:category].downcase) if params[:category]
-        @connectors = @connectors.send(params[:sub_category].downcase) if params[:sub_category]
-        @connectors = @connectors.page(params[:page] || 1).per(params[:per_page])
+        authorize current_workspace.connectors
+        result = FilterConnectors.call(filter_params)
+        @connectors = result.connectors
         render json: @connectors, status: :ok
       end
 
@@ -192,6 +189,18 @@ module Api
                                           :connector_type,
                                           :connector_name, :name, :description, :query_type,
                                           configuration: {})
+      end
+
+      def filter_params
+        {
+          workspace: current_workspace,
+          type: params[:type],
+          category: params[:category],
+          sub_category: params[:sub_category],
+          provider: params[:provider],
+          page: params[:page],
+          per_page: params[:per_page]
+        }
       end
     end
     # rubocop:enable Metrics/ClassLength
