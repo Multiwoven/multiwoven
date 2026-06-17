@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.2].define(version: 2026_04_28_125517) do
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +46,157 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+<<<<<<< HEAD
+=======
+  create_table "agentic_coding_app_resources", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.string "resource_type", null: false
+    t.string "resource_id"
+    t.text "credentials"
+    t.jsonb "metadata", default: {}
+    t.string "status", default: "provisioning", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agentic_coding_app_id", "resource_type"], name: "idx_agentic_app_resources_active_type_per_app", unique: true, where: "((status)::text <> 'deleted'::text)"
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_app_resources_on_agentic_coding_app_id"
+    t.index ["resource_type"], name: "index_agentic_coding_app_resources_on_resource_type"
+  end
+
+  create_table "agentic_coding_app_visitors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "visitor_token", null: false
+    t.uuid "app_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id"], name: "index_agentic_coding_app_visitors_on_app_id"
+    t.index ["visitor_token", "app_id"], name: "index_agentic_coding_app_visitors_on_visitor_token_and_app_id", unique: true
+  end
+
+  create_table "agentic_coding_apps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "template_id"
+    t.uuid "source_app_id"
+    t.index ["source_app_id"], name: "index_agentic_coding_apps_on_source_app_id"
+    t.index ["template_id"], name: "index_agentic_coding_apps_on_template_id"
+    t.index ["user_id"], name: "index_agentic_coding_apps_on_user_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_apps_on_workspace_id"
+  end
+
+  create_table "agentic_coding_deployments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.uuid "agentic_coding_session_id", null: false
+    t.bigint "workspace_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "deploy_url"
+    t.string "deploy_target"
+    t.string "commit_sha"
+    t.string "version_tag"
+    t.jsonb "deploy_metadata"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "neon_deployed_at"
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_deployments_on_agentic_coding_app_id"
+    t.index ["agentic_coding_session_id"], name: "index_agentic_coding_deployments_on_agentic_coding_session_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_deployments_on_workspace_id"
+  end
+
+  create_table "agentic_coding_prompts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.uuid "agentic_coding_session_id", null: false
+    t.integer "role"
+    t.text "content"
+    t.integer "status", default: 0, null: false
+    t.text "response_text"
+    t.string "agent_mode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "context", default: {}, null: false
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_prompts_on_agentic_coding_app_id"
+    t.index ["agentic_coding_session_id"], name: "index_agentic_coding_prompts_on_agentic_coding_session_id"
+  end
+
+  create_table "agentic_coding_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agentic_coding_app_id", null: false
+    t.bigint "workspace_id", null: false
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.integer "status", default: 0, null: false
+    t.string "sandbox_id"
+    t.string "coding_agent_session_id"
+    t.string "preview_url"
+    t.datetime "last_active_at"
+    t.datetime "suspended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "configuration", default: {}
+    t.string "agent_model"
+    t.index ["agentic_coding_app_id"], name: "index_agentic_coding_sessions_on_agentic_coding_app_id"
+    t.index ["user_id"], name: "index_agentic_coding_sessions_on_user_id"
+    t.index ["workspace_id"], name: "index_agentic_coding_sessions_on_workspace_id"
+  end
+
+  create_table "agentic_coding_templates", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "image_id", null: false
+    t.string "repo_url"
+    t.string "category"
+    t.string "icon"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "prompt"
+    t.index ["category"], name: "index_agentic_coding_templates_on_category"
+    t.index ["name"], name: "index_agentic_coding_templates_on_name", unique: true
+    t.index ["status"], name: "index_agentic_coding_templates_on_status"
+  end
+
+  create_table "ahoy_events", force: :cascade do |t|
+    t.bigint "visit_id"
+    t.string "name"
+    t.jsonb "properties"
+    t.datetime "time"
+    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
+    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "ahoy_visits", force: :cascade do |t|
+    t.string "visit_token"
+    t.string "visitor_token"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.string "referring_domain"
+    t.text "landing_page"
+    t.string "browser"
+    t.string "os"
+    t.string "device_type"
+    t.string "country"
+    t.string "region"
+    t.string "city"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.string "utm_term"
+    t.string "utm_content"
+    t.string "utm_campaign"
+    t.string "app_version"
+    t.string "os_version"
+    t.string "platform"
+    t.datetime "started_at"
+    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
+    t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
+
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
   create_table "alert_channels", force: :cascade do |t|
     t.bigint "alert_id", null: false
     t.jsonb "configuration"
@@ -125,14 +280,28 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
 
   create_table "chat_messages", force: :cascade do |t|
     t.bigint "workspace_id", null: false
+<<<<<<< HEAD
     t.bigint "data_app_session_id", null: false
     t.bigint "visual_component_id", null: false
+=======
+    t.bigint "session_id"
+    t.bigint "visual_component_id"
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
     t.text "content", null: false
     t.integer "role", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
     t.index ["data_app_session_id", "created_at"], name: "index_chat_messages_on_data_app_session_id_and_created_at"
     t.index ["data_app_session_id"], name: "index_chat_messages_on_data_app_session_id"
+=======
+    t.string "session_type"
+    t.uuid "workflow_id"
+    t.bigint "workflow_file_id"
+    t.index ["session_id", "created_at"], name: "index_chat_messages_on_session_id_and_created_at"
+    t.index ["session_id"], name: "index_chat_messages_on_session_id"
+    t.index ["session_type", "session_id"], name: "index_chat_messages_on_session_type_and_session_id"
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
     t.index ["visual_component_id"], name: "index_chat_messages_on_visual_component_id"
     t.index ["workspace_id"], name: "index_chat_messages_on_workspace_id"
   end
@@ -695,6 +864,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+<<<<<<< HEAD
+=======
+  add_foreign_key "agentic_coding_app_resources", "agentic_coding_apps"
+  add_foreign_key "agentic_coding_app_visitors", "agentic_coding_apps", column: "app_id"
+  add_foreign_key "agentic_coding_apps", "agentic_coding_apps", column: "source_app_id"
+  add_foreign_key "agentic_coding_apps", "agentic_coding_templates", column: "template_id"
+  add_foreign_key "agentic_coding_apps", "users"
+  add_foreign_key "agentic_coding_apps", "workspaces"
+  add_foreign_key "agentic_coding_deployments", "agentic_coding_apps"
+  add_foreign_key "agentic_coding_deployments", "agentic_coding_sessions"
+  add_foreign_key "agentic_coding_deployments", "workspaces"
+  add_foreign_key "agentic_coding_prompts", "agentic_coding_apps"
+  add_foreign_key "agentic_coding_prompts", "agentic_coding_sessions"
+  add_foreign_key "agentic_coding_sessions", "agentic_coding_apps"
+  add_foreign_key "agentic_coding_sessions", "users"
+  add_foreign_key "agentic_coding_sessions", "workspaces"
+  add_foreign_key "ahoy_events", "ahoy_visits", column: "visit_id"
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
   add_foreign_key "alert_channels", "alert_media"
   add_foreign_key "alert_channels", "alerts"
   add_foreign_key "alerts", "workspaces"
