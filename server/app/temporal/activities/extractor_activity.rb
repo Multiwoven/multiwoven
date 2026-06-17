@@ -3,8 +3,13 @@
 module Activities
   class ExtractorActivity < Temporal::Activity
     timeouts(
+<<<<<<< HEAD
       start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
       heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "1200").to_i
+=======
+      start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "864000").to_i,
+      heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "1800").to_i
+>>>>>>> 6ba2c06b2 (fix(CE): CPU memory usage due to DB read and write (#1640))
     )
 
     retry_policy(
