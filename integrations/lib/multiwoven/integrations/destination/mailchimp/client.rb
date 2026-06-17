@@ -30,7 +30,7 @@ module Multiwoven
                              })
           end
 
-          def write(sync_config, records, _action = "create")
+          def write(sync_config, records, _action = "create", _identifier_key = nil)
             @sync_config = sync_config
             initialize_client(sync_config.destination.connection_specification)
             process_records(records, sync_config.stream)
