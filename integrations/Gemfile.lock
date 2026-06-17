@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.0)
+=======
+    multiwoven-integrations (0.35.3)
+>>>>>>> 9712b5cc1 (fix(CE): added a logic to fetch primary key dynamically (#1842))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -58,10 +62,18 @@ GEM
       drb
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
+<<<<<<< HEAD
       mutex_m
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+=======
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+      uri (>= 0.13.1)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
+>>>>>>> 9712b5cc1 (fix(CE): added a logic to fetch primary key dynamically (#1842))
     afm (1.0.0)
     ast (2.4.2)
     async (2.11.0)
@@ -482,7 +494,12 @@ PLATFORMS
 
 DEPENDENCIES
   MailchimpMarketing
+<<<<<<< HEAD
   activesupport
+=======
+  activesupport (>= 7.2.3.1)
+  addressable (>= 2.8.10)
+>>>>>>> 9712b5cc1 (fix(CE): added a logic to fetch primary key dynamically (#1842))
   async-websocket (~> 0.8.0)
   aws-sdk-athena
   aws-sdk-bedrockruntime
