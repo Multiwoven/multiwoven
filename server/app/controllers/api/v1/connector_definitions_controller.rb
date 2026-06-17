@@ -39,7 +39,7 @@ module Api
 
       def set_connectors
         @connectors = FilterConnectorDefinitions.call(
-          connection_definitions_params
+          connection_definitions_params.merge(workspace: current_workspace)
         ).connectors
       end
 
