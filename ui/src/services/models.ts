@@ -38,6 +38,7 @@ export type ModelAttributes = {
   primary_key: string;
   connector: {
     icon: string;
+    name: string;
     [key: string]: string | null;
   };
 };
