@@ -27,7 +27,7 @@ gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
 gem "webmock", "~> 3.0"
 
-gem "activesupport"
+gem "activesupport", ">= 7.2.3.1"
 
 gem "google-apis-sheets_v4"
 
@@ -39,7 +39,7 @@ gem "slack-ruby-client"
 
 gem "async-websocket", "~> 0.8.0"
 
-gem "git"
+gem "git", ">= 2.0.1"
 
 gem "hubspot-api-client", "~> 17.2.0"
 
