@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Mysql",
+    "title": "MySQL",
+    "connector_type": "destination",
+    "category": "Database",
+    "documentation_url": "https://docs.multiwoven.com/guides/destinations/mysql",
+    "github_issue_label": "destination-mysql",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

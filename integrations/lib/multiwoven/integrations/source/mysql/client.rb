@@ -1,0 +1,97 @@
+# frozen_string_literal: true
+
+module Multiwoven::Integrations::Source
+  module Mysql
+    include Multiwoven::Integrations::Core
+    class Client < SourceConnector
+      def check_connection(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        db = create_connection(connection_config)
+        ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
+      rescue StandardError => e
+        ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
+      ensure
+        db&.disconnect
+      end
+
+      def discover(connection_config)
+        connection_config = connection_config.with_indifferent_access
+        db = create_connection(connection_config)
+        query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = ? ORDER BY table_name, ordinal_position;"
+        results = query_execution(db, query, connection_config[:database])
+        catalog = Catalog.new(streams: create_streams(results))
+        catalog.to_multiwoven_message
+      rescue StandardError => e
+        handle_exception(e, {
+                           context: "MYSQL:DISCOVER:EXCEPTION",
+                           type: "error"
+                         })
+      ensure
+        db&.disconnect
+      end
+
+      def read(sync_config)
+        connection_config = sync_config.source.connection_specification.with_indifferent_access
+        query = sync_config.model.query
+        query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
+        db = create_connection(connection_config)
+        query(db, query)
+      rescue StandardError => e
+        handle_exception(e, {
+                           context: "MYSQL:READ:EXCEPTION",
+                           type: "error",
+                           sync_id: sync_config.sync_id,
+                           sync_run_id: sync_config.sync_run_id
+                         })
+      ensure
+        db&.disconnect
+      end
+
+      private
+
+      def create_connection(connection_config)
+        Sequel.connect(
+          adapter: "mysql2",
+          host: connection_config[:host],
+          port: connection_config[:port],
+          user: connection_config[:username],
+          password: connection_config[:password],
+          database: connection_config[:database]
+        )
+      end
+
+      def query_execution(db, query, *params)
+        db.fetch(query, *params).all.map { |row| row.transform_keys { |k| k.to_s.downcase.to_sym } }
+      end
+
+      def create_streams(records)
+        group_by_table(records).map do |_, r|
+          Multiwoven::Integrations::Protocol::Stream.new(name: r[:tablename], action: StreamAction["fetch"], json_schema: convert_to_json_schema(r[:columns]))
+        end
+      end
+
+      def query(db, query)
+        records = []
+        query_execution(db, query).map do |row|
+          records << RecordMessage.new(data: row, emitted_at: Time.now.to_i).to_multiwoven_message
+        end
+        records
+      end
+
+      def group_by_table(records)
+        result = {}
+        records.each do |entry|
+          table_name = entry[:table_name]
+          column_data = {
+            column_name: entry[:column_name],
+            data_type: entry[:data_type],
+            is_nullable: entry[:is_nullable] == "YES"
+          }
+          result[table_name] ||= { tablename: table_name, columns: [] }
+          result[table_name][:columns] << column_data
+        end
+        result
+      end
+    end
+  end
+end
