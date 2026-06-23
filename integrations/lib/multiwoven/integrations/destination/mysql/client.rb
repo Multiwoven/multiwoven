@@ -39,6 +39,8 @@ module Multiwoven::Integrations::Destination
         primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
 
+        create_table_if_not_exists(db, table_name, sync_config.stream.json_schema, primary_key)
+
         log_message_array = []
         write_success = 0
         write_failure = 0
@@ -84,6 +86,30 @@ module Multiwoven::Integrations::Destination
           password: connection_config[:password],
           database: connection_config[:database]
         )
+      end
+
+      def create_table_if_not_exists(db, table_name, json_schema, primary_key)
+        properties = json_schema&.[]("properties")
+        return unless properties&.any?
+
+        columns = properties.map do |name, prop|
+          "`#{name}` #{mysql_type_mapping(prop["type"])}"
+        end
+        columns << "PRIMARY KEY (`#{primary_key}`)" if primary_key.present?
+
+        db.run("CREATE TABLE IF NOT EXISTS `#{table_name}` (#{columns.join(', ')})")
+      rescue Sequel::DatabaseError => e
+        logger.warn("MYSQL:CREATE_TABLE:ERROR #{e.message}")
+      end
+
+      def mysql_type_mapping(data_type)
+        case data_type
+        when "string"  then "VARCHAR(255)"
+        when "integer" then "INT"
+        when "number"  then "DECIMAL(15,6)"
+        when "boolean" then "TINYINT(1)"
+        else "TEXT"
+        end
       end
 
       def create_streams(records)

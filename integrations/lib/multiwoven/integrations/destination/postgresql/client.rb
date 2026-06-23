@@ -54,6 +54,8 @@ module Multiwoven::Integrations::Destination
         primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
 
+        create_table_if_not_exists(db, raw_table, sync_config.stream.json_schema, primary_key)
+
         write_success = 0
         write_failure = 0
         log_message_array = []
@@ -174,6 +176,30 @@ module Multiwoven::Integrations::Destination
               }
             end
           }
+        end
+      end
+
+      def create_table_if_not_exists(db, table_name, json_schema, primary_key)
+        properties = json_schema&.[]("properties")
+        return unless properties&.any?
+
+        columns = properties.map do |name, prop|
+          "#{quote_ident(name)} #{pg_type_mapping(prop["type"])}"
+        end
+        columns << "PRIMARY KEY (#{quote_ident(primary_key)})" if primary_key.present?
+
+        db.exec("CREATE TABLE IF NOT EXISTS #{quote_ident(table_name)} (#{columns.join(', ')})")
+      rescue PG::Error => e
+        logger.warn("POSTGRESQL:CREATE_TABLE:ERROR #{e.message}")
+      end
+
+      def pg_type_mapping(data_type)
+        case data_type
+        when "string"  then "VARCHAR(255)"
+        when "integer" then "INTEGER"
+        when "number"  then "DECIMAL"
+        when "boolean" then "BOOLEAN"
+        else "TEXT"
         end
       end
 
