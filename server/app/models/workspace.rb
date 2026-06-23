@@ -29,6 +29,7 @@ class Workspace < ApplicationRecord
   has_many :chat_messages, dependent: :nullify
   has_many :workflows, class_name: "Agents::Workflow", dependent: :destroy
   has_many :workflow_runs, class_name: "Agents::WorkflowRun", dependent: :destroy
+  has_many :workflow_approvals, class_name: "Agents::WorkflowApproval", dependent: :destroy
   has_many :workflow_logs, class_name: "Agents::WorkflowLog", dependent: :nullify
   has_many :workflow_integrations, class_name: "Agents::WorkflowIntegration", dependent: :nullify
 
