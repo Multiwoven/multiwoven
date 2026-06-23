@@ -48,6 +48,10 @@ RSpec.describe Multiwoven::Integrations::Source::Mysql::Client do
 
   let(:sequel_client) { instance_double(Sequel::Database) }
 
+  before(:each) do
+    allow(sequel_client).to receive(:disconnect)
+  end
+
   describe "#check_connection" do
     context "when the connection is successful" do
       it "returns a succeeded connection status" do

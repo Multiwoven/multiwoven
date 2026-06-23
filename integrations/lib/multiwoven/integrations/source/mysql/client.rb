@@ -6,17 +6,19 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        create_connection(connection_config)
+        db = create_connection(connection_config)
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
+      ensure
+        db&.disconnect
       end
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
-        query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = '#{connection_config[:database]}' ORDER BY table_name, ordinal_position;"
         db = create_connection(connection_config)
-        results = query_execution(db, query)
+        query = "SELECT table_name, column_name, data_type, is_nullable FROM information_schema.columns WHERE table_schema = ? ORDER BY table_name, ordinal_position;"
+        results = query_execution(db, query, connection_config[:database])
         catalog = Catalog.new(streams: create_streams(results))
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -24,6 +26,8 @@ module Multiwoven::Integrations::Source
                            context: "MYSQL:DISCOVER:EXCEPTION",
                            type: "error"
                          })
+      ensure
+        db&.disconnect
       end
 
       def read(sync_config)
@@ -39,6 +43,8 @@ module Multiwoven::Integrations::Source
                            sync_id: sync_config.sync_id,
                            sync_run_id: sync_config.sync_run_id
                          })
+      ensure
+        db&.disconnect
       end
 
       private
@@ -54,8 +60,8 @@ module Multiwoven::Integrations::Source
         )
       end
 
-      def query_execution(db, query)
-        db.fetch(query).all
+      def query_execution(db, query, *params)
+        db.fetch(query, *params).all.map { |row| row.transform_keys { |k| k.to_s.downcase.to_sym } }
       end
 
       def create_streams(records)

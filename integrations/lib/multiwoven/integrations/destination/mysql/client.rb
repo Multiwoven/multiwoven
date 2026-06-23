@@ -6,25 +6,22 @@ module Multiwoven::Integrations::Destination
     class Client < DestinationConnector
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
-        create_connection(connection_config)
+        db = create_connection(connection_config)
         ConnectionStatus.new(status: ConnectionStatusType["succeeded"]).to_multiwoven_message
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
+      ensure
+        db&.disconnect
       end
 
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
+        db = create_connection(connection_config)
         query = "SELECT table_name, column_name, data_type, is_nullable
                  FROM information_schema.columns
-                 WHERE table_schema = '#{connection_config[:database]}'
+                 WHERE table_schema = ?
                  ORDER BY table_name, ordinal_position;"
-
-        db = create_connection(connection_config)
-        records = db.fetch(query) do |result|
-          result.map do |row|
-            row
-          end
-        end
+        records = db.fetch(query, connection_config[:database]).all.map { |row| row.transform_keys { |k| k.to_s.downcase.to_sym } }
         catalog = Catalog.new(streams: create_streams(records))
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -32,6 +29,8 @@ module Multiwoven::Integrations::Destination
                            context: "MYSQL:DISCOVER:EXCEPTION",
                            type: "error"
                          })
+      ensure
+        db&.disconnect
       end
 
       def write(sync_config, records, action = "destination_insert")
@@ -46,11 +45,11 @@ module Multiwoven::Integrations::Destination
 
         records.each do |record|
           query = Multiwoven::Integrations::Core::QueryBuilder.perform(action, table_name, record, primary_key)
-          logger.debug("MYSQL:WRITE:QUERY query = #{query} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
+          logger.debug("MYSQL:WRITE:QUERY action = #{action} table_name = #{table_name} primary_key = #{primary_key} sync_id = #{sync_config.sync_id} sync_run_id = #{sync_config.sync_run_id}")
           begin
             db.run(query)
             write_success += 1
-            log_message_array << log_request_response("info", query, "Successful")
+            log_message_array << log_request_response("info", "#{action} #{table_name}", "Successful")
           rescue StandardError => e
             handle_exception(e, {
                                context: "MYSQL:RECORD:WRITE:EXCEPTION",
@@ -59,7 +58,7 @@ module Multiwoven::Integrations::Destination
                                sync_run_id: sync_config.sync_run_id
                              })
             write_failure += 1
-            log_message_array << log_request_response("error", query, e.message)
+            log_message_array << log_request_response("error", "#{action} #{table_name}", e.message)
           end
         end
         tracking_message(write_success, write_failure, log_message_array)
@@ -70,6 +69,8 @@ module Multiwoven::Integrations::Destination
                            sync_id: sync_config.sync_id,
                            sync_run_id: sync_config.sync_run_id
                          })
+      ensure
+        db&.disconnect
       end
 
       private
@@ -93,20 +94,17 @@ module Multiwoven::Integrations::Destination
 
       def group_by_table(records)
         result = {}
-        records.each_with_index do |entry, index|
+        records.each do |entry|
           table_name = entry[:table_name]
           column_data = {
             column_name: entry[:column_name],
             data_type: entry[:data_type],
             is_nullable: entry[:is_nullable] == "YES"
           }
-          result[index] ||= {}
-          result[index][:tablename] = table_name
-          result[index][:columns] = [column_data]
+          result[table_name] ||= { tablename: table_name, columns: [] }
+          result[table_name][:columns] << column_data
         end
-        result.values.group_by { |entry| entry[:tablename] }.transform_values do |entries|
-          { tablename: entries.first[:tablename], columns: entries.flat_map { |entry| entry[:columns] } }
-        end
+        result
       end
     end
   end

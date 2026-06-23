@@ -50,6 +50,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Mysql::Client do
 
   let(:sequel_client) { instance_double(Sequel::Database) }
 
+  before(:each) do
+    allow(sequel_client).to receive(:disconnect)
+  end
+
   describe "#check_connection" do
     context "when the connection is successful" do
       it "returns a succeeded connection status" do
@@ -74,12 +78,14 @@ RSpec.describe Multiwoven::Integrations::Destination::Mysql::Client do
 
   describe "#discover" do
     it "discovers schema successfully" do
-      dataset = [
+      dataset = double("Sequel::Dataset")
+      rows = [
         { table_name: "test_table", column_name: "col1", data_type: "int", is_nullable: "YES" },
         { table_name: "test_table", column_name: "col2", data_type: "varchar", is_nullable: "YES" },
         { table_name: "test_table", column_name: "col3", data_type: "float", is_nullable: "YES" }
       ]
-      allow(sequel_client).to receive(:fetch).and_yield(dataset).and_return(dataset)
+      allow(dataset).to receive(:all).and_return(rows)
+      allow(sequel_client).to receive(:fetch).and_return(dataset)
       allow(client).to receive(:create_connection).and_return(sequel_client)
 
       message = client.discover(sync_config_json[:destination][:connection_specification])
