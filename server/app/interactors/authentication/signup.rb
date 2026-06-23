@@ -8,13 +8,14 @@ module Authentication
       ActiveRecord::Base.transaction do
         create_new_user
         create_organization_and_workspace
-
+        Rails.logger.info("[Signup] User email verification enabled: #{User.email_verification_enabled?}")
         user.skip_confirmation! unless User.email_verification_enabled?
 
         save_user
         if user.persisted?
           if User.email_verification_enabled?
             user.send_confirmation_instructions
+            Rails.logger.info("[Signup] Sending confirmation instructions to user: #{user.email}")
             context.message = "Signup successful! Please check your email to confirm your account."
           else
             context.message = "Signup successful!"
