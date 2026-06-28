@@ -99,6 +99,7 @@ require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
 require_relative "integrations/source/http/client"
+require_relative "integrations/source/aisquared/client"
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
