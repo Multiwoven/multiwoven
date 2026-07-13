@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.0)
+=======
+    multiwoven-integrations (0.37.3)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -64,18 +68,28 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     afm (1.0.0)
     ast (2.4.2)
-    async (2.11.0)
-      console (~> 1.25, >= 1.25.2)
+    async (2.37.0)
+      console (~> 1.29)
       fiber-annotation
-      io-event (~> 1.5, >= 1.5.1)
-      timers (~> 4.1)
+      io-event (~> 1.11)
+      metrics (~> 0.12)
+      traces (~> 0.18)
     async-io (1.43.2)
       async
+<<<<<<< HEAD
     async-websocket (0.8.0)
       async-io
       websocket-driver (~> 0.7.0)
     aws-eventstream (1.3.0)
     aws-partitions (1.931.0)
+=======
+    async-websocket (0.9.0)
+      async-io (~> 1.23)
+      protocol-http1 (~> 0.1)
+      protocol-websocket (~> 0.3)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1240.0)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
     aws-sdk-athena (1.83.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
@@ -115,9 +129,15 @@ GEM
     bigdecimal (3.1.9)
     builder (3.3.0)
     byebug (11.1.3)
+<<<<<<< HEAD
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     console (1.25.2)
+=======
+    concurrent-ruby (1.3.6)
+    connection_pool (3.0.2)
+    console (1.34.3)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
       fiber-annotation
       fiber-local (~> 1.1)
       json
@@ -315,7 +335,7 @@ GEM
       httparty (>= 0.16.3)
       json (>= 1.8.0)
       rsa-pem-from-mod-exp (~> 0.1.0)
-    io-event (1.5.1)
+    io-event (1.11.2)
     iterable-api-client (0.6.2)
       multi_json (~> 1.15.0)
       sorbet-runtime
@@ -327,6 +347,7 @@ GEM
       base64
     language_server-protocol (3.17.0.3)
     logger (1.7.0)
+    metrics (0.15.0)
     mini_mime (1.1.5)
     minitest (5.23.0)
     multi_json (1.15.0)
@@ -359,6 +380,7 @@ GEM
       ttfunk
     pg (1.5.6)
     pg (1.5.6-x64-mingw-ucrt)
+<<<<<<< HEAD
     pinecone (1.1.0)
       dry-struct (~> 1.6.0)
       dry-validation (~> 1.10.0)
@@ -366,6 +388,22 @@ GEM
     process_executer (1.1.0)
     public_suffix (5.0.5)
     racc (1.8.0)
+=======
+    pinecone (1.2.2)
+      dry-struct (~> 1.6)
+      dry-validation (~> 1.10)
+      httparty (>= 0.22.0)
+    prism (1.9.0)
+    process_executer (4.0.2)
+      track_open_instances (~> 0.1)
+    protocol-http (0.59.0)
+    protocol-http1 (0.37.0)
+      protocol-http (~> 0.58)
+    protocol-websocket (0.20.2)
+      protocol-http (~> 0.2)
+    public_suffix (7.0.5)
+    racc (1.8.1)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
     rainbow (3.1.1)
     rake (13.2.1)
     rchardet (1.8.0)
@@ -438,9 +476,13 @@ GEM
       hashie
     sorbet-runtime (0.5.11414)
     stripe (11.4.0)
-    timers (4.3.5)
     tiny_tds (2.1.7)
     tiny_tds (2.1.7-x64-mingw-ucrt)
+<<<<<<< HEAD
+=======
+    traces (0.18.2)
+    track_open_instances (0.1.15)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
     trailblazer-option (0.1.2)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
@@ -458,9 +500,6 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.9.1)
-    websocket-driver (0.7.6)
-      websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.5)
     xmlrpc (0.3.3)
       webrick
     zeitwerk (2.6.14)
@@ -482,8 +521,14 @@ PLATFORMS
 
 DEPENDENCIES
   MailchimpMarketing
+<<<<<<< HEAD
   activesupport
   async-websocket (~> 0.8.0)
+=======
+  activesupport (>= 7.2.3.1)
+  addressable (>= 2.9.0)
+  async-websocket (~> 0.9.0)
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
   aws-sdk-athena
   aws-sdk-bedrockruntime
   aws-sdk-s3
