@@ -63,6 +63,7 @@ const Workspace = () => {
               borderColor='gray.400'
               borderStyle='solid'
             >
+<<<<<<< HEAD
               <Box
                 display='flex'
                 justifyContent='space-between'
@@ -81,6 +82,16 @@ const Workspace = () => {
                 </VStack>
                 <Box color='gray.600'>
                   <FiChevronDown />
+=======
+              <VStack spacing={0} align='start'>
+                <Box w='128px' maxW='128px'>
+                  <Text size='xs' fontWeight={400} noOfLines={1} color='black.200'>
+                    {activeWorkspaceDetails?.attributes?.organization_name}
+                  </Text>
+                  <Text color='black.500' size='sm' fontWeight='semibold' noOfLines={1}>
+                    {activeWorkspaceDetails?.attributes?.name}
+                  </Text>
+>>>>>>> 1b6c16d8 (fix(CE): changed org name to current workspace org)
                 </Box>
               </Box>
             </Box>
