@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "Aisquared",
+    "title": "AI Squared Bolt",
+    "connector_type": "source",
+    "category": "AI Model",
+    "sub_category": "LLM",
+    "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/aisquared-bolt",
+    "github_issue_label": "source-aisquared-bolt",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}
