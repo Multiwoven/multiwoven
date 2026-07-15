@@ -1,6 +1,38 @@
 # frozen_string_literal: true
 
 RSpec.describe Multiwoven::Integrations do
+<<<<<<< HEAD
+=======
+  describe "::VERSION" do
+    it "is a valid semantic version string" do
+      expect(Multiwoven::Integrations::VERSION).to match(/\A\d+\.\d+\.\d+\z/)
+    end
+
+    it "matches the currently released version" do
+      expect(Multiwoven::Integrations::VERSION).to eq("0.37.4")
+    end
+  end
+
+  describe "gem packaging" do
+    let(:gemspec) do
+      Gem::Specification.load(
+        File.expand_path("../../../multiwoven-integrations.gemspec", __dir__)
+      )
+    end
+
+    it "keeps the gemspec version in sync with rollout" do
+      expect(gemspec.version).to eq(Gem::Version.new(Multiwoven::Integrations::VERSION))
+    end
+
+    it "depends on duckdb 1.4.3.0 to match libduckdb v1.4.3" do
+      duckdb = gemspec.runtime_dependencies.find { |dep| dep.name == "duckdb" }
+
+      expect(duckdb).not_to be_nil
+      expect(duckdb.requirement).to eq(Gem::Requirement.new("= 1.4.3.0"))
+    end
+  end
+
+>>>>>>> 27b5d207d (chore(CE): solve vulnerabilities (#2048))
   describe "::ENABLED_SOURCES" do
     let(:enabled_sources) { Multiwoven::Integrations::ENABLED_SOURCES }
     let(:enabled_destinations) { Multiwoven::Integrations::ENABLED_DESTINATIONS }
