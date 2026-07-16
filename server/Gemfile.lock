@@ -1931,7 +1931,14 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
+<<<<<<< HEAD
     json (2.9.1)
+=======
+    json (2.19.2)
+    json-schema (5.2.2)
+      addressable (~> 2.8)
+      bigdecimal (~> 3.1)
+>>>>>>> 6318ed59f (chore(CE): bumped up the version for integrations (#1754))
     json_schemer (0.2.25)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
@@ -1979,7 +1986,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.35.1)
+>>>>>>> 6318ed59f (chore(CE): bumped up the version for integrations (#1754))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2339,7 +2350,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  multiwoven-integrations (~> 0.35.1)
+>>>>>>> 6318ed59f (chore(CE): bumped up the version for integrations (#1754))
   mysql2
   newrelic_rpm
   parallel
