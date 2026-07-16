@@ -34,17 +34,18 @@ module ReverseEtl
 
           Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
             transformer = Transformers::UserMapping.new
+            Rails.logger.info("Before Transformer, sync_id = #{sync.id}, " \
+                              "sync_run_id = #{sync_run.id}, sync_record = #{sync_record.to_json}")
             record = transformer.transform(sync, sync_record)
-            Rails.logger.info "sync_id = #{sync.id} sync_run_id = #{sync_run.id} sync_record = #{record}"
+            Rails.logger.info("After Transformer, sync_id = #{sync.id}, sync_run_id = #{sync_run.id}, " \
+                              "sync_record = #{sync_record.to_json}, record = #{record.to_json}")
             report = handle_response(client.write(sync_config, [record], sync_record.action), sync_run)
             update_sync_record_logs_and_status(report, sync_record)
           rescue Activities::LoaderActivity::FullRefreshFailed
             raise
           rescue StandardError => e
-            # Utils::ExceptionReporter.report(e, {
-            #                                   sync_run_id: sync_run.id,
-            #                                   sync_id: sync.id
-            #                                 })
+            Rails.logger.info("Error in Transformer, sync_id = #{sync.id}, " \
+                              "sync_run_id = #{sync_run.id}, sync_record = #{sync_record.to_json} error = #{e.message}")
             Rails.logger.error({
               error_message: e.message,
               sync_run_id: sync_run.id,
@@ -78,9 +79,11 @@ module ReverseEtl
         rescue Activities::LoaderActivity::FullRefreshFailed
           raise
         rescue StandardError
-          # Utils::ExceptionReporter.report(e, {
-          #                                   sync_run_id: sync_run.id
-          #                                 })
+          Rails.logger.info(
+            "Error in Batch Transformer, " \
+            "sync_id = #{sync.id}, sync_run_id = #{sync_run.id}, " \
+            "error = #{e.message}"
+          )
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         heartbeat(activity, sync_run)
