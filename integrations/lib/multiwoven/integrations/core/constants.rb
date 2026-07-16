@@ -114,6 +114,20 @@ module Multiwoven
         "item_price" => "UNIT_PRICE",
         "line_total" => "PRICE"
       }.freeze
+<<<<<<< HEAD
+=======
+
+      # Aisquared Bolt
+      AISQUARED_BOLT_URL = ENV["LIGHTNING_URL"]
+
+      # Microsoft Graph
+      MICROSOFT_GRAPH_BASE = "https://graph.microsoft.com/v1.0"
+      MICROSOFT_GRAPH_SCOPE = "https://graph.microsoft.com/.default"
+      MICROSOFT_GRAPH_TOKEN_URL = "https://login.microsoftonline.com/%<tenant_id>s/oauth2/v2.0/token"
+      MICROSOFT_GRAPH_USER_DRIVE_URL = "#{MICROSOFT_GRAPH_BASE}/users/%<user_name>s/drive"
+      MICROSOFT_GRAPH_SHARE_ITEM_URL = "#{MICROSOFT_GRAPH_BASE}/shares/%<share_id>s/driveItem"
+      MICROSOFT_GRAPH_DRIVE_ITEM_URL = "#{MICROSOFT_GRAPH_BASE}/drives/%<drive_id>s/items/%<item_id>s"
+>>>>>>> 42efd6924 (feat(CE): Add One drive connector (#1987))
     end
   end
 end

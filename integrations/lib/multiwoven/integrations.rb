@@ -99,6 +99,11 @@ require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
 require_relative "integrations/source/http/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/aisquared/client"
+require_relative "integrations/source/one_drive/client"
+>>>>>>> 42efd6924 (feat(CE): Add One drive connector (#1987))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

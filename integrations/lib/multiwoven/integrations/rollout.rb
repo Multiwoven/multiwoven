@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.37.0"
+>>>>>>> 42efd6924 (feat(CE): Add One drive connector (#1987))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +38,11 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+<<<<<<< HEAD
+=======
+      Aisquared
+      OneDrive
+>>>>>>> 42efd6924 (feat(CE): Add One drive connector (#1987))
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
