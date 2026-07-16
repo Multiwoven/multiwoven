@@ -1,0 +1,61 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/one_drive",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "OneDrive",
+    "type": "object",
+    "required": ["tenant_id", "client_id", "client_secret"],
+    "properties": {
+      "data_type": {
+        "description": "Type of data in files",
+        "type": "string",
+        "title": "Data Format Type",
+        "oneOf": [
+          { "const": "structured", "title": "Tables & Records (Structured)" },
+          { "const": "unstructured", "title": "Documents & Files (Unstructured)" }
+        ],
+        "default": "structured"
+      },
+      "tenant_id": {
+        "type": "string",
+        "description": "Azure AD tenant ID",
+        "title": "Tenant ID"
+      },
+      "client_id": {
+        "type": "string",
+        "description": "Azure AD client ID",
+        "multiwoven_secret": true,
+        "title": "Client ID"
+      },
+      "client_secret": {
+        "type": "string",
+        "description": "Azure AD client secret",
+        "multiwoven_secret": true,
+        "title": "Client Secret"
+      },
+      "user_name": {
+        "type": "string",
+        "description": "Email address to access Root Folder, skip if using Share URL",
+        "title": "User Name"
+      },
+      "share_url": {
+        "type": "string",
+        "title": "Share URL",
+        "description": "OneDrive or SharePoint sharing link for the folder to read from, skip if using User Name to access Root Folder."
+      },
+      "file_name": {
+        "type": "string",
+        "title": "File Name",
+        "description": "Optional. For unstructured data, fetches only this file from the folder."
+      },
+      "access_token": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Access Token",
+        "description": "Leave blank during connection setup. Will fetch access token from Microsoft Graph."
+      }
+    }
+  }
+}
