@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.35.2"
+>>>>>>> 951017ad4 (fix(CE): added fix for duplicate primary key in case of insert (#1795))
 
     ENABLED_SOURCES = %w[
       Snowflake
