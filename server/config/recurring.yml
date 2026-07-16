@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # production:
 #   periodic_cleanup:
 #     class: CleanSoftDeletedRecordsJob
@@ -8,3 +9,30 @@
 #     command: "SoftDeletedRecord.due.delete_all"
 #     priority: 2
 #     schedule: at 5am every day
+=======
+production:
+  purge_expired_workflow_files:
+    class: PurgeExpiredWorkflowFilesJob
+    queue: background
+    schedule: every hour
+
+  sync_geo_lite_db:
+    class: SyncGeoLiteDbJob
+    queue: background
+    schedule: "0 2 * * 3"
+
+  prune_solid_cable_messages:
+    class: SolidCable::PruneJob
+    queue: background
+    schedule: every 4 hours
+
+# periodic_cleanup:
+#   class: CleanSoftDeletedRecordsJob
+#   queue: background
+#   args: [ 1000, { batch_size: 500 } ]
+#   schedule: every hour
+# periodic_command:
+#   command: "SoftDeletedRecord.due.delete_all"
+#   priority: 2
+#   schedule: at 5am every day
+>>>>>>> 9745524b2 (fix(CE): investigate high memory usage in pods for leaks (#1927))
