@@ -19,7 +19,18 @@ RSpec.describe Agents::Component, type: :model do
         llm_model: 3,
         prompt_template: 4,
         vector_store: 5,
+<<<<<<< HEAD
         python_custom: 6
+=======
+        python_custom: 6,
+        conditional: 7,
+        guardrails: 8,
+        tool: 9,
+        agent: 10,
+        knowledge_base: 11,
+        llm_router: 12,
+        human_in_loop: 13
+>>>>>>> d6dadb6dd (feat(CE): add workflow approval model  (#1708))
       )
     }
   end
