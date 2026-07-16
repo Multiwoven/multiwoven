@@ -1,13 +1,24 @@
 import { render, fireEvent } from '@testing-library/react';
-import TemplateOptions from '../TemplateOptions';
+import TemplateOptions from '../TemplateMappingOptions';
 import { expect } from '@jest/globals';
 import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 
 describe('TemplateOptions component', () => {
-  const columnOptions = ['Column1', 'Column2', 'Column3'];
-  const filterOptions = ['Filter1', 'Filter2', 'Filter3'];
-  const variableOptions = ['Variable1', 'Variable2'];
+  const columnOptions = [
+    { name: 'Column1', value: 'Column1', description: 'Description 1' },
+    { name: 'Column2', value: 'Column2', description: 'Description 2' },
+    { name: 'Column3', value: 'Column3', description: 'Description 3' },
+  ];
+  const filterOptions = [
+    { name: 'Filter1', value: 'Filter1', description: 'Description 1' },
+    { name: 'Filter2', value: 'Filter2', description: 'Description 2' },
+    { name: 'Filter3', value: 'Filter3', description: 'Description 3' },
+  ];
+  const variableOptions = [
+    { name: 'Variable1', value: 'Variable1', description: 'Description 1' },
+    { name: 'Variable2', value: 'Variable2', description: 'Description 2' },
+  ];
   const catalogMapping = {
     data: {
       configurations: {
@@ -50,7 +61,7 @@ describe('TemplateOptions component', () => {
 
     // Column options should be visible
     columnOptions.forEach((option) => {
-      expect(getByText(option)).toBeInTheDocument();
+      expect(getByText(option.name)).toBeInTheDocument();
     });
   });
 
