@@ -180,6 +180,53 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(result["data"].count).to eql(0)
       end
 
+<<<<<<< HEAD
+=======
+      it "returns connectors filtered by provider with pagination" do
+        get "/api/v1/connectors?provider=Klaviyo&page=1&per_page=10", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        expect(result["data"].count).to eql(1)
+        expect(result["data"].first.dig("attributes", "connector_name")).to eq("Klaviyo")
+        expect(result.dig("links", "first")).to include("page=1")
+      end
+
+      it "returns connectors excluding llm sub_category" do
+        get "/api/v1/connectors?exclude_sub_category=llm", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        ids = result["data"].map { |c| c["id"] }
+        expect(ids).not_to include(llm_connector.id.to_s)
+        expect(ids).to include(vector_connector.id.to_s)
+      end
+
+      it "returns connectors excluding vector sub_category" do
+        get "/api/v1/connectors?exclude_sub_category=vector", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        ids = result["data"].map { |c| c["id"] }
+        expect(ids).not_to include(vector_connector.id.to_s)
+        expect(ids).to include(llm_connector.id.to_s)
+      end
+
+      it "returns connectors excluding ai_ml_service sub_category" do
+        get "/api/v1/connectors?exclude_sub_category=ai_ml_service", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        ids = result["data"].map { |c| c["id"] }
+        expect(ids).not_to include(ai_ml_service_connector.id.to_s)
+      end
+
+      it "returns source connectors excluding llm sub_category" do
+        get "/api/v1/connectors?type=source&exclude_sub_category=llm", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        result = JSON.parse(response.body)
+        ids = result["data"].map { |c| c["id"] }
+        expect(ids).not_to include(llm_connector.id.to_s)
+        expect(result["data"].all? { |c| c.dig("attributes", "connector_type") == "source" }).to be true
+      end
+
+>>>>>>> f6d71341a (fix(CE): added an extra filter in connectors api for excluding on basis of sub category (#1893))
       it "returns an error response for connectors" do
         get "/api/v1/connectors?type=destination1", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:bad_request)
