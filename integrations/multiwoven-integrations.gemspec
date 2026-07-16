@@ -34,7 +34,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "activesupport"
-  spec.add_runtime_dependency "async-websocket"
   spec.add_runtime_dependency "aws-sdk-athena"
   spec.add_runtime_dependency "aws-sdk-cloudwatchlogs"
   spec.add_runtime_dependency "aws-sdk-s3"

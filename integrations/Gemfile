@@ -37,9 +37,13 @@ gem "restforce", "~> 7.1.0"
 
 gem "slack-ruby-client"
 
+<<<<<<< HEAD
 gem "async-websocket", "~> 0.8.0"
 
 gem "git"
+=======
+gem "git", ">= 2.0.1"
+>>>>>>> 27b5d207d (chore(CE): solve vulnerabilities (#2048))
 
 gem "hubspot-api-client", "~> 17.2.0"
 
@@ -85,7 +89,11 @@ gem "pinecone"
 
 gem "intuit-oauth"
 
+<<<<<<< HEAD
 gem "nokogiri"
+=======
+gem "nokogiri", ">= 1.19.4"
+>>>>>>> 27b5d207d (chore(CE): solve vulnerabilities (#2048))
 
 gem "xmlrpc", "~> 0.3.3"
 
