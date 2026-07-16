@@ -40,7 +40,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "destination_insert")
+      def write(sync_config, records, _action = "destination_insert", _identifier_key = nil)
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         token = connection_config[:token]
         file_name = sync_config.stream.name.split(", ").first

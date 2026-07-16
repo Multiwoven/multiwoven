@@ -47,37 +47,32 @@ module Multiwoven::Integrations::Destination
         db&.close
       end
 
-      def write(sync_config, records, action = "destination_insert")
+      def write(sync_config, records, action = "destination_insert", identifier_key = nil)
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         raw_table = sync_config.stream.name
         table_name = qualify_table(connection_config[:schema], raw_table)
         primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
+<<<<<<< HEAD
+=======
+        primary_key = fetch_primary_key(db, connection_config[:schema], raw_table)
+        opts = { action: action, identifier_key: identifier_key, sync_config: sync_config }
+>>>>>>> d9813065c (fix(CE): Added a record indentifier for batch support (#1885))
 
         write_success = 0
         write_failure = 0
         log_message_array = []
 
         records.each_slice(MAX_CHUNK_SIZE) do |chunk|
-          bulk_write(db, table_name, chunk, primary_key, action)
+          bulk_write(db, table_name, chunk, primary_key, opts)
           write_success += chunk.size
           log_message_array << log_request_response("info", "bulk_#{action}", "#{chunk.size} rows")
         rescue StandardError => e
           logger.warn("POSTGRESQL:BULK_WRITE:FALLBACK chunk_size=#{chunk.size} error=#{e.message}")
-          chunk.each do |record|
-            response = bulk_write(db, table_name, [record], primary_key, action)
-            write_success += 1
-            log_message_array << log_request_response("info", "fallback_#{action}", response)
-          rescue StandardError => individual_error
-            handle_exception(individual_error, {
-                               context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
-                               type: "error",
-                               sync_id: sync_config.sync_id,
-                               sync_run_id: sync_config.sync_run_id
-                             })
-            write_failure += 1
-            log_message_array << log_request_response("error", "fallback_#{action}", individual_error.message)
-          end
+          success, failure, logs = write_chunk_fallback(db, table_name, chunk, primary_key, opts)
+          write_success += success
+          write_failure += failure
+          log_message_array.concat(logs)
         end
 
         tracking_message(write_success, write_failure, log_message_array)
@@ -94,10 +89,39 @@ module Multiwoven::Integrations::Destination
 
       private
 
-      def bulk_write(db, table_name, records, primary_key, action)
+      def write_chunk_fallback(db, table_name, chunk, primary_key, opts)
+        action = opts[:action]
+        identifier_key = opts[:identifier_key]
+        sync_config = opts[:sync_config]
+        success = 0
+        failure = 0
+        logs = []
+
+        chunk.each do |record|
+          response = bulk_write(db, table_name, [record], primary_key, opts)
+          success += 1
+          logs << log_request_response("info", "fallback_#{action}", response, record[identifier_key])
+        rescue StandardError => individual_error # rubocop:disable Naming/RescuedExceptionsVariableName
+          handle_exception(individual_error, {
+                             context: "POSTGRESQL:RECORD:WRITE:EXCEPTION",
+                             type: "error",
+                             sync_id: sync_config.sync_id,
+                             sync_run_id: sync_config.sync_run_id
+                           })
+          failure += 1
+          logs << log_request_response("error", "fallback_#{action}", individual_error.message, record[identifier_key])
+        end
+
+        [success, failure, logs]
+      end
+
+      def bulk_write(db, table_name, records, primary_key, opts)
+        action = opts[:action]
+        identifier_key = opts[:identifier_key]
         return if records.empty?
 
         columns = records.flat_map(&:keys).uniq
+        columns -= [identifier_key] if identifier_key
         col_list = columns.map { |c| quote_ident(c) }.join(", ")
 
         values_clauses = records.map do |record|
@@ -105,9 +129,20 @@ module Multiwoven::Integrations::Destination
           "(#{vals.join(", ")})"
         end
 
+<<<<<<< HEAD
         sql = "INSERT INTO #{table_name} (#{col_list}) VALUES #{values_clauses.join(", ")}"
         sql += build_upsert_clause(columns, primary_key) if action.to_s == "destination_update"
         db.exec(sql)
+=======
+        conflict = build_conflict_clause(primary_key, action, columns)
+        db.exec("INSERT INTO #{table_name} (#{col_list}) VALUES #{values_clauses.join(", ")}#{conflict}")
+      end
+
+      def build_conflict_clause(primary_key, action, columns)
+        return "" unless primary_key.present?
+
+        action.to_s == "destination_insert" ? build_safe_insert_clause(primary_key) : build_upsert_clause(columns, primary_key)
+>>>>>>> d9813065c (fix(CE): Added a record indentifier for batch support (#1885))
       end
 
       def build_upsert_clause(columns, primary_key)

@@ -67,6 +67,16 @@ module Multiwoven
             expect(parsed_message["response"]).to eq(response.to_s)
             expect(parsed_message["level"]).to eq(level)
           end
+
+          it "sets record_identifier when provided" do
+            log_message = dummy_class.log_request_response("error", request, response, "uuid-123")
+            expect(log_message.record_identifier).to eq("uuid-123")
+          end
+
+          it "record_identifier is nil when not provided" do
+            log_message = dummy_class.log_request_response("info", request, response)
+            expect(log_message.record_identifier).to be_nil
+          end
         end
       end
     end
