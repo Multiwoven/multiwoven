@@ -22,6 +22,7 @@ GEM
       json (~> 2.1, >= 2.1.0)
     aasm (5.5.0)
       concurrent-ruby (~> 1.0)
+<<<<<<< HEAD
     actioncable (7.1.5.2)
       actionpack (= 7.1.5.2)
       activesupport (= 7.1.5.2)
@@ -51,13 +52,40 @@ GEM
     actionpack (7.1.5.2)
       actionview (= 7.1.5.2)
       activesupport (= 7.1.5.2)
+=======
+    actioncable (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      nio4r (~> 2.0)
+      websocket-driver (>= 0.6.1)
+      zeitwerk (~> 2.6)
+    actionmailbox (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      activejob (= 7.2.3.1)
+      activerecord (= 7.2.3.1)
+      activestorage (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      mail (>= 2.8.0)
+    actionmailer (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      actionview (= 7.2.3.1)
+      activejob (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      mail (>= 2.8.0)
+      rails-dom-testing (~> 2.2)
+    actionpack (7.2.3.1)
+      actionview (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      cgi
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       nokogiri (>= 1.8.5)
       racc
-      rack (>= 2.2.4)
+      rack (>= 2.2.4, < 3.3)
       rack-session (>= 1.0.1)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+<<<<<<< HEAD
     actiontext (7.1.5.2)
       actionpack (= 7.1.5.2)
       activerecord (= 7.1.5.2)
@@ -67,6 +95,18 @@ GEM
       nokogiri (>= 1.8.5)
     actionview (7.1.5.2)
       activesupport (= 7.1.5.2)
+=======
+      useragent (~> 0.16)
+    actiontext (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      activerecord (= 7.2.3.1)
+      activestorage (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      globalid (>= 0.6.0)
+      nokogiri (>= 1.8.5)
+    actionview (7.2.3.1)
+      activesupport (= 7.2.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       builder (~> 3.1)
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
@@ -76,6 +116,7 @@ GEM
       activemodel (>= 4.1)
       case_transform (>= 0.2)
       jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
+<<<<<<< HEAD
     activejob (7.1.5.2)
       activesupport (= 7.1.5.2)
       globalid (>= 0.3.6)
@@ -84,10 +125,21 @@ GEM
     activerecord (7.1.5.2)
       activemodel (= 7.1.5.2)
       activesupport (= 7.1.5.2)
+=======
+    activejob (7.2.3.1)
+      activesupport (= 7.2.3.1)
+      globalid (>= 0.3.6)
+    activemodel (7.2.3.1)
+      activesupport (= 7.2.3.1)
+    activerecord (7.2.3.1)
+      activemodel (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       timeout (>= 0.4.0)
     activerecord_json_validator (2.1.5)
       activerecord (>= 4.2.0, < 8)
       json_schemer (~> 0.2.18)
+<<<<<<< HEAD
     activestorage (7.1.5.2)
       actionpack (= 7.1.5.2)
       activejob (= 7.1.5.2)
@@ -95,24 +147,38 @@ GEM
       activesupport (= 7.1.5.2)
       marcel (~> 1.0)
     activesupport (7.1.5.2)
+=======
+    activestorage (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      activejob (= 7.2.3.1)
+      activerecord (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      marcel (~> 1.0)
+    activesupport (7.2.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       base64
       benchmark (>= 0.3)
       bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
+      concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
       drb
       i18n (>= 1.6, < 2)
       logger (>= 1.4.2)
-      minitest (>= 5.1)
-      mutex_m
+      minitest (>= 5.1, < 6)
       securerandom (>= 0.3)
-      tzinfo (~> 2.0)
+      tzinfo (~> 2.0, >= 2.0.5)
     acts-as-taggable-on (12.0.0)
       activerecord (>= 7.1, < 8.1)
       zeitwerk (>= 2.4, < 3.0)
+<<<<<<< HEAD
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     afm (1.0.0)
+=======
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
+    afm (0.2.2)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
@@ -1665,13 +1731,19 @@ GEM
     azure-blob (0.5.4)
       rexml
     base64 (0.3.0)
+<<<<<<< HEAD
     bcrypt (3.1.20)
     benchmark (0.4.1)
     bigdecimal (3.2.2)
+=======
+    bcrypt (3.1.22)
+    benchmark (0.5.0)
+    bigdecimal (3.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     builder (3.3.0)
-    bullet (7.1.5)
+    bullet (8.1.1)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -1691,22 +1763,38 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
+<<<<<<< HEAD
     csv (3.3.2)
     data_migrate (9.4.0)
+=======
+    csv (3.3.5)
+    data_migrate (11.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       activerecord (>= 6.1)
       railties (>= 6.1)
     date (3.4.1)
     declarative (0.0.20)
+<<<<<<< HEAD
     devise (4.9.3)
+=======
+    devise (5.0.3)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
+      railties (>= 7.0)
       responders
       warden (~> 1.2.3)
+<<<<<<< HEAD
     devise-jwt (0.11.0)
       devise (~> 4.0)
       warden-jwt_auth (~> 0.8)
     devise_invitable (2.0.9)
+=======
+    devise-jwt (0.13.0)
+      devise (>= 4.0.0, < 6.0.0)
+      warden-jwt_auth (~> 0.10)
+    devise_invitable (2.0.11)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       actionmailer (>= 5.0)
       devise (>= 4.6)
     diff-lcs (1.5.0)
@@ -1759,7 +1847,11 @@ GEM
       bigdecimal (>= 3.1.4)
     ecma-re-validator (0.4.0)
       regexp_parser (~> 2.2)
+<<<<<<< HEAD
     erb (5.0.2)
+=======
+    erb (6.0.4)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -1916,11 +2008,19 @@ GEM
       httparty (>= 0.16.3)
       json (>= 1.8.0)
       rsa-pem-from-mod-exp (~> 0.1.0)
+<<<<<<< HEAD
     io-console (0.8.1)
     io-endpoint (0.15.0)
     io-event (1.9.0)
     io-stream (0.6.1)
     irb (1.15.2)
+=======
+    io-console (0.8.2)
+    io-endpoint (0.17.2)
+    io-event (1.11.2)
+    io-stream (0.11.1)
+    irb (1.18.0)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -1962,7 +2062,11 @@ GEM
       launchy (>= 2.2, < 4)
     liquid (5.4.0)
     logger (1.7.0)
+<<<<<<< HEAD
     loofah (2.24.1)
+=======
+    loofah (2.25.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -1973,13 +2077,21 @@ GEM
     marcel (1.0.4)
     metrics (0.12.1)
     mini_mime (1.1.5)
+<<<<<<< HEAD
     minitest (5.25.5)
+=======
+    minitest (5.27.0)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     msgpack (1.8.0)
     multi_json (1.15.0)
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.35.4)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2013,7 +2125,6 @@ GEM
       stripe
       tiny_tds
       zendesk_api
-    mutex_m (0.3.0)
     mysql2 (0.5.6)
     net-http (0.6.0)
       uri
@@ -2030,6 +2141,7 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     newrelic_rpm (9.7.0)
+<<<<<<< HEAD
     nio4r (2.7.4)
     nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
@@ -2038,6 +2150,16 @@ GEM
     nokogiri (1.18.9-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.9-x86_64-linux-gnu)
+=======
+    nio4r (2.7.5)
+    nokogiri (1.19.2-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.2-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.2-x86_64-linux-gnu)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -2098,18 +2220,29 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
+<<<<<<< HEAD
     rack (3.2.0)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-session (2.1.1)
+=======
+    rack (3.2.6)
+    rack-attack (6.8.0)
+      rack (>= 1.0, < 4)
+    rack-cors (3.0.0)
+      logger
+      rack (>= 3.0.14)
+    rack-session (2.1.2)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
       rack (>= 1.3)
     rackup (2.2.1)
       rack (>= 3)
+<<<<<<< HEAD
     rails (7.1.5.2)
       actioncable (= 7.1.5.2)
       actionmailbox (= 7.1.5.2)
@@ -2124,6 +2257,22 @@ GEM
       activesupport (= 7.1.5.2)
       bundler (>= 1.15.0)
       railties (= 7.1.5.2)
+=======
+    rails (7.2.3.1)
+      actioncable (= 7.2.3.1)
+      actionmailbox (= 7.2.3.1)
+      actionmailer (= 7.2.3.1)
+      actionpack (= 7.2.3.1)
+      actiontext (= 7.2.3.1)
+      actionview (= 7.2.3.1)
+      activejob (= 7.2.3.1)
+      activemodel (= 7.2.3.1)
+      activerecord (= 7.2.3.1)
+      activestorage (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      bundler (>= 1.15.0)
+      railties (= 7.2.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
@@ -2131,18 +2280,32 @@ GEM
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+<<<<<<< HEAD
     railties (7.1.5.2)
       actionpack (= 7.1.5.2)
       activesupport (= 7.1.5.2)
       irb
+=======
+    railties (7.2.3.1)
+      actionpack (= 7.2.3.1)
+      activesupport (= 7.2.3.1)
+      cgi
+      irb (~> 1.13)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       rackup (>= 1.0.0)
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
+<<<<<<< HEAD
     rake (13.3.0)
     rchardet (1.9.0)
     rdoc (6.14.2)
+=======
+    rake (13.4.2)
+    rchardet (1.10.0)
+    rdoc (7.2.0)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
       erb
       psych (>= 4.0.0)
     redis (4.8.1)
@@ -2271,10 +2434,17 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.9.1)
+<<<<<<< HEAD
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
     uri (1.0.3)
+=======
+    unicode-display_width (2.6.0)
+    uniform_notifier (1.18.0)
+    uri (1.1.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
     uri_template (0.7.0)
+    useragent (0.16.11)
     warden (1.2.9)
       rack (>= 2.0.9)
     warden-jwt_auth (0.8.0)
@@ -2319,10 +2489,17 @@ DEPENDENCIES
   bullet
   byebug
   counter_culture (~> 3.3)
+<<<<<<< HEAD
   data_migrate
   devise
   devise-jwt
   devise_invitable
+=======
+  data_migrate (>= 10.0)
+  devise (~> 5.0)
+  devise-jwt (~> 0.13.0)
+  devise_invitable (~> 2.0.10)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
   discard
   dry-validation
   factory_bot_rails
@@ -2339,7 +2516,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  multiwoven-integrations (~> 0.35.4)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
   mysql2
   newrelic_rpm
   parallel
@@ -2351,10 +2532,17 @@ DEPENDENCIES
   prometheus-client (~> 4.2)
   puma (>= 5.0)
   pundit
+<<<<<<< HEAD
   rack-attack
   rack-cors
   rails (~> 7.1.1)
   redis (~> 4.0)
+=======
+  rack-attack (~> 6.8)
+  rack-cors (~> 3.0)
+  rack-session (>= 2.1.2)
+  rails (~> 7.2, >= 7.2.3.1)
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
   rexml (~> 3.4.2)
   rspec-rails
   rubocop
