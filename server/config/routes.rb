@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       post "forgot_password", to: "auth#forgot_password"
       post "reset_password", to: "auth#reset_password"
       post "resend_verification", to: "auth#resend_verification"
+      get "auth_token", to: "auth_token#show"
 
       # Workspace Routes
       resources :workspaces
