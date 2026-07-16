@@ -61,6 +61,44 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(categories).to eql(["AI Model"])
       end
 
+      it "returns only LLM connectors when filtered by sub_category" do
+        get "/api/v1/connector_definitions?type=source&sub_category=llm", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_array = JSON.parse(response.body)
+        sub_categories = response_array.map { |item| item["sub_category"] }.uniq
+        connector_types = response_array.map { |item| item["connector_type"] }.uniq
+
+        expect(sub_categories).to eq(["LLM"])
+        expect(connector_types).to eq(["source"])
+        expect(response_array.map { |c| c["name"] }).to include("OpenAI", "Anthropic")
+      end
+
+      it "returns only vector database connectors when filtered by sub_category" do
+        get "/api/v1/connector_definitions?type=source&sub_category=vector", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_array = JSON.parse(response.body)
+        sub_categories = response_array.map { |item| item["sub_category"] }.uniq
+
+        expect(sub_categories).to eq(["Vector Database"])
+        expect(response_array.map { |c| c["name"] }).to include("PineconeDB", "Qdrant")
+      end
+
+      it "returns connectors filtered by both category and sub_category" do
+        get "/api/v1/connector_definitions?type=source&category=ai_ml&sub_category=llm",
+            headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+
+        response_array = JSON.parse(response.body)
+        categories = response_array.map { |item| item["category"] }.uniq
+        sub_categories = response_array.map { |item| item["sub_category"] }.uniq
+
+        expect(categories).to eq(["AI Model"])
+        expect(sub_categories).to eq(["LLM"])
+        expect(response_array.map { |c| c["name"] }).to include("OpenAI", "Anthropic")
+      end
+
       it "returns success viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/connector_definitions", headers: auth_headers(user, workspace_id)
