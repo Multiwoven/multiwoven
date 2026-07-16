@@ -19,6 +19,26 @@ export const generateUiSchema = (
         }
         current = current[schemaPath];
       });
+    } else if (key === 'x-request-format') {
+      let current = uiSchema;
+      path.forEach((schemaPath, index) => {
+        if (index === path.length - 1) {
+          current[schemaPath] = { 'ui:widget': 'requestFormat' };
+        } else {
+          current[schemaPath] = current[schemaPath] || {};
+        }
+        current = current[schemaPath];
+      });
+    } else if (key === 'x-response-format') {
+      let current = uiSchema;
+      path.forEach((schemaPath, index) => {
+        if (index === path.length - 1) {
+          current[schemaPath] = { 'ui:widget': 'responseFormat' };
+        } else {
+          current[schemaPath] = current[schemaPath] || {};
+        }
+        current = current[schemaPath];
+      });
     }
   });
 
