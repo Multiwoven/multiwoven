@@ -118,6 +118,7 @@ GEM
       rake (>= 10.4, < 14.0)
     appsignal (3.7.5)
       rack
+<<<<<<< HEAD
     ast (2.4.2)
     async (2.22.0)
       console (~> 1.29)
@@ -144,6 +145,11 @@ GEM
       protocol-websocket (~> 0.17)
     aws-eventstream (1.3.0)
     aws-partitions (1.880.0)
+=======
+    ast (2.4.3)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1224.0)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
     aws-sdk (3.2.0)
       aws-sdk-resources (~> 3)
     aws-sdk-accessanalyzer (1.44.0)
@@ -1679,12 +1685,17 @@ GEM
       activesupport
     childprocess (5.1.0)
       logger (~> 1.5)
+<<<<<<< HEAD
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     console (1.29.2)
       fiber-annotation
       fiber-local (~> 1.1)
       json
+=======
+    concurrent-ruby (1.3.7)
+    connection_pool (3.0.2)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
     counter_culture (3.8.2)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -1788,6 +1799,7 @@ GEM
       net-http (>= 0.5.0)
     faraday-retry (2.2.1)
       faraday (~> 2.0)
+<<<<<<< HEAD
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-darwin)
@@ -1798,6 +1810,21 @@ GEM
     fiber-storage (1.0.0)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
+=======
+    ferrum (0.17.2)
+      addressable (~> 2.5)
+      base64 (~> 0.2)
+      concurrent-ruby (~> 1.1)
+      webrick (~> 1.7)
+      websocket-driver (~> 0.7)
+    ffi (1.17.3-aarch64-linux-gnu)
+    ffi (1.17.3-arm64-darwin)
+    ffi (1.17.3-x86_64-darwin)
+    ffi (1.17.3-x86_64-linux-gnu)
+    fiber-storage (1.0.1)
+    fugit (1.13.0)
+      et-orbi (~> 1.4)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
       raabro (~> 1.4)
     gapic-common (0.25.0)
       faraday (>= 1.9, < 3.a)
@@ -1916,11 +1943,16 @@ GEM
       httparty (>= 0.16.3)
       json (>= 1.8.0)
       rsa-pem-from-mod-exp (~> 0.1.0)
+<<<<<<< HEAD
     io-console (0.8.1)
     io-endpoint (0.15.0)
     io-event (1.9.0)
     io-stream (0.6.1)
     irb (1.15.2)
+=======
+    io-console (0.8.2)
+    irb (1.18.0)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -1970,8 +2002,18 @@ GEM
       net-imap
       net-pop
       net-smtp
+<<<<<<< HEAD
     marcel (1.0.4)
     metrics (0.12.1)
+=======
+    marcel (1.2.1)
+    matrix (0.4.2)
+    maxminddb (0.1.22)
+    mime-types (3.7.0)
+      logger
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2026.0317)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
@@ -1979,10 +2021,13 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.37.4)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
       MailchimpMarketing
       activesupport
-      async-websocket
       aws-sdk-athena
       aws-sdk-cloudwatchlogs
       aws-sdk-s3
@@ -2076,6 +2121,7 @@ GEM
       track_open_instances (~> 0.1)
     prometheus-client (4.2.4)
       base64
+<<<<<<< HEAD
     protocol-hpack (1.5.1)
     protocol-http (0.49.0)
     protocol-http1 (0.30.0)
@@ -2093,6 +2139,11 @@ GEM
       stringio
     public_suffix (5.0.5)
     puma (6.6.0)
+=======
+    pstore (0.2.1)
+    public_suffix (7.0.5)
+    puma (8.0.2)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
       nio4r (~> 2.0)
     pundit (2.3.2)
       activesupport (>= 3.0.0)
@@ -2251,6 +2302,7 @@ GEM
       activerecord (>= 5.2)
     thor (1.4.0)
     timecop (0.9.8)
+<<<<<<< HEAD
     timeout (0.4.3)
     tiny_tds (3.2.0)
       bigdecimal (~> 3)
@@ -2259,6 +2311,19 @@ GEM
     tiny_tds (3.2.0-x86_64-linux-gnu)
       bigdecimal (~> 3)
     traces (0.15.2)
+=======
+    timeout (0.6.1)
+    tiny_tds (3.4.0)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-aarch64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tiny_tds (3.4.0-x86_64-linux-gnu)
+      bigdecimal (>= 2.0.0)
+    tokenizers (0.6.3-aarch64-linux)
+    tokenizers (0.6.3-arm64-darwin)
+    tokenizers (0.6.3-x86_64-darwin)
+    tokenizers (0.6.3-x86_64-linux)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
     track_open_instances (0.1.15)
     trailblazer-option (0.1.2)
     ttfunk (1.8.0)
@@ -2339,7 +2404,12 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.37.4)
+>>>>>>> 9b961e949 (chore(CE): version update integrations (#2063))
   mysql2
   newrelic_rpm
   parallel
