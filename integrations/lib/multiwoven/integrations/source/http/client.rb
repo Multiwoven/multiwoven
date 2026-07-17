@@ -56,7 +56,7 @@ module Multiwoven::Integrations::Source
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
         connection_config = create_connection(connection_config)
-        if sync_config.increment_strategy_config.increment_strategy == "page"
+        if sync_config.increment_strategy_config&.increment_strategy == "page"
           @limit = sync_config.increment_strategy_config.limit
           @offset = sync_config.increment_strategy_config.offset
         else
@@ -80,6 +80,19 @@ module Multiwoven::Integrations::Source
         config.with_indifferent_access.tap do |conf|
           conf[:config][:timeout] ||= 30
         end
+      end
+
+      def duplicate_request?(connection_config)
+        signature = [
+          @url,
+          connection_config[:http_method],
+          connection_config[:params],
+          connection_config[:request_format]
+        ].to_json
+        return true if @last_request_signature == signature
+
+        @last_request_signature = signature
+        false
       end
 
       def create_connection(connection_config)
@@ -113,6 +126,8 @@ module Multiwoven::Integrations::Source
       def query(connection_config, query)
         connection_config = prepare_config(connection_config)
         build_paginated_request(connection_config, query)
+        return [] if duplicate_request?(connection_config)
+
         response = send_request(
           url: @url,
           http_method: connection_config[:http_method],
@@ -144,12 +159,11 @@ module Multiwoven::Integrations::Source
       def parse_response(response_body, parse_response)
         case parse_response
         when Array
-          records = []
-          parse_response.each do |path|
-            records << JsonPath.on(response_body, path)
-          end
-          records[1].each_slice(records[0].size).map do |row_values|
-            data = Hash[records[0].zip(row_values)]
+          headers = JsonPath.on(response_body, parse_response[0]).flatten(1)
+          values = JsonPath.on(response_body, parse_response[1])
+          rows = values.first.is_a?(Array) ? values : values.each_slice(headers.size).to_a
+          rows.map do |row_values|
+            data = Hash[headers.zip(row_values)]
             RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message
           end
         else
