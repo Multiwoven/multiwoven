@@ -12,12 +12,61 @@
         "title": "Destination url",
         "order": 0
       },
+      "auth_type": {
+        "type": "string",
+        "title": "Authentication Type",
+        "description": "Select 'oauth_client_credentials' to have Multiwoven fetch and refresh an OAuth2 access token automatically.",
+        "enum": ["none", "oauth_client_credentials"],
+        "default": "none",
+        "order": 2
+      },
       "headers": {
         "title": "Http Headers",
         "order": 1,
         "additionalProperties": {
           "type": "string"
         }
+      }
+    },
+    "dependencies": {
+      "auth_type": {
+        "oneOf": [
+          {
+            "properties": {
+              "auth_type": { "enum": ["none"] }
+            }
+          },
+          {
+            "properties": {
+              "auth_type": { "enum": ["oauth_client_credentials"] },
+              "token_url": {
+                "type": "string",
+                "title": "OAuth Token URL",
+                "description": "E.g. https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+                "order": 3
+              },
+              "client_id": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client ID",
+                "order": 4
+              },
+              "client_secret": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client Secret",
+                "order": 5
+              },
+              "scope": {
+                "type": "string",
+                "title": "OAuth Scope",
+                "description": "Optional. E.g. https://graph.microsoft.com/.default",
+                "order": 6
+              }
+            },
+            "required": ["token_url", "client_id", "client_secret"]
+          }
+        ]
       }
     }
   }
