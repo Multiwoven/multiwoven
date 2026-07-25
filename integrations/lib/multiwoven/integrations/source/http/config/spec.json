@@ -72,7 +72,7 @@
       },
       "parse_response": {
         "title": "Parse Response",
-        "description": "A JSONPath expression that points to a single record (usually the first row) in the response. The keys of this object are treated as the column names. Example: `$.data[0]`",
+        "description": "How to extract rows from the response. Three supported forms: (1) a JSONPath expression pointing to a single record whose keys become column names, e.g. `$.data[0]`; (2) a JSON array of two JSONPaths `[\"$.headers_path\", \"$.values_path\"]` where the first resolves to column names and the second to a flat stream of values sliced into rows; (3) the same two-path form where the values path resolves to a 2D array (array of row-arrays), useful for Microsoft Graph Excel range endpoints, e.g. `[\"$.values[0]\", \"$.values[1:]\"]`.",
         "type": "string",
         "x-response-format": true,
         "order": 8,

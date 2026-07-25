@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.37.5"
+>>>>>>> 19fc09c91 (chore(CE): support for 2d array from api (#2054))
 
     ENABLED_SOURCES = %w[
       Snowflake

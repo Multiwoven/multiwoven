@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.0)
+=======
+    multiwoven-integrations (0.37.5)
+>>>>>>> 19fc09c91 (chore(CE): support for 2d array from api (#2054))
       MailchimpMarketing
       activesupport
       async-websocket

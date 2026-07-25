@@ -365,6 +365,133 @@ RSpec.describe Multiwoven::Integrations::Source::Http::Client do
       end
     end
 
+    context "when the read is successful for a 2D array response (Microsoft Graph range)" do
+      let(:response_body) do
+        {
+          "address": "Sheet1!A1:C3",
+          "values": [
+            %w[Name Email Country],
+            ["Alice", "alice@example.com", "US"],
+            ["Bob", "bob@example.com", "DE"]
+          ]
+        }.to_json
+      end
+
+      before do
+        response = Net::HTTPSuccess.new("1.1", "200", "Authorized")
+        response.content_type = "application/json"
+        url = sync_config_json[:source][:connection_specification][:base_url] + sync_config_json[:source][:connection_specification][:path]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
+        headers = sync_config_json[:source][:connection_specification][:headers]
+        request_format = sync_config_json[:source][:connection_specification][:request_format]
+        config = sync_config_json[:source][:connection_specification][:config]
+        params = { status: "success", page: 1, per_page: 10 }
+        allow(response).to receive(:body).and_return(response_body)
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(url,
+                http_method,
+                payload: JSON.parse(request_format),
+                headers: headers,
+                options: { config: config, params: params })
+          .and_return(response)
+      end
+
+      it "flattens the 2D values array into named-column records" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.increment_strategy_config.offset = 1
+        s_config.increment_strategy_config.limit = 10
+        s_config[:source][:connection_specification][:parse_response] = "[\"$.values[0]\", \"$.values[1:]\"]"
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.length).to eq(2)
+        expect(records.first.record.data).to eq(
+          {
+            "Name" => "Alice",
+            "Email" => "alice@example.com",
+            "Country" => "US"
+          }
+        )
+        expect(records.last.record.data).to eq(
+          {
+            "Name" => "Bob",
+            "Email" => "bob@example.com",
+            "Country" => "DE"
+          }
+        )
+      end
+    end
+
+    context "when the endpoint returns the same request signature twice (unpaginated / API ignores pagination params)" do
+      let(:response_body) do
+        { "data" => [{ "id" => "1", "type" => "sync_records", "attributes" => { "record" => { "col1" => 1 } } }] }.to_json
+      end
+
+      before do
+        response = Net::HTTPSuccess.new("1.1", "200", "Authorized")
+        response.content_type = "application/json"
+        allow(response).to receive(:body).and_return(response_body)
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .and_return(response)
+      end
+
+      it "returns records on the first call and [] on the second identical call" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        s_config.increment_strategy_config.offset = 1
+        s_config.increment_strategy_config.limit = 10
+
+        first = client.read(s_config)
+        second = client.read(s_config)
+
+        expect(first).to be_an(Array)
+        expect(first.length).to eq(1)
+        expect(first.first.record.data).to eq({ "col1" => 1 })
+        expect(second).to eq([])
+      end
+    end
+
+    context "when the sync_config has no increment_strategy_config (test sync)" do
+      let(:response_body) do
+        { "data" => [{ "id" => "1", "type" => "sync_records", "attributes" => { "record" => { "col1" => 1 } } }] }.to_json
+      end
+
+      before do
+        response = Net::HTTPSuccess.new("1.1", "200", "Authorized")
+        response.content_type = "application/json"
+        url = sync_config_json[:source][:connection_specification][:base_url] + sync_config_json[:source][:connection_specification][:path]
+        http_method = sync_config_json[:source][:connection_specification][:http_method]
+        headers = sync_config_json[:source][:connection_specification][:headers]
+        request_format = sync_config_json[:source][:connection_specification][:request_format]
+        config = sync_config_json[:source][:connection_specification][:config]
+        params = { status: "success", page: 0, per_page: 1 }
+        allow(response).to receive(:body).and_return(response_body)
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(url,
+                http_method,
+                payload: JSON.parse(request_format),
+                headers: headers,
+                options: { config: config, params: params })
+          .and_return(response)
+      end
+
+      it "falls back to top-level limit and offset without crashing" do
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.new(
+          source: sync_config.source,
+          destination: sync_config.destination,
+          model: sync_config.model,
+          stream: sync_config.stream,
+          sync_mode: sync_config.sync_mode,
+          cursor_field: sync_config.cursor_field,
+          destination_sync_mode: sync_config.destination_sync_mode,
+          sync_id: sync_config.sync_id
+        )
+        s_config.limit = 1
+        s_config.offset = 0
+        records = client.read(s_config)
+        expect(records).to be_an(Array)
+        expect(records.first.record.data).to eq({ "col1" => 1 })
+      end
+    end
+
     context "when the read operation fails" do
       let(:response_body) { { "message" => "failed" }.to_json }
       before do
