@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.35.3"
+>>>>>>> 9712b5cc1 (fix(CE): added a logic to fetch primary key dynamically (#1842))
 
     ENABLED_SOURCES = %w[
       Snowflake
