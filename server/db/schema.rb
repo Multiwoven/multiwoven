@@ -277,6 +277,37 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.string "organization_logo_filename"
   end
 
+  create_table "prompt_to_workflow_session_events", force: :cascade do |t|
+    t.bigint "prompt_to_workflow_session_id", null: false
+    t.integer "sequence", null: false
+    t.string "event_type", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.index ["prompt_to_workflow_session_id", "sequence"], name: "idx_p2w_events_session_sequence", unique: true
+    t.index ["prompt_to_workflow_session_id"], name: "idx_on_prompt_to_workflow_session_id_4fd8c9eb0e"
+  end
+
+  create_table "prompt_to_workflow_sessions", force: :cascade do |t|
+    t.uuid "session_id", null: false
+    t.uuid "workflow_id", null: false
+    t.integer "workspace_id", null: false
+    t.string "status", default: "running", null: false
+    t.uuid "current_clarification_id"
+    t.jsonb "state", default: {}, null: false
+    t.string "temporal_workflow_id"
+    t.string "temporal_run_id"
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "current_turn", default: 0, null: false
+    t.index ["expires_at"], name: "index_prompt_to_workflow_sessions_on_expires_at"
+    t.index ["session_id"], name: "index_prompt_to_workflow_sessions_on_session_id", unique: true
+    t.index ["status", "expires_at"], name: "idx_p2w_sessions_status_expires"
+    t.index ["workflow_id"], name: "index_prompt_to_workflow_sessions_on_workflow_id"
+    t.index ["workspace_id", "status"], name: "idx_p2w_sessions_workspace_status"
+    t.index ["workspace_id"], name: "index_prompt_to_workflow_sessions_on_workspace_id"
+  end
+
   create_table "remote_code_executions", force: :cascade do |t|
     t.integer "workflow_run_id"
     t.integer "workspace_id", null: false
@@ -709,6 +740,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "edges", "components", column: "target_component_id", validate: false
   add_foreign_key "edges", "workflows", validate: false
   add_foreign_key "edges", "workspaces", validate: false
+<<<<<<< HEAD
+=======
+  add_foreign_key "hosted_data_store_tables", "hosted_data_stores", on_delete: :cascade, validate: false
+  add_foreign_key "hosted_data_stores", "workspaces", validate: false
+  add_foreign_key "knowledge_base_files", "knowledge_bases", validate: false
+  add_foreign_key "knowledge_bases", "workspaces", validate: false
+  add_foreign_key "llm_routing_logs", "components", validate: false
+  add_foreign_key "llm_routing_logs", "workflow_runs"
+  add_foreign_key "llm_routing_logs", "workspaces"
+  add_foreign_key "llm_usage_logs", "components", validate: false
+  add_foreign_key "llm_usage_logs", "workflow_runs"
+  add_foreign_key "llm_usage_logs", "workspaces"
+  add_foreign_key "prompt_to_workflow_session_events", "prompt_to_workflow_sessions"
+  add_foreign_key "prompt_to_workflow_sessions", "workflows", validate: false
+  add_foreign_key "prompt_to_workflow_sessions", "workspaces", validate: false
+>>>>>>> 46ca3c401 (feat(CE): prompt to workflow v2 models (#1803))
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

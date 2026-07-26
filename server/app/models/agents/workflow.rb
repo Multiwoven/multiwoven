@@ -10,6 +10,12 @@ module Agents
     has_many :workflow_runs, dependent: :destroy
     has_many :visual_components, as: :configurable, dependent: :destroy
     has_one :workflow_integration, dependent: :destroy
+<<<<<<< HEAD
+=======
+    has_many :workflow_sessions, dependent: :destroy
+    has_many :p2w_sessions, class_name: "P2w::Session", dependent: :destroy
+    has_many :workflow_files, class_name: "Agents::WorkflowFile", dependent: :destroy
+>>>>>>> 46ca3c401 (feat(CE): prompt to workflow v2 models (#1803))
 
     enum status: { draft: 0, published: 1 }
     enum trigger_type: { website_chatbot: 0, chat_assistant: 1, scheduled: 2, api_trigger: 3, slack: 4 }
