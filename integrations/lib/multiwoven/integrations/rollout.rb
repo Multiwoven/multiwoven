@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.37.3"
+>>>>>>> 121c7eef1 (chore(CE): Remove requirement of OneDrive email for One Drive Connector (#2053))
 
     ENABLED_SOURCES = %w[
       Snowflake
