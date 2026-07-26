@@ -15,6 +15,8 @@ class ConnectorSerializer < ActiveModel::Serializer
   end
 
   def configuration
+    return {} if object.in_host?
+
     object.masked_configuration
   end
 end
