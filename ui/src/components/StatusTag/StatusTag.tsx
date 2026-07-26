@@ -14,6 +14,7 @@ export enum StatusTagVariants {
 type StatusTagProps = {
   variant?: StatusTagVariants;
   status: string;
+  testId?: string;
 };
 
 type VariantTheme = Record<
@@ -79,7 +80,7 @@ export const StatusTagText = {
   failed: 'Failed',
 };
 
-const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagProps) => (
+const StatusTag = ({ status, variant = StatusTagVariants.success, testId }: StatusTagProps) => (
   <Tag
     colorScheme='teal'
     size='xs'
@@ -91,6 +92,11 @@ const StatusTag = ({ status, variant = StatusTagVariants.success }: StatusTagPro
     borderStyle='solid'
     height='22px'
     borderRadius='4px'
+<<<<<<< HEAD
+=======
+    justifyContent='center'
+    data-testid={testId}
+>>>>>>> e6895d051 (chore(CE): Add data-testid for Knowledge Base E2E Testing (#1891))
   >
     <TagLabel fontSize='small' fontWeight='semibold' color={theme[variant].textColor}>
       {status}
