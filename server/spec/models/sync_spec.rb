@@ -473,4 +473,135 @@ RSpec.describe Sync, type: :model do
       end
     end
   end
+
+  describe "#update_data_store_table_status" do
+    let!(:workspace) { create(:workspace) }
+    let!(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake", workspace:, in_host: false)
+    end
+    let!(:in_host_source) do
+      create(:connector, connector_type: "source", connector_name: "Postgresql", workspace:, in_host: true)
+    end
+    let!(:destination) { create(:connector, connector_type: "destination", workspace:, in_host: false) }
+    let!(:in_host_destination) do
+      create(:connector, connector_type: "destination", connector_name: "Postgresql", workspace:, in_host: true)
+    end
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let!(:in_host_catalog) { create(:catalog, connector: in_host_destination) }
+    let!(:hosted_data_store) do
+      create(
+        :hosted_data_store,
+        workspace:,
+        source_connector: in_host_source,
+        destination_connector: destination
+      )
+    end
+    let!(:hosted_data_store_table) do
+      create(
+        :hosted_data_store_table,
+        hosted_data_store:,
+        name: "test_table1",
+        source_connector: in_host_source,
+        destination_connector: destination
+      )
+    end
+    let!(:hosted_data_store_table2) do
+      create(
+        :hosted_data_store_table,
+        hosted_data_store:,
+        name: "test_table2",
+        source_connector: in_host_source,
+        destination_connector: destination
+      )
+    end
+    let!(:model) { create(:model, connector: source, workspace:, query: "SELECT * FROM test_table1") }
+    let!(:sync) do
+      create(:sync, sync_interval: 3, sync_interval_unit: "hours", source: in_host_source, destination:, model:)
+    end
+    context "when source is in host" do
+      it "updates the data store table status to enabled when source is in host" do
+        sync.stream_name = "test_table"
+        hosted_data_store_table.update!(sync_enabled: "disabled")
+        hosted_data_store_table2.update!(sync_enabled: "disabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("enabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("disabled")
+      end
+
+      it "updates the data store table status to disabled when source is in host" do
+        sync.stream_name = "test_table"
+        hosted_data_store_table.update!(sync_enabled: "enabled")
+        hosted_data_store_table2.update!(sync_enabled: "disabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("disabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("disabled")
+      end
+    end
+
+    context "when destination is in host" do
+      it "updates the data store table status to enabled when destination is in host" do
+        hosted_data_store.update!(destination_connector: in_host_destination, source_connector: source)
+        hosted_data_store_table.update!(destination_connector: in_host_destination, source_connector: source)
+        hosted_data_store_table2.update!(destination_connector: in_host_destination, source_connector: source)
+        sync.update!(source:, destination: in_host_destination)
+        sync.stream_name = "test_table1"
+        hosted_data_store_table.update!(sync_enabled: "disabled")
+        hosted_data_store_table2.update!(sync_enabled: "disabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("enabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("disabled")
+      end
+
+      it "updates the data store table status to disabled when destination is in host" do
+        hosted_data_store.update!(destination_connector: in_host_destination, source_connector: source)
+        hosted_data_store_table.update!(destination_connector: in_host_destination, source_connector: source)
+        hosted_data_store_table2.update!(destination_connector: in_host_destination, source_connector: source)
+        sync.update!(source:, destination: in_host_destination)
+        sync.stream_name = "test_table1"
+        hosted_data_store_table.update!(sync_enabled: "enabled")
+        hosted_data_store_table2.update!(sync_enabled: "disabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("disabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("disabled")
+      end
+    end
+
+    context "when source has multiple tables" do
+      it "updates the data store table status to enabled when source has multiple tables" do
+        model.update!(query: "SELECT * FROM test_table1, JOIN test_table2")
+        hosted_data_store_table.update!(sync_enabled: "disabled")
+        hosted_data_store_table2.update!(sync_enabled: "disabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("enabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("enabled")
+      end
+
+      it "updates the data store table status to disabled when source has multiple tables" do
+        model.update!(query: "SELECT * FROM test_table1, JOIN test_table2")
+        hosted_data_store_table.update!(sync_enabled: "enabled")
+        hosted_data_store_table2.update!(sync_enabled: "enabled")
+        allow(sync).to receive(:find_hosted_ds).and_return(hosted_data_store)
+        sync.update_data_store_table_status("disabled")
+        hosted_data_store_table.reload
+        hosted_data_store_table2.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+        expect(hosted_data_store_table2.sync_enabled).to eq("disabled")
+      end
+    end
+  end
 end
