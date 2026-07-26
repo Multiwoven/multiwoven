@@ -40,6 +40,14 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:workflows).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
     it { should have_many(:workflow_integrations).dependent(:nullify) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:hosted_data_stores).dependent(:nullify) }
+    it { should have_many(:knowledge_bases).dependent(:nullify) }
+    it { should have_many(:tools).dependent(:destroy) }
+    it { should have_many(:llm_routing_logs).dependent(:destroy) }
+    it { should have_many(:llm_usage_logs).dependent(:destroy) }
+>>>>>>> 6f1a6fb16 (chore(CE): Add LLM Usage Log (#1649))
   end
 
   context "before_validation callbacks" do
