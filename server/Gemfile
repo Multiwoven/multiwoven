@@ -14,17 +14,26 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.34.6"
+=======
+gem "duckdb", "~> 0.10.3" # Pin to match libduckdb v1.0.0 installed in CI/Docker
+gem "multiwoven-integrations", "~> 0.35.4"
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
-gem "data_migrate"
+gem "data_migrate", ">= 10.0"
 gem "mysql2"
 gem "parallel"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "pinecone"
 gem "puma", ">= 5.0"     # Web server
+<<<<<<< HEAD
 gem "rails", "~> 7.1.1"  # Core Rails gem
+=======
+gem "rails", "~> 7.2", ">= 7.2.3.1" # Core Rails gem
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
 
 # API Support
 gem "active_model_serializers", "~> 0.10.0"
@@ -34,12 +43,30 @@ gem "jbuilder"
 gem "jwt"
 gem "kaminari"
 gem "liquid"
+<<<<<<< HEAD
 gem "rack-cors"
 
 # AuthN & AuthZ
 gem "devise"
 gem "devise_invitable"
 gem "devise-jwt"
+=======
+gem "rack-cors", "~> 3.0"
+gem "rack-session", ">= 2.1.2"
+gem "ruby-anthropic", "~> 0.4.2"
+
+# File Processing
+gem "docx"
+gem "pdf-reader"
+gem "power_point_pptx"
+gem "roo"      # .xlsx, .ods
+gem "roo-xls"  # .xls (legacy Excel)
+
+# AuthN & AuthZ
+gem "devise", "~> 5.0"
+gem "devise_invitable", "~> 2.0.10"
+gem "devise-jwt", "~> 0.13.0"
+>>>>>>> b4e671d0c (chore(CE): fix vulnerabilities (#1850))
 gem "intuit-oauth"
 gem "pundit"
 gem "ruby-saml"
