@@ -31,7 +31,7 @@ module Multiwoven
             failure_status(e)
           end
 
-          def write(sync_config, records, action = "create")
+          def write(sync_config, records, action = "create", _identifier_key = nil)
             @sync_config = sync_config
             @action = sync_config.stream.action || action
             initialize_client(sync_config.destination.connection_specification)

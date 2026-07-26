@@ -26,7 +26,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "destination_insert")
+      def write(sync_config, records, _action = "destination_insert", _identifier_key = nil)
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         create_connection(connection_config)
         model = sync_config.stream.name

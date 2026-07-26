@@ -27,7 +27,7 @@ module Multiwoven::Integrations::Destination
                          })
       end
 
-      def write(sync_config, records, _action = "destination_insert")
+      def write(sync_config, records, _action = "destination_insert", _identifier_key = nil)
         records_size = records.size
         log_message_array = []
         write_success = upload_csv_content(sync_config, records)

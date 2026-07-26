@@ -79,6 +79,7 @@ module Multiwoven
 
     class LogMessage < ProtocolModel
       attribute :level, LogLevel
+      attribute? :record_identifier, Types::String.optional
       attribute :message, Types::String
       attribute? :name, Types::String.optional
       attribute? :stack_trace, Types::String.optional

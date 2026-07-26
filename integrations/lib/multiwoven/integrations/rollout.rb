@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.35.5"
+>>>>>>> d9813065c (fix(CE): Added a record indentifier for batch support (#1885))
 
     ENABLED_SOURCES = %w[
       Snowflake

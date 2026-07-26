@@ -117,6 +117,18 @@ module Multiwoven
           expect(multiwoven_message.log).to eq(log_message)
         end
       end
+
+      describe "record_identifier" do
+        it "accepts an optional record_identifier" do
+          log = described_class.new(level: "error", message: "test", record_identifier: "abc-uuid-123")
+          expect(log.record_identifier).to eq("abc-uuid-123")
+        end
+
+        it "defaults record_identifier to nil when not provided" do
+          log = described_class.new(level: "info", message: "test")
+          expect(log.record_identifier).to be_nil
+        end
+      end
     end
 
     RSpec.describe RecordMessage do

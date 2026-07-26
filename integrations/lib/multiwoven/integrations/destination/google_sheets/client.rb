@@ -33,7 +33,7 @@ module Multiwoven
                              })
           end
 
-          def write(sync_config, records, action = "create")
+          def write(sync_config, records, action = "create", _identifier_key = nil)
             setup_write_environment(sync_config, action)
             process_record_chunks(records, sync_config)
           rescue StandardError => e

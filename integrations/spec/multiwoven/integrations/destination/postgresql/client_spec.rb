@@ -303,6 +303,69 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       end
     end
 
+    context "with identifier_key" do
+      let(:records_with_identifier) do
+        batch_records.map { |r| r.merge("record_identifier" => SecureRandom.uuid) }
+      end
+
+      it "excludes identifier_key column from INSERT statement" do
+        allow(pg_connection).to receive(:exec).and_return(true)
+        expect(pg_connection).to receive(:exec).with(
+          satisfy { |sql| !sql.include?('"record_identifier"') }
+        ).once.and_return(true)
+
+        subject.write(s_config, records_with_identifier, "destination_insert", "record_identifier")
+      end
+
+      it "sets record_identifier on error log in fallback" do
+        uuid = SecureRandom.uuid
+        record = batch_records.first.merge("record_identifier" => uuid)
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          raise StandardError, "bulk failed" if call_count == 1
+          raise StandardError, "row failed" if call_count == 2
+
+          true
+        end
+
+        tracking = subject.write(s_config, [record], "destination_insert", "record_identifier").tracking
+        error_log = tracking.logs.find { |l| l.level == "error" }
+        expect(error_log.record_identifier).to eq(uuid)
+      end
+
+      it "sets record_identifier on info log in fallback" do
+        uuid = SecureRandom.uuid
+        record = batch_records.first.merge("record_identifier" => uuid)
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          raise StandardError, "bulk failed" if call_count == 1
+
+          true
+        end
+
+        tracking = subject.write(s_config, [record], "destination_insert", "record_identifier").tracking
+        info_log = tracking.logs.find { |l| l.level == "info" }
+        expect(info_log.record_identifier).to eq(uuid)
+      end
+
+      it "record_identifier is nil on error log when identifier_key is not provided" do
+        call_count = 0
+        allow(pg_connection).to receive(:exec) do
+          call_count += 1
+          raise StandardError, "bulk failed" if call_count == 1
+          raise StandardError, "row failed" if call_count == 2
+
+          true
+        end
+
+        tracking = subject.write(s_config, [batch_records.first]).tracking
+        error_log = tracking.logs.find { |l| l.level == "error" }
+        expect(error_log.record_identifier).to be_nil
+      end
+    end
+
     context "connection cleanup" do
       it "closes connection on success" do
         allow(pg_connection).to receive(:exec).and_return(true)
