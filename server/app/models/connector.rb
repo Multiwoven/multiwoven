@@ -214,12 +214,12 @@ class Connector < ApplicationRecord
 
   def masked_configuration
     spec = connector_client.new.connector_spec[:connection_specification].with_indifferent_access
-    secret_keys = extract_secret_keys(spec)
-    mask_secret_values(configuration.deep_dup, secret_keys)
+    Utils::SecretMasking.mask_by_keys(configuration.deep_dup, spec)
   end
 
   private
 
+<<<<<<< HEAD
   def extract_secret_keys(schema, keys = [])
     return keys unless schema.is_a?(Hash)
 
@@ -249,6 +249,13 @@ class Connector < ApplicationRecord
       config.map { |item| mask_secret_values(item, secret_keys) }
     else
       config
+=======
+  def format_llm_payload(payload)
+    if connector_name == "Anthropic"
+      payload.to_json
+    else
+      payload
+>>>>>>> 6e0b1e4c6 (fix(CE): return masked configuration for model (#1840))
     end
   end
 end

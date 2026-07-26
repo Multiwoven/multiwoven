@@ -273,6 +273,92 @@ RSpec.describe Model, type: :model do
     end
   end
 
+  describe "#masked_configuration" do
+    let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
+
+    context "when configuration is blank" do
+      it "returns configuration as-is" do
+        model = Model.new(query_type: :raw_sql, connector_id: source.id, workspace_id: source.workspace_id)
+        model.configuration = nil
+        expect(model.masked_configuration).to be_nil
+      end
+    end
+
+    context "when query_type has no schema (raw_sql)" do
+      it "returns configuration unchanged" do
+        model = Model.new(
+          query_type: :raw_sql,
+          connector_id: source.id,
+          workspace_id: source.workspace_id,
+          configuration: { "host" => "localhost" }
+        )
+        expect(model.masked_configuration).to eq({ "host" => "localhost" })
+      end
+    end
+
+    context "when query_type is vector_search" do
+      let(:config) do
+        {
+          "harvesters" => [],
+          "json_schema" => {},
+          "embedding_config" => { "api_key" => "secret-key", "model" => "text-embedding-ada-002" }
+        }
+      end
+
+      it "masks api_key in embedding_config" do
+        model = Model.new(
+          query_type: :vector_search,
+          connector_id: source.id,
+          workspace_id: source.workspace_id,
+          configuration: config
+        )
+        result = model.masked_configuration
+        expect(result.dig("embedding_config", "api_key")).to eq("*************")
+        expect(result.dig("embedding_config", "model")).to eq("text-embedding-ada-002")
+      end
+
+      it "does not mutate the original configuration" do
+        model = Model.new(
+          query_type: :vector_search,
+          connector_id: source.id,
+          workspace_id: source.workspace_id,
+          configuration: config
+        )
+        model.masked_configuration
+        expect(model.configuration.dig("embedding_config", "api_key")).to eq("secret-key")
+      end
+    end
+
+    context "when query_type is unstructured" do
+      it "masks api_key in embedding_config" do
+        model = Model.new(
+          query_type: :unstructured,
+          connector_id: source.id,
+          workspace_id: source.workspace_id,
+          configuration: {
+            "embedding_config" => { "api_key" => "secret-key", "model" => "text-embedding-ada-002" },
+            "chunk_config" => { "chunk_size" => 500, "chunk_overlap" => 50 }
+          }
+        )
+        result = model.masked_configuration
+        expect(result.dig("embedding_config", "api_key")).to eq("*************")
+        expect(result.dig("embedding_config", "model")).to eq("text-embedding-ada-002")
+      end
+    end
+
+    context "when query_type is ai_ml" do
+      it "returns configuration unchanged (no multiwoven_secret fields in schema)" do
+        model = Model.new(
+          query_type: :ai_ml,
+          connector_id: source.id,
+          workspace_id: source.workspace_id,
+          configuration: { "harvesters" => [] }
+        )
+        expect(model.masked_configuration).to eq({ "harvesters" => [] })
+      end
+    end
+  end
+
   describe "#to_protocol" do
     it "returns a protocol model with correct attributes" do
       model = Model.new(
