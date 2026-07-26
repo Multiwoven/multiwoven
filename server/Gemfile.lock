@@ -1979,7 +1979,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.37.5)
+>>>>>>> b37ce9ad9 (chore(CE): added the http connector 2d array support integrations (#2068))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2339,7 +2343,12 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.37.5)
+>>>>>>> b37ce9ad9 (chore(CE): added the http connector 2d array support integrations (#2068))
   mysql2
   newrelic_rpm
   parallel
