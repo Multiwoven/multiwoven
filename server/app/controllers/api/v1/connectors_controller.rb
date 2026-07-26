@@ -193,6 +193,22 @@ module Api
                                           :connector_name, :name, :description, :query_type,
                                           configuration: {})
       end
+<<<<<<< HEAD
+=======
+
+      def filter_params
+        {
+          workspace: current_workspace,
+          type: params[:type],
+          category: params[:category],
+          sub_category: params[:sub_category],
+          exclude_sub_category: params[:exclude_sub_category],
+          provider: params[:provider],
+          page: params[:page],
+          per_page: params[:per_page]
+        }
+      end
+>>>>>>> f6d71341a (fix(CE): added an extra filter in connectors api for excluding on basis of sub category (#1893))
     end
     # rubocop:enable Metrics/ClassLength
   end
