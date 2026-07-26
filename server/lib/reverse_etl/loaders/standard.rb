@@ -75,6 +75,7 @@ module ReverseEtl
           else
             successfull_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           end
+<<<<<<< HEAD
         rescue Activities::LoaderActivity::FullRefreshFailed
           raise
         rescue StandardError
@@ -84,6 +85,110 @@ module ReverseEtl
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         heartbeat(activity, sync_run)
+=======
+          update_sync_records_logs_and_status(sync_run, successful_sync_records, failed_sync_records)
+          heartbeat(activity, sync_run)
+        end
+      end
+
+      def process_single_batch(sync, sync_run, sync_config, sync_records, # rubocop:disable Metrics/ParameterLists
+                               mutex, successful_sync_records, failed_sync_records)
+        client = sync.destination.connector_client.new
+        transformed_records, identifier_map, identifier_key = build_transformed_batch(sync, sync_records)
+        report = handle_response(
+          client.write(sync_config, transformed_records, "destination_insert", identifier_key), sync_run
+        )
+        record_batch_outcome(report, sync_records, identifier_map, identifier_key,
+                             mutex, successful_sync_records, failed_sync_records)
+      rescue Activities::LoaderActivity::FullRefreshFailed
+        raise
+      rescue ActiveRecord::RecordNotUnique => e
+        mutex.synchronize do
+          failed_sync_records.concat(build_failed_sync_records_from_sync_records(sync_records, e.message))
+        end
+        Rails.logger.warn("UniqueViolation in batch: sync_id=#{sync.id}, error=#{e.message}")
+      rescue StandardError => e
+        mutex.synchronize do
+          failed_sync_records.concat(build_failed_sync_records_from_sync_records(sync_records, e.message))
+        end
+        Rails.logger.info(
+          "Error in Batch Transformer, sync_id = #{sync.id}, " \
+          "sync_run_id = #{sync_run.id}, error = #{e.message}"
+        )
+      ensure
+        client&.close if client.respond_to?(:close)
+      end
+
+      def build_transformed_batch(sync, sync_records)
+        transformer = Transformers::UserMapping.new
+        record_identifier_key = SecureRandom.uuid
+        sync_record_identifier_to_id = {}
+        transformed_records = sync_records.map do |sr|
+          record = transformer.transform(sync, sr)
+          identifier = SecureRandom.uuid
+          record[record_identifier_key] = identifier
+          sync_record_identifier_to_id[identifier] = sr["id"]
+          record
+        end
+        [transformed_records, sync_record_identifier_to_id, record_identifier_key]
+      end
+
+      def record_batch_outcome(report, _sync_records, # rubocop:disable Metrics/ParameterLists
+                               identifier_map, identifier_key, mutex,
+                               successful_sync_records, failed_sync_records)
+        mutex.synchronize do
+          successful_records, failed_records = build_failed_sync_records_from_report(identifier_map,
+                                                                                     report, identifier_key)
+          failed_sync_records.concat(failed_records)
+          successful_sync_records.concat(successful_records)
+        end
+      end
+
+      def build_failed_sync_records_from_report(sync_record_identifier_to_id, report,
+                                                _record_identifier_key)
+        successful_records = []
+        failed_records = []
+        (report.tracking.logs || []).each do |log|
+          record_identifier = log.record_identifier
+          next unless record_identifier.present? && sync_record_identifier_to_id[record_identifier].present?
+
+          sync_record_id = sync_record_identifier_to_id[record_identifier]
+          level = log.level
+          message = nil
+          begin
+            message = JSON.parse(log.message)
+          rescue JSON::ParserError => e
+            Rails.logger.warn("Failed to parse log message for #{record_identifier}: #{e.message}")
+            message = { "error" => log.message }
+          end
+          if level == "error"
+            failed_records << { id: sync_record_id, status: "failed", logs: message }
+          else
+            successful_records << { id: sync_record_id, status: "success", logs: nil }
+          end
+        end
+        [successful_records, failed_records]
+      end
+
+      def build_failed_sync_records_from_sync_records(sync_records, message)
+        parsed_logs = begin
+          JSON.parse(message)
+        rescue JSON::ParserError
+          { "error" => message }
+        end
+        sync_records.map { |sync_record| { id: sync_record["id"], status: "failed", logs: parsed_logs } }.compact
+      end
+
+      def log_sync_record_error(error, sync, sync_run, sync_record)
+        Rails.logger.info("Error in Transformer, sync_id = #{sync.id}, " \
+                          "sync_run_id = #{sync_run.id}, sync_record = #{sync_record.to_json} error = #{error.message}")
+        Rails.logger.error({
+          error_message: error.message,
+          sync_run_id: sync_run.id,
+          sync_id: sync_run.sync_id,
+          stack_trace: Rails.backtrace_cleaner.clean(error.backtrace)
+        }.to_s)
+>>>>>>> e4bf26352 (fix(CE): implemented record_identifier mapper for batch support (#1886))
       end
 
       def handle_response(report, sync_run)
@@ -115,9 +220,23 @@ module ReverseEtl
         JSON.parse(report.tracking.logs.first.message)
       end
 
+<<<<<<< HEAD
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         sync_run.sync_records.where(id: successfull_sync_records).update_all(status: "success") # rubocop:disable Rails/SkipsModelValidations
         sync_run.sync_records.where(id: failed_sync_records).update_all(status: "failed") # rubocop:disable Rails/SkipsModelValidations
+=======
+      def update_sync_records_logs_and_status(sync_run, successful_sync_records, failed_sync_records)
+        all_records = successful_sync_records.map { |r| { id: r[:id], status: "success", logs: r[:logs] } } +
+                      failed_sync_records.map { |r| { id: r[:id], status: "failed", logs: r[:logs] } }
+
+        return if all_records.empty?
+
+        sync_run.sync_records.upsert_all( # rubocop:disable Rails/SkipsModelValidations
+          all_records,
+          unique_by: :id,
+          update_only: %i[status logs]
+        )
+>>>>>>> e4bf26352 (fix(CE): implemented record_identifier mapper for batch support (#1886))
       end
 
       def heartbeat(activity, sync_run)
