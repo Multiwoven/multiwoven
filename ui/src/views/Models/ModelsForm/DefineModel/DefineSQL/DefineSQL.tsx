@@ -202,6 +202,7 @@ const DefineSQL = ({
               h='xs'
               rounded='xl'
             >
+<<<<<<< HEAD
               <Flex bgColor='gray.300' p={2} roundedTop='xl'>
                 <Flex w='full' alignItems='center'>
                   {connector_icon}
@@ -243,6 +244,15 @@ const DefineSQL = ({
                 </HStack>
               </Flex>
               <Box p={3} w='100%' maxH='250px' bgColor='gray.100'>
+=======
+              <Box
+                p={3}
+                w='100%'
+                maxH='250px'
+                bgColor='gray.100'
+                data-testid='model-sql-monaco-editor'
+              >
+>>>>>>> c14aaa594 (feat(CE): data test ids for connectors and models (#1831))
                 <Editor
                   width='100%'
                   height='240px'

@@ -111,6 +111,7 @@ const FormFooter = ({
             </Button>
           ) : null}
           {isContinueCtaRequired ? (
+<<<<<<< HEAD
             <Button
               type={ctaType}
               onClick={() => onCtaClick?.()}
@@ -121,6 +122,22 @@ const FormFooter = ({
             >
               {ctaName}
             </Button>
+=======
+            <ToolTip label={ctaTooltip ?? ''} enabled={ctaTooltipEnabled} placement='top'>
+              <Button
+                data-testid={`stepped-form-${ctaName.toLowerCase().replace(/\s+/g, '-')}`}
+                variant={'solid'}
+                type={ctaType}
+                onClick={() => onCtaClick?.()}
+                isDisabled={isCtaDisabled}
+                isLoading={isCtaLoading}
+                minWidth={0}
+                width='auto'
+              >
+                {ctaName}
+              </Button>
+            </ToolTip>
+>>>>>>> c14aaa594 (feat(CE): data test ids for connectors and models (#1831))
           ) : null}
         </ButtonGroup>
       </Box>
