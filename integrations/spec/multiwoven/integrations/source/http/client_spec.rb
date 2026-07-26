@@ -400,4 +400,125 @@ RSpec.describe Multiwoven::Integrations::Source::Http::Client do
       end
     end
   end
+
+  describe "OAuth client_credentials" do
+    let(:token_url) { "https://login.example.com/oauth2/v2.0/token" }
+    let(:base_url)  { "http://localhost:3000" }
+    let(:path)      { "/api/v1/data" }
+    let(:oauth_config) do
+      {
+        base_url: base_url,
+        path: path,
+        http_method: "GET",
+        headers: { "X-Trace" => "abc" },
+        request_format: "{}",
+        sample_query: "",
+        parse_response: "$.rows[*]",
+        config: { timeout: 30 },
+        params: {},
+        offset_param: "offset",
+        limit_param: "limit",
+        auth_type: "oauth_client_credentials",
+        token_url: token_url,
+        client_id: "cid",
+        client_secret: "csecret",
+        scope: "https://graph.microsoft.com/.default"
+      }.with_indifferent_access
+    end
+
+    let(:oauth_sync_config_json) do
+      json = sync_config_json.deep_dup
+      json[:source][:connection_specification] = oauth_config
+      json
+    end
+
+    let(:connector_instance) do
+      Class.new do
+        attr_accessor :configuration
+
+        def initialize(config)
+          @configuration = config
+        end
+
+        def update!(attrs)
+          @configuration = attrs[:configuration]
+          true
+        end
+      end.new(oauth_config.to_h)
+    end
+
+    def build_sync_config(instance: nil)
+      sc = Multiwoven::Integrations::Protocol::SyncConfig.from_json(oauth_sync_config_json.to_json)
+      allow(sc.source).to receive(:connector_instance).and_return(instance) if instance
+      sc
+    end
+
+    def stub_token_endpoint(access_token: "tok", expires_in: 3600, status: 200)
+      body = status == 200 ? { access_token: access_token, expires_in: expires_in }.to_json : "denied"
+      stub_request(:post, token_url)
+        .to_return(status: status, body: body, headers: { "Content-Type" => "application/json" })
+    end
+
+    def stub_source_endpoint(expected_auth:)
+      response = Net::HTTPSuccess.new("1.1", "200", "OK")
+      allow(response).to receive(:body).and_return({ "rows" => [{ "id" => 1 }] }.to_json)
+      allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request) do |_url, _method, opts|
+        expect(opts[:headers]["Authorization"]).to eq("Bearer #{expected_auth}")
+        response
+      end
+    end
+
+    context "#check_connection" do
+      it "fetches an access token and sends it as a Bearer header" do
+        stub_token_endpoint(access_token: "tok-1")
+        stub_source_endpoint(expected_auth: "tok-1")
+
+        response = client.check_connection(oauth_config)
+        expect(response.connection_status.status).to eq("succeeded")
+      end
+
+      it "returns failed status when the token endpoint errors" do
+        stub_token_endpoint(status: 401)
+        response = client.check_connection(oauth_config)
+        expect(response.connection_status.status).to eq("failed")
+      end
+    end
+
+    context "#read with a persisted connector_instance" do
+      it "reuses a cached token that is not near expiry" do
+        connector_instance.configuration = connector_instance.configuration.merge(
+          "oauth_access_token" => "cached-tok",
+          "oauth_expires_at" => (Time.now + 3600).iso8601
+        )
+        sc = build_sync_config(instance: connector_instance)
+        stub_source_endpoint(expected_auth: "cached-tok")
+
+        client.read(sc)
+        expect(WebMock).not_to have_requested(:post, token_url)
+      end
+
+      it "refreshes a near-expiry token and persists it back to the connector" do
+        connector_instance.configuration = connector_instance.configuration.merge(
+          "oauth_access_token" => "stale-tok",
+          "oauth_expires_at" => (Time.now + 60).iso8601 # within 300s buffer
+        )
+        sc = build_sync_config(instance: connector_instance)
+        stub_token_endpoint(access_token: "fresh-tok")
+        stub_source_endpoint(expected_auth: "fresh-tok")
+
+        client.read(sc)
+        expect(WebMock).to have_requested(:post, token_url).once
+        expect(connector_instance.configuration["oauth_access_token"]).to eq("fresh-tok")
+      end
+
+      it "fetches a token when none has been cached yet" do
+        sc = build_sync_config(instance: connector_instance)
+        stub_token_endpoint(access_token: "first-tok")
+        stub_source_endpoint(expected_auth: "first-tok")
+
+        client.read(sc)
+        expect(connector_instance.configuration["oauth_access_token"]).to eq("first-tok")
+      end
+    end
+  end
 end

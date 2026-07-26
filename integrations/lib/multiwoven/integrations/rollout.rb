@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.38.0"
+>>>>>>> 9302a1c27 (chore(CE): added a new logic to attach oauth credentials in http conn… (#2073))
 
     ENABLED_SOURCES = %w[
       Snowflake

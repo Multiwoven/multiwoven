@@ -4,6 +4,8 @@ module Multiwoven::Integrations::Source
   module Http
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
+      include Multiwoven::Integrations::Core::OauthClientCredentials
+
       def check_connection(connection_config)
         connection_config = prepare_config(connection_config)
         create_connection(connection_config)
@@ -17,7 +19,7 @@ module Multiwoven::Integrations::Source
           url: @url,
           http_method: connection_config[:http_method],
           payload: connection_config[:request_format],
-          headers: connection_config[:headers],
+          headers: build_headers(connection_config),
           config: connection_config[:config],
           params: connection_config[:params]
         )
@@ -40,7 +42,7 @@ module Multiwoven::Integrations::Source
           url: @url,
           http_method: connection_config[:http_method],
           payload: connection_config[:request_format],
-          headers: connection_config[:headers],
+          headers: build_headers(connection_config),
           config: connection_config[:config],
           params: connection_config[:params]
         )
@@ -55,6 +57,7 @@ module Multiwoven::Integrations::Source
       def read(sync_config)
         connection_config = sync_config.source.connection_specification
         connection_config = connection_config.with_indifferent_access
+        @connector_instance = sync_config&.source&.connector_instance
         connection_config = create_connection(connection_config)
         if sync_config.increment_strategy_config.increment_strategy == "page"
           @limit = sync_config.increment_strategy_config.limit
@@ -117,7 +120,7 @@ module Multiwoven::Integrations::Source
           url: @url,
           http_method: connection_config[:http_method],
           payload: connection_config[:request_format],
-          headers: connection_config[:headers],
+          headers: build_headers(connection_config),
           config: connection_config[:config],
           params: connection_config[:params] || {}
         )

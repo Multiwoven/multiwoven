@@ -33,6 +33,14 @@
         "order": 3,
         "default": "/"
       },
+      "auth_type": {
+        "type": "string",
+        "title": "Authentication Type",
+        "description": "Select 'oauth_client_credentials' to have Multiwoven fetch and refresh an OAuth2 access token automatically.",
+        "enum": ["none", "oauth_client_credentials"],
+        "default": "none",
+        "order": 14
+      },
       "headers": {
         "title": "HTTP Headers",
         "description": "Custom headers to include in the HTTP request. Useful for authentication, content type specifications, and other request metadata.",
@@ -111,6 +119,47 @@
         "title": "Page Start",
         "description": "The starting page number for pagination. This value is used to calculate the offset for the initial request.",
         "order": 13
+      }
+    },
+    "dependencies": {
+      "auth_type": {
+        "oneOf": [
+          {
+            "properties": {
+              "auth_type": { "enum": ["none"] }
+            }
+          },
+          {
+            "properties": {
+              "auth_type": { "enum": ["oauth_client_credentials"] },
+              "token_url": {
+                "type": "string",
+                "title": "OAuth Token URL",
+                "description": "E.g. https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+                "order": 15
+              },
+              "client_id": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client ID",
+                "order": 16
+              },
+              "client_secret": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client Secret",
+                "order": 17
+              },
+              "scope": {
+                "type": "string",
+                "title": "OAuth Scope",
+                "description": "Optional. E.g. https://graph.microsoft.com/.default",
+                "order": 18
+              }
+            },
+            "required": ["token_url", "client_id", "client_secret"]
+          }
+        ]
       }
     }
   }

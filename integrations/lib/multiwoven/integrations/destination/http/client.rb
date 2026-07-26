@@ -6,16 +6,18 @@ module Multiwoven
       module Http
         include Multiwoven::Integrations::Core
         class Client < DestinationConnector
+          include Multiwoven::Integrations::Core::OauthClientCredentials
+
           MAX_CHUNK_SIZE = 10
+
           def check_connection(connection_config)
             connection_config = connection_config.with_indifferent_access
             destination_url = connection_config[:destination_url]
-            headers = connection_config[:headers]
             request = Multiwoven::Integrations::Core::HttpClient.request(
               destination_url,
               HTTP_POST,
               payload: {},
-              headers: headers
+              headers: build_headers(connection_config)
             )
             if success?(request)
               success_status
@@ -43,8 +45,9 @@ module Multiwoven
 
           def write(sync_config, records, _action = "create")
             connection_config = sync_config.destination.connection_specification.with_indifferent_access
+            @connector_instance = sync_config&.destination&.connector_instance
             url = connection_config[:destination_url]
-            headers = connection_config[:headers]
+            headers = build_headers(connection_config)
             log_message_array = []
             write_success = 0
             write_failure = 0
