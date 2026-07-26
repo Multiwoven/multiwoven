@@ -4,6 +4,7 @@ import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
 import { getConnectorDefinition } from '@/services/connectors';
 import { useContext } from 'react';
 import { Box } from '@chakra-ui/react';
+import { useMemo } from 'react';
 
 import FormFooter from '@/components/FormFooter';
 
@@ -15,15 +16,34 @@ import JSONSchemaForm from '@/components/JSONSchemaForm';
 import { useStore } from '@/stores';
 
 const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.Element | null => {
+<<<<<<< HEAD
   const { state, stepInfo, handleMoveForward } = useContext(SteppedFormContext);
   const { forms } = state;
+=======
+  const {
+    forms,
+    stepInfo,
+    handleMoveForward,
+    saveConnectorFormData,
+    connectorFormData = {},
+  } = useSteppedForm();
+  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
+  const stepKey = connectorType === 'source' ? 'connectToSources' : 'destinationConfig';
+
+>>>>>>> cd20cdf6 (feat(CE): added connector formstate persistence (#1429))
   const selectedConnector = forms.find(
-    ({ stepKey }) => stepKey === (connectorType === 'source' ? 'datasource' : connectorType),
+    ({ stepKey: sk }) => sk === (connectorType === 'source' ? 'datasource' : connectorType),
   );
   const connector = selectedConnector?.data?.[
     connectorType === 'source' ? 'datasource' : connectorType
   ] as string;
-  const activeWorkspaceId = useStore((state) => state.workspaceId);
+
+  const formData = useMemo(() => {
+    if (!connectorFormData || !connector) return {};
+    const persistedData = connectorFormData[connector]?.[stepKey];
+    return (persistedData as Record<string, unknown>) || {};
+  }, [connector, stepKey, connectorFormData]);
 
   if (!connector) return null;
 
@@ -39,6 +59,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
 
   const handleFormSubmit = async (formData: FormData) => {
     const processedFormData = processFormData(formData);
+    saveConnectorFormData(connector, stepKey, processedFormData);
     handleMoveForward(stepInfo?.formKey as string, processedFormData);
   };
 
@@ -54,6 +75,7 @@ const ConnectorConfigForm = ({ connectorType }: { connectorType: string }): JSX.
           <JSONSchemaForm
             schema={connectorSchema}
             uiSchema={generatedSchema}
+            formData={formData}
             onSubmit={(formData: FormData) => handleFormSubmit(formData)}
           >
             <FormFooter
