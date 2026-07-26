@@ -201,6 +201,36 @@ RSpec.describe ReverseEtl::Extractors::Http do
       end
     end
 
+    context "when retrying after deployment (total_query_rows resume)" do
+      let(:sync_run_retry) do
+        create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model,
+                          status: "started", total_query_rows: 500_000, skipped_rows: 100, current_offset: 500_000)
+      end
+
+      before do
+        allow(sync_run_retry.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
+      end
+
+      it "resumes total_query_rows from DB value instead of resetting to zero" do
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 500_002, nil)
+
+        subject.read(sync_run_retry.id, activity)
+        sync_run_retry.reload
+
+        expect(sync_run_retry.total_query_rows).to eq(500_002)
+        expect(sync_run_retry).to have_state(:queued)
+      end
+
+      it "resumes skipped_rows from DB value instead of resetting to zero" do
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 500_002, nil)
+
+        subject.read(sync_run_retry.id, activity)
+        sync_run_retry.reload
+
+        expect(sync_run_retry.skipped_rows).to be >= 100
+      end
+    end
+
     context "when there is a new record" do
       it "creates a new sync record" do
         expect(sync_run_pending).to have_state(:pending)

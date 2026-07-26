@@ -5,12 +5,12 @@ module ReverseEtl
     class Http < Base
       # TODO: Make it as class method
       def read(sync_run_id, activity)
-        total_query_rows = 0
-        skipped_rows = 0
-
         sync_run = SyncRun.find(sync_run_id)
 
         return log_sync_run_error(sync_run) unless sync_run.may_query?
+
+        total_query_rows = sync_run.total_query_rows || 0
+        skipped_rows = sync_run.skipped_rows || 0
 
         sync_run.query!
         source_client = setup_source_client(sync_run.sync)
