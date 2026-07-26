@@ -28,6 +28,16 @@
     /* Testing */
     "types": ["jest"],
   },
+<<<<<<< HEAD
   "include": ["src", "vite.config.ts", "cypress.config.ts"],
+=======
+  "include": [
+    "src",
+    "__mocks__",
+    "e2e/**/*.ts",
+    "playwright.config.ts",
+    "../server/enterprise/app/data-apps/data-app-runner.js"
+  ],
+>>>>>>> 749f0e956 (fix(CE): solve snyk vulnerabilites for the UI (#1857))
   "references": [{ "path": "./tsconfig.node.json" }]
 }
