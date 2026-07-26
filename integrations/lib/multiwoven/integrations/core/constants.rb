@@ -114,6 +114,12 @@ module Multiwoven
         "item_price" => "UNIT_PRICE",
         "line_total" => "PRICE"
       }.freeze
+<<<<<<< HEAD
+=======
+
+      # Aisquared Bolt
+      AISQUARED_BOLT_URL = ENV["LIGHTNING_URL"]
+>>>>>>> 01fcef99a (fix(CE): change AI Squared Lightning Endpoint to AI Squared Bolt (#1941))
     end
   end
 end

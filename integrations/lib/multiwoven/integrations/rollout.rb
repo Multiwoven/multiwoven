@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.0"
+=======
+    VERSION = "0.36.1"
+>>>>>>> 01fcef99a (fix(CE): change AI Squared Lightning Endpoint to AI Squared Bolt (#1941))
 
     ENABLED_SOURCES = %w[
       Snowflake
