@@ -2,7 +2,7 @@
 
 module Multiwoven
   module Integrations
-    VERSION = "0.35.0"
+    VERSION = "0.39.0"
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -15,6 +15,7 @@ module Multiwoven
       Clickhouse
       AmazonS3
       MariaDB
+      Mysql
       Oracle
       DatabricksModel
       AwsSagemakerModel
@@ -52,6 +53,7 @@ module Multiwoven
       Http
       Iterable
       MariaDB
+      Mysql
       DatabricksLakehouse
       Oracle
       MicrosoftExcel
