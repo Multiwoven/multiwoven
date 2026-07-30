@@ -40,7 +40,15 @@ FactoryBot.define do
             "sso" => { "create" => true, "read" => true, "update" => true, "delete" => true },
             "eula" => { "create" => true, "read" => true, "update" => true, "delete" => true },
             "assistant" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+<<<<<<< HEAD
             "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+=======
+            "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "hosted_datastore" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "knowledge_base" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "tool" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "agentic_coding" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+>>>>>>> 9eb4341c9 (feat(CE): add app gen models (#1695))
           }
         }
       end
@@ -69,7 +77,15 @@ FactoryBot.define do
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+<<<<<<< HEAD
             "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+=======
+            "workflow" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "hosted_datastore" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "knowledge_base" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "tool" => { "create" => true, "read" => true, "update" => true, "delete" => true },
+            "agentic_coding" => { "create" => true, "read" => true, "update" => true, "delete" => true }
+>>>>>>> 9eb4341c9 (feat(CE): add app gen models (#1695))
           }
         }
       end
@@ -98,7 +114,15 @@ FactoryBot.define do
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+<<<<<<< HEAD
             "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false }
+=======
+            "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "hosted_datastore" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "knowledge_base" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "tool" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "agentic_coding" => { "create" => false, "read" => true, "update" => false, "delete" => false }
+>>>>>>> 9eb4341c9 (feat(CE): add app gen models (#1695))
           }
         }
       end
@@ -127,7 +151,15 @@ FactoryBot.define do
             "sso" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "eula" => { "create" => false, "read" => false, "update" => false, "delete" => false },
             "assistant" => { "create" => false, "read" => false, "update" => false, "delete" => false },
+<<<<<<< HEAD
             "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false }
+=======
+            "workflow" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "hosted_datastore" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "knowledge_base" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "tool" => { "create" => false, "read" => true, "update" => false, "delete" => false },
+            "agentic_coding" => { "create" => false, "read" => true, "update" => false, "delete" => false }
+>>>>>>> 9eb4341c9 (feat(CE): add app gen models (#1695))
           }
         }
       end
