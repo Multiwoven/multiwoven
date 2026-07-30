@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 RSpec.describe Multiwoven::Integrations::Destination::MicrosoftDynamics::Client do
   include WebMock::API
 
