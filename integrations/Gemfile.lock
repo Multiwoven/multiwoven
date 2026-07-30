@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.0)
+=======
+    multiwoven-integrations (0.37.0)
+>>>>>>> 42efd6924 (feat(CE): Add One drive connector (#1987))
       MailchimpMarketing
       activesupport
       async-websocket

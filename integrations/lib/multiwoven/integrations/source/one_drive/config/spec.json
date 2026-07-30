@@ -1,0 +1,59 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/one_drive",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "OneDrive",
+    "type": "object",
+    "required": ["user_name", "tenant_id", "client_id", "client_secret"],
+    "properties": {
+      "data_type": {
+        "description": "Type of data in files",
+        "type": "string",
+        "title": "Data Format Type",
+        "oneOf": [
+          { "const": "structured", "title": "Tables & Records (Structured)" },
+          { "const": "unstructured", "title": "Documents & Files (Unstructured)" }
+        ],
+        "default": "structured"
+      },
+      "user_name": {
+        "type": "string",
+        "description": "Email address of the OneDrive user to access on behalf of",
+        "title": "User Name"
+      },
+      "tenant_id": {
+        "type": "string",
+        "description": "Azure AD tenant ID",
+        "title": "Tenant ID"
+      },
+      "client_id": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Client ID"
+      },
+      "client_secret": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Client Secret"
+      },
+      "share_url": {
+        "type": "string",
+        "title": "Share URL",
+        "description": "OneDrive or SharePoint sharing link for the folder to read from. When not set, the user's OneDrive root folder is used."
+      },
+      "file_name": {
+        "type": "string",
+        "title": "File Name",
+        "description": "Optional. For unstructured data, fetches only this file from the shared folder."
+      },
+      "access_token": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Access Token",
+        "description": "Leave blank during connection setup. Will fetch access token from Microsoft Graph."
+      }
+    }
+  }
+}
