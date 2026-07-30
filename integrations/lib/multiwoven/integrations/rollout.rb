@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.38.1"
+>>>>>>> d546f58fa (chore(CE): Add recursive folder fetch to One Drive Connector (#2117))
 
     ENABLED_SOURCES = %w[
       Snowflake
