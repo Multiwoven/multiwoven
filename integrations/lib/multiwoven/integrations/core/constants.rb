@@ -114,6 +114,9 @@ module Multiwoven
         "item_price" => "UNIT_PRICE",
         "line_total" => "PRICE"
       }.freeze
+
+      # Aisquared Lightning Endpoint
+      AISQUARED_LIGHTNING_ENDPOINT_URL = ENV["LIGHTNING_URL"]
     end
   end
 end
