@@ -7,6 +7,7 @@ class ApplicationController < ActionController::API
   include Pundit::Authorization
   before_action :authenticate_user!
   before_action :validate_contract
+  before_action :ensure_eula_accepted
   around_action :handle_with_exception
   after_action :verify_authorized
 
@@ -27,7 +28,10 @@ class ApplicationController < ActionController::API
   def current_workspace
     workspace_id = request.headers["Workspace-Id"]
     @current_workspace = current_user.workspaces.find_by(id: workspace_id)
-    @current_workspace || raise(StandardError, "Workspace not found")
+    @current_workspace || raise(
+      StandardError,
+      "Workspace not found: workspace_id=#{workspace_id.inspect}, user_id=#{current_user&.id}, path=#{request.path}"
+    )
   end
 
   def current_organization
@@ -67,6 +71,23 @@ class ApplicationController < ActionController::API
   def event_logger
     metadata = {}
     metadata[:connector_name] = @connector.connector_name if @connector.present?
+<<<<<<< HEAD
     _track_event("#{params[:controller]}##{params[:action]}", {}.merge(metadata))
+=======
+    # _track_event("#{params[:controller]}##{params[:action]}", {}.merge(metadata))
+  end
+
+  def eula_required?
+    current_organization&.eulas&.enabled&.exists?
+  rescue StandardError
+    false
+  end
+
+  def render_eula_error
+    render_error(
+      message: "You must accept the EULA before accessing the API.",
+      status: :forbidden
+    )
+>>>>>>> 29bfd20fe (chore(CE): add detail error in workspace (#1792))
   end
 end
