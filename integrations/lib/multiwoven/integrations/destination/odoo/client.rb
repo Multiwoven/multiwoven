@@ -15,10 +15,8 @@ module Multiwoven::Integrations::Destination
       def discover(connection_config)
         connection_config = connection_config.with_indifferent_access
         create_connection(connection_config)
-
         models = @client.execute_kw(connection_config[:database], @uid, connection_config[:password],
-                                    "ir.model", "search_read", [[["transient", "=", false], ["abstract", "=", false]]], { 'fields': %w[name model] })
-
+                                    "ir.model", "search_read", [[["transient", "=", false]]], { 'fields': %w[name model] })
         catalog = Catalog.new(streams: create_streams(connection_config, models))
         catalog.to_multiwoven_message
       rescue StandardError => e
@@ -85,7 +83,15 @@ module Multiwoven::Integrations::Destination
                                       model["model"], "fields_get", [], { 'attributes': %w[name type] })
           Multiwoven::Integrations::Protocol::Stream.new(name: model["model"], action: StreamAction["fetch"],
                                                          supported_sync_modes: %w[incremental], json_schema: convert_to_json_schema(fields))
-        end
+        rescue XMLRPC::FaultException => e
+          # Some versions of Odoo don't expose abstract field in the ir.model.
+          # Because of this, we aren't able to filter them out when fetching models.
+          # Because abstract models are not tables we can fetch fields from,
+          # an exception is raised when trying to fetch fields from them.
+          raise e unless e.message == "Object #{model["model"]} doesn't exist"
+
+          next
+        end.compact
       end
 
       def convert_to_json_schema(fields)

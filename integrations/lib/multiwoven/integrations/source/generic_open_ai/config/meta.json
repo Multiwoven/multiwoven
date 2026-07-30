@@ -1,7 +1,7 @@
 {
   "data": {
     "name": "GenericOpenAI",
-    "title": "Generic OpenAI Spec Endpoint",
+    "title": "OpenAI Compatible Endpoint",
     "connector_type": "source",
     "category": "AI Model",
     "sub_category": "LLM",

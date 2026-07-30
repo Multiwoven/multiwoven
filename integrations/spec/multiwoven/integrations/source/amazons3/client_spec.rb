@@ -143,6 +143,19 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         expect(result.message).to include("Access Denied")
       end
     end
+
+    context "when the connection is successful for minIO" do
+      it "returns a succeeded connection status" do
+        sync_config[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config[:source][:connection_specification][:path_style] = true
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+        expect(result.status).to eq("succeeded")
+        expect(result.message).to be_nil
+      end
+    end
   end
   # read and discover tests for AWS Athena
   describe "#read" do
@@ -354,6 +367,77 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
         expect(result.log.name).to eq("AMAZONS3:READ:EXCEPTION")
       end
     end
+
+    context "when reading structured data is successful for minIO" do
+      it "returns a succeeded connection status" do
+        sync_config[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+        message = client.read(s_config)
+        expect(message).to be_an(Array)
+        expect(message.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      end
+    end
+
+    context "when reading unstructured data is successful for minIO" do
+      let(:unstructured_sync_config) do
+        {
+          "source": {
+            "name": "AmazonS3",
+            "type": "source",
+            "connection_specification": unstructured_config
+          },
+          "destination": sync_config[:destination],
+          "model": {
+            "name": "List Files",
+            "query": "list_files",
+            "query_type": "raw_sql",
+            "primary_key": "file_path"
+          },
+          "stream": {
+            "name": "unstructured_files",
+            "action": "fetch",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "file_name": { "type": "string" },
+                "file_path": { "type": "string" },
+                "size": { "type": "integer" },
+                "created_date": { "type": "string" },
+                "modified_date": { "type": "string" }
+              }
+            }
+          },
+          "sync_id": "1",
+          "sync_run_id": "123",
+          "sync_mode": "incremental",
+          "cursor_field": "",
+          "destination_sync_mode": "upsert"
+        }
+      end
+
+      before do
+        allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
+        allow(s3_resource).to receive(:bucket).and_return(s3_bucket)
+        allow(client).to receive(:unstructured_data?).and_return(true)
+      end
+      it "returns a succeeded connection status" do
+        unstructured_sync_config[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        unstructured_sync_config[:source][:connection_specification][:path_style] = true
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(unstructured_sync_config.to_json)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
+        allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+        allow(s3_bucket).to receive(:objects).and_return([s3_objects])
+        allow(s3_objects).to receive(:key).and_return("test/file.pdf")
+        allow(s3_objects).to receive(:content_length).and_return(1024)
+        allow(s3_objects).to receive(:last_modified).and_return(Time.now)
+        message = client.read(s_config)
+        expect(message).to be_an(Array)
+        expect(message.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      end
+    end
   end
 
   describe "#discover" do
@@ -411,6 +495,21 @@ RSpec.describe Multiwoven::Integrations::Source::AmazonS3::Client do
       it "returns unstructured stream for unstructured data" do
         allow_any_instance_of(Multiwoven::Integrations::Source::AmazonS3::Client).to receive(:get_auth_data).and_return(auth_data)
         message = client.discover(unstructured_config)
+        expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
+        expect(message.catalog.streams).to be_an(Array)
+        expect(message.catalog.streams.first).to be_a(Multiwoven::Integrations::Protocol::Stream)
+      end
+    end
+
+    context "when discovering unstructured data is successful for minIO" do
+      it "returns a succeeded connection status" do
+        sync_config[:source][:connection_specification][:endpoint] = "http://localhost:9000"
+        sync_config[:source][:connection_specification][:path_style] = true
+        allow(client).to receive(:get_auth_data).and_return(auth_data)
+        allow(client).to receive(:create_connection).and_return(conn)
+        allow(client).to receive(:get_results).and_return([{ Id: "1" }, { Id: "2" }])
+        allow(client).to receive(:build_discover_columns).and_return([{ column_name: "Id", type: "string" }])
+        message = client.discover(sync_config[:source][:connection_specification])
         expect(message.catalog).to be_an(Multiwoven::Integrations::Protocol::Catalog)
         expect(message.catalog.streams).to be_an(Array)
         expect(message.catalog.streams.first).to be_a(Multiwoven::Integrations::Protocol::Stream)
