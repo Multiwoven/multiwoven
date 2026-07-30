@@ -177,4 +177,24 @@ RSpec.describe Activities::ExtractorActivity do
       end
     end
   end
+<<<<<<< HEAD
+=======
+
+  describe "timeouts and retry policy" do
+    it "has correct timeouts" do
+      expect(described_class.timeouts).to eq(
+        start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "864000").to_i,
+        heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "1800").to_i
+      )
+    end
+
+    it "has correct retry policy" do
+      expect(described_class.retry_policy).to eq(
+        interval: (ENV["TEMPORAL_ACTIVITY_RETRY_INTERVAL_IN_SEC"] || "1").to_i,
+        backoff: (ENV["TEMPORAL_ACTIVITY_RETRY_BACK_OFF"] || "1").to_i,
+        max_attempts: (ENV["TEMPORAL_ACTIVITY_RETRY_MAX_ATTEMPT"] || "10").to_i
+      )
+    end
+  end
+>>>>>>> 6ba2c06b2 (fix(CE): CPU memory usage due to DB read and write (#1640))
 end
