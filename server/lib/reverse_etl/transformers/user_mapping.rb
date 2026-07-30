@@ -7,7 +7,9 @@ module ReverseEtl
 
       def transform(sync, sync_record)
         @mappings = sync.configuration
+        Rails.logger.info("Mappings Transformer: #{mappings.is_a?(Array)}")
         @record = sync_record.record
+        Rails.logger.info("Record Transformer: #{record}")
         @destination_data = {}
 
         if mappings.is_a?(Array)
@@ -22,6 +24,10 @@ module ReverseEtl
         #                                   sync_id: sync.id,
         #                                   sync_record_id: sync_record.id
         #                                 })
+        Rails.logger.info(
+          "Error in User Mapping Transformer, sync_id = #{sync.id} sync_record_id = #{sync_record.id} " \
+          "error = #{e.message}"
+        )
         Rails.logger.error({
           error_message: e.message,
           sync_id: sync.id,
@@ -32,7 +38,9 @@ module ReverseEtl
       private
 
       def transform_record_v1
+        Rails.logger.info("Transform record v2: #{mappings.to_json}")
         mappings.each do |source_key, dest_path|
+          Rails.logger.info("Source key: #{source_key}, Dest path: #{dest_path}")
           dest_keys = dest_path.split(".")
           mapped_destination_value = record[source_key]
           extract_destination_mapping(dest_keys, mapped_destination_value)
@@ -40,8 +48,10 @@ module ReverseEtl
       end
 
       def transform_record_v2
+        Rails.logger.info("Transform record v2: #{mappings.to_json}")
         mappings.each do |mapping|
           mapping = mapping.with_indifferent_access
+          Rails.logger.info("Mapping: #{mapping.to_json}")
           case mapping[:mapping_type]
           when "standard"
             standard_mapping(mapping)
