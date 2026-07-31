@@ -75,7 +75,7 @@ npm i
 4. **Initialize .env file:**
 
 ```bash
-mv .env.example .env
+cp ../server/.env.example .env
 ```
 
 4. **Start the services:**
@@ -92,6 +92,7 @@ http://localhost:8000
 
 Note: In the env, the base URL for the mutiwoven server is pointing to the staging deployed URL. If you want it to point to the local server, you will have to make sure the multiwoven server is setup locally on your machine.
 Follow the steps [here](https://github.com/Multiwoven/multiwoven-server/tree/main?tab=readme-ov-file#local-setup) to set it up locally.
+The local UI expects the backend at `http://localhost:3000`.
 
 ## Contributing
 
