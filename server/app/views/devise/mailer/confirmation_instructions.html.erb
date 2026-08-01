@@ -23,7 +23,7 @@
               <tr>
                 <td style="text-align: center; padding: 12px">
                   <img
-                    src="https://squared.ai/wp-content/uploads/2024/04/ai-squared-r-logo.png"
+                    src="https://res.cloudinary.com/dspflukeu/image/upload/v1746630317/Multiwoven/ais-logo_fyn2uv.png"
                     style="width: 100%; max-width: 178px"
                     alt="AI Squared Logo"
                   />
@@ -64,29 +64,25 @@
                   </p>
                   <a
                     href="<%= confirmation_url %>"
-                    style="display: inline-block; text-decoration: none"
+                    style="
+                      background: #00249c;
+                      border-radius: 6px;
+                      color: white;
+                      display: inline-block;
+                      font-size: 14px;
+                      font-family: Helvetica, Arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 20px;
+                      padding: 10px 20px;
+                      text-decoration: none;
+                    "
                   >
-                    <button
-                      style="
-                        background: #00249c;
-                        border: none;
-                        border-radius: 6px;
-                        color: white;
-                        font-size: 14px;
-                        font-family: Helvetica, Arial, sans-serif;
-                        font-weight: 700;
-                        line-height: 20px;
-                        padding: 10px 20px;
-                        cursor: pointer;
-                      "
-                    >
-                      Verify Email
-                    </button>
+                    Verify Email
                   </a>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 12px; text-align: left">
+                <td style="padding: 12px; text-align: center">
                   <p
                     style="
                       color: #98a2b3;
@@ -118,43 +114,28 @@
                 <td
                   style="
                     padding: 12px;
-                    text-align: left;
+                    text-align: center;
                     font-size: 12px;
                     color: #98a2b3;
                     font-family: Helvetica, Arial, sans-serif;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
+                    line-height: 18px;
                   "
                 >
-                  <div>
-                    <p style="margin: 0">
-                      <a
-                        href="https://blog.squared.ai/"
-                        style="color: #98a2b3; text-decoration: underline"
-                        >Our blog</a
-                      >
-                      |
-                      <a
-                        href="https://docs.squared.ai/"
-                        style="color: #98a2b3; text-decoration: underline"
-                        >Docs</a
-                      >
-                      |
-                      <a
-                        href="https://squared.ai/contact/"
-                        style="color: #98a2b3; text-decoration: underline"
-                        >Contact Us</a
-                      >
-                    </p>
-                    <p style="margin: 0">
-                      © 2025 AI Squared. All Rights Reserved.
-                    </p>
-                  </div>
-                  <div style="text-align: end">
-                    <p style="margin: 0">AI Squared, 1300 I Street NW,</p>
-                    <p style="margin: 0">Suite 400 E, Washington, DC 20005</p>
-                  </div>
+                  <p style="margin: 0 0 8px 0">
+                    <a href="https://blog.squared.ai/" style="color: #98a2b3; text-decoration: underline">Our Blog</a>
+                    |
+                    <a href="https://docs.squared.ai/" style="color: #98a2b3; text-decoration: underline">Docs</a>
+                    |
+                    <a href="https://squared.ai/contact/" style="color: #98a2b3; text-decoration: underline">Contact Us</a>
+                  </p>
+                  <p style="margin: 0">
+                    AI Squared, 147 Castro Street, Second Floor
+                    <br />
+                    Mountain View, CA 94041
+                  </p>
+                  <p style="margin: 0">
+                    © <%= Time.current.year %> AI Squared. All Rights Reserved.
+                  </p>
                 </td>
               </tr>
             </table>
