@@ -3,6 +3,21 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
+<<<<<<< HEAD
+=======
+const upstream = process.env.VITE_API_HOST;
+if (!upstream) {
+  throw new Error('VITE_API_HOST is required (e.g. https://api.staging.squared.ai)');
+}
+const apiProxy = createProxyMiddleware({
+  pathFilter: ['/api', '/enterprise', '/saml'],
+  target: upstream,
+  changeOrigin: true,
+  xfwd: true,
+});
+app.use(apiProxy);
+
+>>>>>>> e03f7c173 (chore(CE): clickjacking issue revert (#2134))
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 

@@ -53,6 +53,16 @@ class Rack::Attack
     end
   end
 
+<<<<<<< HEAD
+=======
+  # Public, unauthenticated badge lookup — hit on every view of every app.
+  throttle('agentic_badge/ip', limit: 120, period: 60.seconds) do |req|
+    if req.get? && req.path.match?(%r{/agentic_coding/workspaces/[^/]+/apps/[^/]+/badge\z})
+      req.env['action_dispatch.remote_ip'].to_s
+    end
+  end
+
+>>>>>>> e03f7c173 (chore(CE): clickjacking issue revert (#2134))
   throttle('resend_verification/ip', limit: 2, period: 300.seconds) do |req|
     if req.path == '/api/v1/resend_verification' && req.post?
       req.env['action_dispatch.remote_ip'].to_s
@@ -78,6 +88,11 @@ class Rack::Attack
         "Too many password reset attempts. Please wait #{retry_after} seconds before trying again."
       when "resend_verification/ip"
         "Too many verification email requests. Please wait #{retry_after} seconds before trying again."
+<<<<<<< HEAD
+=======
+      when "analytics/ip_app", "analytics/app"
+        "Too many analytics requests. Please wait #{retry_after} seconds before trying again."
+>>>>>>> e03f7c173 (chore(CE): clickjacking issue revert (#2134))
       else
         "Too many requests. Please try again later."
       end
