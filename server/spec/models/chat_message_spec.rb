@@ -5,8 +5,9 @@ require "rails_helper"
 RSpec.describe ChatMessage, type: :model do
   describe "associations" do
     it { should belong_to(:workspace) }
-    it { should belong_to(:data_app_session) }
-    it { should belong_to(:visual_component) }
+    it { should belong_to(:session) }
+    it { should belong_to(:visual_component).optional }
+    it { should belong_to(:workflow).optional }
   end
 
   describe "enum for role" do
