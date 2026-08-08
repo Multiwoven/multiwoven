@@ -1,0 +1,49 @@
+{
+  "documentation_url": "https://dev.mysql.com/doc/",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "MySQL Database",
+    "type": "object",
+    "required": ["host", "port", "username", "password", "database"],
+    "properties": {
+      "host": {
+        "description": "The hostname or IP address of the server where the MySQL database is hosted.",
+        "examples": ["127.0.0.1", "mysql.yourdomain.com","localhost"],
+        "type": "string",
+        "title": "Host",
+        "order": 0
+      },
+      "port": {
+        "description": "The port number on which the MySQL server is listening for connections.",
+        "examples": [3306],
+        "type": "integer",
+        "title": "Port",
+        "default": 3306,
+        "order": 1
+      },
+      "username": {
+        "description": "The username used to authenticate and connect to the MySQL database.",
+        "examples": ["root"],
+        "type": "string",
+        "title": "Username",
+        "order": 2
+      },
+      "password": {
+        "description": "The password corresponding to the username used for authentication.",
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "Password",
+        "order": 3
+      },
+      "database": {
+        "description": "The name of the specific database within the MySQL server to connect to.",
+        "examples": ["test", "analytics", "production_db","mydatabase"],
+        "type": "string",
+        "title": "Database",
+        "order": 4
+      }
+    }
+  }
+}
