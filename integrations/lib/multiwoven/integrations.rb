@@ -99,6 +99,12 @@ require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
 require_relative "integrations/source/http/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/aisquared/client"
+require_relative "integrations/source/one_drive/client"
+require_relative "integrations/source/microsoft_dynamics/client"
+>>>>>>> 5c3bcb68c (chore(CE): add Microsoft Dynamics as a data source connector (#2138))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

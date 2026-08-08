@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.2)
+=======
+    multiwoven-integrations (0.39.0)
+>>>>>>> 5c3bcb68c (chore(CE): add Microsoft Dynamics as a data source connector (#2138))
       MailchimpMarketing
       activesupport
       async-websocket
