@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.39.1"
+>>>>>>> 5053116c9 (chore(CE): Allow Table Selector for One Drive when recursive (#2146))
 
     ENABLED_SOURCES = %w[
       Snowflake
