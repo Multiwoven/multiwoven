@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.39.2"
+>>>>>>> 3c28db967 (chore(CE): Add schema to query as search path (#2147))
 
     ENABLED_SOURCES = %w[
       Snowflake
