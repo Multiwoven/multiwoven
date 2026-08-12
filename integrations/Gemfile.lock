@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.2)
+=======
+    multiwoven-integrations (0.39.2)
+>>>>>>> 3c28db967 (chore(CE): Add schema to query as search path (#2147))
       MailchimpMarketing
       activesupport
       async-websocket

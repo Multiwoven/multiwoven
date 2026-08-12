@@ -50,6 +50,9 @@ module Multiwoven::Integrations::Source
         connection_config = connection_config.with_indifferent_access
         query = sync_config.model.query
         query = batched_query(query, sync_config.limit, sync_config.offset) unless sync_config.limit.nil? && sync_config.offset.nil?
+        schemas = [connection_config[:schema].presence, "public"].compact
+        search_path = schemas.map { |s| PG::Connection.quote_ident(s.to_s) }.join(", ")
+        query = "SET search_path TO #{search_path}; #{query}"
 
         db = create_connection(connection_config)
 

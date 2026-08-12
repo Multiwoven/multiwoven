@@ -108,7 +108,8 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
         s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config.to_json)
         allow(PG).to receive(:connect).and_return(pg_connection)
 
-        allow(pg_connection).to receive(:exec).with(s_config.model.query).and_return(
+        expected_query = "SET search_path TO \"test_schema\", \"public\"; #{s_config.model.query}"
+        allow(pg_connection).to receive(:exec).with(expected_query).and_return(
           [
             Multiwoven::Integrations::Protocol::RecordMessage.new(
               data: { column1: "column1" }, emitted_at: Time.now.to_i
@@ -132,8 +133,9 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
         allow(PG).to receive(:connect).and_return(pg_connection)
 
         batched_query = client.send(:batched_query, s_config.model.query, s_config.limit, s_config.offset)
+        expected_query = "SET search_path TO \"test_schema\", \"public\"; #{batched_query}"
 
-        allow(pg_connection).to receive(:exec).with(batched_query).and_return(
+        allow(pg_connection).to receive(:exec).with(expected_query).and_return(
           [
             Multiwoven::Integrations::Protocol::RecordMessage.new(
               data: { column1: "column1" }, emitted_at: Time.now.to_i
@@ -148,6 +150,37 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
         expect(records).to be_an(Array)
         expect(records).not_to be_empty
         expect(records.first).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+      end
+
+      it "falls back to public search_path when schema is blank" do
+        config = sync_config.deep_dup
+        config[:source][:connection_specification][:schema] = ""
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(config.to_json)
+        allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(pg_connection).to receive(:close).and_return(true)
+
+        expect(pg_connection).to receive(:exec).with(
+          "SET search_path TO \"public\"; SELECT * FROM contacts;"
+        ).and_return([])
+
+        client.read(s_config)
+      end
+
+      it "quotes schema identifiers that contain double quotes" do
+        malicious_schema = 'test"; DROP TABLE contacts; --'
+        config = sync_config.deep_dup
+        config[:source][:connection_specification][:schema] = malicious_schema
+        s_config = Multiwoven::Integrations::Protocol::SyncConfig.from_json(config.to_json)
+        allow(PG).to receive(:connect).and_return(pg_connection)
+        allow(pg_connection).to receive(:close).and_return(true)
+
+        quoted_schema = PG::Connection.quote_ident(malicious_schema)
+        expect(quoted_schema).to eq("\"test\"\"; DROP TABLE contacts; --\"")
+        expect(pg_connection).to receive(:exec).with(
+          "SET search_path TO #{quoted_schema}, \"public\"; SELECT * FROM contacts;"
+        ).and_return([])
+
+        client.read(s_config)
       end
 
       it "read records failure" do
