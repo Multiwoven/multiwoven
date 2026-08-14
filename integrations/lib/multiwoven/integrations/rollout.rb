@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.39.3"
+>>>>>>> c1fbe4683 (chore(CE): update OneDrive client to handle mixed-type spreadsheets (#2160))
 
     ENABLED_SOURCES = %w[
       Snowflake
