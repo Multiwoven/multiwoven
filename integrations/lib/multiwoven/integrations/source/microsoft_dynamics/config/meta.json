@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "MicrosoftDynamics",
+    "title": "Microsoft Dynamics",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "sub_category": "Relational Database",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/microsoft_dynamics",
+    "github_issue_label": "source-microsoft-dynamics",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

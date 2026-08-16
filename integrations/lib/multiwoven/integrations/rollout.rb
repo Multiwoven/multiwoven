@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.39.0"
+>>>>>>> 5c3bcb68c (chore(CE): add Microsoft Dynamics as a data source connector (#2138))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +38,12 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+<<<<<<< HEAD
+=======
+      Aisquared
+      OneDrive
+      MicrosoftDynamics
+>>>>>>> 5c3bcb68c (chore(CE): add Microsoft Dynamics as a data source connector (#2138))
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
