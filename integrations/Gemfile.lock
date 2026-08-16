@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.2)
+=======
+    multiwoven-integrations (0.38.1)
+>>>>>>> d546f58fa (chore(CE): Add recursive folder fetch to One Drive Connector (#2117))
       MailchimpMarketing
       activesupport
       async-websocket
