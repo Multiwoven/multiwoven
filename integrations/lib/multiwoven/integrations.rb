@@ -99,6 +99,13 @@ require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
 require_relative "integrations/source/http/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/aisquared/client"
+require_relative "integrations/source/one_drive/client"
+require_relative "integrations/source/microsoft_dynamics/client"
+require_relative "integrations/source/epic_fhir/client"
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"

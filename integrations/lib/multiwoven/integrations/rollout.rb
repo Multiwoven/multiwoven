@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.40.0"
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +38,13 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+<<<<<<< HEAD
+=======
+      Aisquared
+      OneDrive
+      MicrosoftDynamics
+      EpicFhir
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
     ].freeze
 
     ENABLED_DESTINATIONS = %w[

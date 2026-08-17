@@ -1,0 +1,112 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/epic_fhir",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Epic FHIR",
+    "type": "object",
+    "required": ["fhir_base_url", "token_url", "client_id", "private_key", "kid", "export_group_id"],
+    "properties": {
+      "fhir_base_url": {
+        "type": "string",
+        "title": "FHIR Base URL",
+        "description": "Your Epic FHIR R4 base URL.",
+        "order": 0
+      },
+      "token_url": {
+        "type": "string",
+        "title": "OAuth Token URL",
+        "description": "Your Epic OAuth token endpoint.",
+        "order": 1
+      },
+      "client_id": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "OAuth Client ID",
+        "description": "The Client ID from your Epic app.",
+        "order": 2
+      },
+      "private_key": {
+        "type": "string",
+        "multiwoven_secret": true,
+        "title": "RSA Private Key",
+        "description": "The RSA private key for your Epic app.",
+        "order": 3
+      },
+      "kid": {
+        "type": "string",
+        "title": "Key ID (kid)",
+        "description": "The Key ID for your Epic app's public key.",
+        "order": 4
+      },
+      "algorithm": {
+        "type": "string",
+        "title": "JWT Signing Algorithm",
+        "description": "The signing algorithm used for OAuth authentication.",
+        "enum": ["RS384"],
+        "default": "RS384",
+        "order": 5
+      },
+      "audience": {
+        "type": "string",
+        "title": "JWT Audience (aud)",
+        "description": "Optional. Defaults to your OAuth Token URL.",
+        "order": 6
+      },
+      "scope": {
+        "type": "string",
+        "title": "OAuth Scope",
+        "description": "Optional. The OAuth scopes requested from Epic.",
+        "default": "system/*.read",
+        "order": 7
+      },
+      "resources": {
+        "type": "string",
+        "title": "Resources",
+        "description": "Optional. Comma-separated FHIR resources to export, such as Patient, Observation, or Condition.",
+        "order": 8
+      },
+      "export_group_id": {
+        "type": "string",
+        "title": "Bulk Export Group ID",
+        "description": "The Epic Group ID used for Bulk Data exports.",
+        "order": 9
+      },
+      "export_since": {
+        "type": "string",
+        "title": "Export Since",
+        "description": "Optional. Only export resources changed after this date and time.",
+        "order": 10
+      },
+      "export_poll_interval": {
+        "type": "string",
+        "title": "Export Poll Interval (seconds)",
+        "description": "How often to check the export status.",
+        "default": "5",
+        "order": 11
+      },
+      "export_timeout": {
+        "type": "string",
+        "title": "Export Timeout (seconds)",
+        "description": "Maximum time to wait for an export to complete. Must be greater than 0 and at most 120.",
+        "default": "120",
+        "order": 12
+      },
+      "config": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "string",
+            "default": "30",
+            "title": "HTTP Timeout",
+            "description": "Maximum time to wait for an API response.",
+            "order": 0
+          }
+        },
+        "order": 13
+      }
+    }
+  }
+}
