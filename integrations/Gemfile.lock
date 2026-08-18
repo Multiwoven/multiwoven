@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.2)
+=======
+    multiwoven-integrations (0.40.0)
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -28,6 +32,7 @@ PATH
       grpc
       hubspot-api-client
       iterable-api-client
+      jwt
       net-sftp
       pg
       rake

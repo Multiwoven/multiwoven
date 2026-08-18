@@ -33,6 +33,17 @@
         "order": 3,
         "default": "/"
       },
+<<<<<<< HEAD
+=======
+      "auth_type": {
+        "type": "string",
+        "title": "Authentication Type",
+        "description": "Select an OAuth2 option to have Multiwoven fetch and refresh an access token automatically. Use 'oauth_private_key_jwt' for Epic Backend Services / SMART confidential asymmetric clients.",
+        "enum": ["none", "oauth_client_credentials", "oauth_private_key_jwt"],
+        "default": "none",
+        "order": 14
+      },
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
       "headers": {
         "title": "HTTP Headers",
         "description": "Custom headers to include in the HTTP request. Useful for authentication, content type specifications, and other request metadata.",
@@ -112,6 +123,102 @@
         "description": "The starting page number for pagination. This value is used to calculate the offset for the initial request.",
         "order": 13
       }
+<<<<<<< HEAD
+=======
+    },
+    "dependencies": {
+      "auth_type": {
+        "oneOf": [
+          {
+            "properties": {
+              "auth_type": { "enum": ["none"] }
+            }
+          },
+          {
+            "properties": {
+              "auth_type": { "enum": ["oauth_client_credentials"] },
+              "token_url": {
+                "type": "string",
+                "title": "OAuth Token URL",
+                "description": "E.g. https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+                "order": 15
+              },
+              "client_id": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client ID",
+                "order": 16
+              },
+              "client_secret": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client Secret",
+                "order": 17
+              },
+              "scope": {
+                "type": "string",
+                "title": "OAuth Scope",
+                "description": "Optional. E.g. https://graph.microsoft.com/.default",
+                "order": 18
+              }
+            },
+            "required": ["token_url", "client_id", "client_secret"]
+          },
+          {
+            "properties": {
+              "auth_type": { "enum": ["oauth_private_key_jwt"] },
+              "token_url": {
+                "type": "string",
+                "title": "OAuth Token URL",
+                "description": "E.g. https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
+                "order": 15
+              },
+              "client_id": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "OAuth Client ID",
+                "description": "Non-production or production Client ID from Epic app registration.",
+                "order": 16
+              },
+              "private_key": {
+                "type": "string",
+                "multiwoven_secret": true,
+                "title": "RSA Private Key (PEM)",
+                "description": "PEM-encoded RSA private key used to sign the client_assertion JWT. The matching public key must be published at your registered JWK Set URL.",
+                "order": 17
+              },
+              "kid": {
+                "type": "string",
+                "title": "Key ID (kid)",
+                "description": "Must match the kid of the public key in your JWK Set.",
+                "order": 18
+              },
+              "algorithm": {
+                "type": "string",
+                "title": "JWT Signing Algorithm",
+                "description": "Epic Backend Services require RS384.",
+                "enum": ["RS384", "RS256"],
+                "default": "RS384",
+                "order": 19
+              },
+              "audience": {
+                "type": "string",
+                "title": "JWT Audience (aud)",
+                "description": "Optional. Defaults to the Token URL. Epic expects the token endpoint URL.",
+                "order": 20
+              },
+              "scope": {
+                "type": "string",
+                "title": "OAuth Scope",
+                "description": "Optional. E.g. system/Patient.read system/Observation.read",
+                "order": 21
+              }
+            },
+            "required": ["token_url", "client_id", "private_key", "kid"]
+          }
+        ]
+      }
+>>>>>>> 23012b64a (feat(CE): add Epic Fhir Source Connector (#2157))
     }
   }
 }
