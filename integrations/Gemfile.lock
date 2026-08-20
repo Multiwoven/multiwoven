@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.2)
+=======
+    multiwoven-integrations (0.40.1)
+>>>>>>> be9215ce8 (chore(CE): Update EPIC FHIR to handle "Another request for this same Client and Group is in progress." error (#2175))
       MailchimpMarketing
       activesupport
       async-websocket
