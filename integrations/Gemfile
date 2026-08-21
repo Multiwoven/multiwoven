@@ -5,13 +5,10 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in multiwoven-integrations.gemspec
 gemspec
 
-<<<<<<< HEAD
-=======
 gem "addressable", ">= 2.9.0"
 
 gem "rexml", ">= 3.4.2"
 
->>>>>>> f57503ce9 (chore(CE): solved the vulnerabilities on integrations (#1851))
 gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0"

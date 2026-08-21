@@ -7,11 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-<<<<<<< HEAD
-    multiwoven-integrations (0.35.0)
-=======
     multiwoven-integrations (0.35.4)
->>>>>>> f57503ce9 (chore(CE): solved the vulnerabilities on integrations (#1851))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -306,14 +302,9 @@ GEM
       grpc (~> 1.41)
     hashdiff (1.1.0)
     hashery (2.1.2)
-<<<<<<< HEAD
-    hashie (5.0.0)
-    httparty (0.22.0)
-=======
     hashie (5.1.0)
       logger
     httparty (0.24.2)
->>>>>>> f57503ce9 (chore(CE): solved the vulnerabilities on integrations (#1851))
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -497,12 +488,8 @@ PLATFORMS
 
 DEPENDENCIES
   MailchimpMarketing
-<<<<<<< HEAD
-  activesupport
-=======
   activesupport (>= 7.2.3.1)
   addressable (>= 2.9.0)
->>>>>>> f57503ce9 (chore(CE): solved the vulnerabilities on integrations (#1851))
   async-websocket (~> 0.8.0)
   aws-sdk-athena
   aws-sdk-bedrockruntime
@@ -517,15 +504,9 @@ DEPENDENCIES
   dry-schema
   dry-struct
   dry-types
-<<<<<<< HEAD
-  duckdb
-  faraday
-  git
-=======
   duckdb (~> 0.10.3)
   faraday (>= 2.14.1)
   git (>= 2.0.1)
->>>>>>> f57503ce9 (chore(CE): solved the vulnerabilities on integrations (#1851))
   google-apis-drive_v3 (~> 0.67.0)
   google-apis-sheets_v4
   google-cloud-ai_platform-v1
