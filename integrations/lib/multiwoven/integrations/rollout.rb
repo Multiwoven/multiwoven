@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.2"
+=======
+    VERSION = "0.40.1"
+>>>>>>> be9215ce8 (chore(CE): Update EPIC FHIR to handle "Another request for this same Client and Group is in progress." error (#2175))
 
     ENABLED_SOURCES = %w[
       Snowflake
