@@ -428,5 +428,9 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
     it "defines a private #query method" do
       expect(described_class.private_instance_methods).to include(:query)
     end
+
+    it "defines a private #build_safe_insert_clause method" do
+      expect(described_class.private_instance_methods).to include(:build_safe_insert_clause)
+    end
   end
 end
