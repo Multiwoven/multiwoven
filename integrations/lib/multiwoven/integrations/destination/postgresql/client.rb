@@ -51,8 +51,8 @@ module Multiwoven::Integrations::Destination
         connection_config = sync_config.destination.connection_specification.with_indifferent_access
         raw_table = sync_config.stream.name
         table_name = qualify_table(connection_config[:schema], raw_table)
-        primary_key = sync_config.model.primary_key
         db = create_connection(connection_config)
+        primary_key = fetch_primary_key(db, connection_config[:schema], raw_table)
 
         write_success = 0
         write_failure = 0
@@ -106,15 +106,19 @@ module Multiwoven::Integrations::Destination
         end
 
         sql = "INSERT INTO #{table_name} (#{col_list}) VALUES #{values_clauses.join(", ")}"
-        sql += build_upsert_clause(columns, primary_key) if action.to_s == "destination_update"
+        if primary_key.present?
+          sql += action.to_s == "destination_insert" ? build_safe_insert_clause(primary_key) : build_upsert_clause(columns, primary_key)
+        end
         db.exec(sql)
       end
 
-      def build_upsert_clause(columns, primary_key)
-        return "" unless primary_key.present?
+      def build_safe_insert_clause(primary_key)
+        " ON CONFLICT (#{quote_ident(primary_key)}) DO NOTHING"
+      end
 
+      def build_upsert_clause(columns, primary_key)
         update_cols = columns.reject { |c| c.to_s == primary_key.to_s }
-        return " ON CONFLICT (#{quote_ident(primary_key)}) DO NOTHING" if update_cols.empty?
+        return build_safe_insert_clause(primary_key) if update_cols.empty?
 
         set_clause = update_cols.map { |c| "#{quote_ident(c)} = EXCLUDED.#{quote_ident(c)}" }.join(", ")
         " ON CONFLICT (#{quote_ident(primary_key)}) DO UPDATE SET #{set_clause}"
@@ -175,6 +179,23 @@ module Multiwoven::Integrations::Destination
             end
           }
         end
+      end
+
+      def fetch_primary_key(db, schema, table)
+        schema = schema.presence || "public"
+        quoted = "\"#{schema}\".\"#{table}\""
+        result = db.exec(<<~SQL)
+          SELECT a.attname AS column_name
+          FROM pg_index i
+          JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+          WHERE i.indrelid = '#{quoted}'::regclass
+            AND i.indisprimary
+          LIMIT 1
+        SQL
+        result.first&.dig("column_name")
+      rescue StandardError => e
+        logger.warn("POSTGRESQL:FETCH_PRIMARY_KEY:EXCEPTION #{e.message}")
+        nil
       end
 
       def qualify_table(schema, table)

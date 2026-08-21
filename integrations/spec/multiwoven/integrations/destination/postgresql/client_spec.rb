@@ -175,6 +175,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       allow(PG).to receive(:connect).and_return(pg_connection)
       allow(pg_connection).to receive(:close)
       allow(pg_connection).to receive(:escape_string) { |str| str }
+      allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return(nil)
     end
 
     let(:s_config) do
@@ -197,10 +198,36 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         expect(tracking.success).to eql(2)
         expect(tracking.failed).to eql(0)
       end
+
+      it "generates ON CONFLICT DO NOTHING for destination_insert when primary key is present" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("user_id")
+        expect(pg_connection).to receive(:exec).with(
+          a_string_matching(/ON CONFLICT.*DO NOTHING/)
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config, batch_records, "destination_insert").tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
+
+      it "generates plain INSERT without ON CONFLICT when primary key is absent" do
+        config_without_pk = sync_config.deep_merge(model: { primary_key: "" })
+        s_config_no_pk = Multiwoven::Integrations::Protocol::SyncConfig.from_json(config_without_pk.to_json)
+        s_config_no_pk.sync_run_id = "50"
+
+        expect(pg_connection).to receive(:exec).with(
+          satisfy { |sql| sql.include?("INSERT INTO") && !sql.include?("ON CONFLICT") }
+        ).once.and_return(true)
+
+        tracking = subject.write(s_config_no_pk, batch_records, "destination_insert").tracking
+        expect(tracking.success).to eql(2)
+        expect(tracking.failed).to eql(0)
+      end
     end
 
     context "bulk upsert" do
       it "generates ON CONFLICT clause for destination_update" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("user_id")
         expect(pg_connection).to receive(:exec).with(
           a_string_matching(/ON CONFLICT.*DO UPDATE SET/)
         ).once.and_return(true)
@@ -211,6 +238,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       end
 
       it "generates ON CONFLICT DO NOTHING when update_cols is empty (only primary key)" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("id")
         records_only_pk = [
           { "id" => "1" },
           { "id" => "2" }
@@ -360,6 +388,35 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
     end
   end
 
+  describe "#fetch_primary_key" do
+    before do
+      allow(PG).to receive(:connect).and_return(pg_connection)
+    end
+
+    it "returns the primary key column name from pg_catalog" do
+      allow(pg_connection).to receive(:exec).and_return([{ "column_name" => "customer_id" }])
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to eq("customer_id")
+    end
+
+    it "returns nil when table has no primary key" do
+      allow(pg_connection).to receive(:exec).and_return([])
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to be_nil
+    end
+
+    it "defaults schema to public when blank" do
+      expect(pg_connection).to receive(:exec).with(a_string_matching(/"public"\."scraper"'::regclass/)).and_return([])
+      client.send(:fetch_primary_key, pg_connection, nil, "scraper")
+    end
+
+    it "returns nil on exec error" do
+      allow(pg_connection).to receive(:exec).and_raise(PG::Error.new("connection error"))
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to be_nil
+    end
+  end
+
   describe "#meta_data" do
     it "client class_name and meta name is same" do
       meta_name = client.class.to_s.split("::")[-2]
@@ -370,6 +427,10 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
   describe "method definition" do
     it "defines a private #query method" do
       expect(described_class.private_instance_methods).to include(:query)
+    end
+
+    it "defines a private #build_safe_insert_clause method" do
+      expect(described_class.private_instance_methods).to include(:build_safe_insert_clause)
     end
   end
 end
