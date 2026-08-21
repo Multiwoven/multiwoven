@@ -175,6 +175,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       allow(PG).to receive(:connect).and_return(pg_connection)
       allow(pg_connection).to receive(:close)
       allow(pg_connection).to receive(:escape_string) { |str| str }
+      allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return(nil)
     end
 
     let(:s_config) do
@@ -199,6 +200,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       end
 
       it "generates ON CONFLICT DO NOTHING for destination_insert when primary key is present" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("user_id")
         expect(pg_connection).to receive(:exec).with(
           a_string_matching(/ON CONFLICT.*DO NOTHING/)
         ).once.and_return(true)
@@ -225,6 +227,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
 
     context "bulk upsert" do
       it "generates ON CONFLICT clause for destination_update" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("user_id")
         expect(pg_connection).to receive(:exec).with(
           a_string_matching(/ON CONFLICT.*DO UPDATE SET/)
         ).once.and_return(true)
@@ -235,6 +238,7 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
       end
 
       it "generates ON CONFLICT DO NOTHING when update_cols is empty (only primary key)" do
+        allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("id")
         records_only_pk = [
           { "id" => "1" },
           { "id" => "2" }
@@ -381,6 +385,35 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         }
       )
       client.discover(sync_config[:source][:connection_specification])
+    end
+  end
+
+  describe "#fetch_primary_key" do
+    before do
+      allow(PG).to receive(:connect).and_return(pg_connection)
+    end
+
+    it "returns the primary key column name from pg_catalog" do
+      allow(pg_connection).to receive(:exec).and_return([{ "column_name" => "customer_id" }])
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to eq("customer_id")
+    end
+
+    it "returns nil when table has no primary key" do
+      allow(pg_connection).to receive(:exec).and_return([])
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to be_nil
+    end
+
+    it "defaults schema to public when blank" do
+      expect(pg_connection).to receive(:exec).with(a_string_matching(/"public"\."scraper"'::regclass/)).and_return([])
+      client.send(:fetch_primary_key, pg_connection, nil, "scraper")
+    end
+
+    it "returns nil on exec error" do
+      allow(pg_connection).to receive(:exec).and_raise(PG::Error.new("connection error"))
+      result = client.send(:fetch_primary_key, pg_connection, "destination", "scraper")
+      expect(result).to be_nil
     end
   end
 
