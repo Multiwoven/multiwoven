@@ -198,8 +198,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         expect(tracking.success).to eql(2)
         expect(tracking.failed).to eql(0)
       end
-<<<<<<< HEAD
-=======
 
       it "generates ON CONFLICT DO NOTHING for destination_insert when primary key is present" do
         allow_any_instance_of(described_class).to receive(:fetch_primary_key).and_return("user_id")
@@ -225,7 +223,6 @@ RSpec.describe Multiwoven::Integrations::Destination::Postgresql::Client do
         expect(tracking.success).to eql(2)
         expect(tracking.failed).to eql(0)
       end
->>>>>>> 9712b5cc1 (fix(CE): added a logic to fetch primary key dynamically (#1842))
     end
 
     context "bulk upsert" do
