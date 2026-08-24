@@ -18,8 +18,11 @@ module Multiwoven
     MultiwovenMessageType = Types::String.enum(
       "record", "log", "connector_spec",
       "connection_status", "catalog", "control",
-      "tracking"
+      "tracking", "model_catalog"
     )
+    ModelCatalogType = Types::String.enum("llm", "embedding", "vision")
+    ModelCatalogKind = Types::String.enum("completion", "embedding", "image")
+    ModelCatalogAvailability = Types::String.default("available").enum("available", "unavailable")
     ControlMessageType = Types::String.enum(
       "rate_limit", "connection_config", "full_refresh"
     )
@@ -165,6 +168,40 @@ module Multiwoven
       end
     end
 
+    class ModelCatalogPricing < ProtocolModel
+      attribute? :input, Types::Coercible::Float.optional
+      attribute? :output, Types::Coercible::Float.optional
+      attribute? :cached_read, Types::Coercible::Float.optional
+      attribute? :cached_write, Types::Coercible::Float.optional
+      attribute? :unit, Types::String.optional.default("per_1m_tokens")
+    end
+
+    class ModelCatalogEntry < ProtocolModel
+      attribute :id, Types::String
+      attribute :name, Types::String
+      attribute :model_type, ModelCatalogType
+      attribute? :type, ModelCatalogKind.optional
+      attribute? :openrouter_id, Types::String.optional
+      attribute :tasks, Types::Array.of(Types::String).default([].freeze)
+      attribute :capabilities, Types::Array.of(Types::String).default([].freeze)
+      attribute? :context_window, Types::Integer.optional
+      attribute? :max_output, Types::Integer.optional
+      attribute? :pricing, ModelCatalogPricing.optional
+      attribute :availability, ModelCatalogAvailability
+      attribute? :unavailable_reason, Types::String.optional
+    end
+
+    class ModelCatalog < ProtocolModel
+      attribute :models, Types::Array.of(ModelCatalogEntry).default([].freeze)
+
+      def to_multiwoven_message
+        MultiwovenMessage.new(
+          type: MultiwovenMessageType["model_catalog"],
+          model_catalog: self
+        )
+      end
+    end
+
     class IncrementStrategyConfig < ProtocolModel
       attr_accessor :offset, :limit, :offset_variable, :limit_variable
 
@@ -229,6 +266,7 @@ module Multiwoven
       attribute? :connection_status, ConnectionStatus.optional
       attribute? :connector_spec, ConnectorSpecification.optional
       attribute? :catalog, Catalog.optional
+      attribute? :model_catalog, ModelCatalog.optional
       attribute? :record, RecordMessage.optional
       attribute? :control, ControlMessage.optional
       attribute? :tracking, TrackingMessage.optional

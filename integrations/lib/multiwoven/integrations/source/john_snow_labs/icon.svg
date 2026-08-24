@@ -1,0 +1,16 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#0B7285" stroke-width="2" stroke-linecap="round">
+    <line x1="20" y1="4" x2="20" y2="36"/>
+    <line x1="6" y1="12" x2="34" y2="28"/>
+    <line x1="34" y1="12" x2="6" y2="28"/>
+    <g stroke-width="1.6">
+      <path d="M20 4 l-4 5 M20 4 l4 5"/>
+      <path d="M20 36 l-4 -5 M20 36 l4 -5"/>
+      <path d="M6 12 l0 6 M6 12 l6 0"/>
+      <path d="M34 28 l0 -6 M34 28 l-6 0"/>
+      <path d="M34 12 l0 6 M34 12 l-6 0"/>
+      <path d="M6 28 l0 -6 M6 28 l6 0"/>
+    </g>
+    <circle cx="20" cy="20" r="3.4" fill="#0B7285" stroke="none"/>
+  </g>
+</svg>

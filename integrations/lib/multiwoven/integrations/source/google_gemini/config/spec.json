@@ -1,31 +1,40 @@
 {
-  "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/open_ai-model",
+  "documentation_url": "https://ai.google.dev/gemini-api/docs/openai",
   "stream_type": "user_defined",
   "connector_query_type": "ai_ml",
   "connection_specification": {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Open AI Endpoint",
+    "title": "Google Gemini",
     "type": "object",
     "x-dynamic-input-path": "messages.0.content",
     "x-output-path": "choices.0.message.content",
     "required": [
+      "url",
       "api_key",
       "request_format",
       "response_format"
     ],
     "properties": {
+      "url": {
+        "type": "string",
+        "title": "Endpoint URL",
+        "description": "The Gemini OpenAI-compatible chat completions endpoint.",
+        "default": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+        "order": 0
+      },
       "api_key": {
         "type": "string",
         "multiwoven_secret": true,
         "title": "API Key",
-        "order": 0
+        "description": "Your Google AI Studio API key.",
+        "order": 1
       },
       "is_stream": {
         "type": "boolean",
         "title": "Enable streaming",
-        "description": "Enables data streaming for such as chat, when supported by the model. When true, messages and model data are processed in chunks for immediate delivery, enhancing responsiveness. Default is false, processing only after the entire response is received.",
+        "description": "Enables data streaming when supported by the model. When true, responses are processed in chunks for immediate delivery. Default is false.",
         "default": false,
-        "order": 1
+        "order": 2
       },
       "config": {
         "title": "",
@@ -39,23 +48,23 @@
             "order": 0
           }
         },
-        "order": 2
+        "order": 3
       },
       "request_format": {
         "title": "Request Format",
         "description": "Sample Request Format",
         "type": "string",
-        "default": "{\"model\":\"gpt-4o-mini\", \"messages\":[{\"role\": \"user\", \"content\": \"What do you know about APIs?\"}], \"stream\": false}",
+        "default": "{\"model\":\"gemini-2.0-flash\", \"messages\":[{\"role\": \"user\", \"content\": \"What do you know about APIs?\"}], \"stream\": false}",
         "x-request-format": true,
-        "order": 3
+        "order": 4
       },
       "response_format": {
         "title": "Response Format",
         "description": "Sample Response Format",
         "type": "string",
-        "default": "{\"choices\":[{\"index\": 0, \"delta\":{\"role\": \"assistant\", \"content\": \"APIs, or Application Programming Interfaces, are tools that allow different software applications to communicate with each other. They define a set of rules and protocols for building and interacting with software applications.\"}, \"finish_reason\": \"stop\"}]}",
+        "default": "{\"choices\":[{\"index\": 0, \"message\":{\"role\": \"assistant\", \"content\": \"APIs let software applications communicate with each other.\"}, \"finish_reason\": \"stop\"}]}",
         "x-response-format": true,
-        "order": 4
+        "order": 5
       }
     }
   }
