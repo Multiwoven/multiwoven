@@ -9,7 +9,7 @@
     "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/salesforce-consumer-goods-cloud",
     "github_issue_label": "source-salesforce-consumer-goods",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609252/Multiwoven/connectors/salesforce-consumer-goods-cloud/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

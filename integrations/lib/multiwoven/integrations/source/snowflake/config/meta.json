@@ -7,7 +7,7 @@
     "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/snowflake",
     "github_issue_label": "source-snowflake",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609492/Multiwoven/connectors/snowflake/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

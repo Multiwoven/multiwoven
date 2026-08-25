@@ -6,7 +6,7 @@
     "category": "CRM",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/hubspot",
     "github_issue_label": "destination-hubspot-crm",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607386/Multiwoven/connectors/hubspot/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",
