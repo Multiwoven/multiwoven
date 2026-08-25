@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "data": {
       "name": "DatabricksModel",
       "title": "Databricks Model",
@@ -13,5 +14,27 @@
       "support_level": "community",
       "tags": ["language:ruby", "multiwoven"]
     }
+=======
+  "data": {
+    "name": "DatabricksModel",
+    "title": "Databricks",
+    "connector_type": "source",
+    "category": "AI Model",
+    "sub_category": "AI_ML Service",
+    "provider_type": "cloud_provider",
+    "show_payload_formats": true,
+    "display_order": 100,
+    "description": "Serve models from Databricks Model Serving endpoints using your workspace credentials.",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks-model",
+    "github_issue_label": "source-databricks-foundation",
+    "icon": "icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": [
+      "language:ruby",
+      "multiwoven"
+    ]
+>>>>>>> 6aca5e420 (chore(CE): make AI Model sample payloads cheap and editable (#2183))
   }
   
