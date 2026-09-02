@@ -99,26 +99,37 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
     end
 
     context "when the connection fails" do
-      let(:response_body) { { "message" => "failed" }.to_json }
+      let(:response_body) do
+        {
+          error: {
+            message: "The provider rejected the request",
+            type: "invalid_request_error"
+          }
+        }.to_json
+      end
       before do
         response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
         url = sync_config_json[:source][:connection_specification][:url_host]
         http_method = sync_config_json[:source][:connection_specification][:http_method]
         headers = sync_config_json[:source][:connection_specification][:headers]
+        config = sync_config_json[:source][:connection_specification][:config]
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
                 http_method,
-                headers: headers)
+                payload: JSON.parse(payload.to_json),
+                headers: headers,
+                options: { config: config })
           .and_return(response)
       end
 
-      it "returns a failed connection status with an error message" do
+      it "returns a failed connection status with the provider error message" do
         response = client.check_connection(sync_config_json[:source][:connection_specification])
 
         expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
         expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to include("The provider rejected the request")
       end
     end
   end
