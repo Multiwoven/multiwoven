@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.7"
+>>>>>>> ece3a16e7 (chore(CE): Support only Bolt model for now in AI Squared Bolt Connector (#2215))
 
     ENABLED_SOURCES = %w[
       Snowflake
