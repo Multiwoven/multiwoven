@@ -18,6 +18,7 @@ const SearchBar = ({ setSearchTerm, placeholder, borderColor }: SearchBarProps) 
       _placeholder={{ color: 'gray.600' }}
       borderColor={borderColor}
       _hover={{ borderColor }}
+      _focusVisible={{ borderColor }}
       onChange={({ target: { value } }) => setSearchTerm(value)}
     />
   </InputGroup>

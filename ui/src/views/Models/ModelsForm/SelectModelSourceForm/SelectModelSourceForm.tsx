@@ -1,46 +1,20 @@
 import ContentContainer from '@/components/ContentContainer';
-import EntityItem from '@/components/EntityItem';
 import Loader from '@/components/Loader';
 import { SteppedFormContext } from '@/components/SteppedForm/SteppedForm';
-import Table from '@/components/Table';
 import { getUserConnectors } from '@/services/connectors';
 import NoConnectors from '@/views/Connectors/NoConnectors';
-import { CONNECTOR_LIST_COLUMNS } from '@/views/Connectors/constant';
-import { ConnectorAttributes, ConnectorTableColumnFields } from '@/views/Connectors/types';
-import { Box, Text } from '@chakra-ui/react';
-import moment from 'moment';
-import { useContext, useMemo } from 'react';
-import StatusTag from '@/components/StatusTag';
+import { Box } from '@chakra-ui/react';
 import useQueryWrapper from '@/hooks/useQueryWrapper';
-import { ConnectorListResponse } from '@/views/Connectors/types';
-
-type TableItem = {
-  field: ConnectorTableColumnFields;
-  attributes: ConnectorAttributes;
-};
-
-const TableItem = ({ field, attributes }: TableItem): JSX.Element => {
-  switch (field) {
-    case 'icon':
-      return <EntityItem icon={attributes.icon} name={attributes.connector_name} />;
-
-    case 'updated_at':
-      return <Text size='sm'>{moment(attributes?.updated_at).format('DD/MM/YY')}</Text>;
-
-    case 'status':
-      return <StatusTag status='Active' />;
-
-    default:
-      return (
-        <Text size='sm' fontWeight={600}>
-          {attributes?.[field]}
-        </Text>
-      );
-  }
-};
+import { ConnectorItem, ConnectorListResponse } from '@/views/Connectors/types';
+import { ConnectorsListColumns } from '@/views/Connectors/ConnectorsListColumns/ConnectorsListColumns';
+import DataTable from '@/components/DataTable';
+import { useContext, useState } from 'react';
+import { Row } from '@tanstack/react-table';
+import SearchBar from '@/components/SearchBar/SearchBar';
 
 const SelectModelSourceForm = (): JSX.Element | null => {
   const { stepInfo, handleMoveForward } = useContext(SteppedFormContext);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { data, isLoading } = useQueryWrapper<ConnectorListResponse, Error>(
     ['models', 'data-source'],
@@ -53,43 +27,40 @@ const SelectModelSourceForm = (): JSX.Element | null => {
 
   const connectors = data?.data;
 
-  const tableData = useMemo(() => {
-    if (connectors && connectors?.length > 0) {
-      const rows = connectors.map(({ attributes, id }) => {
-        return CONNECTOR_LIST_COLUMNS.reduce(
-          (acc, { key }) => ({
-            [key]: <TableItem field={key} attributes={attributes} />,
-            id,
-            ...acc,
-          }),
-          {},
-        );
-      });
-
-      return {
-        columns: CONNECTOR_LIST_COLUMNS,
-        data: rows,
-      };
-    }
-  }, [data]);
-
   if (!connectors) return null;
 
-  if (!isLoading && !tableData) return <NoConnectors connectorType='source' />;
+  if (!isLoading && !connectors) return <NoConnectors connectorType='source' />;
 
-  const handleOnRowClick = (row: unknown) => {
+  const handleOnRowClick = (row: Row<ConnectorItem>) => {
     if (stepInfo?.formKey) {
-      handleMoveForward(stepInfo?.formKey, row);
+      handleMoveForward(stepInfo?.formKey, row.original);
     }
   };
+
+  const filteredData = connectors.filter((connector) =>
+    connector.attributes.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   return (
     <Box width='100%' display='flex' justifyContent='center'>
       <ContentContainer>
-        {isLoading || !tableData ? (
+        {isLoading ? (
           <Loader />
         ) : (
-          <Table data={tableData} onRowClick={(row) => handleOnRowClick(row)} />
+          <Box display='flex' flexDirection='column' gap={4}>
+            <SearchBar
+              placeholder='Search by name'
+              borderColor='gray.400'
+              setSearchTerm={setSearchTerm}
+            />
+            <Box border='1px' borderColor='gray.400' borderRadius='lg' overflowX='scroll'>
+              <DataTable
+                data={filteredData}
+                columns={ConnectorsListColumns}
+                onRowClick={(row) => handleOnRowClick(row)}
+              />
+            </Box>
+          </Box>
         )}
       </ContentContainer>
     </Box>
