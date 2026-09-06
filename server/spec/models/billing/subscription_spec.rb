@@ -46,6 +46,24 @@ RSpec.describe Billing::Subscription, type: :model do
     let(:plan) { create(:billing_plan, interval: "monthly") }
     let(:subscription) { create(:billing_subscription, organization:, created_at:, plan:) }
 
+    context "when created_at is nil" do
+      let(:created_at) { Time.zone.local(2024, 1, 15) }
+
+      it "returns nil" do
+        allow(subscription).to receive(:created_at).and_return(nil)
+        expect(subscription.next_renewal_date).to be_nil
+      end
+    end
+
+    context "when plan interval is unknown" do
+      let(:created_at) { Time.zone.local(2024, 1, 15) }
+
+      it "returns nil" do
+        allow(plan).to receive(:interval).and_return("weekly")
+        expect(subscription.next_renewal_date).to be_nil
+      end
+    end
+
     context "when plan is monthly" do
       context "when created on a valid day of month" do
         let(:created_at) { Time.zone.local(2024, 1, 15) }
@@ -53,6 +71,15 @@ RSpec.describe Billing::Subscription, type: :model do
         it "returns next renewal date on same day of current month" do
           travel_to Time.zone.local(2024, 2, 10)
           expect(subscription.next_renewal_date).to eq(Time.zone.local(2024, 2, 15))
+        end
+      end
+
+      context "when created on day 31 and current month has fewer days" do
+        let(:created_at) { Time.zone.local(2024, 1, 31) }
+
+        it "overflows to the next month" do
+          travel_to Time.zone.local(2024, 2, 10)
+          expect(subscription.next_renewal_date).to eq(Time.zone.local(2024, 3, 2))
         end
       end
     end
@@ -70,6 +97,15 @@ RSpec.describe Billing::Subscription, type: :model do
         it "returns next renewal date on same day and month" do
           travel_to Time.zone.local(2025, 1, 10)
           expect(subscription.next_renewal_date).to eq(Time.zone.local(2025, 2, 15))
+        end
+      end
+
+      context "when created on Feb 29 and renewal year is not a leap year" do
+        let(:created_at) { Time.zone.local(2024, 2, 29) }
+
+        it "overflows to the next month" do
+          travel_to Time.zone.local(2025, 1, 10)
+          expect(subscription.next_renewal_date).to eq(Time.zone.local(2025, 3, 1))
         end
       end
     end
