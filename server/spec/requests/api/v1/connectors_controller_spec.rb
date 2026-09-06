@@ -554,10 +554,100 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(audit_log.updated_at).not_to be_nil
       end
 
-      it "returns fail viwer role" do
+      it "returns fail viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "returns error when connector has associated models" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        create(:model, connector: source_connector, workspace:)
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("models")
+      end
+
+      it "returns error when connector is used in workflow components (llm_model)" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        workflow = create(:workflow, workspace:)
+        create(:component, workspace:, workflow:, component_type: :llm_model,
+                           configuration: { "llm_model" => source_connector.id })
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("workflow components")
+      end
+
+      it "returns error when connector is used in workflow components (data_storage)" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        workflow = create(:workflow, workspace:)
+        create(:component, workspace:, workflow:, component_type: :data_storage,
+                           configuration: { "database" => source_connector.id })
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("workflow components")
+      end
+
+      it "returns error when connector is used in workflow components (vector_store)" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        workflow = create(:workflow, workspace:)
+        create(:component, workspace:, workflow:, component_type: :vector_store,
+                           configuration: { "database" => source_connector.id })
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("workflow components")
+      end
+
+      it "returns error when connector is used in workflow components (agent)" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        workflow = create(:workflow, workspace:)
+        create(:component, workspace:, workflow:, component_type: :agent,
+                           configuration: { "llm_connector_id" => source_connector.id })
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("workflow components")
+      end
+
+      it "returns error with multiple dependencies listed" do
+        source_connector = connectors.find { |c| c.connector_type == "source" }
+        create(:model, connector: source_connector, workspace:)
+        workflow = create(:workflow, workspace:)
+        create(:component, workspace:, workflow:, component_type: :llm_model,
+                           configuration: { "llm_model" => source_connector.id })
+
+        delete "/api/v1/connectors/#{source_connector.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        response_hash = JSON.parse(response.body).with_indifferent_access
+        expect(response_hash[:errors]).to be_present
+        expect(response_hash[:errors].first[:detail]).to include("Cannot delete connector")
+        expect(response_hash[:errors].first[:detail]).to include("models")
+        expect(response_hash[:errors].first[:detail]).to include("workflow components")
       end
 
       it "returns an error response while delete wrong connector" do
