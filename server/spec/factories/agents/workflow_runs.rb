@@ -30,6 +30,10 @@ FactoryBot.define do
       status { "cancelled" }
     end
 
+    trait :action_required do
+      status { "action_required" }
+    end
+
     trait :with_inputs do
       inputs { { "key1" => "value1", "key2" => { "nested" => "value" } } }
     end
