@@ -73,6 +73,69 @@ module Multiwoven::Integrations::Source
       end
 
       def run_model_stream(connection_config, payload)
+<<<<<<< HEAD
+=======
+        stream_with_endpoint_fallback(connection_config, payload) do |message|
+          yield message if block_given?
+        end
+      rescue StandardError => e
+        handle_exception(e, { context: "OPEN AI:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
+      end
+
+      # Some OpenAI models reject /v1/chat/completions and require /v1/completions or /v1/responses.
+      # Models whose id ends with "-pro" (e.g. gpt-5-pro) only work on /v1/responses.
+      def request_with_endpoint_fallback(connection_config, payload, url: nil)
+        normalized = normalize_payload(payload)
+        url ||= resolve_endpoint_url(normalized)
+        response = post_openai(connection_config, adapt_payload_for_url(normalized, url), url)
+        return response if success?(response)
+
+        fallback_url = resolve_fallback_url(response_error_message(response))
+        return response if fallback_url.blank? || fallback_url == url
+
+        post_openai(connection_config, adapt_payload_for_url(normalized, fallback_url), fallback_url)
+      end
+
+      def stream_with_endpoint_fallback(connection_config, payload, url: nil)
+        normalized = normalize_payload(payload)
+        url ||= resolve_endpoint_url(normalized)
+        emitted = false
+
+        begin
+          post_openai_stream(connection_config, streaming_payload(normalized, url), url) do |message|
+            emitted = true
+            yield message if block_given?
+          end
+        rescue StandardError => e
+          fallback_url = resolve_fallback_url(e.message)
+          # Retrying after the consumer has seen chunks would deliver them twice.
+          raise if fallback_url.blank? || fallback_url == url || emitted
+
+          post_openai_stream(connection_config, streaming_payload(normalized, fallback_url), fallback_url) do |message|
+            yield message if block_given?
+          end
+        end
+      end
+
+      def resolve_endpoint_url(payload)
+        model = payload["model"] || payload[:model]
+        return OPEN_AI_RESPONSES_URL if model.to_s.end_with?("-pro")
+
+        OPEN_AI_URL
+      end
+
+      def post_openai(connection_config, payload, url)
+        send_request(
+          url: url,
+          http_method: HTTP_POST,
+          payload: payload,
+          headers: auth_headers(connection_config[:api_key]),
+          config: connection_config[:config]
+        )
+      end
+
+      def post_openai_stream(connection_config, payload, url)
+>>>>>>> 74088209e (chore(CE): Add model exclusion for deprecated/unsupported models (#2219))
         send_streaming_request(
           url: OPEN_AI_URL,
           http_method: HTTP_POST,
