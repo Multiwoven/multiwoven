@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.9)
+>>>>>>> a0c1860c6 (chore(CE): Change OPEN_AI_EXCLUDE_MODELS to OPENAI_EXCLUDE_MODELS (#2223))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -421,8 +425,12 @@ GEM
     ruby-oci8 (2.2.12-x64-mingw-ucrt)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
+<<<<<<< HEAD
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+=======
+    rubyzip (3.6.0)
+>>>>>>> a0c1860c6 (chore(CE): Change OPEN_AI_EXCLUDE_MODELS to OPENAI_EXCLUDE_MODELS (#2223))
     securerandom (0.4.1)
     sequel (5.80.0)
       bigdecimal

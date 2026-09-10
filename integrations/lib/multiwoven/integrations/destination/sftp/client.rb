@@ -67,7 +67,7 @@ module Multiwoven::Integrations::Destination
       def write_compressed_data(connection_config, file_path, local_file_name, csv_content, records_size)
         write_success = 0
         Tempfile.create([local_file_name, ".zip"]) do |tempfile|
-          Zip::File.open(tempfile.path, Zip::File::CREATE) do |zipfile|
+          Zip::File.open(tempfile.path, create: true) do |zipfile|
             zipfile.get_output_stream("#{local_file_name}.csv") { |f| f.write(csv_content) }
           end
           with_sftp_client(connection_config) do |sftp|
