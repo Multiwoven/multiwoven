@@ -42,6 +42,41 @@ module ReverseEtl
             expect(results.first.size).to eq(100)
             expect(results.last.size).to eq(100)
           end
+
+          it "defaults offset to 0 when :offset key is omitted" do
+            params = {
+              limit: 100,
+              batch_size: 100,
+              sync_config: sync.to_protocol,
+              client:
+            }
+
+            offsets = []
+            BatchQuery.execute_in_batches(params) do |_result, current_offset, _cursor|
+              offsets << current_offset
+            end
+
+            expect(offsets.first).to eq(100)
+            expect(offsets).to eq((1..9).map { |i| i * 100 })
+          end
+
+          it "defaults offset to 0 when :offset is explicitly nil" do
+            params = {
+              offset: nil,
+              limit: 100,
+              batch_size: 100,
+              sync_config: sync.to_protocol,
+              client:
+            }
+
+            offsets = []
+            BatchQuery.execute_in_batches(params) do |_result, current_offset, _cursor|
+              offsets << current_offset
+            end
+
+            expect(offsets.first).to eq(100)
+            expect(offsets).to eq((1..9).map { |i| i * 100 })
+          end
         end
         context "when both cursor_field is empty" do
           let(:existing_query) { "SELECT * FROM table" }

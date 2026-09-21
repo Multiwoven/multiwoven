@@ -7,7 +7,7 @@ module ReverseEtl
         raise ArgumentError, "Batch size must be greater than 0" if params[:batch_size] <= 0
 
         initial_sync_config = params[:sync_config]
-        current_offset = params[:offset]
+        current_offset = params[:offset].to_i
         last_cursor_field_value = params[:sync_config].current_cursor_field
         loop do
           # Set the current limit and offset in the sync configuration
