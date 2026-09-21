@@ -31,6 +31,17 @@ class Workspace < ApplicationRecord
   has_many :workflow_runs, class_name: "Agents::WorkflowRun", dependent: :destroy
   has_many :workflow_logs, class_name: "Agents::WorkflowLog", dependent: :nullify
   has_many :workflow_integrations, class_name: "Agents::WorkflowIntegration", dependent: :nullify
+<<<<<<< HEAD
+=======
+  has_many :workflow_sessions, class_name: "Agents::WorkflowSession", dependent: :nullify
+  has_many :p2w_sessions, class_name: "P2w::Session", dependent: :destroy
+  has_many :hosted_data_stores, dependent: :nullify
+  has_many :knowledge_bases, class_name: "Agents::KnowledgeBase", dependent: :nullify
+  has_many :tools, class_name: "Agents::Tool", dependent: :destroy
+  has_many :llm_routing_logs, dependent: :destroy
+  has_many :llm_usage_logs, dependent: :destroy
+  has_many :agentic_coding_apps, class_name: "AgenticCoding::App", dependent: :destroy
+>>>>>>> 46ca3c401 (feat(CE): prompt to workflow v2 models (#1803))
 
   belongs_to :organization
   has_many :sso_configurations, through: :organization
