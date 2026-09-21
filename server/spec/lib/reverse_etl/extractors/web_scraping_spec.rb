@@ -6,7 +6,24 @@ RSpec.describe ReverseEtl::Extractors::WebScraping do
   let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
   let(:destination) { create(:connector, connector_type: "destination") }
   let!(:catalog) { create(:catalog, connector: destination) }
-  let(:sync) { create(:sync, source:, destination:) }
+  let(:standard_configuration) do
+    [{ "mapping_type" => "standard", "from" => "markdown", "to" => "markdown" }]
+  end
+  let(:vector_configuration) do
+    [
+      {
+        "mapping_type" => "vector",
+        "from" => "markdown",
+        "to" => "embedding",
+        "embedding_config" => {
+          "model" => "text-embedding-ada-002",
+          "mode" => "open_ai",
+          "provider" => "open_ai"
+        }
+      }
+    ]
+  end
+  let(:sync) { create(:sync, source:, destination:, configuration: standard_configuration) }
   let(:sync_run1) do
     create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
   end
@@ -108,6 +125,167 @@ RSpec.describe ReverseEtl::Extractors::WebScraping do
         subject.read(sync_run_pending.id, activity)
         expect(sync_run_pending).to have_state(:pending)
       end
+    end
+
+    context "when vector mapping is present" do
+      let(:sync) { create(:sync, source:, destination:, configuration: vector_configuration) }
+      let(:sync_run_vector) do
+        create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
+      end
+
+      before do
+        sync.model.update(primary_key: "markdown_hash", query: "SELECT * FROM web_scraping_data")
+      end
+
+      it "uses token chunking and creates sync records" do
+        expect(chunk_processor).to receive(:process)
+          .with({ model: "text-embedding-ada-002", provider: "open_ai", chunk_size: 8191 }, "Some content")
+          .and_return(chunked_records)
+        expect { subject.read(sync_run_vector.id, activity) }.to change { sync_run_vector.sync_records.count }.by(1)
+        sync_run_vector.reload
+        expect(sync_run_vector.total_query_rows).to eq(1)
+        expect(sync_run_vector.skipped_rows).to eq(0)
+      end
+    end
+  end
+
+  describe "#generate_chunks" do
+    subject { described_class.new }
+
+    context "when no vector mapping is present" do
+      it "calls process on chunk_processor with default chunk config" do
+        expect(chunk_processor).to receive(:process)
+          .with({ chunk_size: 1000, chunk_overlap: 200 }, "Some content")
+          .and_return(chunked_records)
+        result = subject.send(:generate_chunks, sync_run1, "Some content")
+        expect(result).to eq(chunked_records)
+      end
+    end
+
+    context "when a vector mapping is present" do
+      let(:sync) { create(:sync, source:, destination:, configuration: vector_configuration) }
+      let(:sync_run_vector) do
+        create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
+      end
+
+      before do
+        sync.model.update(primary_key: "markdown_hash", query: "SELECT * FROM web_scraping_data")
+      end
+
+      it "calls ChunkProcessor#process with model, provider, and chunk_size from embedding_config" do
+        expect(chunk_processor).to receive(:process)
+          .with({ model: "text-embedding-ada-002", provider: "open_ai", chunk_size: 8191 }, "Some content")
+          .and_return(chunked_records)
+        result = subject.send(:generate_chunks, sync_run_vector, "Some content")
+        expect(result).to eq(chunked_records)
+      end
+    end
+
+    context "when multiple vector mappings are present" do
+      let(:multi_vector_configuration) do
+        [
+          {
+            "mapping_type" => "vector",
+            "from" => "markdown",
+            "to" => "embedding_1",
+            "embedding_config" => { "model" => "text-embedding-ada-002", "mode" => "open_ai" }
+          },
+          {
+            "mapping_type" => "vector",
+            "from" => "markdown",
+            "to" => "embedding_2",
+            "embedding_config" => { "model" => "all-MiniLM-L6-v2", "mode" => "hugging_face" }
+          }
+        ]
+      end
+      let(:sync) { create(:sync, source:, destination:, configuration: multi_vector_configuration) }
+      let(:sync_run_multi) do
+        create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
+      end
+
+      before do
+        sync.model.update(primary_key: "markdown_hash", query: "SELECT * FROM web_scraping_data")
+      end
+
+      it "uses the model with the smallest token limit" do
+        expect(chunk_processor).to receive(:process)
+          .with({ model: "all-MiniLM-L6-v2", provider: "hugging_face", chunk_size: 256 }, "Some content")
+          .and_return(chunked_records)
+        result = subject.send(:generate_chunks, sync_run_multi, "Some content")
+        expect(result).to eq(chunked_records)
+      end
+    end
+
+    context "when chunk processing raises a StandardError" do
+      before do
+        allow(chunk_processor).to receive(:process).and_raise(StandardError, "processing failed")
+      end
+
+      it "raises ChunkProcessingError" do
+        expect { subject.send(:generate_chunks, sync_run1, "Some content") }
+          .to raise_error(ReverseEtl::Extractors::ChunkProcessingError, /processing failed/)
+      end
+    end
+  end
+
+  describe "#fetch_records" do
+    subject { described_class.new }
+
+    context "when source returns nil" do
+      before do
+        allow(client).to receive(:read).and_return(nil)
+      end
+
+      it "raises a RuntimeError" do
+        expect { subject.send(:fetch_records, sync_run1) }
+          .to raise_error(RuntimeError, /Expected record in the result/)
+      end
+    end
+
+    context "when source returns a non-array" do
+      before do
+        allow(client).to receive(:read).and_return("unexpected string")
+      end
+
+      it "raises a RuntimeError" do
+        expect { subject.send(:fetch_records, sync_run1) }
+          .to raise_error(RuntimeError, /Expected record in the result/)
+      end
+    end
+
+    context "when source returns a valid array" do
+      it "returns the result" do
+        result = subject.send(:fetch_records, sync_run1)
+        expect(result).to eq([record1])
+      end
+    end
+  end
+
+  describe "#build_record" do
+    subject { described_class.new }
+
+    let(:message) { { "text" => "Hello world", "element_id" => "abc123" } }
+    let(:metadata) { "{\"url\": \"https://example.com\", \"source\": \"test\"}" }
+
+    it "maps text to markdown and element_id to markdown_hash" do
+      record = subject.send(:build_record, message, metadata)
+      expect(record.data[:markdown]).to eq("Hello world")
+      expect(record.data[:markdown_hash]).to eq("abc123")
+    end
+
+    it "parses the url from metadata JSON" do
+      record = subject.send(:build_record, message, metadata)
+      expect(record.data[:url]).to eq("https://example.com")
+    end
+
+    it "stores the raw metadata string" do
+      record = subject.send(:build_record, message, metadata)
+      expect(record.data[:metadata]).to eq(metadata)
+    end
+
+    it "returns a RecordMessage" do
+      record = subject.send(:build_record, message, metadata)
+      expect(record).to be_a(Multiwoven::Integrations::Protocol::RecordMessage)
     end
   end
 end
