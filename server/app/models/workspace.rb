@@ -23,7 +23,7 @@ class Workspace < ApplicationRecord
   has_many :data_apps, dependent: :nullify
   has_many :data_app_sessions, dependent: :nullify
   has_many :audit_logs, dependent: :nullify
-  has_many :custom_visual_component_files, dependent: :nullify
+  has_many :custom_visual_component_files, dependent: :destroy
   has_many :alerts, dependent: :nullify
   has_many :message_feedbacks, dependent: :nullify
   has_many :chat_messages, dependent: :nullify
