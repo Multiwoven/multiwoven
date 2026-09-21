@@ -5,3 +5,14 @@ docker-compose.override.yml
 .vscode
 .DS_Store
 .qodo
+<<<<<<< HEAD
+=======
+.claude/hooks/
+server/.claude/
+/.claude
+CLAUDE.md
+/integrations/.claude
+/integrations/freetds-1.4.10
+/docs
+/server/scripts
+>>>>>>> 08c94c996 (feat(CE): add Neon DB models, migrations, and specs (BE-1607) (#1866))
