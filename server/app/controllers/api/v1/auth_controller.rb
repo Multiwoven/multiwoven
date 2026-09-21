@@ -4,6 +4,7 @@ module Api
   module V1
     class AuthController < ApplicationController
       include Authentication
+      include AuthCookies
       before_action :authenticate_user!, only: [:logout]
       skip_after_action :verify_authorized
 
@@ -11,15 +12,9 @@ module Api
         result = Login.call(params:)
         if result.success?
           # Treating the token as a resource in terms of JSON API response
-          render json: {
-            data: {
-              type: "token",
-              id: result.token, # or a generated ID if the token shouldn't be exposed here
-              attributes: {
-                token: result.token
-              }
-            }
-          }, status: :ok
+          write_auth_cookie(result.token)
+          write_csrf_cookie
+          render_auth_token(result.token, status: :ok)
         else
           render_error(message: result.error, status: :unauthorized)
         end
@@ -38,6 +33,7 @@ module Api
       def logout
         result = Logout.call(current_user:)
         if result.success?
+          clear_all_auth_cookies
           render json: { data: { type: "message", id: SecureRandom.uuid, attributes: { message: result.message } } },
                  status: :ok
         else
