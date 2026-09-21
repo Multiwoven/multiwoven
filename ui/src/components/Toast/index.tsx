@@ -51,6 +51,8 @@ const Toast: React.FC<ToastProps> = ({
 
   return (
     <Box
+      data-testid='custom-toast'
+      data-toast-status={status}
       bg={backgroundColor}
       border='1px solid'
       borderColor={borderColor}
@@ -65,11 +67,20 @@ const Toast: React.FC<ToastProps> = ({
       <Box display='flex' justifyContent='flex-start' alignItems='center'>
         <CustomToastIcon status={status as CustomToastStatus} />
         <Box>
+<<<<<<< HEAD
           <Text color='black.500' size='sm' fontWeight='semibold'>
+=======
+          <Text
+            data-testid='custom-toast-title'
+            color='black.500'
+            size='sm'
+            fontWeight={description && description > '' ? 'semibold' : 400}
+          >
+>>>>>>> deba42b89 (feat(CE): data-testid hooks for models, Data Apps, and workflows (#1835))
             {title}
           </Text>
           {description && (
-            <Text color='black.200' size='sm'>
+            <Text data-testid='custom-toast-description' color='black.200' size='sm'>
               {description}
             </Text>
           )}
