@@ -18,6 +18,7 @@ module Authentication
     end
 
     def authenticate(user)
+      reset_expired_lock(user)
       if account_locked?(user)
         handle_account_locked
       elsif valid_password?(user)
@@ -41,6 +42,13 @@ module Authentication
       else
         context.fail!(error: "Invalid login credentials, please try again")
       end
+    end
+
+    def reset_expired_lock(user)
+      return unless user
+      return unless user.locked_at.present? && !user.access_locked?
+
+      user.unlock_access!
     end
 
     def account_locked?(user)
@@ -67,6 +75,18 @@ module Authentication
       token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
       user.update!(unique_id: SecureRandom.uuid) if user.unique_id.nil?
       user.update!(jti: payload["jti"])
+<<<<<<< HEAD
+=======
+
+      # Reset lock state on successful login
+      if user.locked_at.present?
+        user.unlock_access!
+      elsif user.failed_attempts.positive?
+        user.update!(failed_attempts: 0)
+      end
+
+      log_successful_login(user)
+>>>>>>> 3b944b881 (fix(CE): unlock user account after lock expiry before re-authentication (#1762))
       context.token = token
     end
 
