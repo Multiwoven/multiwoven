@@ -14,7 +14,11 @@ const ScheduleForm = ({ formik, isEdit }: ScheduleFormProps) => {
       backgroundColor={isEdit ? 'gray.100' : 'gray.200'}
       padding='24px'
       borderRadius='8px'
+<<<<<<< HEAD
       marginBottom={'100px'}
+=======
+      marginBottom='100px'
+>>>>>>> 4c71dc38e (fix(CE): remove unsupported API key banner from Edit Sync manual schedule (#1773))
     >
       <Text fontWeight='semibold' mb='6' size='md'>
         Finalise setting for this sync
