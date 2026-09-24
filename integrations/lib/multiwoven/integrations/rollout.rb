@@ -34,6 +34,7 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+      MysqlDb
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
