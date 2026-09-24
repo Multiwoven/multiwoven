@@ -1,0 +1,168 @@
+{
+  "//models": "Curated for Mistral AI API aliases (https://docs.mistral.ai/getting-started/models). OpenRouter mistralai/* ids do not match (e.g. mistral-large vs mistral-large-latest). Do not set openrouter_slug.",
+  "models": [
+    {
+      "id": "mistral-large-latest",
+      "name": "Mistral Large 3",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 0.5,
+        "output": 1.5,
+        "cached_read": 0.05,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "mistral-medium-latest",
+      "name": "Mistral Medium 3.5",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 1.5,
+        "output": 7.5,
+        "cached_read": 0.15,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "mistral-small-latest",
+      "name": "Mistral Small 4",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 0.15,
+        "output": 0.6,
+        "cached_read": 0.015,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "ministral-14b-latest",
+      "name": "Ministral 3 14B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 0.2,
+        "output": 0.2,
+        "cached_read": 0.02,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "ministral-8b-latest",
+      "name": "Ministral 3 8B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 0.15,
+        "output": 0.15,
+        "cached_read": 0.015,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "ministral-3b-latest",
+      "name": "Ministral 3 3B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation"
+      ],
+      "context_window": 262144,
+      "max_output": 262144,
+      "pricing": {
+        "input": 0.1,
+        "output": 0.1,
+        "cached_read": 0.01,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Image analysis"
+      ]
+    },
+    {
+      "id": "codestral-latest",
+      "name": "Codestral",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Code Generation"
+      ],
+      "context_window": 131072,
+      "max_output": 131072,
+      "pricing": {
+        "input": 0.3,
+        "output": 0.9,
+        "cached_read": 0.03,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode",
+        "JSON Schema Mode"
+      ]
+    }
+  ]
+}
