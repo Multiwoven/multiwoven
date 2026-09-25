@@ -1,0 +1,23 @@
+{
+  "data": {
+    "name": "OpenRouter",
+    "title": "OpenRouter",
+    "connector_type": "source",
+    "category": "AI Model",
+    "sub_category": "LLM",
+    "provider_type": "third_party",
+    "display_order": 150,
+    "openrouter_slug": "*",
+    "description": "Unified OpenAI-compatible gateway to many LLM providers. Use one API key and select models by their OpenRouter id (provider/model).",
+    "documentation_url": "https://openrouter.ai/docs/api-reference/overview",
+    "github_issue_label": "source-open-router",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1789523591/Multiwoven/connectors/open_router/icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": [
+      "language:ruby",
+      "multiwoven"
+    ]
+  }
+}

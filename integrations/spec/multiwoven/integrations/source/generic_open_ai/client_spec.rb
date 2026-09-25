@@ -118,6 +118,24 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         expect(response.connection_status.status).to eq("failed")
       end
     end
+
+    it "uses the default timeout when config is omitted" do
+      connection_config = sync_config_json[:source][:connection_specification].dup
+      connection_config.delete(:config)
+      response = instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json)
+
+      expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+        .with(
+          endpoint,
+          "POST",
+          payload: JSON.parse(payload.to_json),
+          headers: headers,
+          options: { config: { timeout: 30 } }
+        )
+        .and_return(response)
+
+      expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+    end
   end
 
   describe "#discover" do
@@ -151,7 +169,7 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(endpoint,
                 "POST",
-                payload: JSON.parse(payload.to_json),
+                payload: JSON.parse(payload.to_json).merge("stream" => false),
                 headers: headers,
                 options: { config: config })
           .and_return(response)
@@ -191,6 +209,37 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         client.read(sync_config)
       end
     end
+
+    it "overrides a custom payload's stream field to false" do
+      custom_payload = { model: "test-model", custom_option: "preserved", stream: true }
+      sync_config_json[:model][:query] = custom_payload.to_json
+
+      expect(client).to receive(:run_model).with(
+        anything,
+        hash_including("custom_option" => "preserved", "stream" => false)
+      )
+
+      client.read(Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json))
+    end
+
+    it "uses the default timeout when config is omitted" do
+      sync_config_json[:source][:connection_specification].delete(:config)
+      response = instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json)
+
+      expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+        .with(
+          endpoint,
+          "POST",
+          payload: JSON.parse(payload.to_json).merge("stream" => false),
+          headers: headers,
+          options: { config: { timeout: 30 } }
+        )
+        .and_return(response)
+
+      records = client.read(Multiwoven::Integrations::Protocol::SyncConfig.from_json(sync_config_json.to_json))
+
+      expect(records.first.record.data).to eq("message" => "success")
+    end
   end
 
   describe "#read with is_stream = true" do
@@ -207,7 +256,7 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
           .with(endpoint,
                 "POST",
-                payload: JSON.parse(payload),
+                payload: JSON.parse(payload).merge("stream" => true),
                 headers: headers,
                 config: sync_config_json[:source][:connection_specification][:config])
           .and_yield(streaming_chunk_first)
@@ -234,6 +283,18 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
       end
     end
 
+    it "overrides a custom payload's stream field to true" do
+      custom_payload = { model: "test-model", custom_option: "preserved", stream: false }
+      sync_config_json[:model][:query] = custom_payload.to_json
+
+      expect(client).to receive(:run_model_stream).with(
+        anything,
+        hash_including("custom_option" => "preserved", "stream" => true)
+      )
+
+      client.read(sync_config_stream)
+    end
+
     context "when the read is successful but failed message for open ai" do
       before do
         payload = sync_config_json[:model][:query]
@@ -241,7 +302,7 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
           .with(endpoint,
                 "POST",
-                payload: JSON.parse(payload),
+                payload: JSON.parse(payload).merge("stream" => true),
                 headers: headers,
                 config: sync_config_json[:source][:connection_specification][:config])
           .and_yield(streaming_chunk_first)
@@ -266,7 +327,7 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         allow(Multiwoven::Integrations::Core::StreamingHttpClient).to receive(:request)
           .with(endpoint,
                 "POST",
-                payload: JSON.parse(payload.to_json),
+                payload: JSON.parse(payload.to_json).merge("stream" => true),
                 headers: headers,
                 config: config)
           .and_yield(streaming_chunk_first)
