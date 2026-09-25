@@ -7,7 +7,7 @@
     "sub_category": "LLM",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/generic_open_ai-endpoint",
     "github_issue_label": "source-generic-open-ai-model",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787606721/Multiwoven/connectors/generic_open_ai/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

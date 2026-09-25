@@ -6,7 +6,7 @@
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/analytics/databricks_lakehouse",
     "github_issue_label": "destination-databricks-lakehouse",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787605447/Multiwoven/connectors/databricks_lakehouse/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",
