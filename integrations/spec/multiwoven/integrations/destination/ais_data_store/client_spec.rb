@@ -206,7 +206,14 @@ RSpec.describe Multiwoven::Integrations::Destination::AISDataStore::Client do
   describe "#meta_data" do
     it "client class_name and meta name is same" do
       meta_name = client.class.to_s.split("::")[-2]
+<<<<<<< HEAD
       expect(client.send(:meta_data)[:data][:name]).to eq(meta_name)
+=======
+      expect(meta_data).to be_a(Hash)
+      expect(meta_data[:data][:name]).to eq(meta_name)
+      expect(meta_data[:data][:connector_type]).to eq("destination")
+      expect(meta_data[:data][:icon]).to eq("https://res.cloudinary.com/dspflukeu/image/upload/v1788361050/Multiwoven/connectors/ais_data_store/icon.svg")
+>>>>>>> 863f6160d (chore(CE): Update AI Squared Icon (#2207))
     end
   end
 
