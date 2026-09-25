@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.8"
+>>>>>>> 74088209e (chore(CE): Add model exclusion for deprecated/unsupported models (#2219))
 
     ENABLED_SOURCES = %w[
       Snowflake
