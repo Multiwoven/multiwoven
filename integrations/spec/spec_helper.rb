@@ -30,4 +30,15 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Service.connectors memoizes its build, so a stubbed ENABLED_SOURCES would
+  # otherwise leak into every example that runs after it. Building a spec also
+  # reaches OpenRouter for live model metadata, and WebMock refuses with an
+  # Exception the catalog's own rescue does not catch.
+  config.before do
+    Multiwoven::Integrations::Service.reset_connectors!
+    Multiwoven::Integrations::Core::OpenRouterCatalog.reset!
+    stub_request(:get, Multiwoven::Integrations::Core::OpenRouterCatalog::MODELS_URL)
+      .to_return(status: 200, body: { data: [] }.to_json)
+  end
 end

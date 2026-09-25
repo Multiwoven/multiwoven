@@ -1,0 +1,96 @@
+{
+  "models": [
+    {
+      "id": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+      "name": "Claude Sonnet 4.5 (Bedrock)",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning",
+        "Analysis"
+      ],
+      "context_window": 200000,
+      "max_output": 64000,
+      "pricing": {
+        "input": 3.0,
+        "output": 15.0,
+        "cached_read": 0.3,
+        "cached_write": 3.75,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents",
+        "Image analysis",
+        "Data analyst"
+      ]
+    },
+    {
+      "id": "amazon.titan-text-premier-v1:0",
+      "name": "Titan Text Premier",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Chat"
+      ],
+      "context_window": 32000,
+      "max_output": 3072,
+      "pricing": {
+        "input": 0.5,
+        "output": 1.5,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    },
+    {
+      "id": "meta.llama3-70b-instruct-v1:0",
+      "name": "Llama 3 70B Instruct",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 8192,
+      "max_output": 2048,
+      "pricing": {
+        "input": 2.65,
+        "output": 3.5,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    },
+    {
+      "id": "amazon.titan-embed-text-v2:0",
+      "name": "Titan Text Embeddings V2",
+      "model_type": "embedding",
+      "type": "embedding",
+      "tasks": [
+        "Text Embeddings",
+        "Indexing",
+        "Retrieval"
+      ],
+      "context_window": 8192,
+      "max_output": null,
+      "pricing": {
+        "input": 0.02,
+        "output": null,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    }
+  ]
+}
