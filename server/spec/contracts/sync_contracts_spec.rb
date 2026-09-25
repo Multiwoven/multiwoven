@@ -73,6 +73,62 @@ RSpec.describe "SyncContracts" do
       end
     end
 
+<<<<<<< HEAD
+=======
+    context "with cursor_field" do
+      it "accepts a simple column identifier" do
+        result = contract.call(sync: valid_inputs[:sync].merge(cursor_field: "job_component_key"))
+        expect(result).to be_success
+      end
+
+      it "accepts dotted/qualified names" do
+        result = contract.call(sync: valid_inputs[:sync].merge(cursor_field: "schema.updated_at"))
+        expect(result).to be_success
+      end
+
+      it "accepts Salesforce-style dotted paths" do
+        result = contract.call(sync: valid_inputs[:sync].merge(cursor_field: "Account.Name__c"))
+        expect(result).to be_success
+      end
+
+      it "rejects SQL injection payloads" do
+        result = contract.call(sync: valid_inputs[:sync].merge(cursor_field: "job; DROP TABLE users--"))
+        expect(result).to be_failure
+        expect(result.errors[:sync][:cursor_field].join).to include("column identifier")
+      end
+
+      it "rejects quoted or spaced identifiers" do
+        result = contract.call(sync: valid_inputs[:sync].merge(cursor_field: '"Last Name"'))
+        expect(result).to be_failure
+        expect(result.errors[:sync][:cursor_field].join).to include("column identifier")
+      end
+    end
+
+    context "with invalid sync name" do
+      let(:invalid_inputs) do
+        {
+          sync: valid_inputs[:sync].merge(name: nil)
+        }
+      end
+
+      let(:invalid_inputs) do
+        {
+          sync: valid_inputs[:sync].merge(name: "")
+        }
+      end
+
+      it "fails validation with nil" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:name]).to include("must be filled")
+      end
+
+      it "fails validation with empty string" do
+        result = contract.call(invalid_inputs)
+        expect(result.errors[:sync][:name]).to include("must be filled")
+      end
+    end
+
+>>>>>>> 4b573a546 (refactor(CE): enhance cursor field query builder to support CTEs and aggregates (#2222))
     context "with invalide schedule_type" do
       let(:invalid_inputs) { { sync: valid_inputs[:sync].merge(schedule_type: "automated") } }
 
