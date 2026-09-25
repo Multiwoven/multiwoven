@@ -27,6 +27,17 @@ RSpec.describe Organization, type: :model do
     it { should have_many(:roles).dependent(:destroy) }
     it { should have_many(:sso_configurations).dependent(:destroy) }
     it { should have_many(:eulas).dependent(:destroy) }
+    it { should have_many(:spending_limits).dependent(:destroy) }
+  end
+
+  describe "deletion" do
+    it "takes the spending limits of its workspaces with it" do
+      organization = create(:organization)
+      workspace = create(:workspace, organization:)
+      create(:spending_limit, workspace:, organization:)
+
+      expect { organization.destroy! }.to change(SpendingLimit, :count).by(-1)
+    end
   end
 
   describe "association functionality" do
