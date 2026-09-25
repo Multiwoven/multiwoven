@@ -6,6 +6,8 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "WatsonX AI Endpoint",
     "type": "object",
+    "x-dynamic-input-path": "input",
+    "x-output-path": "results.0.generated_text",
     "required": ["api_key", "region", "deployment_id", "request_format", "response_format"],
     "properties": {
       "api_key": {
@@ -52,12 +54,15 @@
         "title": "Request Format",
         "description": "Sample request format",
         "type": "string",
+        "default": "{\"input\":\"Hi.\",\"parameters\":{\"decoding_method\":\"greedy\",\"max_new_tokens\":256}}",
+        "x-request-format": true,
         "order": 5
       },
       "response_format": {
         "title": "Response Format",
         "description": "Sample response format",
         "type": "string",
+        "default": "{\"model_id\":\"ibm/granite-3-8b-instruct\",\"results\":[{\"generated_text\":\"Hello!\",\"stop_reason\":\"eos_token\"}]}",
         "x-response-format": true,
         "order": 6
       },

@@ -47,7 +47,7 @@
         "title": "Response Format",
         "description": "Sample Response Format",
         "type": "string",
-        "default": "{\"id\":\"msg_0123ABC\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-3-7-sonnet-20250219\",\"content\":[{\"type\":\"text\",\"text\":\"Hello there! How can I assist you today? Whether you have a question, need some information, or just want to chat, I'm here to help. What's on your mind?\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":41}}",
+        "default": "{\"id\":\"msg_0123ABC\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-3-7-sonnet-20250219\",\"content\":[{\"type\":\"text\",\"text\":\"Hello!\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":4}}",
         "x-response-format": true,
         "order": 4
       }
