@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.3"
+>>>>>>> 2bb8c2cd1 (chore(CE): fix private key handling in Google Drive client (#2194))
 
     ENABLED_SOURCES = %w[
       Snowflake
