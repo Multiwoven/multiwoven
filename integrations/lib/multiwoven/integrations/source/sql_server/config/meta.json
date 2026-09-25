@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "SqlServer",
+    "title": "SQL Server",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "sub_category": "Relational Database",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/sql-server",
+    "github_issue_label": "source-sql-server",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1790358609/Multiwoven/connectors/sql_server/icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

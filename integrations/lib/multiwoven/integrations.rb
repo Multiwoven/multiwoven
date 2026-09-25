@@ -99,6 +99,14 @@ require_relative "integrations/source/firecrawl/client"
 require_relative "integrations/source/odoo/client"
 require_relative "integrations/source/google_drive/client"
 require_relative "integrations/source/http/client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/source/aisquared/client"
+require_relative "integrations/source/one_drive/client"
+require_relative "integrations/source/microsoft_dynamics/client"
+require_relative "integrations/source/epic_fhir/client"
+require_relative "integrations/source/sql_server/client"
+>>>>>>> 077c3d8de (chore(CE): Add SQL Server as Source (#2265))
 
 # Destination
 require_relative "integrations/destination/klaviyo/client"
