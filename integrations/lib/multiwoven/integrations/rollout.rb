@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.9"
+>>>>>>> a0c1860c6 (chore(CE): Change OPEN_AI_EXCLUDE_MODELS to OPENAI_EXCLUDE_MODELS (#2223))
 
     ENABLED_SOURCES = %w[
       Snowflake
