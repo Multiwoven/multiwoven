@@ -7,17 +7,17 @@ module ReverseEtl
         existing_query = sync_config.model.query
         query_type = sync_config.source.query_type || "raw_sql"
 
-        case query_type.to_sym
-        when :soql
+        return existing_query if query_type.to_sym == :soql
+
+        case sync_config.source.name
+        when "Bigquery"
+          "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RAND()"
+        when "SqlServer"
+          "SELECT * FROM (#{existing_query.strip.chomp(';')}) AS subquery ORDER BY NEWID()"
+        when "IntuitQuickBooks", "Odoo"
           existing_query
-        when :raw_sql
-          if sync_config.source.name == "Bigquery"
-            "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RAND()"
-          elsif sync_config.source.name == "IntuitQuickBooks" || sync_config.source.name == "Odoo"
-            existing_query
-          else
-            "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RANDOM()"
-          end
+        else
+          "SELECT * FROM (#{existing_query}) AS subquery ORDER BY RANDOM()"
         end
       end
     end
