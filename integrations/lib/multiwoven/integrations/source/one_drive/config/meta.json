@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "OneDrive",
+    "title": "One Drive",
+    "connector_type": "source",
+    "category": "File Storage",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/one_drive",
+    "github_issue_label": "source-one-drive",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787608681/Multiwoven/connectors/one_drive/icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven"]
+  }
+}

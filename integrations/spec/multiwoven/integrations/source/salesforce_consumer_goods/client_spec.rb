@@ -169,9 +169,13 @@ RSpec.describe Multiwoven::Integrations::Source::SalesforceConsumerGoodsCloud::C
   end
 
   describe "#meta_data" do
-    it "serves it github image url as icon" do
-      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations/lib/multiwoven/integrations/source/salesforce_consumer_goods_cloud/icon.svg"
-      expect(client.send(:meta_data)[:data][:icon]).to eq(image_url)
+    it "returns the correct meta data" do
+      meta_data = client.send(:meta_data)
+      meta_name = client.class.to_s.split("::")[-2]
+      expect(meta_data).to be_a(Hash)
+      expect(meta_data[:data][:name]).to eq(meta_name)
+      expect(meta_data[:data][:connector_type]).to eq("source")
+      expect(meta_data[:data][:icon]).to eq("https://res.cloudinary.com/dspflukeu/image/upload/v1787609252/Multiwoven/connectors/salesforce-consumer-goods-cloud/icon.svg")
     end
   end
 
