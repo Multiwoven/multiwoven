@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_11_12_165325) do
+>>>>>>> 028e49d5 (chore(CE): workflow model RBAC changes (#1452))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -664,6 +668,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "access_control_enabled", default: false, null: false
+    t.jsonb "access_control", default: {}, null: false
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
