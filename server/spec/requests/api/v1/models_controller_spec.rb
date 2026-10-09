@@ -178,6 +178,41 @@ RSpec.describe "Api::V1::ModelsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :configuration)).to eq(expected_configuration)
       end
 
+      it "does not mask configuration for raw_sql models (no schema)" do
+        model_with_secrets = create(
+          :model,
+          connector:,
+          workspace:,
+          query_type: :raw_sql,
+          query: "SELECT 1",
+          configuration: { "api_key" => "real-api-key", "host" => "localhost" }
+        )
+        get "/api/v1/models/#{model_with_secrets.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        config = JSON.parse(response.body).dig("data", "attributes", "configuration")
+        expect(config["api_key"]).to eq("real-api-key")
+        expect(config["host"]).to eq("localhost")
+      end
+
+      it "masks api_key for vector_search models via schema" do
+        vector_search_model = create(
+          :model,
+          connector:,
+          workspace:,
+          query_type: :vector_search,
+          configuration: {
+            "harvesters" => [],
+            "json_schema" => {},
+            "embedding_config" => { "api_key" => "real-api-key", "model" => "text-embedding-ada-002" }
+          }
+        )
+        get "/api/v1/models/#{vector_search_model.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:ok)
+        config = JSON.parse(response.body).dig("data", "attributes", "configuration")
+        expect(config.dig("embedding_config", "api_key")).to eq("*************")
+        expect(config.dig("embedding_config", "model")).to eq("text-embedding-ada-002")
+      end
+
       it "returns success and fetch model for viewer role" do
         workspace.workspace_users.first.update(role: viewer_role)
         get "/api/v1/models/#{models.first.id}", headers: auth_headers(user, workspace_id)
