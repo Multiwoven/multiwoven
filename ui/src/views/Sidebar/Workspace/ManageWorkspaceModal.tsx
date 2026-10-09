@@ -27,6 +27,7 @@ const ManageWorkspaceModal = ({
   return (
     <>
       <Box
+        data-testid='manage-workspaces'
         _hover={{ bgColor: 'gray.300' }}
         w='100%'
         py='8px'
