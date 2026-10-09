@@ -25,8 +25,17 @@ module MultiwovenServer
       Rails.logger.info({
         request_method: request.request_method,
         request_url: request.url,
+<<<<<<< HEAD
         request_params: request.filtered_parameters,
         request_headers: { "Workspace-Id": request.headers["Workspace-Id"] }
+=======
+        request_params: params,
+        request_headers: {
+          "Workspace-Id": request.headers["Workspace-Id"],
+          "Origin": request.headers["Origin"],
+          "Referer": request.headers["Referer"]
+        }
+>>>>>>> 4fa47e8ed (chore(CE): added log for http_origin and http_referrerin request log … (#2154))
       }.to_s)
     end
 
