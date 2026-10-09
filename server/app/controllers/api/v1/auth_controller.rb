@@ -8,7 +8,8 @@ module Api
       skip_after_action :verify_authorized
 
       def login
-        result = Login.call(params:)
+        app_context = request.headers["X-App-Context"]
+        result = Login.call(params:, app_context:)
         if result.success?
           # Treating the token as a resource in terms of JSON API response
           render json: {
@@ -21,7 +22,8 @@ module Api
             }
           }, status: :ok
         else
-          render_error(message: result.error, status: :unauthorized)
+          status = result.error&.include?("X-App-Context") ? :bad_request : :unauthorized
+          render_error(message: result.error, status:)
         end
       end
 
