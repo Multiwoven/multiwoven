@@ -118,4 +118,12 @@ gem "rexml", "~> 3.4.2"
 
 gem "git", "~> 4.0"
 
+<<<<<<< HEAD
 gem "pdf-reader", "~> 2.15"
+=======
+gem "ruby-openai", "~> 8.3"
+
+gem "paper_trail", "~> 17.0"
+
+gem "tokenizers", "~> 0.6.3"
+>>>>>>> 667262992 (fix(CE): fix the issue for token limit solution for firecrawl (#1772))
