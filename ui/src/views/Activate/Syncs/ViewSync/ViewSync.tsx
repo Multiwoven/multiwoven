@@ -33,14 +33,20 @@ enum SyncTabs {
 const SyncDetails = ({ syncData, syncId }: any) => (
   <Box display='flex' alignItems='center'>
     <MappedInfo
-      source={{
-        name: syncData.model.connector.name,
-        icon: syncData.model.connector.icon,
-      }}
-      destination={{
-        name: syncData.destination.name,
-        icon: syncData.destination.icon,
-      }}
+      info={[
+        {
+          name: syncData.model.connector.name,
+          icon: syncData.model.connector.icon,
+        },
+        {
+          name: syncData.model.name,
+          icon: syncData.model.connector.icon,
+        },
+        {
+          name: syncData.destination.name,
+          icon: syncData.destination.icon,
+        },
+      ]}
     />
     <Divider orientation='vertical' height='24px' borderColor='gray.500' opacity='1' mx='13px' />
     <Text size='sm' fontWeight='medium'>
