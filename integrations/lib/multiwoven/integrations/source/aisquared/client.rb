@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 module Multiwoven::Integrations::Source
-  module Anthropic
+  module Aisquared
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
-      API_VERSION = "2023-06-01"
+      class AisquaredError < StandardError; end
+
       def check_connection(connection_config)
-        connection_config = prepare_config(connection_config)
-        response = make_request(ANTHROPIC_URL, HTTP_POST, connection_config[:request_format], connection_config)
+        response = make_request(lightning_embedding_url, HTTP_POST, connection_config[:request_format], connection_config)
         success?(response) ? success_status : failure_status_from_response(response)
       rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:CHECK_CONNECTION:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)
       end
 
@@ -19,79 +19,52 @@ module Multiwoven::Integrations::Source
         catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:DISCOVER:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:DISCOVER:EXCEPTION", type: "error" })
       end
 
       def read(sync_config)
         # The server checks the ConnectorQueryType.
         # If it's "ai_ml," the server calculates the payload and passes it as a query in the sync config model protocol.
         # This query is then sent to the AI/ML model.
-        connection_config = prepare_config(sync_config.source.connection_specification)
-        stream = connection_config[:is_stream] ||= false
+        connection_config = sync_config.source.connection_specification
         payload = sync_config.model.query
-        if stream
-          run_model_stream(connection_config, payload) { |message| yield message if block_given? }
-        else
-          run_model(connection_config, payload)
-        end
+        run_model(connection_config, payload)
       rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:READ:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:READ:EXCEPTION", type: "error" })
       end
 
       private
 
-      def prepare_config(config)
-        config.with_indifferent_access.tap do |conf|
-          conf[:config][:timeout] ||= 30
-        end
+      def lightning_embedding_url
+        host = AISQUARED_BOLT_URL.to_s.strip
+        raise AisquaredError, "AISQUARED_BOLT_URL is not configured" if host.empty?
+
+        "http://#{host.sub(%r{\Ahttps?://}, "")}/chat"
       end
 
       def parse_json(json_string)
         JSON.parse(json_string)
       rescue JSON::ParserError => e
-        handle_exception(e, { context: "ANTHROPIC:PARSE_JSON:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:PARSE_JSON:EXCEPTION", type: "error" })
         {}
       end
 
-      def build_headers(connection_config, streaming: false)
-        {
-          "x-api-key" => connection_config[:api_key],
-          "anthropic-version" => API_VERSION,
-          "content-type" => "application/json"
-        }.tap do |headers|
-          headers["transfer-encoding"] = "chunked" if streaming
-        end
-      end
-
-      def make_request(url, http_method, payload, connection_config)
+      # TODO: Re-add config for timeout when Lightning Endpoint supports it.
+      def make_request(url, http_method, payload, _connection_config)
         send_request(
           url: url,
           http_method: http_method,
           payload: JSON.parse(payload),
-          headers: build_headers(connection_config, streaming: false),
-          config: connection_config[:config]
+          headers: { "Content-Type" => "application/json" }
         )
       end
 
+      # TODO: Add support for streaming when Lightning Endpoint supports it.
       def run_model(connection_config, payload)
-        response = make_request(ANTHROPIC_URL, HTTP_POST, payload, connection_config)
+        response = make_request(lightning_embedding_url, HTTP_POST, payload, connection_config)
         process_response(response)
       rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:RUN_MODEL:EXCEPTION", type: "error" })
-      end
-
-      def run_model_stream(connection_config, payload)
-        send_streaming_request(
-          url: ANTHROPIC_URL,
-          http_method: HTTP_POST,
-          payload: JSON.parse(payload),
-          headers: build_headers(connection_config, streaming: true),
-          config: connection_config[:config]
-        ) do |chunk|
-          process_streaming_response(chunk) { |message| yield message if block_given? }
-        end
-      rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:RUN_MODEL:EXCEPTION", type: "error" })
       end
 
       def process_response(response)
@@ -99,10 +72,10 @@ module Multiwoven::Integrations::Source
           data = JSON.parse(response.body)
           [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
         else
-          create_log_message("ANTHROPIC:RUN_MODEL", "error", "request failed: #{response.body}")
+          create_log_message("AISQUARED_BOLT:RUN_MODEL", "error", "request failed: #{response.body}")
         end
       rescue StandardError => e
-        handle_exception(e, { context: "ANTHROPIC:PROCESS_RESPONSE:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "AISQUARED_BOLT:PROCESS_RESPONSE:EXCEPTION", type: "error" })
       end
 
       def check_chunk_error(chunk)

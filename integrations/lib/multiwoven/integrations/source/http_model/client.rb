@@ -13,7 +13,7 @@ module Multiwoven::Integrations::Source
           headers: connection_config[:headers],
           config: connection_config[:config]
         )
-        success?(response) ? success_status : failure_status(nil)
+        success?(response) ? success_status : failure_status_from_response(response)
       rescue StandardError => e
         handle_exception(e, { context: "HTTP MODEL:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)
