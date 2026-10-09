@@ -4,7 +4,7 @@ class CreateEdges < ActiveRecord::Migration[7.1]
   def change
     drop_table :edges, if_exists: true
 
-    create_table :edges, id: :string do |t|
+    create_table :edges do |t|
       t.uuid :workflow_id, null: false
       t.integer :workspace_id, null: false
       t.string :source_component_id, null: false
