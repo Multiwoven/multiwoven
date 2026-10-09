@@ -115,6 +115,49 @@ RSpec.describe Connector, type: :model do
         expect(result).to eq(query_result)
       end
     end
+<<<<<<< HEAD
+=======
+
+    context "when query is for Postgresql connector" do
+      before do
+        allow(postgres_connector).to receive(:connector_client).and_return(postgres_client_class)
+
+        allow(postgres_client_class).to receive(:new).and_return(postgres_client_instance)
+
+        allow(postgres_client_instance).to receive(:create_connection)
+          .with(postgres_connector.configuration.with_indifferent_access)
+          .and_return(postgres_db_connection)
+
+        allow(postgres_client_instance).to receive(:query)
+          .with(postgres_db_connection, "SET search_path TO \"public\", \"public\"; #{postgres_query} LIMIT 50")
+          .and_return(postgres_result)
+      end
+
+      it "appends a LIMIT clause and executes the query" do
+        expect(postgres_client_instance)
+          .to receive(:query)
+          .with(
+            postgres_db_connection,
+            "SET search_path TO \"public\", \"public\"; #{postgres_query} LIMIT 50"
+          ).and_return(postgres_result)
+        result = postgres_connector.execute_query(postgres_query)
+        expect(result).to eq(postgres_result)
+      end
+    end
+
+    context "when query has a LIMIT and OFFSET clause" do
+      let(:query_with_limit_and_offset) { "#{query} LIMIT 50 OFFSET 10" }
+
+      it "executes the query without modifying it" do
+        expect(client_double)
+          .to receive(:query)
+          .with(db_connection, query_with_limit_and_offset)
+          .and_return(query_result)
+        result = connector.execute_query(query_with_limit_and_offset)
+        expect(result).to eq(query_result)
+      end
+    end
+>>>>>>> e9fcf2dbe (chore(CE): update connector model to handle query pagination safely (#1790))
   end
 
   describe "#execute_search" do
