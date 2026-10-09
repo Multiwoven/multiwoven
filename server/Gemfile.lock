@@ -1979,7 +1979,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.34.19)
+>>>>>>> 36e157e33 (chore(CE): Update Server Gem 0.34.18 (#1633))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2339,7 +2343,11 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  multiwoven-integrations (~> 0.34.19)
+>>>>>>> 36e157e33 (chore(CE): Update Server Gem 0.34.18 (#1633))
   mysql2
   newrelic_rpm
   parallel
