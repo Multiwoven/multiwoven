@@ -137,6 +137,25 @@ RSpec.describe Multiwoven::Integrations::Source::GoogleDrive::Client do
         expect(result.message).to include("Connection failed")
       end
     end
+
+    context "when private_key contains escaped newlines" do
+      it "converts escaped newlines to real newlines before authenticating" do
+        config = unstructured_config.merge(
+          credentials_json: credentials.merge(
+            private_key: "-----BEGIN PRIVATE KEY-----\\nABC\\n-----END PRIVATE KEY-----\\n"
+          )
+        )
+
+        expect(Google::Auth::ServiceAccountCredentials).to receive(:make_creds) do |args|
+          parsed = JSON.parse(args[:json_key_io].read)
+          expect(parsed["private_key"]).to eq("-----BEGIN PRIVATE KEY-----\nABC\n-----END PRIVATE KEY-----\n")
+          nil
+        end
+
+        message = client.check_connection(config)
+        expect(message.connection_status.status).to eq("succeeded")
+      end
+    end
   end
 
   describe "#discover" do
