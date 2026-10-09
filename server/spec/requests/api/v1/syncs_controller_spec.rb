@@ -306,6 +306,122 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
           .merge(auth_headers(user, workspace_id))
         expect(response).to have_http_status(:bad_request)
       end
+
+      it "enables hosted_data_store_table when creating a sync with in_host source connector" do
+        in_host_source = create(
+          :connector,
+          workspace:,
+          connector_type: "source",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        in_host_destination = create(
+          :connector,
+          workspace:,
+          connector_type: "destination",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        hosted_data_store = create(
+          :hosted_data_store,
+          workspace:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination
+        )
+
+        table_name = "profile"
+
+        hosted_data_store_table = create(
+          :hosted_data_store_table,
+          hosted_data_store:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination,
+          name: table_name,
+          sync_enabled: :disabled
+        )
+
+        in_host_model = create(
+          :model,
+          connector: in_host_source,
+          workspace:,
+          name: "in_host_model",
+          query: "SELECT * FROM schema.#{table_name}"
+        )
+
+        request_body[:sync][:source_id] = in_host_source.id
+        request_body[:sync][:destination_id] = connectors.first.id
+        request_body[:sync][:model_id] = in_host_model.id
+
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:created)
+
+        hosted_data_store_table.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+      end
+
+      it "enables hosted_data_store_table when creating a sync with in_host destination connector" do
+        in_host_source = create(
+          :connector,
+          workspace:,
+          connector_type: "source",
+          in_host: false,
+          connector_name: "Postgresql"
+        )
+
+        in_host_destination = create(
+          :connector,
+          workspace:,
+          connector_type: "destination",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        create(:catalog, connector: in_host_destination, workspace:)
+
+        hosted_data_store = create(
+          :hosted_data_store,
+          workspace:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination
+        )
+
+        table_name = "profile"
+
+        hosted_data_store_table = create(
+          :hosted_data_store_table,
+          hosted_data_store:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination,
+          name: table_name,
+          sync_enabled: :disabled
+        )
+
+        in_host_model = create(
+          :model,
+          connector: in_host_source,
+          workspace:,
+          name: "in_host_model",
+          query: "SELECT * FROM schema.#{table_name}"
+        )
+
+        request_body[:sync][:source_id] = connectors.second.id
+        request_body[:sync][:destination_id] = in_host_destination.id
+        request_body[:sync][:model_id] = in_host_model.id
+
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user, workspace_id))
+        expect(response).to have_http_status(:created)
+
+        hosted_data_store_table.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+      end
     end
 
     context "when stream name is not present" do
@@ -696,6 +812,121 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       it "returns an error response while delete wrong sync" do
         delete "/api/v1/syncs/999", headers: auth_headers(user, workspace_id)
         expect(response).to have_http_status(:not_found)
+      end
+
+      it "disables hosted_data_store_table when deleting a sync with in_host source connector" do
+        in_host_source = create(
+          :connector,
+          workspace:,
+          connector_type: "source",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        in_host_destination = create(
+          :connector,
+          workspace:,
+          connector_type: "destination",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        hosted_data_store = create(
+          :hosted_data_store,
+          workspace:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination
+        )
+
+        table_name = "locations"
+
+        hosted_data_store_table = create(
+          :hosted_data_store_table,
+          hosted_data_store:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination,
+          name: table_name,
+          sync_enabled: :enabled
+        )
+
+        in_host_model = create(
+          :model,
+          connector: in_host_source,
+          workspace:,
+          name: "in_host_model",
+          query: "SELECT * FROM schema.#{table_name}"
+        )
+
+        in_host_sync = create(
+          :sync,
+          workspace:,
+          model: in_host_model,
+          source: in_host_source,
+          destination: connectors.first
+        )
+
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+
+        delete "/api/v1/syncs/#{in_host_sync.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:no_content)
+
+        hosted_data_store_table.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
+      end
+
+      it "disables hosted_data_store_table when deleting a sync with in_host destination connector" do
+        in_host_source = create(
+          :connector,
+          workspace:,
+          connector_type: "source",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        in_host_destination = create(
+          :connector,
+          workspace:,
+          connector_type: "destination",
+          in_host: true,
+          connector_name: "Postgresql"
+        )
+
+        create(:catalog, connector: in_host_destination, workspace:)
+
+        hosted_data_store = create(
+          :hosted_data_store,
+          workspace:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination
+        )
+
+        stream_name = "profile"
+
+        hosted_data_store_table = create(
+          :hosted_data_store_table,
+          hosted_data_store:,
+          source_connector: in_host_source,
+          destination_connector: in_host_destination,
+          name: stream_name,
+          sync_enabled: :enabled
+        )
+
+        in_host_sync = create(
+          :sync,
+          workspace:,
+          model:,
+          source: connectors.second,
+          destination: in_host_destination,
+          stream_name:
+        )
+
+        expect(hosted_data_store_table.sync_enabled).to eq("enabled")
+
+        delete "/api/v1/syncs/#{in_host_sync.id}", headers: auth_headers(user, workspace_id)
+        expect(response).to have_http_status(:no_content)
+
+        hosted_data_store_table.reload
+        expect(hosted_data_store_table.sync_enabled).to eq("disabled")
       end
     end
   end
