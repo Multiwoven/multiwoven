@@ -53,6 +53,25 @@ class Rack::Attack
     end
   end
 
+<<<<<<< HEAD
+=======
+  # Public, unauthenticated badge lookup — hit on every view of every app.
+  throttle('agentic_badge/ip', limit: 120, period: 60.seconds) do |req|
+    if req.get? && req.path.match?(%r{/agentic_coding/workspaces/[^/]+/apps/[^/]+/badge\z})
+      req.env['action_dispatch.remote_ip'].to_s
+    end
+  end
+
+  # Public, unauthenticated CSP frame-ancestors lookup called by the Node-side
+  # security-headers middleware. Cache-TTL means each id is fetched at most
+  # once per minute per Node, so 120 rpm/IP floors id-enumeration by scrapers.
+  throttle('embed_origins_lookup/ip', limit: 120, period: 60.seconds) do |req|
+    if req.get? && req.path == "/enterprise/api/v1/embed_origins/lookup"
+      req.env['action_dispatch.remote_ip'].to_s
+    end
+  end
+
+>>>>>>> 26ac41b53 (chore(CE): clickjacking issue solved (#2128))
   throttle('resend_verification/ip', limit: 2, period: 300.seconds) do |req|
     if req.path == '/api/v1/resend_verification' && req.post?
       req.env['action_dispatch.remote_ip'].to_s
@@ -78,6 +97,13 @@ class Rack::Attack
         "Too many password reset attempts. Please wait #{retry_after} seconds before trying again."
       when "resend_verification/ip"
         "Too many verification email requests. Please wait #{retry_after} seconds before trying again."
+<<<<<<< HEAD
+=======
+      when "analytics/ip_app", "analytics/app"
+        "Too many analytics requests. Please wait #{retry_after} seconds before trying again."
+      when "embed_origins_lookup/ip"
+        "Too many embed-origin lookups. Please wait #{retry_after} seconds before trying again."
+>>>>>>> 26ac41b53 (chore(CE): clickjacking issue solved (#2128))
       else
         "Too many requests. Please try again later."
       end
