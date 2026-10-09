@@ -86,5 +86,43 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "wait-on": "^7.2.0"
+<<<<<<< HEAD
+=======
+  },
+  "resolutions": {
+    "cross-spawn": "7.0.5",
+    "**/cross-spawn": "7.0.5",
+    "foreground-child/cross-spawn": "7.0.5",
+    "braces": "3.0.3",
+    "micromatch": "4.0.8",
+    "ws": "8.21.0",
+    "@rjsf/validator-ajv8/ajv": "8.18.0",
+    "@rjsf/validator-ajv8/ajv-formats/ajv": "8.18.0",
+    "@rjsf/validator-ajv8/ajv/fast-uri": "3.1.3",
+    "preact": "10.27.3",
+    "@xmldom/xmldom": ">=0.8.13",
+    "lodash-es": ">=4.18.0",
+    "brace-expansion": ">=2.0.3",
+    "js-yaml": ">=4.1.1",
+    "diff": ">=4.0.4",
+    "@tootallnate/once": ">=3.0.1"
+  },
+  "overrides": {
+    "cross-spawn": "7.0.5",
+    "braces": "3.0.3",
+    "micromatch": "4.0.8",
+    "ws": "8.21.0",
+    "@rjsf/validator-ajv8": {
+      "ajv": "8.18.0"
+    },
+    "fast-uri": "3.1.3",
+    "preact": "10.27.3",
+    "@xmldom/xmldom": ">=0.8.13",
+    "lodash-es": ">=4.18.0",
+    "brace-expansion": ">=2.0.3",
+    "js-yaml": ">=4.1.1",
+    "diff": ">=4.0.4",
+    "@tootallnate/once": ">=3.0.1"
+>>>>>>> 10b27c9a1 (fix(CE): UI vulnerabilities (#2069))
   }
 }
