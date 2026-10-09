@@ -36,3 +36,5 @@ module TemporalService
     end
   end
 end
+
+TemporalService.setup
