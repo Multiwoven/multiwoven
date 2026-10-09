@@ -80,6 +80,93 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         expect(response_hash[:source].count).to eql(service.connectors[:source].count)
         expect(response_hash[:destination].count).to eql(service.connectors[:destination].count)
       end
+
+      context "when filtering with hosted data stores" do
+        let(:source_connector) do
+          create(:connector, workspace:, connector_type: "source", connector_name: "Postgresql")
+        end
+        let(:destination_connector) do
+          create(:connector, workspace:, connector_type: "destination", connector_name: "Klaviyo")
+        end
+        let(:hosted_data_store) { create(:hosted_data_store, workspace:, source_connector:, destination_connector:) }
+        let(:template_data) do
+          [
+            {
+              id: 1,
+              template_id: "vector_store_hosted_connector",
+              name: "AI Squared Vector Store",
+              store_enabled: true,
+              linked: true,
+              linked_data_store_id: hosted_data_store.id
+            }.with_indifferent_access
+          ]
+        end
+
+        before do
+          hosted_data_store # Ensure it's created
+          allow(HostedDataStores::HostedDataStoreTemplateList)
+            .to receive(:call)
+            .with(workspace:)
+            .and_return(double(data: template_data, success?: true))
+        end
+
+        it "returns hosted data store connectors when category is specified" do
+          get "/api/v1/connector_definitions?type=source&category=data", headers: auth_headers(user, workspace_id)
+          expect(response).to have_http_status(:ok)
+
+          response_array = JSON.parse(response.body)
+          expect(response_array).to be_an(Array)
+          hosted_data_store_connector = response_array.find { |c| c["title"] == "AI Squared Vector Store" }
+
+          expect(hosted_data_store_connector).to be_present
+          expect(hosted_data_store_connector["name"]).to eq("AISquaredVectorStore")
+          expect(hosted_data_store_connector["in_host"]).to be true
+          expect(hosted_data_store_connector["store_enabled"]).to be true
+          expect(hosted_data_store_connector["in_host_store_id"]).to eq(hosted_data_store.id)
+          expect(hosted_data_store_connector["icon"]).to eq(Utils::Constants::HOSTED_DATA_STORE_ICON)
+        end
+
+        it "returns hosted data store connectors with in_host false when not linked" do
+          unlinked_template_data = [
+            {
+              id: 1,
+              template_id: "vector_store_hosted_connector",
+              name: "AI Squared Vector Store",
+              store_enabled: false,
+              linked: false,
+              linked_data_store_id: nil
+            }.with_indifferent_access
+          ]
+
+          allow(HostedDataStores::HostedDataStoreTemplateList)
+            .to receive(:call)
+            .with(workspace:)
+            .and_return(double(data: unlinked_template_data, success?: true))
+
+          get "/api/v1/connector_definitions?type=source&category=data", headers: auth_headers(user, workspace_id)
+          expect(response).to have_http_status(:ok)
+
+          response_array = JSON.parse(response.body)
+          expect(response_array).to be_an(Array)
+          hosted_data_store_connector = response_array.find { |c| c["title"] == "AI Squared Vector Store" }
+
+          expect(hosted_data_store_connector).to be_present
+          expect(hosted_data_store_connector["in_host"]).to be false
+          expect(hosted_data_store_connector["store_enabled"]).to be false
+          expect(hosted_data_store_connector["in_host_store_id"]).to be_nil
+        end
+
+        it "does not return hosted data stores when category is not specified" do
+          get "/api/v1/connector_definitions?type=source", headers: auth_headers(user, workspace_id)
+          expect(response).to have_http_status(:ok)
+
+          response_array = JSON.parse(response.body)
+          expect(response_array).to be_an(Array)
+          hosted_data_store_connector = response_array.find { |c| c["title"] == "AI Squared Vector Store" }
+
+          expect(hosted_data_store_connector).to be_nil
+        end
+      end
     end
   end
 
