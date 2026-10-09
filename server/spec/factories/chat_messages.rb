@@ -6,8 +6,16 @@ FactoryBot.define do
     role { 0 }
 
     association :workspace
-    association :data_app_session
-    association :visual_component
+
+    trait :data_app_session do
+      association :session, factory: :data_app_session
+      visual_component { association :visual_component }
+    end
+
+    trait :workflow_session do
+      association :session, factory: :workflow_session
+      workflow { association :workflow }
+    end
 
     created_at { Time.current }
     updated_at { Time.current }

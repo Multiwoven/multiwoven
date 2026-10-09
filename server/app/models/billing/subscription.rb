@@ -16,6 +16,7 @@ module Billing
 
     validates :status, presence: true
     validates :data_app_sessions, presence: true, numericality: { greater_than_or_equal_to: 0 }
+    validates :workflow_sessions, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :feedback_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :rows_synced, presence: true, numericality: { greater_than_or_equal_to: 0 }
 

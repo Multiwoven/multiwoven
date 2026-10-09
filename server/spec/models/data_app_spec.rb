@@ -30,13 +30,19 @@ RSpec.describe DataApp, type: :model do
         create(:feedback, visual_component: data_app.visual_components.first)
       end.to change { data_app.reload.feedbacks_count }.by(1)
 
+      chat_message = nil
       expect do
-        create(:chat_message, visual_component: data_app.visual_components.first)
+        chat_message = create(:chat_message, visual_component: data_app.visual_components.first,
+                                             session: data_app.data_app_sessions.first)
       end.to change { data_app.reload.chat_messages_count }.by(1)
 
       expect do
         create(:message_feedback, visual_component: data_app.visual_components.first)
       end.to change { data_app.reload.message_feedbacks_count }.by(1)
+
+      expect do
+        chat_message.destroy
+      end.to change { data_app.reload.chat_messages_count }.by(-1)
 
       expect do
         data_app.data_app_sessions.first.destroy
@@ -45,10 +51,6 @@ RSpec.describe DataApp, type: :model do
       expect do
         data_app.visual_components.first.feedbacks.first.destroy
       end.to change { data_app.reload.feedbacks_count }.by(-1)
-
-      expect do
-        data_app.visual_components.first.chat_messages.first.destroy
-      end.to change { data_app.reload.chat_messages_count }.by(-1)
 
       expect do
         data_app.visual_components.first.message_feedbacks.first.destroy
