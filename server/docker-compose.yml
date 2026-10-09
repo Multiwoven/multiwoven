@@ -48,7 +48,7 @@ services:
       - 8080:8080
   # Multiwoven services
   db:
-    image: postgres:latest
+    image: postgres:16
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
@@ -64,6 +64,7 @@ services:
       dockerfile: Dockerfile.dev
       args:
         TARGETARCH: ${TARGETARCH:-amd64}
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
@@ -80,6 +81,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    restart: unless-stopped
     depends_on:
       - db
       - redis
