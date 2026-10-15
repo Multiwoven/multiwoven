@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    multiwoven-integrations (0.35.3)
+    multiwoven-integrations (0.35.4)
       MailchimpMarketing
       activesupport
       async-websocket
@@ -77,8 +77,8 @@ GEM
     async-websocket (0.8.0)
       async-io
       websocket-driver (~> 0.7.0)
-    aws-eventstream (1.3.0)
-    aws-partitions (1.931.0)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1240.0)
     aws-sdk-athena (1.83.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
@@ -88,18 +88,21 @@ GEM
     aws-sdk-cloudwatchlogs (1.82.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.196.1)
+    aws-sdk-core (3.245.0)
       aws-eventstream (~> 1, >= 1.3.0)
-      aws-partitions (~> 1, >= 1.651.0)
-      aws-sigv4 (~> 1.8)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
+      bigdecimal
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.82.0)
-      aws-sdk-core (~> 3, >= 3.193.0)
-      aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.151.0)
-      aws-sdk-core (~> 3, >= 3.194.0)
+      logger
+    aws-sdk-kms (1.123.0)
+      aws-sdk-core (~> 3, >= 3.244.0)
+      aws-sigv4 (~> 1.5)
+    aws-sdk-s3 (1.220.0)
+      aws-sdk-core (~> 3, >= 3.244.0)
       aws-sdk-kms (~> 1)
-      aws-sigv4 (~> 1.8)
+      aws-sigv4 (~> 1.5)
     aws-sdk-sagemaker (1.229.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
@@ -112,7 +115,7 @@ GEM
     aws-sdk-textract (1.58.0)
       aws-sdk-core (~> 3, >= 3.193.0)
       aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.8.0)
+    aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bigdecimal (3.3.1)
@@ -175,18 +178,19 @@ GEM
     ethon (0.16.0)
       ffi (>= 1.15.0)
     excon (0.112.0)
-    faraday (2.8.1)
-      base64
-      faraday-net_http (>= 2.0, < 3.1)
-      ruby2_keywords (>= 0.0.4)
-    faraday-follow_redirects (0.3.0)
+    faraday (2.14.1)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-follow_redirects (0.5.0)
       faraday (>= 1, < 3)
     faraday-mashify (0.1.1)
       faraday (~> 2.0)
       hashie
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (3.0.2)
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     faraday-retry (2.2.1)
       faraday (~> 2.0)
     ffi (1.16.3)
@@ -301,8 +305,9 @@ GEM
       grpc (~> 1.41)
     hashdiff (1.1.0)
     hashery (2.1.2)
-    hashie (5.0.0)
-    httparty (0.22.0)
+    hashie (5.1.0)
+      logger
+    httparty (0.24.2)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -326,7 +331,7 @@ GEM
     json (2.7.2)
     jsonpath (1.1.5)
       multi_json
-    jwt (2.8.1)
+    jwt (2.10.2)
       base64
     language_server-protocol (3.17.0.3)
     logger (1.7.0)
@@ -339,6 +344,8 @@ GEM
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     mysql2 (0.5.6)
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.2.3)
@@ -380,15 +387,15 @@ GEM
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
-    restforce (7.1.1)
-      faraday (>= 1.1.0, < 2.9.0)
-      faraday-follow_redirects (<= 0.3.0, < 1.0.0)
+    restforce (8.0.1)
+      faraday (>= 1.1.0, < 3.0.0)
+      faraday-follow_redirects (< 0.6.0)
       faraday-multipart (>= 1.0.0, < 2.0.0)
       faraday-net_http (< 4.0.0)
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
     retriable (3.1.2)
-    rexml (3.4.0)
+    rexml (3.4.4)
     rsa-pem-from-mod-exp (0.1.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
@@ -421,7 +428,6 @@ GEM
     ruby-oci8 (2.2.12-x64-mingw-ucrt)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
-    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     securerandom (0.4.1)
     sequel (5.80.0)
@@ -492,11 +498,11 @@ PLATFORMS
 DEPENDENCIES
   MailchimpMarketing
   activesupport (>= 7.2.3.1)
-  addressable (>= 2.8.10)
+  addressable (>= 2.9.0)
   async-websocket (~> 0.8.0)
   aws-sdk-athena
   aws-sdk-bedrockruntime
-  aws-sdk-s3
+  aws-sdk-s3 (>= 1.208.0)
   aws-sdk-sagemaker
   aws-sdk-sagemakerruntime
   aws-sdk-sts
@@ -507,8 +513,8 @@ DEPENDENCIES
   dry-schema
   dry-struct
   dry-types
-  duckdb
-  faraday
+  duckdb (~> 0.10.3)
+  faraday (>= 2.14.1)
   git (>= 2.0.1)
   google-apis-drive_v3 (~> 0.67.0)
   google-apis-sheets_v4
@@ -527,7 +533,8 @@ DEPENDENCIES
   pg
   pinecone
   rake (~> 13.0)
-  restforce (~> 7.1.0)
+  restforce (~> 8.0)
+  rexml (>= 3.4.2)
   rspec (~> 3.0)
   rubocop (~> 1.21)
   ruby-limiter
