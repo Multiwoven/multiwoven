@@ -116,9 +116,9 @@ module Multiwoven::Integrations::Source
           active = crawl_activity
           crawl_active = JSON.parse(active.body)
 
-          raise "Missing crawl result URL and no active crawl ID available." unless crawl_active["crawls"][-1]["id"].present?
+          crawl_id = crawl_active["crawls"]&.last&.dig("id")
+          raise "Missing crawl result URL and no active crawl ID available." if crawl_id.blank?
 
-          crawl_id = crawl_active["crawls"][-1]["id"]
           build_url(FIRECRAWL_GET_CRAWL_URL, crawl_id.to_s)
         else
           request["url"]
