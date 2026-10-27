@@ -5,7 +5,9 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in multiwoven-integrations.gemspec
 gemspec
 
-gem "addressable", ">= 2.8.10"
+gem "addressable", ">= 2.9.0"
+
+gem "rexml", ">= 3.4.2"
 
 gem "rake", "~> 13.0"
 
@@ -35,7 +37,7 @@ gem "google-apis-sheets_v4"
 
 gem "google-cloud-bigquery"
 
-gem "restforce", "~> 7.1.0"
+gem "restforce", "~> 8.0"
 
 gem "slack-ruby-client"
 
@@ -57,9 +59,9 @@ gem "aws-sdk-athena"
 
 gem "rubyzip"
 
-gem "faraday"
+gem "faraday", ">= 2.14.1"
 
-gem "aws-sdk-s3"
+gem "aws-sdk-s3", ">= 1.208.0"
 
 gem "duckdb"
 
