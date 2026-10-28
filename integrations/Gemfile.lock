@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.43.4)
+>>>>>>> 382704a31 (fix(CE): guard blank and invalid HTTP Model request_format in check_connection (BE-2028) (#2331))
       MailchimpMarketing
       activesupport
       async-websocket

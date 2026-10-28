@@ -54,6 +54,15 @@ module Multiwoven
         )
       end
 
+      def parse_request_format(request_format, required:)
+        return [request_format, nil] if request_format.is_a?(Hash)
+        return [nil, required ? "Request Format is required to test the connection" : nil] if request_format.blank?
+
+        [JSON.parse(request_format), nil]
+      rescue JSON::ParserError
+        [nil, "Request Format must be valid JSON"]
+      end
+
       def send_streaming_request(options = {})
         Multiwoven::Integrations::Core::StreamingHttpClient.request(
           options[:url],
