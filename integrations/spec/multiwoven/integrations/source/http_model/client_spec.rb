@@ -121,6 +121,101 @@ RSpec.describe Multiwoven::Integrations::Source::HttpModel::Client do
         expect(response.connection_status.status).to eq("failed")
       end
     end
+
+    context "when request_format is blank" do
+      let(:connection_config) { sync_config_json[:source][:connection_specification].dup }
+      let(:success_response) { instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json) }
+      let(:failure_response) do
+        instance_double(Net::HTTPResponse, code: "401",
+                                           body: { error: { message: "The provider rejected the request" } }.to_json)
+      end
+
+      before do
+        expect(client).not_to receive(:handle_exception)
+        expect(client).not_to receive(:report_exception)
+      end
+
+      {
+        "nil" => ->(config) { config[:request_format] = nil },
+        "empty" => ->(config) { config[:request_format] = "" },
+        "whitespace" => ->(config) { config[:request_format] = "   \n " },
+        "absent" => ->(config) { config.delete(:request_format) }
+      }.each do |label, blank_request_format|
+        it "sends the request with a nil payload and succeeds on 2xx when request_format is #{label}" do
+          blank_request_format.call(connection_config)
+          expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+            .with("https://your-subdomain", "POST", hash_including(payload: nil))
+            .and_return(success_response)
+
+          expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+        end
+
+        it "sends the request with a nil payload and fails from the response on non-2xx when request_format is #{label}" do
+          blank_request_format.call(connection_config)
+          expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+            .with("https://your-subdomain", "POST", hash_including(payload: nil))
+            .and_return(failure_response)
+          response = client.check_connection(connection_config)
+
+          expect(response.connection_status.status).to eq("failed")
+          expect(response.connection_status.message).to include("The provider rejected the request")
+        end
+      end
+    end
+
+    context "when request_format is invalid JSON" do
+      let(:connection_config) { sync_config_json[:source][:connection_specification].dup }
+
+      before do
+        expect(Multiwoven::Integrations::Core::HttpClient).not_to receive(:request)
+        expect(client).not_to receive(:handle_exception)
+        expect(client).not_to receive(:report_exception)
+      end
+
+      it "returns a failed status without sending a request" do
+        connection_config[:request_format] = "{bad"
+        response = client.check_connection(connection_config)
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("Request Format must be valid JSON")
+      end
+    end
+
+    context "when request_format is not a JSON object string" do
+      let(:connection_config) { sync_config_json[:source][:connection_specification].dup }
+      let(:success_response) { instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json) }
+
+      it "passes a JSON array request_format through unchanged" do
+        connection_config[:request_format] = "[]"
+        expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with("https://your-subdomain", "POST", hash_including(payload: []))
+          .and_return(success_response)
+
+        expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+      end
+
+      it "accepts request_format already provided as a Hash" do
+        connection_config[:request_format] = { "queries" => "Hello there" }
+        expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with("https://your-subdomain", "POST", hash_including(payload: { "queries" => "Hello there" }))
+          .and_return(success_response)
+
+        expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+      end
+    end
+
+    context "when sending the request raises an unexpected error" do
+      it "reports the exception and returns a failed status" do
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request).and_raise(StandardError, "boom")
+        expect(client).to receive(:handle_exception)
+          .with(an_instance_of(StandardError), hash_including(context: "HTTP MODEL:CHECK_CONNECTION:EXCEPTION"))
+
+        response = client.check_connection(sync_config_json[:source][:connection_specification])
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("boom")
+      end
+    end
   end
 
   describe "#discover" do

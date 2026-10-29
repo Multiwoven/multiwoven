@@ -6,10 +6,13 @@ module Multiwoven::Integrations::Source
     class Client < SourceConnector
       def check_connection(connection_config)
         connection_config = prepare_config(connection_config)
+        payload, error = parse_request_format(connection_config[:request_format], required: true)
+        return failure_status(error) if error
+
         response = send_request(
           url: connection_config[:url],
           http_method: HTTP_POST,
-          payload: JSON.parse(connection_config[:request_format]),
+          payload: payload,
           headers: auth_headers(connection_config[:api_key]),
           config: connection_config[:config]
         )

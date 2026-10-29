@@ -118,6 +118,99 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
         expect(response.connection_status.status).to eq("failed")
       end
     end
+<<<<<<< HEAD
+=======
+
+    it "uses the default timeout when config is omitted" do
+      connection_config = sync_config_json[:source][:connection_specification].dup
+      connection_config.delete(:config)
+      response = instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json)
+
+      expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+        .with(
+          endpoint,
+          "POST",
+          payload: JSON.parse(payload.to_json),
+          headers: headers,
+          options: { config: { timeout: 30 } }
+        )
+        .and_return(response)
+
+      expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+    end
+
+    context "when request_format is a configuration error" do
+      let(:connection_config) { sync_config_json[:source][:connection_specification].dup }
+
+      before do
+        expect(Multiwoven::Integrations::Core::HttpClient).not_to receive(:request)
+        expect(client).not_to receive(:handle_exception)
+        expect(client).not_to receive(:report_exception)
+      end
+
+      [nil, "", "   \n "].each do |blank_value|
+        it "returns a failed status without sending a request when request_format is #{blank_value.inspect}" do
+          connection_config[:request_format] = blank_value
+          response = client.check_connection(connection_config)
+
+          expect(response.connection_status.status).to eq("failed")
+          expect(response.connection_status.message).to eq("Request Format is required to test the connection")
+        end
+      end
+
+      it "returns a failed status without sending a request when request_format is absent" do
+        connection_config.delete(:request_format)
+        response = client.check_connection(connection_config)
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("Request Format is required to test the connection")
+      end
+
+      it "returns a failed status without sending a request when request_format is invalid JSON" do
+        connection_config[:request_format] = "{bad"
+        response = client.check_connection(connection_config)
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("Request Format must be valid JSON")
+      end
+    end
+
+    context "when request_format is not a JSON object string" do
+      let(:connection_config) { sync_config_json[:source][:connection_specification].dup }
+      let(:success_response) { instance_double(Net::HTTPResponse, code: "200", body: { message: "success" }.to_json) }
+
+      it "passes a JSON array request_format through unchanged" do
+        connection_config[:request_format] = "[]"
+        expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(endpoint, "POST", hash_including(payload: []))
+          .and_return(success_response)
+
+        expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+      end
+
+      it "accepts request_format already provided as a Hash" do
+        connection_config[:request_format] = { "queries" => "Hello there" }
+        expect(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(endpoint, "POST", hash_including(payload: { "queries" => "Hello there" }))
+          .and_return(success_response)
+
+        expect(client.check_connection(connection_config).connection_status.status).to eq("succeeded")
+      end
+    end
+
+    context "when sending the request raises an unexpected error" do
+      it "reports the exception and returns a failed status" do
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request).and_raise(StandardError, "boom")
+        expect(client).to receive(:handle_exception)
+          .with(an_instance_of(StandardError), hash_including(context: "GENERIC OPEN AI:CHECK_CONNECTION:EXCEPTION"))
+
+        response = client.check_connection(sync_config_json[:source][:connection_specification])
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("boom")
+      end
+    end
+>>>>>>> 382704a31 (fix(CE): guard blank and invalid HTTP Model request_format in check_connection (BE-2028) (#2331))
   end
 
   describe "#discover" do
