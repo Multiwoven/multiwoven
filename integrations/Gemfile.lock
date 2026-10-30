@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.43.6)
+>>>>>>> df3134437 (fix(CE): add connect_timeout to Postgres source connection (BE-2063) (#2368))
       MailchimpMarketing
       activesupport
       async-websocket
