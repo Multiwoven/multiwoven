@@ -50,6 +50,26 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
   end
 
   describe "#read" do
+    context "when the source client returns a log message instead of records" do
+      let(:connection_failure) do
+        Multiwoven::Integrations::Protocol::LogMessage.new(
+          name: "POSTGRESQL:READ:EXCEPTION", level: "error",
+          message: "connection to server at \"db.example.com\", port 5432 failed: timeout expired"
+        ).to_multiwoven_message
+      end
+
+      before do
+        allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_call_original
+        allow(Multiwoven::Integrations::Source::Snowflake::Client).to receive(:new).and_return(client)
+        allow(client).to receive(:read).and_return(connection_failure)
+      end
+
+      it "raises a source read failure" do
+        expect { subject.read(sync_run1.id, activity) }
+          .to raise_error(Activities::ExtractorActivity::SourceReadFailed, /timeout expired/)
+      end
+    end
+
     context "performs a full refresh" do
       it "performs a full refresh and updates the sync run" do
         expect(sync_run1).to have_state(:started)

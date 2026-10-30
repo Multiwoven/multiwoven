@@ -43,6 +43,53 @@ module ReverseEtl
             expect(results.last.size).to eq(100)
           end
         end
+        context "when the client returns a log message instead of records" do
+          let(:destination) { create(:connector, connector_type: "destination") }
+          let!(:catalog) { create(:catalog, connector: destination) }
+          let(:sync) { create(:sync, destination:) }
+          let(:params) { { offset: 0, limit: 100, batch_size: 100, sync_config: sync.to_protocol, client: } }
+          let(:connector_message) { "connection to server at \"db.example.com\", port 5432 failed: timeout expired" }
+          let(:connection_failure) do
+            Multiwoven::Integrations::Protocol::LogMessage.new(
+              name: "POSTGRESQL:READ:EXCEPTION", level: "error", message: connector_message
+            ).to_multiwoven_message
+          end
+
+          it "raises a source read failure with the connector message" do
+            allow(client).to receive(:read).and_return(connection_failure)
+
+            expect { BatchQuery.execute_in_batches(params) }
+              .to raise_error(Activities::ExtractorActivity::SourceReadFailed, connector_message)
+          end
+
+          it "does not yield a batch" do
+            allow(client).to receive(:read).and_return(connection_failure)
+            yielded_batches = []
+
+            expect { BatchQuery.execute_in_batches(params) { |result| yielded_batches << result } }
+              .to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+            expect(yielded_batches).to be_empty
+          end
+
+          it "raises a source read failure when the client returns nil" do
+            allow(client).to receive(:read).and_return(nil)
+
+            expect { BatchQuery.execute_in_batches(params) }
+              .to raise_error(Activities::ExtractorActivity::SourceReadFailed,
+                              "Source read returned an unexpected NilClass result")
+          end
+
+          context "when the sync has a cursor field" do
+            let(:sync) { create(:sync, destination:, cursor_field: "timestamp", current_cursor_field: "2022-01-01") }
+
+            it "raises a source read failure with the connector message" do
+              allow(client).to receive(:read).and_return(connection_failure)
+
+              expect { BatchQuery.execute_in_batches(params) }
+                .to raise_error(Activities::ExtractorActivity::SourceReadFailed, connector_message)
+            end
+          end
+        end
         context "when both cursor_field is empty" do
           let(:existing_query) { "SELECT * FROM table" }
           let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
