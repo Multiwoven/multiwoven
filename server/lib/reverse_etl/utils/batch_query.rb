@@ -20,7 +20,7 @@ module ReverseEtl
           end
 
           # Execute the batch query
-          result = params[:client].read(params[:sync_config])
+          result = read_batch(params)
           # Extract the value of the cursor_field column from the last record
           current_cursor_field_value = extract_last_cursor_field_value(result, params[:sync_config])
           if current_cursor_field_value && current_cursor_field_value == last_cursor_field_value
@@ -37,6 +37,19 @@ module ReverseEtl
           # Break the loop if the number of records fetched is less than the batch size
           # break if result.size < params[:batch_size]
         end
+      end
+
+      def self.read_batch(params)
+        result = params[:client].read(params[:sync_config])
+        raise_source_read_failure(result) unless result.is_a?(Array)
+
+        result
+      end
+
+      def self.raise_source_read_failure(result)
+        connector_message = result.log&.message if result.is_a?(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        raise Activities::ExtractorActivity::SourceReadFailed,
+              connector_message.presence || "Source read returned an unexpected #{result.class.name} result"
       end
 
       def self.extract_last_cursor_field_value(result, sync_config)
