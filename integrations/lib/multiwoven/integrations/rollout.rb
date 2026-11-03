@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.7"
+>>>>>>> 49d1f6a02 (fix(CE): Raise typed OauthTokenRequestError for OAuth token 4xx responses (BE-2068) (#2380))
 
     ENABLED_SOURCES = %w[
       Snowflake
