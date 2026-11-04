@@ -1979,7 +1979,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.43.2)
+>>>>>>> 54a04f94d (chore(CE): Update Server Gemfile 0.43.2 (#2347))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -1988,6 +1992,8 @@ GEM
       aws-sdk-s3
       aws-sdk-sts
       aws-sigv4
+      base64
+      bigdecimal
       csv
       dry-schema
       dry-struct
@@ -2000,6 +2006,11 @@ GEM
       grpc
       hubspot-api-client
       iterable-api-client
+<<<<<<< HEAD
+=======
+      jwt
+      logger
+>>>>>>> 54a04f94d (chore(CE): Update Server Gemfile 0.43.2 (#2347))
       net-sftp
       pg
       rake
@@ -2339,7 +2350,12 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.43.2)
+>>>>>>> 54a04f94d (chore(CE): Update Server Gemfile 0.43.2 (#2347))
   mysql2
   newrelic_rpm
   parallel
