@@ -155,6 +155,60 @@
       },
       "additionalProperties": true
     },
+    "ModelCatalogType": {
+      "type": "string",
+      "enum": ["llm", "embedding", "vision"]
+    },
+    "ModelCatalogKind": {
+      "type": "string",
+      "enum": ["completion", "embedding", "image"]
+    },
+    "ModelCatalogAvailability": {
+      "type": "string",
+      "enum": ["available", "unavailable"]
+    },
+    "ModelCatalogPricing": {
+      "type": "object",
+      "properties": {
+        "input": { "type": ["number", "null"] },
+        "output": { "type": ["number", "null"] },
+        "cached_read": { "type": ["number", "null"] },
+        "cached_write": { "type": ["number", "null"] },
+        "unit": { "type": ["string", "null"], "default": "per_1m_tokens" }
+      },
+      "additionalProperties": true
+    },
+    "ModelCatalogEntry": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "model_type": { "$ref": "#/definitions/ModelCatalogType" },
+        "type": { "anyOf": [{ "$ref": "#/definitions/ModelCatalogKind" }, { "type": "null" }] },
+        "openrouter_id": { "type": ["string", "null"] },
+        "tasks": { "type": "array", "items": { "type": "string" } },
+        "capabilities": { "type": "array", "items": { "type": "string" } },
+        "context_window": { "type": ["integer", "null"] },
+        "max_output": { "type": ["integer", "null"] },
+        "pricing": { "anyOf": [{ "$ref": "#/definitions/ModelCatalogPricing" }, { "type": "null" }] },
+        "availability": { "$ref": "#/definitions/ModelCatalogAvailability" },
+        "unavailable_reason": { "type": ["string", "null"] }
+      },
+      "required": ["id", "name", "model_type"],
+      "additionalProperties": true
+    },
+    "ModelCatalog": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelCatalogEntry"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
     "SyncConfig": {
       "type": "object",
       "properties": {

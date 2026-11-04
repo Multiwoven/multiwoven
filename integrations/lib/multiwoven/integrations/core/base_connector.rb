@@ -8,20 +8,47 @@ module Multiwoven
       include Constants
 
       def connector_spec
-        @connector_spec ||= begin
-          spec_json = keys_to_symbols(read_json(CONNECTOR_SPEC_PATH)).to_json
-          # returns Protocol::ConnectorSpecification
-          ConnectorSpecification.from_json(spec_json)
-        end
+        @connector_spec ||= ConnectorSpecification.from_json(keys_to_symbols(read_json(CONNECTOR_SPEC_PATH)).to_json)
       end
 
       def meta_data
+        return @meta_data if @meta_data
+
         client_meta_data = read_json(META_DATA_PATH).deep_symbolize_keys
         icon_name = client_meta_data[:data][:icon]
         icon_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations#{relative_path}/#{icon_name}"
         client_meta_data[:data][:icon] = icon_url
         # returns hash
-        @meta_data ||= client_meta_data
+        @meta_data = client_meta_data
+      end
+
+      def model_catalog
+        @model_catalog ||= ModelCatalog.new(models: (live_models + curated_models).uniq { |model| model[:id] })
+      rescue Dry::Struct::Error => e
+        Integrations::Service.logger.error("#{self.class}: unusable model catalog: #{e.message}")
+        @model_catalog = ModelCatalog.new(models: [])
+      end
+
+      # Symbolized to match models from upstream; read_json hands back string keys,
+      # which leaves callers reading nil.
+      def curated_models
+        @curated_models ||= Array(read_json(MODELS_SPEC_PATH)["models"]).map(&:deep_symbolize_keys)
+      rescue Errno::ENOENT
+        @curated_models = []
+      rescue StandardError => e
+        Integrations::Service.logger.error("#{self.class}: unusable models.json: #{e.message}")
+        @curated_models = []
+      end
+
+      def live_models
+        slug = meta_data[:data][:openrouter_slug]
+        return [] if slug.blank?
+
+        overrides = meta_data[:data][:model_id_overrides] || {}
+        Integrations::Core::OpenRouterCatalog.fetch.models_for(slug).map do |model|
+          pinned = overrides[model[:id].to_sym] || overrides[model[:id].to_s]
+          pinned.present? ? model.merge(id: pinned) : model
+        end
       end
 
       def relative_path

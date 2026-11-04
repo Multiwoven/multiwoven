@@ -15,7 +15,7 @@ module Multiwoven::Integrations::Source
         )
         success?(response) ? success_status : failure_status(nil)
       rescue StandardError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:CHECK_CONNECTION:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)
       end
 
@@ -24,7 +24,7 @@ module Multiwoven::Integrations::Source
         catalog = build_catalog(catalog_json)
         catalog.to_multiwoven_message
       rescue StandardError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:DISCOVER:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:DISCOVER:EXCEPTION", type: "error" })
       end
 
       def read(sync_config)
@@ -41,10 +41,17 @@ module Multiwoven::Integrations::Source
           run_model(connection_config, payload)
         end
       rescue StandardError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:READ:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:READ:EXCEPTION", type: "error" })
       end
 
       private
+
+      # Prefixes this connector's log lines. Subclasses that reuse this client
+      # for another OpenAI-compatible provider override it so their exceptions
+      # are attributable.
+      def log_context
+        "GENERIC OPEN AI"
+      end
 
       def prepare_config(config)
         config.with_indifferent_access.tap do |conf|
@@ -55,7 +62,7 @@ module Multiwoven::Integrations::Source
       def parse_json(json_string)
         JSON.parse(json_string)
       rescue JSON::ParserError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:PARSE_JSON:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:PARSE_JSON:EXCEPTION", type: "error" })
         {}
       end
 
@@ -69,7 +76,7 @@ module Multiwoven::Integrations::Source
         )
         process_response(response)
       rescue StandardError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:RUN_MODEL:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:RUN_MODEL:EXCEPTION", type: "error" })
       end
 
       def run_model_stream(connection_config, payload)
@@ -83,7 +90,7 @@ module Multiwoven::Integrations::Source
           process_streaming_response(chunk) { |message| yield message if block_given? }
         end
       rescue StandardError => e
-        handle_exception(e, { context: "GENERIC OPEN AI:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:RUN_STREAM_MODEL:EXCEPTION", type: "error" })
       end
 
       def process_response(response)
@@ -91,10 +98,10 @@ module Multiwoven::Integrations::Source
           data = JSON.parse(response.body)
           [RecordMessage.new(data: data, emitted_at: Time.now.to_i).to_multiwoven_message]
         else
-          create_log_message("GENERIC OPEN AI:RUN_MODEL", "error", "request failed: #{response.body}")
+          create_log_message("#{log_context}:RUN_MODEL", "error", "request failed: #{response.body}")
         end
       rescue StandardError => e
-        handle_exception(e, { context: "OPEN AI:PROCESS_RESPONSE:EXCEPTION", type: "error" })
+        handle_exception(e, { context: "#{log_context}:PROCESS_RESPONSE:EXCEPTION", type: "error" })
       end
 
       def extract_data_entries(chunk)

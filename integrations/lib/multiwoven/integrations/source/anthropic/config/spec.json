@@ -6,7 +6,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Anthropic Endpoint",
     "type": "object",
-    "required": ["api_key", "request_format", "response_format"],
+    "x-dynamic-input-path": "messages.0.content",
+    "x-output-path": "content.0.text",
+    "required": [
+      "api_key",
+      "request_format",
+      "response_format"
+    ],
     "properties": {
       "api_key": {
         "type": "string",

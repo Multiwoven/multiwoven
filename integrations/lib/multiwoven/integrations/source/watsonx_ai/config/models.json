@@ -1,0 +1,73 @@
+{
+  "models": [
+    {
+      "id": "ibm/granite-13b-instruct-v2",
+      "name": "Granite 13B Instruct",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Chat",
+        "Extraction"
+      ],
+      "context_window": 8192,
+      "max_output": 4096,
+      "pricing": {
+        "input": 0.6,
+        "output": 0.6,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    },
+    {
+      "id": "ibm/granite-3-8b-instruct",
+      "name": "Granite 3 8B Instruct",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 128000,
+      "max_output": 8192,
+      "pricing": {
+        "input": 0.2,
+        "output": 0.2,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents",
+        "Data analyst"
+      ]
+    },
+    {
+      "id": "ibm/slate-125m-english-rtrvr",
+      "name": "Slate 125M Retriever",
+      "model_type": "embedding",
+      "type": "embedding",
+      "tasks": [
+        "Text Embeddings",
+        "Indexing",
+        "Retrieval"
+      ],
+      "context_window": 512,
+      "max_output": null,
+      "pricing": {
+        "input": 0.1,
+        "output": null,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    }
+  ]
+}

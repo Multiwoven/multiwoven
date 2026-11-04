@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.0"
+>>>>>>> bc369553b (feat(CE): describe AI Model providers in their own connector metadata (#2177))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -27,6 +31,8 @@ module Multiwoven
       Anthropic
       AwsBedrockModel
       GenericOpenAI
+      GoogleGemini
+      JohnSnowLabs
       IntuitQuickBooks
       PineconeDB
       Qdrant
