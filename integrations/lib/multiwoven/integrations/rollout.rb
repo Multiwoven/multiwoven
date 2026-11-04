@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.5"
+>>>>>>> 4a6d0f5cc (chore(CE): Update AI Squared Connector Endpoint (#2362))
 
     ENABLED_SOURCES = %w[
       Snowflake
