@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+### [0.43.3]
+
+
+### Bug Fixes
+
+* Firecrawl `get_request_url` raises a clear error when there is no active crawl id (BE-2025)
+
 ### [0.4.1](https://www.github.com/Multiwoven/multiwoven-integrations/compare/v0.4.0...v0.4.1) (2024-02-15)
 
 

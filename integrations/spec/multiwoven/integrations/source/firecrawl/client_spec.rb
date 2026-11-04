@@ -186,6 +186,35 @@ RSpec.describe Multiwoven::Integrations::Source::Firecrawl::Client do
     end
   end
 
+  describe "#get_request_url" do
+    let(:missing_crawl_error) { "Missing crawl result URL and no active crawl ID available." }
+
+    def stub_crawl_activity(body)
+      allow(client).to receive(:crawl_activity).and_return(instance_double(Net::HTTPSuccess, body: body.to_json))
+    end
+
+    it "returns the request url when present" do
+      expect(client.send(:get_request_url, { "url" => get_crawl_endpoint })).to eq(get_crawl_endpoint)
+    end
+
+    it "builds the crawl url from the last active crawl id" do
+      stub_crawl_activity({ "crawls" => [{ "id" => "123" }] })
+      expect(client.send(:get_request_url, {})).to eq(get_crawl_endpoint)
+    end
+
+    [
+      ["crawls is empty", { "crawls" => [] }],
+      ["crawls key is missing", {}],
+      ["crawls is nil", { "crawls" => nil }],
+      ["the last crawl has no id", { "crawls" => [{ "url" => "https://doc_test.com" }] }]
+    ].each do |description, body|
+      it "raises a clear error when #{description}" do
+        stub_crawl_activity(body)
+        expect { client.send(:get_request_url, {}) }.to raise_error(RuntimeError, missing_crawl_error)
+      end
+    end
+  end
+
   describe "#meta_data" do
     # change this to rollout validation for all connector rolling out
     it "client class_name and meta name is same" do
