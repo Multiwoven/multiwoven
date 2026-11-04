@@ -5,13 +5,14 @@ default: &default
 
 development:
   <<: *default
-  host: <%= ENV['DB_HOST'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  database: <%= ENV.fetch("DB_NAME") { "multiwoven_server_development" } %>
+  host: <%= (v = ENV["DB_HOST"]) && v != "" ? v.inspect : nil %>
+  username: <%= (v = ENV["DB_USERNAME"]) && v != "" ? v.inspect : nil %>
+  password: <%= (v = ENV["DB_PASSWORD"]) && v != "" ? v.inspect : nil %>
+  database: <%= ((v = ENV["DB_NAME"]) && v != "" ? v : "multiwoven_server_development").inspect %>
 
 test:
   <<: *default
+<<<<<<< HEAD
   host: <%= ENV['DB_HOST'] %>
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
@@ -23,3 +24,16 @@ production:
   username: <%= ENV['DB_USERNAME'] %> 
   password: <%= ENV['DB_PASSWORD'] %>
   database: <%= ENV.fetch("DB_NAME") { "multiwoven_server_production" } %>
+=======
+  host: <%= (v = ENV["DB_HOST"]) && v != "" ? v.inspect : nil %>
+  username: <%= (v = ENV["DB_USERNAME"]) && v != "" ? v.inspect : nil %>
+  password: <%= (v = ENV["DB_PASSWORD"]) && v != "" ? v.inspect : nil %>
+  database: <%= (((v = ENV["DB_NAME"]) && v != "" ? v : "multiwoven_server_test") + (ENV["TEST_ENV_NUMBER"] || "")).inspect %>
+  pool: <%= ENV.fetch("DB_POOL") { 10 } %>
+production:
+  <<: *default
+  host: <%= (v = ENV["DB_HOST"]) && v != "" ? v.inspect : nil %>
+  username: <%= (v = ENV["DB_USERNAME"]) && v != "" ? v.inspect : nil %>
+  password: <%= (v = ENV["DB_PASSWORD"]) && v != "" ? v.inspect : nil %>
+  database: <%= ((v = ENV["DB_NAME"]) && v != "" ? v : "multiwoven_server_production").inspect %>
+>>>>>>> c7a6b9e6c (fix(CE): update database.yml to use inspect for environment variables (#2142))
