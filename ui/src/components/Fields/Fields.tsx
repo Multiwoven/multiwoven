@@ -24,6 +24,11 @@ export type FormFieldProps = {
   errors: FormikErrors<any>;
   helperText?: string;
   isDisabled?: boolean;
+<<<<<<< HEAD
+=======
+  showHelperSuccess?: boolean;
+  'data-testid'?: string;
+>>>>>>> a94e3c75e (chore(CE): Add data-testID for App Builder Secrets (#2033))
 };
 
 export const FormField = ({
@@ -36,6 +41,11 @@ export const FormField = ({
   tooltipText,
   hasTooltip,
   isDisabled,
+<<<<<<< HEAD
+=======
+  fontSize = 'xs',
+  'data-testid': dataTestId,
+>>>>>>> a94e3c75e (chore(CE): Add data-testID for App Builder Secrets (#2033))
 }: FormFieldProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <InputGroup>
@@ -71,6 +81,7 @@ export const FormField = ({
         color='black.500'
         focusBorderColor='brand.400'
         disabled={isDisabled}
+        data-testid={dataTestId}
       />
     </InputGroup>
     <Text size='xs' color='red.500' mt={2}>
@@ -88,6 +99,11 @@ export const PasswordField = ({
   placeholder,
   helperText,
   id,
+<<<<<<< HEAD
+=======
+  showHelperSuccess,
+  'data-testid': dataTestId,
+>>>>>>> a94e3c75e (chore(CE): Add data-testID for App Builder Secrets (#2033))
 }: FormFieldProps) => (
   <FormControl isInvalid={!!(touched[name] && errors[name])}>
     <HiddenInput
@@ -100,6 +116,7 @@ export const PasswordField = ({
       color='black.500'
       focusBorderColor='brand.400'
       id={id}
+      data-testid={dataTestId}
     />
     <Text color='gray.600' ml={1} mt={2} fontWeight={400} size='xs'>
       {helperText}
