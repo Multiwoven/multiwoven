@@ -14,10 +14,17 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ExitWarningImage from '@/assets/images/ExitWarning.png';
+import useConnectorFormStore from '@/stores/useConnectorFormStore';
 
 const ExitModal = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { resetAllFormData } = useConnectorFormStore();
   const navigate = useNavigate();
+
+  const handleSetupExit = () => {
+    resetAllFormData();
+    navigate('*');
+  };
 
   return (
     <>
@@ -74,7 +81,7 @@ const ExitModal = (): JSX.Element => {
                   variant='solid'
                   color='white'
                   rounded='lg'
-                  onClick={() => navigate('*')}
+                  onClick={handleSetupExit}
                   letterSpacing='-0.14px'
                 >
                   Exit
