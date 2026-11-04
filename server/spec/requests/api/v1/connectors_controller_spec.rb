@@ -704,6 +704,82 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash[:data]).to eq([record1.record.data, record2.record.data])
       end
 
+<<<<<<< HEAD
+=======
+      it "returns unprocessable content for a source without query support" do
+        ai_ml_connector.update_column(:connector_name, "OpenAI") # rubocop:disable Rails/SkipsModelValidations
+
+        expect(Utils::ExceptionReporter).not_to receive(:report)
+        post "/api/v1/connectors/#{ai_ml_connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body).dig("errors", 0, "detail"))
+          .to eq("This connector does not support querying")
+      end
+
+      it "returns unprocessable content when the source query returns a log message" do
+        log_message = Multiwoven::Integrations::Protocol::LogMessage.new(
+          name: "AmazonS3", level: "error", message: "request failed"
+        ).to_multiwoven_message
+        allow_any_instance_of(Connector).to receive(:execute_query).and_return(log_message)
+
+        expect(Utils::ExceptionReporter).not_to receive(:report)
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body).dig("errors", 0, "detail")).to eq("request failed")
+      end
+
+      it "returns unprocessable content without reporting when the query references an undefined column" do
+        allow_any_instance_of(Connector).to receive(:execute_query)
+          .and_raise(PG::UndefinedColumn.new('ERROR:  column "missing" does not exist'))
+
+        expect(Utils::ExceptionReporter).not_to receive(:report)
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body).dig("errors", 0, "detail"))
+          .to include('column "missing" does not exist')
+      end
+
+      it "returns unprocessable content and reports when the source connection fails" do
+        error = PG::ConnectionBad.new("connection to server failed")
+        allow_any_instance_of(Connector).to receive(:execute_query).and_raise(error)
+
+        expect(Utils::ExceptionReporter).to receive(:report).with(error)
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body).dig("errors", 0, "detail")).to eq("connection to server failed")
+      end
+
+      it "returns success with empty data when the query returns no rows" do
+        allow_any_instance_of(Connector).to receive(:execute_query).and_return([])
+
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["data"]).to eq([])
+      end
+
+      it "returns unprocessable content for a google drive source" do
+        connector.update_column(:connector_name, "GoogleDrive") # rubocop:disable Rails/SkipsModelValidations
+
+        expect(Utils::ExceptionReporter).not_to receive(:report)
+        post "/api/v1/connectors/#{connector.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user, workspace_id))
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body).dig("errors", 0, "detail"))
+          .to eq("This connector does not support querying")
+      end
+
+>>>>>>> d4d3a541e (fix(CE): Stop reporting expected Postgres query errors from QuerySource to AppSignal (BE-2051) (#2361))
       it "returns failure status for a invalid query" do
         allow(Connectors::QuerySource).to receive(:call).and_raise(StandardError, "query failed")
 
