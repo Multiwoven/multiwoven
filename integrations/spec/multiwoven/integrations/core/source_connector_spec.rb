@@ -78,6 +78,40 @@ module Multiwoven
         end
       end
 
+      describe "#parse_request_format" do
+        [true, false].each do |required|
+          context "with required: #{required}" do
+            it "passes a Hash through unchanged" do
+              request_format = { "queries" => "Hello there" }
+
+              expect(connector.send(:parse_request_format, request_format, required: required))
+                .to eq([request_format, nil])
+            end
+
+            it "parses a valid JSON string" do
+              expect(connector.send(:parse_request_format, '{"queries":"Hello there"}', required: required))
+                .to eq([{ "queries" => "Hello there" }, nil])
+            end
+
+            it "returns an error for invalid JSON" do
+              expect(connector.send(:parse_request_format, "{bad", required: required))
+                .to eq([nil, "Request Format must be valid JSON"])
+            end
+          end
+        end
+
+        [nil, "", "   \n "].each do |blank_value|
+          it "returns an error for #{blank_value.inspect} when required" do
+            expect(connector.send(:parse_request_format, blank_value, required: true))
+              .to eq([nil, "Request Format is required to test the connection"])
+          end
+
+          it "returns no payload and no error for #{blank_value.inspect} when not required" do
+            expect(connector.send(:parse_request_format, blank_value, required: false)).to eq([nil, nil])
+          end
+        end
+      end
+
       describe "#send_streaming_request" do
         it "delegates to StreamingHttpClient.request" do
           options = {

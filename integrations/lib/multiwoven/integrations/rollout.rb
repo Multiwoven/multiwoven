@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.4"
+>>>>>>> 382704a31 (fix(CE): guard blank and invalid HTTP Model request_format in check_connection (BE-2028) (#2331))
 
     ENABLED_SOURCES = %w[
       Snowflake
