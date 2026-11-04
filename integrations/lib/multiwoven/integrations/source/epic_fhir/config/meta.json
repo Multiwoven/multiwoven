@@ -1,0 +1,16 @@
+{
+  "data": {
+    "name": "EpicFhir",
+    "title": "Epic FHIR",
+    "connector_type": "source",
+    "category": "Data Warehouse",
+    "sub_category": "Relational Database",
+    "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/epic_fhir",
+    "github_issue_label": "source-epic-fhir",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787605548/Multiwoven/connectors/epic_fhir/icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": ["language:ruby", "multiwoven", "fhir", "epic"]
+  }
+}

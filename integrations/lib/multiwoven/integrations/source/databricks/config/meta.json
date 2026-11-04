@@ -7,7 +7,7 @@
       "sub_category": "Relational Database",
       "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/databricks",
       "github_issue_label": "source-databricks",
-      "icon": "icon.svg",
+      "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787605313/Multiwoven/connectors/DataBricks/icon.svg",
       "license": "MIT",
       "release_stage": "alpha",
       "support_level": "community",

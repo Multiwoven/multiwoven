@@ -7,7 +7,7 @@
     "category": "Retail",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/retail/salesforce-consumer-goods-cloud",
     "github_issue_label": "destination-salesforce-consumer-goods-cloud",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609252/Multiwoven/connectors/salesforce-consumer-goods-cloud/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

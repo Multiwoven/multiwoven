@@ -6,7 +6,7 @@
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/postgresql",
     "github_issue_label": "destination-postgresql",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609121/Multiwoven/connectors/postgresql/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

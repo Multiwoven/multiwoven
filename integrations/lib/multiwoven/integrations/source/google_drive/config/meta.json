@@ -6,7 +6,7 @@
     "category": "File Storage",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/google_drive",
     "github_issue_label": "source-google-drive",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787606775/Multiwoven/connectors/google_drive/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

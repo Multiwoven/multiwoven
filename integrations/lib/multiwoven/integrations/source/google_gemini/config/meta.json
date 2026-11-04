@@ -1,0 +1,23 @@
+{
+  "data": {
+    "name": "GoogleGemini",
+    "title": "Google Gemini",
+    "connector_type": "source",
+    "category": "AI Model",
+    "sub_category": "LLM",
+    "provider_type": "third_party",
+    "display_order": 70,
+    "openrouter_slug": "google",
+    "description": "Gemini model family from Google. Multimodal capabilities with strong performance on reasoning, code generation, and long-context tasks.",
+    "documentation_url": "https://ai.google.dev/gemini-api/docs/openai",
+    "github_issue_label": "source-google-gemini",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787606988/Multiwoven/connectors/google_gemini/icon.svg",
+    "license": "MIT",
+    "release_stage": "alpha",
+    "support_level": "community",
+    "tags": [
+      "language:ruby",
+      "multiwoven"
+    ]
+  }
+}

@@ -6,7 +6,7 @@
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/ais_data_store",
     "github_issue_label": "destination-ais-data-store",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787602253/Multiwoven/connectors/ais_data_store/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

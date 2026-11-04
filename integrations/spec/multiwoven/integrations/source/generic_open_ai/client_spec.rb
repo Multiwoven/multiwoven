@@ -282,4 +282,15 @@ RSpec.describe Multiwoven::Integrations::Source::GenericOpenAI::Client do
       end
     end
   end
+
+  describe "#meta_data" do
+    it "returns the correct meta data" do
+      meta_data = client.send(:meta_data)
+      meta_name = client.class.to_s.split("::")[-2]
+      expect(meta_data).to be_a(Hash)
+      expect(meta_data[:data][:name]).to eq(meta_name)
+      expect(meta_data[:data][:connector_type]).to eq("source")
+      expect(meta_data[:data][:icon]).to eq("https://res.cloudinary.com/dspflukeu/image/upload/v1787606721/Multiwoven/connectors/generic_open_ai/icon.svg")
+    end
+  end
 end
