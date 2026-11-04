@@ -15,6 +15,9 @@ module Multiwoven
 
       JSON_SCHEMA_URL = "https://json-schema.org/draft-07/schema#"
 
+      OPEN_AI_EXCLUDE_MODELS = ENV["OPEN_AI_EXCLUDE_MODELS"] || ""
+      ANTHROPIC_EXCLUDE_MODELS = ENV["ANTHROPIC_EXCLUDE_MODELS"] || ""
+
       # CONNECTORS
       INSTALL_HTTPFS_QUERY = ENV["INSTALL_HTTPFS_QUERY"] || "INSTALL HTTPFS; LOAD HTTPFS;"
 
