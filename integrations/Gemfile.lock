@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.42.0)
+>>>>>>> 03e00a685 (chore(CE): Add Mistral AI as AI/ML Source Connector (#2260))
       MailchimpMarketing
       activesupport
       async-websocket

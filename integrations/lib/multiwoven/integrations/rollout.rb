@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.42.0"
+>>>>>>> 03e00a685 (chore(CE): Add Mistral AI as AI/ML Source Connector (#2260))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -27,6 +31,16 @@ module Multiwoven
       Anthropic
       AwsBedrockModel
       GenericOpenAI
+<<<<<<< HEAD
+=======
+      GoogleGemini
+      JohnSnowLabs
+      AzureOpenAI
+      Xai
+      Groq
+      OpenRouter
+      MistralAi
+>>>>>>> 03e00a685 (chore(CE): Add Mistral AI as AI/ML Source Connector (#2260))
       IntuitQuickBooks
       PineconeDB
       Qdrant
