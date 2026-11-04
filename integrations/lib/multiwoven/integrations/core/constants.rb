@@ -15,6 +15,13 @@ module Multiwoven
 
       JSON_SCHEMA_URL = "https://json-schema.org/draft-07/schema#"
 
+<<<<<<< HEAD
+=======
+      OPENAI_EXCLUDE_MODELS = ENV["OPENAI_EXCLUDE_MODELS"] || ""
+      ANTHROPIC_EXCLUDE_MODELS = ENV["ANTHROPIC_EXCLUDE_MODELS"] || ""
+      GOOGLE_GEMINI_EXCLUDE_MODELS = ENV["GOOGLE_GEMINI_EXCLUDE_MODELS"] || ""
+
+>>>>>>> b38822ed8 (chore(CE): Exclude specific models from Google Gemini (#2226))
       # CONNECTORS
       INSTALL_HTTPFS_QUERY = ENV["INSTALL_HTTPFS_QUERY"] || "INSTALL HTTPFS; LOAD HTTPFS;"
 

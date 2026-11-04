@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.10"
+>>>>>>> b38822ed8 (chore(CE): Exclude specific models from Google Gemini (#2226))
 
     ENABLED_SOURCES = %w[
       Snowflake

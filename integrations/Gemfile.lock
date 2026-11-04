@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.10)
+>>>>>>> b38822ed8 (chore(CE): Exclude specific models from Google Gemini (#2226))
       MailchimpMarketing
       activesupport
       async-websocket
