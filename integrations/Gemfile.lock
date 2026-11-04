@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.12)
+>>>>>>> 6332873f1 (chore(CE): Allow One Drive to query all file name (#2249))
       MailchimpMarketing
       activesupport
       async-websocket
