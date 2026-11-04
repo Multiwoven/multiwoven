@@ -6,6 +6,8 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "AWS Bedrock Model",
     "type": "object",
+    "x-dynamic-input-path": "messages.0.content",
+    "x-output-path": "content.0.text",
     "required": ["access_key", "secret_access_key", "region", "model_id", "request_format", "response_format"],
     "properties": {
       "access_key": {
@@ -43,6 +45,7 @@
         "description": "Sample Request Format",
         "type": "string",
         "title": "Request Format",
+        "default": "{\"anthropic_version\":\"bedrock-2023-05-31\",\"max_tokens\":256,\"messages\":[{\"role\":\"user\",\"content\":\"Hi.\"}]}",
         "x-request-format": true,
         "order": 5
       },
@@ -50,6 +53,7 @@
         "description": "Sample Response Format",
         "type": "string",
         "title": "Response Format",
+        "default": "{\"id\":\"msg_0123ABC\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"anthropic.claude-sonnet-4-5-20250929-v1:0\",\"content\":[{\"type\":\"text\",\"text\":\"Hello!\"}],\"stop_reason\":\"end_turn\",\"usage\":{\"input_tokens\":8,\"output_tokens\":4}}",
         "x-response-format": true,
         "order": 6
       }

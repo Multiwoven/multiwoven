@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.1)
+>>>>>>> 6aca5e420 (chore(CE): make AI Model sample payloads cheap and editable (#2183))
       MailchimpMarketing
       activesupport
       async-websocket
