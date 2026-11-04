@@ -131,7 +131,9 @@ module Api
         if @connector.source?
           result = ExecuteModel.call(
             connector: @connector,
-            payload: params[:payload]
+            payload: params[:payload],
+            workspace: current_workspace,
+            user: current_user
           )
 
           if result.success?
@@ -140,7 +142,8 @@ module Api
           else
             render_error(
               message: result["error"],
-              status: :unprocessable_content
+              status: spend_limit_status(result),
+              metadata: result.metadata
             )
           end
         else
@@ -152,6 +155,10 @@ module Api
       end
 
       private
+
+      def spend_limit_status(result)
+        SpendingLimits::SpendLimitExceeded.blocked?(result.metadata) ? :too_many_requests : :unprocessable_content
+      end
 
       def set_connector
         @connector = current_workspace.connectors.find(params[:id])
