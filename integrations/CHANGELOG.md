@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### Bug Fixes
+
+* Preserve the attempted HubSpot request in failed-write logs so rejection details remain accessible.
+
 ### [0.4.1](https://www.github.com/Multiwoven/multiwoven-integrations/compare/v0.4.0...v0.4.1) (2024-02-15)
 
 
