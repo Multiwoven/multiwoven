@@ -1713,6 +1713,12 @@ GEM
     discard (1.3.0)
       activerecord (>= 4.2, < 8)
     docile (1.4.0)
+<<<<<<< HEAD
+=======
+    docx (0.13.0)
+      nokogiri (~> 1.13, >= 1.13.0)
+      rubyzip (>= 2.0, < 4)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
     drb (2.2.3)
     dry-auto_inject (1.0.1)
       dry-core (~> 1.0)
@@ -1979,7 +1985,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.41.9)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2057,11 +2067,19 @@ GEM
     pg (1.5.4)
     pg_query (5.0.0)
       google-protobuf (>= 3.22.3)
+<<<<<<< HEAD
     pinecone (1.1.0)
       dry-struct (~> 1.6.0)
       dry-validation (~> 1.10.0)
       httparty (~> 0.22.0)
     pp (0.6.2)
+=======
+    pinecone (1.2.2)
+      dry-struct (~> 1.6)
+      dry-validation (~> 1.10)
+      httparty (>= 0.22.0)
+    pp (0.6.4)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
       prettyprint
     premailer (1.23.0)
       addressable
@@ -2163,8 +2181,24 @@ GEM
       faraday-net_http (< 4.0.0)
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
+<<<<<<< HEAD
     retriable (3.1.2)
     rexml (3.4.2)
+=======
+    retriable (4.2.0)
+    rexml (3.4.4)
+    roo (3.0.0)
+      base64 (~> 0.2)
+      csv (~> 3)
+      logger (~> 1)
+      nokogiri (~> 1)
+      rubyzip (>= 3.0.0, < 4.0.0)
+    roo-xls (2.0.0)
+      csv
+      nokogiri
+      roo (>= 2.0.0, < 4)
+      spreadsheet (>= 1.3.4, < 2)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
     rsa-pem-from-mod-exp (0.1.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
@@ -2211,7 +2245,12 @@ GEM
     ruby-saml (1.18.1)
       nokogiri (>= 1.13.10)
       rexml
+<<<<<<< HEAD
     rubyzip (2.4.1)
+=======
+    rubyzip (3.6.0)
+    safely_block (0.5.0)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
     securerandom (0.4.1)
     sequel (5.89.0)
       bigdecimal
@@ -2339,14 +2378,24 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.41.9)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
   mysql2
   newrelic_rpm
   parallel
   pdf-reader (~> 2.15)
   pg (~> 1.1)
   pg_query
+<<<<<<< HEAD
   pinecone
+=======
+  pinecone (~> 1.2)
+  premailer (~> 1.27)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
   premailer-rails
   prometheus-client (~> 4.2)
   puma (>= 5.0)
@@ -2356,12 +2405,21 @@ DEPENDENCIES
   rails (~> 7.1.1)
   redis (~> 4.0)
   rexml (~> 3.4.2)
+<<<<<<< HEAD
+=======
+  roo (>= 3.0.0)
+  roo-xls
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
   rspec-rails
   rubocop
   rubocop-performance
   rubocop-rails
   ruby-odbc!
   ruby-saml
+<<<<<<< HEAD
+=======
+  rubyzip (>= 3.4.0)
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter
