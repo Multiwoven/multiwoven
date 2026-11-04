@@ -78,6 +78,13 @@ module SyncContracts
         key.failure("invalid cron expression format")
       end
     end
+
+    rule(sync: :cursor_field) do
+      next if value.nil? || value.strip.empty?
+      next if value.match?(ReverseEtl::Utils::CursorQueryBuilder::SAFE_CURSOR_FIELD)
+
+      key.failure("must be a column identifier (letters, numbers, underscore; optional dotted path)")
+    end
   end
 
   class Update < Dry::Validation::Contract
