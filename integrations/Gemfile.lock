@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.43.0)
+>>>>>>> 077c3d8de (chore(CE): Add SQL Server as Source (#2265))
       MailchimpMarketing
       activesupport
       async-websocket

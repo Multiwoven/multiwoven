@@ -1,0 +1,94 @@
+{
+  "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/sql-server",
+  "stream_type": "dynamic",
+  "connector_query_type": "raw_sql",
+  "connection_specification": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SqlServer",
+    "type": "object",
+    "required": ["data_type", "credentials", "host", "database", "schema"],
+    "properties": {
+      "data_type": {
+        "description": "Type of data in the database",
+        "type": "string",
+        "title": "Data Format Type",
+        "oneOf": [
+          {
+            "const": "structured",
+            "title": "Tables & Records (Structured)"
+          },
+          {
+            "const": "vector",
+            "title": "Tables & Records containing Vector fields"
+          }
+        ],
+        "default": "structured",
+        "order": 0
+      },
+      "credentials": {
+        "title": "",
+        "type": "object",
+        "required": ["auth_type", "username", "password"],
+        "properties": {
+          "auth_type": {
+            "type": "string",
+            "default": "username/password",
+            "order": 0,
+            "readOnly": true
+          },
+          "username": {
+            "description": "Username refers to your individual SQL Server login credentials. At a minimum, the user associated with these credentials must be granted read access to the data intended for synchronization.",
+            "examples": ["SQLSERVER_USER"],
+            "type": "string",
+            "title": "Username",
+            "order": 1
+          },
+          "password": {
+            "description": "This field requires the password associated with the SQL Server login specified in the preceding section.",
+            "type": "string",
+            "multiwoven_secret": true,
+            "title": "Password",
+            "order": 2
+          }
+        },
+        "order": 1
+      },
+      "host": {
+        "description": "The hostname or IP address of your SQL Server instance.",
+        "examples": ["127.0.0.1"],
+        "type": "string",
+        "title": "Host",
+        "order": 2
+      },
+      "port": {
+        "description": "The port number for your SQL Server instance, which defaults to 1433 and may vary based on your configuration.",
+        "examples": ["1433"],
+        "type": "string",
+        "title": "Port",
+        "order": 3
+      },
+      "database": {
+        "description": "The specific SQL Server database to connect to.",
+        "examples": ["SQLSERVER_DB"],
+        "type": "string",
+        "title": "Database",
+        "order": 4
+      },
+      "schema": {
+        "description": "The schema within the SQL Server database, typically 'dbo'.",
+        "examples": ["dbo"],
+        "default": "dbo",
+        "type": "string",
+        "title": "Schema",
+        "order": 5
+      },
+      "azure": {
+        "description": "Enable when connecting to Azure SQL Database (required for Azure encryption/login behaviour).",
+        "type": "boolean",
+        "title": "Azure SQL",
+        "default": false,
+        "order": 6
+      }
+    }
+  }
+}
