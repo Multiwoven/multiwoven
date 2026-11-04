@@ -1,0 +1,9 @@
+<svg width="40" height="40" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="azure-open-ai-gradient" cx="-67.981" cy="793.199" r=".45" gradientTransform="translate(-17939.03 20368.029) rotate(45) scale(25.091 -34.149)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#83B9F9"/>
+      <stop offset="1" stop-color="#0078D4"/>
+    </radialGradient>
+  </defs>
+  <path d="M0 2.7V15.3C0 16.791 1.209 18 2.7 18H15.3C16.791 18 18 16.791 18 15.3V2.7C18 1.209 16.791 0 15.3 0H2.7C1.209 0 0 1.209 0 2.7ZM10.8 0V3.6C10.8 7.576 14.024 10.8 18 10.8H14.4C10.424 10.8 7.201 14.022 7.2 17.998V14.4C7.2 10.424 3.976 7.2 0 7.2H3.6C7.576 7.2 10.8 3.976 10.8 0Z" fill="url(#azure-open-ai-gradient)"/>
+</svg>

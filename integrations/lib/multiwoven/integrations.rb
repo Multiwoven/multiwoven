@@ -92,6 +92,16 @@ require_relative "integrations/source/watsonx_data/client"
 require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/aws_bedrock_model/client"
 require_relative "integrations/source/generic_open_ai/client"
+<<<<<<< HEAD
+=======
+# All other sources that subclass GenericOpenAI::Client must load after it.
+require_relative "integrations/source/google_gemini/client"
+require_relative "integrations/source/john_snow_labs/client"
+require_relative "integrations/source/azure_open_ai/client"
+require_relative "integrations/source/xai/client"
+require_relative "integrations/source/groq/client"
+require_relative "integrations/source/open_router/client"
+>>>>>>> f2c498c05 (chore(CE): Add Azure OpenAI, Groq, Open Router, and xAI as AI/ML Connector (#2233))
 require_relative "integrations/source/intuit_quick_books/client"
 require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"

@@ -15,6 +15,14 @@ module Multiwoven
 
       JSON_SCHEMA_URL = "https://json-schema.org/draft-07/schema#"
 
+<<<<<<< HEAD
+=======
+      OPENAI_EXCLUDE_MODELS = ENV["OPENAI_EXCLUDE_MODELS"] || ""
+      ANTHROPIC_EXCLUDE_MODELS = ENV["ANTHROPIC_EXCLUDE_MODELS"] || ""
+      GOOGLE_GEMINI_EXCLUDE_MODELS = ENV["GOOGLE_GEMINI_EXCLUDE_MODELS"] || ""
+      OPEN_ROUTER_EXCLUDE_PROVIDERS = ENV["OPEN_ROUTER_EXCLUDE_PROVIDERS"] || ""
+
+>>>>>>> f2c498c05 (chore(CE): Add Azure OpenAI, Groq, Open Router, and xAI as AI/ML Connector (#2233))
       # CONNECTORS
       INSTALL_HTTPFS_QUERY = ENV["INSTALL_HTTPFS_QUERY"] || "INSTALL HTTPFS; LOAD HTTPFS;"
 
