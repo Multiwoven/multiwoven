@@ -141,21 +141,117 @@ RSpec.describe Multiwoven::Integrations::Source::WatsonxAi::Client do
               "Content-Type" => "application/x-www-form-urlencoded"
             }
           ).to_return(status: 200, body: { "access_token" => api_key }.to_json, headers: { "Content-Type" => "application/json" })
-        response = Net::HTTPSuccess.new("1.1", "400", "Unauthorized")
+        response = Net::HTTPSuccess.new("1.1", "200", "OK")
         response.content_type = "application/json"
         allow(response).to receive(:body).and_return(response_body)
 
         config = sync_config_json[:source][:connection_specification][:config]
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
-          .with(health_endpoint, "GET", payload: {}, headers: headers, config: config)
+          .with(health_endpoint, "GET", payload: {}, headers: headers, options: { config: config })
           .and_return(response)
       end
 
-      it "returns a failed connection status with an error message" do
+      it "returns a failed connection status with the deployment state" do
         response = client.check_connection(sync_config_json[:source][:connection_specification])
 
         expect(response).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
         expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to include("disabled")
+      end
+    end
+
+    context "when the deployment state is missing" do
+      let(:response_body) do
+        { "resources" => [{ "metadata" => { "id" => "Test-Deployment-Id" }, "entity" => { "status" => {} } }] }.to_json
+      end
+
+      before do
+        stub_request(:post, "https://iam.cloud.ibm.com/identity/token")
+          .with(
+            body: { "apikey" => api_key, "grant_type" => "urn:ibm:params:oauth:grant-type:apikey" },
+            headers: {
+              "Content-Type" => "application/x-www-form-urlencoded"
+            }
+          ).to_return(status: 200, body: { "access_token" => api_key }.to_json, headers: { "Content-Type" => "application/json" })
+        response = Net::HTTPSuccess.new("1.1", "200", "OK")
+        response.content_type = "application/json"
+        allow(response).to receive(:body).and_return(response_body)
+
+        config = sync_config_json[:source][:connection_specification][:config]
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(health_endpoint, "GET", payload: {}, headers: headers, options: { config: config })
+          .and_return(response)
+      end
+
+      it "reports an unknown state rather than a blank one" do
+        response = client.check_connection(sync_config_json[:source][:connection_specification])
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("Deployment status is unknown")
+      end
+    end
+
+    context "when the deployment is missing from the response" do
+      let(:response_body) { { "resources" => [] }.to_json }
+
+      before do
+        stub_request(:post, "https://iam.cloud.ibm.com/identity/token")
+          .with(
+            body: { "apikey" => api_key, "grant_type" => "urn:ibm:params:oauth:grant-type:apikey" },
+            headers: {
+              "Content-Type" => "application/x-www-form-urlencoded"
+            }
+          ).to_return(status: 200, body: { "access_token" => api_key }.to_json, headers: { "Content-Type" => "application/json" })
+        response = Net::HTTPSuccess.new("1.1", "200", "OK")
+        response.content_type = "application/json"
+        allow(response).to receive(:body).and_return(response_body)
+
+        config = sync_config_json[:source][:connection_specification][:config]
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(health_endpoint, "GET", payload: {}, headers: headers, options: { config: config })
+          .and_return(response)
+      end
+
+      it "returns a failed connection status when the deployment is not found" do
+        response = client.check_connection(sync_config_json[:source][:connection_specification])
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to include("Deployment Test-Deployment-Id not found")
+      end
+    end
+
+    context "when the health request fails" do
+      let(:response_body) do
+        {
+          errors: [
+            { message: "Invalid authentication token" }
+          ]
+        }.to_json
+      end
+
+      before do
+        stub_request(:post, "https://iam.cloud.ibm.com/identity/token")
+          .with(
+            body: { "apikey" => api_key, "grant_type" => "urn:ibm:params:oauth:grant-type:apikey" },
+            headers: {
+              "Content-Type" => "application/x-www-form-urlencoded"
+            }
+          ).to_return(status: 200, body: { "access_token" => api_key }.to_json, headers: { "Content-Type" => "application/json" })
+        response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
+        response.content_type = "application/json"
+        allow(response).to receive(:body).and_return(response_body)
+
+        config = sync_config_json[:source][:connection_specification][:config]
+        allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
+          .with(health_endpoint, "GET", payload: {}, headers: headers, options: { config: config })
+          .and_return(response)
+      end
+
+      it "returns a failed connection status with the provider response body" do
+        response = client.check_connection(sync_config_json[:source][:connection_specification])
+
+        expect(response.connection_status.status).to eq("failed")
+        expect(response.connection_status.message).to eq("Invalid authentication token")
       end
     end
   end

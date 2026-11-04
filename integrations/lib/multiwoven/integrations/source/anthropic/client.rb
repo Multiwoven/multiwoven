@@ -8,7 +8,7 @@ module Multiwoven::Integrations::Source
       def check_connection(connection_config)
         connection_config = prepare_config(connection_config)
         response = make_request(ANTHROPIC_URL, HTTP_POST, connection_config[:request_format], connection_config)
-        success?(response) ? success_status : failure_status(nil)
+        success?(response) ? success_status : failure_status_from_response(response)
       rescue StandardError => e
         handle_exception(e, { context: "ANTHROPIC:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)

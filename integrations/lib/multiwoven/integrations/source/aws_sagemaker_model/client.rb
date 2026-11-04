@@ -11,7 +11,7 @@ module Multiwoven::Integrations::Source
         if response.endpoint_status == "InService"
           success_status
         else
-          failure_status
+          failure_status("Endpoint status is #{response.endpoint_status.presence || "unknown"}")
         end
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message

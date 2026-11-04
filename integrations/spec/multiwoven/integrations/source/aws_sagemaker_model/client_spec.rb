@@ -85,6 +85,30 @@ RSpec.describe Multiwoven::Integrations::Source::AwsSagemakerModel::Client do
         expect(result.status).to eq("failed")
         expect(result.message).to include("Connection failed")
       end
+
+      it "returns the endpoint status when the endpoint is not in service" do
+        allow(sagemaker_client).to receive(:describe_endpoint).and_return(
+          instance_double(Aws::SageMaker::Types::DescribeEndpointOutput, endpoint_status: "Creating")
+        )
+
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+
+        expect(result.status).to eq("failed")
+        expect(result.message).to eq("Endpoint status is Creating")
+      end
+
+      it "reports an unknown endpoint status rather than a blank one" do
+        allow(sagemaker_client).to receive(:describe_endpoint).and_return(
+          instance_double(Aws::SageMaker::Types::DescribeEndpointOutput, endpoint_status: nil)
+        )
+
+        message = client.check_connection(sync_config[:source][:connection_specification])
+        result = message.connection_status
+
+        expect(result.status).to eq("failed")
+        expect(result.message).to eq("Endpoint status is unknown")
+      end
     end
   end
 

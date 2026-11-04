@@ -15,7 +15,7 @@ module Multiwoven::Integrations::Source
         if success?(response)
           success_status
         else
-          failure_status(nil)
+          failure_status_from_response(response)
         end
       rescue StandardError => e
         ConnectionStatus.new(status: ConnectionStatusType["failed"], message: e.message).to_multiwoven_message
