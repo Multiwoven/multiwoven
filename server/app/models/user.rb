@@ -43,6 +43,12 @@ class User < ApplicationRecord
   has_many :workspace_users, dependent: :nullify
   has_many :workspaces, through: :workspace_users
   has_many :roles, through: :workspace_users
+<<<<<<< HEAD
+=======
+  has_many :git_installations, dependent: :destroy
+  has_many :created_spending_limits, class_name: "SpendingLimit", foreign_key: :created_by_id,
+                                     dependent: :nullify, inverse_of: :created_by
+>>>>>>> 662d24a7f (feat(CE): spending limit schema and models (#2237))
 
   validates :eula_accepted, inclusion: { in: [true, false] }
 

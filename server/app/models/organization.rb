@@ -13,6 +13,7 @@ class Organization < ApplicationRecord
   validates :name, presence: true
 
   has_many :workspaces, dependent: :destroy
+  has_many :spending_limits, dependent: :destroy
   has_many :workspace_users, through: :workspaces
   has_many :users, through: :workspace_users
   has_many :subscriptions, class_name: "Billing::Subscription", dependent: :destroy

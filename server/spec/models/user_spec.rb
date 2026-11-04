@@ -193,6 +193,7 @@ RSpec.describe User, type: :model do
     end
   end
 
+<<<<<<< HEAD
   describe "#confirmation_required?" do
     it "returns the result of User.email_verification_enabled?" do
       user = User.new
@@ -201,6 +202,17 @@ RSpec.describe User, type: :model do
 
       expect(User).to receive(:email_verification_enabled?).and_return(false)
       expect(user.send(:confirmation_required?)).to be false
+=======
+  context "spending limits" do
+    it { should have_many(:created_spending_limits).class_name("SpendingLimit").dependent(:nullify) }
+
+    it "is deletable without taking the budgets it created with it" do
+      author = create(:user)
+      limit = create(:spending_limit, workspace: create(:workspace), created_by: author)
+
+      expect { author.destroy! }.not_to change(SpendingLimit, :count)
+      expect(limit.reload.created_by_id).to be_nil
+>>>>>>> 662d24a7f (feat(CE): spending limit schema and models (#2237))
     end
   end
 end
