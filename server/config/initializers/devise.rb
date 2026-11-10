@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join("lib/utils/jwt_secret")
+
 # Assuming you have not yet modified this file, each configuration option below
 # is set to its default value. Note that some are commented out while others
 # are not: uncommented lines are intended to protect your configuration from
@@ -14,7 +16,6 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'ff49fe469ce501cbb07be03fd81e13a350bf55c27f213f75b0b0bbe3d1c79fd544ac863cb58af47841aecdf7f06e529b1016933c9aeb28c80848d4fde7f140e9'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -361,7 +362,7 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
   config.jwt do |jwt|
-    jwt.secret = ENV.fetch("JWT_SECRET", "ff49fe469ce501cbb07be03fd81e13a350bf55c27f213f75b0b0bbe3d1c79fd544ac863cb58af47841aecdf7f06e529b1016933c9aeb28c80848d4fde7f140e9")
+    jwt.secret = Utils::JwtSecret.fetch
     jwt.dispatch_requests = [["POST", %r{^/api/v1/login$}]]
     jwt.revocation_requests = [["DELETE", %r{^/api/v1/logout$}]]
     jwt.expiration_time = 30.minutes.to_i
