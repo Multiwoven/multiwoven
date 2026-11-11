@@ -18,6 +18,8 @@
 class Connector < ApplicationRecord
   include Utils::JsonHelpers
 
+  encrypts :configuration
+
   validates :workspace_id, presence: true
   validates :connector_type, presence: true
   validates :configuration, presence: true, json: { schema: -> { configuration_schema } }
