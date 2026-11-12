@@ -3,6 +3,22 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
+<<<<<<< HEAD
+=======
+const upstream = process.env.VITE_API_HOST;
+if (!upstream) {
+  throw new Error('VITE_API_HOST is required (e.g. https://api.staging.squared.ai)');
+}
+app.use(
+  createProxyMiddleware({
+    pathFilter: ['/api', '/enterprise', '/saml'],
+    target: upstream,
+    changeOrigin: true,
+    xfwd: true,
+  }),
+);
+
+>>>>>>> 511039ec2 (chore(CE): revert to just the admin UI changes (#2127))
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
