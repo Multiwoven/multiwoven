@@ -46,6 +46,25 @@ module ReverseEtl
           end
         end
 
+        context "when query_type is raw_sql and source is SqlServer" do
+          # SqlServer may not be in the installed multiwoven-integrations gem yet;
+          # exercise the builder with a protocol-shaped double.
+          let(:sync_config) do
+            double(
+              "SyncConfig",
+              model: double("Model", query: existing_query),
+              source: double("Source", name: "SqlServer", query_type: "raw_sql")
+            )
+          end
+
+          it "returns the query with ORDER BY NEWID()" do
+            query = described_class.build_random_record_query(sync_config)
+
+            expected_query = "SELECT * FROM (#{existing_query}) AS subquery ORDER BY NEWID()"
+            expect(query).to eq(expected_query)
+          end
+        end
+
         context "when query_type is raw_sql and source is Intuit QuickBooks" do
           let(:sync) do
             create(:sync, model:, source: source_intuitquickbooks, destination:)
