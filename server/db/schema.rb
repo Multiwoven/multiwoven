@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.2].define(version: 2026_08_07_142125) do
+>>>>>>> 026f0ade1 (chore(CE): Backfill null Agentic Coding Template slugs with defaults (#2141))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
