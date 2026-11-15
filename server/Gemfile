@@ -14,7 +14,12 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.34.6"
+=======
+gem "duckdb", "= 1.4.3.0" # Pin to match libduckdb v1.4.3 installed in CI/Docker
+gem "multiwoven-integrations", "~> 0.41.9"
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
@@ -34,7 +39,20 @@ gem "jbuilder"
 gem "jwt"
 gem "kaminari"
 gem "liquid"
+<<<<<<< HEAD
 gem "rack-cors"
+=======
+gem "rack-cors", "~> 3.0"
+gem "rack-session", ">= 2.1.2"
+gem "ruby-anthropic", "~> 0.4.2"
+
+# File Processing
+gem "docx"
+gem "pdf-reader"
+gem "roo", ">= 3.0.0" # .xlsx, .ods
+gem "roo-xls" # .xls (legacy Excel)
+gem "rubyzip", ">= 3.4.0", require: "zip"
+>>>>>>> 9a2a90a9c (chore(CE): Update Server Gemfile 0.41.9 (#2224))
 
 # AuthN & AuthZ
 gem "devise"
