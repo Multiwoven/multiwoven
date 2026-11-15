@@ -51,12 +51,17 @@ module Multiwoven::Integrations::Source
       end
 
       def evaluate_deployment_status(response, deployment_id)
+        return failure_status_from_response(response) unless success?(response)
+
         response_body = JSON.parse(response.body)
         deployment_status = response_body["resources"]&.find { |res| res.dig("metadata", "id") == deployment_id }
 
-        return failure_status unless deployment_status
+        return failure_status("Deployment #{deployment_id} not found") unless deployment_status
 
-        deployment_status.dig("entity", "status", "state") == "ready" ? success_status : failure_status
+        state = deployment_status.dig("entity", "status", "state")
+        return success_status if state == "ready"
+
+        failure_status("Deployment status is #{state.presence || "unknown"}")
       end
 
       def prepare_config_and_payload(sync_config)

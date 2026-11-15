@@ -13,7 +13,7 @@ module Multiwoven::Integrations::Source
           headers: auth_headers(connection_config[:api_key]),
           config: connection_config[:config]
         )
-        success?(response) ? success_status : failure_status(nil)
+        success?(response) ? success_status : failure_status_from_response(response)
       rescue StandardError => e
         handle_exception(e, { context: "GENERIC OPEN AI:CHECK_CONNECTION:EXCEPTION", type: "error" })
         failure_status(e)
