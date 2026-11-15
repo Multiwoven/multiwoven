@@ -9,6 +9,11 @@ RSpec.describe Agents::Workflow, type: :model do
     it { should have_many(:edges).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
     it { should have_one(:workflow_integration).dependent(:destroy) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:p2w_sessions).class_name("P2w::Session").dependent(:destroy) }
+    it { should have_many(:versions) }
+>>>>>>> 46ca3c401 (feat(CE): prompt to workflow v2 models (#1803))
   end
 
   describe "enums" do
