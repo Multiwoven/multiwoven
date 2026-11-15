@@ -1,5 +1,22 @@
 ## [Unreleased]
 
+<<<<<<< HEAD
+=======
+### [0.43.7]
+
+
+### Bug Fixes
+
+* OAuth token requests rejected with a 4xx other than 408 or 429 raise `OauthTokenRequestError` instead of a bare `RuntimeError` (BE-2068)
+
+### [0.43.3]
+
+
+### Bug Fixes
+
+* Firecrawl `get_request_url` raises a clear error when there is no active crawl id (BE-2025)
+
+>>>>>>> 49d1f6a02 (fix(CE): Raise typed OauthTokenRequestError for OAuth token 4xx responses (BE-2068) (#2380))
 ### [0.4.1](https://www.github.com/Multiwoven/multiwoven-integrations/compare/v0.4.0...v0.4.1) (2024-02-15)
 
 
