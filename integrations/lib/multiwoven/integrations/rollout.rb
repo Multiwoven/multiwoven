@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.2"
+>>>>>>> f34f80736 (chore(CE): Update Bolt from 32b to V2 (#2346))
 
     ENABLED_SOURCES = %w[
       Snowflake
