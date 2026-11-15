@@ -61,6 +61,7 @@ module ReverseEtl
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
         batch_size = sync_config.stream.batch_size
+<<<<<<< HEAD
 
         # track sync record status
         successfull_sync_records = []
@@ -84,6 +85,20 @@ module ReverseEtl
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
         heartbeat(activity, sync_run)
+=======
+
+        sync_run.sync_records.pending.find_in_batches(batch_size:).each_slice(THREAD_COUNT) do |batch_of_sync_records|
+          mutex = Mutex.new
+          successful_sync_records = []
+          failed_sync_records = []
+          Parallel.each(batch_of_sync_records, in_threads: THREAD_COUNT) do |sync_records|
+            process_single_batch(sync, sync_run, sync_config, sync_records,
+                                 mutex, successful_sync_records, failed_sync_records)
+          end
+          update_sync_records_status(sync_run, successful_sync_records, failed_sync_records)
+          heartbeat(activity, sync_run)
+        end
+>>>>>>> 5e35988b1 (fix(CE): parallelism getting stuck at batch upserting (#1799))
       end
 
       def handle_response(report, sync_run)
