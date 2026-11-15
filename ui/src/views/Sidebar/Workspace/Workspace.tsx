@@ -52,7 +52,22 @@ const Workspace = () => {
     <>
       <Popover closeOnEsc isOpen={isPopOverOpen} onClose={() => setIsPopOverOpen(false)}>
         <PopoverTrigger>
+<<<<<<< HEAD
           <Box cursor='pointer'>
+=======
+          <Box
+            data-testid='workspace-selector-trigger'
+            bgColor='gray.200'
+            px={2}
+            py={2}
+            rounded='lg'
+            _hover={{ bgColor: 'gray.300' }}
+            borderWidth='1px'
+            borderColor='gray.400'
+            borderStyle='solid'
+            cursor='pointer'
+          >
+>>>>>>> f4a938794 (chore(CE): data-testid attributes to the main sidebar and workspace UI  (#1781))
             <Box
               bgColor='gray.300'
               px={2}
