@@ -1,0 +1,27 @@
+{
+  "models": [
+    {
+      "id": "bolt-instruct-32b",
+      "name": "Bolt-Instruct-32B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 128000,
+      "max_output": 16384,
+      "pricing": {
+        "input": 0.0,
+        "output": 0.0,
+        "cached_read": 0.0,
+        "cached_write": 0.0,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents",
+        "Data analyst"
+      ]
+    }
+  ]
+}
