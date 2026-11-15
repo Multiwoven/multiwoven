@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2026_02_26_020731) do
+>>>>>>> 6310b2d26 (chore(CE): Add total cost to LLM Usage Log Model (#1659))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -244,6 +248,113 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.jsonb "additional_remarks"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "hosted_data_store_tables", force: :cascade do |t|
+    t.integer "hosted_data_store_id"
+    t.string "name"
+    t.integer "column_count"
+    t.integer "row_count"
+    t.integer "size"
+    t.integer "sync_enabled"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.jsonb "table_schema", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hosted_data_stores", force: :cascade do |t|
+    t.string "name"
+    t.integer "workspace_id"
+    t.integer "database_type"
+    t.text "description"
+    t.integer "state"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.string "template_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "knowledge_base_files", force: :cascade do |t|
+    t.string "name"
+    t.integer "size", default: 0
+    t.integer "knowledge_base_id"
+    t.boolean "workflow_enabled", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "upload_status", default: 0
+  end
+
+  create_table "knowledge_bases", force: :cascade do |t|
+    t.string "name"
+    t.integer "knowledge_base_type"
+    t.integer "size", default: 0
+    t.jsonb "embedding_config"
+    t.jsonb "storage_config"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.integer "hosted_data_store_id"
+    t.integer "workspace_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "llm_routing_logs", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "workflow_run_id", null: false
+    t.string "component_id", null: false
+    t.string "prompt_hash", null: false
+    t.string "selected_model", null: false
+    t.string "selected_component_id", null: false
+    t.string "selected_connector_id", null: false
+    t.string "routing_strategy", default: "judge_llm", null: false
+    t.string "optimization_mode", default: "balanced", null: false
+    t.text "routing_reason"
+    t.float "routing_confidence"
+    t.integer "execution_time_ms"
+    t.integer "routing_time_ms"
+    t.boolean "is_fallback", default: false
+    t.string "prompt_complexity"
+    t.string "task_type"
+    t.integer "estimated_tokens"
+    t.jsonb "routing_metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["component_id"], name: "index_llm_routing_logs_on_component_id"
+    t.index ["created_at"], name: "index_llm_routing_logs_on_created_at"
+    t.index ["is_fallback"], name: "index_llm_routing_logs_on_is_fallback"
+    t.index ["prompt_complexity"], name: "index_llm_routing_logs_on_prompt_complexity"
+    t.index ["prompt_hash"], name: "index_llm_routing_logs_on_prompt_hash"
+    t.index ["selected_model"], name: "index_llm_routing_logs_on_selected_model"
+    t.index ["task_type"], name: "index_llm_routing_logs_on_task_type"
+    t.index ["workflow_run_id"], name: "index_llm_routing_logs_on_workflow_run_id"
+    t.index ["workspace_id"], name: "index_llm_routing_logs_on_workspace_id"
+  end
+
+  create_table "llm_usage_logs", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "workflow_run_id", null: false
+    t.string "component_id", null: false
+    t.string "connector_id", null: false
+    t.string "prompt_hash", null: false
+    t.integer "estimated_input_tokens", null: false
+    t.integer "estimated_output_tokens", null: false
+    t.string "selected_model", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "provider"
+    t.float "total_cost", default: 0.0, null: false
+    t.index ["component_id"], name: "index_llm_usage_logs_on_component_id"
+    t.index ["created_at"], name: "index_llm_usage_logs_on_created_at"
+    t.index ["prompt_hash"], name: "index_llm_usage_logs_on_prompt_hash"
+    t.index ["selected_model"], name: "index_llm_usage_logs_on_selected_model"
+    t.index ["workflow_run_id"], name: "index_llm_usage_logs_on_workflow_run_id"
+    t.index ["workspace_id"], name: "index_llm_usage_logs_on_workspace_id"
+  end
+
+>>>>>>> 6310b2d26 (chore(CE): Add total cost to LLM Usage Log Model (#1659))
   create_table "message_feedbacks", force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
