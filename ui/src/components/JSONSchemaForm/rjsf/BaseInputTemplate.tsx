@@ -70,6 +70,9 @@ export default function BaseInputTemplate<
     onToggle();
   };
 
+  const connectorFieldTestId =
+    id && id.startsWith('root_') ? `connector-config-field-${id.slice('root_'.length)}` : undefined;
+
   return (
     <FormControl
       mb={1}
@@ -113,6 +116,7 @@ export default function BaseInputTemplate<
           <Input
             id={id}
             name={id}
+            data-testid={connectorFieldTestId}
             value={value || value === 0 ? value : ''}
             onChange={onChangeOverride || _onChange}
             onBlur={_onBlur}
