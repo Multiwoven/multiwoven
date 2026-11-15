@@ -6,7 +6,7 @@
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/maria_db",
     "github_issue_label": "destination-maria-db",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607744/Multiwoven/connectors/maria_db/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

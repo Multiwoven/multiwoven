@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.2"
+>>>>>>> 27ec87468 (chore(CE): update icon URL path (#2178))
 
     ENABLED_SOURCES = %w[
       Snowflake

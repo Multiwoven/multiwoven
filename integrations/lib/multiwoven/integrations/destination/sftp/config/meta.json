@@ -7,7 +7,7 @@
     "category": "File Storage",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/file-storage/sftp",
     "github_issue_label": "destination-sftp",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609351/Multiwoven/connectors/sftp/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

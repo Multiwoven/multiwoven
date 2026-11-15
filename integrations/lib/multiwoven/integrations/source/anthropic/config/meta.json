@@ -7,7 +7,7 @@
     "sub_category": "LLM",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/anthropic-model",
     "github_issue_label": "source-anthropic-model",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787604726/Multiwoven/connectors/Antropic-model/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

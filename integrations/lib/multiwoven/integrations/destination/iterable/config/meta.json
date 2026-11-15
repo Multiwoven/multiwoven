@@ -6,7 +6,7 @@
     "category": "Marketing Automation",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/marketing-automation/iterable",
     "github_issue_label": "destination-iterable",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607480/Multiwoven/connectors/iterable/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

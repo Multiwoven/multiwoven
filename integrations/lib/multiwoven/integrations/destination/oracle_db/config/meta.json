@@ -6,7 +6,7 @@
     "category": "Database",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/database/oracle",
     "github_issue_label": "destination-oracle",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787608648/Multiwoven/connectors/Oracle/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

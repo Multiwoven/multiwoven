@@ -242,4 +242,16 @@ RSpec.describe Multiwoven::Integrations::Destination::Klaviyo::Client do
       end
     end
   end
+
+  describe "#meta_data" do
+    it "returns the correct meta data" do
+      client = Multiwoven::Integrations::Destination::Klaviyo::Client.new
+      meta_data = client.send(:meta_data)
+      meta_name = client.class.to_s.split("::")[-2]
+      expect(meta_data).to be_a(Hash)
+      expect(meta_data[:data][:name]).to eq(meta_name)
+      expect(meta_data[:data][:connector_type]).to eq("destination")
+      expect(meta_data[:data][:icon]).to eq("https://res.cloudinary.com/dspflukeu/image/upload/v1787607650/Multiwoven/connectors/klaviyo/icon.svg")
+    end
+  end
 end

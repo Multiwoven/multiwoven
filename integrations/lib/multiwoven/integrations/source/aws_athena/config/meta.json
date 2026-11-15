@@ -7,7 +7,7 @@
     "sub_category": "Relational Database",
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/aws_athena",
     "github_issue_label": "source-aws-athena",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787604838/Multiwoven/connectors/aws_athena/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

@@ -6,7 +6,7 @@
     "category": "CRM",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/salesforce",
     "github_issue_label": "destination-salesforce-crm",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609278/Multiwoven/connectors/salesforce-crm/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

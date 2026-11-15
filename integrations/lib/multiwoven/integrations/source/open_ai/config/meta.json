@@ -7,7 +7,7 @@
     "sub_category": "LLM",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/open_ai-model",
     "github_issue_label": "source-open-ai-model",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787608718/Multiwoven/connectors/Open_ai/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

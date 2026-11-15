@@ -150,9 +150,13 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do
   end
 
   describe "#meta_data" do
-    it "serves it github image url as icon" do
-      image_url = "https://raw.githubusercontent.com/Multiwoven/multiwoven/main/integrations/lib/multiwoven/integrations/destination/hubspot/icon.svg"
-      expect(client.send(:meta_data)[:data][:icon]).to eq(image_url)
+    it "returns the correct meta data" do
+      meta_data = client.send(:meta_data)
+      meta_name = client.class.to_s.split("::")[-2]
+      expect(meta_data).to be_a(Hash)
+      expect(meta_data[:data][:name]).to eq(meta_name)
+      expect(meta_data[:data][:connector_type]).to eq("destination")
+      expect(meta_data[:data][:icon]).to eq("https://res.cloudinary.com/dspflukeu/image/upload/v1787607386/Multiwoven/connectors/hubspot/icon.svg")
     end
   end
 

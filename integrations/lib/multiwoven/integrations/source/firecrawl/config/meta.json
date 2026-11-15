@@ -7,7 +7,7 @@
       "sub_category": "Web Scraper",
       "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/firecrawl",
       "github_issue_label": "source-firecrawl",
-      "icon": "icon.svg",
+      "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787605660/Multiwoven/connectors/Firecrawl/icon.svg",
       "license": "MIT",
       "release_stage": "alpha",
       "support_level": "community",

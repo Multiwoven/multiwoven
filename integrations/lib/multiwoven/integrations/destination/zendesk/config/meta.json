@@ -6,7 +6,7 @@
     "category": "Customer Support",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/customer-support/zendesk",
     "github_issue_label": "destination-zendesk",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787609690/Multiwoven/connectors/zendesk/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

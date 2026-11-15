@@ -6,7 +6,7 @@
     "category": "CRM",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/crm/microsoft_dynamics",
     "github_issue_label": "destination-microsoft-dynamics",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607904/Multiwoven/connectors/Microsoft%20Dynamics/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

@@ -6,7 +6,7 @@
     "category": "Marketing Automation",
     "documentation_url": "https://docs.squared.ai/guides/destinations/retl-destinations/marketing-automation/klaviyo",
     "github_issue_label": "destination-klaviyo",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607650/Multiwoven/connectors/klaviyo/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",

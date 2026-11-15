@@ -7,7 +7,7 @@
     "sub_category": "AI_ML Service",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/google_vertex-model",
     "github_issue_label": "source-vertex",
-    "icon": "icon.svg",
+    "icon": "https://res.cloudinary.com/dspflukeu/image/upload/v1787607167/Multiwoven/connectors/google_vertex-model/icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",
