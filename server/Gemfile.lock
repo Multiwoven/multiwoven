@@ -1679,12 +1679,17 @@ GEM
       activesupport
     childprocess (5.1.0)
       logger (~> 1.5)
+<<<<<<< HEAD
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     console (1.29.2)
       fiber-annotation
       fiber-local (~> 1.1)
       json
+=======
+    concurrent-ruby (1.3.8)
+    connection_pool (3.0.2)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
     counter_culture (3.8.2)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -1820,12 +1825,22 @@ GEM
       activesupport (>= 6.1)
     google-apis-bigquery_v2 (0.83.0)
       google-apis-core (>= 0.15.0, < 2.a)
+<<<<<<< HEAD
     google-apis-core (0.16.0)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 1.9)
       httpclient (>= 2.8.3, < 3.a)
       mini_mime (~> 1.0)
       mutex_m
+=======
+    google-apis-core (1.2.5)
+      addressable (~> 2.9)
+      faraday (~> 2.13)
+      faraday-follow_redirects (~> 0.3)
+      googleauth (~> 1.14)
+      mini_mime (~> 1.1)
+      multi_json (~> 1.11)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
     google-apis-drive_v3 (0.68.0)
@@ -1848,7 +1863,12 @@ GEM
     google-cloud-core (1.7.1)
       google-cloud-env (>= 1.0, < 3.a)
       google-cloud-errors (~> 1.0)
+<<<<<<< HEAD
     google-cloud-env (2.2.1)
+=======
+    google-cloud-env (2.4.0)
+      base64 (~> 0.2)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       faraday (>= 1.0, < 3.a)
     google-cloud-errors (1.4.0)
     google-cloud-location (0.10.0)
@@ -1869,7 +1889,11 @@ GEM
       grpc (~> 1.41)
     googleapis-common-protos-types (1.18.0)
       google-protobuf (>= 3.18, < 5.a)
+<<<<<<< HEAD
     googleauth (1.13.1)
+=======
+    googleauth (1.17.3)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
       google-logging-utils (~> 0.1)
@@ -1931,7 +1955,14 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
+<<<<<<< HEAD
     json (2.9.1)
+=======
+    json (2.21.2)
+    json-schema (5.2.2)
+      addressable (~> 2.8)
+      bigdecimal (~> 3.1)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
     json_schemer (0.2.25)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
@@ -1954,7 +1985,18 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+<<<<<<< HEAD
     language_server-protocol (3.17.0.3)
+=======
+    langchainrb (0.19.5)
+      baran (~> 0.1.9)
+      csv
+      json-schema (>= 4, < 6)
+      matrix
+      pragmatic_segmenter (~> 0.3.0)
+      zeitwerk (~> 2.5)
+    language_server-protocol (3.17.0.6)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
     launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -1979,7 +2021,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.39.2)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2043,9 +2089,20 @@ GEM
       bigdecimal (>= 3.0)
     orm_adapter (0.5.0)
     os (1.1.4)
+<<<<<<< HEAD
     ostruct (0.6.1)
     parallel (1.24.0)
     parser (3.3.0.3)
+=======
+    ostruct (0.6.3)
+    paper_trail (17.0.0)
+      activerecord (>= 7.1)
+      request_store (~> 1.4)
+    parallel (1.28.0)
+    parallel_tests (5.4.0)
+      parallel
+    parser (3.3.12.0)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       ast (~> 2.4.1)
       racc
     pdf-reader (2.15.0)
@@ -2144,10 +2201,18 @@ GEM
     rchardet (1.9.0)
     rdoc (6.14.2)
       erb
+<<<<<<< HEAD
       psych (>= 4.0.0)
     redis (4.8.1)
     regexp_parser (2.9.0)
     reline (0.6.2)
+=======
+      prism (>= 1.6.0)
+      rbs (>= 4.0.0)
+      tsort
+    regexp_parser (2.12.0)
+    reline (0.6.3)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       io-console (~> 0.5)
     representable (3.2.0)
       declarative (< 0.1.0)
@@ -2194,11 +2259,18 @@ GEM
       rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
+<<<<<<< HEAD
     rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
     rubocop-performance (1.20.2)
+=======
+    rubocop-ast (1.50.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
+    rubocop-performance (1.23.1)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
       rubocop (>= 1.48.1, < 2.0)
-      rubocop-ast (>= 1.30.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rails (2.23.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
@@ -2339,7 +2411,12 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.39.2)
+>>>>>>> b51f36a0c (chore(CE): Update Server Gemfile 0.39.2 (#2149))
   mysql2
   newrelic_rpm
   parallel
