@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 
 describe('TemplateOptions component', () => {
+<<<<<<< HEAD:ui/src/views/Activate/Syncs/SyncForm/ConfigureSyncs/TemplateMapping/__tests__/TemplateOptions.test.tsx
   const columnOptions = ['Column1', 'Column2', 'Column3'];
   const filterOptions = ['Filter1', 'Filter2', 'Filter3'];
   const variableOptions = ['Variable1', 'Variable2'];
@@ -28,6 +29,22 @@ describe('TemplateOptions component', () => {
       },
     },
   };
+=======
+  const columnOptions = [
+    { name: 'Column1', value: 'Column1', description: 'Description 1' },
+    { name: 'Column2', value: 'Column2', description: 'Description 2' },
+    { name: 'Column3', value: 'Column3', description: 'Description 3' },
+  ];
+  const filterOptions = [
+    { name: 'Filter1', value: 'Filter1', description: 'Description 1' },
+    { name: 'Filter2', value: 'Filter2', description: 'Description 2' },
+    { name: 'Filter3', value: 'Filter3', description: 'Description 3' },
+  ];
+  const variableOptions = [
+    { name: 'Variable1', value: 'Variable1', description: 'Description 1' },
+    { name: 'Variable2', value: 'Variable2', description: 'Description 2' },
+  ];
+>>>>>>> d0c54bf0 (fix(CE): remove catalog mapping prop):ui/src/components/TemplateMappingOptions/__tests__/TemplateOptions.test.tsx
 
   test('renders TemplateOptions component with default tab and column options', () => {
     const { getByText, getByPlaceholderText } = render(
@@ -37,7 +54,6 @@ describe('TemplateOptions component', () => {
         filterOptions={filterOptions}
         selectedTemplate=''
         setSelectedTemplate={() => {}}
-        catalogMapping={catalogMapping}
       />,
     );
 
@@ -64,7 +80,6 @@ describe('TemplateOptions component', () => {
         filterOptions={filterOptions}
         selectedTemplate=''
         setSelectedTemplate={setSelectedTemplate}
-        catalogMapping={catalogMapping}
       />,
     );
 
