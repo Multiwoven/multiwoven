@@ -1,0 +1,6 @@
+{
+  "request_rate_limit": 600,
+  "request_rate_limit_unit": "minute",
+  "request_rate_concurrency": 10,
+  "streams": []
+}
