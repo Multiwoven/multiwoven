@@ -30,10 +30,62 @@ RSpec.describe MultiwovenServer::RequestResponseLogger do
         expect(log_data[:request_method]).to eq("POST")
         expect(log_data[:request_url]).to eq("http://example.org/api/v1/users")
         expect(log_data[:request_params]).to eq({ "name" => "John Doe" })
-        expect(log_data[:request_headers].transform_keys(&:to_s)).to eq({ "Workspace-Id" => "1" })
+        expect(log_data[:request_headers].transform_keys(&:to_s)).to eq(
+          {
+            "Workspace-Id" => "1",
+            "Origin" => nil,
+            "Referer" => nil
+          }
+        )
       end.once
 
       subject.call(env)
+    end
+
+    it "logs Origin and Referer headers when present" do
+      env_with_headers = Rack::MockRequest.env_for(
+        "/api/v1/users",
+        method: "POST",
+        "CONTENT_TYPE" => "application/json",
+        "HTTP_WORKSPACE_ID" => "1",
+        "HTTP_ORIGIN" => "https://app.example.com",
+        "HTTP_REFERER" => "https://app.example.com/data-apps/42/edit",
+        input: '{"name": "John Doe"}'
+      )
+      allow(app).to receive(:call).with(env_with_headers)
+                                  .and_return([201, {}, double(body: "User created")])
+      allow_any_instance_of(described_class).to receive(:log_response).and_return(nil)
+
+      expect(Rails.logger).to receive(:info) do |arg|
+        log_data = eval(arg) # rubocop:disable Security/Eval
+        expect(log_data[:request_headers].transform_keys(&:to_s)).to eq(
+          {
+            "Workspace-Id" => "1",
+            "Origin" => "https://app.example.com",
+            "Referer" => "https://app.example.com/data-apps/42/edit"
+          }
+        )
+      end.once
+
+      subject.call(env_with_headers)
+    end
+
+    it "logs nil for Origin and Referer when absent (same-origin case)" do
+      env_no_origin = Rack::MockRequest.env_for(
+        "/api/v1/users",
+        method: "GET",
+        "HTTP_WORKSPACE_ID" => "1"
+      )
+      allow(app).to receive(:call).with(env_no_origin).and_return([200, {}, double(body: "[]")])
+      allow_any_instance_of(described_class).to receive(:log_response).and_return(nil)
+
+      expect(Rails.logger).to receive(:info) do |arg|
+        log_data = eval(arg) # rubocop:disable Security/Eval
+        headers = log_data[:request_headers].transform_keys(&:to_s)
+        expect(headers).to include("Origin" => nil, "Referer" => nil)
+      end.once
+
+      subject.call(env_no_origin)
     end
 
     it "logs response details" do
