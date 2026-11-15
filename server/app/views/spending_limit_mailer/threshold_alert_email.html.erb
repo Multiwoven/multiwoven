@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      .limit-info-label {
+        color: #667085;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 6px;
+        text-align: left;
+      }
+
+      .limit-info-value {
+        color: #101828;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 6px;
+        text-align: left;
+      }
+
+      .info-table {
+        width: 100%;
+        margin-top: 20px;
+        border-spacing: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <td align="center">
+          <table style="width: 100%; max-width: 600px; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #eaecf0;">
+            <tr>
+              <td align="center" style="padding: 12px;">
+                <img
+                  src="https://res.cloudinary.com/dspflukeu/image/upload/v1746630317/Multiwoven/ais-logo_fyn2uv.png"
+                  style="max-width: 178px;"
+                  alt="AI Squared Logo"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style="background: white; border-radius: 8px; border: 1px solid #eaecf0; padding: 48px 16px; text-align: center;">
+                <h1 style="color: #b54708; font-size: 28px; font-weight: 700; margin: 0 0 16px;">
+                  Spend Limit at <%= @alert_attrs[:percentage] %>%
+                </h1>
+                <p style="color: #475467; font-size: 14px; font-weight: 400; margin-bottom: 20px;">
+                  <%= "The spend limit \"#{@alert_attrs[:limit_name]}\" has reached #{@alert_attrs[:percentage]}% of its #{@alert_attrs[:period]} budget." %>
+                </p>
+
+                <table class="info-table">
+                  <tr>
+                    <td class="limit-info-label">Limit Name</td>
+                    <td class="limit-info-value"><%= @alert_attrs[:limit_name] %></td>
+                  </tr>
+                  <tr>
+                    <td class="limit-info-label">Workspace</td>
+                    <td class="limit-info-value"><%= @alert_attrs[:workspace_name] %></td>
+                  </tr>
+                  <tr>
+                    <td class="limit-info-label">Reached</td>
+                    <td class="limit-info-value"><%= @alert_attrs[:percentage] %>%</td>
+                  </tr>
+                  <% if @alert_attrs[:cost_limit].present? %>
+                    <tr>
+                      <td class="limit-info-label">Spent</td>
+                      <td class="limit-info-value">
+                        <%= number_to_currency(@alert_attrs[:spent_cost] || 0, precision: 4) %>
+                        of <%= number_to_currency(@alert_attrs[:cost_limit], precision: 4) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  <% if @alert_attrs[:token_limit].present? %>
+                    <tr>
+                      <td class="limit-info-label">Tokens</td>
+                      <td class="limit-info-value">
+                        <%= number_with_delimiter(@alert_attrs[:spent_tokens].to_i) %>
+                        of <%= number_with_delimiter(@alert_attrs[:token_limit].to_i) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  <% if @alert_attrs[:resets_at].present? %>
+                    <tr>
+                      <td class="limit-info-label">Period Resets</td>
+                      <td class="limit-info-value"><%= @alert_attrs[:resets_at].to_time.utc.strftime("%b %d, %Y %I:%M %p UTC") %></td>
+                    </tr>
+                  <% end %>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 24px 12px; text-align: center; font-size: 12px; color: #98a2b3;">
+                <div>AI Squared, 147 Castro Street, Second Floor, Mountain View, CA 94041</div>
+                <div>© <%= Time.current.year %> AI Squared. All Rights Reserved.</div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

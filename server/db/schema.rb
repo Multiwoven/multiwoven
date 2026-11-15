@@ -244,6 +244,205 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.jsonb "additional_remarks"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "git_installations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", default: "github", null: false
+    t.bigint "external_id"
+    t.string "name"
+    t.integer "account_type"
+    t.string "status", default: "active", null: false
+    t.bigint "provider_user_id"
+    t.jsonb "provider_metadata", default: {}, null: false
+    t.text "cached_token"
+    t.datetime "token_expires_at"
+    t.text "user_token"
+    t.text "refresh_token"
+    t.datetime "refresh_token_expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "external_id", "user_id"], name: "index_git_installations_on_provider_external_id_and_user_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["provider", "provider_user_id"], name: "index_git_installations_on_provider_and_provider_user_id", where: "(provider_user_id IS NOT NULL)"
+    t.index ["provider", "user_id", "name"], name: "index_git_installations_on_provider_user_and_name", unique: true, where: "(name IS NOT NULL)"
+    t.index ["user_id", "provider"], name: "index_git_installations_pending_per_user", unique: true, where: "((status)::text = 'pending'::text)"
+    t.index ["user_id"], name: "index_git_installations_on_user_id"
+  end
+
+  create_table "git_session_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "session_id", null: false
+    t.string "event", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "delivery_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id", "delivery_id"], name: "index_git_session_events_on_session_and_delivery", unique: true, where: "(delivery_id IS NOT NULL)"
+    t.index ["session_id", "id"], name: "index_git_session_events_on_session_and_id"
+    t.index ["session_id"], name: "index_git_session_events_on_session_id"
+  end
+
+  create_table "git_targets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "git_installation_id", null: false
+    t.string "repo", null: false
+    t.string "default_branch", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["git_installation_id", "repo"], name: "index_git_targets_on_install_repo", unique: true
+    t.index ["git_installation_id"], name: "index_git_targets_on_git_installation_id"
+    t.index ["status"], name: "index_git_targets_on_status"
+  end
+
+  create_table "git_webhook_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "delivery_id", null: false
+    t.string "scope", null: false
+    t.string "commit_sha"
+    t.string "status", default: "pending", null: false
+    t.string "webhook_event"
+    t.jsonb "webhook_payload"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_id"], name: "index_git_webhook_deliveries_on_delivery_id", unique: true
+  end
+
+  create_table "hosted_data_store_tables", force: :cascade do |t|
+    t.integer "hosted_data_store_id"
+    t.string "name"
+    t.integer "column_count"
+    t.integer "row_count"
+    t.integer "size"
+    t.integer "sync_enabled"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.jsonb "table_schema", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hosted_data_stores", force: :cascade do |t|
+    t.string "name"
+    t.integer "workspace_id"
+    t.integer "database_type"
+    t.text "description"
+    t.integer "state"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.string "template_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "knowledge_base_files", force: :cascade do |t|
+    t.string "name"
+    t.integer "size", default: 0
+    t.integer "knowledge_base_id"
+    t.boolean "workflow_enabled", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "upload_status", default: 0
+  end
+
+  create_table "knowledge_bases", force: :cascade do |t|
+    t.string "name"
+    t.integer "knowledge_base_type"
+    t.integer "size", default: 0
+    t.jsonb "embedding_config"
+    t.jsonb "storage_config"
+    t.integer "source_connector_id"
+    t.integer "destination_connector_id"
+    t.integer "hosted_data_store_id"
+    t.integer "workspace_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "parser_config", default: {"parser_provider"=>"langchain"}, null: false
+  end
+
+  create_table "llm_routing_logs", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "workflow_run_id", null: false
+    t.string "component_id", null: false
+    t.string "prompt_hash", null: false
+    t.string "selected_model", null: false
+    t.string "selected_component_id", null: false
+    t.string "selected_connector_id", null: false
+    t.string "routing_strategy", default: "judge_llm", null: false
+    t.string "optimization_mode", default: "balanced", null: false
+    t.text "routing_reason"
+    t.float "routing_confidence"
+    t.integer "execution_time_ms"
+    t.integer "routing_time_ms"
+    t.boolean "is_fallback", default: false
+    t.string "prompt_complexity"
+    t.string "task_type"
+    t.integer "estimated_tokens"
+    t.jsonb "routing_metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["component_id"], name: "index_llm_routing_logs_on_component_id"
+    t.index ["created_at"], name: "index_llm_routing_logs_on_created_at"
+    t.index ["is_fallback"], name: "index_llm_routing_logs_on_is_fallback"
+    t.index ["prompt_complexity"], name: "index_llm_routing_logs_on_prompt_complexity"
+    t.index ["prompt_hash"], name: "index_llm_routing_logs_on_prompt_hash"
+    t.index ["selected_model"], name: "index_llm_routing_logs_on_selected_model"
+    t.index ["task_type"], name: "index_llm_routing_logs_on_task_type"
+    t.index ["workflow_run_id"], name: "index_llm_routing_logs_on_workflow_run_id"
+    t.index ["workspace_id"], name: "index_llm_routing_logs_on_workspace_id"
+  end
+
+  create_table "llm_usage_events", force: :cascade do |t|
+    t.uuid "request_id", null: false
+    t.bigint "organization_id", null: false
+    t.bigint "workspace_id", null: false
+    t.bigint "user_id"
+    t.bigint "role_id"
+    t.integer "source", default: 0, null: false
+    t.jsonb "source_ref", default: {}, null: false
+    t.bigint "connector_id"
+    t.string "provider", null: false
+    t.string "model", null: false
+    t.bigint "input_tokens", default: 0, null: false
+    t.bigint "output_tokens", default: 0, null: false
+    t.bigint "reasoning_tokens", default: 0, null: false
+    t.bigint "cache_read_tokens", default: 0, null: false
+    t.bigint "cache_write_tokens", default: 0, null: false
+    t.integer "token_count_method", default: 0, null: false
+    t.decimal "cost", precision: 18, scale: 10
+    t.bigint "pricing_id"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.index "workspace_id, ((source_ref ->> 'data_app_id'::text)), created_at", name: "index_llm_usage_events_on_workspace_and_data_app_ref", where: "(source_ref ? 'data_app_id'::text)"
+    t.index "workspace_id, ((source_ref ->> 'workflow_id'::text)), created_at", name: "index_llm_usage_events_on_workspace_and_workflow_ref", where: "(source_ref ? 'workflow_id'::text)"
+    t.index "workspace_id, lower((provider)::text), created_at", name: "index_llm_usage_events_on_workspace_and_lower_provider"
+    t.index ["organization_id", "created_at"], name: "index_llm_usage_events_on_organization_id_and_created_at"
+    t.index ["request_id"], name: "index_llm_usage_events_on_request_id", unique: true
+    t.index ["workspace_id", "created_at"], name: "index_llm_usage_events_on_workspace_id_and_created_at"
+    t.index ["workspace_id", "source", "created_at"], name: "index_llm_usage_events_on_workspace_and_source_and_created_at"
+    t.check_constraint "cost IS NULL OR cost >= 0::numeric", name: "llm_usage_events_cost_non_negative"
+    t.check_constraint "input_tokens >= 0 AND output_tokens >= 0 AND reasoning_tokens >= 0 AND cache_read_tokens >= 0 AND cache_write_tokens >= 0", name: "llm_usage_events_token_counts_non_negative"
+  end
+
+  create_table "llm_usage_logs", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.bigint "workflow_run_id", null: false
+    t.string "component_id", null: false
+    t.string "connector_id", null: false
+    t.string "prompt_hash", null: false
+    t.integer "estimated_input_tokens", null: false
+    t.integer "estimated_output_tokens", null: false
+    t.string "selected_model", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "provider"
+    t.float "total_cost", default: 0.0, null: false
+    t.index ["component_id"], name: "index_llm_usage_logs_on_component_id"
+    t.index ["created_at"], name: "index_llm_usage_logs_on_created_at"
+    t.index ["prompt_hash"], name: "index_llm_usage_logs_on_prompt_hash"
+    t.index ["selected_model"], name: "index_llm_usage_logs_on_selected_model"
+    t.index ["workflow_run_id"], name: "index_llm_usage_logs_on_workflow_run_id"
+    t.index ["workspace_id"], name: "index_llm_usage_logs_on_workspace_id"
+  end
+
+>>>>>>> f7e57f5b5 (feat(CE): spending limit alerts schema, models and the refusal seam (#2267))
   create_table "message_feedbacks", force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.integer "data_app_id", null: false
@@ -437,6 +636,66 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+<<<<<<< HEAD
+=======
+  create_table "spending_limit_alerts", force: :cascade do |t|
+    t.bigint "spending_limit_counter_id", null: false
+    t.integer "threshold", null: false
+    t.datetime "delivered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "abandoned_at"
+    t.datetime "claimed_at"
+    t.index ["id"], name: "index_spend_alerts_pending_v2", where: "((delivered_at IS NULL) AND (abandoned_at IS NULL))"
+    t.index ["spending_limit_counter_id", "threshold"], name: "index_spend_alerts_on_counter_and_threshold", unique: true
+  end
+
+  create_table "spending_limit_counters", force: :cascade do |t|
+    t.bigint "spending_limit_id", null: false
+    t.datetime "window_start", null: false
+    t.decimal "spent_cost", precision: 18, scale: 10, default: "0.0", null: false
+    t.bigint "spent_tokens", default: 0, null: false
+    t.bigint "request_count", default: 0, null: false
+    t.integer "unpriced_requests", default: 0, null: false
+    t.integer "alerted_thresholds", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spending_limit_id", "window_start"], name: "index_spending_limit_counters_on_limit_and_window_start", unique: true
+    t.index ["spending_limit_id"], name: "index_spending_limit_counters_on_spending_limit_id"
+    t.check_constraint "spent_cost >= 0::numeric AND spent_tokens >= 0 AND request_count >= 0 AND unpriced_requests >= 0", name: "spending_limit_counters_totals_non_negative"
+  end
+
+  create_table "spending_limits", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.bigint "workspace_id", null: false
+    t.integer "level", default: 0, null: false
+    t.string "name", null: false
+    t.integer "scope_type", default: 0, null: false
+    t.string "scope_ids", default: [], null: false, array: true
+    t.string "providers", default: [], null: false, array: true
+    t.string "models", default: [], null: false, array: true
+    t.integer "limit_type", default: 0, null: false
+    t.decimal "cost_limit", precision: 14, scale: 4
+    t.bigint "token_limit"
+    t.integer "period", default: 0, null: false
+    t.integer "alert_thresholds", default: [80, 90], null: false, array: true
+    t.integer "action_on_exhaust", default: 0, null: false
+    t.boolean "enabled", default: true, null: false
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "counting_started_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["created_by_id"], name: "index_spending_limits_on_created_by_id"
+    t.index ["organization_id"], name: "index_spending_limits_on_organization_id"
+    t.index ["workspace_id", "name"], name: "index_spending_limits_on_workspace_id_and_name", unique: true
+    t.index ["workspace_id"], name: "index_spending_limits_on_workspace_id"
+    t.index ["workspace_id"], name: "index_spending_limits_one_allocation_per_workspace", unique: true, where: "(level = 1)"
+    t.check_constraint "cost_limit IS NULL OR cost_limit > 0::numeric", name: "spending_limits_cost_limit_positive"
+    t.check_constraint "limit_type = 0 AND cost_limit IS NOT NULL OR limit_type = 1 AND token_limit IS NOT NULL OR limit_type = 2 AND cost_limit IS NOT NULL AND token_limit IS NOT NULL", name: "spending_limits_cap_matches_limit_type"
+    t.check_constraint "token_limit IS NULL OR token_limit > 0", name: "spending_limits_token_limit_positive"
+  end
+
+>>>>>>> f7e57f5b5 (feat(CE): spending limit alerts schema, models and the refusal seam (#2267))
   create_table "sso_configurations", force: :cascade do |t|
     t.integer "organization_id"
     t.integer "status", default: 1
@@ -715,6 +974,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+<<<<<<< HEAD
+=======
+  add_foreign_key "spending_limit_alerts", "spending_limit_counters", on_delete: :cascade
+  add_foreign_key "spending_limit_counters", "spending_limits", on_delete: :cascade
+  add_foreign_key "spending_limits", "organizations"
+  add_foreign_key "spending_limits", "users", column: "created_by_id", on_delete: :nullify
+  add_foreign_key "spending_limits", "workspaces"
+>>>>>>> f7e57f5b5 (feat(CE): spending limit alerts schema, models and the refusal seam (#2267))
   add_foreign_key "taggings", "tags"
   add_foreign_key "workflow_integrations", "workflows", validate: false
   add_foreign_key "workflow_integrations", "workspaces", validate: false
