@@ -11,11 +11,9 @@ class ModelSerializer < ActiveModel::Serializer
     if object.ai_ml?
       connector = object.connector
       json_schema = connector.catalog.json_schema(connector.connector_name)
-      existing_config = object.configuration
-
-      existing_config.merge({ json_schema: })
+      object.masked_configuration.merge({ json_schema: })
     else
-      object.configuration
+      object.masked_configuration
     end
   end
 end

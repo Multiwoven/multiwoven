@@ -53,6 +53,69 @@ RSpec.describe Sync, type: :model do
     it { should validate_presence_of(:cron_expression) }
   end
 
+  describe "#masked_configuration" do
+    let(:source) { create(:connector, connector_type: "source", connector_name: "Snowflake") }
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) do
+      create(:catalog, connector: destination,
+                       catalog: {
+                         "request_rate_limit" => 60,
+                         "request_rate_limit_unit" => "minute",
+                         "request_rate_concurrency" => 2,
+                         "streams" => [{ "name" => "profile", "batch_support" => false,
+                                         "batch_size" => 1, "json_schema" => {} }]
+                       })
+    end
+    let(:sync) { create(:sync, source:, destination:) }
+
+    context "when configuration is blank" do
+      it "returns configuration as-is" do
+        sync.configuration = {}
+        expect(sync.masked_configuration).to eq({})
+      end
+    end
+
+    context "when configuration has no embedding_config" do
+      it "returns configuration unchanged" do
+        sync.configuration = [{ "from" => "email", "to" => "customer_email" }]
+        result = sync.masked_configuration
+        expect(result[0]["from"]).to eq("email")
+        expect(result[0]["to"]).to eq("customer_email")
+      end
+    end
+
+    context "when configuration contains embedding_config with api_key" do
+      let(:config) do
+        [
+          {
+            "from" => "content",
+            "to" => "embedding",
+            "embedding_config" => { "mode" => "automatic", "model" => "ada", "api_key" => "secret-key" }
+          }
+        ]
+      end
+
+      before { sync.configuration = config }
+
+      it "masks api_key inside embedding_config" do
+        result = sync.masked_configuration
+        expect(result[0].dig("embedding_config", "api_key")).to eq("*************")
+      end
+
+      it "leaves non-secret fields unchanged" do
+        result = sync.masked_configuration
+        expect(result[0]["from"]).to eq("content")
+        expect(result[0].dig("embedding_config", "mode")).to eq("automatic")
+        expect(result[0].dig("embedding_config", "model")).to eq("ada")
+      end
+
+      it "does not mutate the original configuration" do
+        sync.masked_configuration
+        expect(sync.configuration[0].dig("embedding_config", "api_key")).to eq("secret-key")
+      end
+    end
+  end
+
   describe "#to_protocol" do
     let(:streams) do
       [
