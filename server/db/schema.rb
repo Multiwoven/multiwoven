@@ -619,6 +619,28 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["configurable_type", "configurable_id"], name: "index_visual_components_on_configurable"
   end
 
+  create_table "workflow_approvals", force: :cascade do |t|
+    t.bigint "workflow_run_id", null: false
+    t.bigint "workspace_id", null: false
+    t.string "component_id", null: false
+    t.integer "status", default: 0, null: false
+    t.text "message", null: false
+    t.jsonb "input_data"
+    t.string "temporal_workflow_id", null: false
+    t.string "temporal_run_id", null: false
+    t.bigint "resolved_by_id"
+    t.text "resolution_note"
+    t.datetime "timeout_at"
+    t.string "timeout_action", default: "reject"
+    t.datetime "resolved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resolved_by_id"], name: "index_workflow_approvals_on_resolved_by_id"
+    t.index ["status"], name: "index_workflow_approvals_on_status"
+    t.index ["workflow_run_id"], name: "index_workflow_approvals_on_workflow_run_id"
+    t.index ["workspace_id"], name: "index_workflow_approvals_on_workspace_id"
+  end
+
   create_table "workflow_integrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.jsonb "metadata", null: false
     t.integer "workspace_id", null: false
@@ -716,6 +738,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "taggings", "tags"
+<<<<<<< HEAD
+=======
+  add_foreign_key "tools", "workspaces"
+  add_foreign_key "workflow_approvals", "users", column: "resolved_by_id"
+  add_foreign_key "workflow_approvals", "workflow_runs"
+  add_foreign_key "workflow_approvals", "workspaces"
+>>>>>>> d6dadb6dd (feat(CE): add workflow approval model  (#1708))
   add_foreign_key "workflow_integrations", "workflows", validate: false
   add_foreign_key "workflow_integrations", "workspaces", validate: false
   add_foreign_key "workflow_runs", "workspaces"

@@ -12,14 +12,21 @@ module Agents
     belongs_to :workspace
 
     has_one :workflow_log, class_name: "Agents::WorkflowLog", dependent: :destroy
+<<<<<<< HEAD
+=======
+    has_many :workflow_approvals, class_name: "Agents::WorkflowApproval", dependent: :destroy
+    has_many :llm_routing_logs, dependent: :destroy
+    has_many :llm_usage_logs, dependent: :destroy
+>>>>>>> d6dadb6dd (feat(CE): add workflow approval model  (#1708))
 
     after_initialize :set_defaults, if: :new_record?
 
-    scope :active, -> { where(status: %i[pending in_progress]) }
+    scope :active, -> { where(status: %i[pending in_progress action_required]) }
 
     aasm column: :status, whiny_transitions: true do
       state :pending, initial: true
       state :in_progress
+      state :action_required
       state :completed
       state :failed
       state :cancelled
@@ -28,16 +35,24 @@ module Agents
         transitions from: %i[pending in_progress], to: :in_progress
       end
 
+      event :pause_for_approval do
+        transitions from: :in_progress, to: :action_required
+      end
+
+      event :resume do
+        transitions from: :action_required, to: :in_progress
+      end
+
       event :complete do
         transitions from: :in_progress, to: :completed
       end
 
       event :fail do
-        transitions from: %i[pending in_progress], to: :failed
+        transitions from: %i[pending in_progress action_required], to: :failed
       end
 
       event :cancel do
-        transitions from: %i[pending in_progress], to: :cancelled
+        transitions from: %i[pending in_progress action_required], to: :cancelled
       end
     end
 
