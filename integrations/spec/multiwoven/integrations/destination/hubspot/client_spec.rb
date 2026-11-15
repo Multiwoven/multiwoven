@@ -146,6 +146,64 @@ RSpec.describe Multiwoven::Integrations::Destination::Hubspot::Client do
         expect(log_message.message).to include("request")
         expect(log_message.message).to include("response")
       end
+
+      it "retains each rejected request so its error log remains accessible" do
+        response = client.write(sync_config, records)
+
+        response.tracking.logs.each_with_index do |log, index|
+          payload = JSON.parse(log.message)
+          expect(payload["request"]).to eq(records[index].with_indifferent_access.to_s)
+          expect(payload["level"]).to eq("error")
+        end
+      end
+    end
+
+    it "keeps the rejection reason and request for a failed company write" do
+      config = sync_config_json
+      config[:stream][:name] = "companies"
+      config[:stream][:json_schema] = client.discover.catalog.streams.find { |stream| stream.name == "companies" }.json_schema
+      record = { "inputs" => [{ "properties" => { "name" => "Example Company", "domain" => "example.com" } }] }
+      error_body = { status: "error", message: "Properties are required", category: "VALIDATION_ERROR" }.to_json
+      stub_request(:post, "https://api.hubapi.com/crm/v3/objects/companies")
+        .with(body: record.to_json)
+        .to_return(status: 400, body: error_body, headers: { "Content-Type" => "application/json" })
+
+      response = client.write(Multiwoven::Integrations::Protocol::SyncConfig.from_json(config.to_json), [record])
+      payload = JSON.parse(response.tracking.logs.first.message)
+
+      expect(response.tracking.success).to eq(0)
+      expect(response.tracking.failed).to eq(1)
+      expect(payload["request"]).to eq(record.with_indifferent_access.to_s)
+      expect(payload["response"]).to include("Properties are required", "VALIDATION_ERROR")
+    end
+
+    it "keeps mixed outcomes attached to their own requests and continues after rejection" do
+      batch = records + [build_record("third@multiwoven.com")]
+      stub_create_request("developer@multiwoven.com", 200)
+      stub_create_request("developer_second@multiwoven.com", 403)
+      stub_create_request("third@multiwoven.com", 200)
+
+      response = client.write(sync_config, batch)
+      logs = response.tracking.logs.map { |log| JSON.parse(log.message) }
+
+      expect(response.tracking.success).to eq(2)
+      expect(response.tracking.failed).to eq(1)
+      expect(logs.map { |log| log["request"] }).to eq(batch.map { |record| record.with_indifferent_access.to_s })
+      expect(logs.map { |log| log["level"] }).to eq(%w[info error info])
+    end
+
+    it "retains the request after a timeout without retrying the write" do
+      request = stub_request(:post, "https://api.hubapi.com/crm/v3/objects/contacts")
+                .with(body: records.first.to_json).to_timeout
+
+      response = client.write(sync_config, [records.first])
+      payload = JSON.parse(response.tracking.logs.first.message)
+
+      expect(response.tracking.success).to eq(0)
+      expect(response.tracking.failed).to eq(1)
+      expect(payload["request"]).to eq(records.first.with_indifferent_access.to_s)
+      expect(payload["response"]).not_to be_empty
+      expect(request).to have_been_requested.once
     end
   end
 
