@@ -37,12 +37,9 @@ module ReverseEtl
 
       # TODO: refactor this method
       def process_records(records, sync_run, model)
-        Parallel.map(records, in_threads: THREAD_COUNT) do |message|
-          record = message.record
-          fingerprint = generate_fingerprint(record.data)
-          sync_record = process_record(record, sync_run, model)
-          update_or_create_sync_record(sync_record, record, sync_run, fingerprint) ? 0 : 1
-        end.sum
+        records_to_upsert, skipped_count = build_upsert_records(records, sync_run, model)
+        batch_upsert_sync_records(records_to_upsert)
+        skipped_count
       end
     end
   end
