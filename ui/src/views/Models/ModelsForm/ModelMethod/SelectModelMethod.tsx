@@ -56,6 +56,7 @@ const ModelMethod = (): JSX.Element => {
               <Card
                 maxW='sm'
                 key={index}
+                data-testid={`model-method-${methodProperties.type}`}
                 _hover={methodProperties.enabled ? { bgColor: 'gray.200' } : {}}
                 variant='elevated'
                 onClick={
