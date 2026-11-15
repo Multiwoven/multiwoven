@@ -603,6 +603,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.string "whodunnit"
+    t.datetime "created_at"
+    t.string "item_id", null: false
+    t.string "item_type", null: false
+    t.string "event", null: false
+    t.text "object"
+    t.integer "version_number"
+    t.text "version_description"
+    t.jsonb "associations"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   create_table "visual_components", force: :cascade do |t|
     t.integer "component_type", null: false
     t.string "name"
@@ -664,6 +677,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
+=======
+    t.boolean "access_control_enabled", default: false, null: false
+    t.jsonb "access_control", default: {}, null: false
+    t.integer "version_number", default: 1
+>>>>>>> 578f80e42 (feat(CE): database migrations for workflow versioning (#1598))
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 

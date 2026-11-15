@@ -9,6 +9,7 @@ RSpec.describe Agents::Workflow, type: :model do
     it { should have_many(:edges).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
     it { should have_one(:workflow_integration).dependent(:destroy) }
+    it { should have_many(:versions) }
   end
 
   describe "enums" do
@@ -111,4 +112,246 @@ RSpec.describe Agents::Workflow, type: :model do
       expect(Agents::WorkflowRun.exists?(run2.id)).to be false
     end
   end
+<<<<<<< HEAD
+=======
+
+  describe "#accessible_by?" do
+    let(:workspace) { create(:workspace) }
+    let(:workflow) { create(:workflow, workspace:) }
+    let(:admin_role) { create(:role, :admin) }
+    let(:member_role) { create(:role, :member) }
+    let(:viewer_role) { create(:role, :viewer) }
+    let(:admin_user) { create(:user, email: "admin@example.com") }
+    let(:member_user) { create(:user, email: "member@example.com") }
+    let(:viewer_user) { create(:user, email: "viewer@example.com") }
+    let(:other_user) { create(:user, email: "other@example.com") }
+
+    before do
+      create(:workspace_user, workspace:, user: admin_user, role: admin_role)
+      create(:workspace_user, workspace:, user: member_user, role: member_role)
+      create(:workspace_user, workspace:, user: viewer_user, role: viewer_role)
+    end
+
+    context "when access_control_enabled is false" do
+      it "returns true for any user" do
+        workflow.update!(access_control_enabled: false)
+        expect(workflow.accessible_by?(admin_user)).to be true
+        expect(workflow.accessible_by?(member_user)).to be true
+        expect(workflow.accessible_by?(other_user)).to be true
+      end
+    end
+
+    context "when access_control_enabled is true" do
+      before do
+        workflow.update!(access_control_enabled: true)
+      end
+
+      context "when both allowed_role_ids and allowed_users are empty" do
+        it "returns true for any user" do
+          workflow.update!(access_control: {})
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+          expect(workflow.accessible_by?(other_user)).to be true
+        end
+      end
+
+      context "when allowed_role_ids is specified" do
+        it "returns true if user's role ID is in allowed_role_ids" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id, member_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+        end
+
+        it "returns false if user's role ID is not in allowed_role_ids" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(member_user)).to be false
+          expect(workflow.accessible_by?(viewer_user)).to be false
+        end
+
+        it "returns false if user has no role in the workspace" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+
+        it "handles string role IDs from frontend correctly" do
+          # Frontend may submit role IDs as strings, which get persisted as strings in JSONB
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id.to_s, member_role.id.to_s]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+          expect(workflow.accessible_by?(viewer_user)).to be false
+        end
+      end
+
+      context "when allowed_users is specified" do
+        it "returns true if user's email is in allowed_users" do
+          workflow.update!(
+            access_control: {
+              "allowed_users" => [admin_user.email, member_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be true
+        end
+
+        it "returns false if user's email is not in allowed_users" do
+          workflow.update!(
+            access_control: {
+              "allowed_users" => [admin_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(member_user)).to be false
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+      end
+
+      context "when both allowed_role_ids and allowed_users are specified" do
+        it "returns true if user matches either role ID or email" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id],
+              "allowed_users" => [member_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true # matches role
+          expect(workflow.accessible_by?(member_user)).to be true # matches email
+        end
+
+        it "returns false if user matches neither role ID nor email" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id],
+              "allowed_users" => [admin_user.email]
+            }
+          )
+          expect(workflow.accessible_by?(viewer_user)).to be false
+          expect(workflow.accessible_by?(other_user)).to be false
+        end
+      end
+
+      context "with edge cases" do
+        it "handles nil access_control gracefully" do
+          # access_control has NOT NULL constraint, so we test with empty hash instead
+          workflow.update!(access_control: {})
+          expect(workflow.accessible_by?(admin_user)).to be true
+        end
+
+        it "handles empty arrays in access_control" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [],
+              "allowed_users" => []
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+        end
+
+        it "handles missing keys in access_control hash" do
+          workflow.update!(
+            access_control: {
+              "allowed_role_ids" => [admin_role.id]
+            }
+          )
+          expect(workflow.accessible_by?(admin_user)).to be true
+          expect(workflow.accessible_by?(member_user)).to be false
+        end
+      end
+    end
+  end
+
+  describe "#latest_published_version" do
+    let(:workspace) { create(:workspace) }
+
+    context "when the workflow has no versions" do
+      let(:workflow) { create(:workflow, workspace:) }
+
+      it "returns nil" do
+        expect(workflow.versions).to be_empty
+        expect(workflow.latest_published_version).to be_nil
+      end
+    end
+
+    context "when the workflow has versions but none are published" do
+      let(:workflow) { create(:workflow, workspace:, status: :draft) }
+
+      before do
+        workflow.update!(version_number: 1)
+        workflow.paper_trail_event = "draft"
+        version = workflow.paper_trail.save_with_version
+        version.update!(version_number: 1)
+      end
+
+      it "returns nil" do
+        expect(workflow.versions.where(event: "published")).to be_empty
+        expect(workflow.latest_published_version).to be_nil
+      end
+    end
+
+    context "when the workflow has one published version" do
+      let(:workflow) { create(:workflow, workspace:, name: "Published Workflow", status: :published) }
+
+      before do
+        workflow.update!(version_number: 1)
+        workflow.paper_trail_event = "published"
+        version = workflow.paper_trail.save_with_version
+        version.update!(version_number: 1)
+      end
+
+      it "returns the reified workflow from that version" do
+        result = workflow.latest_published_version
+
+        expect(result).to be_a(Agents::Workflow)
+        expect(result.id).to eq(workflow.id)
+        expect(result.name).to eq("Published Workflow")
+        expect(result.status).to eq("published")
+      end
+
+      it "returns a workflow that responds to components and edges without error" do
+        result = workflow.latest_published_version
+
+        expect(result.components).to eq([])
+        expect(result.edges).to eq([])
+      end
+    end
+
+    context "when the workflow has multiple published versions" do
+      let(:workflow) { create(:workflow, workspace:, name: "Original", status: :published) }
+
+      before do
+        workflow.update!(version_number: 1)
+        workflow.paper_trail_event = "published"
+        v1 = workflow.paper_trail.save_with_version
+        v1.update!(version_number: 1)
+
+        workflow.update!(name: "Updated", version_number: 2)
+        workflow.paper_trail_event = "published"
+        v2 = workflow.paper_trail.save_with_version
+        v2.update!(version_number: 2)
+      end
+
+      it "returns the version with the highest version_number" do
+        result = workflow.latest_published_version
+
+        expect(result).to be_a(Agents::Workflow)
+        expect(result.name).to eq("Updated")
+        expect(result.id).to eq(workflow.id)
+      end
+    end
+  end
+>>>>>>> 578f80e42 (feat(CE): database migrations for workflow versioning (#1598))
 end
