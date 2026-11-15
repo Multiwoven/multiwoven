@@ -77,8 +77,76 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   describe "POST #login" do
+<<<<<<< HEAD
+=======
+    let(:password) { "Password@123" }
+    let(:confirmed_user) { create(:user, password:, password_confirmation: password, confirmed_at: Time.current) }
+
+    def set_cookie_lines
+      Array(response.headers["Set-Cookie"]).flat_map { |v| v.to_s.split("\n") }.reject(&:empty?)
+    end
+
+>>>>>>> 20c70131b (chore(CE): added backwards compatible logic to handle the csrf and h… (#2034))
     context "with valid parameters" do
       it "logs in a user and returns a token" do
+        user.confirm
+        post :login, params: { email: user.email, password: user.password }
+
+        expect(response).to have_http_status(:ok)
+        expect(response_data["attributes"]["token"]).not_to be_nil
+      end
+
+      it "sets an HttpOnly auth cookie with the JWT" do
+        user.confirm
+        post :login, params: { email: user.email, password: user.password }
+
+        auth_line = set_cookie_lines.find { |l| l.start_with?("#{AuthCookies::AUTH_COOKIE_NAME}=") }
+        expect(auth_line).not_to be_nil
+        expect(auth_line).to match(/HttpOnly/i)
+        expect(auth_line).to match(/SameSite=Lax/i)
+        expect(auth_line).to match(%r{path=/}i)
+      end
+
+      it "sets a non-HttpOnly csrf-token cookie" do
+        user.confirm
+        post :login, params: { email: user.email, password: user.password }
+
+        csrf_line = set_cookie_lines.find { |l| l.start_with?("#{AuthCookies::CSRF_COOKIE_NAME}=") }
+        expect(csrf_line).not_to be_nil
+        expect(csrf_line).not_to match(/HttpOnly/i)
+        expect(csrf_line).to match(/SameSite=Lax/i)
+      end
+
+      it "returns type 'token' with a UUID id, not the JWT itself" do
+        user.confirm
+        post :login, params: { email: user.email, password: user.password }
+
+        expect(response_data["type"]).to eq("token")
+        expect(response_data["id"]).to match(/\A[0-9a-f-]{36}\z/)
+        expect(response_data["id"]).not_to eq(response_data["attributes"]["token"])
+      end
+    end
+
+    context "when BEARER_TOKEN_AUTH is set to 'false'" do
+      around do |example|
+        original = ENV["BEARER_TOKEN_AUTH"]
+        ENV["BEARER_TOKEN_AUTH"] = "false"
+        example.run
+      ensure
+        ENV["BEARER_TOKEN_AUTH"] = original
+      end
+
+      it "omits the token from the response body but still sets the cookies" do
+        user.confirm
+        post :login, params: { email: user.email, password: user.password }
+
+        expect(response).to have_http_status(:ok)
+        expect(response_data["attributes"]).to eq({})
+        expect(set_cookie_lines.any? { |l| l.start_with?("#{AuthCookies::AUTH_COOKIE_NAME}=") }).to be true
+      end
+
+      it "still returns the token when X-App-Context is 'embed'" do
+        request.headers["X-App-Context"] = "embed"
         user.confirm
         post :login, params: { email: user.email, password: user.password }
 
@@ -232,6 +300,17 @@ RSpec.describe Api::V1::AuthController, type: :controller do
         user.confirm
         request.headers.merge!(auth_headers(user, 0))
         delete :logout
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "invokes clear_all_auth_cookies on the concern" do
+        user.confirm
+        request.headers.merge!(auth_headers(user, 0))
+
+        expect(controller).to receive(:clear_all_auth_cookies).and_call_original
+
+        delete :logout
+
         expect(response).to have_http_status(:ok)
       end
     end

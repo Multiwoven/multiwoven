@@ -49,6 +49,7 @@ module MultiwovenServer
     config.api_only = true
     config.middleware.insert_before Rails::Rack::Logger, MultiwovenServer::QuietLogger
     config.middleware.use MultiwovenServer::RequestResponseLogger
+    config.middleware.use ActionDispatch::Cookies
 
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
