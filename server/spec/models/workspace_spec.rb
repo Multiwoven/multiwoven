@@ -40,6 +40,38 @@ RSpec.describe Workspace, type: :model do
     it { should have_many(:workflows).dependent(:destroy) }
     it { should have_many(:workflow_runs).dependent(:destroy) }
     it { should have_many(:workflow_integrations).dependent(:nullify) }
+<<<<<<< HEAD
+=======
+    it { should have_many(:hosted_data_stores).dependent(:nullify) }
+    it { should have_many(:knowledge_bases).dependent(:nullify) }
+    it { should have_many(:tools).dependent(:destroy) }
+    it { should have_many(:llm_routing_logs).dependent(:destroy) }
+    it { should have_many(:llm_usage_logs).dependent(:destroy) }
+    it { should have_many(:spending_limits).dependent(:destroy) }
+    it {
+      should have_many(:agentic_coding_app_clone_records)
+        .class_name("AgenticCoding::AppCloneRecord")
+        .dependent(:destroy)
+    }
+    it {
+      should have_many(:agentic_coding_source_app_clone_records)
+        .class_name("AgenticCoding::AppCloneRecord")
+        .with_foreign_key(:source_workspace_id)
+        .dependent(:nullify)
+    }
+>>>>>>> 662d24a7f (feat(CE): spending limit schema and models (#2237))
+  end
+
+  describe "deletion" do
+    let(:workspace) { create(:workspace) }
+
+    it "takes its spending limits and their counters with it" do
+      limit = create(:spending_limit, workspace:)
+      create(:spending_limit_counter, spending_limit: limit)
+
+      expect { workspace.destroy! }.to change(SpendingLimit, :count).by(-1)
+      expect(SpendingLimitCounter.where(spending_limit_id: limit.id)).to be_empty
+    end
   end
 
   context "before_validation callbacks" do

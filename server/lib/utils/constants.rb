@@ -21,6 +21,10 @@ module Utils
         resources: [:model],
         description: "Manage and access models"
       },
+      "AI Gateway" => {
+        resources: [:spending_limit],
+        description: "Manage spend limits and view model usage"
+      },
       "Syncs" => {
         resources: %i[sync sync_run sync_record],
         description: "Manage and access syncs"
