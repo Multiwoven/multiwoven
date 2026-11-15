@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.43.3)
+>>>>>>> ef191b427 (fix(CE): guard Firecrawl get_request_url against empty crawls (#2326))
       MailchimpMarketing
       activesupport
       async-websocket

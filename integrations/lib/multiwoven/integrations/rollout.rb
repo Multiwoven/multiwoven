@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.3"
+>>>>>>> ef191b427 (fix(CE): guard Firecrawl get_request_url against empty crawls (#2326))
 
     ENABLED_SOURCES = %w[
       Snowflake
