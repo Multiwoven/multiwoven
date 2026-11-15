@@ -213,6 +213,7 @@ const EditDestination = (): JSX.Element => {
             formData={formData}
             onSubmit={(formData: FormData) => handleOnTestClick(formData)}
             onChange={(formData: FormData) => setFormData(formData)}
+            connectorType='destination'
           >
             <FormFooter
               ctaName='Save Changes'
