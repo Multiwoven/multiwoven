@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.12"
+>>>>>>> 6332873f1 (chore(CE): Allow One Drive to query all file name (#2249))
 
     ENABLED_SOURCES = %w[
       Snowflake
