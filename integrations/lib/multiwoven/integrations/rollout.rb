@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.0"
+>>>>>>> 077c3d8de (chore(CE): Add SQL Server as Source (#2265))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -34,6 +38,14 @@ module Multiwoven
       Odoo
       GoogleDrive
       Http
+<<<<<<< HEAD
+=======
+      Aisquared
+      OneDrive
+      MicrosoftDynamics
+      EpicFhir
+      SqlServer
+>>>>>>> 077c3d8de (chore(CE): Add SQL Server as Source (#2265))
     ].freeze
 
     ENABLED_DESTINATIONS = %w[
