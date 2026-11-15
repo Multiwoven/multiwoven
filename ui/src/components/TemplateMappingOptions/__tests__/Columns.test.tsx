@@ -5,8 +5,30 @@ import '@testing-library/jest-dom';
 import Columns from '../Columns';
 import { expect } from '@jest/globals';
 
-import { columnOptions, catalogMappingMock } from '../mocks/Columns';
-import { OPTION_TYPE } from '../TemplateOptions';
+import { OPTION_TYPE } from '../types';
+
+export const columnOptions = [
+  { name: 'Column 1', value: 'Column 1', description: 'Description 1' },
+  { name: 'Column 2', value: 'Column 2', description: 'Description 2' },
+  { name: 'Column 3', value: 'Column 3', description: 'Description 3' },
+];
+export const catalogMappingMock = {
+  data: {
+    configurations: {
+      catalog_mapping_types: {
+        static: {},
+        template: {
+          filter: {
+            'Column 1': { description: 'Description 1' },
+            'Column 2': { description: 'Description 2' },
+            'Column 3': { description: 'Description 3' },
+          },
+          variable: {},
+        },
+      },
+    },
+  },
+};
 
 describe('Columns component', () => {
   test('renders column options', () => {
