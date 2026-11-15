@@ -137,7 +137,7 @@ cp .env ui/.env
 6. **Start the services:**
 
 ```bash
-docker-compose build && docker-compose up
+docker compose build && docker compose up
 ```
 
 UI can be accessed at the PORT 8000 :
