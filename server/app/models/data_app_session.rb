@@ -3,7 +3,7 @@
 class DataAppSession < ApplicationRecord
   belongs_to :data_app
   belongs_to :workspace
-  has_many :chat_messages, dependent: :destroy
+  has_many :chat_messages, as: :session, dependent: :destroy
 
   validates :session_id, presence: true, uniqueness: true
   validates :data_app_id, :workspace_id, presence: true

@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2026_03_02_205149) do
+>>>>>>> 2ac5fd568 (feat(CE): Prompt To Workflow db related changes (#1671))
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -110,6 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.jsonb "addons_usage", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "workflow_sessions", default: 0
     t.index ["organization_id"], name: "index_billing_subscriptions_on_organization_id"
     t.index ["plan_id"], name: "index_billing_subscriptions_on_plan_id"
   end
@@ -125,15 +130,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
 
   create_table "chat_messages", force: :cascade do |t|
     t.bigint "workspace_id", null: false
-    t.bigint "data_app_session_id", null: false
-    t.bigint "visual_component_id", null: false
+    t.bigint "visual_component_id"
     t.text "content", null: false
     t.integer "role", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["data_app_session_id", "created_at"], name: "index_chat_messages_on_data_app_session_id_and_created_at"
-    t.index ["data_app_session_id"], name: "index_chat_messages_on_data_app_session_id"
+    t.bigint "session_id"
+    t.string "session_type"
+    t.uuid "workflow_id"
+    t.index ["session_type", "session_id"], name: "index_chat_messages_on_session_type_and_session_id"
     t.index ["visual_component_id"], name: "index_chat_messages_on_visual_component_id"
+    t.index ["workflow_id"], name: "index_chat_messages_on_workflow_id"
     t.index ["workspace_id"], name: "index_chat_messages_on_workspace_id"
   end
 
@@ -654,6 +661,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.index ["workspace_id"], name: "index_workflow_runs_on_workspace_id"
   end
 
+  create_table "workflow_sessions", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.uuid "workflow_id", null: false
+    t.integer "workspace_id", null: false
+    t.string "title"
+    t.datetime "start_time", null: false
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "workflow_chat_messages_count", default: 0, null: false
+    t.index ["session_id"], name: "index_workflow_sessions_on_session_id", unique: true
+    t.index ["workflow_id"], name: "index_workflow_sessions_on_workflow_id"
+    t.index ["workspace_id"], name: "index_workflow_sessions_on_workspace_id"
+  end
+
   create_table "workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "workspace_id", null: false
     t.string "name", null: false
@@ -664,6 +686,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
+=======
+    t.boolean "access_control_enabled", default: false, null: false
+    t.jsonb "access_control", default: {}, null: false
+    t.integer "version_number", default: 1
+    t.integer "workflow_sessions_count", default: 0, null: false
+>>>>>>> 2ac5fd568 (feat(CE): Prompt To Workflow db related changes (#1671))
     t.index ["workspace_id", "name"], name: "index_workflows_on_workspace_id_and_name", unique: true
   end
 
@@ -700,8 +729,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "alerts", "workspaces"
   add_foreign_key "billing_subscriptions", "billing_plans", column: "plan_id"
   add_foreign_key "billing_subscriptions", "organizations"
-  add_foreign_key "chat_messages", "data_app_sessions"
   add_foreign_key "chat_messages", "visual_components"
+  add_foreign_key "chat_messages", "workflows", validate: false
   add_foreign_key "chat_messages", "workspaces"
   add_foreign_key "components", "workflows", validate: false
   add_foreign_key "components", "workspaces", validate: false
@@ -719,6 +748,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_09_173752) do
   add_foreign_key "workflow_integrations", "workflows", validate: false
   add_foreign_key "workflow_integrations", "workspaces", validate: false
   add_foreign_key "workflow_runs", "workspaces"
+  add_foreign_key "workflow_sessions", "workflows", validate: false
+  add_foreign_key "workflow_sessions", "workspaces", validate: false
   add_foreign_key "workflows", "workspaces", validate: false
   add_foreign_key "workspace_users", "roles"
   add_foreign_key "workspace_users", "users"
