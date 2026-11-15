@@ -1,0 +1,26 @@
+{
+  "//models": "Sourced live from OpenRouter. Embedding models are curated here because OpenRouter lists none.",
+  "models": [
+    {
+      "id": "text-embedding-3-large",
+      "name": "Text Embedding 3 Large",
+      "model_type": "embedding",
+      "type": "embedding",
+      "tasks": [
+        "Text Embeddings"
+      ],
+      "context_window": 8191,
+      "max_output": null,
+      "pricing": {
+        "input": 0.13,
+        "output": null,
+        "cached_read": null,
+        "cached_write": null,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents"
+      ]
+    }
+  ]
+}

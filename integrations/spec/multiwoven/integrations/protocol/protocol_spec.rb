@@ -272,6 +272,76 @@ module Multiwoven
       end
     end
 
+    RSpec.describe ModelCatalog do
+      json_data = {
+        "models" => [
+          {
+            "id" => "claude-opus-5",
+            "name" => "Claude Opus 5",
+            "model_type" => "llm",
+            "type" => "completion",
+            "openrouter_id" => "anthropic/claude-opus-5",
+            "tasks" => ["Text Generation"],
+            "capabilities" => ["Documents"],
+            "context_window" => 1_000_000,
+            "max_output" => 128_000,
+            "pricing" => {
+              "input" => 5.0,
+              "output" => 25.0,
+              "cached_read" => 0.5,
+              "cached_write" => 6.25,
+              "unit" => "per_1m_tokens"
+            },
+            "availability" => "available"
+          }
+        ]
+      }.to_json
+
+      describe ".from_json" do
+        it "creates an instance from JSON" do
+          instance = ModelCatalog.from_json(json_data)
+          expect(instance).to be_a(ModelCatalog)
+          expect(instance.models.first).to be_a(ModelCatalogEntry)
+          expect(instance.models.first.id).to eq("claude-opus-5")
+          expect(instance.models.first.name).to eq("Claude Opus 5")
+          expect(instance.models.first.model_type).to eq("llm")
+          expect(instance.models.first.type).to eq("completion")
+          expect(instance.models.first.openrouter_id).to eq("anthropic/claude-opus-5")
+          expect(instance.models.first.tasks).to eq(["Text Generation"])
+          expect(instance.models.first.capabilities).to eq(["Documents"])
+          expect(instance.models.first.context_window).to eq(1_000_000)
+          expect(instance.models.first.max_output).to eq(128_000)
+          expect(instance.models.first.pricing).to be_a(ModelCatalogPricing)
+          expect(instance.models.first.pricing.input).to eq(5.0)
+          expect(instance.models.first.pricing.unit).to eq("per_1m_tokens")
+          expect(instance.models.first.availability).to eq("available")
+        end
+
+        it "defaults availability, tasks, and capabilities when omitted" do
+          instance = ModelCatalog.from_json(
+            { "models" => [{ "id" => "m1", "name" => "M", "model_type" => "embedding" }] }.to_json
+          )
+          entry = instance.models.first
+
+          expect(entry.availability).to eq("available")
+          expect(entry.tasks).to eq([])
+          expect(entry.capabilities).to eq([])
+          expect(entry.pricing).to be_nil
+        end
+      end
+
+      describe "#to_multiwoven_message" do
+        it "converts to a MultiwovenMessage" do
+          catalog = described_class.from_json(json_data)
+          multiwoven_message = catalog.to_multiwoven_message
+
+          expect(multiwoven_message).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+          expect(multiwoven_message.type).to eq("model_catalog")
+          expect(multiwoven_message.model_catalog).to eq(catalog)
+        end
+      end
+    end
+
     RSpec.describe SyncConfig do
       describe ".from_json" do
         it "creates an instance from JSON" do

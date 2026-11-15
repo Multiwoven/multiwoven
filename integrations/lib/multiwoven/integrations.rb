@@ -64,6 +64,11 @@ require_relative "integrations/core/source_connector"
 require_relative "integrations/core/destination_connector"
 require_relative "integrations/core/http_helper"
 require_relative "integrations/core/http_client"
+<<<<<<< HEAD
+=======
+require_relative "integrations/core/open_router_catalog"
+require_relative "integrations/core/oauth_client_credentials"
+>>>>>>> bc369553b (feat(CE): describe AI Model providers in their own connector metadata (#2177))
 require_relative "integrations/core/streaming_http_client"
 require_relative "integrations/core/query_builder"
 require_relative "integrations/core/unstructured_source_connector"
@@ -92,6 +97,9 @@ require_relative "integrations/source/watsonx_data/client"
 require_relative "integrations/source/anthropic/client"
 require_relative "integrations/source/aws_bedrock_model/client"
 require_relative "integrations/source/generic_open_ai/client"
+# Both subclass GenericOpenAI::Client, so they must load after it.
+require_relative "integrations/source/google_gemini/client"
+require_relative "integrations/source/john_snow_labs/client"
 require_relative "integrations/source/intuit_quick_books/client"
 require_relative "integrations/source/pinecone_db/client"
 require_relative "integrations/source/qdrant/client"

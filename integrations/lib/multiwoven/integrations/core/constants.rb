@@ -7,6 +7,7 @@ module Multiwoven
       META_DATA_PATH = "config/meta.json"
       CONNECTOR_SPEC_PATH = "config/spec.json"
       CATALOG_SPEC_PATH   = "config/catalog.json"
+      MODELS_SPEC_PATH    = "config/models.json"
       SNOWFLAKE_MAC_DRIVER_PATH = "/opt/snowflake/snowflakeodbc/lib/universal/libSnowflake.dylib"
       DATABRICKS_MAC_DRIVER_PATH = "/Library/simba/spark/lib/libsparkodbc_sb64-universal.dylib"
 

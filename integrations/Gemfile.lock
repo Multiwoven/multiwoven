@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.0)
+>>>>>>> bc369553b (feat(CE): describe AI Model providers in their own connector metadata (#2177))
       MailchimpMarketing
       activesupport
       async-websocket

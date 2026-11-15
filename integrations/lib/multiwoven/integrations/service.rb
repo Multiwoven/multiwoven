@@ -7,15 +7,17 @@ module Multiwoven
         yield(self.class.config) if block_given?
       end
       class << self
+        # deep_dup, not dup: the entries are the clients' own memoized metadata, so a
+        # shallow copy lets one caller's mutation reach every later caller.
         def connectors
-          {
-            source: build_connectors(
-              ENABLED_SOURCES, "Source"
-            ),
-            destination: build_connectors(
-              ENABLED_DESTINATIONS, "Destination"
-            )
-          }
+          built = built_connectors
+          { source: built[:source].deep_dup, destination: built[:destination].deep_dup }
+        end
+
+        # The build is memoized for the life of the process, so anything that
+        # changes what would be built has to clear it.
+        def reset_connectors!
+          @built_connectors = nil
         end
 
         def connector_class(connector_type, connector_name)
@@ -37,6 +39,13 @@ module Multiwoven
         end
 
         private
+
+        def built_connectors
+          @built_connectors ||= {
+            source: build_connectors(ENABLED_SOURCES, "Source"),
+            destination: build_connectors(ENABLED_DESTINATIONS, "Destination")
+          }
+        end
 
         def build_connectors(enabled_connectors, type)
           enabled_connectors.map do |connector|

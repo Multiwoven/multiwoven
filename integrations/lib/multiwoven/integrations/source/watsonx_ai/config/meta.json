@@ -1,16 +1,22 @@
 {
   "data": {
     "name": "WatsonxAi",
-    "title": "WatsonX AI Model Endpoint",
+    "title": "IBM watsonx",
     "connector_type": "source",
     "category": "AI Model",
     "sub_category": "AI_ML Service",
+    "provider_type": "partner_provider",
+    "display_order": 60,
+    "description": "IBM Granite and hosted open models on watsonx.ai. Enterprise governance, on-prem options, and indemnified foundation models.",
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/watsonx_ai-model",
     "github_issue_label": "source-watsonx-ai-model",
     "icon": "icon.svg",
     "license": "MIT",
     "release_stage": "alpha",
     "support_level": "community",
-    "tags": ["language:ruby", "multiwoven"]
+    "tags": [
+      "language:ruby",
+      "multiwoven"
+    ]
   }
 }
