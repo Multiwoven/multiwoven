@@ -43,6 +43,21 @@ module Utils
       "Assistant" => {
         resources: %i[assistant],
         description: "Manage and access the AI assistant and its configurations"
+<<<<<<< HEAD
+=======
+      },
+      "Workflows" => {
+        resources: %i[workflow],
+        description: "Manage and access workflows"
+      },
+      "Tools" => {
+        resources: %i[tool],
+        description: "Manage and access tools"
+      },
+      "Agentic Coding" => {
+        resources: %i[agentic_coding],
+        description: "Manage and access the app generation"
+>>>>>>> 9eb4341c9 (feat(CE): add app gen models (#1695))
       }
     }.freeze
   end
