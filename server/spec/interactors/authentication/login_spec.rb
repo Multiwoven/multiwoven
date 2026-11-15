@@ -108,6 +108,63 @@ RSpec.describe Authentication::Login, type: :interactor do
           expect(context.token).to be_present
         end
       end
+
+      it "resets failed_attempts and locked_at on successful login after lock expiry" do
+        travel_to 2.hours.from_now do
+          context
+          user.reload
+          expect(user.failed_attempts).to eq(0)
+          expect(user.locked_at).to be_nil
+        end
+      end
+    end
+
+    context "when user lock has expired and wrong password is provided" do
+      let(:params) { { email: user.email, password: "wrong_password" } }
+
+      before do
+        user.update(failed_attempts: Devise.maximum_attempts, locked_at: Time.current, confirmed_at: Time.current)
+      end
+
+      it "allows fresh attempts instead of immediately re-locking" do
+        travel_to 2.hours.from_now do
+          context
+          user.reload
+          expect(user.failed_attempts).to eq(1)
+          expect(user.access_locked?).to be(false)
+        end
+      end
+
+      it "returns invalid credentials error, not locked error" do
+        travel_to 2.hours.from_now do
+          expect(context).to be_failure
+          expect(context.error).to eq("Invalid login credentials, please try again")
+        end
+      end
+    end
+
+    context "when lock has not yet expired" do
+      let(:params) { { email: user.email, password: "Password@123" } }
+
+      before do
+        user.update(failed_attempts: Devise.maximum_attempts, locked_at: Time.current, confirmed_at: Time.current)
+      end
+
+      it "stays locked before unlock_in period" do
+        travel_to 15.minutes.from_now do
+          expect(context).to be_failure
+          expect(context.error).to eq("Account is locked due to multiple login attempts. Please retry after sometime")
+          expect(user.reload.access_locked?).to be(true)
+        end
+      end
+
+      it "unlocks at exactly the unlock_in boundary" do
+        travel_to(30.minutes.from_now + 1.second) do
+          context
+          expect(context).to be_success
+          expect(user.reload.access_locked?).to be(false)
+        end
+      end
     end
 
     context "handling exceptions" do
