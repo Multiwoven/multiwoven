@@ -1,0 +1,126 @@
+{
+  "//models": "Curated for GroqCloud API ids (https://console.groq.com/docs/models). OpenRouter has no groq/* author slug, and its meta-llama/* / openai/* ids do not match Groq's (e.g. llama-3.3-70b-versatile vs llama-3.3-70b-instruct). Do not set openrouter_slug.",
+  "models": [
+    {
+      "id": "llama-3.1-8b-instant",
+      "name": "Llama 3.1 8B Instant",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation"
+      ],
+      "context_window": 131072,
+      "max_output": 131072,
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode"
+      ]
+    },
+    {
+      "id": "llama-3.3-70b-versatile",
+      "name": "Llama 3.3 70B Versatile",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131072,
+      "max_output": 32768,
+      "capabilities": [
+        "Tool Use",
+        "JSON Object Mode"
+      ]
+    },
+    {
+      "id": "openai/gpt-oss-120b",
+      "name": "GPT OSS 120B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131072,
+      "max_output": 65536,
+      "pricing": {
+        "input": 0.15,
+        "output": 0.60,
+        "cached_read": 0.075,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "Browser Search",
+        "Code Execution",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Reasoning"
+      ]
+    },
+    {
+      "id": "openai/gpt-oss-20b",
+      "name": "GPT OSS 20B",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131072,
+      "max_output": 65536,
+      "pricing": {
+        "input": 0.075,
+        "output": 0.30,
+        "cached_read": 0.0375,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Tool Use",
+        "Browser Search",
+        "Code Execution",
+        "JSON Object Mode",
+        "JSON Schema Mode",
+        "Reasoning"
+      ]
+    },
+    {
+      "id": "groq/compound",
+      "name": "Compound",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131072,
+      "max_output": 8192,
+      "capabilities": [
+        "Web Search",
+        "Code Execution",
+        "Visit Websites",
+        "Wolfram Alpha",
+        "JSON Object Mode"
+      ]
+    },
+    {
+      "id": "groq/compound-mini",
+      "name": "Compound Mini",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131072,
+      "max_output": 8192,
+      "capabilities": [
+        "Web Search",
+        "Code Execution",
+        "Visit Websites",
+        "Wolfram Alpha",
+        "JSON Object Mode"
+      ]
+    }
+  ]
+}

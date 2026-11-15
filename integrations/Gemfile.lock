@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.11)
+>>>>>>> f2c498c05 (chore(CE): Add Azure OpenAI, Groq, Open Router, and xAI as AI/ML Connector (#2233))
       MailchimpMarketing
       activesupport
       async-websocket

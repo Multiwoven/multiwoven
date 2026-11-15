@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.11"
+>>>>>>> f2c498c05 (chore(CE): Add Azure OpenAI, Groq, Open Router, and xAI as AI/ML Connector (#2233))
 
     ENABLED_SOURCES = %w[
       Snowflake
@@ -27,6 +31,15 @@ module Multiwoven
       Anthropic
       AwsBedrockModel
       GenericOpenAI
+<<<<<<< HEAD
+=======
+      GoogleGemini
+      JohnSnowLabs
+      AzureOpenAI
+      Xai
+      Groq
+      OpenRouter
+>>>>>>> f2c498c05 (chore(CE): Add Azure OpenAI, Groq, Open Router, and xAI as AI/ML Connector (#2233))
       IntuitQuickBooks
       PineconeDB
       Qdrant

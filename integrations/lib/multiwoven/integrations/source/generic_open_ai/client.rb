@@ -34,6 +34,7 @@ module Multiwoven::Integrations::Source
         # If it's "ai_ml," the server calculates the payload and passes it as a query in the sync config model protocol.
         # This query is then sent to the AI/ML model.
         payload = parse_json(sync_config.model.query)
+        payload["stream"] = stream
 
         if stream
           run_model_stream(connection_config, payload) { |message| yield message if block_given? }
@@ -48,6 +49,7 @@ module Multiwoven::Integrations::Source
 
       def prepare_config(config)
         config.with_indifferent_access.tap do |conf|
+          conf[:config] ||= {}
           conf[:config][:timeout] ||= 30
         end
       end
