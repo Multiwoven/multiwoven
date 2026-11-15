@@ -65,6 +65,7 @@ module Multiwoven::Integrations::Source
 
       def create_drive_connection(connection_config)
         credentials = connection_config[:credentials_json]
+        credentials["private_key"] = credentials["private_key"].gsub("\\n", "\n") if credentials["private_key"].include?("\\n")
         @google_drive = Google::Apis::DriveV3::DriveService.new
         @google_drive.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
           json_key_io: StringIO.new(credentials.to_json),

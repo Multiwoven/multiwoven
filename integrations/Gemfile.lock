@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.3)
+>>>>>>> 2bb8c2cd1 (chore(CE): fix private key handling in Google Drive client (#2194))
       MailchimpMarketing
       activesupport
       async-websocket
