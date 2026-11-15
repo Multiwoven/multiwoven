@@ -1,0 +1,27 @@
+{
+  "models": [
+    {
+      "id": "aisquared/bolt-instruct-v2",
+      "name": "Bolt-Instruct-V2",
+      "model_type": "llm",
+      "type": "completion",
+      "tasks": [
+        "Text Generation",
+        "Reasoning"
+      ],
+      "context_window": 131000,
+      "max_output": 131000,
+      "pricing": {
+        "input": 0.0,
+        "output": 0.0,
+        "cached_read": 0.0,
+        "cached_write": 0.0,
+        "unit": "per_1m_tokens"
+      },
+      "capabilities": [
+        "Documents",
+        "Data analyst"
+      ]
+    }
+  ]
+}
