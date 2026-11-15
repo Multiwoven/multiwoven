@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import ExitWarningImage from '@/assets/images/ExitWarning.png';
+import ExitWarningImage from '@/assets/images/ExitWarning.svg';
 
 const ExitModal = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -39,9 +39,9 @@ const ExitModal = (): JSX.Element => {
         <ModalOverlay bg='blackAlpha.400' />
         <ModalContent>
           <ModalCloseButton color='gray.600' />
-          <ModalBody mx='auto' pt={8} pb={0}>
-            <Flex direction='column'>
-              <Image src={ExitWarningImage} h={32} w={48} mx='auto' my={8} />
+          <ModalBody mx='auto'>
+            <Flex direction='column' alignItems='center'>
+              <Image src={ExitWarningImage} h='200px' w='200px' />
               <Text
                 fontWeight={700}
                 size='xl'
