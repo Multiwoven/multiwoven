@@ -64,6 +64,418 @@ RSpec.describe Connector, type: :model do
     end
   end
 
+<<<<<<< HEAD
+=======
+  describe "#generate_response" do
+    let(:workspace) { create(:workspace) }
+    let(:mock_client) { double("client") }
+    let(:mock_response) do
+      [
+        double("response_item",
+               record: double("record",
+                              data: {
+                                "choices" => [
+                                  {
+                                    "message" => {
+                                      "content" => "Test response"
+                                    }
+                                  }
+                                ]
+                              }))
+      ]
+    end
+
+    context "with OpenAI connector" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "OpenAI",
+               configuration: { "api_key" => "test-key" })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "handles JSON string payload and converts to Hash" do
+        payload_json = {
+          "model" => "gpt-4o-mini",
+          "messages" => [{ "role" => "user", "content" => "Hello" }]
+        }.to_json
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          hash_including("model" => "gpt-4o-mini")
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_json)
+        expect(result).to eq(mock_response)
+      end
+
+      it "handles Hash payload as-is" do
+        payload_hash = {
+          "model" => "gpt-4o-mini",
+          "messages" => [{ "role" => "user", "content" => "Hello" }]
+        }
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          payload_hash
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_hash)
+        expect(result).to eq(mock_response)
+      end
+    end
+
+    context "with Anthropic connector" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "Anthropic",
+               configuration: { "api_key" => "test-key" })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "passes JSON string to Anthropic client" do
+        payload_json = {
+          "model" => "claude-opus-4-5-20251101",
+          "system" => "You are helpful",
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }.to_json
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          payload_json
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_json)
+        expect(result).to eq(mock_response)
+      end
+
+      it "converts Hash to JSON string for Anthropic client" do
+        payload_hash = {
+          "model" => "claude-opus-4-5-20251101",
+          "system" => "You are helpful",
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          payload_hash.to_json
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_hash)
+        expect(result).to eq(mock_response)
+      end
+    end
+
+    context "with AwsBedrockModel connector" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "AwsBedrockModel",
+               configuration: {
+                 "access_key" => "test-key",
+                 "secret_access_key" => "test-secret",
+                 "region" => "us-east-1"
+               })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "handles JSON string payload and converts to Hash" do
+        payload_json = {
+          "model" => "anthropic.claude-sonnet-4-20250514-v1:0",
+          "system" => "You are helpful",
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 2048
+        }.to_json
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          hash_including("model" => "anthropic.claude-sonnet-4-20250514-v1:0")
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_json)
+        expect(result).to eq(mock_response)
+      end
+    end
+
+    context "with GenericOpenAI connector" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "GenericOpenAI",
+               configuration: {
+                 "api_key" => "test-key",
+                 "base_url" => "https://api.example.com/v1"
+               })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "handles JSON string payload and converts to Hash" do
+        payload_json = {
+          "model" => "custom-model-v1",
+          "messages" => [{ "role" => "user", "content" => "Hello" }]
+        }.to_json
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          hash_including("model" => "custom-model-v1")
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_json)
+        expect(result).to eq(mock_response)
+      end
+    end
+
+    context "with Aisquared connector (format_llm_payload serializes to JSON)" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "Aisquared",
+               configuration: { "api_key" => "test-key" })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "passes JSON string to Aisquared client via format_llm_payload" do
+        payload_json = {
+          "temperature" => 0.7,
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }.to_json
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          payload_json
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_json)
+        expect(result).to eq(mock_response)
+      end
+
+      it "converts Hash to JSON string for Aisquared client via format_llm_payload" do
+        payload_hash = {
+          "temperature" => 0.7,
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }
+
+        expect(mock_client).to receive(:send).with(
+          :run_model,
+          anything,
+          payload_hash.to_json
+        ).and_return(mock_response)
+
+        result = connector.generate_response(payload_hash)
+        expect(result).to eq(mock_response)
+      end
+    end
+
+    context "payload type handling" do
+      context "for OpenAI (expects Hash)" do
+        let(:connector) do
+          create(:connector,
+                 workspace:,
+                 connector_type: :source,
+                 connector_name: "OpenAI",
+                 configuration: { "api_key" => "test-key" })
+        end
+
+        before do
+          allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+        end
+
+        it "passes Hash payload directly to client" do
+          payload_hash = { "model" => "gpt-4o", "messages" => [] }
+
+          expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+            expect(payload_arg).to be_a(Hash)
+            expect(payload_arg).to eq(payload_hash)
+            mock_response
+          end
+
+          connector.generate_response(payload_hash)
+        end
+
+        it "converts JSON string to Hash for client" do
+          payload_json = { "model" => "gpt-4o", "messages" => [] }.to_json
+
+          expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+            expect(payload_arg).to be_a(Hash)
+            expect(payload_arg["model"]).to eq("gpt-4o")
+            mock_response
+          end
+
+          connector.generate_response(payload_json)
+        end
+      end
+
+      context "for Anthropic (expects JSON string)" do
+        let(:connector) do
+          create(:connector,
+                 workspace:,
+                 connector_type: :source,
+                 connector_name: "Anthropic",
+                 configuration: { "api_key" => "test-key" })
+        end
+
+        before do
+          allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+        end
+
+        it "converts Hash payload to JSON string for client" do
+          payload_hash = { "model" => "claude-opus-4-5-20251101", "messages" => [], "max_tokens" => 4096 }
+
+          expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+            expect(payload_arg).to be_a(String)
+            expect(JSON.parse(payload_arg)).to eq(payload_hash)
+            mock_response
+          end
+
+          connector.generate_response(payload_hash)
+        end
+
+        it "keeps JSON string as-is for client" do
+          payload_json = { "model" => "claude-opus-4-5-20251101", "messages" => [], "max_tokens" => 4096 }.to_json
+
+          expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+            expect(payload_arg).to be_a(String)
+            expect(payload_arg).to eq(payload_json)
+            mock_response
+          end
+
+          connector.generate_response(payload_json)
+        end
+      end
+    end
+
+    context "for Aisquared (format_llm_payload expects JSON string)" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "Aisquared",
+               configuration: { "api_key" => "test-key" })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "converts Hash payload to JSON string for Aisquared via format_llm_payload" do
+        payload_hash = {
+          "temperature" => 0.7,
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }
+
+        expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+          expect(payload_arg).to be_a(String)
+          expect(JSON.parse(payload_arg)).to eq(payload_hash)
+          mock_response
+        end
+
+        connector.generate_response(payload_hash)
+      end
+
+      it "keeps JSON string as-is for Aisquared via format_llm_payload" do
+        payload_json = {
+          "temperature" => 0.7,
+          "messages" => [{ "role" => "user", "content" => "Hello" }],
+          "max_tokens" => 4096
+        }.to_json
+
+        expect(mock_client).to receive(:send) do |_method, _config, payload_arg|
+          expect(payload_arg).to be_a(String)
+          expect(payload_arg).to eq(payload_json)
+          mock_response
+        end
+
+        connector.generate_response(payload_json)
+      end
+    end
+
+    context "error handling" do
+      let(:connector) do
+        create(:connector,
+               workspace:,
+               connector_type: :source,
+               connector_name: "OpenAI",
+               configuration: { "api_key" => "test-key" })
+      end
+
+      before do
+        allow(connector).to receive(:connector_client).and_return(double(new: mock_client))
+      end
+
+      it "raises ArgumentError with context for malformed JSON" do
+        expect do
+          connector.generate_response("not valid json")
+        end.to raise_error(ArgumentError, /Invalid JSON payload for OpenAI/)
+      end
+
+      it "raises ArgumentError with context for incomplete JSON" do
+        expect do
+          connector.generate_response('{"model": "gpt-4"')
+        end.to raise_error(ArgumentError, /Invalid JSON payload for OpenAI/)
+      end
+
+      it "includes provider name in error message for Anthropic" do
+        anthropic_connector = create(:connector,
+                                     workspace:,
+                                     connector_type: :source,
+                                     connector_name: "Anthropic",
+                                     configuration: { "api_key" => "test-key" })
+        allow(anthropic_connector).to receive(:connector_client).and_return(double(new: mock_client))
+
+        expect do
+          anthropic_connector.generate_response("invalid json")
+        end.to raise_error(ArgumentError, /Invalid JSON payload for Anthropic/)
+      end
+
+      it "includes provider name in error message for Aisquared" do
+        aisquared_connector = create(:connector,
+                                     workspace:,
+                                     connector_type: :source,
+                                     connector_name: "Aisquared",
+                                     configuration: { "api_key" => "test-key" })
+        allow(aisquared_connector).to receive(:connector_client).and_return(double(new: mock_client))
+
+        expect do
+          aisquared_connector.generate_response("invalid json")
+        end.to raise_error(ArgumentError, /Invalid JSON payload for Aisquared/)
+      end
+    end
+  end
+
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
   describe "#execute_query" do
     let(:workspace) { create(:workspace) } # Assuming you have factories set up for workspace
     let(:connector) do

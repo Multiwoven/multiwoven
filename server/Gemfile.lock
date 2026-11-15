@@ -1773,7 +1773,11 @@ GEM
       railties (>= 5.0.0)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
+<<<<<<< HEAD
     faraday (2.12.2)
+=======
+    faraday (2.14.2)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -1784,9 +1788,15 @@ GEM
       hashie
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
+<<<<<<< HEAD
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     faraday-retry (2.2.1)
+=======
+    faraday-net_http (3.4.3)
+      net-http (~> 0.5)
+    faraday-retry (2.4.0)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
       faraday (~> 2.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm64-darwin)
@@ -1931,7 +1941,14 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
+<<<<<<< HEAD
     json (2.9.1)
+=======
+    json (2.19.5)
+    json-schema (5.2.2)
+      addressable (~> 2.8)
+      bigdecimal (~> 3.1)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
     json_schemer (0.2.25)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
@@ -1941,7 +1958,12 @@ GEM
     jsonapi-renderer (0.2.2)
     jsonpath (1.1.5)
       multi_json
+<<<<<<< HEAD
     jwt (2.7.1)
+=======
+    jwt (3.2.0)
+      base64
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -1979,7 +2001,11 @@ GEM
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
+<<<<<<< HEAD
     multiwoven-integrations (0.34.6)
+=======
+    multiwoven-integrations (0.36.1)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
       MailchimpMarketing
       activesupport
       async-websocket
@@ -2163,8 +2189,21 @@ GEM
       faraday-net_http (< 4.0.0)
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
+<<<<<<< HEAD
     retriable (3.1.2)
     rexml (3.4.2)
+=======
+    retriable (3.8.0)
+    rexml (3.4.4)
+    roo (2.10.1)
+      nokogiri (~> 1)
+      rubyzip (>= 1.3.0, < 3.0.0)
+    roo-xls (2.0.0)
+      csv
+      nokogiri
+      roo (>= 2.0.0, < 4)
+      spreadsheet (>= 1.3.4, < 2)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
     rsa-pem-from-mod-exp (0.1.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
@@ -2339,7 +2378,12 @@ DEPENDENCIES
   kaminari
   letter_opener
   liquid
+<<<<<<< HEAD
   multiwoven-integrations (~> 0.34.6)
+=======
+  maxminddb (~> 0.1.22)
+  multiwoven-integrations (~> 0.36.1)
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
   mysql2
   newrelic_rpm
   parallel

@@ -220,6 +220,7 @@ class Connector < ApplicationRecord
 
   private
 
+<<<<<<< HEAD
   def extract_secret_keys(schema, keys = [])
     return keys unless schema.is_a?(Hash)
 
@@ -247,6 +248,11 @@ class Connector < ApplicationRecord
       end
     when Array
       config.map { |item| mask_secret_values(item, secret_keys) }
+=======
+  def format_llm_payload(payload)
+    if connector_name == "Anthropic" || connector_name == "Aisquared"
+      payload.to_json
+>>>>>>> 5a003b41e (chore(CE): Server Gem Update 0.36.0 (#1939))
     else
       config
     end
