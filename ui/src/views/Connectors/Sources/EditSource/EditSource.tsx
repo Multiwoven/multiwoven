@@ -208,7 +208,6 @@ const EditSource = (): JSX.Element => {
             uiSchema={generatedSchema}
             formData={formData}
             onSubmit={(formData: FormData) => handleOnTestClick(formData)}
-            onChange={(formData: FormData) => setFormData(formData)}
           >
             <FormFooter
               ctaName='Save Changes'
