@@ -149,7 +149,18 @@ const ViewModel = (): JSX.Element => {
               <Text size='sm' fontWeight='semibold'>
                 {moment(data.data?.attributes?.updated_at).format('DD/MM/YYYY')}
               </Text>
+<<<<<<< HEAD
               <ModelActions prefillValues={prefillValues} />
+=======
+              <RoleAccess
+                location='model'
+                type='item'
+                action={UserActions.Update}
+                orAction={UserActions.Delete}
+              >
+                <ModelActions prefillValues={prefillValues} invalidateQuery={invalidateQuery} />
+              </RoleAccess>
+>>>>>>> 11791c77 (feat(CE): added Edit Details Modal (#791))
             </Box>
           }
         />
