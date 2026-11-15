@@ -22,10 +22,16 @@ module MultiwovenServer
       return unless ENV["APPSIGNAL_PUSH_API_KEY"]
 
       request = ActionDispatch::Request.new(env)
+      params = {}
+      begin
+        params = request.filtered_parameters
+      rescue Rack::Multipart::EmptyContentError
+        Rails.logger.info("Malformed multipart body — skipping param logging")
+      end
       Rails.logger.info({
         request_method: request.request_method,
         request_url: request.url,
-        request_params: request.filtered_parameters,
+        request_params: params,
         request_headers: { "Workspace-Id": request.headers["Workspace-Id"] }
       }.to_s)
     end
