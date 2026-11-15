@@ -5,6 +5,13 @@
     "connector_type": "source",
     "category": "AI Model",
     "sub_category": "AI_ML Service",
+<<<<<<< HEAD
+=======
+    "provider_type": "cloud_provider",
+    "show_payload_formats": true,
+    "display_order": 110,
+    "description": "Connect any model exposed over HTTP by describing its request and response format.",
+>>>>>>> 6aca5e420 (chore(CE): make AI Model sample payloads cheap and editable (#2183))
     "documentation_url": "https://docs.squared.ai/activation/ai-ml-sources/http-model-endpoint",
     "github_issue_label": "source-http-model",
     "icon": "icon.svg",

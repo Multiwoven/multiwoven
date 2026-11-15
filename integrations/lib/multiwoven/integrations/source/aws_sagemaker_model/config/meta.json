@@ -5,6 +5,13 @@
     "connector_type": "source",
     "category": "AI Model",
     "sub_category": "AI_ML Service",
+<<<<<<< HEAD
+=======
+    "provider_type": "cloud_provider",
+    "show_payload_formats": true,
+    "display_order": 80,
+    "description": "Deploy and serve custom models via AWS SageMaker endpoints. Supports any model you have hosted on SageMaker.",
+>>>>>>> 6aca5e420 (chore(CE): make AI Model sample payloads cheap and editable (#2183))
     "documentation_url": "https://docs.squared.ai/guides/sources/data-sources/aws_sagemaker-model",
     "github_issue_label": "source-aws-sagemaker-model",
     "icon": "icon.svg",

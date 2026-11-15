@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.1"
+>>>>>>> 6aca5e420 (chore(CE): make AI Model sample payloads cheap and editable (#2183))
 
     ENABLED_SOURCES = %w[
       Snowflake
