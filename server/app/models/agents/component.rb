@@ -17,5 +17,28 @@ module Agents
     validates :component_type, presence: true
 
     store :position, coder: JSON
+<<<<<<< HEAD
+=======
+
+    # Returns configuration with auth_config values masked for API responses.
+    # Currently applies to :a2a_agent components and masks all non-blank strings under auth_config.
+    def masked_configuration
+      return configuration if configuration.blank?
+      return mask_secrets(configuration.deep_dup) if a2a_agent? || vector_store?
+
+      configuration
+    end
+
+    private
+
+    def mask_secrets(config)
+      config["api_key"] = Utils::SecretMasking::MASKED_VALUE if config["api_key"].present?
+      if config["auth_config"].present?
+        config["auth_config"] =
+          Utils::SecretMasking.mask_nested_values(config["auth_config"])
+      end
+      config
+    end
+>>>>>>> 2d3e49530 (fix(CE): added masking configuration for vector store (#1855))
   end
 end
