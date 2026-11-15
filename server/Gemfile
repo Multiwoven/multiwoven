@@ -14,7 +14,12 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.34.6"
+=======
+gem "duckdb", "= 1.4.3.0" # Pin to match libduckdb v1.4.3 installed in CI/Docker
+gem "multiwoven-integrations", "~> 0.38.1"
+>>>>>>> 21f434a5d (chore(CE): Update Server Gemfile 0.38.1 (#2120))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
