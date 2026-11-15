@@ -60,6 +60,7 @@ export default function WrapIfAdditionalTemplate<
             name={`${id}-key`}
             onBlur={!readonly ? handleBlur : undefined}
             type='text'
+            fontSize='sm'
             mb={1}
           />
         </FormControl>
