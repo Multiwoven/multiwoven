@@ -14,7 +14,12 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
+<<<<<<< HEAD
 gem "multiwoven-integrations", "~> 0.34.6"
+=======
+gem "duckdb", "= 1.4.3.0" # Pin to match libduckdb v1.4.3 installed in CI/Docker
+gem "multiwoven-integrations", "~> 0.43.7"
+>>>>>>> 9a6a6e73e (fix(CE): Stop reporting PG::SyntaxError and OAuth token 4xx from QuerySource (BE-2068) (#2382))
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
