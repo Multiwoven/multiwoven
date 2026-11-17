@@ -687,4 +687,87 @@ RSpec.describe Connector, type: :model do
       end
     end
   end
+<<<<<<< HEAD
+=======
+
+  describe "#masked_configuration with the real HTTP spec" do
+    let(:connector) do
+      create(:connector, workspace:, connector_type: "source", connector_name: "Http",
+                         configuration: {
+                           "increment_type" => "Page", "http_method" => "GET", "base_url" => "https://api.example.com",
+                           "auth_type" => "oauth_private_key_jwt", "token_url" => "https://login.example.com/token",
+                           "client_id" => "client-id-value", "private_key" => "-----BEGIN RSA PRIVATE KEY-----",
+                           "kid" => "key-1"
+                         })
+    end
+
+    it "masks the secrets declared under the auth_type dependency" do
+      result = connector.masked_configuration
+      expect(result["client_id"]).to eq("*************")
+      expect(result["private_key"]).to eq("*************")
+      expect(result["kid"]).to eq("key-1")
+      expect(result["base_url"]).to eq("https://api.example.com")
+    end
+  end
+
+  describe "#dependency_counts" do
+    it "counts models, syncs on either side, and referencing workflow components" do
+      destination = create(:connector, workspace:, connector_type: "destination", connector_name: "Klaviyo")
+      create(:catalog, workspace:, connector: destination)
+      create(:model, connector:, workspace:)
+      create(:sync, workspace:, source: connector, destination:)
+      create(:component, workspace:, workflow: create(:workflow, workspace:), component_type: :agent,
+                         configuration: { "llm_connector_id" => connector.id.to_s })
+
+      expect(connector.dependency_counts).to eq(models_count: 1, syncs_count: 1, workflow_components_count: 1)
+    end
+
+    it "returns zeros for an unused connector" do
+      expect(connector.dependency_counts).to eq(models_count: 0, syncs_count: 0, workflow_components_count: 0)
+    end
+  end
+
+  describe "scopes" do
+    context "when a connector is in host" do
+      let(:connector) { create(:connector, in_host: true) }
+      it "returns the connector" do
+        expect(Connector.in_host).to include(connector)
+      end
+    end
+    context "when a connector is external" do
+      let(:connector) { create(:connector, in_host: false) }
+      it "returns the connector" do
+        expect(Connector.external).to include(connector)
+      end
+    end
+  end
+
+  describe "configuration encryption" do
+    let(:workspace) { create(:workspace) }
+    let(:configuration) { { "public_api_key" => "public-key-value", "private_api_key" => "private-key-value" } }
+    let(:connector) { create(:connector, workspace:, configuration:) }
+
+    def stored_configuration(connector_id)
+      ActiveRecord::Base.connection.select_value(
+        "SELECT configuration::text FROM connectors WHERE id = #{connector_id}"
+      )
+    end
+
+    it "stores the configuration encrypted at rest" do
+      expect(stored_configuration(connector.id)).not_to include("private-key-value")
+    end
+
+    it "reads the decrypted configuration back" do
+      expect(described_class.find(connector.id).configuration).to eq(configuration)
+    end
+
+    it "reads a configuration written before encryption" do
+      ActiveRecord::Base.connection.execute(
+        "UPDATE connectors SET configuration = '#{configuration.to_json}'::jsonb WHERE id = #{connector.id}"
+      )
+
+      expect(described_class.find(connector.id).configuration).to eq(configuration)
+    end
+  end
+>>>>>>> edac1bc7b (fix(CE): encrypt connector configuration at rest, require JWT_SECRET in production (BE-2075) (#2398))
 end
