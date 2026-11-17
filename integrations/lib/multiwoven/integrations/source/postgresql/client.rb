@@ -6,6 +6,8 @@ module Multiwoven::Integrations::Source
   module Postgresql
     include Multiwoven::Integrations::Core
     class Client < SourceConnector
+      CONNECT_TIMEOUT = 10
+
       def check_connection(connection_config)
         connection_config = connection_config.with_indifferent_access
         create_connection(connection_config)
@@ -96,7 +98,8 @@ module Multiwoven::Integrations::Source
           dbname: connection_config[:database],
           user: connection_config[:credentials][:username],
           password: connection_config[:credentials][:password],
-          port: connection_config[:port]
+          port: connection_config[:port],
+          connect_timeout: CONNECT_TIMEOUT
         )
       end
 

@@ -87,6 +87,12 @@ RSpec.describe Multiwoven::Integrations::Source::Postgresql::Client do
         expect(result.status).to eq("succeeded")
         expect(result.message).to be_nil
       end
+
+      it "connects with a connect timeout" do
+        expect(PG).to receive(:connect).with(hash_including(connect_timeout: 10)).and_return(pg_connection)
+
+        client.check_connection(sync_config[:source][:connection_specification])
+      end
     end
 
     context "when the connection fails" do

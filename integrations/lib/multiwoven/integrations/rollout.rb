@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.43.6"
+>>>>>>> df3134437 (fix(CE): add connect_timeout to Postgres source connection (BE-2063) (#2368))
 
     ENABLED_SOURCES = %w[
       Snowflake
