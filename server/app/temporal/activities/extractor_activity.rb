@@ -2,6 +2,7 @@
 
 module Activities
   class ExtractorActivity < Temporal::Activity
+    class SourceReadFailed < Temporal::ActivityException; end
     timeouts(
       start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE_IN_SEC"] || "172800").to_i,
       heartbeat: (ENV["TEMPORAL_ACTIVITY_HEARTBEAT_TIMEOUT_IN_SEC"] || "1200").to_i
@@ -10,8 +11,12 @@ module Activities
     retry_policy(
       interval: (ENV["TEMPORAL_ACTIVITY_RETRY_INTERVAL_IN_SEC"] || "1").to_i,
       backoff: (ENV["TEMPORAL_ACTIVITY_RETRY_BACK_OFF"] || "1").to_i,
+<<<<<<< HEAD
       max_attempts: (ENV["TEMPORAL_ACTIVITY_RETRY_MAX_ATTEMPT"] || "3").to_i
       # non_retriable_errors: [SyncRunStateExeption]
+=======
+      max_attempts: "10".to_i
+>>>>>>> b61bc2d9c (fix(CE): fail sync run on source connection error instead of retrying (BE-2063) (#2369))
     )
 
     def execute(sync_run_id)
@@ -21,13 +26,27 @@ module Activities
 
       # state of sync run to started only if current state in [ pending,started,querying]
       sync_run.start
-      sync_run.update(started_at: Time.zone.now)
+      sync_run.update(started_at: Time.zone.now, error: nil)
 
       extractor = select_extractor(sync_run)
       extractor.read(sync_run.id, activity)
+    rescue SourceReadFailed => e
+      record_source_read_failure(sync_run, e)
+      raise
     end
 
     private
+
+    # Retriable: UpdateSyncRunStatusMiddleware fails the run once retries are exhausted.
+    def record_source_read_failure(sync_run, error)
+      sync_run.update!(error: error.message)
+      Rails.logger.error({
+        error_message: error.message,
+        sync_run_id: sync_run.id,
+        sync_id: sync_run.sync_id,
+        stack_trace: nil
+      }.to_s)
+    end
 
     def select_extractor(sync_run)
       return test_sync_extractor if sync_run.test?

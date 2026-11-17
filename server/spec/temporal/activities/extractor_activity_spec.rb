@@ -45,6 +45,72 @@ RSpec.describe Activities::ExtractorActivity do
       allow(extractor_web_scrape).to receive(:read).with(anything, mock_context)
     end
 
+    context "when the source read fails" do
+      let(:connector_message) { "connection to server at \"db.example.com\", port 5432 failed: timeout expired" }
+
+      before do
+        allow(extractor_incremental).to receive(:read)
+          .and_raise(Activities::ExtractorActivity::SourceReadFailed, connector_message)
+      end
+
+      it "re-raises the failure" do
+        expect { activity.execute(sync_run.id) }.to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+      end
+
+      it "leaves the sync run non-terminal so Temporal can retry the read" do
+        finished_at_before = sync_run.finished_at
+
+        expect { activity.execute(sync_run.id) }.to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+        expect(sync_run.reload).not_to be_terminal_status
+        expect(sync_run.finished_at).to eq(finished_at_before)
+      end
+
+      it "stores the connector message on the sync run" do
+        expect { activity.execute(sync_run.id) }.to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+        expect(sync_run.reload.error).to eq(connector_message)
+      end
+
+      it "can restart the run on the next attempt" do
+        expect { activity.execute(sync_run.id) }.to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+        expect(sync_run.reload.may_start?).to be(true)
+      end
+
+      it "clears the stored message when a retry starts" do
+        expect { activity.execute(sync_run.id) }.to raise_error(Activities::ExtractorActivity::SourceReadFailed)
+        allow(extractor_incremental).to receive(:read).with(anything, mock_context)
+
+        activity.execute(sync_run.id)
+
+        expect(sync_run.reload.error).to be_nil
+      end
+
+      context "when retries are exhausted and the workflow middleware fails the run" do
+        before do
+          activity.execute(sync_run.id)
+        rescue Activities::ExtractorActivity::SourceReadFailed
+          nil
+        end
+
+        it "marks the sync run and parent sync failed with finished_at set" do
+          sync_run.reload.update_status_post_workflow
+
+          expect(sync_run.reload).to have_state(:failed)
+          expect(sync_run.finished_at).to be_present
+          expect(sync.reload).to be_failed
+        end
+
+        it "queues the sync alert with the connector message already stored" do
+          create(:alert, workspace: sync.workspace, alert_sync_failure: true)
+          error_seen_by_alert = nil
+          allow(SendSyncAlertsJob).to receive(:perform_later) { |id| error_seen_by_alert = SyncRun.find(id).error }
+
+          sync_run.reload.update_status_post_workflow
+
+          expect(error_seen_by_alert).to eq(connector_message)
+        end
+      end
+    end
+
     it "sync run pending to started" do
       expect(sync_run).to have_state(:pending)
       activity.execute(sync_run.id)
