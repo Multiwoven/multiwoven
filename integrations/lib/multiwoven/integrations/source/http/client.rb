@@ -126,8 +126,15 @@ module Multiwoven::Integrations::Source
           parse_response = get_parse_response(connection_config[:parse_response])
           parse_response(response_body, parse_response)
         else
-          handle_exception("Failed to fetch data", { context: "HTTP:QUERY:EXCEPTION", type: "error" })
+          handle_exception(StandardError.new(query_failure_message(response)), { context: "HTTP:QUERY:EXCEPTION", type: "error" })
         end
+      end
+
+      def query_failure_message(response)
+        code = response.respond_to?(:code) ? response.code.to_s : ""
+        return "Failed to fetch data" if code.empty?
+
+        "Failed to fetch data: HTTP #{code}"
       end
 
       def create_streams(response_body)

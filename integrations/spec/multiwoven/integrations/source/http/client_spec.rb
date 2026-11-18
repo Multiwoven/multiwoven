@@ -368,35 +368,44 @@ RSpec.describe Multiwoven::Integrations::Source::Http::Client do
     context "when the read operation fails" do
       let(:response_body) { { "message" => "failed" }.to_json }
       before do
-        response = Net::HTTPSuccess.new("1.1", "401", "Unauthorized")
+        response = Net::HTTPUnauthorized.new("1.1", "401", "Unauthorized")
         response.content_type = "application/json"
-        url = sync_config_json[:source][:connection_specification][:url_host]
+        url = sync_config_json[:source][:connection_specification][:base_url] + sync_config_json[:source][:connection_specification][:path]
         http_method = sync_config_json[:source][:connection_specification][:http_method]
         request_format = sync_config_json[:source][:connection_specification][:request_format]
         headers = sync_config_json[:source][:connection_specification][:headers]
         config = sync_config_json[:source][:connection_specification][:config]
-        params = { status: "success", page: 1, per_page: 10 }
+        params = { status: "success" }
         allow(response).to receive(:body).and_return(response_body)
         allow(Multiwoven::Integrations::Core::HttpClient).to receive(:request)
           .with(url,
                 http_method,
                 payload: JSON.parse(request_format),
                 headers: headers,
-                config: config,
-                params: params)
+                options: { config: config, params: params })
           .and_return(response)
       end
 
       it "handles exceptions during reading" do
-        expect(client).to receive(:handle_exception).with(
-          "Failed to fetch data",
-          {
-            context: "HTTP:QUERY:EXCEPTION",
-            type: "error"
-          }
-        )
+        expect(client).to receive(:handle_exception) do |exception, meta|
+          expect(exception).to be_a(StandardError)
+          expect(exception.message).to eq("Failed to fetch data: HTTP 401")
+          expect(meta).to eq({ context: "HTTP:QUERY:EXCEPTION", type: "error" })
+        end
 
         client.read(sync_config)
+      end
+
+      it "returns a log message and does not raise when the HTTP response is not successful" do
+        connection_config = sync_config.source.connection_specification.with_indifferent_access
+        db = client.send(:create_connection, connection_config)
+
+        result = client.send(:query, db, sync_config.model.query)
+
+        expect(result).to be_a(Multiwoven::Integrations::Protocol::MultiwovenMessage)
+        expect(result.log.message).to eq("Failed to fetch data: HTTP 401")
+        expect(result.log.name).to eq("HTTP:QUERY:EXCEPTION")
+        expect(result.log.level).to eq("error")
       end
     end
   end
