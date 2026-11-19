@@ -2,7 +2,11 @@
 
 module Multiwoven
   module Integrations
+<<<<<<< HEAD
     VERSION = "0.35.3"
+=======
+    VERSION = "0.41.4"
+>>>>>>> 863f6160d (chore(CE): Update AI Squared Icon (#2207))
 
     ENABLED_SOURCES = %w[
       Snowflake

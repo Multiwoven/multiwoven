@@ -7,7 +7,11 @@ GIT
 PATH
   remote: .
   specs:
+<<<<<<< HEAD
     multiwoven-integrations (0.35.3)
+=======
+    multiwoven-integrations (0.41.4)
+>>>>>>> 863f6160d (chore(CE): Update AI Squared Icon (#2207))
       MailchimpMarketing
       activesupport
       async-websocket
